@@ -1,0 +1,78 @@
+---
+const phone = '(956) 564-6067';
+const phoneHref = 'tel:+19565646067';
+
+const nav = [
+  { label: 'African Greys For Sale', href: '/african-grey-parrot-for-sale/' },
+  { label: 'Congo Grey',             href: '/congo-african-grey-for-sale/' },
+  { label: 'Breeding Pairs',         href: '/african-grey-breeding-pair-for-sale/' },
+  { label: 'Contact',                href: '/contact-us/' },
+];
+
+const current = Astro.url.pathname;
+---
+
+<header class="bg-logo-dark text-cream sticky top-0 z-50 shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo + brand name -->
+      <a href="/" class="flex items-center gap-3 shrink-0">
+        <img
+          src="/logo-64.png"
+          alt="Congo African Greys logo"
+          width="48"
+          height="48"
+          class="rounded-full"
+        />
+        <span class="font-lora font-bold text-gold text-lg leading-tight hidden sm:block">
+          Congo African Greys
+        </span>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-sora font-medium">
+        {nav.map(link => (
+          <a
+            href={link.href}
+            class:list={[
+              'transition-colors hover:text-gold',
+              current === link.href ? 'text-gold underline underline-offset-4' : 'text-cream/90'
+            ]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Phone CTA -->
+      <a
+        href={phoneHref}
+        class="hidden sm:inline-flex items-center gap-2 bg-gold text-logo-dark font-semibold text-sm px-4 py-2 rounded-full hover:bg-cream transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
+        </svg>
+        {phone}
+      </a>
+
+      <!-- Mobile menu button (progressive enhancement — no JS needed for links) -->
+      <details class="md:hidden relative">
+        <summary class="list-none cursor-pointer text-cream/90 hover:text-gold p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </summary>
+        <nav class="absolute right-0 top-10 bg-logo-dark border border-gold/30 rounded-lg shadow-xl p-4 flex flex-col gap-3 min-w-52">
+          {nav.map(link => (
+            <a href={link.href} class="text-cream/90 hover:text-gold text-sm font-medium">
+              {link.label}
+            </a>
+          ))}
+          <a href={phoneHref} class="text-gold font-semibold text-sm">{phone}</a>
+        </nav>
+      </details>
+
+    </div>
+  </div>
+</header>
