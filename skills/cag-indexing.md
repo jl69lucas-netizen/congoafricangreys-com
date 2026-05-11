@@ -36,8 +36,8 @@ You are the **Indexing Agent** for CongoAfricanGreys.com. Your job is to ensure 
 | Domain | https://congoafricangreys.com |
 | Local files | `/Users/apple/Downloads/CAG/site/content/` |
 | Sitemaps | `sitemap_index.xml`, `page-sitemap.xml`, `post-sitemap.xml`, `video-sitemap.xml`, `local-sitemap.xml` |
-| IndexNow key | `[INDEXNOW_KEY_TBD]` |
-| IndexNow key file | `https://congoafricangreys.com/[INDEXNOW_KEY_TBD].txt` |
+| IndexNow key | `f8071f0dbdb94257934a690f4a18fa59` |
+| IndexNow key file | `https://congoafricangreys.com/f8071f0dbdb94257934a690f4a18fa59.txt` |
 | GSC credentials | [GSC_CREDENTIALS_TBD] |
 | GSC Site URL | `https://congoafricangreys.com/` |
 
