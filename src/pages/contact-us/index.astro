@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import Schema from '../../components/Schema.astro';
+
+const title = "Contact Congo African Greys | Inquire About Available Birds";
+const description = "Reach out to Mark and Teri Benjamin about African Grey parrots for sale. We respond within 24 hours. Located in Midland, Texas. USDA AWA licensed breeder.";
+const canonical = "https://congoafricangreys.com/contact-us/";
+---
+
+<BaseLayout {title} {description} {canonical}>
+  <Header />
+
+  <section class="bg-logo-dark text-cream py-16 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">Contact Us</h1>
+      <p class="text-cream/80 text-lg">We reply to all inquiries within 24–48 hours. Please include which bird or variant you're interested in.</p>
+    </div>
+  </section>
+
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
+
+      <!-- Contact info -->
+      <div>
+        <h2 class="font-lora font-bold text-2xl text-logo-dark mb-6">Get in Touch</h2>
+        <ul class="space-y-4 text-stone-600">
+          <li class="flex items-start gap-3">
+            <span class="text-gold text-xl">📞</span>
+            <div>
+              <p class="font-semibold text-logo-dark">Phone</p>
+              <a href="tel:+19565646067" class="hover:text-gold transition-colors">(956) 564-6067</a>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-gold text-xl">✉️</span>
+            <div>
+              <p class="font-semibold text-logo-dark">Email</p>
+              <a href="mailto:Info@congoafricangreys.com" class="hover:text-gold transition-colors">Info@congoafricangreys.com</a>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-gold text-xl">📍</span>
+            <div>
+              <p class="font-semibold text-logo-dark">Location</p>
+              <p>2508 Briaroaks Ct<br />Midland, TX 79707</p>
+              <p class="text-sm text-stone-400 mt-1">Visits by appointment only</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-gold text-xl">🕐</span>
+            <div>
+              <p class="font-semibold text-logo-dark">Hours</p>
+              <p>Monday–Sunday, 9:00 AM – 5:00 PM CT</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="mt-8 p-5 bg-gold/10 border border-gold/30 rounded-xl">
+          <p class="font-semibold text-logo-dark mb-2">About Your Inquiry</p>
+          <ul class="text-sm text-stone-600 space-y-1">
+            <li>&middot; We respond within 24–48 hours</li>
+            <li>&middot; A $200 deposit reserves your bird</li>
+            <li>&middot; We can arrange aviary visits by appointment</li>
+            <li>&middot; All birds come with CITES documentation</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Inquiry form -->
+      <div>
+        <h2 class="font-lora font-bold text-2xl text-logo-dark mb-6">Send an Inquiry</h2>
+        <form
+          name="bird-inquiry"
+          method="POST"
+          action="/contact-us/?success=true"
+          class="space-y-4"
+        >
+          <div>
+            <label for="name" class="block text-sm font-semibold text-logo-dark mb-1">Your Name</label>
+            <input type="text" id="name" name="name" required
+              class="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+              placeholder="First and last name" />
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-semibold text-logo-dark mb-1">Email Address</label>
+            <input type="email" id="email" name="email" required
+              class="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+              placeholder="your@email.com" />
+          </div>
+          <div>
+            <label for="phone" class="block text-sm font-semibold text-logo-dark mb-1">Phone (optional)</label>
+            <input type="tel" id="phone" name="phone"
+              class="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+              placeholder="(555) 000-0000" />
+          </div>
+          <div>
+            <label for="interest" class="block text-sm font-semibold text-logo-dark mb-1">Interested In</label>
+            <select id="interest" name="interest"
+              class="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors bg-white">
+              <option value="">Select a bird type</option>
+              <option value="congo-baby">Congo African Grey — Baby ($3,000)</option>
+              <option value="congo-adult">Congo African Grey — Adult ($1,500)</option>
+              <option value="timneh">Timneh African Grey ($1,200–$2,500)</option>
+              <option value="breeding-pair">Breeding Pair ($3,500)</option>
+              <option value="congo-pair">Congo Pair ($2,700)</option>
+              <option value="other">Other / Not sure yet</option>
+            </select>
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-semibold text-logo-dark mb-1">Message</label>
+            <textarea id="message" name="message" rows="4"
+              class="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
+              placeholder="Tell us about yourself, your living situation, and what you're looking for in a bird..."></textarea>
+          </div>
+          <button type="submit"
+            class="w-full bg-logo-dark text-cream font-semibold py-4 rounded-full hover:bg-gold hover:text-logo-dark transition-colors">
+            Send Inquiry
+          </button>
+          <p class="text-xs text-stone-400 text-center">We reply within 24–48 hours. No spam, ever.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <TrustBar />
+  <Schema type="local-business" />
+  <Footer />
+</BaseLayout>
