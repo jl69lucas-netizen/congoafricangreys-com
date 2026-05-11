@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import CTA from '../../components/CTA.astro';
+
+const title = "Where to Buy African Greys Near Me | Find Captive-Bred Breeders";
+const description = "Looking for where to buy African Greys near you? Congo African Greys ships hand-fed, DNA-tested African Grey parrots to all 50 states from Midland, TX. CITES documented. Health guarantee included.";
+const canonical = "https://congoafricangreys.com/where-to-buy-african-greys-near-me/";
+
+const states = [
+  { name: 'Texas', href: '/african-grey-parrot-for-sale-texas/' },
+  { name: 'New York', href: '/african-grey-parrot-for-sale-new-york/' },
+  { name: 'Ohio', href: '/african-grey-parrot-for-sale-ohio/' },
+  { name: 'Florida', href: '/african-grey-parrot-for-sale/' },
+  { name: 'California', href: '/african-grey-parrot-for-sale/' },
+  { name: 'All Other States', href: '/african-grey-parrot-for-sale/' },
+];
+---
+
+<BaseLayout {title} {description} {canonical}>
+  <Header />
+
+  <!-- Hero -->
+  <section class="bg-green text-white py-16 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-3">Ships to All 50 States</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">Where to Buy African Greys Near Me</h1>
+      <p class="text-white/80 text-lg">If you're searching for where to buy African Greys near you, your search ends here. Hand-fed, DNA-tested, CITES-documented Congo African Greys shipped nationwide from Midland, TX.</p>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <!-- Intro -->
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">We Come to You — Anywhere in the U.S.</h2>
+      <p class="text-stone-600 max-w-2xl mx-auto text-lg leading-relaxed">You don't need to find a local breeder. We specialize in providing hand-fed, DNA-tested, and well-socialized Congo African Grey parrots with nationwide IATA-compliant shipping for just $185. Your bird arrives at your nearest airport within 3–8 hours of departure.</p>
+    </div>
+  </section>
+
+  <!-- State Grid -->
+  <section class="bg-warm-white py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8 text-center">Browse Birds by State</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {states.map(state => (
+          <a href={state.href} class="flex items-center justify-between p-5 bg-white border border-stone-100 rounded-xl shadow-sm hover:border-green hover:shadow-md transition-all group">
+            <span class="font-lora font-semibold text-logo-dark group-hover:text-green transition-colors">{state.name}</span>
+            <svg class="w-5 h-5 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose CAG -->
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8 text-center">Why Buy From Congo African Greys?</h2>
+      <div class="grid sm:grid-cols-2 gap-6">
+        {[
+          { icon: '🏡', title: 'Home Raised', body: 'Birds raised in our Midland, TX family home — socialized with people from hatch.' },
+          { icon: '🌍', title: 'CITES Documented', body: 'Full CITES Appendix II captive-bred documentation on every bird. 100% legal.' },
+          { icon: '🔬', title: 'DNA Sexed', body: 'Know the sex of your bird before purchase. Every bird comes with a DNA sexing certificate.' },
+          { icon: '✈️', title: 'Ships From $185', body: 'IATA-compliant airline shipping to all 50 states. Your bird arrives within 3–8 hours.' },
+          { icon: '💊', title: '3-Day Health Guarantee', body: "Written guarantee covering Polyoma, Pacheco's, Psittacosis, and PBFD." },
+          { icon: '📞', title: 'Lifetime Breeder Support', body: 'Mark and Teri answer questions about diet, behavior, and enrichment long after your bird comes home.' },
+        ].map(item => (
+          <div class="flex gap-4 p-5 bg-warm-white rounded-xl border border-stone-100">
+            <span class="text-2xl mt-0.5">{item.icon}</span>
+            <div>
+              <h3 class="font-lora font-semibold text-logo-dark text-base mb-1">{item.title}</h3>
+              <p class="text-stone-500 text-sm leading-relaxed">{item.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA headline="Find Your African Grey — Ships to Your City" sub="Contact us today. We'll match you with the right bird and handle all shipping." />
+  <Footer />
+</BaseLayout>
