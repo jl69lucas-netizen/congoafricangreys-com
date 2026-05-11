@@ -1,0 +1,59 @@
+---
+interface Props {
+  size?: number;
+  class?: string;
+}
+const { size = 48, class: className = '' } = Astro.props;
+---
+
+<a href="/" class:list={['logo-link flex items-center gap-3 shrink-0 group', className]}>
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 48 48"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    class="logo-svg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
+    aria-hidden="true"
+  >
+    <!-- Outer circle — clay coral -->
+    <circle cx="24" cy="24" r="23" fill="#e8604c" />
+
+    <!-- Inner circle — forest green -->
+    <circle cx="24" cy="24" r="18" fill="#2D6A4F" />
+
+    <!-- Stylized wing / feather shape — cream -->
+    <!-- Left wing arc -->
+    <path
+      d="M14 28 Q10 18 20 14 Q16 22 18 28Z"
+      fill="#f5eeda"
+      opacity="0.9"
+    />
+    <!-- Right wing arc -->
+    <path
+      d="M34 28 Q38 18 28 14 Q32 22 30 28Z"
+      fill="#f5eeda"
+      opacity="0.9"
+    />
+    <!-- Center body / tail -->
+    <path
+      d="M20 28 Q24 34 28 28 Q26 24 24 22 Q22 24 20 28Z"
+      fill="#f5eeda"
+    />
+    <!-- Head dot -->
+    <circle cx="24" cy="18" r="3" fill="#f5eeda" />
+  </svg>
+
+  <span class="font-lora font-bold text-gold text-lg leading-tight hidden sm:block">
+    Congo African Greys
+  </span>
+</a>
+
+<style>
+  .logo-svg {
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.25));
+  }
+  .logo-link:hover .logo-svg {
+    filter: drop-shadow(0 2px 8px rgba(232, 96, 76, 0.45));
+  }
+</style>
