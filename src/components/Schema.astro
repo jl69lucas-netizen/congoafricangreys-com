@@ -1,0 +1,64 @@
+---
+interface Props {
+  type: 'organization' | 'local-business' | 'product' | 'faq';
+  data?: Record<string, unknown>;
+}
+
+const ORG_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": ["PetStore", "Organization"],
+  "@id": "https://congoafricangreys.com/#organization",
+  "name": "Congo African Greys",
+  "legalName": "C.A.Gs - Congo African Greys For Sale",
+  "url": "https://congoafricangreys.com",
+  "email": "Info@congoafricangreys.com",
+  "telephone": "+19565646067",
+  "priceRange": "$1,500–$3,500",
+  "openingHours": ["Mo-Su 09:00-17:00"],
+  "sameAs": ["https://www.facebook.com/people/Congo-African-grey/61571657313840/"],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "2508 Briaroaks Ct",
+    "addressLocality": "Midland",
+    "addressRegion": "TX",
+    "postalCode": "79707",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "32.00275937134384",
+    "longitude": "-102.17760079202473"
+  },
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://congoafricangreys.com/logo-256.png",
+    "width": 256,
+    "height": 256
+  },
+  "description": "Captive-bred African Grey parrots from a USDA AWA licensed, CITES-compliant family aviary in Midland, Texas. Founded 2014 by Mark and Teri Benjamin."
+};
+
+const { type, data = {} } = Astro.props;
+
+let schema: Record<string, unknown> = ORG_SCHEMA;
+if (type === 'local-business') {
+  schema = { ...ORG_SCHEMA, "@type": ["LocalBusiness", "PetStore"], ...data };
+} else if (type === 'product') {
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "brand": { "@type": "Brand", "name": "Congo African Greys" },
+    ...data
+  };
+} else if (type === 'faq') {
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    ...data
+  };
+}
+
+const schemaString = JSON.stringify(schema);
+---
+
+<script type="application/ld+json" set:html={schemaString} />
