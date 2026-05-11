@@ -1,0 +1,43 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Copy public assets
+        run: |
+          cp site/content/robots.txt public/robots.txt
+          cp site/content/llms.txt public/llms.txt
+          cp site/content/sitemap.xml public/sitemap.xml
+          cp site/content/sitemap_index.xml public/sitemap_index.xml
+          cp site/content/page-sitemap.xml public/page-sitemap.xml
+          cp site/content/local-sitemap.xml public/local-sitemap.xml
+          cp site/content/post-sitemap.xml public/post-sitemap.xml
+          cp site/content/video-sitemap.xml public/video-sitemap.xml
+          cp site/content/f8071f0dbdb94257934a690f4a18fa59.txt public/f8071f0dbdb94257934a690f4a18fa59.txt
+          cp site/content/_headers public/_headers
+          cp site/content/_redirects public/_redirects
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist/ --project-name congoafricangreys --branch production
