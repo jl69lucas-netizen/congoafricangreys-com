@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import CTA from '../../components/CTA.astro';
+import Schema from '../../components/Schema.astro';
+
+const title = "African Greys For Sale With Health Guarantee | Congo African Greys";
+const description = "Every African Grey parrot from Congo African Greys ships with a written health guarantee covering Polyoma, Pacheco's disease, Psittacosis, and PBFD. USDA AWA licensed. Vet health certificate included.";
+const canonical = "https://congoafricangreys.com/african-greys-for-sale-with-health-guarantee/";
+---
+
+<BaseLayout {title} {description} {canonical}>
+  <Header />
+
+  <!-- Hero -->
+  <section class="bg-green text-white py-16 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-3">3-Day Written Guarantee</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">African Greys For Sale With Health Guarantee</h1>
+      <p class="text-white/80 text-lg">Every bird ships with a written health guarantee and avian vet health certificate. If your bird falls ill within 3 days of arrival, we make it right.</p>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <!-- What's Covered -->
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4 text-center">What Our Health Guarantee Covers</h2>
+      <p class="text-stone-600 text-center mb-10 max-w-2xl mx-auto">Our guarantee covers the most serious parrot diseases. If your veterinarian diagnoses any of the following within 3 days of arrival, contact us immediately.</p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          { num: '1', disease: 'Polyoma', desc: 'A viral disease affecting feather development and immune system in young parrots.' },
+          { num: '2', disease: "Pacheco's Disease", desc: 'A highly contagious herpesvirus that can cause rapid liver failure in parrots.' },
+          { num: '3', disease: 'Psittacosis', desc: 'A bacterial infection affecting the respiratory system. Reportable in most U.S. states.' },
+          { num: '4', disease: 'PBFD', desc: 'Psittacine Beak and Feather Disease — a circovirus causing feather and beak abnormalities.' },
+        ].map(item => (
+          <div class="border border-gold/30 rounded-2xl p-6 bg-white shadow-sm text-center">
+            <div class="w-10 h-10 rounded-full bg-green text-white font-bold font-lora flex items-center justify-center mx-auto mb-3 text-lg">{item.num}</div>
+            <h3 class="font-lora font-semibold text-logo-dark text-lg mb-2">{item.disease}</h3>
+            <p class="text-stone-500 text-sm leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Documentation -->
+  <section class="bg-warm-white py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8 text-center">Documentation Included With Every Bird</h2>
+      <div class="grid sm:grid-cols-2 gap-6">
+        {[
+          { icon: '📋', title: 'Avian Vet Health Certificate', body: 'Issued within 10 days of shipment. Required by airlines and confirms your bird is healthy for travel.' },
+          { icon: '🌍', title: 'CITES Captive-Bred Certificate', body: 'CITES Appendix II documentation proving your bird was legally captive-bred — not wild-caught.' },
+          { icon: '🏷️', title: 'Hatch Certificate & Band Number', body: 'Unique identification for your bird. Required for CITES compliance and interstate transport.' },
+          { icon: '🔬', title: 'DNA Sexing Certificate', body: 'Confirms the sex of your bird before purchase. Male or female — guaranteed.' },
+        ].map(doc => (
+          <div class="flex gap-4 p-5 bg-white rounded-xl border border-stone-100 shadow-sm">
+            <span class="text-2xl mt-1">{doc.icon}</span>
+            <div>
+              <h3 class="font-lora font-semibold text-logo-dark text-base mb-1">{doc.title}</h3>
+              <p class="text-stone-500 text-sm leading-relaxed">{doc.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- If Your Bird Falls Ill -->
+  <section class="py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6 text-center">If Your Parrot Becomes Ill</h2>
+      <div class="bg-gold/10 border border-gold/30 rounded-2xl p-8">
+        <ol class="space-y-4 text-stone-700">
+          <li class="flex gap-3"><span class="font-bold text-green shrink-0">Step 1.</span> Contact an avian veterinarian within 24 hours of noticing symptoms.</li>
+          <li class="flex gap-3"><span class="font-bold text-green shrink-0">Step 2.</span> Email us at <a href="mailto:Info@congoafricangreys.com" class="text-green hover:underline">Info@congoafricangreys.com</a> with the diagnosis and vet contact information.</li>
+          <li class="flex gap-3"><span class="font-bold text-green shrink-0">Step 3.</span> We will review the case and work with you on a resolution — replacement or refund depending on circumstances.</li>
+        </ol>
+        <p class="text-stone-500 text-sm mt-6">Guarantee is void if the bird is exposed to other birds, improper diet, or improper cage setup within the first 30 days.</p>
+      </div>
+    </div>
+  </section>
+
+  <Schema type="local-business" />
+  <CTA headline="Every Bird Backed by a Written Guarantee" sub="USDA AWA licensed. CITES documented. Vet-certified. Inquire today." />
+  <Footer />
+</BaseLayout>
