@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import CTA from '../../components/CTA.astro';
+import Schema from '../../components/Schema.astro';
+
+const title = "African Grey Parrot For Sale | Congo African Greys | USA";
+const description = "Captive-bred African Grey parrots for sale from a USDA AWA licensed, CITES-documented breeder. Congo and Timneh variants, $1,500–$3,000. Ships nationwide.";
+const canonical = "https://congoafricangreys.com/african-grey-parrot-for-sale/";
+
+const productSchema = {
+  "name": "African Grey Parrot For Sale",
+  "description": "Captive-bred Congo and Timneh African Grey parrots. CITES documented, DNA sexed, avian vet health certificate included.",
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": "1500",
+    "highPrice": "3000",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "seller": { "@type": "Organization", "name": "Congo African Greys" }
+  },
+  "image": "https://congoafricangreys.com/og-image.png"
+};
+---
+
+<BaseLayout {title} {description} {canonical}>
+  <Header />
+
+  <!-- Hero -->
+  <section class="bg-logo-dark text-cream py-16 px-4">
+    <div class="max-w-5xl mx-auto text-center">
+      <p class="text-gold text-sm font-semibold uppercase tracking-widest mb-3">CITES Captive-Bred &middot; USDA Licensed &middot; Ships Nationwide</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-6">African Grey Parrot For Sale</h1>
+      <p class="text-cream/80 text-lg max-w-2xl mx-auto mb-8">Hand-raised Congo and Timneh African Greys from our family aviary in Midland, Texas. Every bird is DNA sexed, CITES documented, and comes with an avian vet health certificate.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/contact-us/" class="bg-gold text-logo-dark font-semibold px-8 py-4 rounded-full text-lg hover:bg-cream transition-colors">Inquire About Availability</a>
+        <a href="tel:+19565646067" class="border-2 border-gold text-gold font-semibold px-8 py-4 rounded-full text-lg hover:bg-gold hover:text-logo-dark transition-colors">Call (956) 564-6067</a>
+      </div>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <!-- Pricing -->
+  <section class="py-16 px-4">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-center text-logo-dark mb-10">Current Pricing</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          { label: 'Congo Baby (3–6 mo)', price: '$3,000', note: 'Hand-raised, weaned' },
+          { label: 'Congo Adult',         price: '$1,500', note: 'Tame, established personality' },
+          { label: 'Timneh African Grey', price: '$1,200–$2,500', note: 'Calmer, earlier talker' },
+          { label: 'Congo Pair',          price: '$2,700', note: 'Bonded pair' },
+          { label: 'Breeding Pair',       price: '$3,500', note: 'Proven bonded pair, DNA certified' },
+          { label: 'Deposit to Reserve', price: '$200', note: 'Applies to purchase price' },
+        ].map(item => (
+          <div class="border border-gold/30 rounded-xl p-6 bg-white shadow-sm text-center">
+            <p class="text-stone-500 text-sm mb-1">{item.label}</p>
+            <p class="font-lora font-bold text-2xl text-logo-dark mb-1">{item.price}</p>
+            <p class="text-xs text-stone-400">{item.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Schema type="product" data={productSchema} />
+  <Schema type="organization" />
+
+  <CTA headline="Inquire About Available African Greys" />
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import CTA from '../../components/CTA.astro';
+import Schema from '../../components/Schema.astro';
+
+const title = "African Grey Breeding Pair For Sale | $3,500 | Congo African Greys";
+const description = "Proven African Grey breeding pairs for sale. Bonded, DNA-certified, CITES documented. $3,500 per pair. Congo African Grey breeding pairs from our USDA-licensed aviary in Texas.";
+const canonical = "https://congoafricangreys.com/african-grey-breeding-pair-for-sale/";
+
+const productSchema = {
+  "name": "African Grey Breeding Pair For Sale",
+  "description": "Proven bonded African Grey breeding pairs, DNA-certified. CITES Appendix II captive-bred documentation included.",
+  "offers": {
+    "@type": "Offer",
+    "price": "3500",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "seller": { "@type": "Organization", "name": "Congo African Greys" }
+  }
+};
+---
+
+<BaseLayout {title} {description} {canonical}>
+  <Header />
+  <section class="bg-logo-dark text-cream py-16 px-4">
+    <div class="max-w-5xl mx-auto text-center">
+      <p class="text-gold text-sm font-semibold uppercase tracking-widest mb-3">For Experienced Breeders &middot; CITES Compliant &middot; DNA Certified</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-6">African Grey Breeding Pair For Sale</h1>
+      <p class="text-cream/80 text-lg max-w-2xl mx-auto mb-8">Proven bonded Congo African Grey breeding pairs from our USDA AWA licensed aviary. Each pair is DNA-certified and comes with full CITES captive-bred documentation. $3,500 per pair.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/contact-us/" class="bg-gold text-logo-dark font-semibold px-8 py-4 rounded-full text-lg hover:bg-cream transition-colors">Inquire About Breeding Pairs</a>
+        <a href="tel:+19565646067" class="border-2 border-gold text-gold font-semibold px-8 py-4 rounded-full text-lg hover:bg-gold hover:text-logo-dark transition-colors">Call (956) 564-6067</a>
+      </div>
+    </div>
+  </section>
+  <TrustBar />
+  <section class="py-16 px-4 max-w-4xl mx-auto">
+    <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">What's Included With Every Breeding Pair</h2>
+    <ul class="grid sm:grid-cols-2 gap-4 text-stone-600 text-sm">
+      {['Proven bonded pair (not randomly paired)', 'DNA sexing certificate for both birds', 'CITES captive-bred documentation', 'Hatch certificates + band numbers', 'Avian vet health certificates', 'Breeding history if applicable', 'IATA-compliant shipping available', 'Post-placement support from Mark & Teri'].map(item => (
+        <li class="flex items-start gap-2"><span class="text-gold font-bold">&#10003;</span>{item}</li>
+      ))}
+    </ul>
+    <div class="mt-8 p-6 bg-gold/10 border border-gold/30 rounded-xl">
+      <p class="font-semibold text-logo-dark">Price: $3,500 per breeding pair</p>
+      <p class="text-stone-600 text-sm mt-1">$200 deposit reserves your pair. Balance due before shipment or pickup.</p>
+    </div>
+  </section>
+  <Schema type="product" data={productSchema} />
+  <Schema type="organization" />
+  <CTA headline="Inquire About Available Breeding Pairs" />
+  <Footer />
+</BaseLayout>
