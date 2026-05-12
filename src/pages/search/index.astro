@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const title = "Search | CongoAfricanGreys.com";
+const description = "Search the CongoAfricanGreys.com website for African Grey parrots, care guides, shipping info, and more.";
+const canonical = "https://congoafricangreys.com/search/";
+---
+
+<BaseLayout {title} {description} {canonical}>
+  <section class="py-16 px-4 min-h-[60vh]">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="font-lora font-bold text-3xl text-logo-dark mb-8">Search Results</h1>
+
+      <!-- Refine search -->
+      <form action="/search/" method="get" class="flex gap-2 mb-10">
+        <input
+          id="search-refine"
+          name="q"
+          type="search"
+          placeholder="Search CongoAfricanGreys.com…"
+          class="flex-1 border border-stone-300 rounded-full px-4 py-2.5 text-sm text-logo-dark focus:outline-none focus:border-clay focus:ring-1 focus:ring-clay"
+        />
+        <button type="submit" class="bg-clay text-white font-semibold text-sm px-5 py-2.5 rounded-full hover:bg-clay-dk transition-colors">
+          Search
+        </button>
+      </form>
+
+      <div id="results" class="space-y-5">
+        <p class="text-stone-400 text-sm">Loading…</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q') ?? '';
+
+    const refineInput = document.getElementById('search-refine') as HTMLInputElement;
+    if (refineInput && q) refineInput.value = q;
+
+    const resultsEl = document.getElementById('results')!;
+
+    async function runSearch() {
+      if (!q.trim()) {
+        resultsEl.innerHTML = '<p class="text-stone-500 text-sm">Enter a search term above.</p>';
+        return;
+      }
+
+      let pagefind: any;
+      try {
+        pagefind = await import('/pagefind/pagefind.js');
+      } catch {
+        resultsEl.innerHTML = '<p class="text-stone-500 text-sm">Search index not available — try again after the next site deploy.</p>';
+        return;
+      }
+
+      const search = await pagefind.search(q);
+
+      if (!search.results.length) {
+        resultsEl.innerHTML = `<p class="text-stone-500 text-sm">No results found for "<strong>${q}</strong>". Try a shorter or different term.</p>`;
+        return;
+      }
+
+      const items = await Promise.all(search.results.slice(0, 12).map((r: any) => r.data()));
+
+      resultsEl.innerHTML = items.map((item: any) => `
+        <a href="${item.url}" class="block border border-stone-200 rounded-xl p-5 hover:border-clay/50 hover:shadow-sm transition-all group">
+          <div class="font-lora font-semibold text-logo-dark text-lg group-hover:text-clay transition-colors mb-1">
+            ${item.meta?.title ?? item.url}
+          </div>
+          <div class="text-stone-500 text-sm leading-relaxed line-clamp-2">
+            ${item.excerpt ?? ''}
+          </div>
+          <div class="text-clay text-xs mt-2 font-sora">${item.url}</div>
+        </a>
+      `).join('');
+    }
+
+    runSearch();
+  </script>
+</BaseLayout>
