@@ -1,0 +1,78 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  sex: string;
+  age: string;
+  price: string;
+  tag: string;
+  tagType: 'new' | 'talker' | 'family' | 'value';
+  notes: string;
+  hook: string;
+}
+
+const { id, name, sex, age, price, tag, tagType, notes, hook } = Astro.props;
+
+const tagColors: Record<string, string> = {
+  new:    'bg-clay text-white',
+  talker: 'bg-green text-white',
+  family: 'bg-amber-500 text-white',
+  value:  'bg-stone-600 text-white',
+};
+
+const tagClass = tagColors[tagType] ?? tagColors.new;
+---
+
+<article class="bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-100 flex flex-col hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
+  <!-- Photo -->
+  <div class="relative bg-green/10 h-52 overflow-hidden">
+    <img
+      src="/african-grey-hero.webp"
+      alt={`${name} — ${sex} Congo African Grey parrot`}
+      class="w-full h-full object-cover object-center"
+      loading="lazy"
+    />
+    <span class={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${tagClass}`}>
+      {tag}
+    </span>
+    <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-stone-600 text-xs font-sora px-2 py-1 rounded-full">
+      📍 Midland, TX
+    </span>
+  </div>
+
+  <!-- Body -->
+  <div class="p-5 flex flex-col flex-1">
+    <!-- Name + meta row -->
+    <div class="mb-2">
+      <h3 class="font-lora font-bold text-xl text-logo-dark leading-tight">{name}</h3>
+      <p class="text-stone-400 text-xs font-sora mt-0.5">{sex} · {age} · Congo African Grey</p>
+    </div>
+
+    <!-- Personality hook -->
+    <p class="text-stone-700 text-sm font-semibold leading-snug mb-2 italic">"{hook}"</p>
+
+    <!-- Supporting notes -->
+    <p class="text-stone-500 text-sm leading-relaxed mb-4 flex-1">{notes}</p>
+
+    <!-- Trust micro-badges -->
+    <div class="flex flex-wrap gap-1.5 mb-4">
+      <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">CITES Cert</span>
+      <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">DNA Sexed</span>
+      <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">Vet Certified</span>
+    </div>
+
+    <!-- Price + CTA -->
+    <div class="flex items-center justify-between pt-4 border-t border-stone-100">
+      <div>
+        <span class="font-lora font-bold text-2xl text-clay">{price}</span>
+        <span class="text-stone-400 text-xs font-sora ml-1">+ $200 deposit</span>
+      </div>
+      <a
+        href={`/contact-us/?bird=${id}`}
+        class="bg-clay text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-clay-dk transition-colors"
+      >
+        Inquire →
+      </a>
+    </div>
+  </div>
+</article>
