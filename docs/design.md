@@ -36,15 +36,25 @@ Apply this system to every page, component, navbar, and footer rebuild.
 
 ## Color Palette
 
+### ✅ Active Website Colors (confirmed production — do not change)
+
+| Role | Color | Hex | Tailwind token |
+|------|-------|-----|---------------|
+| **Brand Green** — header/nav background, section headers | Forest green | `#2D6A4F` | `bg-green` / `text-green` |
+| **Orange (Clay)** — all CTAs, buttons, active accents, gold text | Terracotta orange | `#e8604c` | `bg-clay` / `text-clay` / `text-gold` |
+| **White / Cream** — page background, card surfaces | Off-white | `#faf7f4` | `bg-warm-white` / `bg-white` |
+
+> **Rule:** `--color-gold` in `src/styles/global.css` must always equal `#e8604c` (same as `--color-clay`). This ensures every `text-gold`, `bg-gold`, `border-gold` renders orange, not yellow.
+
 ```css
 :root {
   /* Brand */
   --clay:       #e8604c;   /* Primary CTA / buttons / active accents */
   --clay-lt:    #f08070;   /* Gradient light / hover */
   --clay-dk:    #c94d3a;   /* Pressed / deep hover */
-  --green:      #2D6A4F;   /* Brand green — info headers, labels, icons */
+  --green:      #2D6A4F;   /* Brand green — header bg, info headers, labels */
   --green-lt:   #eaf4ef;   /* Light green — success bg, tag bg */
-  --gold:       #F4A261;   /* Warm accent — trust pills, secondary CTA */
+  --gold:       #e8604c;   /* ⚠️ Must equal clay — all gold text is orange */
 
   /* Surfaces */
   --cream:      #faf7f4;   /* Page background */
