@@ -81,47 +81,89 @@ const faqSchema = {
 
 <BaseLayout {title} {description} {canonical}>
 
-  <!-- Hero: Image-First -->
-  <section class="bg-green text-white">
-    <!-- Full-bleed image — first thing visitor sees -->
-    <div class="w-full overflow-hidden">
-      <img
-        src="/african-grey-hero.webp"
-        alt="African Grey parrots hand-feeding — captive-bred from Congo African Greys"
-        class="w-full h-[58vh] min-h-72 object-cover object-center"
-        loading="eager"
-        fetchpriority="high"
-      />
-    </div>
+  <!-- Hero: Immersive Full-Bleed -->
+  <section class="relative text-white overflow-hidden md:min-h-[88vh] md:flex md:items-end">
 
-    <!-- Text content below image -->
-    <div class="max-w-5xl mx-auto px-6 py-12 text-center">
-      <p class="inline-flex items-center gap-3 text-gold font-sora text-xs font-semibold uppercase tracking-widest mb-5">
-        <span class="w-8 h-px bg-gold opacity-60 inline-block"></span>
-        Midland, Texas &middot; Family Aviary Since 2014
-        <span class="w-8 h-px bg-gold opacity-60 inline-block"></span>
-      </p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl leading-tight mb-5">
-        African Grey Parrots For Sale<br />
-        <span class="text-gold">Raised with Family. Proven with Trust.</span>
-      </h1>
-      <p class="text-white/75 text-base max-w-2xl mx-auto mb-8 leading-relaxed">
-        Congo and Timneh African Greys from Mark &amp; Teri Benjamin's USDA AWA licensed, CITES-documented home aviary. Hand-raised, DNA sexed, vet-certified. Every bird ships nationwide.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
-        <a href="/african-grey-parrot-for-sale/" class="bg-gold text-white font-semibold px-8 py-3.5 rounded-full hover:opacity-90 transition-opacity">
-          See Available Birds
-        </a>
-        <a href="/contact-us/" class="border-2 border-white/50 text-white font-semibold px-8 py-3.5 rounded-full hover:bg-white/10 hover:border-white transition-all">
-          Inquire Now
-        </a>
-      </div>
-      <!-- Trust badges -->
-      <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/55">
-        <span>🏛️ USDA AWA Licensed</span>
-        <span>📋 CITES Documented</span>
-        <span>🔬 DNA Sexed</span>
-        <span>🩺 Health Cert</span>
+    <!-- Background image: in-flow on mobile (takes vertical space), absolute on desktop -->
+    <img
+      src="/african-grey-hero.webp"
+      alt="African Grey parrots in the Congo African Greys home aviary — captive-bred, CITES documented"
+      class="block w-full object-cover object-center h-[50vh] md:absolute md:inset-0 md:h-full md:w-full"
+      loading="eager"
+      fetchpriority="high"
+    />
+
+    <!-- Desktop-only gradient overlay for text legibility -->
+    <div class="hidden md:block absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/65 pointer-events-none"></div>
+
+    <!-- Content: green rounded card on mobile, transparent overlay on desktop -->
+    <div class="relative z-10 w-full text-center
+      bg-green -mt-8 rounded-t-3xl px-6 pt-10 pb-10
+      md:bg-transparent md:rounded-none md:mt-0
+      md:pb-24 md:px-6">
+      <div class="md:max-w-4xl md:mx-auto">
+
+        <!-- Eyebrow -->
+        <p class="inline-flex items-center gap-3 font-sora text-[11px] font-semibold uppercase tracking-widest text-white/60 mb-5">
+          <span class="hidden md:inline-block w-8 h-px bg-white/40"></span>
+          Midland, Texas &middot; Family Aviary Since 2014
+          <span class="hidden md:inline-block w-8 h-px bg-white/40"></span>
+        </p>
+
+        <!-- H1: two lines for visual impact -->
+        <h1 class="font-lora font-bold leading-none mb-2 text-[2.75rem] sm:text-6xl md:text-7xl lg:text-8xl">
+          African Grey
+        </h1>
+        <p class="font-lora font-bold leading-none mb-6 text-[2.1rem] sm:text-5xl md:text-6xl lg:text-7xl">
+          Parrots For Sale
+        </p>
+
+        <!-- Tagline -->
+        <p class="font-sora font-semibold text-base md:text-xl mb-4 text-white">
+          Raised with Family. <span class="text-clay">Proven with Trust.</span>
+        </p>
+
+        <!-- Description -->
+        <p class="font-sora text-white/70 text-sm md:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+          Congo and Timneh African Greys from Mark &amp; Teri Benjamin's USDA AWA
+          licensed, CITES-documented home aviary. Hand-raised, DNA sexed, vet-certified.
+          Every bird ships nationwide.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+          <a
+            href="/african-grey-parrot-for-sale/"
+            class="bg-clay text-white font-sora font-semibold px-8 py-3.5 rounded-full hover:bg-clay-dk transition-colors text-sm"
+          >
+            See Available Birds
+          </a>
+          <a
+            href="/contact-us/"
+            class="border-2 border-white/50 text-white font-sora font-semibold px-8 py-3.5 rounded-full hover:bg-white/10 hover:border-white transition-all text-sm"
+          >
+            Inquire Now
+          </a>
+        </div>
+
+        <!-- Trust badges: scrollable row on mobile, wrapped on desktop -->
+        <div class="flex gap-2 justify-start sm:justify-center overflow-x-auto pb-1 md:flex-wrap md:overflow-visible"
+          style="-ms-overflow-style: none; scrollbar-width: none;">
+          {[
+            { icon: '🏛️', line1: 'USDA AWA', line2: 'Licensed' },
+            { icon: '📋', line1: 'CITES', line2: 'Documented' },
+            { icon: '🔬', line1: 'DNA', line2: 'Sexed' },
+            { icon: '🩺', line1: 'Health', line2: 'Cert' },
+            { icon: '✅', line1: 'Approved', line2: 'Breeder' },
+          ].map(b => (
+            <div class="flex-shrink-0 border border-white/30 rounded-xl px-3 py-2.5 backdrop-blur-sm bg-white/5 text-center min-w-[72px]">
+              <span class="text-xl block mb-1">{b.icon}</span>
+              <span class="font-sora text-[10px] leading-tight text-white/80 block">{b.line1}</span>
+              <span class="font-sora text-[10px] leading-tight text-white/80 block">{b.line2}</span>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   </section>
