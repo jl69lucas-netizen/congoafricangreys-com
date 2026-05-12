@@ -9,6 +9,38 @@ description: Generates logo design specifications and AI image prompts for Congo
 
 ---
 
+## Active Logo Registry (last updated 2026-05-12)
+
+| Slot | File in `public/` | Source in `assets/brand/` | Display size |
+|------|-------------------|--------------------------|--------------|
+| Header | `cag-header-logo.png` | `NewHeaderLOGO.png` | height: 44px, width: auto |
+| Footer | `cag-footer-logo.png` | `NEW-FOOTER-LOGO.png` | 64×64px |
+| favicon.ico | `favicon.ico` | generated from footer logo | 16+32px multi-size ICO |
+| favicon-32.png | `favicon-32.png` | generated from footer logo | 32×32px |
+| favicon-16.png | `favicon-16.png` | generated from footer logo | 16×16px |
+| apple-touch-icon | `apple-touch-icon.png` | generated from footer logo | 180×180px |
+
+Both source logos are 1024×1024 RGBA PNGs. Components:
+- `src/components/Logo.astro` — header; uses `/cag-header-logo.png`
+- `src/components/Footer.astro` line 11 — footer; uses `/cag-footer-logo.png`
+- `src/layouts/BaseLayout.astro` lines 27–30 — favicon link tags (filenames are stable, no changes needed on logo swap)
+
+### Regenerate favicons after a new footer logo
+
+```bash
+cd /Users/apple/Downloads/CAG && python3 - <<'EOF'
+from PIL import Image
+img = Image.open("public/cag-footer-logo.png").convert("RGBA")
+img.resize((16, 16), Image.LANCZOS).save("public/favicon-16.png")
+img.resize((32, 32), Image.LANCZOS).save("public/favicon-32.png")
+img.resize((180, 180), Image.LANCZOS).save("public/apple-touch-icon.png")
+img.resize((32, 32), Image.LANCZOS).save("public/favicon.ico", format="ICO", sizes=[(16,16),(32,32)])
+print("Done")
+EOF
+```
+
+---
+
 ## Logo Design Specification
 
 ### Format
