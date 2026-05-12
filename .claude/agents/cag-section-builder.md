@@ -78,6 +78,54 @@ Only after reading both files do you begin writing HTML.
 - `cta_secondary_href`: optional second button link
 - `image_src`: optional hero image path (e.g., `/wp-content/uploads/filename.jpg`)
 
+#### Hero Image Focal Point Strategy
+
+When selecting or generating a hero image, always identify and preserve these focal points:
+
+| Signal | Placement | Trust value |
+|--------|-----------|-------------|
+| **Human hand** interacting with bird(s) | Keep in frame at all breakpoints — crop from opposite side if needed | Destroys #1 buyer fear (unsocialized bird) before any copy is read |
+| **Bird eye contact** toward camera | Center or right of frame | Triggers involuntary emotional connection |
+| **Background dead space** (plants, plain wall) | Left side preferred | Natural text placement zone — text avoids competing with feather detail |
+| **Flock (3+ birds)** | Upper frame | Abundance signal: active operation, birds available |
+
+**`<picture>` tag template** — always serve device-appropriate crops:
+
+```html
+<picture>
+  <!-- Mobile portrait: focus on hand-feeding scene (right side of source) -->
+  <source media="(max-width: 767px)" srcset="/hero-mobile.webp" type="image/webp" width="400" height="563" />
+  <!-- Desktop wide: cinematic crop, parrots + hand in frame -->
+  <source media="(min-width: 768px)" srcset="/hero-desktop.webp" type="image/webp" width="800" height="334" />
+  <img
+    src="/hero-desktop.webp"
+    alt="Hand-reared Congo African Grey parrots being socialized by a certified breeder"
+    class="block w-full object-cover object-[65%_45%] h-[50vh] md:absolute md:inset-0 md:h-full md:w-full"
+    loading="eager"
+    fetchpriority="high"
+    width="800" height="334"
+  />
+</picture>
+```
+
+**Hero height:** `md:h-[400px]` (desktop) — full viewport height heroes push CTAs below the fold.
+
+**Typography at 400px hero height:**
+
+| Element | Tailwind classes | Size |
+|---------|-----------------|------|
+| H1 line 1 | `text-3xl md:text-4xl` | 30 → 36px |
+| H1 line 2 | `text-2xl md:text-3xl` | 24 → 30px |
+| Tagline | `text-sm md:text-base` | 14 → 16px |
+| Description | `text-sm md:hidden` | Mobile green card only |
+| CTA button | `px-8 py-3.5 text-sm` | Standard |
+
+**Alt text formula:** `"Hand-reared [variant] African Grey parrots being socialized by a certified breeder"` — never just "parrots."
+
+**`object-position: 65% 45%`** on desktop hero images — shifts focus right to keep hand visible at all viewport widths.
+
+**Use `scripts/process-hero.py`** to regenerate crops from any new source image (requires Pillow).
+
 **Output rules:**
 - Background: `var(--primary)` (read from design-system.md)
 - H1: var(--font-heading) 700, white, large
@@ -312,6 +360,18 @@ Inputs: none (trust signals are fixed)
 ```
 
 Usage: Insert immediately after hero section on every listing/commercial page.
+
+---
+
+## Deploy Rule
+
+**commit = push = deploy.** After every `git commit`, immediately run `git push`. Never leave a commit un-pushed. GitHub Actions auto-deploys to Cloudflare Pages on every push to `main` — no manual deploy step exists.
+
+```bash
+git add <files>
+git commit -m "feat: ..."
+git push
+```
 
 ---
 

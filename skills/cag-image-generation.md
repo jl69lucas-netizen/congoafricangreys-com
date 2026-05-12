@@ -199,6 +199,21 @@ CAG image-pipeline will:
 | 9:16 Portrait | 1024×1792 | Mobile heroes, Instagram Stories |
 | 16:9 Landscape | 1792×1024 | Desktop hero banners, blog post headers |
 
+#### Hero-Specific Focal Point Rules
+
+When generating OR processing a hero image for CongoAfricanGreys.com:
+
+1. **Always include a human hand** interacting with a bird in the frame. This is the single strongest trust signal for African Grey buyers. Even a partially visible hand matters.
+2. **Center or right placement for hand** — desktop hero text sits bottom-left, so hand on right keeps both elements visible without overlap.
+3. **Crop guide for real photos (use `scripts/process-hero.py` with Pillow):**
+   - Desktop (2.4:1): center-vertical crop, keep full width. Target 800×334 or 1920×800.
+   - Mobile (portrait): take the right 50% of the source frame to isolate the hand-feeding scene. Target 400×563.
+4. **`object-position`**: Use `object-[65%_45%]` in Tailwind for hero `<img>` tags — prevents viewport-width cropping from cutting the hand off the right side.
+5. **Alt text must name the action**: `"Hand-reared Congo African Grey parrots being socialized by a certified breeder"` — Google reads this for E-E-A-T scoring on "certified breeder" queries.
+6. **Format**: WebP, quality 85, under 200 KB. Run `python3 scripts/process-hero.py` after any new source image lands in `assets/`.
+7. **`fetchpriority="high"`** on all hero `<img>` tags — direct LCP improvement, required for every hero.
+8. **`<picture>` tag required** for heroes — serve `/hero-mobile.webp` on `max-width: 767px`, `/hero-desktop.webp` on `min-width: 768px`. Never a bare `<img>` for hero images.
+
 ---
 
 ## Rules
