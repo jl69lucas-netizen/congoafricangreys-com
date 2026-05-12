@@ -8,7 +8,12 @@ import mdx from '@astrojs/mdx';
 
 export default defineConfig({
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        external: ['/pagefind/pagefind.js']
+      }
+    }
   },
 
   integrations: [react(), mdx()]
