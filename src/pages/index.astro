@@ -4,18 +4,49 @@ import TrustBar from '../components/TrustBar.astro';
 import CTA from '../components/CTA.astro';
 import Schema from '../components/Schema.astro';
 import FadeIn from '../components/FadeIn';
+import BirdCard from '../components/BirdCard.astro';
 
 const title = "African Grey Parrot Breeder | Congo African Greys | Midland, TX";
 const description = "Captive-bred Congo and Timneh African Grey parrots from Mark & Teri Benjamin's USDA AWA licensed family aviary in Midland, Texas. CITES documented, DNA sexed, health guaranteed. Ships nationwide.";
 const canonical = "https://congoafricangreys.com/";
 
 const birds = [
-  { id: 'amie',  name: 'Amie',  sex: 'Female', age: '11 mo',  price: '$2,700', tag: 'New Arrival',  notes: 'Premium hand-raised female, advanced training' },
-  { id: 'joys',  name: 'Joys',  sex: 'Female', age: '2 yr',   price: '$2,200', tag: 'Top Talker',   notes: 'Vocal female, actively learning new words' },
-  { id: 'roys',  name: 'Roys',  sex: 'Male',   age: '3 yr',   price: '$2,000', tag: 'Family Bird',  notes: 'Energetic male, great with families' },
-  { id: 'carl',  name: 'Carl',  sex: 'Male',   age: '1 yr',   price: '$2,500', tag: 'Talking Now',  notes: 'Highly interactive male, vocabulary developing fast' },
-  { id: 'loti',  name: 'Loti',  sex: 'Male',   age: '5 yr',   price: '$1,800', tag: 'Calm & Social', notes: 'Mature male, apartment-friendly, deeply bonded' },
-  { id: 'bery',  name: 'Bery',  sex: 'Female', age: '4 yr',   price: '$1,600', tag: 'Best Value',   notes: 'Gentle female, easy temperament, great starter bird' },
+  {
+    id: 'amie',  name: 'Amie',  sex: 'Female', age: '11 mo',  price: '$2,700',
+    tag: 'New Arrival',   tagType: 'new'    as const,
+    hook: 'She mimics your laugh before you finish it.',
+    notes: 'Premium hand-raised female, advanced training. Responds to her name and several household words already.',
+  },
+  {
+    id: 'joys',  name: 'Joys',  sex: 'Female', age: '2 yr',   price: '$2,200',
+    tag: 'Top Talker',    tagType: 'talker' as const,
+    hook: 'Every morning she says "good morning" before you do.',
+    notes: "Vocal female actively learning new phrases. Exceptional recall — she won't let you forget her.",
+  },
+  {
+    id: 'roys',  name: 'Roys',  sex: 'Male',   age: '3 yr',   price: '$2,000',
+    tag: 'Family Bird',   tagType: 'family' as const,
+    hook: 'Energetic, curious, and impossible to ignore.',
+    notes: "Great with kids and activity. Thrives in a lively home where there's always something to watch.",
+  },
+  {
+    id: 'carl',  name: 'Carl',  sex: 'Male',   age: '1 yr',   price: '$2,500',
+    tag: 'Talking Now',   tagType: 'talker' as const,
+    hook: 'His vocabulary is growing faster than we can count.',
+    notes: 'Highly interactive male at the peak of language acquisition. Bond now and shape how he talks.',
+  },
+  {
+    id: 'loti',  name: 'Loti',  sex: 'Male',   age: '5 yr',   price: '$1,800',
+    tag: 'Calm & Social', tagType: 'family' as const,
+    hook: 'Apartment-ready. The bird your neighbours will want to meet.',
+    notes: 'Mature, deeply bonded male. Low-drama, high-affection. Adjusts quickly to new homes.',
+  },
+  {
+    id: 'bery',  name: 'Bery',  sex: 'Female', age: '4 yr',   price: '$1,600',
+    tag: 'Best Value',    tagType: 'value'  as const,
+    hook: 'Gentle, easy, and the bird first-time owners dream of.',
+    notes: 'Soft temperament, easy to handle. The best first African Grey — and a steal at this price.',
+  },
 ];
 
 const faqSchema = {
@@ -101,54 +132,27 @@ const faqSchema = {
   <section class="py-16 px-4 bg-warm-white">
     <div class="max-w-7xl mx-auto">
       <div class="flex items-end justify-between mb-10 gap-4 flex-wrap">
-        <div>
+        <div class="border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">This Week's Aviary</p>
           <h2 class="font-lora font-bold text-3xl text-logo-dark">Birds Available Right Now</h2>
-          <p class="text-stone-500 mt-2 max-w-md text-sm leading-relaxed">Every bird is hand-fed, DNA-sexed, CITES-documented, and vet-certified before reservation. We list real availability — no waitlist tricks.</p>
+          <p class="text-stone-500 mt-2 max-w-md text-sm leading-relaxed">Real birds. Real availability. Every one is hand-fed, DNA-sexed, CITES-documented, and vet-certified — no waitlist tricks, no bait listings.</p>
         </div>
         <a href="/african-grey-parrot-for-sale/" class="text-sm font-semibold text-clay hover:text-clay-dk border border-clay/40 hover:border-clay px-4 py-2 rounded-full transition-colors whitespace-nowrap">
-          View all birds &rarr;
+          View all birds →
         </a>
       </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {birds.map(bird => (
-          <article class="bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-100 flex flex-col hover:shadow-md transition-shadow">
-            <!-- Photo placeholder -->
-            <div class="relative bg-green/10 h-48 overflow-hidden">
-              <img
-                src="/african-grey-hero.webp"
-                alt={`${bird.name} — ${bird.sex} Congo African Grey parrot`}
-                class="w-full h-full object-cover object-center"
-                loading="lazy"
-              />
-              <span class="absolute top-3 left-3 bg-clay text-white text-xs font-semibold px-3 py-1 rounded-full">
-                {bird.tag}
-              </span>
-            </div>
-            <!-- Card body -->
-            <div class="p-5 flex flex-col flex-1">
-              <div class="flex items-baseline justify-between mb-1">
-                <h3 class="font-lora font-bold text-xl text-logo-dark">{bird.name}</h3>
-                <span class="text-stone-400 text-xs font-sora">📍 Midland, TX</span>
-              </div>
-              <p class="text-stone-500 text-xs font-sora mb-3">{bird.sex} · {bird.age} · Congo African Grey</p>
-              <p class="text-stone-600 text-sm leading-relaxed mb-4 flex-1">{bird.notes}</p>
-              <div class="flex items-center justify-between mt-auto pt-4 border-t border-stone-100">
-                <span class="font-lora font-bold text-2xl text-clay">{bird.price}</span>
-                <a
-                  href={`/contact-us/?bird=${bird.id}`}
-                  class="bg-clay text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-clay-dk transition-colors"
-                >
-                  Inquire
-                </a>
-              </div>
-            </div>
-          </article>
+          <BirdCard {...bird} />
         ))}
       </div>
-      <p class="text-center text-stone-400 text-xs mt-8 font-sora">
-        All birds include CITES captive-bred certificate · DNA sex certificate · Avian vet health certificate · Hatch certificate
-      </p>
+      <div class="flex flex-wrap justify-center gap-2 mt-8">
+        {['CITES Captive-Bred Cert', 'DNA Sex Certificate', 'Avian Vet Health Cert', 'Hatch Certificate'].map(badge => (
+          <span class="text-xs font-sora text-green bg-green/8 border border-green/20 px-3 py-1 rounded-full">
+            ✓ {badge}
+          </span>
+        ))}
+      </div>
     </div>
   </section>
 
