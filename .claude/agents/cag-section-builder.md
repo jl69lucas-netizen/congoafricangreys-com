@@ -110,6 +110,14 @@ When selecting or generating a hero image, always identify and preserve these fo
 
 **Hero height:** `md:h-[480px]` (desktop) — full viewport height heroes push CTAs below the fold. 480px fits eyebrow + H1 (2 lines) + tagline + description paragraph + CTAs + badges with comfortable spacing. Do NOT hide the description on desktop (`md:hidden` breaks the content flow).
 
+**Desktop layout — LEFT-ALIGNED, not centered:**
+- Section: `md:flex md:items-end md:justify-start`
+- Content div: `md:w-auto md:text-left md:pl-14`
+- Inner div: `md:max-w-lg` (no `md:mx-auto`)
+- Rationale: text sits over the plant background (left = dead space), birds + hand visible on the right
+- Gradient: left-to-right `from-black/70 via-black/40 to-black/5` + subtle bottom lift `from-black/30`
+- Never use centered text (`text-center`, `md:mx-auto`) on a desktop hero with a directional image
+
 **Typography at 480px hero height:**
 
 | Element | Tailwind classes | Size |
