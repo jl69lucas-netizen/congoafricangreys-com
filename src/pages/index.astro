@@ -82,16 +82,34 @@ const faqSchema = {
 <BaseLayout {title} {description} {canonical}>
 
   <!-- Hero: Immersive Full-Bleed -->
-  <section class="relative text-white overflow-hidden md:min-h-[88vh] md:flex md:items-end">
+  <section class="relative text-white overflow-hidden md:h-[400px] md:flex md:items-end">
 
-    <!-- Background image: in-flow on mobile (takes vertical space), absolute on desktop -->
-    <img
-      src="/african-grey-hero.webp"
-      alt="African Grey parrots in the Congo African Greys home aviary — captive-bred, CITES documented"
-      class="block w-full object-cover object-center h-[50vh] md:absolute md:inset-0 md:h-full md:w-full"
-      loading="eager"
-      fetchpriority="high"
-    />
+    <!-- Background image: responsive crops per breakpoint, focal-point optimised -->
+    <picture>
+      <source
+        media="(max-width: 767px)"
+        srcset="/hero-mobile.webp"
+        type="image/webp"
+        width="400"
+        height="563"
+      />
+      <source
+        media="(min-width: 768px)"
+        srcset="/hero-desktop.webp"
+        type="image/webp"
+        width="800"
+        height="334"
+      />
+      <img
+        src="/hero-desktop.webp"
+        alt="Hand-reared Congo African Grey parrots being socialized by a certified breeder"
+        class="block w-full object-cover object-[65%_45%] h-[50vh] md:absolute md:inset-0 md:h-full md:w-full"
+        loading="eager"
+        fetchpriority="high"
+        width="800"
+        height="334"
+      />
+    </picture>
 
     <!-- Desktop-only gradient overlay for text legibility -->
     <div class="hidden md:block absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/65 pointer-events-none"></div>
@@ -100,7 +118,7 @@ const faqSchema = {
     <div class="relative z-10 w-full text-center
       bg-green -mt-8 rounded-t-3xl px-6 pt-10 pb-10
       md:bg-transparent md:rounded-none md:mt-0
-      md:pb-24 md:px-6">
+      md:pb-8 md:px-6">
       <div class="md:max-w-4xl md:mx-auto">
 
         <!-- Eyebrow -->
@@ -111,10 +129,10 @@ const faqSchema = {
         </p>
 
         <!-- H1: two lines for visual impact -->
-        <h1 class="font-lora font-bold leading-none mb-2 text-[2.75rem] sm:text-6xl md:text-7xl lg:text-8xl">
+        <h1 class="font-lora font-bold leading-none mb-2 text-3xl sm:text-4xl md:text-4xl">
           African Grey
         </h1>
-        <p class="font-lora font-bold leading-none mb-6 text-[2.1rem] sm:text-5xl md:text-6xl lg:text-7xl">
+        <p class="font-lora font-bold leading-none mb-5 text-2xl sm:text-3xl md:text-3xl">
           Parrots For Sale
         </p>
 
@@ -124,7 +142,7 @@ const faqSchema = {
         </p>
 
         <!-- Description -->
-        <p class="font-sora text-white/70 text-sm md:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+        <p class="font-sora text-white/70 text-sm md:hidden max-w-2xl mx-auto mb-6 leading-relaxed">
           Congo and Timneh African Greys from Mark &amp; Teri Benjamin's USDA AWA
           licensed, CITES-documented home aviary. Hand-raised, DNA sexed, vet-certified.
           Every bird ships nationwide.
