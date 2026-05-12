@@ -210,7 +210,7 @@ When generating OR processing a hero image for CongoAfricanGreys.com:
    - Mobile (portrait): take the right 50% of the source frame to isolate the hand-feeding scene. Target 400×563.
 4. **`object-position`**: Use `object-[65%_45%]` in Tailwind for hero `<img>` tags — prevents viewport-width cropping from cutting the hand off the right side.
 5. **Alt text must name the action**: `"Hand-reared Congo African Grey parrots being socialized by a certified breeder"` — Google reads this for E-E-A-T scoring on "certified breeder" queries.
-6. **Format**: WebP, quality 85, under 200 KB. Run `python3 scripts/process-hero.py` after any new source image lands in `assets/`.
+6. **Format**: WebP, quality 85, under 200 KB. Run `python3 scripts/process-hero.py` after any new source image lands in `assets/`. Hero section height is `md:h-[480px]` — sized to fit description paragraph; do not reduce below this or description will be cut.
 7. **`fetchpriority="high"`** on all hero `<img>` tags — direct LCP improvement, required for every hero.
 8. **`<picture>` tag required** for heroes — serve `/hero-mobile.webp` on `max-width: 767px`, `/hero-desktop.webp` on `min-width: 768px`. Never a bare `<img>` for hero images.
 

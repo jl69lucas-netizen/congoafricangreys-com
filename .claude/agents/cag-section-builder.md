@@ -108,16 +108,16 @@ When selecting or generating a hero image, always identify and preserve these fo
 </picture>
 ```
 
-**Hero height:** `md:h-[400px]` (desktop) — full viewport height heroes push CTAs below the fold.
+**Hero height:** `md:h-[480px]` (desktop) — full viewport height heroes push CTAs below the fold. 480px fits eyebrow + H1 (2 lines) + tagline + description paragraph + CTAs + badges with comfortable spacing. Do NOT hide the description on desktop (`md:hidden` breaks the content flow).
 
-**Typography at 400px hero height:**
+**Typography at 480px hero height:**
 
 | Element | Tailwind classes | Size |
 |---------|-----------------|------|
 | H1 line 1 | `text-3xl md:text-4xl` | 30 → 36px |
 | H1 line 2 | `text-2xl md:text-3xl` | 24 → 30px |
 | Tagline | `text-sm md:text-base` | 14 → 16px |
-| Description | `text-sm md:hidden` | Mobile green card only |
+| Description | `text-sm` (always visible) | 14px — keep on desktop |
 | CTA button | `px-8 py-3.5 text-sm` | Standard |
 
 **Alt text formula:** `"Hand-reared [variant] African Grey parrots being socialized by a certified breeder"` — never just "parrots."
