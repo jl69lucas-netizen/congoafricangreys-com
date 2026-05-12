@@ -27,8 +27,8 @@ const current = Astro.url.pathname;
           <a
             href={link.href}
             class:list={[
-              'transition-colors hover:text-gold',
-              current === link.href ? 'text-gold underline underline-offset-4' : 'text-white/90'
+              'transition-colors hover:text-clay',
+              current === link.href ? 'text-clay underline underline-offset-4' : 'text-white/90'
             ]}
           >
             {link.label}
@@ -36,11 +36,11 @@ const current = Astro.url.pathname;
         ))}
       </nav>
 
-      <!-- Search icon + Inquire Now CTA -->
+      <!-- Search icon + Inquire Now CTA (desktop/tablet) -->
       <div class="hidden sm:flex items-center gap-2">
-        <button id="search-btn" aria-label="Search" class="text-white/80 hover:text-gold p-2 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7 7 0 1116.65 16.65z"/>
+        <button id="search-btn" aria-label="Search" class="text-white hover:text-clay p-2 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7 7 0 1116.65 16.65z"/>
           </svg>
         </button>
         <a
@@ -51,25 +51,48 @@ const current = Astro.url.pathname;
         </a>
       </div>
 
-      <!-- Mobile menu -->
+      <!-- Mobile hamburger -->
       <details class="lg:hidden relative">
-        <summary class="list-none cursor-pointer text-white/90 hover:text-gold p-2">
+        <summary class="list-none cursor-pointer text-white/90 hover:text-clay p-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </summary>
-        <nav class="absolute right-0 top-10 bg-green border border-white/20 rounded-lg shadow-xl p-4 flex flex-col gap-3 min-w-52">
-          {nav.map(link => (
-            <a href={link.href} class="text-white/90 hover:text-gold text-sm font-medium">
+        <nav class="absolute right-0 top-10 bg-green border border-white/20 rounded-lg shadow-xl p-4 flex flex-col gap-3 min-w-56">
+          {nav.map(link => link.href === '/contact-us/' ? (
+            <a
+              href={link.href}
+              class="bg-clay text-white font-semibold text-sm px-4 py-2 rounded-full text-center hover:bg-clay-dk transition-colors"
+            >
+              {link.label}
+            </a>
+          ) : (
+            <a href={link.href} class="text-white/90 hover:text-clay text-sm font-medium">
               {link.label}
             </a>
           ))}
+          <!-- Search bar inside mobile dropdown -->
+          <form action="https://www.google.com/search" method="get" class="pt-2 border-t border-white/20">
+            <input type="hidden" name="sitesearch" value="congoafricangreys.com" />
+            <div class="flex gap-2">
+              <input
+                name="q"
+                type="search"
+                placeholder="Search site…"
+                class="flex-1 bg-white/10 border border-white/30 text-white placeholder:text-white/50 rounded-full px-3 py-1.5 text-xs focus:outline-none focus:border-clay"
+              />
+              <button type="submit" class="bg-clay text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-clay-dk transition-colors">
+                Go
+              </button>
+            </div>
+          </form>
         </nav>
       </details>
 
     </div>
   </div>
-  <!-- Search overlay (hidden by default) -->
+
+  <!-- Search overlay (desktop/tablet — hidden by default) -->
   <div id="search-overlay" class="hidden border-t border-white/20 bg-green px-4 py-3">
     <form action="https://www.google.com/search" method="get" class="max-w-2xl mx-auto flex gap-2">
       <input type="hidden" name="sitesearch" value="congoafricangreys.com" />
@@ -78,7 +101,7 @@ const current = Astro.url.pathname;
         name="q"
         type="search"
         placeholder="Search CongoAfricanGreys.com…"
-        class="flex-1 bg-white/10 border border-white/30 text-white placeholder:text-white/50 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-gold focus:bg-white/20"
+        class="flex-1 bg-white/10 border border-white/30 text-white placeholder:text-white/50 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-clay focus:bg-white/20"
       />
       <button type="submit" class="bg-clay text-white font-semibold text-sm px-5 py-2 rounded-full hover:bg-clay-dk transition-colors">
         Search
