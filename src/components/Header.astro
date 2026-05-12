@@ -18,8 +18,21 @@ const current = Astro.url.pathname;
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
 
-      <!-- Logo -->
-      <Logo />
+      <!-- Left: Logo + Desktop search as a unit -->
+      <div class="flex items-center gap-3">
+        <Logo />
+        <form action="/search/" method="get" class="hidden lg:flex gap-2">
+          <input
+            name="q"
+            type="search"
+            placeholder="Search…"
+            class="w-40 bg-white/10 border border-white/30 text-white placeholder:text-white/50 rounded-full px-3 py-1.5 text-xs focus:outline-none focus:border-clay"
+          />
+          <button type="submit" class="bg-clay text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-clay-dk transition-colors">
+            Go
+          </button>
+        </form>
+      </div>
 
       <!-- Desktop nav -->
       <nav class="hidden lg:flex items-center gap-5 text-sm font-sora font-medium">
@@ -36,26 +49,13 @@ const current = Astro.url.pathname;
         ))}
       </nav>
 
-      <!-- Search + Inquire Now CTA (desktop/tablet) -->
-      <div class="hidden sm:flex items-center gap-2">
-        <form action="/search/" method="get" class="flex gap-2">
-          <input
-            name="q"
-            type="search"
-            placeholder="Search…"
-            class="w-44 bg-white/10 border border-white/30 text-white placeholder:text-white/50 rounded-full px-3 py-1.5 text-xs focus:outline-none focus:border-clay"
-          />
-          <button type="submit" class="bg-clay text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-clay-dk transition-colors">
-            Go
-          </button>
-        </form>
-        <a
-          href="/contact-us/"
-          class="inline-flex items-center gap-2 bg-clay text-white font-semibold text-sm px-5 py-2 rounded-full hover:bg-clay-dk transition-colors"
-        >
-          Inquire Now
-        </a>
-      </div>
+      <!-- Inquire Now CTA (desktop/tablet only) -->
+      <a
+        href="/contact-us/"
+        class="hidden sm:inline-flex items-center gap-2 bg-clay text-white font-semibold text-sm px-5 py-2 rounded-full hover:bg-clay-dk transition-colors"
+      >
+        Inquire Now
+      </a>
 
       <!-- Mobile inline search bar (between logo and hamburger) -->
       <form action="/search/" method="get" class="flex lg:hidden flex-1 mx-3">
