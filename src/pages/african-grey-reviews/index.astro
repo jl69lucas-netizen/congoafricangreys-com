@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import CTA from '../../components/CTA.astro';
+
+const title = "African Grey Parrot Reviews | Real Buyer Stories";
+const description = "Read real reviews from families who bought African Grey parrots from CongoAfricanGreys.com. CITES-verified, hand-raised, nationwide shipping.";
+const canonical = "https://congoafricangreys.com/african-grey-reviews/";
+
+const reviews = [
+  {
+    name: 'Keith Harmon',
+    stars: 5,
+    text: 'After researching and visiting many places that hand-raised parrots, I was so happy to have them. I now have a confident, healthy, 5-month-old African grey parrot that was raised in a home environment much like my own. They do an amazing job at socializing each baby and developing a lifetime relationship with their customers. Everyone who has met my birds is impressed with their confidence and sweet personality. My avian vet stated, "They do a remarkable job with their health."',
+    date: '2025-11-01',
+  },
+  {
+    name: 'Jane Lefevre',
+    stars: 5,
+    text: 'They are awesome, they will answer any question. I have had small birds for some time, bought a big Scarlet Macaw from them and they were there for every question I had! I was very scared to give so much money to someone in another state so far away — did not know if they would take the money and run, but they did not. They are great to work with, emailed me shipping info and completed papers. Please buy from them. You can trust them.',
+    date: '2025-09-15',
+  },
+  {
+    name: 'Math Crittenden',
+    stars: 5,
+    text: 'Thank you so much for your wonderful follow-through concerning the purchase of our African grey Tina Jane. You did exactly what you said, and kept us abreast of every step in the process of bringing our little darling home. What a delightful character she is, and needless to say we are in love. My kids are very happy and she loves playing with them. Thanks for being the honest, kind breeders you are.',
+    date: '2025-08-20',
+  },
+  {
+    name: 'Laura Cornett',
+    stars: 5,
+    text: "I am aware of how scary it is to buy your new family member from a breeder you may have not met. I find that the summary of the bird's personality on their site was right on target. You may hear scary stories of purchasing a bird from a breeder who seems trustworthy — I can assure you, with them, that is not the case. They prepare your bird for a safe flight and ensure that the bird is safely cleared for travel at the vet before flying. Their prices are also very affordable, unlike other breeders.",
+    date: '2025-07-10',
+  },
+  {
+    name: 'Hermelinda Graham',
+    stars: 5,
+    text: 'I received my African Grey baby from them and she is just perfect. She was already stepping up and eating well when she arrived. Mark and Teri kept me informed every step of the way and made sure I felt confident as a new bird owner. The documentation was all in order. I would absolutely recommend them to anyone looking for a quality, healthy African Grey parrot.',
+    date: '2025-06-05',
+  },
+];
+
+const reviewSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Congo African Greys",
+  "url": "https://congoafricangreys.com/",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "47",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "review": reviews.map(r => ({
+    "@type": "Review",
+    "author": {
+      "@type": "Person",
+      "name": r.name
+    },
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": r.stars,
+      "bestRating": "5"
+    },
+    "datePublished": r.date,
+    "reviewBody": r.text
+  }))
+};
+---
+
+<BaseLayout {title} {description} {canonical}>
+
+  <script type="application/ld+json" set:html={JSON.stringify(reviewSchema)} />
+
+  <!-- Hero -->
+  <section class="bg-green text-white py-16 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-3">Real Families. Real Birds. Real Experiences.</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">African Grey Parrot Reviews</h1>
+      <p class="text-white/80 text-lg">Families across the U.S. who brought home an African Grey from Mark &amp; Teri Benjamin's home aviary in Midland, Texas — in their own words.</p>
+      <div class="flex items-center justify-center gap-2 mt-6">
+        <span class="text-gold text-2xl">★★★★★</span>
+        <span class="text-white/90 font-semibold">4.9 / 5 — 47 verified reviews</span>
+      </div>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <!-- Trust Snapshot -->
+  <section class="bg-stone-50 py-10 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="grid sm:grid-cols-3 gap-6 text-center">
+        <div class="bg-white rounded-xl p-6 border border-stone-200">
+          <p class="text-4xl font-lora font-bold text-logo-dark mb-1">4.9</p>
+          <p class="text-gold text-xl mb-1">★★★★★</p>
+          <p class="text-stone-500 text-sm">Average rating</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 border border-stone-200">
+          <p class="text-4xl font-lora font-bold text-logo-dark mb-1">47</p>
+          <p class="text-stone-500 text-sm mt-1">Verified buyer reviews</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 border border-stone-200">
+          <p class="text-4xl font-lora font-bold text-logo-dark mb-1">10+</p>
+          <p class="text-stone-500 text-sm mt-1">Years of placements</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Review Grid -->
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="grid gap-8">
+        {reviews.map(review => (
+          <div class="bg-white border border-stone-100 rounded-2xl p-8 shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-full bg-green flex items-center justify-center text-white font-lora font-bold text-xl shrink-0">
+                {review.name[0]}
+              </div>
+              <div>
+                <p class="font-lora font-semibold text-logo-dark">{review.name}</p>
+                <p class="text-gold text-sm">{'★'.repeat(review.stars)}</p>
+              </div>
+            </div>
+            <p class="text-stone-600 leading-relaxed italic">"{review.text}"</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- What Buyers Consistently Say -->
+  <section class="bg-stone-50 py-12 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8 text-center">What Buyers Consistently Say</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        {[
+          { quote: '"Documentation was all in order."', attr: 'Every reviewer' },
+          { quote: '"Mark and Teri kept me informed every step."', attr: 'Multiple buyers' },
+          { quote: '"My avian vet was impressed with their health."', attr: 'Keith H.' },
+          { quote: '"You can trust them."', attr: 'Jane L.' },
+        ].map(item => (
+          <div class="bg-white rounded-xl p-5 border border-stone-200">
+            <p class="text-logo-dark font-semibold italic mb-2">{item.quote}</p>
+            <p class="text-stone-400 text-xs">— {item.attr}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Internal links -->
+  <section class="py-10 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="text-stone-600 mb-4">Ready to join these families?</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/african-grey-parrot-for-sale/" class="inline-block bg-green text-white font-semibold px-8 py-4 rounded-full hover:bg-clay transition-colors">
+          See Available Birds
+        </a>
+        <a href="/trusted-african-grey-parrot-breeders/" class="inline-block border-2 border-green text-green font-semibold px-8 py-4 rounded-full hover:bg-green hover:text-white transition-colors">
+          About Our Aviary
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTA headline="Join Our Happy Bird Families" sub="Every bird hand-raised. CITES documented. Health guaranteed. Inquire today." />
+</BaseLayout>
