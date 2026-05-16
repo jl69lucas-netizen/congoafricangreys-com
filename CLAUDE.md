@@ -21,7 +21,7 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 ## Reference Docs
 - `docs/reference/project-context.md` — **MASTER CONTEXT: read this at the start of every session**
 - `docs/reference/site-overview.md` — site structure, page inventory, target states
-- `docs/reference/seo-rules.md` — SEO rules, keyword strategy, quick wins
+- `docs/reference/seo-rules.md` — **MASTER SEO RULES (50 rules): read this before creating or modifying any page**
 - `docs/reference/domain-knowledge.md` — variants, trust signals, health conditions, PAA questions
 - `docs/reference/top-pages.md` — traffic baseline (populate after GSC API connected)
 - `data/competitors.json` — 30-competitor registry (source of truth)
