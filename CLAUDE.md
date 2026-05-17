@@ -11,6 +11,7 @@
 - **Same content** — Redesigns never add or remove page content. Visual layer only.
 - **Confidence Gate** — ≥97% confidence required before writing any site file. If below: stop, state uncertainty, ask.
 - **CITES Awareness** — African Greys are CITES Appendix II. Never imply illegal trade. All birds captive-bred with proper documentation.
+- **src/pages is deployed** — All HTML page edits MUST go to `src/pages/<slug>/index.html` or `src/pages/<slug>/index.astro`. The `site/content/` directory is a staging area; it does NOT get built directly. If both exist, `src/pages/` is authoritative.
 
 ## Site Model
 Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple/Downloads/MFS/`).
