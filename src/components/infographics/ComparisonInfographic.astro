@@ -1,0 +1,84 @@
+---
+interface Props {
+  title: string;
+  height?: number;
+  leftLabel: string;
+  leftPrice?: string;
+  leftItems: Array<{ icon: string; title: string; desc: string }>;
+  rightLabel: string;
+  rightPrice?: string;
+  rightItems: Array<{ icon: string; title: string; desc: string }>;
+  footerCta: string;
+  footerSub?: string;
+}
+
+const {
+  title,
+  height = 320,
+  leftLabel,
+  leftPrice,
+  leftItems,
+  rightLabel,
+  rightPrice,
+  rightItems,
+  footerCta,
+  footerSub,
+} = Astro.props;
+
+const clampedHeight = Math.min(350, Math.max(300, height));
+---
+
+<div
+  aria-label={title}
+  style={`display:flex;flex-direction:column;height:${clampedHeight}px;min-height:300px;max-height:350px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.14);border:1px solid rgba(0,0,0,0.08);`}
+>
+  <div style="background:#1a1a2e;color:#fff;padding:9px 16px;text-align:center;font-family:'Lora',serif;font-size:13px;font-weight:700;flex-shrink:0;line-height:1.3;">
+    {title}
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden;min-height:0;">
+
+    <div style="background:#fff5f5;display:flex;flex-direction:column;border-right:2px solid #e5e7eb;">
+      <div style="background:#fee2e2;color:#991b1b;padding:7px 10px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;flex-shrink:0;border-bottom:1px solid rgba(0,0,0,0.08);">
+        <span style="font-size:14px;">🚩</span>
+        <div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:0.03em;">{leftLabel}</div>
+          {leftPrice && <div style="font-size:13px;font-weight:800;color:#dc2626;">{leftPrice}</div>}
+        </div>
+      </div>
+      {leftItems.map((item) => (
+        <div style="padding:5px 10px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:flex-start;gap:7px;flex:1;">
+          <span style="font-size:16px;flex-shrink:0;width:20px;text-align:center;">{item.icon}</span>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.2;">{item.title}</div>
+            <div style="font-size:9px;color:#555;line-height:1.3;margin-top:1px;">{item.desc}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div style="background:#f0faf4;display:flex;flex-direction:column;">
+      <div style="background:#dcfce7;color:#166534;padding:7px 10px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;flex-shrink:0;border-bottom:1px solid rgba(0,0,0,0.08);">
+        <span style="font-size:14px;">✅</span>
+        <div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:0.03em;">{rightLabel}</div>
+          {rightPrice && <div style="font-size:13px;font-weight:800;color:#16a34a;">{rightPrice}</div>}
+        </div>
+      </div>
+      {rightItems.map((item) => (
+        <div style="padding:5px 10px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:flex-start;gap:7px;flex:1;">
+          <span style="font-size:16px;flex-shrink:0;width:20px;text-align:center;">{item.icon}</span>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.2;">{item.title}</div>
+            <div style="font-size:9px;color:#555;line-height:1.3;margin-top:1px;">{item.desc}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div style="background:#2D6A4F;color:#fff;padding:8px 16px;text-align:center;font-size:11px;font-weight:800;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:8px;">
+    <span>{footerCta}</span>
+    {footerSub && <span style="opacity:0.75;font-weight:400;font-size:9px;">{footerSub}</span>}
+  </div>
+</div>
