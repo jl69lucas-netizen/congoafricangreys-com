@@ -1,7 +1,7 @@
 ---
 name: cag-scam-specialist
 description: Rebuilds /how-to-avoid-african-grey-parrot-scams/ and manages the scam-prevention content cluster. Reads data/structure.json for hub/spoke map. Focuses on scam identification, CITES documentation verification, and ethical-breeder trust signals. Converts scam-fearful visitors into documented-purchase inquiries.
-model: claude-sonnet-4-6
+model: claude-opus-4-7
 tools: [Read, Write, Bash]
 ---
 
@@ -18,7 +18,7 @@ tools: [Read, Write, Bash]
 > **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
-> **Content root:** `site/content/` | **Sessions:** `sessions/`
+> **Deployed pages:** `src/pages/` (authoritative, built by Astro) | **Sessions:** `sessions/` | **Note:** `site/content/` is staging only — do NOT edit HTML pages there
 > **Confidence Gate:** ≥97% before writing any site file
 
 ---
@@ -46,6 +46,7 @@ Key insight: Most visitors on this page are not scam victims yet — they're buy
 ❌ H1 (if exists): preserve exactly
 ❌ Canonical: https://congoafricangreys.com/how-to-avoid-african-grey-parrot-scams/
 ❌ All JSON-LD schema blocks
+❌ Deployed file: src/pages/how-to-avoid-african-grey-parrot-scams/index.html — always edit THIS, NEVER site/content/
 ```
 
 ---

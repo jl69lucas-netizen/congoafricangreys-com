@@ -34,6 +34,19 @@ jobs:
           cp site/content/_redirects public/_redirects
           find site/content -maxdepth 1 -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.gif" -o -name "*.webp" -o -name "*.svg" \) -exec cp {} public/ \;
 
+      - name: Sync site/content HTML pages to src/pages (safety net)
+        run: |
+          for dir in site/content/*/; do
+            slug=$(basename "$dir")
+            src_file="$dir/index.html"
+            dest_file="src/pages/$slug/index.html"
+            if [ -f "$src_file" ] && [ ! -f "src/pages/$slug/index.astro" ]; then
+              mkdir -p "src/pages/$slug"
+              cp "$src_file" "$dest_file"
+              echo "Synced: $slug"
+            fi
+          done
+
       - name: Build
         run: npm run build
 
