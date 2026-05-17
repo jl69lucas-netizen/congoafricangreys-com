@@ -118,9 +118,20 @@ li{margin-bottom:.4rem;line-height:1.7}
 .container{max-width:var(--max-w);margin:0 auto;padding:0 24px}
 
 /* ===== HEADER ===== */
-#cag-header{background:var(--green);padding:0 48px;height:70px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:999;box-shadow:0 2px 16px rgba(0,0,0,.18)}
+#cag-header{background:var(--green);padding:0 48px;height:76px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:999;box-shadow:0 2px 16px rgba(0,0,0,.18)}
 #cag-header .cag-logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0}
-#cag-header .cag-logo img{height:46px;width:auto;display:block;transition:opacity .2s}
+#cag-header .cag-logo img{height:58px;width:auto;display:block;transition:opacity .2s}
+.cag-search-form{display:flex;gap:6px;align-items:center}
+.cag-search-form input[type="search"]{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:50px;padding:6px 12px;font-size:12px;font-family:'Sora',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.cag-search-form input[type="search"]::placeholder{color:rgba(255,255,255,.5)}
+.cag-search-form input[type="search"]:focus{border-color:var(--clay)}
+.cag-search-form button{background:var(--clay);color:#fff;border:none;border-radius:50px;padding:6px 12px;font-size:11px;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer;transition:background .2s;white-space:nowrap;flex-shrink:0}
+.cag-search-form button:hover{background:#c94d3a}
+.cag-search-desktop{display:none}
+.cag-search-mobile{display:none;flex:1;justify-content:center;padding:0 8px}
+.cag-search-mobile input[type="search"]{width:110px}
+.cag-search-desktop input[type="search"]{width:80px}
+@media(min-width:769px){.cag-search-desktop{display:flex}}
 #cag-header .cag-logo img:hover{opacity:.85}
 #cag-header .cag-nav-links{display:flex;align-items:center;gap:26px;list-style:none}
 #cag-header .cag-nav-links a{color:rgba(255,255,255,.78);text-decoration:none;font-size:13.5px;font-weight:500;transition:color .2s}
@@ -129,11 +140,11 @@ li{margin-bottom:.4rem;line-height:1.7}
 #cag-header .cag-nav-cta:hover{background:#c94d3a;transform:translateY(-1px)}
 #cag-header .cag-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
 #cag-header .cag-hamburger span{width:22px;height:2px;background:rgba(255,255,255,.8);border-radius:2px}
-#cag-mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;background:var(--green);padding:20px 24px;z-index:998;flex-direction:column;gap:4px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+#cag-mobile-menu{display:none;position:fixed;top:76px;left:0;right:0;background:var(--green);padding:20px 24px;z-index:998;flex-direction:column;gap:4px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 #cag-mobile-menu.open{display:flex}
 #cag-mobile-menu a{color:rgba(255,255,255,.8);text-decoration:none;font-size:15px;font-weight:500;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1)}
 #cag-mobile-menu a:last-child{border-bottom:none;color:var(--clay);font-weight:700}
-@media(max-width:768px){#cag-header .cag-nav-links,#cag-header .cag-nav-cta{display:none}#cag-header .cag-hamburger{display:flex}#cag-header{padding:0 20px}}
+@media(max-width:768px){#cag-header .cag-nav-links,#cag-header .cag-nav-cta{display:none}#cag-header .cag-hamburger{display:flex}#cag-header{padding:0 20px}.cag-search-mobile{display:flex}}
 
 /* ===== BREADCRUMB ===== */
 .cag-breadcrumb{padding:10px 0;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);background:var(--cream)}
@@ -411,8 +422,17 @@ li{margin-bottom:.4rem;line-height:1.7}
 <!-- ===== HEADER ===== -->
 <header id="cag-header">
   <a href="/" class="cag-logo" aria-label="C.A.Gs - Congo African Greys, Midland TX">
-    <img src="/cag-header-logo.png" alt="C.A.Gs — Congo African Greys, Midland TX" height="46" loading="eager" fetchpriority="high">
+    <img src="/cag-header-logo.png" alt="C.A.Gs — Congo African Greys, Midland TX" height="58" loading="eager" fetchpriority="high">
   </a>
+  <form action="/search/" method="get" class="cag-search-form cag-search-mobile" role="search" aria-label="Site search">
+    <input type="hidden" name="sitesearch" value="congoafricangreys.com">
+    <input type="search" name="q" placeholder="Search…" aria-label="Search congoafricangreys.com">
+    <button type="submit">Go</button>
+  </form>
+  <form action="/search/" method="get" class="cag-search-form cag-search-desktop" role="search" aria-label="Site search">
+    <input type="search" name="q" placeholder="Search…" aria-label="Search congoafricangreys.com">
+    <button type="submit">Go</button>
+  </form>
   <ul class="cag-nav-links" role="navigation" aria-label="Main navigation">
     <li><a href="/">Home</a></li>
     <li><a href="/where-to-buy-african-greys-near-me/">Shop</a></li>
@@ -1907,7 +1927,10 @@ li{margin-bottom:.4rem;line-height:1.7}
   </div>
   <div class="cag-ft-bottom">
     <span>Copyright &copy; <span id="cag-year"></span> &middot; congoafricangreys.com &middot; All Rights Reserved</span>
-    <span>CITES Appendix II Compliant &middot; USDA AWA Licensed &middot; Captive-Bred Only</span>
+    <span style="display:inline-flex;align-items:center;gap:9px">
+      <img src="/cag-logo-badge-64.webp" alt="C.A.Gs — CITES Appendix II &amp; USDA AWA licensed captive-bred African Grey parrot breeders, Midland TX" height="36" width="36" loading="lazy" style="height:36px;width:auto;opacity:.7;flex-shrink:0">
+      CITES Appendix II Compliant &middot; USDA AWA Licensed &middot; Captive-Bred Only
+    </span>
   </div>
 </footer>
 
