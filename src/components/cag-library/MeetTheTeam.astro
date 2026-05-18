@@ -1,0 +1,115 @@
+---
+/**
+ * MeetTheTeam — founder bio block.
+ *
+ * @prop variant — 'duo' (two portraits side-by-side) | 'story' (single photo + narrative) | 'feature' (dark with stats)
+ */
+export interface TeamMember {
+  name: string;
+  role: string;
+  bio: string;
+  bullets?: string[];
+  imageSrc?: string;
+}
+export interface Props {
+  variant?: 'duo' | 'story' | 'feature';
+  members?: TeamMember[];
+  storyTitle?: string;
+  storyBody?: string[];
+}
+const {
+  variant = 'duo',
+  members = [
+    {
+      name: 'Mark Benjamin', role: 'CO-FOUNDER · USDA HANDLER',
+      bio: 'Mark runs the aviary side — incubation, daily welfare checks, vet coordination, shipping logistics. A former wildlife rehabber, he keeps the place clean enough that our vet jokes about eating dinner off the floor.',
+      bullets: [
+        '🏅 USDA Class A certified handler',
+        '🩺 Trained under Dr. R. Speer DVM (Avian Specialty)',
+        '📜 Maintains all CITES & AWA records',
+      ],
+    },
+    {
+      name: 'Teri Benjamin', role: 'CO-FOUNDER · HAND-FEEDER',
+      bio: "Teri hand-feeds every chick from day 14 to weaning. She's the voice on the phone, the writer of every inquiry reply, and the reason new owners can still call us a year after pickup.",
+      bullets: [
+        '🦜 Hand-fed 250+ greys since 2014',
+        '✉️ Responds to every inquiry personally (24–48h)',
+        '📚 Maintains our owner-support library',
+      ],
+    },
+  ],
+  storyTitle = "Mark & Teri — <em>twelve years</em>, twelve breeding pairs, one stubborn principle.",
+  storyBody = [
+    "We started the aviary the way most breeders start: with one bird we couldn't save. In 2014 Teri took on a Grey who'd been rehomed four times in eight years. The vet bills, the welfare reading, the reading-the-room behaviour work — it added up to a programme.",
+    "Twelve years later we run a small family aviary out of our home in Midland. We raise four to six clutches a year. Every chick is hand-fed, weaned, and sent home with paperwork you can verify and a guarantee you can hold us to.",
+  ],
+} = Astro.props;
+---
+
+{variant === 'duo' && (
+  <div class="grid md:grid-cols-2 gap-6">
+    {members.slice(0, 2).map(m => (
+      <article class="bg-white border border-line rounded-3xl cag-warm-shadow overflow-hidden">
+        {m.imageSrc
+          ? <img src={m.imageSrc} alt={m.name} class="w-full aspect-[5/4] object-cover" />
+          : <div class="cag-bird-ph w-full aspect-[5/4] flex items-center justify-center text-[100px] opacity-60">📷</div>}
+        <div class="p-7">
+          <div class="cag-tag text-clay">{m.role}</div>
+          <h3 class="font-display font-bold text-2xl mt-2">{m.name}</h3>
+          <p class="text-mid mt-3 text-[14px] leading-relaxed">{m.bio}</p>
+          {m.bullets && (
+            <ul class="mt-4 space-y-1.5 text-[13px] text-mid">
+              {m.bullets.map(b => <li>{b}</li>)}
+            </ul>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+)}
+
+{variant === 'story' && (
+  <div class="cag-hero-grad rounded-3xl border border-line p-10">
+    <div class="grid md:grid-cols-[1fr_1.3fr] gap-10 items-center">
+      <div>
+        {members[0]?.imageSrc
+          ? <img src={members[0].imageSrc} alt={members[0].name} class="w-full aspect-[4/5] object-cover rounded-3xl" />
+          : <div class="cag-bird-ph w-full aspect-[4/5] rounded-3xl flex items-center justify-center text-[100px] opacity-60">📷</div>}
+      </div>
+      <div>
+        <div class="cag-tag text-clay">OUR FAMILY</div>
+        <h3 class="font-display font-bold text-4xl mt-3 leading-[1.1]" set:html={storyTitle} />
+        {storyBody.map(p => <p class="text-mid mt-5 leading-relaxed">{p}</p>)}
+      </div>
+    </div>
+  </div>
+)}
+
+{variant === 'feature' && (
+  <div class="bg-panel rounded-3xl p-10 text-white">
+    <div class="grid md:grid-cols-[1.3fr_1fr] gap-10 items-center">
+      <div>
+        <div class="cag-tag text-clay">THE BENJAMINS · MIDLAND TX</div>
+        <h3 class="font-display font-bold text-4xl mt-3 leading-[1.1]">
+          A breeding programme, not a <em class="text-clay">side hustle.</em>
+        </h3>
+        <p class="text-white/70 mt-5 leading-relaxed">
+          Twelve years. Six breeding pairs. Two hundred and fifty captive-bred companions placed into homes
+          we still hear from at Christmas. We measure success in birds we don't get back, not birds we sell.
+        </p>
+        <div class="mt-7 grid grid-cols-3 gap-4 pt-7 border-t border-white/10">
+          <div><div class="font-display font-bold text-3xl text-clay">12</div><div class="cag-tag text-white/60">Years aviary</div></div>
+          <div><div class="font-display font-bold text-3xl text-clay">250+</div><div class="cag-tag text-white/60">Birds placed</div></div>
+          <div><div class="font-display font-bold text-3xl text-clay">0</div><div class="cag-tag text-white/60">Returns</div></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        {members.slice(0, 2).map((m, i) => m.imageSrc
+          ? <img src={m.imageSrc} alt={m.name} class={`w-full aspect-[3/4] object-cover rounded-2xl ${i === 1 ? 'mt-8' : ''}`} />
+          : <div class={`cag-bird-ph w-full aspect-[3/4] rounded-2xl flex items-center justify-center text-[80px] opacity-50 ${i === 1 ? 'mt-8' : ''}`}>📷</div>
+        )}
+      </div>
+    </div>
+  </div>
+)}

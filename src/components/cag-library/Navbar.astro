@@ -1,0 +1,90 @@
+---
+/**
+ * Navbar — sticky top navigation.
+ *
+ * @prop variant — 'classic' (forest bar + phone CTA) | 'transparent' (pill nav over hero) | 'mega' (white nav with mega-menu)
+ */
+export interface NavLink { label: string; href: string; }
+export interface Props {
+  variant?: 'classic' | 'transparent' | 'mega';
+  brand?: string;
+  logoEmoji?: string;
+  links?: NavLink[];
+  phone?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+const {
+  variant = 'classic',
+  brand = 'CongoAfricanGreys',
+  logoEmoji = '🦜',
+  links = [
+    { label: 'Available',  href: '#' },
+    { label: 'About us',   href: '#' },
+    { label: 'Our birds',  href: '#' },
+    { label: 'Shipping',   href: '#' },
+    { label: 'Care guide', href: '#' },
+    { label: 'FAQ',        href: '#' },
+  ],
+  phone = '(432) 555-0119',
+  ctaLabel = 'Reserve a Grey',
+  ctaHref = '#',
+} = Astro.props;
+---
+
+{variant === 'classic' && (
+  <header class="sticky top-0 z-50 bg-forest text-white">
+    <div class="mx-auto max-w-[1280px] px-6 h-16 flex items-center justify-between">
+      <a href="/" class="font-display font-bold text-xl flex items-center gap-2">
+        <span class="text-2xl">{logoEmoji}</span> {brand}
+      </a>
+      <nav class="hidden md:flex items-center gap-7 text-[14px] text-white/85">
+        {links.map(l => (
+          <a href={l.href} class="hover:text-white relative group">
+            {l.label}
+            <span class="absolute left-0 -bottom-1 h-0.5 w-0 bg-clay group-hover:w-full transition-all"></span>
+          </a>
+        ))}
+      </nav>
+      <div class="flex items-center gap-3">
+        {phone && <a href={`tel:${phone.replace(/\D/g,'')}`} class="hidden md:flex items-center gap-1.5 text-[13px] text-white/80 hover:text-white">📞 {phone}</a>}
+        <a href={ctaHref} class="bg-clay hover:bg-clay-dk transition rounded-full px-5 py-2 text-[13px] font-semibold cag-glow">{ctaLabel}</a>
+      </div>
+    </div>
+  </header>
+)}
+
+{variant === 'transparent' && (
+  <header class="absolute top-0 left-0 right-0 z-50">
+    <div class="mx-auto max-w-[1280px] px-6 h-20 flex items-center justify-between">
+      <a href="/" class="font-display font-bold text-xl flex items-center gap-2 text-ink">
+        <span class="text-2xl">{logoEmoji}</span> {brand}
+      </a>
+      <nav class="hidden md:flex items-center gap-1 text-[14px] bg-white/60 backdrop-blur rounded-full p-1.5 border border-white/40">
+        {links.map((l, i) => (
+          <a href={l.href} class={`px-4 py-1.5 rounded-full transition ${i === 0 ? 'bg-white shadow-sm text-clay font-semibold' : 'text-ink hover:bg-white'}`}>{l.label}</a>
+        ))}
+      </nav>
+      <a href={ctaHref} class="bg-clay hover:bg-clay-dk transition rounded-full px-5 py-2.5 text-[13px] font-semibold text-white cag-glow">{ctaLabel} →</a>
+    </div>
+  </header>
+)}
+
+{variant === 'mega' && (
+  <header class="sticky top-0 z-50 bg-white border-b border-line">
+    <div class="px-6 h-16 mx-auto max-w-[1280px] flex items-center justify-between">
+      <a href="/" class="font-display font-bold text-xl flex items-center gap-2 text-ink">
+        <span class="text-2xl">{logoEmoji}</span> {brand}
+      </a>
+      <nav class="hidden md:flex items-center gap-1 text-[14px]">
+        {links.map(l => (
+          <a href={l.href} class="px-4 py-2 hover:bg-cream rounded-lg">{l.label}</a>
+        ))}
+      </nav>
+      <div class="flex items-center gap-3">
+        <a class="text-[14px] text-mid hover:text-ink">Sign in</a>
+        <a href={ctaHref} class="bg-clay hover:bg-clay-dk transition rounded-full px-5 py-2 text-[13px] font-semibold text-white cag-glow">{ctaLabel} →</a>
+      </div>
+    </div>
+  </header>
+)}

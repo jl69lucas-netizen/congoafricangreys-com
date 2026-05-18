@@ -1,0 +1,94 @@
+---
+/**
+ * SplitFeature — image-and-text feature block.
+ *
+ * @prop variant — 'classic' (image left + checklist right) | 'editorial' (gradient, narrative + pull-quote) | 'dark' (asymmetric)
+ */
+export interface BulletItem { label: string; }
+export interface Props {
+  variant?: 'classic' | 'editorial' | 'dark';
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  bullets?: BulletItem[];
+  quote?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  imageSrc?: string;
+}
+const {
+  variant = 'classic',
+  eyebrow = '',
+  title = "Looking for a calm, talkative Grey under <em>a year old?</em> Meet our weaned 11-week chicks.",
+  body = "Our chicks come fully weaned, hand-fed by us in our home, and ready to bond with their forever family. Every chick is DNA-sexed, vet-cleared, and shipped with CITES paperwork.",
+  bullets = [
+    { label: '<b class="text-ink">Est. weight at maturity:</b> 400–490g' },
+    { label: '<b class="text-ink">Current clutch:</b> 2 hens, 1 cock, all reservable' },
+    { label: '<b class="text-ink">Recent photos &amp; videos:</b> updated weekly via private link' },
+    { label: '<b class="text-ink">Ships from $185</b> via climate-controlled cargo to 48 states' },
+  ],
+  quote = 'Every chick we place is one that didn\'t need rescuing later.',
+  ctaLabel = 'Reserve a chick from this clutch',
+  ctaHref = '#',
+  imageSrc,
+} = Astro.props;
+---
+
+{variant === 'classic' && (
+  <div class="grid md:grid-cols-2 gap-12 items-center">
+    <div class="cag-bird-ph aspect-[5/4] rounded-3xl cag-warm-shadow-lg flex items-center justify-center text-[200px] opacity-70">
+      {imageSrc ? <img src={imageSrc} alt="" class="w-full h-full object-cover rounded-3xl" /> : '🦜'}
+    </div>
+    <div>
+      {eyebrow && <div class="cag-tag text-clay">{eyebrow}</div>}
+      <h3 class="font-display font-bold text-3xl leading-[1.15]" set:html={title} />
+      <p class="text-mid mt-5 leading-relaxed">{body}</p>
+      <ul class="mt-6 space-y-3">
+        {bullets.map(b => (
+          <li class="flex items-start gap-3 text-[14px]">
+            <span class="bg-clay text-white w-6 h-6 rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5">✓</span>
+            <span set:html={b.label} />
+          </li>
+        ))}
+      </ul>
+      <a href={ctaHref} class="mt-7 inline-block bg-clay hover:bg-clay-dk transition text-white rounded-full px-7 py-3.5 font-semibold text-[15px] cag-glow">{ctaLabel} →</a>
+    </div>
+  </div>
+)}
+
+{variant === 'editorial' && (
+  <div class="cag-hero-grad rounded-3xl border border-line p-10">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        {eyebrow && <div class="cag-tag text-clay">{eyebrow}</div>}
+        <h3 class="font-display font-bold text-4xl mt-4 leading-[1.1]" set:html={title} />
+        <p class="text-mid mt-5 leading-relaxed">{body}</p>
+        {quote && <blockquote class="mt-6 border-l-4 border-clay pl-5 italic font-display text-[18px] text-ink">"{quote}"</blockquote>}
+        <a href={ctaHref} class="mt-6 inline-flex items-center gap-2 text-clay font-semibold border-b-2 border-clay pb-0.5">{ctaLabel} →</a>
+      </div>
+      <div class="relative">
+        <div class="cag-bird-ph aspect-[4/5] rounded-3xl cag-warm-shadow-lg flex items-center justify-center text-[200px] opacity-70 -rotate-2">🦜</div>
+      </div>
+    </div>
+  </div>
+)}
+
+{variant === 'dark' && (
+  <div class="bg-white border border-line rounded-3xl cag-warm-shadow overflow-hidden grid md:grid-cols-[1.3fr_1fr]">
+    <div class="cag-bird-ph relative min-h-[440px]">
+      <div class="absolute inset-0 flex items-center justify-center text-[280px] opacity-70">🦜</div>
+      <div class="absolute bottom-6 left-6 right-6 bg-panel/90 backdrop-blur rounded-2xl p-5 text-white">
+        <div class="cag-tag text-clay">{eyebrow || 'FEATURED CONTENT'}</div>
+        <div class="font-display font-bold text-xl mt-1">Walk through the aviary with Teri</div>
+      </div>
+    </div>
+    <div class="p-10 flex flex-col justify-between">
+      <div>
+        <div class="cag-tag text-clay">{eyebrow || 'SHIPPING NATIONWIDE'}</div>
+        <h3 class="font-display font-bold text-3xl mt-3 leading-tight" set:html={title} />
+        <p class="text-mid mt-4 text-[15px] leading-relaxed">{body}</p>
+      </div>
+      <a href={ctaHref} class="mt-6 inline-block bg-clay hover:bg-clay-dk transition text-white rounded-full px-5 py-3 font-semibold text-[14px] self-start cag-glow">{ctaLabel} →</a>
+    </div>
+  </div>
+)}
