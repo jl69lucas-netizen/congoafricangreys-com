@@ -19,12 +19,43 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - **Informational:** care guides, species guides, health, training, comparison pages
 - **Two variants:** Congo African Grey (CAG) vs Timneh African Grey (TAG)
 
+## Quick Start Commands
+
+### "I want to build a new page"
+→ `grill-me` skill → SESSION CONTEXT → `@cag-content-audit-agent`
+
+### "I want to build all location pages"
+→ `@cag-batch-rebuilder` → reads `data/locations.json` → forks `@cag-location-builder` per state
+
+### "What should I build next?"
+→ `@cag-competitive-keyword-gap-agent` → sort by opportunity score ≥7 → `@cag-content-architect`
+
+### "Is the site healthy?"
+→ `cag-website-health` skill → `@cag-performance-monitor-agent` → `@cag-accessibility-fixer`
+
+### "Weekly monitoring check"
+→ [parallel] `@cag-rank-tracker` + `@cag-branded-search-monitor-agent` + `@cag-competitor-pricing-alert-agent` + `@cag-llm-keyword-intel`
+
+### "A bird was sold"
+→ `@cag-clutch-manager` (status: sold) → Day 7: `@cag-review-collection-agent`
+
+### "Deploy a page"
+→ `@cag-canonical-fixer` → `git push` → `@cag-deploy-verifier` → `sitemap-agent` skill
+
+---
+
 ## Reference Docs
+- `docs/reference/WORKFLOW.md` — **MASTER WORKFLOW: read this before starting any new page, sprint, or monitoring cycle**
 - `docs/reference/project-context.md` — **MASTER CONTEXT: read this at the start of every session**
 - `docs/reference/site-overview.md` — site structure, page inventory, target states
 - `docs/reference/seo-rules.md` — **MASTER SEO RULES (50 rules): read this before creating or modifying any page**
 - `docs/reference/domain-knowledge.md` — variants, trust signals, health conditions, PAA questions
 - `docs/reference/top-pages.md` — traffic baseline (populate after GSC API connected)
+- `docs/reference/components.md` — **COMPONENT REGISTRY v2: 24 named components with variants — read before building any page section**
+- `docs/reference/page-width.md` — **PAGE WIDTH RULES: Option A 1200px container system, breakpoints, responsive typography scale**
+- `docs/design.md` — **MASTER DESIGN SPEC v2: Terracotta Warmth — colors, type, buttons, cards, motion, voice rules**
+- `docs/design-system/README.md` — full narrative brand spec with identity, voice, iconography, and motion
+- `src/styles/cag-design-system.css` — canonical CSS custom-property tokens (import in non-Tailwind pages)
 - `data/competitors.json` — 30-competitor registry (source of truth)
 - `data/analytics/` — GSC performance reports (2026-04-28)
 
@@ -106,11 +137,97 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - `.claude/agents/cag-heatmap-analyst-agent.md` — interprets Clarity/Hotjar/FullStory data (scroll depth, click heatmap, rage clicks, session recordings, exit pages); African Grey lens: extended CITES-section reading = trust validation not confusion; sets up Microsoft Clarity if no tracking; requires user to provide data
 - `.claude/agents/cag-funnel-analysis-agent.md` — 5-stage funnel (Discovery→Engagement→Intent Signal→Form Reach→Conversion); research cycle: 4–8 weeks for African Grey buyers; Stage 1 threshold: <30/month = focus on traffic first; Stage-specific CAG diagnosis (CITES doubt, scam fear, captive-bred credibility); benchmark: Overall >1.5%; run quarterly
 
-## Phase 2 Setup History
+## Phase 2 Workflow
+
+See `docs/reference/WORKFLOW.md` for the authoritative sprint-based workflow.
+
+### Sprint Order (Quick Reference)
+1. **Sprint 0** — Intelligence: `competitor-registry` → `competitor-intel --all` → `gsc-analytics` → `llm-keyword-intel`
+2. **Sprint 1** — Architecture: `structure-architect` → `competitive-keyword-gap` → `hub-builder` → `content-architect`
+3. **Sprint 2** — Content: `content-audit` → `angle-agent` → `paa-agent` → writer → `faq-agent` → `section-builder`
+4. **Sprint 3** — AEO/GEO Gate: `keyword-verifier` → `meta-description` → `external-link` → `trust-signals`
+5. **Sprint 4** — Technical: `accessibility-fixer` → `performance-fixer` → `canonical-fixer` → `footer-standardizer`
+6. **Sprint 5** — Deploy: `git push` → `deploy-verifier` → `redirect-manager` → `sitemap-agent`
+7. **Continuous** — Weekly/monthly/quarterly monitoring loops (see WORKFLOW.md §8)
+
+### Phase 2 Setup History
 Transfer and adapt all MFS agents + skills for African Grey domain.
 - MFS project: `/Users/apple/Downloads/MFS/`
 - Skills land in: `skills/`
 - Domain-agnostic agents copy quickly; domain-specific agents need full rewrite
+
+## Design System & Component Rules
+
+### Design System v2 — "Terracotta Warmth"
+
+Active design system: `docs/design.md` (master reference) + `docs/design-system/README.md` (full narrative spec).
+
+**Non-Negotiable Design Rules — enforced on every page build and rebuild:**
+1. **Colors:** Three anchors only — Forest Green `#2D6A4F` (nav/headers), Clay `#e8604c` (all CTAs/buttons), Cream `#faf7f4` (page surface). `--gold` MUST always equal `--clay`.
+2. **Type:** Lora 700 (serif) for ALL headlines. Sora 400–700 (sans) for ALL body, labels, buttons. No exceptions.
+3. **Buttons:** Primary CTA = clay pill, `border-radius: 50px`. This is the brand signature. Form submit buttons only use `border-radius: 12px`.
+4. **Cards:** 20px radius, 1px `--border`, warm shadow, white surface. Info cards use green header band.
+5. **Shadows:** Always warm-tinted `rgba(60,30,10,…)`. Never neutral grey.
+6. **Motion:** Max 0.2s transitions. No bounce, no parallax, no auto-playing video.
+7. **Emoji:** Canonical set only (📞 ✉️ 📍 🕐 ✈️ 🚗 🦜 ✅ ❋). One per element. No marketing emoji (🎉 🔥 🚀).
+8. **Anti-copy:** NEVER add `user-select: none` CSS or JS.
+
+### Component Library v2
+
+Full registry: `docs/reference/components.md` — 24 named components, each with 2–3 variants.
+
+**Agent workflow for any page section build:**
+1. Identify sections needed (hero, trust, FAQ, CTA, etc.)
+2. Select 1–3 candidate components per section from the registry
+3. **Show the user** candidates + variant options — a short text description is sufficient
+4. **Wait for user approval** before writing any component code into a page
+5. Implement only the approved component + variant
+
+**Key components by use case:**
+
+| Use Case | Component | Top Variants |
+|---|---|---|
+| Page hero | `cag-hero-v1`, `cag-split-hero` | v1 desktop, v2 alt, `editorial` Astro |
+| Credibility strip | `cag-stats-bar` | `classic`, `dark` |
+| Trust credentials | `cag-trust-stats` | `classic` |
+| Bird listing | `cag-bird-card` | `classic`, `horizontal`, `feature` |
+| Breeding pair | `cag-parent-birds` | `classic` |
+| Pricing | `cag-pricing-table` | `classic`, `matrix` |
+| Care tips | `cag-care-grid` | `classic` |
+| Feature / why us | `cag-split-feature` | `editorial` |
+| Scam content | `cag-scam-awareness` | `checklist`, `compare` |
+| FAQ | `cag-faq-accordion` | `classic`, `editorial` |
+| Long-form nav | `cag-toc-v1`, `cag-toc-v2` | v1 minimal, v2 bordered |
+| Article callout | `cag-key-takeaway` | — |
+| Sidebar full | `cag-toc-keytakeaway` | — combined |
+| Inquiry form | `cag-contact-form` | `classic`, `application` |
+| Newsletter | `cag-newsletter` | `banner`, `split` |
+| Reviews | `cag-testimonials` | `grid`, `feature` |
+| Footer | `cag-footer` | `dark` (default) |
+
+### Page Width System — Option A (Classic 1200px)
+
+Full spec: `docs/reference/page-width.md`
+
+**Container rules — enforced on every page:**
+- **All pages:** outer shell `max-width: 1200px` (`.container` class)
+- **Informational / long-form pages:** inner text wrapper `max-width: 760px` (`.container-text` class)
+- **All `<p>` tags:** `max-width: 70ch` — prevents unreadable long lines on wide screens
+
+**Page type → container assignment:**
+- Visual / transactional (homepage, bird listings, location pages): `.container` 1200px, full-width grids
+- Informational (scam guide, care guides, species guides, blog): `.container` outer + `.container-text` 760px inner
+
+**Breakpoints:**
+- Desktop ≥1025px: 1200px centered, 48px padding
+- Tablet 768–1024px: fluid 90–94%, 32px padding
+- Mobile ≤767px: fluid 92%, 16px padding
+
+**Responsive typography:** When writing or updating page CSS, apply the scale from `docs/design.md` §Responsive Typography Scale. Body line-height 1.6–1.7. No inline styles overriding the scale.
+
+**Never** hard-code `max-width: 1180px` — use `1200px` or `var(--container)`.
+
+---
 
 ## Scripts
 - TBD — Phase 2
