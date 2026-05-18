@@ -1,0 +1,139 @@
+---
+/**
+ * ScamAwareness — buyer-protection infographic.
+ *
+ * @prop variant — 'grid' (12 flag dark grid) | 'compare' (side-by-side scam vs legit) | 'checklist' (4-step)
+ */
+export interface Flag { icon: string; title: string; body: string; }
+export interface Props {
+  variant?: 'grid' | 'compare' | 'checklist';
+  flags?: Flag[];
+}
+const {
+  variant = 'grid',
+  flags = [
+    { icon: '⬇️', title: '01 · Price under $1,500', body: 'Legit range is $1,500–$3,500.' },
+    { icon: '💸', title: '02 · Zelle / CashApp only', body: 'Untraceable = unrecoverable.' },
+    { icon: '📷', title: '03 · Stolen images', body: '92% of scams use lifted photos.' },
+    { icon: '🥚', title: '04 · "Parrot eggs for sale"', body: 'Virtually always a scam.' },
+    { icon: '🚫', title: '05 · No CITES docs', body: 'Required by federal law.' },
+    { icon: '🕒', title: '06 · Site under 6 months old', body: 'Check age via WHOIS lookup.' },
+    { icon: '📵', title: '07 · Refuses video call', body: 'Real breeders show real birds.' },
+    { icon: '✈️', title: '08 · Fake shipping fees', body: 'Beware "insurance" upcharges.' },
+    { icon: '📍', title: '09 · No physical address', body: 'Real aviaries are findable.' },
+    { icon: '🪪', title: '10 · No USDA AWA #', body: 'Verify at aphis.usda.gov.' },
+    { icon: '⏱',  title: '11 · "Pay today or lose it"', body: 'Urgency is the oldest scam.' },
+    { icon: '🆓', title: '12 · "Free / $150 rehome"', body: '"Shipping only" = scam.' },
+  ],
+} = Astro.props;
+
+const compareRed = [
+  { title: 'Price: $400–$800', body: 'Too cheap for a healthy, captive-bred Grey. Hook for a scam.' },
+  { title: 'Payment: gift cards, Zelle only', body: "Untraceable methods you can't dispute." },
+  { title: 'No USDA AWA license', body: "Can't or won't provide a verifiable license #." },
+  { title: 'Refuses video calls', body: '"Camera broken" — every time.' },
+];
+const compareGreen = [
+  { title: 'Price: $1,500–$3,500', body: 'Reflects real captive breeding and vet work.' },
+  { title: 'Reversible payments', body: 'Credit card, PayPal Goods, bank wire — protections apply.' },
+  { title: 'Active USDA AWA license', body: 'Verifiable on aphis.usda.gov.' },
+  { title: 'Encourages video calls', body: 'Will show the bird in real time, on demand.' },
+];
+---
+
+{variant === 'grid' && (
+  <div class="bg-panel rounded-3xl p-10 text-white">
+    <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+      <div>
+        <span class="cag-tag bg-clay text-white rounded-full px-3 py-1.5">⚠️ SCAM ALERT</span>
+        <h3 class="font-display font-bold text-4xl mt-3">12 red flags: avoid Congo Grey scams</h3>
+        <p class="text-white/60 mt-2 max-w-2xl">If a listing trips three or more of these, walk away.</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {flags.map(f => (
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+          <div class="text-clay text-2xl">{f.icon}</div>
+          <div class="cag-tag text-clay">{f.title}</div>
+          <div class="text-[12px] text-white/70 mt-1">{f.body}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+{variant === 'compare' && (
+  <div class="bg-white rounded-3xl border border-line cag-warm-shadow overflow-hidden">
+    <div class="p-8 border-b border-line text-center">
+      <h3 class="font-display font-bold text-3xl md:text-4xl leading-tight">
+        African Greys: spot the <span class="text-red-700">scam</span> vs find the <span class="text-forest">breeder</span>
+      </h3>
+    </div>
+    <div class="grid md:grid-cols-2">
+      <div class="bg-red-50 p-8 border-r border-line">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-4xl">🚩</span>
+          <div>
+            <div class="cag-tag text-red-700">RED FLAGS</div>
+            <div class="font-display font-bold text-xl text-red-800">The scammer</div>
+          </div>
+        </div>
+        <div class="space-y-4">
+          {compareRed.map(c => (
+            <div class="bg-white/70 rounded-xl p-4">
+              <div class="font-display font-bold text-red-800">{c.title}</div>
+              <p class="text-[13px] text-mid mt-1">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="bg-forest-lt p-8">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-4xl">✅</span>
+          <div>
+            <div class="cag-tag text-forest">GREEN FLAGS</div>
+            <div class="font-display font-bold text-xl text-forest">The legitimate breeder</div>
+          </div>
+        </div>
+        <div class="space-y-4">
+          {compareGreen.map(c => (
+            <div class="bg-white/70 rounded-xl p-4">
+              <div class="font-display font-bold text-forest">{c.title}</div>
+              <p class="text-[13px] text-mid mt-1">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div class="bg-forest text-white p-6 text-center">
+      <div class="cag-tag tracking-[2px] text-white/80">ALWAYS VERIFY BEFORE YOU BUY ✓</div>
+      <div class="text-[14px] text-white/90 mt-1">Check the breeder's license at aphis.usda.gov before sending any money.</div>
+    </div>
+  </div>
+)}
+
+{variant === 'checklist' && (
+  <div class="cag-hero-grad rounded-3xl border border-line p-10">
+    <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+      <div>
+        <div class="cag-tag text-clay">BEFORE YOU SEND A DOLLAR</div>
+        <h3 class="font-display font-bold text-3xl mt-2">Four checks that catch <em class="text-clay">99% of scams.</em></h3>
+      </div>
+      <a class="text-clay underline decoration-2 underline-offset-4 font-semibold text-[14px]">See all 12 flags →</a>
+    </div>
+    <div class="grid md:grid-cols-4 gap-4">
+      {[
+        { t: 'Verify USDA license', b: 'Cross-check the breeder\'s # at aphis.usda.gov. Takes 30 seconds.' },
+        { t: 'Demand a live video call', b: 'Real breeders show the bird, the band number, today\'s date.' },
+        { t: 'Reverse-image search', b: '92% of scam listings use photos lifted from real breeders.' },
+        { t: 'Use reversible payment', b: 'Credit card or PayPal Goods. Never Zelle, CashApp, or gift cards.' },
+      ].map((s, i) => (
+        <div class="bg-white rounded-2xl cag-warm-shadow p-6">
+          <div class="font-display text-clay text-3xl font-bold">{String(i+1).padStart(2,'0')}</div>
+          <h4 class="font-display font-bold text-lg mt-3">{s.t}</h4>
+          <p class="text-mid text-[13px] mt-2">{s.b}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
