@@ -3,7 +3,7 @@
 ## Working Directory
 - Site content (markdown): `site/content/`
 - Site archive (static HTML): `archive/simply-static-1-1775169284.zip`
-- Deploy: TBD — Phase 2
+- Deploy: GitHub Actions → Cloudflare Pages (auto on push to main)
 - Domain: `congoafricangreys.com`
 
 ## Non-Negotiable Rules
@@ -59,19 +59,14 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - `data/competitors.json` — 30-competitor registry (source of truth)
 - `data/analytics/` — GSC performance reports (2026-04-28)
 
-## Phase 1 — Competitor Intelligence (Current Phase)
+## Phase 1 — Competitor Intelligence (Complete ✓)
 
 ### Agents
 - `.claude/agents/cag-competitor-registry.md` — discovers + registers 30 competitors; run first
 - `.claude/agents/cag-competitor-intel.md` — deep multi-metric analysis; single or --all mode
 - `.claude/agents/cag-rank-tracker.md` — weekly monitoring; runs every Sunday
 
-### Session 1 Order of Operations
-```
-1. Run @cag-competitor-registry → approve 30 competitors → saved to data/competitors.json
-2. Run @cag-competitor-intel --all → 30 reports + master gap matrix
-3. Read docs/research/gap-matrix-[date].md → decide Phase 2 priorities
-```
+All three steps completed — outputs in `docs/research/` and `data/competitors.json`.
 
 ## Phase 2 — Full Agent System (Active)
 
@@ -83,8 +78,12 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - `skills/framework-qab.md` — Question→Answer→Benefit; all FAQ sections + pricing content
 - `skills/framework-aida.md` — Attention→Interest→Desire→Action; high-intent commercial pages
 - `skills/framework-eeat.md` — Experience/Expertise/Authoritativeness/Trustworthiness; credibility audit + schema
+- `skills/framework-bab.md` — Before→After→Bridge; transformation narrative for buyer pain-point pages
+- `skills/framework-ebp.md` — Evidence→Benefit→Proof; credibility-first content for trust-building sections
+- `skills/framework-pdb.md` — Problem→Diagnosis→Bridge; diagnostic content for scam-recovery + comparison pages
 
 #### SEO & Content Skills
+- `skills/grill-me.md` — pre-session context builder; extracts SESSION CONTEXT before any page build; run before `@cag-content-audit-agent`
 - `skills/cag-branded-search-skill.md` — branded query optimization; /why-choose-cag/ + /african-grey-reviews/ page specs; ReviewAggregateSchema; counter snippets; Contextual Intelligence for local SEO; CITES framing in all branded content
 - `skills/keyword-cluster.md` — groups keywords into primary/secondary/LSI/long-tail/PAA tiers
 - `skills/internal-link-agent.md` — orphan page finder, hub→spoke gap audit, anchor text fixes
@@ -94,15 +93,37 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - `skills/cag-website-health.md` — technical audit: broken images, canonicals, www redirect, Core Web Vitals, Page Speed Audit (LCP <2.5s, CLS <0.1, INP <200ms)
 - `skills/cag-footer-agent.md` — 5-column footer structure spec + audit rules; USDA AWA + CITES notice in bottom bar
 - `skills/sitemap-agent.md` — manages sitemap files after any page change
-- `skills/cag-image-generation.md` — multi-provider AI image generation (OpenAI DALL-E 3, Google Gemini 2.0 Flash + Imagen 3 fallback, Anthropic Claude prompt-refine) + WebP optimization; CITES safety rule: no cage/aviary/wild-capture imagery; keys in .openai-key / .google-key / .anthropic-key; hands off to cag-image-pipeline
+- `skills/cag-image-generation.md` — multi-provider AI image generation: OpenAI DALL-E 3 · **Nano Banana 2 / Google Imagen** (`nanobanna` flag, key in `.google-key` as `GEMINI_API_KEY`, script: `scripts/generate_nb_image.sh`) · Anthropic Claude prompt-refine · **Claude Code HTML** (native HTML/CSS, no API) · Pro-grade 9:16 prompt template (1200×2133px → scales to 350px CSS) · WebP optimization · CITES safety rule; hands off to cag-image-pipeline
 - `skills/cag-logo-generator.md` — circular emblem logo spec for CongoAfricanGreys.com; African Grey parrot head centerpiece; top arc: "CongoAfricanGreys.com"; bottom arc: "Captive-Bred African Grey Breeders"; deep green/teal palette; DALL-E prompt + responsive HTML implementation
+- `skills/cag-infographic.md` — infographic system: **4 types** — Comparison / Feature Grid / Process Flow / **AI-Generated Image** (Type 4, Nano Banana 2 or OpenAI, 9:16 1200×2133px, responsive CSS); 300–350px HTML types; mode selection: "use Claude Code" = HTML, "use Nano Banana" = AI image
+- `skills/cag-site-patterns.md` — 4 confirmed site fix patterns: gold→clay color, Pagefind search, header layout, birds listing; full code references
 
 ### Agents
+
+#### Tier 1 — Orchestrators
+- `.claude/agents/cag-content-architect.md` — orchestrates all content creation; selects AIDA/PAS/QAB/BAB/H-S-S framework per page type; routes tasks to specialist agents; reads top-pages.md first
+- `.claude/agents/cag-structure-architect.md` — maps content clusters into Silo/Reverse Silo; generates `data/structure.json`; ensures every page ≤3 clicks from homepage; scans competitor URLs via Playwright
+- `.claude/agents/cag-batch-rebuilder.md` — coordinates batch page rebuilds in parallel (`CLAUDE_CODE_FORK_SUBAGENT=1`); reads `data/locations.json` for location batches; tracks completion + runs final deploy
 
 #### Tier 2 — Page Builders
 - `.claude/agents/cag-seo-content-writer.md` — writes body copy; 5 humor modes; Negative Keyword Counter-Positioning (wild-caught, scam, cheap); Generic-Slayer Filter; DO/DON'T guidelines; Counter Snippets
 - `.claude/agents/cag-bird-personality.md` — CLEO/REX/NOVA/SAGE/IRIS buyer archetype profiles; Bird Vitals Card HTML template; documentation block required on every profile
 - `.claude/agents/cag-faq-agent.md` — QAB FAQ sections + FAQPage JSON-LD; 7 distribution strategies; GSC Queries + PAA sourcing
+- `.claude/agents/cag-homepage-builder.md` — rebuilds homepage section-by-section; 28 clicks / 14,915 impressions / position 45.6 (highest GSC traffic page)
+- `.claude/agents/cag-location-builder.md` — builds state location pages; Florida = 22-section / 4,500+ word reference template; supports fork-parallel execution
+- `.claude/agents/cag-section-builder.md` — builds individual HTML sections using CAG design system; section types: hero, features, faq, cta, testimonials, comparison-table, price-card; called by all page builders
+- `.claude/agents/cag-purchase-guide.md` — rebuilds `/buy-african-grey-parrot-near-me/`; high-intent buyer page covering CITES, IATA shipping, post-arrival support
+- `.claude/agents/cag-species-guide-builder.md` — builds species guide pages using Entity-Tree framework; reads `data/price-matrix.json`; AIO/citation optimized
+- `.claude/agents/cag-variant-specialist.md` — rebuilds `/congo-african-grey-for-sale/` and `/timneh-african-grey-for-sale/`; cross-sell comparison table between both
+- `.claude/agents/cag-timneh-specialist.md` — all Timneh pages; TAG pricing $1,200–$2,500; intelligent CAG/TAG cross-sell
+- `.claude/agents/cag-about-builder.md` — rebuilds `/about/`; H-S-S framework; USDA AWA + CITES credentials + breeder story
+- `.claude/agents/cag-scam-specialist.md` — rebuilds `/how-to-avoid-african-grey-parrot-scams/` and scam cluster; converts scam-fearful visitors into documented-purchase inquiries
+- `.claude/agents/cag-comparison-builder.md` — builds [X] vs [Y] comparison pages; reference: `/male-vs-female-african-grey-parrots-for-sale/`
+- `.claude/agents/cag-financial-strategist.md` — rebuilds pricing/cost guide; reads `data/financial-entities.json`; CAG vs TAG cost comparison; 40–60 year lifetime estimate
+- `.claude/agents/cag-blog-post-agent.md` — creates commercial, transactional, review, alternative, and comparison blog posts; keyword intent classification
+- `.claude/agents/cag-hub-builder.md` — builds aggregator hub pages: comparison hub, species hub, location hub (`/african-grey-parrots-for-sale/`), documentation hub
+- `.claude/agents/cag-infographic-builder.md` — builds infographics; **Mode selection**: "use Claude Code/HTML" = HTML/CSS (3 types, 300–350px), "use Nano Banana/OpenAI" = AI image (Type 4, 9:16, script: generate_nb_image.sh); works for Astro + static HTML pages
+- `.claude/agents/cag-interactive-component.md` — builds interactive HTML components: first-year cost calculators, variant fit quizzes, CITES checklists, shipping estimators; pure HTML/CSS/vanilla JS
 
 #### Tier 3 — Content Intelligence
 - `.claude/agents/cag-non-commodity-content-agent.md` — Triad model (Archaeologist/Provocateur/Stylist); breeder-authentic content a generic LLM cannot write; Generic-Slayer Filter; High-Resolution Detail per 500 words; CITES framing enforced
@@ -112,18 +133,34 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - `.claude/agents/cag-seasonal-content-agent.md` — 12-month content calendar; Spring Bird Season (Mar–May) as major peak; Christmas/Valentine's/Mother's Day/Summer templates adapted for parrot ownership; weaning caveat: African Greys 12–16 weeks; routes briefs to cag-seo-content-writer, banners to page builders; tracks in data/seasonal-calendar.json
 - `.claude/agents/cag-email-newsletter-agent.md` — monthly 4-section newsletter: clutch update (clutch-inventory.json), African Grey tip (12-month rotation: nutrition/enrichment/health/bonding), family spotlight (case-studies.json), seasonal CTA; ≤500 words; never references wild-caught; saves to content/newsletters/
 - `.claude/agents/cag-video-seo-agent.md` — YouTube SEO packages: title ≤60 chars, description 700–1000 chars (first 125 = hook), 15–20 tags, chapters, thumbnail brief; VideoObject JSON-LD; 4 playlists (Care Guide / Congo vs Timneh / Buyer's Guide / Talking & Training); African Grey-specific keyword angles
+- `.claude/agents/cag-angle-agent.md` — generates 5–10 content angles, hooks, counter-intuitive POVs before any writing; fear-based hooks + story-first openings
+- `.claude/agents/cag-paa-agent.md` — extracts real PAA questions via Playwright; formats for Featured Snippet capture; feeds to cag-faq-agent
+- `.claude/agents/cag-meta-description-agent.md` — manages title tags + meta descriptions; audits for duplicates, missing tags, keyword gaps; reads price-matrix.json
+- `.claude/agents/cag-external-link-agent.md` — manages outbound links using `docs/reference/external-link-library.md`; inserts links at beginning/middle of sentences — never end
+- `.claude/agents/cag-framework-agent.md` — deep-dives competitor pages; extracts gaps + content differentiation blueprint; outputs via Playwright
 
 #### Tier 4 — Technical
 - `.claude/agents/cag-accessibility-fixer.md` — full WCAG 2.1 AA audit: skip links, ARIA landmarks, form labels, alt text, focus states, color contrast, heading order, button types; Critical/High/Medium priority tiers; batch mode saving to sessions/; Lighthouse verification
 - `.claude/agents/cag-performance-monitor-agent.md` — Lighthouse CLI audits; thresholds: LCP <2.5s, CLS <0.1, FCP <1.8s, TBT <200ms, Perf Score ≥90; audit list: homepage + 5 top pages; PageSpeed Insights API fallback; saves to sessions/YYYY-MM-DD-perf-report.md; run monthly
+- `.claude/agents/cag-canonical-fixer.md` — converts relative canonicals to absolute URLs on every static export; also fixes og:url + JSON-LD url fields; run before every deploy
+- `.claude/agents/cag-footer-standardizer.md` — standardizes `cag-footer-v1` across all pages in `site/content/`; single + batch mode; detects outdated WordPress/Astra markup
+- `.claude/agents/cag-performance-fixer.md` — applies Lighthouse Performance fixes; targets 100% Performance score; fixes render-blocking CSS, jQuery defer, font-display swap, LCP fetchpriority
+- `.claude/agents/cag-redirect-manager.md` — manages `site/content/_redirects`; flattens redirect chains (A→B→C to A→C); validates targets exist on disk
+- `.claude/agents/cag-deploy-verifier.md` — post-deploy verification: 200 checks, canonical audit, IndexNow submission; saves deploy report to sessions/
+- `.claude/agents/cag-google-map-agent.md` — adds/replaces Google Maps embeds; fixes CSP object-src blocker (embed→iframe); generates styled map sections using CAG design system
+- `.claude/agents/cag-contact-form-updater.md` — audits + standardizes all contact/inquiry forms; detects missing ARIA labels, accessibility violations
+- `.claude/agents/cag-agent-system-qa.md` — quality review of full agent system; audits for Golden Rule, required sections, data file references, CLAUDE.md registration
 
 #### Tier 5 — Trust & Authority
 - `.claude/agents/cag-trust-signals-agent.md` — Google Reviews widget HTML, Trust Badge row (USDA AWA / CITES / DNA Sexed / Avian Vet), ReviewAggregateSchema, Counter Snippet blocks; /why-choose-cag/ page spec; Contextual Intelligence review templates; works with case-study agent
+- `.claude/agents/cag-case-study-agent.md` — manages case studies; scans HTML, writes `data/case-studies.json`; builds `/case-studies/` hub; never fabricates outcomes
+- `.claude/agents/cag-conversion-tracker.md` — audits pages for CTA placement, form friction, trust signal placement, CITES clarity, social proof; reads top-pages.md
+- `.claude/agents/cag-ab-test-agent.md` — creates A/B variant HTML files for CTAs + hero sections; tracks hypothesis + metrics; never auto-deploys — requires explicit approval
 
 #### Tier 6 — SEO & Analytics
-- `.claude/agents/cag-competitor-registry.md` — discovers + registers 30 competitors; run first
-- `.claude/agents/cag-competitor-intel.md` — deep multi-metric analysis; single or --all mode
-- `.claude/agents/cag-rank-tracker.md` — weekly monitoring; runs every Sunday
+- `cag-competitor-registry`, `cag-competitor-intel`, `cag-rank-tracker` — see Phase 1 above for descriptions
+- `.claude/agents/cag-gsc-analytics.md` — analyzes GSC CSV exports from `data/analytics/`; updates `docs/reference/top-pages.md`; never calls external APIs
+- `.claude/agents/cag-llm-keyword-intel.md` — queries ChatGPT/Claude/Gemini/Perplexity/AIO for keyword clusters; routes gaps to keyword-verifier + faq-agent; updates top-pages.md with LLM Visibility scores
 - `.claude/agents/cag-directory-submission-agent.md` — bird breeder directory research + competitor gap analysis; Playwright form submission; data/directories.json registry; CITES safety rule: never submits to directories that accept wild-caught birds; run quarterly
 - `.claude/agents/cag-competitive-keyword-gap-agent.md` — Playwright sitemap + H1/H2/title extraction; opportunity scoring 1–10 (CITES content gaps flagged as high priority); Score ≥7 = build this page; saves to docs/research/; run monthly
 - `.claude/agents/cag-competitor-pricing-alert-agent.md` — weekly Playwright price extraction from top 5 competitors; $150+ single-variant change or $300+ overall triggers alert; data/competitor-prices.json uses "congo"/"timneh" keys; saves to sessions/YYYY-MM-DD-pricing-report.md
@@ -136,6 +173,8 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - `.claude/agents/cag-email-lead-nurture-agent.md` — 5-touch email sequence (Day 0/3/7/14/30); Touch 2 addresses CITES documentation questions; Touch 3 reads live clutch-inventory.json; pricing: CAG $1,500–$3,500 / TAG $1,200–$2,500; never misrepresents CITES status; all templates require human review
 - `.claude/agents/cag-heatmap-analyst-agent.md` — interprets Clarity/Hotjar/FullStory data (scroll depth, click heatmap, rage clicks, session recordings, exit pages); African Grey lens: extended CITES-section reading = trust validation not confusion; sets up Microsoft Clarity if no tracking; requires user to provide data
 - `.claude/agents/cag-funnel-analysis-agent.md` — 5-stage funnel (Discovery→Engagement→Intent Signal→Form Reach→Conversion); research cycle: 4–8 weeks for African Grey buyers; Stage 1 threshold: <30/month = focus on traffic first; Stage-specific CAG diagnosis (CITES doubt, scam fear, captive-bred credibility); benchmark: Overall >1.5%; run quarterly
+- `.claude/agents/cag-clutch-manager.md` — single source of truth for bird inventory; updates availability in `site/content/available/`; writes `data/clutch-inventory.json`; never deletes sold listings
+- `.claude/agents/cag-self-update.md` — self-update agent for CAG system files; run when agents/skills need patching
 
 ## Phase 2 Workflow
 

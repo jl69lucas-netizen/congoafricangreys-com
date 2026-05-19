@@ -16,8 +16,27 @@ Caller provides:
 - `TARGET_PAGE` — full path to the page file (`.astro` or `.html`)
 - `SECTION` — which section gets the infographic (e.g. "hero", "price comparison section", "after intro paragraph")
 - `CONTENT` — data to display: titles, feature items with icons, descriptions, prices
+- `MODE` (optional) — `html` (default) or `ai`
+- `PROVIDER` (optional, only when MODE=ai) — `nanobanna` (default), `openai`
 
 ## Execution Steps
+
+### Step 0: Determine Mode
+
+Check caller input for `MODE` and `PROVIDER`:
+
+| Caller says | MODE | PROVIDER |
+|------------|------|---------|
+| "use Claude Code" / "use HTML" / no MODE given | `html` | n/a |
+| "use Nano Banana" / "use nanobanna" / "use Google" | `ai` | `nanobanna` |
+| "use OpenAI" / "use DALL-E" | `ai` | `openai` |
+
+**If MODE=html:** proceed with Steps 1–9 below (HTML/CSS generation).
+
+**If MODE=ai:** read `skills/cag-infographic.md` → Type 4. Build the pro-grade prompt, run
+`./scripts/generate_nb_image.sh` (nanobanna) or `./scripts/generate_image.sh` (openai),
+then insert the responsive `<img>` wrapper into the target page. Skip Steps 2–4
+(type/height selection — not applicable for AI image mode).
 
 ### Step 1: Read files
 
