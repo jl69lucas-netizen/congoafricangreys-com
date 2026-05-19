@@ -1,6 +1,6 @@
 ---
 name: cag-infographic
-description: Build 300–350px-tall HTML/CSS infographics for CongoAfricanGreys.com pages. Three types: Comparison, Feature Grid, Process Flow. Pure HTML — no images, no external libs. CAG brand colors. Use in Astro pages via component import or raw HTML paste in static HTML files.
+description: Build 400–450px-tall HTML/CSS infographics for CongoAfricanGreys.com pages. Three types: Comparison, Feature Grid, Process Flow. Pure HTML — no images, no external libs. CAG brand colors. Default height: 400px. Use in Astro pages via component import or raw HTML paste in static HTML files.
 ---
 
 # CAG Infographic Skill
@@ -24,19 +24,19 @@ description: Build 300–350px-tall HTML/CSS infographics for CongoAfricanGreys.
 
 ## Height Determination Rules
 
-The agent MUST pick a height in the 300–350px range before writing any HTML:
+The agent MUST pick a height in the 400–450px range before writing any HTML:
 
 | Content density | Recommended height |
 |----------------|-------------------|
-| 2 feature rows per column | 300px |
-| 3 feature rows per column | 320px |
-| 4 feature rows per column | 340px |
-| 4 rows + dense footer bar | 350px |
-| Hero section (less room above fold) | 300px |
-| Mid-page section (more room) | 320–340px |
+| 2 feature rows per column | 400px |
+| 3 feature rows per column | 420px |
+| 4 feature rows per column | 440px |
+| 4 rows + dense footer bar | 450px |
+| Hero section (less room above fold) | 400px |
+| Mid-page section (more room) | 420–440px |
 
-**Never exceed 350px. Never go below 300px.**
-Set height via: `style="height: 320px; min-height: 300px; max-height: 350px;"`
+**Default: 400px. Never exceed 450px. Never go below 380px.**
+Set height via: `style="height: 400px; min-height: 380px; max-height: 450px;"`
 
 ## Brand Colors
 
@@ -209,7 +209,7 @@ Always wrap the infographic in this container regardless of type or page:
 
 ## Integration Checklist (run before every commit)
 
-- [ ] Height set in 300–350px range: `style="height: Xpx; min-height: 300px; max-height: 350px;"`
+- [ ] Height set in 400–450px range: `style="height: Xpx; min-height: 380px; max-height: 450px;"`
 - [ ] `overflow: hidden` on root element
 - [ ] `flex-shrink: 0` on title and footer bars
 - [ ] No `<script>` tags — pure HTML/CSS only

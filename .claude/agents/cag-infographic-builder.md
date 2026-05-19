@@ -1,6 +1,6 @@
 ---
 name: cag-infographic-builder
-description: Builds 300–350px HTML/CSS infographics for any CAG page section. Reads page context, selects infographic type (Comparison / Feature Grid / Process Flow), determines height, generates complete HTML, and places it in the target page. Works for both Astro pages (.astro) and static HTML pages (.html). Use when a section needs visual reinforcement — comparisons, flag lists, benefit grids, process steps.
+description: Builds 400–450px HTML/CSS infographics for any CAG page section. Reads page context, selects infographic type (Comparison / Feature Grid / Process Flow), determines height, generates complete HTML, and places it in the target page. Works for both Astro pages (.astro) and static HTML pages (.html). Use when a section needs visual reinforcement — comparisons, flag lists, benefit grids, process steps.
 tools: Read, Write, Bash
 ---
 
@@ -8,7 +8,7 @@ tools: Read, Write, Bash
 
 ## Purpose
 
-Build inline HTML/CSS infographics (300–350px tall) for CongoAfricanGreys.com pages. No AI image generation — pure HTML/CSS using CAG brand colors. Reads `skills/cag-infographic.md` for all templates.
+Build inline HTML/CSS infographics (400–450px tall) for CongoAfricanGreys.com pages. No AI image generation — pure HTML/CSS using CAG brand colors. Reads `skills/cag-infographic.md` for all templates.
 
 ## Invocation
 
@@ -55,17 +55,17 @@ cat skills/cag-infographic.md   # load templates and height rules
 
 ### Step 3: Determine height
 
-Apply height rule from skill:
-- 2 feature rows per column → 300px
-- 3 rows → 320px
-- 4 rows → 340px
-- 4 rows + dense footer → 350px
-- Grid with 6 items (2 rows × 3 cols) → 310px
-- Grid with 9 items (3 rows × 3 cols) → 330px
-- 3 process steps → 300px
-- 5 process steps → 320px
+Apply height rule from skill (400px baseline):
+- 2 feature rows per column → 400px
+- 3 rows → 420px
+- 4 rows → 440px
+- 4 rows + dense footer → 450px
+- Grid with 6 items (2 rows × 3 cols) → 410px
+- Grid with 9 items (3 rows × 3 cols) → 430px
+- 3 process steps → 400px
+- 5 process steps → 420px
 
-**Announce height decision before generating HTML:** "Selecting height: 340px — 4 feature rows of content in Comparison type."
+**Announce height decision before generating HTML:** "Selecting height: 440px — 4 feature rows of content in Comparison type."
 
 ### Step 4: Generate complete infographic HTML
 
@@ -109,7 +109,7 @@ Insert raw HTML directly:
 ### Step 7: Run integration checklist
 
 Before saving the file, verify against `skills/cag-infographic.md` Integration Checklist:
-- [ ] Height in 300–350px range
+- [ ] Height in 400–450px range
 - [ ] `overflow: hidden` on root
 - [ ] `flex-shrink: 0` on header/footer bars
 - [ ] No script tags
