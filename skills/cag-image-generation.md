@@ -1,6 +1,6 @@
 ---
 name: cag-image-generation
-description: Generates context-aware images for CongoAfricanGreys.com pages using one of three providers — OpenAI DALL-E 3 (best quality), Google Gemini 2.0 Flash + Imagen 3 fallback (fast, photorealistic), or Anthropic Claude (refines prompt then calls OpenAI). Reads page content to extract section context before generating. API keys stored in .openai-key / .google-key / .anthropic-key in project root. Produces square/portrait/landscape variants, then auto-optimizes to WebP. Hands off to cag-image-pipeline agent for placement. Use when the breeder needs images generated automatically rather than via Midjourney manually.
+description: Generates context-aware images for CongoAfricanGreys.com pages. Four providers — OpenAI DALL-E 3, Nano Banana 2 / Google Imagen (nanobanna flag, GEMINI_API_KEY), Anthropic Claude prompt-refine, or Claude Code HTML (native HTML/CSS infographics, no API). Pro-grade 9:16 prompt template (1200×2133px native, scales to 350px via CSS). Reads page content before generating. Keys in .openai-key / .google-key / .anthropic-key. WebP optimization. Hands off to cag-image-pipeline. Say "use Nano Banana", "use Claude", "use OpenAI", or "use Claude Code HTML" to select provider.
 ---
 
 # CAG Image Generation Skill
@@ -13,11 +13,26 @@ description: Generates context-aware images for CongoAfricanGreys.com pages usin
 
 | Provider | Command flag | Best for | Key file |
 |----------|-------------|---------|---------|
-| OpenAI DALL-E 3 | `openai` (default) | Creative/stylized, reliable | `.openai-key` |
-| Google Gemini 2.0 Flash | `google` | Photorealistic lifestyle shots; falls back to Imagen 3 | `.google-key` |
+| OpenAI DALL-E 3 | `openai` (default) | Creative/stylized brand assets, icons | `.openai-key` |
+| **Nano Banana 2 / Google Imagen** | `nanobanna` or `google` | Photorealistic lifestyle shots + AI infographics; 9:16 native high-res | `.google-key` (= `GEMINI_API_KEY`) |
 | Anthropic Claude | `anthropic` | Claude refines prompt → calls OpenAI to generate | `.anthropic-key` + `.openai-key` |
+| **Claude Code HTML** | `claude-html` | HTML/CSS infographics — no image file, no API cost, fully editable | none (Claude generates code) |
 
-**Recommendation for CAG:** Use `google` for lifestyle/bird photos (photorealistic, Gemini 2.0 Flash quality). Use `openai` for infographics, icons, and brand assets. Use `anthropic` when the prompt feels too generic and needs Claude to sharpen it first.
+**How to invoke a specific provider:**
+- "use Nano Banana" or "use nanobanna" → Nano Banana 2 (Google Imagen)
+- "use Claude Code" or "use HTML" → `claude-html` mode (HTML/CSS infographic)
+- "use OpenAI" → DALL-E 3
+- "use Gemini" or "use Google" → Nano Banana 2 (same API)
+
+**Recommendation for CAG:** Use `nanobanna` for AI infographics and lifestyle bird photos. Use `claude-html` for 90% of infographics — instant, no cost, fully brand-compliant. Use `openai` for icons or creative brand assets. Use `anthropic` when the prompt needs Claude to sharpen it first.
+
+**Nano Banana 2 setup:**
+```bash
+echo 'AIza...' > .google-key
+export GEMINI_API_KEY=$(cat .google-key)
+# Verify .google-key is in .gitignore before committing
+grep ".google-key" .gitignore || echo ".google-key" >> .gitignore
+```
 
 ---
 
@@ -101,6 +116,46 @@ Bird appears healthy, alert, and in a loving home environment.
 ```
 
 **CITES safety rule:** Never describe imagery in a way that could suggest wild capture, transport crates, or importation. All images must show birds in settled, domestic home environments.
+
+---
+
+## Pro-Grade Prompt Template (Nano Banana 2 / Google Imagen)
+
+Use this template when `nanobanna` or `google` is selected. Fill in ALL-CAPS placeholders. Generates at 9:16 / 1200×2133px native for perfect CSS downscale to 300–350px.
+
+```
+Role: Professional marketing designer for pet services specializing in responsive UI/UX assets.
+Scene: SCENE_DESCRIPTION
+Style: CAG brand aesthetic (Forest Green #2D6A4F, Clay #e8604c, Cream #faf7f4).
+       Lora serif for headers, Sora sans for body text.
+Technical:
+  - Aspect Ratio: 9:16 (Vertical) for mobile/tablet optimization.
+  - Dimensions: High-density 1200×2133px render for perfect downscaling to 300–350px desktop.
+  - Camera: Professional studio macro-lens clarity, flat-lay design composition,
+            ISO 100, f/8, sharp focus on all text elements.
+  - Responsive Ready: Minimalist, uncluttered layout with balanced white space to ensure
+                      legibility when downscaled to 300px width.
+Text Constraints: Render title "TITLE_TEXT" in Lora serif at the top.
+                  Use ALL CAPS for section headers. High contrast between text and background.
+Content:
+  - CONTENT_ITEM_1
+  - CONTENT_ITEM_2
+  - CONTENT_ITEM_3
+Quality Levers: Photorealistic, professional graphic design, crisp vector-style iconography,
+                ultra-sharp text rendering, 8K resolution, high fidelity, no blurry text.
+CITES Safety: No wire cages, no aviary settings, no wild-capture imagery.
+              All birds shown in loving home environments, domestic setting only.
+```
+
+**Iterative editing (Nano Banana conversational follow-up):**
+- "Change the clay background to cream, keep the green headers and overall layout."
+- "Make the title text larger — it must be readable at 300px width."
+- "Use the attached image as a style reference and generate a new infographic matching this palette."
+
+**Generation command:**
+```bash
+./scripts/generate_nb_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-nb.png" "1200x2133"
+```
 
 ---
 
@@ -193,11 +248,36 @@ CAG image-pipeline will:
 
 ## Aspect Ratio Quick Reference
 
-| Ratio | DALL-E Size | Best for |
-|-------|------------|---------|
-| 1:1 Square | 1024×1024 | Bird cards, social thumbnails, profile photos |
-| 9:16 Portrait | 1024×1792 | Mobile heroes, Instagram Stories |
-| 16:9 Landscape | 1792×1024 | Desktop hero banners, blog post headers |
+| Ratio | Native size (Nano Banana) | DALL-E size | Best for |
+|-------|--------------------------|------------|---------|
+| **9:16 Portrait** | **1200×2133px** | 1024×1792 | **AI infographics, mobile heroes — display at 300–350px via CSS** |
+| 1:1 Square | 1024×1024 | 1024×1024 | Bird cards, social thumbnails, profile photos |
+| 16:9 Landscape | 1792×1024 | 1792×1024 | Desktop hero banners, blog post headers |
+
+**Why 1200×2133px for infographics:** Generating at native high-res then scaling down via CSS keeps text razor-sharp. At 300px display width, each CSS pixel maps to ~4 source pixels. Never generate at 300px — text will be blurry.
+
+**Responsive CSS for AI infographic images:**
+```css
+.cag-ai-infographic {
+  max-width: 350px;  /* enforced desktop width */
+  width: 100%;       /* fluid on mobile/tablet */
+  height: auto;      /* preserves 9:16 ratio */
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(60,30,10,0.15);
+}
+```
+
+**HTML placement wrapper:**
+```html
+<div style="margin: 2rem auto; max-width: 350px; padding: 0 1rem; text-align:center;">
+  <img src="[path/to/infographic.webp]"
+       alt="[primary keyword + description]"
+       width="1200" height="2133"
+       loading="lazy"
+       style="max-width:350px;width:100%;height:auto;border-radius:12px;
+              box-shadow:0 4px 24px rgba(60,30,10,0.15);">
+</div>
+```
 
 #### Hero-Specific Focal Point Rules
 

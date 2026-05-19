@@ -10,6 +10,18 @@ description: Build 300–350px-tall HTML/CSS infographics for CongoAfricanGreys.
 - The section has enough data for 2–4 rows / 6–12 grid items
 - You want visual differentiation without adding an AI-generated image
 
+## Mode Selection — HTML/CSS vs AI-Generated
+
+| Mode | When to use | Provider |
+|------|------------|---------|
+| **HTML/CSS (Claude Code native)** | Default. Instant, brand-perfect, no API cost, fully editable. Use for 90% of cases. | Claude Code generates code directly — say "use Claude Code" or "use HTML" |
+| **AI-Generated Image** | Photorealistic/artistic style needed, or design complexity beyond HTML. | `nanobanna` (Google Imagen) · `openai` (DALL-E 3) |
+
+**How to request each mode:**
+- "Build an infographic using Claude Code" → HTML/CSS (Types 1–3 below)
+- "Build an AI infographic using Nano Banana" → Type 4 below
+- "Build an AI infographic using OpenAI" → Type 4 with `openai` flag
+
 ## Height Determination Rules
 
 The agent MUST pick a height in the 300–350px range before writing any HTML:
@@ -219,3 +231,73 @@ When pasting raw HTML, always add a comment on the opening `<div>`:
 ```html
 <!-- CAG Infographic: [Type] | [Page] | height: [X]px | Added: YYYY-MM-DD -->
 ```
+
+---
+
+## Type 4: AI-Generated Image Infographic (Nano Banana 2 / OpenAI)
+
+**Use for:** Photorealistic or artistically complex infographic images where HTML/CSS cannot express the required design. Use HTML/CSS types 1–3 for 90% of cases.
+
+**Output:** A 1200×2133px (9:16) WebP image, displayed at 300–350px via CSS. Generated at native high-res so text stays razor-sharp when CSS scales it to 300–350px. Never generate at 300px — text will be blurry.
+
+### Pro-Grade Prompt Template
+
+Fill in ALL-CAPS placeholders:
+
+```
+Role: Professional marketing designer for pet services specializing in responsive UI/UX assets.
+Scene: SCENE_DESCRIPTION
+Style: CAG brand aesthetic (Forest Green #2D6A4F, Clay #e8604c, Cream #faf7f4).
+       Lora serif for headers, Sora sans for body text.
+Technical:
+  - Aspect Ratio: 9:16 (Vertical) for mobile/tablet optimization.
+  - Dimensions: 1200×2133px render for perfect downscaling to 300–350px desktop width.
+  - Camera: Professional studio macro-lens clarity, flat-lay design composition,
+            ISO 100, f/8, sharp focus on all text elements.
+  - Responsive Ready: Minimalist, uncluttered layout with balanced white space to ensure
+                      legibility when downscaled to 300px.
+Text Constraints: Render title "TITLE_TEXT" in Lora serif at top.
+                  Use ALL CAPS for section headers. High contrast on all text.
+Content:
+  - CONTENT_ITEM_1
+  - CONTENT_ITEM_2
+  - CONTENT_ITEM_3
+Quality Levers: Photorealistic, professional graphic design, crisp vector-style iconography,
+                ultra-sharp text rendering, 8K resolution, high fidelity, no blurry text.
+CITES Safety: No wire cages, no aviary settings. Birds in loving home environments only.
+```
+
+### Generation Commands
+
+```bash
+# Nano Banana 2 (Google Imagen) — primary choice
+./scripts/generate_nb_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-nb.png" "1200x2133"
+
+# OpenAI DALL-E 3 (portrait mode)
+./scripts/generate_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-openai.png" "1024x1792" "openai"
+```
+
+### HTML Placement Wrapper
+
+```html
+<!-- AI Infographic: [slug] | Provider: [nanobanna/openai] | Generated: YYYY-MM-DD -->
+<div style="margin: 2rem auto; max-width: 350px; padding: 0 1rem; text-align:center;">
+  <img src="[wp-content/uploads/filename.webp]"
+       alt="[Primary keyword + descriptive text]"
+       width="1200"
+       height="2133"
+       loading="lazy"
+       style="max-width:350px;width:100%;height:auto;border-radius:12px;
+              box-shadow:0 4px 24px rgba(60,30,10,0.15);">
+</div>
+```
+
+### Integration Checklist (AI infographic)
+
+- [ ] Generated at 1200×2133px (9:16) — never at final display size
+- [ ] WebP conversion completed (`.webp` not `.png` in production)
+- [ ] `width="1200" height="2133"` attributes on `<img>` (prevents layout shift)
+- [ ] `loading="lazy"` unless this is the first above-fold image
+- [ ] `max-width: 350px; width: 100%; height: auto;` CSS applied
+- [ ] Alt text includes primary keyword
+- [ ] Handed off to `cag-image-pipeline` for SEO filename rename
