@@ -1,7 +1,7 @@
 ---
 name: cag-location-builder
 description: Builds or rebuilds state location pages for /african-grey-parrot-for-sale-[state]/. Reads data/locations.json for live states and states to build. Supports fork-parallel execution — parent spawns one child per state. Uses Florida page as the reference template (22 sections, 4,500+ words).
-model: claude-sonnet-4-6
+model: claude-opus-4-7
 tools: [Read, Write, Bash]
 ---
 
@@ -214,6 +214,29 @@ Child agent receives:
 
 ---
 
+## Pre-Build: Outline First (Rule 51 — MANDATORY)
+
+Before building ANY state location page (single or batch mode), produce the Page Outline and obtain explicit user approval. Do NOT write section 1 until approval is received.
+
+**For single mode:** produce the outline for the one state page.
+**For batch mode:** produce a consolidated outline table for all states showing the H2 structure, keyword distribution, and special elements for each state. User approves the batch outline before any state file is written.
+
+The outline must include:
+
+**A. H1–H6 Heading Tree** — using the 22-section template as the base, customized per state. Must include all six heading levels (H1→H2→H3→H4→H5→H6, no skips). Must include ≥5 H5 and ≥3 H6 entries per page.
+
+**B. Keyword Distribution Table** — section by section for the state: primary KW, LSI, longtail, NLP, comparison KWs, word count per section.
+
+**C. Special Elements Plan** — newsletter position, contact/inquiry form positions (3× required), comparison table, counter snippets (4× after H1), trust bar, FAQ sections.
+
+**D. Competitor Snapshot** — top 3–5 competitors for `"african grey parrot for sale [state]"`: their H2 topics, word count, special elements, keywords.
+
+**E. Fan-Out Keywords** — state-specific longtails, city name modifiers, NLP queries, PAA questions.
+
+**⏸ STOP — Do not write section 1 until the user explicitly approves the outline.**
+
+---
+
 ## Build Protocol — Single Mode
 
 ### Before each section:
@@ -227,10 +250,10 @@ Child agent receives:
 3. Write to `site/content/[slug]-rebuild/section-[N].html`
 
 ### After all 22 sections approved:
-1. Read existing page — copy head + nav verbatim
-2. Insert all sections in order
-3. Append footer verbatim
-4. Write to `site/content/african-grey-parrot-for-sale-[state]/index.md`
+1. Wrap all sections in `<BaseLayout>` — header and footer are injected automatically by `src/layouts/BaseLayout.astro`
+2. Set title, description, canonical props on BaseLayout
+3. Content starts at the hero `<section>` — never write `<header>` or `<footer>` HTML in the page file
+4. Write to `src/pages/african-grey-parrot-for-sale-[state]/index.astro`
 
 ---
 
@@ -256,7 +279,9 @@ Child agent receives:
 2. **H1 pattern is fixed** — "African Grey Parrot for Sale in {STATE} | Captive-Bred | CongoAfricanGreys.com"
 3. **Prices from data/price-matrix.json** — never hardcode
 4. **Both FAQ sections need FAQPage schema** — no exceptions
-5. **Stage before write** — never touch `site/content/[slug]/` until all sections approved
+5. **Stage before write** — never touch the final Astro file until all sections are approved
 6. **Add to sitemap after every new page** — must be updated
 7. **Batch mode requires explicit user approval** before forking all states simultaneously
 8. **CITES compliance** — every page must include federal CITES requirements and note that all documentation is included
+9. **Outline first (Rule 51)** — produce and get approval of the Page Outline before writing any section; this applies in both single and batch mode; batch outline covers all states at once
+10. **Header/Footer: NEVER TOUCH (Rule 53)** — location pages inherit header and footer from `src/layouts/BaseLayout.astro` automatically; never write `<header>` or `<footer>` HTML in page files; start all content at the hero `<section>`; this rule applies to all forked child agents in batch mode

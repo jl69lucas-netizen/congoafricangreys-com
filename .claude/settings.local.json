@@ -62,7 +62,28 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(npm ls *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "WebFetch(domain:www.rationalparrot.com)",
+      "WebFetch(domain:www.allaboutparrots.com)",
+      "WebFetch(domain:www.birdaddicts.com)",
+      "WebFetch(domain:www.mariettabirdshop.com)",
+      "WebFetch(domain:www.chewy.com)",
+      "WebSearch"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "git push 2>&1 || true",
+            "if": "Bash(git commit*)",
+            "statusMessage": "Pushing to remote..."
+          }
+        ]
+      }
     ]
   }
 }

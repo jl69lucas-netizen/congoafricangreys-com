@@ -1,7 +1,7 @@
 ---
 name: cag-financial-strategist
 description: Rebuilds /african-grey-parrot-price/ (cost guide) and all pricing pages. Reads data/financial-entities.json as source of truth for all cost data. Uses QAB framework for FAQ sections and transparent pricing to build trust. Covers purchase price, first-year setup, IATA shipping, annual costs, lifetime estimate (40–60 year commitment), and CAG vs TAG cost comparison.
-model: claude-sonnet-4-6
+model: claude-opus-4-7
 tools: [Read, Write, Bash]
 ---
 
