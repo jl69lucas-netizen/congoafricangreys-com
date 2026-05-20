@@ -267,7 +267,13 @@ function hasActiveChild(children: any[]) {
     if (e.key === 'Escape') {
       dropdownWraps.forEach(wrap => {
         const btn = wrap.querySelector<HTMLButtonElement>('.nav-dropdown-btn');
-        if (btn) btn.setAttribute('aria-expanded', 'false');
+        if (btn) {
+          btn.setAttribute('aria-expanded', 'false');
+          // Restore focus to the trigger button
+          if (wrap.contains(document.activeElement) && document.activeElement !== btn) {
+            btn.focus();
+          }
+        }
       });
     }
   });
