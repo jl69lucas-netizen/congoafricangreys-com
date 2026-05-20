@@ -208,7 +208,12 @@ Active design system: `docs/design.md` (master reference) + `docs/design-system/
 4. **Cards:** 20px radius, 1px `--border`, warm shadow, white surface. Info cards use green header band.
 5. **Shadows:** Always warm-tinted `rgba(60,30,10,…)`. Never neutral grey.
 6. **Motion:** Max 0.2s transitions. No bounce, no parallax, no auto-playing video.
-7. **Emoji:** Canonical set only (📞 ✉️ 📍 🕐 ✈️ 🚗 🦜 ✅ ❋). One per element. No marketing emoji (🎉 🔥 🚀).
+7. **Emoji:** Canonical set only (📞 ✉️ 📍 🕐 ✈️ 🚗 ✅ ❋). One per element. No marketing emoji (🎉 🔥 🚀).
+   - **African Grey bird icon — NEVER use 🦜** (generic green parrot, NOT an African Grey). Use custom images:
+     - Congo African Grey: `<img src="/emoji/cag-congo.png" alt="Congo African Grey" class="cag-emoji" loading="lazy">`
+     - Timneh African Grey: `<img src="/emoji/cag-timneh.png" alt="Timneh African Grey" class="cag-emoji" loading="lazy">`
+     - Large decorative (100px+): `<img src="/emoji/cag-congo.png" style="width:Xpx;height:Xpx;object-fit:contain;" alt="" loading="lazy">` — match original font-size value
+     - Plain text / email / JS string contexts: use `[CAG]` or `[TAG]` as text markers — HTML img not possible in strings
 8. **Anti-copy:** NEVER add `user-select: none` CSS or JS.
 
 ### Component Library v2
