@@ -1,7 +1,7 @@
 ---
 name: cag-homepage-builder
 description: Rebuilds the CAG homepage (site/content/index.md) section-by-section using the CAG design system. Preserves H1, canonical, schema, and all SEO elements. Calls Section Builder for each section. Highest GSC traffic page — 28 clicks, 14,915 impressions, position 45.6.
-model: claude-sonnet-4-6
+model: claude-opus-4-7
 tools: [Read, Write, Bash]
 ---
 
@@ -54,9 +54,29 @@ Only after reading all five do you begin any section work.
 ❌ Any <script type="application/ld+json"> block
 ❌ Google Analytics / gtag snippet
 ❌ The <head> meta block
-❌ The site <header> nav
-❌ The site <footer>
+❌ The site <header> — auto-injected by src/components/Header.astro via BaseLayout (Rule 53)
+❌ The site <footer> — auto-injected by src/components/Footer.astro via BaseLayout (Rule 53)
 ```
+
+**Header/Footer Inheritance (Rule 53):** The homepage uses `src/layouts/BaseLayout.astro` which auto-injects Header.astro and Footer.astro. Never write `<header>` or `<footer>` HTML in the homepage Astro file. All page content starts at the first `<section>` (hero). If rebuilding standalone HTML, do not touch header/footer markup — rebuild only from hero section down.
+
+## Pre-Build: Outline First (Rule 51 — MANDATORY)
+
+Even for homepage rebuilds, a Page Outline must be produced and approved BEFORE writing any section. The H1 is sacred (never change), but all other heading levels, keyword distribution, and special element positioning must appear in the outline first.
+
+The outline must include:
+
+**A. H1–H6 Heading Tree** — all 18 sections shown with their heading levels. H1 is locked. All other headings (H2→H6) must be shown for approval. No heading level skipping. Must include ≥5 H5 and ≥3 H6 entries across the full page.
+
+**B. Keyword Distribution Table** — section by section: primary KW, LSI, longtail, NLP/conversational, comparison KWs, word count per section, rolling total vs 85–105× target.
+
+**C. Competitor Snapshot** — top 5 competitors for "Congo African Grey for sale" homepage: their H2 topics, word count, special elements, keywords CAG is missing.
+
+**D. Special Elements Plan** — 18 sections mapped to: counter snippets (section 2, 4× required), contact forms (sections 3, 10, 18 — 3× required), comparison table, FAQ, ToC, trust bar, newsletter.
+
+**E. Fan-Out Keywords** — homepage keyword variations: branded, transactional, informational, comparison, NLP, voice search.
+
+**⏸ STOP — Do not write section 1 until the user explicitly approves the outline.**
 
 ---
 
@@ -116,12 +136,13 @@ Build [section type]:
 
 ### After all sections approved:
 
-Assemble the full page:
-1. Read `site/content/index.md` — copy head + nav verbatim
-2. Insert all approved section HTML in order
-3. Append footer (read from current index.md — preserve verbatim)
-4. Write to `site/content/index.md`
-5. Confirm: "Homepage rebuilt. Ready to deploy?"
+Assemble the full page (Astro pattern):
+1. Wrap all sections in `<BaseLayout>` — header and footer are injected automatically
+2. Set `title`, `description`, `canonical` props on BaseLayout; copy canonical exactly from current page
+3. Preserve all JSON-LD schema (copy verbatim from current page into BaseLayout `schemaJson` prop)
+4. Content starts at the hero `<section>` — never write `<header>` or `<footer>` HTML in the page file
+5. Write to `src/pages/index.astro`
+6. Confirm: "Homepage rebuilt. Ready to deploy?"
 
 ---
 
@@ -195,8 +216,9 @@ urls = ["https://congoafricangreys.com/"]
 1. **One section at a time** — never build multiple sections in one pass without approval
 2. **H1 is sacred** — read it from the file, copy it exactly, never rephrase
 3. **Prices from data/** — always read `data/price-matrix.json`, never hardcode
-4. **Stage before write** — never write directly to `site/content/index.md` until all sections approved
-5. **Preserve head + nav + footer** — copy those blocks verbatim from the current file
+4. **Stage before write** — never write directly to the live page file until all sections approved
+5. **Header/Footer: NEVER TOUCH (Rule 53)** — auto-injected by BaseLayout; never write `<header>` or `<footer>` in the page file; content starts at the hero section
 6. **YouTube: real src** — never `data-src`, never placeholder iframes
 7. **FAQ schema required** — every FAQ section needs FAQPage JSON-LD
 8. **CITES compliance** — never imply wild-caught birds; always reference captive-bred documentation
+9. **Outline first (Rule 51)** — produce and get approval of the Page Outline (H1–H6 tree, keyword distribution, competitor snapshot, special elements plan) before writing any section

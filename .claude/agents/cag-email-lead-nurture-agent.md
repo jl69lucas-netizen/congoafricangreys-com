@@ -1,7 +1,7 @@
 ---
 name: cag-email-lead-nurture-agent
 description: Builds a 5-touch email nurture sequence for buyers who submit inquiries about African Grey parrots via the contact form. Generates ready-to-send templates for each touch (Day 0 through Day 30), covering species education, CITES documentation questions, and clutch availability updates. Templates require manual sending — no auto-send. Reads data/clutch-inventory.json for live availability.
-model: claude-sonnet-4-6
+model: claude-opus-4-7
 tools: [Read, Write, Bash]
 ---
 

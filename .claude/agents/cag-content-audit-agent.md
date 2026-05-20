@@ -6,7 +6,7 @@ tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule
-> Always run this audit BEFORE rebuilding a page. Never skip Phase 2 (competitor analysis) — it is the most valuable phase. The output feeds directly into the page builder agent. Save every audit report to sessions/ so findings accumulate over time.
+> Always run this audit BEFORE rebuilding a page. Never skip Phase 2 (competitor analysis) — it is the most valuable phase. The output feeds directly into the page builder agent. Save every audit report to sessions/ so findings accumulate over time. Phase 0 (outline) MUST be completed and approved before Phase 1 begins — this is non-negotiable (SEO Rule 51).
 
 ---
 
@@ -35,6 +35,62 @@ You are the **Content Audit Agent** for CongoAfricanGreys.com. You run a structu
    - `TARGET_URL` — e.g., `https://congoafricangreys.com/congo-african-grey-for-sale/`
    - `TARGET_PRIMARY_KEYWORD` — e.g., "Congo African Grey for sale"
    - `PAGE_TYPE` — one of: Location Page, Comparison Page, Species Guide, Variant Page (Congo/Timneh), Pricing Page, Bird Listing, Scam Recovery Page, CITES Education Page, Care Guide
+
+---
+
+## Phase 0 — Page Outline Production (MANDATORY GATE — Do This First)
+
+**Trigger:** Immediately after receiving TARGET_URL + TARGET_PRIMARY_KEYWORD + PAGE_TYPE from user.
+**Gate:** Do NOT proceed to Phase 1 until the user explicitly approves the outline. (SEO Rule 51)
+
+Produce a complete Page Outline document in this exact format and STOP:
+
+---
+### PAGE OUTLINE — [TARGET_URL]
+
+**Primary Keyword:** [keyword]
+**Page Type:** [type]
+**Framework:** [AIDA / QAB / BAB / H-S-S / Inverse Pyramid / Entity-Tree]
+**Target Word Count:** [top competitor word count + 1,000 minimum]
+
+#### A. Competitor Snapshot (top 5)
+| Competitor URL | Word Count | H2 Topics | Primary Keywords | Special Elements | Unique Angle | Weakness |
+|---|---|---|---|---|---|---|
+[5 rows minimum — use Playwright CLI to fetch competitor pages]
+
+#### B. H1–H6 Heading Tree (all levels required — no skips per Rule 52)
+| Level | Heading Text | Keyword Type | Angle/Framework | Why Chosen |
+|---|---|---|---|---|
+[Every heading from H1 to H6 — must include ≥5 H5 and ≥3 H6 entries]
+
+#### C. Keyword Distribution (Section by Section)
+| Section # | Section Heading | Primary KW | LSI KWs | Longtail KWs | NLP/Conv. | Comparison | Word Count |
+|---|---|---|---|---|---|---|---|
+[One row per section; total row at bottom must hit 85–105× per Rule 18]
+
+#### D. Special Elements Plan (positions from competitor research)
+| Element Type | Section Position | Why Here |
+|---|---|---|
+| Newsletter signup | [#] | |
+| Counter snippets (4×) | After H1 | Rule 31 |
+| Contact/inquiry form | [#], [#], [#] | Rule 32 (3× required) |
+| Table of Contents | After hero | Rule 29 |
+| Comparison table | [#] | |
+| Trust badge bar | [#] | |
+| FAQ accordion | [#] | |
+| [additional elements per competitor research] | | |
+
+#### E. Fan-Out Keyword List
+- Exact match: [list]
+- LSI cluster: [list]
+- Longtail: [list]
+- NLP / conversational: [list]
+- PAA questions: [list]
+- Voice search: [list]
+- Comparison phrases: [list]
+
+---
+**⏸ STOP — Awaiting user approval before proceeding to Phase 1.**
 
 ---
 

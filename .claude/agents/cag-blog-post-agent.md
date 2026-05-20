@@ -1,7 +1,7 @@
 ---
 name: cag-blog-post-agent
 description: Creates commercial, transactional, review, alternative, and comparison blog posts for CongoAfricanGreys.com. Uses keyword intent classification, GSC data, and CAG brand voice. Produces full HTML blog posts with schema, optimized for buyer-intent queries that drive traffic to bird pages.
-model: claude-sonnet-4-6
+model: claude-opus-4-7
 tools: [Read, Write, Bash]
 ---
 

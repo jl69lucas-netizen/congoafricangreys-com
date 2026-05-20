@@ -165,7 +165,10 @@ Word count = top-ranking competitor's word count + 1,000 words minimum. Target f
 - H1: exactly **1** per page (hero section only)
 - H2: **25–35** throughout (main section headings)
 - H3: **40–50** throughout (subsection headings)
-- H4/H5/H6: as needed, based on page content + competitor structure
+- H4: **10–20** (deep sub-section headings — LSI keyword territory)
+- H5: **5–10** — MANDATORY, not optional; carries deep LSI / technical authority terms
+- H6: **3–8** — MANDATORY, not optional; carries voice search / natural language queries
+- ALL SIX LEVELS are required on every full-length content page (22+ sections). "H4/H5/H6 as needed" is BANNED. H5 and H6 are not decorative — they are required keyword tiers.
 
 **Rule 29 — Table of Contents**
 Required on all pages over 1,500 words. Placed after hero + key takeaways section. Uses anchor links to all major sections.
@@ -320,6 +323,83 @@ Image agent must determine:
 - Leave labeled placeholders when images are not yet available
 
 Alt text must exceed **250 characters**. Image descriptions must exceed **300 words**.
+
+---
+
+## Category I — Page Outline Gate (Mandatory Pre-Build)
+
+**Rule 51 — Page Outline First (No Sections Without Approval)**
+Before writing sections 1–5 for ANY page (new build or rebuild), STOP and produce a complete Page Outline document. Do NOT write any section HTML until the user explicitly approves the outline. The outline must contain ALL of the following:
+
+**A. Page Identity**
+- Target URL slug
+- Primary keyword (exact match)
+- Page type (Transactional / Informational / Comparison / Scam Recovery / Species Guide / Care Guide)
+- Recommended framework (AIDA, PAS, QAB, EBD, BAB, H-S-S, Inverse Pyramid, Entity-Tree)
+- Target word count (top competitor's word count + 1,000 minimum)
+
+**B. Competitor Snapshot (top 5 competitors)**
+For each competitor: URL, word count, all H2 topics listed, primary keywords used, special elements present (calculators, quizzes, newsletters, comparison tables, video), unique angles, weaknesses CAG can exploit.
+
+**C. Complete H1–H6 Heading Tree**
+List every heading on the page with:
+- Heading level (H1/H2/H3/H4/H5/H6)
+- Heading text (draft)
+- Keyword type (Primary / Secondary / LSI / NLP / Longtail / Comparison / Voice Search)
+- Why this heading was chosen (1 sentence)
+- Section angle (AIDA, PAS, QAB, EBD, BAB, H-S-S, Inverse Pyramid, Entity-Tree, Trust, Urgency, Comparison, Value, Lifestyle)
+
+**D. Keyword Distribution Table (section by section)**
+
+| Section | Heading | Primary KW | LSI KWs | Longtail KWs | NLP/Conversational | Comparison KWs | Word Count |
+|---|---|---|---|---|---|---|---|
+
+One row per section from Hero to final CTA. Total row at bottom must hit 85–105× distribution per Rule 18.
+
+**E. Special Elements Plan**
+List every special element on the page with its section position (position determined by competitor research):
+- Newsletter signup (top / middle / bottom — minimum 1 required)
+- Comparison table
+- Price card
+- Calculator or quiz
+- Counter snippets (4 required after H1 per Rule 31)
+- Trust badge bar
+- Contact/inquiry form (3 required per Rule 32)
+- Video embed
+- FAQ accordion
+- Table of Contents (required >1,500 words per Rule 29)
+
+**F. Fan-Out Keyword List**
+All keyword variations planned for the page: exact match, phrase match, LSI clusters, NLP signals, PAA question phrases, voice search queries, location modifiers, comparison phrases.
+
+**GATE:** User must respond with explicit approval ("Approved", "Continue", or specific changes) before any section is written.
+
+---
+
+**Rule 52 — Strict Heading Hierarchy + Mandatory H1–H6 (All Six Levels Required)**
+- Sequential order ONLY: H1 → H2 → H3 → H4 → H5 → H6. Never skip a level.
+- WRONG: H2 directly to H4 (skipped H3) — BANNED ❌
+- WRONG: H3 directly to H5 (skipped H4) — BANNED ❌
+- WRONG: H1 directly to H3 (skipped H2) — BANNED ❌
+- RIGHT: H1 → H2 → H3 → H4 → H5 → H6 → back up to H2 for next section ✓
+- RIGHT: H2 → H3 → H2 (stepping back up to start a new major section) ✓
+- All six levels are REQUIRED on every full-length content page (22+ sections). H5 and H6 are not decorative — they carry deep LSI and voice search keywords respectively.
+- H5 purpose: deep LSI / technical authority terms ("PBFD Screening Protocol", "USDA AWA License Explained", "DNA Sexing Methodology")
+- H6 purpose: voice search / natural language queries ("Is This Bird Good With Kids?", "What Happens After I Pay a Deposit?", "Can I Visit Before Buying?")
+- Every page outline (Rule 51) must include at least **5 H5 headings** and **3 H6 headings**.
+- Special elements (newsletter, forms, comparison tables, quizzes, calculators, trust badges, video) are REQUIRED on every page. Minimum 3 special elements per page; exact type and placement determined by competitor research per Rule 51 Section E.
+
+---
+
+**Rule 53 — Header/Footer Inheritance: Never Touch, Always Inherit**
+- All pages inherit the site header and footer automatically via `src/layouts/BaseLayout.astro`
+- Header component: `src/components/Header.astro` — READ ONLY, never write or modify when building pages
+- Footer component: `src/components/Footer.astro` — READ ONLY, never write or modify when building pages
+- When creating a NEW page: wrap content in BaseLayout, write only what goes between header and footer — start at the hero section
+- When REBUILDING an existing page: skip header and footer entirely, edit only from hero section downward
+- NEVER copy-paste header/footer HTML into page files — BaseLayout handles injection automatically
+- NEVER add a second `<header>` or `<footer>` element inside page content
+- If a standalone HTML page (non-Astro) must be created: import the CAG canonical header/footer snippets from `scripts/rebuild_footer.py` — never hand-write them
 
 ---
 

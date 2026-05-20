@@ -38,16 +38,23 @@ You ask questions one at a time. Never batch them. Never rush. Every answer shap
 
 Before asking any questions:
 
-1. **Read** `CLAUDE.md` — understand current project state, known issues, what's next
-2. **Read** `docs/reference/top-pages.md` — get current traffic data (clicks, impressions, positions)
-3. **Read** `docs/reference/site-overview.md` — site facts, stack, deploy flow
-4. **Run** `ls sessions/` via Bash — find the most recent session brief file (if any)
-5. **Read** the most recent session brief — extract the "What's Next" or "Urgency" notes to pre-fill Q11
+1. **Read** `docs/reference/WORKFLOW.md` — understand sprint sequence and current workflow state
+2. **Read** `CLAUDE.md` — understand current project state, known issues, what's next
+3. **Read** `docs/reference/top-pages.md` — get current traffic data (clicks, impressions, positions, LLM Visibility scores)
+4. **Read** `data/structure.json` — check if topical authority map exists
+5. **Read** `docs/reference/site-overview.md` — site facts, stack, deploy flow
+6. **Run** `ls sessions/` via Bash — find the most recent session brief file (if any)
+7. **Read** the most recent session brief — extract the "What's Next" or "Urgency" notes to pre-fill Q11
 
-Only after completing all five steps above do you begin asking questions.
+After step 4, determine sprint readiness:
+- If `data/structure.json` does NOT exist → note that Sprint 1 (Architecture) hasn't run yet
+- If `data/competitors.json` is empty or missing → note that Sprint 0 (Intelligence) hasn't run yet
+- If `docs/reference/top-pages.md` has no LLM Visibility column → note that `@cag-llm-keyword-intel` hasn't run yet
+
+Only after completing all steps above do you begin asking questions.
 
 Announce that you've loaded the project context before Q1:
-> "Context loaded. I've read the project state, traffic data, and your last session. Let's get into it."
+> "Context loaded. I've read the project state, traffic data, workflow status, and your last session. Let's get into it."
 
 ---
 
@@ -79,6 +86,32 @@ If all top pages are healthy, ask about the page with the biggest gap between im
 
 **Q6 — Specific Target**
 > "What exact page or feature are we building or fixing today? Give me the slug (e.g., /african-grey-parrot-for-sale-florida/)."
+
+After Q6, run the **Workflow Gate Check** before Q7:
+
+```
+WORKFLOW GATE CHECK (run silently after Q6, report findings before Q7):
+
+1. Is this page in data/structure.json?
+   - NO → "Before we build, I need to run @cag-structure-architect to assign this page a place in the site architecture. Want me to do that first?"
+   - YES → continue
+
+2. Has @cag-content-audit-agent been run for this page?
+   - Check sessions/ for a matching audit file
+   - NO → flag: "This page hasn't been audited yet. The audit takes 10 minutes and prevents wasted work — should we run @cag-content-audit-agent first?"
+   - YES → continue
+
+3. What is the LLM Visibility score for this keyword?
+   - Check docs/reference/top-pages.md for LLM Visibility column
+   - NOT MEASURED → note: "LLM Visibility hasn't been measured for this keyword. We should run @cag-llm-keyword-intel before publishing."
+   - MEASURED → report the score (e.g., "LLM Visibility: 3/10 — CAG is cited in 1 of 5 AI engines")
+
+4. What is the page's hub page?
+   - Check data/structure.json for parent hub
+   - If hub page doesn't exist yet → flag: "The hub page [/url/] isn't built yet. Hubs should be built before spokes."
+```
+
+Report the gate findings to the user in one message before asking Q7.
 
 **Q7 — Done Looks Like**
 > "What does 'done' look like at the end of this session? What will you open in a browser or check in GSC to confirm it worked?"
@@ -124,6 +157,16 @@ Write to `sessions/YYYY-MM-DD-session-brief.md` (use today's actual date):
 ## Business Focus
 [1-2 sentences synthesizing Q1-Q4 answers]
 
+## SESSION CONTEXT
+- Page Type: [location | species guide | comparison | blog | money page | hub]
+- Target Keyword: [exact keyword from Q6]
+- Framework: [AIDA | PAS | QAB | Entity-Tree | H-S-S | Inverse Pyramid — assigned by content-architect]
+- Audit Status: [complete | pending → run cag-content-audit-agent first]
+- LLM Visibility: [0–10 score | "not measured" → run cag-llm-keyword-intel]
+- Structure.json Entry: [yes | no → run cag-structure-architect first]
+- Hub Page: [/url/ of parent hub | "needs to be built first"]
+- Internal Links Needed: [from workflow gate check, or "TBD after audit"]
+
 ## Today's Target
 - Page: /slug/
 - Goal: [Q7 answer — what done looks like]
@@ -140,6 +183,12 @@ Write to `sessions/YYYY-MM-DD-session-brief.md` (use today's actual date):
 
 ## Urgency
 [Q12 answer]
+
+## Recommended Next Agent
+[Based on SESSION CONTEXT, recommend the exact next agent to run:
+- If audit not done: @cag-content-audit-agent [slug] [keyword] [page-type]
+- If structure.json missing: @cag-structure-architect
+- If ready to build: @cag-angle-agent → @cag-paa-agent → @cag-seo-content-writer]
 
 ## What's Next
 [Leave this blank — filled in at end of build session by the build agent]
@@ -181,12 +230,24 @@ If yes → write. If skip → move on.
 
 After writing (or skipping) the CLAUDE.md patch, say:
 
-> "Session brief saved. CLAUDE.md updated. Ready to start — which agent or action should we invoke first?
+> "Session brief saved. CLAUDE.md updated.
 >
-> Available for this session:
-> - `@cag-competitor-intel` — deep multi-metric competitor analysis (single or --all mode)
-> - `@cag-rank-tracker` — weekly ranking monitoring and snapshot
-> - Direct content editing in `site/content/` — Phase 2 page-building skills coming; use `site/content/` directly until then"
+> Based on your session context, here's the recommended next step:
+> [Insert one of the following based on SESSION CONTEXT:]
+>
+> **If audit not run:**
+> → Run `@cag-content-audit-agent /[slug]/ "[keyword]" [PAGE_TYPE]` — 10 minutes, prevents wasted work
+>
+> **If structure.json missing:**
+> → Run `@cag-structure-architect` — maps the full site architecture before building
+>
+> **If ready to write content:**
+> → Run `@cag-angle-agent` → then `@cag-paa-agent` → then `@cag-seo-content-writer` or `@cag-non-commodity-content-agent`
+>
+> **If Sprint 0 hasn't run:**
+> → Run `@cag-competitor-registry` first (Sprint 0 — needed before anything else)
+>
+> See `docs/reference/WORKFLOW.md` for the full sprint sequence."
 
 ---
 

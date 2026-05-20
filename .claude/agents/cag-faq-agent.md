@@ -1,7 +1,7 @@
 ---
 name: cag-faq-agent
 description: Builds and audits FAQ sections for any CAG page using the QAB framework. Generates 6–12 questions per page from real buyer language (GSC Queries.csv, PAA boxes, CAG question bank). Produces FAQPage JSON-LD schema, <details>/<summary> accordion HTML, and verifies all answers against data files. Use after any page section audit flags a weak FAQ.
-model: claude-sonnet-4-6
+model: claude-opus-4-7
 tools: [Read, Write, Bash]
 ---
 

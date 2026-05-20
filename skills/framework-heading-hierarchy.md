@@ -94,29 +94,56 @@ For every core H2, generate 5 variations for A/B testing:
 
 ---
 
-### H5 — Deep LSI / Long-Tail LSI (Authority Signals)
+### H5 — Deep LSI / Technical Authority Terms (MANDATORY — Minimum 5 Per Page)
 **Maps to:** Technical and expert terms that establish topical authority on African Grey breeding
 **Format:** Specific technical term + context or explanation
-**Purpose:** Signals expertise to Google; targets niche searchers who know the terminology
+**Purpose:** Signals expertise to Google and AIO; targets niche searchers who know the terminology
+**Status: MANDATORY — not optional. Every full-length page (22+ sections) must have ≥5 H5 headings.**
 
 **Examples:**
 - "Meeting the Parents: Congo African Grey Genetic and Behavioral Lineage."
 - "PBFD Screening Explained: Why It Matters for Your Parrot's Health."
 - "Travel Ready: How [Name] Transfers to Your State with Full CITES Documentation."
 - "USDA AWA License Explained: What Annual Inspection Means for Buyers."
+- "DNA Sexing Methodology: How We Confirm Your Bird's Sex Before Transfer."
+- "Hatch Certificate and Band Number: Your Bird's Identity on Paper."
 
 ---
 
-### H6 — NLP / Natural Language Entities (Voice Search)
+### H6 — NLP / Natural Language Entities / Voice Search (MANDATORY — Minimum 3 Per Page)
 **Maps to:** Phrases users speak into Siri, Alexa, or type into AI chatbots
 **Format:** Natural language question or statement matching real voice queries
 **Purpose:** Captures voice search and AI Overview citations; answers "what users actually say"
+**Status: MANDATORY — not optional. Every full-length page (22+ sections) must have ≥3 H6 headings.**
 
 **Examples:**
 - "Is [Name] Good with Kids and Other Pets?"
 - "What Is the Total Adoption Fee and Is a Deposit Required?"
 - "Ready to Go Home Now: How to Reserve [Name] Today."
 - "Can I See [Name] Before I Commit? How Our Virtual Visits Work."
+- "What Happens After I Pay a Deposit?"
+- "How Long Until My Bird Is Ready to Come Home?"
+
+---
+
+## The No-Skip Law
+
+Heading levels MUST be sequential. You cannot use H2 and then jump to H4 — H3 must come first.
+The only legal movements are: one level down (H2 → H3), or back up to any higher level to start a new section (H4 → H2 is fine when starting a new major topic).
+
+**ILLEGAL patterns — these break the heading audit and hurt SEO:**
+- H2 → H4 (skipped H3) ❌
+- H3 → H5 (skipped H4) ❌
+- H1 → H3 (skipped H2) ❌
+- H2 → H5 → H6 (skipped H3 and H4) ❌
+
+**LEGAL patterns:**
+- H2 → H3 → H4 → H5 → H6 → H2 (new major section) ✓
+- H2 → H3 → H2 (stepping back up to start a new major topic) ✓
+- H3 → H4 → H5 → H3 (back up within a section) ✓
+- H4 → H5 → H6 → H2 (jumping back up to open a new section) ✓
+
+**Mnemonic:** Think of headings like filesystem folders. You cannot create `/H2/H4/` without `/H2/H3/H4/` — the intermediate folder must exist first.
 
 ---
 
@@ -154,16 +181,26 @@ Run this on every page before publishing or after any heading changes:
 - [ ] H1 is unique across the site (no other page has the same H1 text)
 - [ ] H2s use conversational or question format where applicable
 - [ ] H3s cover distinct attribute angles (health, size, documentation, temperament — not repeating)
-- [ ] H4+ present on pages over 3,000 words
-- [ ] Heading levels are never skipped (no H1 → H3 without H2 in between)
+- [ ] H4 headings present (target 10–20 on full-length pages)
+- [ ] **H5 count ≥ 5** on full-length pages (MANDATORY) — grep: `<h5`
+- [ ] **H6 count ≥ 3** on full-length pages (MANDATORY) — grep: `<h6`
+- [ ] **No level skipping** — run skip-detection command below
 - [ ] No two adjacent headings at the same level with the same keyword
 - [ ] No heading text duplicated verbatim in body paragraphs below it
 - [ ] Every H2/H3 could stand alone as a realistic Google search query
-- [ ] H6 headings (if present) use natural language / voice search phrasing
+- [ ] H6 headings use natural language / voice search phrasing (not marketing language)
 
-**Audit command:**
+**Audit commands:**
 ```bash
-grep -n "<h[1-6]" site/content/[slug]/index.html | head -50
+# List all headings in order
+grep -n "<h[1-6]" site/content/[slug]/index.html | head -80
+
+# Count each level
+grep -c "<h5" site/content/[slug]/index.html   # must be ≥5
+grep -c "<h6" site/content/[slug]/index.html   # must be ≥3
+
+# Detect skipped levels (prints any H-jump greater than 1)
+grep -oP '(?<=<)[hH][1-6]' site/content/[slug]/index.html | grep -oP '[1-6]' | awk 'NR>1 && $1 > prev+1 {print "SKIP DETECTED: H"prev" → H"$1} {prev=$1}'
 ```
 
 ---
@@ -184,6 +221,10 @@ grep -n "<h[1-6]" site/content/[slug]/index.html | head -50
 
 1. **One H1 per page** — non-negotiable
 2. **5 variations per core H2** — required for all commercial and location pages
-3. **No level skipping** — H1 → H2 → H3 only; never jump levels
-4. **Question format preferred for H2/H3** — conversational, voice-search optimized
-5. **Audit command first** — always grep heading levels before manual review
+3. **No level skipping** — sequential order only (H1 → H2 → H3 → H4 → H5 → H6); jumping levels is BANNED
+4. **All six levels required** on every full-length page (22+ sections) — H5 and H6 are not optional
+5. **H5 minimum: 5 per page** — deep LSI / technical authority terms
+6. **H6 minimum: 3 per page** — voice search / natural language queries
+7. **Question format preferred for H2/H3** — conversational, voice-search optimized
+8. **Audit command first** — always grep heading levels and run skip-detection before manual review
+9. **Page Outline includes H1–H6** — the full heading tree must appear in the Rule 51 outline and be approved before writing any section
