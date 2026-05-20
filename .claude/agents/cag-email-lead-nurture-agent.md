@@ -12,7 +12,7 @@ tools: [Read, Write, Bash]
 
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
-> **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500)
+> **Variants:** Congo African Grey (CAG, $1,700–$2,500) · Timneh African Grey (TAG, $1,500–$1,600)
 > **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation.
 > **Content root:** `site/content/`
 
@@ -58,8 +58,8 @@ Hi [FIRST_NAME],
 Thank you for reaching out to CongoAfricanGreys.com. We received your message and will personally reply within 24–48 hours.
 
 A few things to know while you wait:
-- Our Congo African Greys range from $1,500–$3,500 depending on age and training
-- Our Timneh African Greys range from $1,200–$2,500
+- Our Congo African Greys range from $1,700–$2,500 depending on age and training
+- Our Timneh African Greys range from $1,500–$1,600
 - All birds come with CITES captive-bred documentation, avian vet health certificate, DNA sexing cert, and hatch certificate with band number
 - We require a deposit to reserve your bird
 
