@@ -46,7 +46,8 @@ new companion") to the buyer. Never corporate "the company".
 
 | Emoji | Meaning | Where |
 |---|---|---|
-| 🦜 | Brand mark / parrot | Logo fallback, footer, hero accent |
+| `cag-congo.png` | Congo AG brand mark | `<img src="/emoji/cag-congo.png" class="cag-emoji">` — **never use 🦜** |
+| `cag-timneh.png` | Timneh AG brand mark | `<img src="/emoji/cag-timneh.png" class="cag-emoji">` — **never use 🦜** |
 | 📞 | Phone | Contact rows, CTA |
 | ✉️ | Email | Contact rows, form labels |
 | 📍 | Location | Address |
