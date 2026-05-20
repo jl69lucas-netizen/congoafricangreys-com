@@ -156,8 +156,8 @@ Vanilla JS step-stepper, keyboard accessible, no external deps.
 <script>
 function cagCalc() {
   const prices = {
-    congo:  { low: 1500, high: 3500 },
-    timneh: { low: 1200, high: 2500 }
+    congo:  { low: 1700, high: 2500 },
+    timneh: { low: 1500, high: 1600 }
   };
   const variant = document.getElementById('calc-variant').value;
   const includeSetup = document.getElementById('calc-setup').checked;

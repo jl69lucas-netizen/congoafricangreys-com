@@ -52,7 +52,7 @@ Business Category: Exotic Bird Breeder / African Grey Parrot Breeder / Captive-B
 USDA AWA License: [LICENSE_NUMBER]
 Service Area: Nationwide (ships to all 50 states with full CITES documentation)
 Description (short): Captive-bred Congo and Timneh African Grey parrots from a USDA AWA licensed facility. Every bird includes CITES captive-bred permit, DNA sexing certificate, PBFD screening, and avian vet health certificate. Fully weaned and hand-raised.
-Description (long): CongoAfricanGreys.com is [BREEDER_NAME]'s USDA AWA licensed African Grey parrot breeding program. We specialize in captive-bred Congo African Grey (CAG, $1,500–$3,500) and Timneh African Grey (TAG, $1,200–$2,500) parrots. Every bird is hand-raised, PBFD and Psittacosis screened, DNA sexed by an accredited lab, and cleared by a licensed avian veterinarian before transfer. Full CITES Appendix II captive-bred documentation, hatch certificate with band number, and avian vet health certificate included. [BREEDER_NAME] personally answers all inquiries and provides lifetime breeder support.
+Description (long): CongoAfricanGreys.com is [BREEDER_NAME]'s USDA AWA licensed African Grey parrot breeding program. We specialize in captive-bred Congo African Grey (CAG, $1,700–$2,500) and Timneh African Grey (TAG, $1,500–$1,600) parrots. Every bird is hand-raised, PBFD and Psittacosis screened, DNA sexed by an accredited lab, and cleared by a licensed avian veterinarian before transfer. Full CITES Appendix II captive-bred documentation, hatch certificate with band number, and avian vet health certificate included. [BREEDER_NAME] personally answers all inquiries and provides lifetime breeder support.
 Logo path: /wp-content/uploads/cag-logo.png
 ```
 

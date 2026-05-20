@@ -14,7 +14,7 @@ tools: [Read, Write, Bash]
 
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
-> **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
+> **Variants:** Congo African Grey (CAG, $1,700–$2,500) · Timneh African Grey (TAG, $1,500–$1,600) — treat as distinct product lines
 > **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
@@ -114,8 +114,8 @@ For each form:
     <label for="inq-variant">Variant Preference <span aria-hidden="true">*</span></label>
     <select id="inq-variant" name="variant" required aria-required="true">
       <option value="">Select a variant</option>
-      <option value="congo">Congo African Grey ($1,500–$3,500)</option>
-      <option value="timneh">Timneh African Grey ($1,200–$2,500)</option>
+      <option value="congo">Congo African Grey ($1,700–$2,500)</option>
+      <option value="timneh">Timneh African Grey ($1,500–$1,600)</option>
       <option value="unsure">Not sure yet</option>
     </select>
   </div>
