@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CTA from '../../components/CTA.astro';
+
+const title = "African Grey Parrot Comparison Hub | All Side-by-Side Comparisons";
+const description = "Compare African Grey parrots to other species and variants. Congo vs Timneh, male vs female, African Grey vs macaw, cockatoo, and Amazon parrot — all side-by-side.";
+const canonical = "https://congoafricangreys.com/african-grey-comparison/";
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "Compare", url: "/african-grey-comparison/" },
+];
+
+const comparisons = [
+  {
+    title: "Congo vs Timneh African Grey",
+    href: "/congo-vs-timneh-african-grey/",
+    badge: "Most Popular",
+    badgeColor: "#e8604c",
+    desc: "The two subspecies compared on size, color, temperament, talking ability, and price. Which variant is right for your household?",
+  },
+  {
+    title: "Male vs Female African Grey",
+    href: "/male-vs-female-african-grey-parrots-for-sale/",
+    badge: "Buyer Question",
+    badgeColor: "#2D6A4F",
+    desc: "Does sex affect talking ability, bonding, or hormonal behavior in African Greys? The honest answer with real data.",
+  },
+  {
+    title: "African Grey vs Macaw",
+    href: "/african-grey-vs-macaw/",
+    badge: "Species Comparison",
+    badgeColor: "#2D6A4F",
+    desc: "Intelligence vs. spectacle. Quiet apartment bird vs. bold statement bird. Full comparison of talking, noise, price, and care demands.",
+  },
+  {
+    title: "African Grey vs Cockatoo",
+    href: "/african-grey-vs-cockatoo/",
+    badge: "Species Comparison",
+    badgeColor: "#2D6A4F",
+    desc: "Talking ability vs. physical affection. Moderate dander vs. allergy-triggering powder. Which parrot fits your home?",
+  },
+  {
+    title: "African Grey vs Amazon Parrot",
+    href: "/african-grey-vs-amazon-parrot/",
+    badge: "Species Comparison",
+    badgeColor: "#2D6A4F",
+    desc: "Two of the best-talking parrots compared. African Grey precision vs. Amazon charisma — plus hormonal aggression differences.",
+  },
+  {
+    title: "African Grey Pros & Cons",
+    href: "/african-grey-pros-and-cons/",
+    badge: "Self-Assessment",
+    badgeColor: "#8B5CF6",
+    desc: "An honest look at what makes African Greys exceptional — and what makes them the wrong bird for many households.",
+  },
+];
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((b, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: b.name,
+    item: `https://congoafricangreys.com${b.url}`,
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <!-- Hero -->
+  <section style="background:#2D6A4F;padding:4rem 1rem">
+    <div style="max-width:900px;margin:0 auto;text-align:center">
+      <p style="color:#f0c674;font-family:var(--font-sora,sans-serif);font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem">African Grey Comparison Center</p>
+      <h1 style="font-family:var(--font-lora,serif);font-weight:700;font-size:clamp(2rem,5vw,3rem);color:#faf7f4;margin-bottom:1rem">Which Parrot Is Right for You?</h1>
+      <p style="color:rgba(250,247,244,.8);font-size:1.1rem;max-width:680px;margin:0 auto">Side-by-side comparisons that answer the real questions — talking ability, noise level, affection, cost, and CITES documentation requirements.</p>
+    </div>
+  </section>
+
+  <!-- Comparison Card Grid -->
+  <section style="padding:4rem 1rem;background:#faf7f4">
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem">
+        {comparisons.map((c) => (
+          <a href={c.href} style="background:white;border-radius:16px;border:1px solid #e7e2db;box-shadow:0 1px 3px rgba(60,30,10,.08);padding:1.5rem;text-decoration:none;display:block;transition:border-color .2s" class="hover:border-clay">
+            <span style={`font-size:.72rem;font-family:var(--font-sora,sans-serif);font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.25rem .6rem;border-radius:20px;background:${c.badgeColor}20;color:${c.badgeColor}`}>{c.badge}</span>
+            <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.1rem;margin:.75rem 0 .5rem;color:#2D6A4F">{c.title}</h2>
+            <p style="color:#4b5563;font-size:.9rem;line-height:1.6;max-width:70ch">{c.desc}</p>
+            <span style="color:#e8604c;font-family:var(--font-sora,sans-serif);font-weight:700;font-size:.875rem;margin-top:1rem;display:inline-block">Compare now →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Compare Section -->
+  <section style="padding:3.5rem 1rem;background:white">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.5rem;color:#2D6A4F;margin-bottom:1rem">Why These Comparisons Matter</h2>
+      <p style="color:#374151;line-height:1.7;max-width:70ch;margin-bottom:1rem">African Greys are a 40–60 year commitment. Choosing the wrong species — or the wrong variant — leads to rehoming, behavioral problems, and birds that never reach their potential.</p>
+      <p style="color:#374151;line-height:1.7;max-width:70ch;margin-bottom:1rem">Every comparison on this hub is written by Mark &amp; Teri Benjamin, USDA AWA licensed breeders who have raised Congo and Timneh African Greys since 2014. The data reflects real husbandry experience, not aggregated forum posts.</p>
+      <p style="color:#374151;line-height:1.7;max-width:70ch">All birds sold through CongoAfricanGreys.com ship with CITES Appendix II documentation — required by U.S. law for captive-bred African Greys.</p>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>
