@@ -1,0 +1,336 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import CTA from '../../components/CTA.astro';
+
+// 301 REDIRECT NOTE: /african-grey-for-adoption/ should 301 → /african-grey-adoption/
+// Add to site/content/_redirects:  /african-grey-for-adoption/  /african-grey-adoption/  301
+
+const title = "African Grey Parrot for Adoption | CongoAfricanGreys.com";
+const description = "Adopt a captive-bred African Grey parrot from a USDA-licensed breeder. Adoption fee includes CITES docs, DNA sexing, health cert. Congo $1,700–$3,500, Timneh $1,500–$1,600.";
+const canonical = "https://congoafricangreys.com/african-grey-adoption/";
+
+const breadcrumbItems = [
+  { name: "Home", url: "/" },
+  { name: "Shop African Greys", url: "/congo-african-grey-for-sale/" },
+  { name: "African Grey Adoption", url: "/african-grey-adoption/" },
+];
+
+// All pricing sourced from data/price-matrix.json
+const congoLow = 1700, congoHigh = 3500;
+const timnehLow = 1500, timnehHigh = 1600;
+const deposit = 200;
+const shipping = 185;
+const guaranteeDays = 3;
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does African Grey parrot adoption mean with a licensed breeder?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Adopting an African Grey from Congo African Greys means acquiring a captive-bred, fully documented bird from a USDA AWA-licensed family aviary. Unlike rescue or rehoming, our adoption birds are hand-raised, weaned, DNA sexed, and avian vet-certified. The adoption fee is the purchase price and includes complete CITES Appendix II captive-bred documentation, so your bird is legal to own and transport."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much is the African Grey parrot adoption fee?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The adoption fee depends on the variant. Congo African Greys range from $1,700 to $3,500 depending on age and pairing. Timneh African Greys range from $1,500 to $1,600. Every adoption fee includes the bird, CITES captive-bred certification, DNA sexing certificate, avian vet health certificate, and hatch certificate with band number. A $200 deposit reserves your bird."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the African Grey adoption process?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Adoption has five steps: submit an inquiry through our contact form, place a $200 refundable-against-purchase deposit to reserve your bird, complete a matching conversation so we pair you with the right temperament, receive a documentation preview before final payment, and arrange pickup in Midland, Texas or IATA-compliant shipping for $185. The full process typically takes one to three weeks."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is adopting an African Grey parrot legal in the United States?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. African Greys are CITES Appendix II, and all of our birds are captive-bred in the United States with full documentation. Every adopted bird ships with CITES captive-bred certification proving legal origin. We never sell wild-caught birds. Captive-bred African Greys are legal to own in most US states — we recommend confirming any local permit requirements before adoption."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I adopt an African Grey parrot if I live in another state?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. We offer IATA-compliant live-animal shipping nationwide for a flat $185 via Delta, United, and American cargo. Your bird travels in a climate-appropriate, vet-approved container with a USDA health certificate for interstate transport. Local pickup at our Midland, Texas aviary is also welcome and free of charge."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does an adopted African Grey come with a health guarantee?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every adopted African Grey is covered by a 3-day health guarantee against pre-existing congenital conditions and infectious disease diagnosed by a certified avian veterinarian. Each bird receives a full avian vet exam before pickup or shipping. We recommend a new-owner vet visit within the first week to start your bird's lifelong health record."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I adopt a Congo or a Timneh African Grey?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both make exceptional companions. Congo African Greys are larger with a red tail and higher name recognition. Timneh African Greys are smaller, often calmer, and tend to start talking earlier. Your matching conversation with us helps determine the best fit for your home and experience level. You can compare both on our Congo African Grey for sale and Timneh African Grey for sale pages."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What ongoing support comes after I adopt an African Grey?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Post-adoption support is included for the life of your bird. Mark and Teri Benjamin remain available for questions on diet, enrichment, training, and avian health. We provide a settling-in guide, our aviary vet records to speed your first vet visit, and ongoing advice. We stay connected with our birds' families — adoption with us is the start of a long relationship."
+      }
+    }
+  ]
+};
+---
+
+<BaseLayout {title} {description} {canonical}>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <!-- Hero -->
+  <section class="bg-logo-dark text-cream py-16 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-3">USDA AWA Licensed · CITES Captive-Bred · DNA Sexed</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">African Grey Parrot for Adoption</h1>
+      <p class="text-cream/80 text-lg">Adopting a captive-bred, documented African Grey from a licensed breeder — the responsible, fully legal way to bring home a 40–60 year companion.</p>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <!-- Breadcrumb -->
+  <section class="px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <Breadcrumb items={breadcrumbItems} />
+    </div>
+  </section>
+
+  <!-- Intro / What adoption means -->
+  <section class="py-12 px-4">
+    <div class="container-text mx-auto" style="max-width:760px;">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-5">What "African Grey Adoption" Means With a Reputable Breeder</h2>
+      <p class="text-stone-600 leading-relaxed mb-4" style="max-width:70ch;">
+        When most people search for an African Grey parrot for adoption, they want one thing: to bring home a healthy,
+        well-socialized bird through an honest, responsible process. At Congo African Greys, adoption means exactly that —
+        acquiring a captive-bred, fully documented African Grey from a USDA AWA-licensed family aviary in Midland, Texas.
+      </p>
+      <p class="text-stone-600 leading-relaxed mb-4" style="max-width:70ch;">
+        This is different from a shelter rescue or rehoming program. Our adoption birds are hand-raised from the nest,
+        fully weaned, DNA sexed, and examined by an avian veterinarian before they ever leave us. You know the bird's
+        exact hatch date, parentage, band number, and health history. Nothing is a mystery.
+      </p>
+      <p class="text-stone-600 leading-relaxed mb-4" style="max-width:70ch;">
+        The <strong>adoption fee is the purchase price</strong> — and it covers far more than the bird itself. It includes
+        the complete documentation package that proves your African Grey is legal to own, legal to transport, and legitimately
+        captive-bred. For a full breakdown of costs, see our
+        <a href="/african-grey-parrot-price/" class="text-green underline hover:text-clay">African Grey parrot price guide</a>.
+      </p>
+      <div class="bg-green-50 border-l-4 border-green rounded-r-lg p-5 mt-6">
+        <p class="text-logo-dark font-sora text-sm leading-relaxed" style="max-width:70ch;">
+          <strong>CITES notice:</strong> African Greys are listed under CITES Appendix II. Every bird we place is captive-bred
+          in the United States and ships with full CITES captive-bred documentation. We never sell wild-caught birds — and
+          you should never adopt one. Learn the warning signs in our guide to
+          <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-green underline hover:text-clay">how to avoid African Grey parrot scams</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Adoption vs Rescue comparison -->
+  <section class="py-12 px-4 bg-stone-50">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8 text-center">Breeder Adoption vs. Rescue Rehoming</h2>
+      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm">
+          <h3 class="font-lora font-semibold text-xl text-green mb-3">Adopting From Congo African Greys</h3>
+          <ul class="space-y-2 text-stone-600 text-sm">
+            <li class="flex gap-2"><span class="text-green font-bold">✓</span> Known hatch date, parentage, and band number</li>
+            <li class="flex gap-2"><span class="text-green font-bold">✓</span> Hand-raised, fully weaned, and socialized</li>
+            <li class="flex gap-2"><span class="text-green font-bold">✓</span> Full CITES captive-bred documentation</li>
+            <li class="flex gap-2"><span class="text-green font-bold">✓</span> DNA sexing and avian vet health certificate</li>
+            <li class="flex gap-2"><span class="text-green font-bold">✓</span> {guaranteeDays}-day health guarantee</li>
+            <li class="flex gap-2"><span class="text-green font-bold">✓</span> Lifetime breeder support after adoption</li>
+          </ul>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm">
+          <h3 class="font-lora font-semibold text-xl text-stone-500 mb-3">Typical Rescue Rehoming</h3>
+          <ul class="space-y-2 text-stone-600 text-sm">
+            <li class="flex gap-2"><span class="text-stone-400 font-bold">—</span> Often unknown age and origin history</li>
+            <li class="flex gap-2"><span class="text-stone-400 font-bold">—</span> May arrive with behavioral or plucking issues</li>
+            <li class="flex gap-2"><span class="text-stone-400 font-bold">—</span> Documentation frequently incomplete or missing</li>
+            <li class="flex gap-2"><span class="text-stone-400 font-bold">—</span> Sex and health status often unverified</li>
+            <li class="flex gap-2"><span class="text-stone-400 font-bold">—</span> Health guarantees rarely offered</li>
+            <li class="flex gap-2"><span class="text-stone-400 font-bold">—</span> Limited or no post-placement support</li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-stone-500 text-sm text-center mt-6 max-w-2xl mx-auto">
+        Both paths can be responsible — but if you want a documented, health-verified bird with a known history,
+        breeder adoption gives you certainty from day one.
+      </p>
+    </div>
+  </section>
+
+  <!-- The Adoption Process -->
+  <section class="py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-3 text-center">The African Grey Adoption Process</h2>
+      <p class="text-stone-500 text-center mb-10 max-w-2xl mx-auto">Five clear steps — from first inquiry to your bird coming home. Most adoptions complete within one to three weeks.</p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-5 max-w-5xl mx-auto">
+        <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-clay text-white font-lora font-bold flex items-center justify-center mb-3">1</div>
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">Inquiry</h3>
+          <p class="text-stone-500 text-sm">Tell us about your home and the variant you want through our short contact form. We reply within 24 hours.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-clay text-white font-lora font-bold flex items-center justify-center mb-3">2</div>
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">Deposit</h3>
+          <p class="text-stone-500 text-sm">A ${deposit} deposit reserves your African Grey and is applied toward the total adoption fee.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-clay text-white font-lora font-bold flex items-center justify-center mb-3">3</div>
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">Matching</h3>
+          <p class="text-stone-500 text-sm">We pair you with the right bird by temperament, age, and experience level — not just availability.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-clay text-white font-lora font-bold flex items-center justify-center mb-3">4</div>
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">Documentation</h3>
+          <p class="text-stone-500 text-sm">You preview the full CITES, DNA, health, and hatch documents before final payment is made.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm">
+          <div class="w-10 h-10 rounded-full bg-clay text-white font-lora font-bold flex items-center justify-center mb-3">5</div>
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">Pickup or Delivery</h3>
+          <p class="text-stone-500 text-sm">Collect in Midland, Texas free of charge, or choose IATA-compliant shipping nationwide for ${shipping}.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Included in the Adoption Fee -->
+  <section class="py-12 px-4 bg-stone-50">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-3 text-center">What's Included in the Adoption Fee</h2>
+      <p class="text-stone-500 text-center mb-10 max-w-2xl mx-auto">Your adoption fee is never just the bird. Every African Grey leaves our aviary with a complete documentation package.</p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm">
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">Your African Grey</h3>
+          <p class="text-stone-500 text-sm">A hand-raised, fully weaned, socialized bird ready to bond with your family.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm">
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">CITES Captive-Bred Certification</h3>
+          <p class="text-stone-500 text-sm">CITES Appendix II documentation confirming legal, captive-bred US origin.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm">
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">DNA Sexing Certificate</h3>
+          <p class="text-stone-500 text-sm">Lab-verified confirmation of your bird's sex — proof of a professional program.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm">
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">Avian Vet Health Certificate</h3>
+          <p class="text-stone-500 text-sm">A full pre-adoption examination by a certified avian veterinarian.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm">
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">Hatch Certificate &amp; Band Number</h3>
+          <p class="text-stone-500 text-sm">Documented hatch date and a unique closed leg band identifying your bird for life.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm">
+          <h3 class="font-lora font-semibold text-logo-dark mb-2">{guaranteeDays}-Day Health Guarantee</h3>
+          <p class="text-stone-500 text-sm">Coverage against pre-existing conditions diagnosed by a certified avian vet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Adoption Fees / Pricing -->
+  <section class="py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-3 text-center">African Grey Adoption Fees</h2>
+      <p class="text-stone-500 text-center mb-10 max-w-2xl mx-auto">All adoption fees include the full documentation package above. A ${deposit} deposit reserves your bird.</p>
+      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl p-7 border-2 border-green shadow-sm">
+          <h3 class="font-lora font-bold text-2xl text-logo-dark mb-1">Congo African Grey</h3>
+          <p class="text-clay font-lora font-bold text-3xl mb-3">${congoLow.toLocaleString()}–${congoHigh.toLocaleString()}</p>
+          <p class="text-stone-500 text-sm mb-4">The larger variant with a signature red tail. Price varies by age, with adults from ${congoLow.toLocaleString()} and bonded pairs at the top of the range.</p>
+          <a href="/congo-african-grey-for-sale/" class="inline-block bg-clay text-white font-semibold px-6 py-3 rounded-full text-sm hover:bg-clay-dk transition-colors">
+            See Congo African Grey for sale
+          </a>
+        </div>
+        <div class="bg-white rounded-2xl p-7 border border-stone-200 shadow-sm">
+          <h3 class="font-lora font-bold text-2xl text-logo-dark mb-1">Timneh African Grey</h3>
+          <p class="text-clay font-lora font-bold text-3xl mb-3">${timnehLow.toLocaleString()}–${timnehHigh.toLocaleString()}</p>
+          <p class="text-stone-500 text-sm mb-4">The smaller variant — often calmer, with a maroon tail and a tendency to start talking earlier than Congos.</p>
+          <a href="/timneh-african-grey-for-sale/" class="inline-block bg-clay text-white font-semibold px-6 py-3 rounded-full text-sm hover:bg-clay-dk transition-colors">
+            See Timneh African Grey for sale
+          </a>
+        </div>
+      </div>
+      <p class="text-stone-500 text-sm text-center mt-6 max-w-2xl mx-auto">
+        Want a complete cost breakdown including setup and lifetime care? Read our
+        <a href="/african-grey-parrot-price/" class="text-green underline hover:text-clay">African Grey parrot price guide</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Shipping & Post-Adoption Support -->
+  <section class="py-12 px-4 bg-stone-50">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl p-7 border border-stone-200 shadow-sm">
+          <h2 class="font-lora font-bold text-2xl text-logo-dark mb-3">Nationwide Adoption Delivery</h2>
+          <p class="text-stone-600 text-sm leading-relaxed mb-3" style="max-width:70ch;">
+            Can't visit Midland, Texas? We ship adopted African Greys nationwide for a flat ${shipping} via IATA-compliant
+            live-animal cargo with Delta, United, and American. Your bird travels in a climate-appropriate, vet-approved
+            container, accompanied by a USDA health certificate required for interstate transport.
+          </p>
+          <p class="text-stone-500 text-sm">Local pickup at our aviary is always free of charge.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-7 border border-stone-200 shadow-sm">
+          <h2 class="font-lora font-bold text-2xl text-logo-dark mb-3">Post-Adoption Support</h2>
+          <p class="text-stone-600 text-sm leading-relaxed mb-3" style="max-width:70ch;">
+            Adoption with us is the start of a relationship, not the end of a transaction. Mark and Teri Benjamin stay
+            available for the life of your bird — answering questions on diet, enrichment, training, and avian health.
+          </p>
+          <p class="text-stone-500 text-sm">You also receive a settling-in guide and our aviary vet records to speed your first new-owner vet visit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-12 px-4">
+    <div class="container-text mx-auto" style="max-width:760px;">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8 text-center">African Grey Adoption — Frequently Asked Questions</h2>
+      <div class="space-y-3">
+        {faqSchema.mainEntity.map((item) => (
+          <details class="bg-white rounded-xl border border-stone-200 shadow-sm group">
+            <summary class="cursor-pointer list-none px-5 py-4 font-lora font-semibold text-logo-dark flex justify-between items-center gap-3">
+              <span>{item.name}</span>
+              <span class="text-clay text-xl transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <div class="px-5 pb-5 text-stone-600 text-sm leading-relaxed" style="max-width:70ch;">
+              {item.acceptedAnswer.text}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA
+    headline="Ready to Adopt Your African Grey?"
+    sub="Every bird is captive-bred, CITES-documented, DNA sexed, and avian vet-certified. Submit an inquiry to start the matching process — we reply within 24 hours."
+  />
+
+</BaseLayout>
