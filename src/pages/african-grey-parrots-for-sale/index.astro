@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import CTA from '../../components/CTA.astro';
+
+const title = "African Grey Parrots for Sale | All States | CongoAfricanGreys.com";
+const description = "Find a captive-bred, CITES-documented African Grey parrot for sale near you. We ship nationwide from Midland, TX. Browse by state — Florida, Texas, New York, California and 18 more.";
+const canonical = "https://congoafricangreys.com/african-grey-parrots-for-sale/";
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Grey Parrots for Sale", url: "/african-grey-parrots-for-sale/" },
+];
+
+const states = [
+  { name: "Florida", slug: "african-grey-parrot-for-sale-florida" },
+  { name: "Texas", slug: "african-grey-parrot-for-sale-texas" },
+  { name: "California", slug: "buy-intelligent-african-grey-for-sale-ca" },
+  { name: "New York", slug: "african-grey-parrot-for-sale-new-york" },
+  { name: "Ohio", slug: "african-grey-parrot-for-sale-ohio" },
+  { name: "Illinois", slug: "african-grey-parrot-for-sale-illinois" },
+  { name: "Pennsylvania", slug: "african-grey-parrot-for-sale-pennsylvania" },
+  { name: "Michigan", slug: "african-grey-parrot-for-sale-michigan" },
+  { name: "Indiana", slug: "african-grey-parrot-for-sale-indiana" },
+  { name: "Missouri", slug: "african-grey-parrot-for-sale-missouri" },
+  { name: "Maryland", slug: "african-grey-parrot-for-sale-maryland" },
+  { name: "Massachusetts", slug: "african-grey-parrot-for-sale-massachusetts" },
+  { name: "Minnesota", slug: "african-grey-parrot-for-sale-minnesota" },
+  { name: "Kentucky", slug: "african-grey-parrot-for-sale-kentucky" },
+  { name: "Iowa", slug: "african-grey-parrot-for-sale-iowa" },
+];
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((b, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: b.name,
+    item: `https://congoafricangreys.com${b.url}`,
+  })),
+};
+---
+
+<BaseLayout {title} {description} {canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} slot="head" />
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <!-- Hero -->
+  <section class="bg-logo-dark text-cream py-16 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-4">CITES Documented · Ships Nationwide · USDA Licensed</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">African Grey Parrots for Sale</h1>
+      <p class="text-cream/80 text-lg max-w-2xl mx-auto">Captive-bred Congo and Timneh African Greys raised by Mark &amp; Teri Benjamin in Midland, TX since 2014. Every bird ships with CITES documentation, DNA sexing results, and an avian vet certificate.</p>
+      <a href="/contact-us/" class="inline-block mt-8 bg-clay text-white font-sora font-semibold px-8 py-3 rounded-full hover:bg-clay/90 transition-colors">Inquire About Available Birds</a>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <!-- State Grid -->
+  <section class="py-16 px-4 bg-cream">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark text-center mb-4">Find an African Grey Near You</h2>
+      <p class="text-stone-600 text-center max-w-2xl mx-auto mb-12">Select your state below. We ship IATA-compliant to all 50 states. Every bird travels in an airline-approved carrier with live animal documentation.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {states.map((s) => (
+          <a
+            href={`/${s.slug}/`}
+            class="bg-white border border-stone-200 rounded-2xl p-4 text-center font-sora font-semibold text-logo-dark hover:border-clay hover:text-clay transition-colors shadow-sm"
+          >
+            {s.name}
+          </a>
+        ))}
+      </div>
+      <p class="text-stone-500 text-sm text-center mt-8">Don't see your state? <a href="/contact-us/" class="text-clay underline">Contact us</a> — we ship everywhere.</p>
+    </div>
+  </section>
+
+  <!-- Trust section -->
+  <section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">Why CongoAfricanGreys.com</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        {[
+          ["CITES Appendix II Documentation", "Every bird ships with official CITES captive-bred documentation. No paperwork, no purchase."],
+          ["USDA Licensed Aviary", "Our Midland, TX facility is USDA AWA licensed. You can verify our license number before any deposit."],
+          ["DNA Sexed & Vet Certified", "Each bird is DNA sexed and examined by an avian veterinarian before shipping."],
+          ["IATA-Compliant Shipping", "We use airline-approved carriers and live animal shipping protocols. Birds arrive safely."],
+        ].map(([h, p]) => (
+          <div class="bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
+            <h3 class="font-lora font-bold text-lg text-logo-dark mb-2">{h}</h3>
+            <p class="text-stone-600 text-sm leading-relaxed">{p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>
