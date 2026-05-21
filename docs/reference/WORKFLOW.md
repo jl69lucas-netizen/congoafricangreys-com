@@ -536,4 +536,41 @@ START: What are you trying to do?
 7. **Hub Before Spoke** — Always build hub pages before their spoke pages. Link equity flows correctly.
 8. **Audit Before Build** — `cag-content-audit-agent` must run before any page rebuild.
 9. **Canonical Before Deploy** — `cag-canonical-fixer` must run before every deploy. Relative canonicals = zero indexing.
+
+---
+
+## Post-Deploy Verification Checklist
+
+Run within 2 minutes of every `git push` (Cloudflare Pages deploys in ~45 seconds):
+
+### 1. Check new/modified pages return 200
+```bash
+curl -sI https://congoafricangreys.com/[new-slug]/ | grep "HTTP"
+```
+Expected: `HTTP/2 200`
+
+### 2. Verify canonical is correct
+```bash
+curl -s https://congoafricangreys.com/[new-slug]/ | grep -i "canonical"
+```
+Expected: absolute URL matching the slug
+
+### 3. Update page-inventory.md
+Change status from 🟡 BUILT → 🟢 LIVE for each verified page.  
+File: `docs/reference/page-inventory.md`
+
+### 4. Update data/locations.json for state pages
+Change `"status": "planned"` → `"status": "live"` for any new state pages.
+
+### If any URL returns 404 after deploy:
+1. Check `src/pages/[slug]/index.astro` exists
+2. Run `npx astro build` locally — check for build errors
+3. Check `public/_redirects` for conflicting rules
+4. Check `astro.config.mjs` for any route configuration
+
+### Slug Registry Rule (PREVENT FUTURE MISMATCHES)
+Before building any new page, check `docs/reference/page-inventory.md` to confirm:
+- The planned slug matches what will be linked to in navigation
+- No existing page already covers this topic at a different URL
+- If URLs will differ from what's linked, add a redirect BEFORE building the page
 10. **Data Files Are Truth** — Never fabricate data. All claims come from: data files, GSC CSV exports, real page fetches, or direct breeder input.
