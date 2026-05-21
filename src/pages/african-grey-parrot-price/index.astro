@@ -1,0 +1,519 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import CTA from '../../components/CTA.astro';
+
+const title = "African Grey Parrot Price Guide 2026 | CongoAfricanGreys.com";
+const description = "African Grey parrot price guide for 2026: Congo Greys $1,700–$3,500, Timneh Greys $1,500–$1,600. See first-year setup, annual, and lifetime cost of ownership.";
+const canonical = "https://congoafricangreys.com/african-grey-parrot-price/";
+
+const breadcrumbItems = [
+  { name: "Home", url: "/" },
+  { name: "African Grey Parrot Price", url: "/african-grey-parrot-price/" },
+];
+
+// All pricing sourced from data/financial-entities.json + data/price-matrix.json
+const congoLow = 1700, congoHigh = 3500;
+const timnehLow = 1500, timnehHigh = 1600;
+const shipping = 185;
+const deposit = 200;
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much does a Congo African Grey parrot cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A captive-bred Congo African Grey parrot costs $1,700 to $3,500 from a USDA AWA licensed breeder. The price reflects age, hand-raising, weaning status, and the complete documentation package — CITES captive-bred certificate, DNA sexing certificate, avian veterinarian health certificate, and hatch certificate with band number. The benefit of paying a documented-breeder price is that you know exactly what you receive: a healthy, legally traceable bird with no surprise fees at deposit time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does a Timneh African Grey parrot cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A captive-bred Timneh African Grey parrot costs $1,500 to $1,600. Timnehs are typically a few hundred dollars less than Congo African Greys because they are a smaller variant with lower buyer demand, not because they are lower quality. Every Timneh ships with the same full documentation package. The benefit is that a Timneh offers the same 40–60 year African Grey companionship and early talking ability at a more accessible entry price."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much is the deposit to reserve an African Grey parrot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The typical deposit to reserve an African Grey parrot is $200. The deposit holds a specific bird for you and is applied toward the final purchase price. We only accept traceable payment methods for deposits — never gift cards, cryptocurrency, or wire transfers to personal accounts. The benefit of a traceable deposit is a clear paper trail that protects you from the payment scams common in the parrot market."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the first-year cost of owning an African Grey parrot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Beyond the purchase price, budget $1,025 to $2,300 for first-year ownership. This includes a large cage ($300–$800), perches and toys ($100–$300), an initial avian vet visit ($75–$200), a year of pellet-based food ($200–$400), and enrichment ($150–$300). The benefit of knowing this number up front is that you can plan a realistic Year 1 budget and avoid sticker shock after your bird arrives."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does an African Grey cage cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A large, appropriately sized African Grey cage costs $300 to $800. African Greys need a wide cage with horizontal bars for climbing and enough room to fully extend their wings. The benefit of buying the right cage once is that you avoid the common — and expensive — mistake of buying a too-small cage and having to replace it within the first year."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does an avian vet visit for an African Grey cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An avian veterinarian visit for an African Grey costs $75 to $200 for a routine wellness exam, with unexpected illness or injury care running up to $500 or more. We recommend an annual wellness exam plus an established relationship with an avian-certified vet. The benefit of consistent avian vet care is early detection of health issues, which protects both your bird's 40–60 year lifespan and your wallet."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does it cost to ship an African Grey parrot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nationwide IATA-compliant shipping for an African Grey parrot is a flat $185, traveling on major carriers such as Delta, United, and American. The bird flies in a climate-controlled, USDA-compliant travel crate. The benefit of a flat shipping rate is a predictable, transparent cost — you know the total before you commit, with no destination-based surprises."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the African Grey price include CITES documentation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The CITES captive-bred permit, DNA sexing certificate, avian veterinarian health certificate, and hatch certificate are all included in the purchase price at no extra charge. African Greys are CITES Appendix II, and this documentation proves your bird is captive-bred and legally traceable. The benefit is that you never pay a hidden documentation fee — and you are protected from the legal risk of owning an undocumented bird."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the lifetime cost of owning an African Grey parrot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An African Grey parrot lives 40 to 60 years, and annual ongoing costs of $375 to $1,350 add up to roughly $15,000 to $80,000 over the bird's lifetime, on top of the purchase price. African Greys can outlive their owners, so estate planning for the bird is part of responsible ownership. The benefit of understanding the full lifetime commitment is that you make a confident, informed decision — not an impulse purchase you later regret."
+      }
+    }
+  ]
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "African Grey Parrot Price Guide 2026: Full Cost of Ownership",
+  "about": {
+    "@type": "Thing",
+    "name": "African Grey Parrot Price",
+    "description": "Purchase price, first-year setup, annual, and lifetime cost of owning a Congo or Timneh African Grey parrot"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Mark Benjamin",
+    "jobTitle": "USDA AWA Licensed Bird Breeder"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Congo African Greys",
+    "url": "https://congoafricangreys.com"
+  },
+  "datePublished": "2026-05-21",
+  "dateModified": "2026-05-21",
+  "mainEntityOfPage": "https://congoafricangreys.com/african-grey-parrot-price/"
+};
+---
+
+<BaseLayout {title} {description} {canonical}>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+
+  <!-- 1. Hero -->
+  <section class="bg-logo-dark text-cream py-16 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto text-center">
+        <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-3">The Honest Cost Guide · Updated 2026</p>
+        <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">African Grey Parrot Price: The Complete 2026 Cost Guide</h1>
+        <p class="text-cream/80 text-lg" style="max-width:70ch;margin:0 auto;">
+          A documented African Grey parrot price ranges from $1,500 to $3,500 depending on variant and age — but the purchase price is only the beginning. Here is every cost, in full, with no surprises.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <!-- Breadcrumb -->
+  <section class="px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <Breadcrumb items={breadcrumbItems} />
+    </div>
+  </section>
+
+  <!-- 2. Quick Answer / Key Takeaways -->
+  <section class="py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">African Grey Parrot Price at a Glance</h2>
+        <p class="text-stone-700 mb-8" style="max-width:70ch;">
+          Most buyers want one number. The honest answer is three numbers: what the bird costs, what the first year costs, and what every year after that costs. Here they are.
+        </p>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-6" style="max-width:1000px;margin:0 auto;">
+        <div class="bg-white border border-stone-200 rounded-2xl p-6 text-center" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+          <p class="text-stone-500 text-xs font-semibold uppercase tracking-widest mb-2">Purchase Price</p>
+          <p class="font-lora font-bold text-3xl text-clay mb-1">$1,500–$3,500</p>
+          <p class="text-stone-600 text-sm">One-time, documentation included</p>
+        </div>
+        <div class="bg-white border border-stone-200 rounded-2xl p-6 text-center" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+          <p class="text-stone-500 text-xs font-semibold uppercase tracking-widest mb-2">First-Year Setup</p>
+          <p class="font-lora font-bold text-3xl text-clay mb-1">$1,025–$2,300</p>
+          <p class="text-stone-600 text-sm">Cage, food, vet, toys & enrichment</p>
+        </div>
+        <div class="bg-white border border-stone-200 rounded-2xl p-6 text-center" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+          <p class="text-stone-500 text-xs font-semibold uppercase tracking-widest mb-2">Annual Ongoing</p>
+          <p class="font-lora font-bold text-3xl text-clay mb-1">$375–$1,350</p>
+          <p class="text-stone-600 text-sm">Every year, for 40–60 years</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Purchase Price by Variant -->
+  <section class="bg-stone-50 py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">African Grey Parrot Price by Variant</h2>
+        <p class="text-stone-700 mb-8" style="max-width:70ch;">
+          There are two African Grey variants, and they are priced differently. The Congo African Grey is the larger, more recognized variant. The Timneh African Grey is smaller, calmer, and often an earlier talker — at a lower entry price.
+        </p>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-6" style="max-width:900px;margin:0 auto;">
+        <div class="bg-white border border-stone-200 rounded-2xl overflow-hidden" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+          <div class="bg-green text-cream px-6 py-4">
+            <h3 class="font-lora font-bold text-xl">Congo African Grey</h3>
+          </div>
+          <div class="p-6">
+            <p class="font-lora font-bold text-3xl text-clay mb-1">${congoLow.toLocaleString()}–${congoHigh.toLocaleString()}</p>
+            <p class="text-stone-500 text-sm mb-4">Larger variant · red tail · 400–600g</p>
+            <ul class="space-y-2 text-stone-600 text-sm mb-5">
+              <li class="flex gap-2"><span class="text-green">✓</span> Hand-raised, fully weaned chicks</li>
+              <li class="flex gap-2"><span class="text-green">✓</span> Full CITES documentation included</li>
+              <li class="flex gap-2"><span class="text-green">✓</span> Adult birds available from $1,700</li>
+            </ul>
+            <a href="/congo-african-grey-for-sale/" class="inline-block bg-clay text-white font-semibold px-6 py-3 rounded-full text-sm hover:bg-clay-dk transition-colors">
+              See Congo African Grey for sale &rarr;
+            </a>
+          </div>
+        </div>
+        <div class="bg-white border border-stone-200 rounded-2xl overflow-hidden" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+          <div class="bg-green text-cream px-6 py-4">
+            <h3 class="font-lora font-bold text-xl">Timneh African Grey</h3>
+          </div>
+          <div class="p-6">
+            <p class="font-lora font-bold text-3xl text-clay mb-1">${timnehLow.toLocaleString()}–${timnehHigh.toLocaleString()}</p>
+            <p class="text-stone-500 text-sm mb-4">Smaller variant · maroon tail · 275–375g</p>
+            <ul class="space-y-2 text-stone-600 text-sm mb-5">
+              <li class="flex gap-2"><span class="text-green">✓</span> Calmer temperament, earlier talker</li>
+              <li class="flex gap-2"><span class="text-green">✓</span> Same full documentation package</li>
+              <li class="flex gap-2"><span class="text-green">✓</span> Most accessible African Grey entry price</li>
+            </ul>
+            <a href="/timneh-african-grey-for-sale/" class="inline-block bg-clay text-white font-semibold px-6 py-3 rounded-full text-sm hover:bg-clay-dk transition-colors">
+              See Timneh African Grey for sale &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+      <p class="text-stone-500 text-sm text-center mt-6" style="max-width:70ch;margin-left:auto;margin-right:auto;">
+        New to the differences between variants? Read our <a href="/african-grey-parrot-guide/" class="text-green underline hover:text-clay">African Grey parrot species guide</a> before you decide.
+      </p>
+    </div>
+  </section>
+
+  <!-- 4. What's Included in the Price -->
+  <section class="py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">What's Included in the African Grey Price</h2>
+        <p class="text-stone-700 mb-8" style="max-width:70ch;">
+          A documented-breeder price is not just for the bird. It covers a complete documentation package that proves your African Grey is captive-bred, healthy, and legally traceable — at no extra charge.
+        </p>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-green-lt border border-green/15 rounded-xl p-5">
+            <h3 class="font-lora font-semibold text-lg text-green mb-1">CITES Captive-Bred Permit</h3>
+            <p class="text-stone-600 text-sm">Proves your bird was bred in captivity under CITES Appendix II — never wild-caught.</p>
+          </div>
+          <div class="bg-green-lt border border-green/15 rounded-xl p-5">
+            <h3 class="font-lora font-semibold text-lg text-green mb-1">DNA Sexing Certificate</h3>
+            <p class="text-stone-600 text-sm">Lab-confirmed sex from a certified avian DNA lab — African Greys are not visually sexable.</p>
+          </div>
+          <div class="bg-green-lt border border-green/15 rounded-xl p-5">
+            <h3 class="font-lora font-semibold text-lg text-green mb-1">Avian Vet Health Certificate</h3>
+            <p class="text-stone-600 text-sm">Issued by an accredited avian veterinarian, confirming the bird is healthy at transfer.</p>
+          </div>
+          <div class="bg-green-lt border border-green/15 rounded-xl p-5">
+            <h3 class="font-lora font-semibold text-lg text-green mb-1">Hatch Certificate & Band Number</h3>
+            <p class="text-stone-600 text-sm">Records your bird's hatch date and unique band number — the start of its lifelong record.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. First-Year Cost Breakdown -->
+  <section class="bg-stone-50 py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">First-Year Cost Breakdown</h2>
+        <p class="text-stone-700 mb-8" style="max-width:70ch;">
+          The first year carries one-time setup costs that later years do not. Budget for these before your bird arrives so the only surprise is how quickly you fall in love.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse bg-white rounded-xl overflow-hidden" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <thead>
+              <tr class="bg-green text-cream text-left">
+                <th class="px-4 py-3 font-sora font-semibold">First-Year Item</th>
+                <th class="px-4 py-3 font-sora font-semibold">Cost Range</th>
+                <th class="px-4 py-3 font-sora font-semibold">Type</th>
+              </tr>
+            </thead>
+            <tbody class="text-stone-700">
+              <tr class="border-b border-stone-100"><td class="px-4 py-3">Large cage (wide, horizontal bars)</td><td class="px-4 py-3 font-semibold">$300–$800</td><td class="px-4 py-3 text-stone-500">One-time</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3">Perches & toys (starter set)</td><td class="px-4 py-3 font-semibold">$100–$300</td><td class="px-4 py-3 text-stone-500">One-time</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3">Initial avian vet visit</td><td class="px-4 py-3 font-semibold">$75–$200</td><td class="px-4 py-3 text-stone-500">One-time</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3">Food & pellets (first year)</td><td class="px-4 py-3 font-semibold">$200–$400</td><td class="px-4 py-3 text-stone-500">Recurring</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3">Enrichment (first year)</td><td class="px-4 py-3 font-semibold">$150–$300</td><td class="px-4 py-3 text-stone-500">Recurring</td></tr>
+              <tr class="bg-green-lt font-semibold text-green"><td class="px-4 py-3">First-Year Total (excl. purchase)</td><td class="px-4 py-3">$825–$2,000</td><td class="px-4 py-3"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-stone-500 text-sm mt-4" style="max-width:70ch;">
+          Add the one-time $185 IATA shipping cost if your bird travels to you, and a Congo purchase price of $1,700–$3,500, for a realistic total first-year investment of roughly $2,710–$5,685.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Annual Ongoing Costs -->
+  <section class="py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">Annual Ongoing Costs</h2>
+        <p class="text-stone-700 mb-8" style="max-width:70ch;">
+          After year one, the costs settle into a predictable annual rhythm. These are the recurring expenses every African Grey owner should budget for, every single year.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse bg-white rounded-xl overflow-hidden" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <thead>
+              <tr class="bg-green text-cream text-left">
+                <th class="px-4 py-3 font-sora font-semibold">Annual Item</th>
+                <th class="px-4 py-3 font-sora font-semibold">Cost Range</th>
+              </tr>
+            </thead>
+            <tbody class="text-stone-700">
+              <tr class="border-b border-stone-100"><td class="px-4 py-3">Food & treats</td><td class="px-4 py-3 font-semibold">$200–$400</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3">Avian vet wellness exam</td><td class="px-4 py-3 font-semibold">$75–$200</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3">Toy replacement (chewed & destroyed)</td><td class="px-4 py-3 font-semibold">$100–$250</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3">Unexpected vet care (set aside a buffer)</td><td class="px-4 py-3 font-semibold">$0–$500</td></tr>
+              <tr class="bg-green-lt font-semibold text-green"><td class="px-4 py-3">Annual Ongoing Total</td><td class="px-4 py-3">$375–$1,350</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Lifetime Cost Estimate -->
+  <section class="bg-stone-50 py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">Lifetime Cost Estimate: The 40–60 Year Commitment</h2>
+        <div class="bg-white border-l-4 border-clay rounded-r-xl p-6 mb-6" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+          <p class="font-lora text-xl text-green mb-2" style="max-width:70ch;">
+            An African Grey parrot purchased today may still be alive in 2085.
+          </p>
+          <p class="text-stone-600 text-sm" style="max-width:70ch;">
+            Factor the 40–60 year commitment into your decision — not just the purchase price. African Greys can outlive their owners, so a responsible plan includes naming a caretaker for the bird in your estate planning.
+          </p>
+        </div>
+        <p class="text-stone-700 mb-4" style="max-width:70ch;">
+          Using the annual ongoing range of $375–$1,350, here is what an African Grey costs across its full lifespan, on top of the purchase price:
+        </p>
+        <div class="grid sm:grid-cols-2 gap-6 mb-4">
+          <div class="bg-white border border-stone-200 rounded-2xl p-6 text-center" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <p class="text-stone-500 text-xs font-semibold uppercase tracking-widest mb-2">40-Year Lifespan</p>
+            <p class="font-lora font-bold text-3xl text-clay">~$15,000–$54,000</p>
+          </div>
+          <div class="bg-white border border-stone-200 rounded-2xl p-6 text-center" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <p class="text-stone-500 text-xs font-semibold uppercase tracking-widest mb-2">60-Year Lifespan</p>
+            <p class="font-lora font-bold text-3xl text-clay">~$22,500–$81,000</p>
+          </div>
+        </div>
+        <p class="text-stone-500 text-sm" style="max-width:70ch;">
+          These are estimates for ongoing care only. They show why an African Grey is a lifetime financial commitment — closer to raising a child than buying a pet.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CAG vs TAG Cost Comparison -->
+  <section class="py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">Congo vs Timneh African Grey: Cost Comparison</h2>
+        <p class="text-stone-700 mb-8" style="max-width:70ch;">
+          The Congo and Timneh African Grey cost differently to buy, but their ongoing care costs are nearly identical. Use this table to compare both variants side by side.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse bg-white rounded-xl overflow-hidden" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <thead>
+              <tr class="bg-green text-cream text-left">
+                <th class="px-4 py-3 font-sora font-semibold">Cost Category</th>
+                <th class="px-4 py-3 font-sora font-semibold">Congo African Grey</th>
+                <th class="px-4 py-3 font-sora font-semibold">Timneh African Grey</th>
+              </tr>
+            </thead>
+            <tbody class="text-stone-700">
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">Purchase price</td><td class="px-4 py-3">$1,700–$3,500</td><td class="px-4 py-3">$1,500–$1,600</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">Deposit to reserve</td><td class="px-4 py-3">$200</td><td class="px-4 py-3">$200</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">IATA shipping (flat)</td><td class="px-4 py-3">$185</td><td class="px-4 py-3">$185</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">CITES documentation</td><td class="px-4 py-3">Included</td><td class="px-4 py-3">Included</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">First-year setup</td><td class="px-4 py-3">$825–$2,000</td><td class="px-4 py-3">$825–$2,000</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">Annual ongoing</td><td class="px-4 py-3">$375–$1,350</td><td class="px-4 py-3">$375–$1,350</td></tr>
+              <tr class="bg-green-lt font-semibold text-green"><td class="px-4 py-3">Best for</td><td class="px-4 py-3">Larger, most-recognized variant</td><td class="px-4 py-3">Lowest entry price, calm temperament</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. CAG vs Alternatives -->
+  <section class="bg-stone-50 py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">CongoAfricanGreys.com vs Cheap Online Listings</h2>
+        <p class="text-stone-700 mb-8" style="max-width:70ch;">
+          A $400 African Grey on a classifieds site is not a bargain — it is a warning sign. Here is the true cost comparison, including the risk that never shows up on the price tag.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse bg-white rounded-xl overflow-hidden" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <thead>
+              <tr class="bg-green text-cream text-left">
+                <th class="px-4 py-3 font-sora font-semibold">Cost Category</th>
+                <th class="px-4 py-3 font-sora font-semibold">CongoAfricanGreys.com</th>
+                <th class="px-4 py-3 font-sora font-semibold">Facebook / Craigslist</th>
+                <th class="px-4 py-3 font-sora font-semibold">Unknown Online Seller</th>
+              </tr>
+            </thead>
+            <tbody class="text-stone-700">
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">Purchase price</td><td class="px-4 py-3">$1,700–$3,500</td><td class="px-4 py-3">$400–$800</td><td class="px-4 py-3">$600–$1,200</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">CITES permit</td><td class="px-4 py-3 text-green font-semibold">Included — verifiable</td><td class="px-4 py-3 text-clay">None / forged</td><td class="px-4 py-3 text-clay">Unverifiable</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">DNA sexing cert</td><td class="px-4 py-3 text-green font-semibold">Included</td><td class="px-4 py-3 text-clay">None</td><td class="px-4 py-3 text-clay">Rarely</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">Avian vet cert</td><td class="px-4 py-3 text-green font-semibold">Included</td><td class="px-4 py-3 text-clay">None</td><td class="px-4 py-3 text-clay">Rarely</td></tr>
+              <tr class="border-b border-stone-100"><td class="px-4 py-3 font-semibold">Risk of CBP seizure</td><td class="px-4 py-3 text-green font-semibold">Zero</td><td class="px-4 py-3 text-clay">High</td><td class="px-4 py-3 text-clay">High</td></tr>
+              <tr class="bg-green-lt font-semibold text-green"><td class="px-4 py-3">True 1-year cost</td><td class="px-4 py-3">Predictable</td><td class="px-4 py-3">High (scam + vet)</td><td class="px-4 py-3">Unpredictable</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-stone-500 text-sm mt-4" style="max-width:70ch;">
+          Learn the warning signs in our guide on <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-green underline hover:text-clay">how to avoid African Grey parrot scams</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Deposit & Inquiry Process -->
+  <section class="py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">Deposit & Inquiry Process</h2>
+        <p class="text-stone-700 mb-6" style="max-width:70ch;">
+          A ${deposit} deposit reserves a specific bird in your name and is applied toward the purchase price. The deposit holds your bird while documentation and travel are arranged.
+        </p>
+        <div class="bg-green-lt border border-green/15 rounded-xl p-6">
+          <h3 class="font-lora font-semibold text-lg text-green mb-3">Traceable Payment Only</h3>
+          <p class="text-stone-600 text-sm mb-3" style="max-width:70ch;">
+            We accept only traceable payment methods for deposits and final payments. We never request gift cards, cryptocurrency, or wire transfers to personal accounts — those are the hallmarks of parrot payment scams.
+          </p>
+          <p class="text-stone-600 text-sm" style="max-width:70ch;">
+            A traceable payment gives you a clear paper trail and recourse if anything goes wrong. A legitimate breeder will always welcome that protection.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. Hidden Costs Warning -->
+  <section class="bg-stone-50 py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-6">Hidden Costs Buyers Underestimate</h2>
+        <p class="text-stone-700 mb-8" style="max-width:70ch;">
+          Transparency builds trust faster than a low price. These are the real ownership costs that catch new African Grey owners off guard — plan for them now.
+        </p>
+        <div class="space-y-4">
+          <div class="bg-white border border-stone-200 rounded-xl p-5" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <h3 class="font-lora font-semibold text-green mb-1">Cage upgrades</h3>
+            <p class="text-stone-600 text-sm" style="max-width:70ch;">Buying a too-small cage first means buying the right one twice. Start with a large, wide cage and skip the costly mistake.</p>
+          </div>
+          <div class="bg-white border border-stone-200 rounded-xl p-5" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <h3 class="font-lora font-semibold text-green mb-1">Unexpected vet bills</h3>
+            <p class="text-stone-600 text-sm" style="max-width:70ch;">Avian emergency care can exceed $500 in a single visit. A small monthly buffer turns a crisis into a manageable expense.</p>
+          </div>
+          <div class="bg-white border border-stone-200 rounded-xl p-5" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <h3 class="font-lora font-semibold text-green mb-1">Constant enrichment</h3>
+            <p class="text-stone-600 text-sm" style="max-width:70ch;">African Greys destroy toys — that is healthy behavior. Toy replacement is a permanent line item, not a one-time purchase.</p>
+          </div>
+          <div class="bg-white border border-stone-200 rounded-xl p-5" style="box-shadow:0 4px 16px rgba(60,30,10,0.06);">
+            <h3 class="font-lora font-semibold text-green mb-1">The 40-year commitment</h3>
+            <p class="text-stone-600 text-sm" style="max-width:70ch;">The biggest hidden cost is time. An African Grey needs daily interaction for decades — and a plan for its care if it outlives you.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. CITES Compliance Notice -->
+  <section class="py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <div class="bg-green-lt border border-green/20 rounded-xl p-6">
+          <p class="text-green font-semibold mb-2">Every adoption fee includes full documentation.</p>
+          <p class="text-stone-600 text-sm" style="max-width:70ch;">
+            African Greys are CITES Appendix II. Every bird we place is captive-bred, USDA AWA documented, and DNA sexed — the adoption fee includes the CITES captive-bred permit, DNA sexing certificate, avian vet health certificate, and hatch certificate at no extra cost. We never sell wild-caught birds, and there are no hidden documentation fees.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. FAQ -->
+  <section class="bg-stone-50 py-12 px-4">
+    <div class="container mx-auto" style="max-width:1200px;">
+      <div style="max-width:760px;" class="mx-auto">
+        <h2 class="font-lora font-bold text-3xl text-green mb-8">African Grey Parrot Price: Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item: any) => (
+            <details class="bg-white border border-stone-200 rounded-lg">
+              <summary class="p-4 font-semibold text-green cursor-pointer hover:text-clay transition-colors list-none flex justify-between items-center gap-4">
+                {item.name}
+                <span class="text-stone-400 text-lg flex-shrink-0">+</span>
+              </summary>
+              <div class="px-4 pb-4 text-stone-600 text-sm leading-relaxed border-t border-stone-100 pt-3">
+                {item.acceptedAnswer.text}
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. Final CTA -->
+  <CTA
+    headline="Get Transparent African Grey Pricing"
+    sub="Send an inquiry and we'll confirm current availability, the exact all-in price for your variant, and the documentation you'll receive. It takes about 2 minutes."
+  />
+
+</BaseLayout>
