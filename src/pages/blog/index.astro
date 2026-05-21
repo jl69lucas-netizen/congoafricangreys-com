@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CTA from '../../components/CTA.astro';
+
+const title = "African Grey Parrot Blog | Care, Training & Buyer Guides";
+const description = "African Grey parrot articles from USDA-licensed breeders. Diet, training, lifespan, health, CITES documentation, and species guides written from 10+ years of hands-on experience.";
+const canonical = "https://congoafricangreys.com/blog/";
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "Blog", url: "/blog/" },
+];
+
+const posts = [
+  {
+    title: "African Grey Parrot Care Guide",
+    slug: "/african-grey-parrot-care-guide/",
+    excerpt: "Complete care guide covering diet, housing, enrichment, health, and CITES documentation requirements.",
+    category: "Care",
+  },
+  {
+    title: "African Grey Parrot Diet",
+    slug: "/african-grey-parrot-diet/",
+    excerpt: "What to feed, what to avoid, and how to build a diet that keeps an African Grey healthy for 40–60 years.",
+    category: "Nutrition",
+  },
+  {
+    title: "African Grey Parrot Lifespan",
+    slug: "/african-grey-parrot-lifespan/",
+    excerpt: "African Greys live 40–60 years. What affects lifespan, life stages, and how to plan for a lifelong companion.",
+    category: "Health",
+  },
+  {
+    title: "African Grey Pros and Cons",
+    slug: "/african-grey-pros-and-cons/",
+    excerpt: "An honest look at what makes African Greys exceptional — and what makes them the wrong bird for many households.",
+    category: "Buyer's Guide",
+  },
+  {
+    title: "Baby African Grey for Sale",
+    slug: "/baby-african-grey-parrot-for-sale/",
+    excerpt: "Hand-raised, fully weaned baby African Greys with CITES documentation. What to expect and what questions to ask.",
+    category: "Buying",
+  },
+  {
+    title: "Congo vs Timneh African Grey",
+    slug: "/congo-vs-timneh-african-grey/",
+    excerpt: "Size, color, price, temperament and talking ability compared side by side.",
+    category: "Comparisons",
+  },
+  {
+    title: "African Grey vs Macaw",
+    slug: "/african-grey-vs-macaw/",
+    excerpt: "Which parrot fits your home, schedule, and budget? Full side-by-side comparison.",
+    category: "Comparisons",
+  },
+  {
+    title: "African Grey vs Cockatoo",
+    slug: "/african-grey-vs-cockatoo/",
+    excerpt: "Talking ability, affection level, noise, and care demands compared.",
+    category: "Comparisons",
+  },
+  {
+    title: "How to Avoid African Grey Parrot Scams",
+    slug: "/how-to-avoid-african-grey-parrot-scams/",
+    excerpt: "CITES documentation red flags, deposit scam patterns, and how to verify a legitimate breeder.",
+    category: "Safety",
+  },
+  {
+    title: "CITES African Grey Documentation",
+    slug: "/cites-african-grey-documentation/",
+    excerpt: "What documentation every captive-bred African Grey must ship with — and what to demand before any deposit.",
+    category: "Legal",
+  },
+  {
+    title: "African Grey Parrot Price Guide",
+    slug: "/african-grey-parrot-price/",
+    excerpt: "Congo and Timneh pricing, first-year setup costs, annual expenses, and 40–60 year lifetime estimates.",
+    category: "Costs",
+  },
+  {
+    title: "African Grey Parrot Species Guide",
+    slug: "/african-grey-parrot-guide/",
+    excerpt: "Complete species guide: subspecies, intelligence, talking ability, wild range, CITES status, and captive care.",
+    category: "Species",
+  },
+];
+---
+
+<BaseLayout {title} {description} {canonical}>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <!-- Hero -->
+  <section style="background:#2D6A4F" class="text-white py-16 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Written by USDA-Licensed Breeders · Midland, TX</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey Parrot Blog</h1>
+      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">Care guides, species comparisons, diet, health, and buyer resources — written by Mark &amp; Teri Benjamin after 10+ years raising captive-bred African Greys.</p>
+    </div>
+  </section>
+
+  <!-- Article Grid -->
+  <section class="py-16 px-4" style="background:#faf7f4">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => (
+          <a href={post.slug} class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 hover:border-clay transition-colors block" style="text-decoration:none">
+            <span class="text-xs font-sora font-semibold uppercase tracking-wide" style="color:#e8604c">{post.category}</span>
+            <h2 class="font-lora font-bold text-lg mt-2 mb-3" style="color:#2D6A4F">{post.title}</h2>
+            <p class="text-stone-600 text-sm leading-relaxed">{post.excerpt}</p>
+            <span class="text-sm font-sora font-semibold mt-4 inline-block" style="color:#e8604c">Read more →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>
