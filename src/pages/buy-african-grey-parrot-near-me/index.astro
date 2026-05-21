@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CTA from '../../components/CTA.astro';
+
+const title = "Buy African Grey Parrot Near Me | Captive-Bred with CITES Documentation";
+const description = "Looking to buy an African Grey parrot near you? USDA AWA licensed breeders ship live to all 50 states. Every bird includes CITES Appendix II documentation.";
+const canonical = "https://congoafricangreys.com/buy-african-grey-parrot-near-me/";
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "Buy African Grey Parrot Near Me", url: "/buy-african-grey-parrot-near-me/" },
+];
+
+const steps = [
+  { n: "01", title: "Submit an Inquiry", body: "Fill out the inquiry form on this page. Tell us your state, living situation, and which variant interests you — Congo or Timneh." },
+  { n: "02", title: "Review Your Match", body: "We match you to an available bird based on your timeline, household, and experience level. You receive the bird's personality profile and documentation preview." },
+  { n: "03", title: "Confirm & Reserve", body: "A deposit secures your bird. We send a holding confirmation and estimated weaning timeline (African Greys are fully weaned at 12–16 weeks before shipping)." },
+  { n: "04", title: "IATA Live Shipping", body: "Your bird ships IATA-compliant, temperature-controlled, directly to your nearest major airport for same-day pickup. Every shipment is tracked in real time." },
+];
+
+const faqs = [
+  {
+    q: "Do you have African Grey parrots for sale near me?",
+    a: "We ship captive-bred African Grey parrots to all 50 U.S. states via IATA-approved live animal shipping. 'Near me' in parrot buying doesn't mean the same thing as buying a local rescue — the bird comes directly to your airport, typically within 24–48 hours of shipping. We're based in Midland, TX, and have delivered birds to buyers in California, New York, Florida, Texas, and every state in between.",
+  },
+  {
+    q: "Is it safe to ship a parrot?",
+    a: "Yes — when done correctly. All our shipments are IATA-compliant: temperature-controlled, direct-route (no connections), with a vet health certificate issued within 10 days of shipping. We've shipped hundreds of birds without incident. We do not ship during extreme weather windows.",
+  },
+  {
+    q: "What documentation comes with the bird?",
+    a: "Every captive-bred African Grey ships with CITES Appendix II documentation, a vet health certificate, DNA sexing certificate, hatch certificate, and our written health guarantee. These are not optional — they are required by U.S. law for interstate transport of CITES-listed species.",
+  },
+  {
+    q: "How much does an African Grey parrot cost?",
+    a: "Congo African Greys are priced $1,700–$3,500 depending on age, training, and lineage. Timneh African Greys range $1,200–$2,500. These prices include full CITES documentation. Avoid any seller offering African Greys below $1,500 without documentation — that is a red flag for illegal trade or a scam.",
+  },
+  {
+    q: "Why buy from a licensed breeder instead of a local pet store?",
+    a: "USDA AWA licensed breeders (like us, License #74-B-0247) are subject to federal inspection and documentation requirements. Most local pet stores source birds through brokers — adding markup, removing lineage traceability, and often providing incomplete or fraudulent documentation. When you buy direct from a USDA-licensed breeder, you know exactly who raised the bird and under what conditions.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((b, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: b.name,
+    item: `https://congoafricangreys.com${b.url}`,
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <!-- Hero -->
+  <section style="background:#2D6A4F;padding:4rem 1rem">
+    <div style="max-width:900px;margin:0 auto;text-align:center">
+      <p style="color:#f0c674;font-family:var(--font-sora,sans-serif);font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem">USDA AWA Licensed · Ships to All 50 States</p>
+      <h1 style="font-family:var(--font-lora,serif);font-weight:700;font-size:clamp(2rem,5vw,3rem);color:#faf7f4;margin-bottom:1rem">Buy African Grey Parrot Near Me</h1>
+      <p style="color:rgba(250,247,244,.8);font-size:1.1rem;max-width:680px;margin:0 auto 2rem">Captive-bred Congo and Timneh African Greys with full CITES Appendix II documentation. We ship live, IATA-compliant, directly to your nearest major airport.</p>
+      <a href="/contact-us/" style="display:inline-block;background:#e8604c;color:white;font-family:var(--font-sora,sans-serif);font-weight:700;padding:.875rem 2rem;border-radius:50px;text-decoration:none;font-size:1rem">Inquire About Available Birds →</a>
+    </div>
+  </section>
+
+  <!-- Process Steps -->
+  <section style="padding:4rem 1rem;background:#faf7f4">
+    <div style="max-width:960px;margin:0 auto">
+      <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.75rem;color:#2D6A4F;text-align:center;margin-bottom:2.5rem">How the Purchase Process Works</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem">
+        {steps.map((s) => (
+          <div style="background:white;border-radius:16px;padding:1.5rem;border:1px solid #e7e2db;box-shadow:0 1px 3px rgba(60,30,10,.06)">
+            <span style="font-family:var(--font-sora,sans-serif);font-size:2rem;font-weight:700;color:#e8604c">{s.n}</span>
+            <h3 style="font-family:var(--font-lora,serif);font-weight:700;color:#2D6A4F;margin:.5rem 0">{s.title}</h3>
+            <p style="color:#4b5563;font-size:.9rem;line-height:1.6;max-width:70ch">{s.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Bar -->
+  <section style="padding:2rem 1rem;background:#2D6A4F">
+    <div style="max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center">
+      {["USDA AWA Licensed (#74-B-0247)", "CITES Appendix II Documented", "DNA Sexed & Vet Certified", "IATA Live Shipping", "Written Health Guarantee"].map((t) => (
+        <span style="color:white;font-family:var(--font-sora,sans-serif);font-size:.85rem;font-weight:600">✅ {t}</span>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="padding:4rem 1rem;background:white">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.75rem;color:#2D6A4F;margin-bottom:2rem">Common Questions About Buying Near Me</h2>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        {faqs.map((faq) => (
+          <details style="background:#faf7f4;border:1px solid #e7e2db;border-radius:12px;padding:1.25rem">
+            <summary style="font-family:var(--font-sora,sans-serif);font-weight:600;cursor:pointer;color:#1f2937;list-style:none">{faq.q}</summary>
+            <p style="margin-top:.75rem;color:#4b5563;line-height:1.7;max-width:70ch">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>
