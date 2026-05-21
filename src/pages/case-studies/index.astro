@@ -14,6 +14,22 @@ const breadcrumbs = [
   { name: "Owner Stories", url: "/case-studies/" },
 ];
 
+const faqs = [
+  { q: "How do I submit my African Grey story?", a: "Email your story and a photo to us via the contact form at /contact-us/. We accept stories from verified buyers who received their bird from CongoAfricanGreys.com. Stories are reviewed before publishing." },
+  { q: "Are the owner stories on this page verified?", a: "Yes. Every story on this page comes from a verified buyer — someone who purchased a captive-bred, CITES-documented African Grey from our Midland, TX aviary. We do not publish or fabricate unverified testimonials." },
+  { q: "How long does it take for my story to be published?", a: "We review story submissions within 2–3 weeks. We may reach out for additional details, a photo, or to confirm your bird's documentation details before publishing." },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 // Attempt to load case studies data file
 let caseStudies: Array<{
   name: string;
@@ -36,6 +52,7 @@ try {
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
   <div class="page-container">
     <Breadcrumb items={breadcrumbs} />
   </div>
@@ -129,6 +146,19 @@ try {
         <a href="/contact-us/" class="cs-link">contact page</a> — include your bird's name,
         when you got them, and one or two sentences about life together.
       </p>
+    </div>
+  </section>
+
+  <!-- FAQ ACCORDION -->
+  <section class="cs-section cs-faq">
+    <div class="page-container text-wrap">
+      <h2 class="cs-h2">Frequently Asked Questions</h2>
+      {faqs.map((f) => (
+        <details class="cs-details">
+          <summary class="cs-summary">{f.q}</summary>
+          <p class="cs-details-body">{f.a}</p>
+        </details>
+      ))}
     </div>
   </section>
 
@@ -260,6 +290,48 @@ try {
     line-height: 1.5;
     color: #44403c;
     margin: 0;
+  }
+  .cs-faq { background: #fff; }
+  .cs-details {
+    border: 1px solid #e7e5e4;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+  .cs-details[open] { box-shadow: 0 2px 8px rgba(60,30,10,0.07); }
+  .cs-summary {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2D6A4F;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.15s;
+  }
+  .cs-summary::-webkit-details-marker { display: none; }
+  .cs-summary::after {
+    content: '+';
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #e8604c;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    transition: transform 0.15s;
+  }
+  details[open] > .cs-summary::after { content: '−'; }
+  .cs-summary:hover { background: #faf7f4; }
+  .cs-details-body {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.97rem;
+    line-height: 1.7;
+    color: #44403c;
+    padding: 0 1.25rem 1rem;
+    margin: 0;
+    max-width: 70ch;
   }
   @media (max-width: 767px) { .page-container { padding: 0 16px; } }
   @media (min-width: 768px) and (max-width: 1024px) { .page-container { padding: 0 32px; } }
