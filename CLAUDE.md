@@ -150,6 +150,7 @@ All three steps completed — outputs in `docs/research/` and `data/competitors.
 - `.claude/agents/cag-google-map-agent.md` — adds/replaces Google Maps embeds; fixes CSP object-src blocker (embed→iframe); generates styled map sections using CAG design system
 - `.claude/agents/cag-contact-form-updater.md` — audits + standardizes all contact/inquiry forms; detects missing ARIA labels, accessibility violations
 - `.claude/agents/cag-agent-system-qa.md` — quality review of full agent system; audits for Golden Rule, required sections, data file references, CLAUDE.md registration
+- `.claude/agents/cag-site-hygiene-agent.md` — monthly technical SEO maintenance: (1) page cannibalization audit + 301 redirects, (2) breadcrumb audit + fix (adds Breadcrumb component + BreadcrumbList schema to pages missing it), (3) footer link management (5-column Footer.astro), (4) GA4 health check (tag G-MEWJ9GVC4T in BaseLayout + generate_lead event on /contact-us/); run monthly or after any batch page build
 
 #### Tier 5 — Trust & Authority
 - `.claude/agents/cag-trust-signals-agent.md` — Google Reviews widget HTML, Trust Badge row (USDA AWA / CITES / DNA Sexed / Avian Vet), ReviewAggregateSchema, Counter Snippet blocks; /why-choose-cag/ page spec; Contextual Intelligence review templates; works with case-study agent
@@ -215,6 +216,7 @@ Active design system: `docs/design.md` (master reference) + `docs/design-system/
      - Large decorative (100px+): `<img src="/emoji/cag-congo.png" style="width:Xpx;height:Xpx;object-fit:contain;" alt="" loading="lazy">` — match original font-size value
      - Plain text / email / JS string contexts: use `[CAG]` or `[TAG]` as text markers — HTML img not possible in strings
 8. **Anti-copy:** NEVER add `user-select: none` CSS or JS.
+9. **Infographic widths:** `760px` wrapper for species guides / blogs / care pages; `1100px` wrapper for homepage / location pages / hero sections. Height always `400px` fixed on desktop, `auto` on mobile. Never use `900px` or `max-w-4xl` — those are legacy values. See `docs/reference/page-width.md §Infographic Width Rules`.
 
 ### Component Library v2
 
@@ -270,6 +272,16 @@ Full spec: `docs/reference/page-width.md`
 **Responsive typography:** When writing or updating page CSS, apply the scale from `docs/design.md` §Responsive Typography Scale. Body line-height 1.6–1.7. No inline styles overriding the scale.
 
 **Never** hard-code `max-width: 1180px` — use `1200px` or `var(--container)`.
+
+**Infographic widths (confirmed defaults — applies to all `@cag-infographic-builder` output):**
+
+| Page type | Wrapper max-width | Desktop height |
+|---|---|---|
+| Species guide, blog, care guide, article | **760px** | 400px fixed |
+| Homepage, location pages, hero sections | **1100px** | 400px fixed |
+| Mobile (≤767px for 1100px; ≤640px for 760px) | 100% width | auto (stacks) |
+
+Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 
 ---
 
