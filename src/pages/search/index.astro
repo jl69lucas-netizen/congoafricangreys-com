@@ -24,9 +24,7 @@ const canonical = "https://congoafricangreys.com/search/";
         </button>
       </form>
 
-      <div id="results" class="space-y-5">
-        <p class="text-stone-400 text-sm">Loading…</p>
-      </div>
+      <div id="results" class="space-y-5"></div>
     </div>
   </section>
 
@@ -45,9 +43,12 @@ const canonical = "https://congoafricangreys.com/search/";
         return;
       }
 
+      resultsEl.innerHTML = '<p class="text-stone-400 text-sm">Loading…</p>';
+
       let pagefind: any;
       try {
         pagefind = await import('/pagefind/pagefind.js');
+        await pagefind.init();
       } catch {
         resultsEl.innerHTML = '<p class="text-stone-500 text-sm">Search index not available — try again after the next site deploy.</p>';
         return;
