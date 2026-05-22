@@ -15,53 +15,59 @@ const schema = {
 };
 ---
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-<nav aria-label="Breadcrumb" class="breadcrumb-nav">
-  <ol class="breadcrumb-list">
+<div class="bc-pill-wrap">
+  <ol class="bc-pill" aria-label="Breadcrumb">
     {items.map((item, i) => (
-      <li class="breadcrumb-item">
+      <li class="bc-item">
         {i < items.length - 1 ? (
-          <a href={item.url} class="breadcrumb-link">{item.name}</a>
+          <a href={item.url} class="bc-link">{item.name}</a>
         ) : (
-          <span aria-current="page" class="breadcrumb-current">{item.name}</span>
+          <span aria-current="page" class="bc-current">{item.name}</span>
         )}
-        {i < items.length - 1 && <span class="breadcrumb-sep" aria-hidden="true"> › </span>}
+        {i < items.length - 1 && <span class="bc-sep" aria-hidden="true"> › </span>}
       </li>
     ))}
   </ol>
-</nav>
+</div>
 
 <style>
-.breadcrumb-nav {
-  padding: 8px 0 16px;
+.bc-pill-wrap {
+  margin-bottom: 1.5rem;
   font-family: 'Sora', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
 }
-.breadcrumb-list {
+.bc-pill {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50px;
+  padding: 6px 16px 6px 12px;
   list-style: none;
   margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0;
 }
-.breadcrumb-item {
+.bc-item {
   display: flex;
   align-items: center;
 }
-.breadcrumb-link {
-  color: #2D6A4F;
+.bc-link {
+  color: rgba(250, 247, 244, 0.85);
   text-decoration: none;
+  transition: color 0.15s;
 }
-.breadcrumb-link:hover {
-  color: #e8604c;
+.bc-link:hover {
+  color: #faf7f4;
   text-decoration: underline;
 }
-.breadcrumb-sep {
-  color: #999;
-  padding: 0 4px;
+.bc-sep {
+  color: rgba(255, 255, 255, 0.35);
+  padding: 0 5px;
 }
-.breadcrumb-current {
-  color: #666;
+.bc-current {
+  color: #faf7f4;
+  font-weight: 600;
 }
 </style>
