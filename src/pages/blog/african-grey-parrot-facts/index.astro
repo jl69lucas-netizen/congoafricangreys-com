@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import CTA from '../../../components/CTA.astro';
+
+const title = "African Grey Parrot Facts | 20 Things Every Owner Should Know";
+const description = "African Grey parrots live 40–60 years, speak up to 1,000 words, and are CITES Appendix II. Here are 20 verified facts from USDA-licensed breeders.";
+const canonical = "https://congoafricangreys.com/blog/african-grey-parrot-facts/";
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "Blog", url: "/blog/" },
+  { name: "African Grey Parrot Facts", url: "/blog/african-grey-parrot-facts/" },
+];
+
+const faqs = [
+  {
+    q: "How long do African Grey parrots live?",
+    a: "Captive African Grey parrots typically live 40–60 years, with some reaching 70+ years in exceptional cases. Wild African Greys average 20–25 years due to predation and habitat loss. The 40–60 year commitment is one of the most important facts prospective owners must understand before purchasing.",
+  },
+  {
+    q: "How many words can an African Grey parrot learn?",
+    a: "African Grey parrots can learn 200–1,000 words, with exceptional individuals exceeding 1,000. They don't just mimic — they use words contextually. Alex, the famous Congo African Grey studied by Dr. Irene Pepperberg, demonstrated object recognition, color naming, and numerical concepts at the level of a 5-year-old child.",
+  },
+  {
+    q: "Are African Grey parrots endangered?",
+    a: "African Grey parrots are listed as Endangered on the IUCN Red List and are CITES Appendix II, meaning international trade is strictly regulated. All legally sold African Grey parrots in the United States must be captive-bred with CITES documentation — not wild-caught. Our birds ship with complete CITES paperwork.",
+  },
+  {
+    q: "What is the difference between a Congo and Timneh African Grey?",
+    a: "The Congo African Grey (Psittacus erithacus) is larger (12–14 inches, 400–650g), has a bright red tail, and is slightly more emotionally reactive. The Timneh African Grey (Psittacus timneh) is smaller (9–11 inches, 275–400g), has a dark maroon tail, matures faster, and adapts more easily to new environments. Both subspecies talk well, but Congo Greys tend to develop larger vocabularies.",
+  },
+  {
+    q: "Where do African Grey parrots come from?",
+    a: "African Grey parrots are native to the rainforests of West and Central Africa — primarily Cameroon, the Congo Basin, Ghana, Ivory Coast, and Kenya. In the wild, they live in large flocks and travel up to 10 miles daily to find food. All legally sold birds in the US are captive-bred, not imported from the wild.",
+  },
+  {
+    q: "How smart is an African Grey parrot?",
+    a: "African Greys are consistently rated the most intelligent of all parrot species. Dr. Irene Pepperberg's 30-year study of Alex (a Congo African Grey) demonstrated object permanence, basic arithmetic, phoneme awareness, and abstract concept understanding. They have the cognitive ability of a 5-year-old human child and the emotional intelligence of a 2-year-old.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "African Grey Parrot Facts: 20 Things Every Owner Should Know",
+  description,
+  author: { "@type": "Person", name: "Mark & Teri Benjamin" },
+  publisher: {
+    "@type": "Organization",
+    name: "CongoAfricanGreys.com",
+    url: "https://congoafricangreys.com",
+  },
+  datePublished: "2026-05-22",
+  url: canonical,
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((b, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: b.name,
+    item: `https://congoafricangreys.com${b.url}`,
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <!-- Hero -->
+  <section style="background:#2D6A4F" class="text-white py-16 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Facts · USDA-Licensed Breeders · Midland, TX</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey Parrot Facts</h1>
+      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">20 verified facts about African Grey parrots — lifespan, intelligence, CITES status, subspecies differences, and what it actually takes to own one.</p>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="py-16 px-4" style="background:#faf7f4">
+    <div class="max-w-760px mx-auto" style="max-width:760px">
+
+      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">The Biology</h2>
+      <p class="text-stone-700 leading-relaxed mb-4">African Grey parrots (<em>Psittacus erithacus</em>) are medium-to-large parrots native to the equatorial rainforests of West and Central Africa. Two subspecies are recognized: the larger Congo African Grey and the smaller Timneh African Grey.</p>
+      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
+        <li>Congo African Grey: 12–14 inches, 400–650g, bright red tail</li>
+        <li>Timneh African Grey: 9–11 inches, 275–400g, dark maroon tail</li>
+        <li>Lifespan: 40–60 years in captivity (20–25 in the wild)</li>
+        <li>Native range: Cameroon, Congo Basin, Ghana, Ivory Coast, Uganda</li>
+        <li>IUCN status: Endangered (population declined 80%+ since 1992)</li>
+        <li>CITES status: Appendix II — all legal US sales must be captive-bred</li>
+      </ul>
+
+      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">The Intelligence</h2>
+      <p class="text-stone-700 leading-relaxed mb-4">African Greys are widely recognized as the most cognitively advanced parrot species. Dr. Irene Pepperberg's 30-year study of Alex — a Congo African Grey — changed how scientists understand animal intelligence.</p>
+      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
+        <li>Vocabulary: 200–1,000+ words (contextually used, not just mimicked)</li>
+        <li>Cognitive level: comparable to a 5-year-old child in some tasks</li>
+        <li>Emotional intelligence: comparable to a 2-year-old</li>
+        <li>Can identify colors, shapes, numbers, and materials</li>
+        <li>Demonstrates object permanence — understands objects exist when hidden</li>
+        <li>Problem-solving ability: can unlock latches, open puzzle boxes</li>
+      </ul>
+
+      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">The Commitment</h2>
+      <p class="text-stone-700 leading-relaxed mb-4">African Greys are not a beginner pet. Their 40–60 year lifespan, emotional sensitivity, and daily care demands make them a lifetime commitment — one that outlasts many marriages, careers, and living situations.</p>
+      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
+        <li>Daily interaction needed: 3–4 hours minimum</li>
+        <li>Highly sensitive to routine changes and household stress</li>
+        <li>Feather plucking is a documented stress response — not a grooming habit</li>
+        <li>Diet must be actively managed (calcium deficiency causes seizures)</li>
+        <li>Require annual avian vet visits — not all vets treat birds</li>
+        <li>CITES documentation must be kept with the bird for its lifetime</li>
+      </ul>
+
+      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Congo vs Timneh: Key Differences</h2>
+      <div class="bg-white rounded-xl border border-stone-200 overflow-hidden mb-8">
+        <table class="w-full text-sm">
+          <thead>
+            <tr style="background:#2D6A4F">
+              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Trait</th>
+              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Congo (CAG)</th>
+              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Timneh (TAG)</th>
+            </tr>
+          </thead>
+          <tbody class="text-stone-600 divide-y divide-stone-100">
+            <tr><td class="py-3 px-4">Size</td><td class="py-3 px-4">12–14 inches</td><td class="py-3 px-4">9–11 inches</td></tr>
+            <tr><td class="py-3 px-4">Weight</td><td class="py-3 px-4">400–650g</td><td class="py-3 px-4">275–400g</td></tr>
+            <tr><td class="py-3 px-4">Tail color</td><td class="py-3 px-4">Bright red</td><td class="py-3 px-4">Dark maroon</td></tr>
+            <tr><td class="py-3 px-4">Talking onset</td><td class="py-3 px-4">12–18 months</td><td class="py-3 px-4">9–14 months</td></tr>
+            <tr><td class="py-3 px-4">Temperament</td><td class="py-3 px-4">More reactive</td><td class="py-3 px-4">More adaptable</td></tr>
+            <tr><td class="py-3 px-4">Price range</td><td class="py-3 px-4">$1,500–$3,500</td><td class="py-3 px-4">$1,200–$2,500</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FAQ -->
+      <h2 class="font-lora font-bold text-3xl mb-8" style="color:#2D6A4F">Frequently Asked Questions</h2>
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="bg-white rounded-xl border border-stone-200 p-5">
+            <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
+            <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>
