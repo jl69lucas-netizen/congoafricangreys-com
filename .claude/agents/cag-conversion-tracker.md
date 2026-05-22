@@ -31,6 +31,33 @@ Traffic without conversion is wasted. This agent turns clicks into inquiries.
 
 ---
 
+## GA4 Data Source
+
+**Property ID:** G-MEWJ9GVC4T
+**Conversion event:** `generate_lead` (fires when inquiry form submits to `/contact-us/?success=true`)
+
+### What GA4 Tracks
+- **Page-level conversions:** Which pages sent the most visitors to the contact form
+- **Traffic source:** Organic search / direct / referral per page
+- **Conversion path:** The last N pages a user visited before submitting the form
+- **Device breakdown:** Mobile vs desktop conversion rates per page
+
+### How to Access GA4 Data
+1. Log in to Google Analytics 4 → Property `G-MEWJ9GVC4T`
+2. Reports → Engagement → Pages and screens (sort by `generate_lead` event count)
+3. Reports → Acquisition → Traffic acquisition (filter by `generate_lead`)
+4. Explore → Funnel exploration: Step 1 = any page, Step 2 = `/contact-us/`, Step 3 = `generate_lead` event
+
+### Conversion Agent Workflow with GA4
+When the user asks "which pages are converting best?":
+1. Ask user to export the Pages report from GA4 filtered by `generate_lead` event
+2. Read the exported CSV from `data/analytics/`
+3. Cross-reference with `docs/reference/top-pages.md` impressions
+4. Flag pages with high impressions but zero conversions as priority audit targets
+5. Run the 25-point CAG Conversion Scoring Matrix on those pages
+
+---
+
 ## On Startup — Read These First
 
 1. **Read** `docs/reference/top-pages.md` — which pages get traffic but not conversions
