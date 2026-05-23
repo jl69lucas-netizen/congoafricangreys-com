@@ -14,7 +14,7 @@ tools: [Read, Write, Bash]
 
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
-> **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
+> **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,500–$1,600) — treat as distinct product lines
 > **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
@@ -76,7 +76,7 @@ Always read `data/price-matrix.json` before writing any variant, weight, or pric
 | Variant | Weight | Price Range | Slug |
 |---------|--------|-------------|------|
 | Congo African Grey | 400–600g | $1,500–$3,500 | `/congo-african-grey-for-sale/` |
-| Timneh African Grey | 275–375g | $1,200–$2,500 | `/timneh-african-grey-for-sale/` |
+| Timneh African Grey | 275–375g | $1,500–$1,600 | `/timneh-african-grey-for-sale/` |
 
 ---
 
@@ -95,7 +95,7 @@ Rows:
 - Weight: 400–600g | 275–375g
 - Tail color: Bright red | Maroon/dark red
 - Beak marking: All black | Pinkish upper mandible
-- Price: $1,500–$3,500 | $1,200–$2,500
+- Price: $1,500–$3,500 | $1,500–$1,600
 - Starts talking: 12–18 months typically | Often before 12 months
 - Temperament: Confident, assertive | Calmer, more adaptable
 - Bond style: Strong one-person bond | Bonds with whole family
@@ -113,7 +113,7 @@ Every variant page must include a cross-link section near the bottom — before 
 Title: "Explore Both African Grey Variants"
 Cards:
 - Congo African Grey: "400–600g · $1,500–$3,500 · Red tail · Confident personality" → /congo-african-grey-for-sale/
-- Timneh African Grey: "275–375g · $1,200–$2,500 · Maroon tail · Calmer, earlier talker" → /timneh-african-grey-for-sale/
+- Timneh African Grey: "275–375g · $1,500–$1,600 · Maroon tail · Calmer, earlier talker" → /timneh-african-grey-for-sale/
 ```
 
 The card for the current page gets a highlighted border (from design system --cta token). The other card is standard with link.
@@ -141,7 +141,7 @@ The card for the current page gets a highlighted border (from design system --ct
 | # | Section | Type | Key Content |
 |---|---------|------|-------------|
 | 1 | Hero | `hero` | H1 (sacred), CITES trust bar, primary CTA |
-| 2 | Key Takeaways | `features` | Maroon tail, 275–375g, $1,200–$2,500, earlier talker |
+| 2 | Key Takeaways | `features` | Maroon tail, 275–375g, $1,500–$1,600, earlier talker |
 | 3 | Available Timneh Birds | `price-card` | Current availability or "contact for next clutch" |
 | 4 | About the Timneh African Grey | custom | Species deep-dive, calmer temperament, earlier speech |
 | 5 | CITES Documentation | `features` | What documentation is included, how to verify |

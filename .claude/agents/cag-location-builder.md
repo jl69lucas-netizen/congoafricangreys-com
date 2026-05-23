@@ -144,6 +144,18 @@ Washington (WA)
   Avian vet note: Strong avian vet community in Seattle metro. Post-arrival vet visit within 72h recommended.
 ```
 
+### Fallback for States Not Listed Above
+
+For any of the 15 remaining states (MI, NJ, VA, AZ, MA, TN, IN, MO, MD, WI, CO, MN, KY, IA, OR) that are in `data/locations.json` but don't have hardcoded data above:
+
+1. **Cities:** Use your knowledge of the state's 5–8 largest cities (flag as "agent-derived — verify with breeder if needed")
+2. **Climate:** Use regional climate knowledge (Northeast = cold winters; Southeast = hot humid; Mountain West = dry; Pacific = mild)
+3. **Import note:** Default to "No state-level restrictions beyond federal CITES requirements" unless you know of specific restrictions
+4. **State law:** Default to "CITES Appendix II documentation required at federal level. No additional state-level parrot permit for buyers."
+5. **Avian vet note:** Default to "Contact us for avian vet referrals in [STATE]. Post-arrival vet visit within 72h recommended."
+
+**Never leave `{MAJOR_CITIES}` or `{STATE_AVIAN_VET_NOTE}` as unfilled placeholders in final output.** If uncertain about cities, use the state capital + 2–3 major metros — that is always better than an empty placeholder.
+
 ---
 
 ## 22-Section Page Template

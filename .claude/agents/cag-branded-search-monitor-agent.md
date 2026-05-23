@@ -70,10 +70,13 @@ with open('$LATEST') as f:
 
 | Condition | Alert |
 |-----------|-------|
-| Branded impressions drop > 20% WoW | 🔴 HIGH |
+| Branded impressions drop > 20% WoW **AND** base impressions ≥ 50 | 🔴 HIGH |
+| Branded impressions drop > 20% WoW **AND** base impressions < 50 | 🟡 MEDIUM (may be noise — low volume) |
 | Branded impressions drop 10–20% | 🟡 MEDIUM |
 | New branded query (brand gaining recognition) | ✅ POSITIVE |
 | Position for brand name > 5 | 🔴 HIGH — possible competitor issue |
+
+**Threshold caveat:** Require BOTH conditions for HIGH alert — a >20% drop with only 30 impressions could be a single day's variance, not a real trend. Require ≥50 base impressions before treating a 20%+ drop as HIGH priority.
 
 ---
 

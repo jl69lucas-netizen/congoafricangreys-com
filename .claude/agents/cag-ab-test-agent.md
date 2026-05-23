@@ -89,9 +89,10 @@ echo "Backup created: [slug]-original"
 ## Minimum Sample Size
 - Estimated: [X] visitors needed for statistical significance (based on current traffic)
 - Duration estimate: [X days at current traffic level]
+- **Hard minimum:** Run each variant for at least **2 weeks AND 100+ form views** before declaring a winner. Do not end tests early — a variant with 5 form submissions vs 3 is not a statistically meaningful winner. Early stopping produces false positives.
 
 ## Decision Date
-[Date to review results and declare winner]
+[Date to review results and declare winner — must be at least 14 days from test start]
 ```
 
 ### Step 3 — Write Variant File

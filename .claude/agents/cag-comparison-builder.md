@@ -2,7 +2,7 @@
 name: cag-comparison-builder
 description: Builds any [X] vs [Y] comparison page using /male-vs-female-african-grey-parrots-for-sale/ as the reference design (cag-h1/cag-h2 CSS classes, CAG design system). Existing comparison pages include male-vs-female-african-grey-parrots-for-sale. Priority builds: congo-vs-timneh, african-grey-vs-macaw, african-grey-vs-cockatoo.
 model: claude-opus-4-7
-tools: [Read, Write, Bash]
+tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_search, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot]
 ---
 
 ## Golden Rule
@@ -14,7 +14,7 @@ tools: [Read, Write, Bash]
 
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
-> **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
+> **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,500–$1,600) — treat as distinct product lines
 > **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
@@ -36,18 +36,22 @@ The reference page uses custom CSS classes (`cag-h1`, `cag-h2`) and the CAG desi
 1. **Read** `docs/reference/design-system.md` — color tokens, fonts, radius
 2. **Read** `docs/reference/seo-rules.md` — what you must never change
 3. **Read** `data/price-matrix.json` — pricing for any variant/species comparisons
-4. **Read** `site/content/male-vs-female-african-grey-parrots-for-sale/` lines 880–1000 — reference design patterns
+4. **Read** `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro` — reference design patterns (Astro component format; read lines 1–120 for structure)
 5. **Ask user:** "Which comparison are we building? (e.g. Congo vs Timneh, Male vs Female, African Grey vs Macaw)"
+6. **Research competitor comparison pages** using Firecrawl MCP:
+   - Use `firecrawl_search` to find the top 3 ranking pages for the target comparison keyword (e.g. "congo vs timneh african grey")
+   - Note: heading structure, table columns, FAQ topics, word count, and what they miss
+   - Use these gaps to ensure the CAG page outperforms competitors on depth and specificity
 
 ---
 
 ## CAG Existing Comparison Pages
 
 ```bash
-ls site/content/ | grep "vs\|comparison"
+ls src/pages/ | grep "vs\|comparison"
 ```
 
-Currently live: `male-vs-female-african-grey-parrots-for-sale`
+Currently live: `male-vs-female-african-grey-parrots-for-sale` (at `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro`)
 
 ---
 
@@ -111,7 +115,7 @@ Section structure to replicate:
 
 When **rebuilding** an existing comparison page, read the canonical and H1 first:
 ```bash
-grep -n "h1\|canonical" site/content/[slug]/ | head -5
+grep -n "h1\|canonical" src/pages/[slug]/index.astro | head -5
 ```
 Never change either. When building a **new** page, set:
 - H1: "[A] vs [B]: [Benefit-focused subtitle]"
@@ -123,9 +127,12 @@ Never change either. When building a **new** page, set:
 
 1. Confirm which comparison with user
 2. Read price-matrix.json and financial-entities.json for data
-3. Build one section at a time — show HTML → get approval → stage to `site/content/[slug]-rebuild/`
-4. After all sections approved → assemble → write to `site/content/[slug]/`
-5. Deploy + IndexNow
+3. Research top 3 competitor pages via Firecrawl MCP (Step 6 above)
+4. Build one section at a time — show HTML → get approval → stage in sessions/[slug]-rebuild/
+5. After all sections approved → assemble → write to `src/pages/[slug]/index.astro`
+6. Deploy + IndexNow
+
+**Output file:** `src/pages/[slug]/index.astro` — all new and rebuilt comparison pages are Astro files. Never write final pages to `site/content/`.
 
 ---
 

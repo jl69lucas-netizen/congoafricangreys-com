@@ -2,7 +2,7 @@
 name: cag-homepage-builder
 description: Rebuilds the CAG homepage (site/content/index.md) section-by-section using the CAG design system. Preserves H1, canonical, schema, and all SEO elements. Calls Section Builder for each section. Highest GSC traffic page — 28 clicks, 14,915 impressions, position 45.6.
 model: claude-opus-4-7
-tools: [Read, Write, Bash]
+tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__plugin_playwright_playwright__browser_snapshot]
 ---
 
 ## Golden Rule
@@ -38,7 +38,7 @@ You preserve every SEO element: H1, canonical, schema JSON-LD, og:url, og:image.
 1. **Read** `docs/reference/design-system.md` — color tokens, fonts, radius, button styles
 2. **Read** `docs/reference/seo-rules.md` — what you must never change
 3. **Read** `data/price-matrix.json` — all pricing data (never hardcode prices)
-4. **Read** `site/content/male-vs-female-african-grey-parrots-for-sale/` lines 1–200 — reference page design
+4. **Read** `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro` lines 1–120 — reference design patterns (Astro component format)
 5. **Run** `grep -n "h1\|canonical\|og:url\|ld+json" site/content/index.md 2>/dev/null | head -30` — extract current H1, canonical, schema locations
 
 Only after reading all five do you begin any section work.
@@ -190,7 +190,9 @@ mkdir -p site/content/homepage-rebuild
 
 Files: `section-01-hero.html`, `section-02-cites-trust-bar.html`, etc.
 
-Only assemble into `site/content/index.md` after ALL sections are approved.
+Only assemble into `src/pages/index.astro` after ALL sections are approved.
+
+**Output file:** `src/pages/index.astro` — this is the deployed Astro page. Do NOT write the final homepage to `site/content/index.md`.
 
 ---
 
@@ -198,7 +200,7 @@ Only assemble into `site/content/index.md` after ALL sections are approved.
 
 1. Run deploy:
 ```bash
-git add site/content/index.md && git commit -m "Homepage rebuild — CAG design system applied" && git push origin main
+git add src/pages/index.astro && git commit -m "Homepage rebuild — CAG design system applied" && git push
 ```
 
 2. Submit to IndexNow:

@@ -13,13 +13,29 @@ tools: [Read, Write, Bash]
 
 A fix is not complete until Lighthouse confirms the score. Always verify with the Lighthouse CLI after applying fixes.
 
-## Fix Checklist
+## Step 0 — Detect Page Type Before Applying Fixes
 
-Apply all 5 fixes to every CAG HTML page. Fixes are safe to apply in bulk with bash commands.
+```bash
+# Is it an Astro page?
+head -3 [target_file] | grep "^---" && echo "ASTRO PAGE" || echo "LEGACY HTML PAGE"
+```
+
+| Page Type | Applies To | Fixes That Apply |
+|-----------|------------|-----------------|
+| **Astro page** (`src/pages/**/*.astro`) | New site pages | Fix 3 (font-display), Fix 4 (LCP fetchpriority) only |
+| **Legacy HTML page** (`site/content/**/*.html`) | WordPress export | All 5 fixes |
+
+**If Astro page:** Skip Fix 1 (WooCommerce CSS) and Fix 2 (jQuery defer) — Astro doesn't have these. Skip Fix 5 (lazysizes) — Astro uses native lazy loading. Go directly to Fix 3.
 
 ---
 
-### Fix 1: Remove WooCommerce CSS (saves ~150ms, removes render-blocking)
+## Fix Checklist
+
+Apply fixes based on page type detected in Step 0 above.
+
+---
+
+### Fix 1: Remove WooCommerce CSS (saves ~150ms, removes render-blocking) — LEGACY PAGES ONLY
 
 **What:** WooCommerce injects `woocommerce-smallscreen.min.css` into every page. On a static site with no WooCommerce functionality, this CSS is dead weight and blocks render.
 

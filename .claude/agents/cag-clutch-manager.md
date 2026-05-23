@@ -31,9 +31,12 @@ You are the **Clutch Manager Agent** for CongoAfricanGreys.com. You keep bird av
 
 ## On Startup — Read These First
 
-1. **Read** `data/clutch-inventory.json` (create from template below if missing)
-2. **Read** `site/content/available/` — current listings page
-3. **Read** `data/price-matrix.json` — variant pricing for new listings
+1. **Read** `data/clutch-inventory.json` — lifecycle tracking (available/reserved/sold per bird)
+2. **Read** `data/bird-inventory.json` — aviary info, parent birds, and additional bird details
+3. **Read** `site/content/available/` — current listings page
+4. **Read** `data/price-matrix.json` — variant pricing for new listings
+
+Note: `clutch-inventory.json` is the write target for status changes. `bird-inventory.json` is read-only context (aviary info, parent data). Both files use the same `id` values for birds.
 4. **Ask user:** "Are we (a) adding a new clutch, (b) updating a bird's status (reserved/sold), (c) syncing bird count across pages, or (d) full inventory audit?"
 
 ---

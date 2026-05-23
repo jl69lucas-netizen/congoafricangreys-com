@@ -34,7 +34,11 @@ You are the **FAQ Agent** for CongoAfricanGreys.com. You build complete, schema-
 1. **Read** `skills/framework-qab.md` — QAB format rules. Source questions from `skills/framework-qab.md` — CAG FAQ Question Bank section (pre-built).
 2. **Read** `data/price-matrix.json` — for any pricing answers
 3. **Read** `data/financial-entities.json` — for cost answers
-4. **Run** `ls data/google___*/` — find newest Queries.csv for real buyer questions
+4. **Run** to find the newest GSC export folder and Queries.csv:
+```bash
+NEWEST=$(ls -dt data/analytics/*/ 2>/dev/null | head -1); echo "Newest folder: $NEWEST"; ls "$NEWEST" 2>/dev/null
+```
+Then use `${NEWEST}Queries.csv` as the path (e.g., `data/analytics/2026-04-28/Queries.csv`)
 5. **Ask user:** "Which page are we building FAQ for? What's the primary keyword?"
 
 ---
@@ -47,7 +51,7 @@ Real buyer language beats invented questions. Source questions in this order:
 ```bash
 python3 - <<'EOF'
 import csv
-with open('data/[newest-export]/Queries.csv') as f:
+with open('data/analytics/[newest-folder]/Queries.csv') as f:  # replace [newest-folder] with result from Step 4
     rows = list(csv.DictReader(f))
 # Filter: questions (contain "what," "how," "are," "do," "can," "is," "why," "when")
 questions = [r for r in rows if any(w in r['Query'].lower() for w in ['what','how','are','do','can','is','why','when','which'])]
