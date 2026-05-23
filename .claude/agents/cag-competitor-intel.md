@@ -2,13 +2,13 @@
 name: cag-competitor-intel
 description: Deep multi-metric competitive intelligence agent for congoafricangreys.com. Analyzes any or all 30 competitors from data/competitors.json across 10 metric categories — authority signals, content depth, keyword intelligence, page types, blog analysis, visual assets, schema, geography (22 states), conversion, and technical. Produces individual reports + a master gap matrix. Run @cag-competitor-intel [id] for single competitor or @cag-competitor-intel --all for full sweep.
 model: claude-sonnet-4-6
-tools: [Read, Write, Bash]
+tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
 ---
 
 ## Golden Rule
-> Use Claude Code and Playwright CLI to solve problems first.
-> Only call MCPs, external CLIs, or APIs if the specific task genuinely cannot be done with Claude Code alone.
-> **Confidence Gate:** Before writing any report, verify the competitor URL loaded successfully. If Playwright fails to load a URL, log the error and skip — never fabricate data.
+> **Primary:** Use Firecrawl MCP (`firecrawl_scrape`, `firecrawl_crawl`, `firecrawl_map`, `firecrawl_search`) for all competitor page fetches, sitemap discovery, bulk crawls, and schema extraction.
+> **Secondary:** Fall back to Playwright MCP (`browser_navigate` + `browser_snapshot`) only for interactive tasks (PAA click expansion, SERP pages, JS-heavy SPAs where Firecrawl returns empty content).
+> **Confidence Gate:** Only report data you retrieved from a live fetch. Never infer or fabricate. Log failures and skip — never guess.
 
 ---
 
@@ -41,9 +41,9 @@ CA, TX, FL, NY, IL, PA, OH, GA, NC, MI, NJ, VA, WA, AZ, MA, TN, IN, MO, MD, CO, 
 For each competitor, run all 10 metric categories:
 
 ### Category 1 — Authority Signals
-```bash
-# playwright navigate [competitor-url]
-# playwright snapshot
+```
+# firecrawl_scrape(url="[COMPETITOR_URL]", formats=["markdown","links"], onlyMainContent=true)
+# Falls back to: browser_navigate → browser_snapshot if Firecrawl returns empty
 # Extract:
 ```
 - USDA license mentioned? (y/n)
@@ -56,10 +56,9 @@ For each competitor, run all 10 metric categories:
 - Testimonials/reviews count
 
 ### Category 2 — Content Depth
-```bash
-# playwright get_page_text → count words on homepage
-# Check for sitemap: playwright navigate [url]/sitemap.xml
-# Count approximate total pages from sitemap
+```
+# firecrawl_scrape(url="[COMPETITOR_URL]", formats=["markdown"], onlyMainContent=true) → count words in markdown output
+# Sitemap/URL discovery: firecrawl_map(url="[COMPETITOR_ROOT]") → count total URLs returned
 ```
 - Homepage word count
 - Total indexed pages (from sitemap or site: search)
@@ -76,9 +75,9 @@ From page text analysis:
 - **Keywords they rank for that CAG pages don't use** → flag as KEYWORD GAP
 
 ### Category 4 — Page Types Inventory
-```bash
-# Check for each page type by navigating site structure
-# playwright navigate [url]/sitemap.xml or browse nav menus
+```
+# firecrawl_map(url="[COMPETITOR_ROOT]") → filter URLs for /blog/, /care/, /vs/, /state/ patterns
+# firecrawl_scrape(url="[COMPETITOR_ROOT]", formats=["links"]) → extract nav menu links
 ```
 - [ ] Breed/species guides
 - [ ] Care guides (diet, housing, training, health)
@@ -101,9 +100,9 @@ If blog exists:
 - Any comparison posts? Any "best [X]" posts?
 
 ### Category 6 — Visual Assets
-```bash
-# playwright snapshot → count img tags on homepage
-# Check for infographic-style images (tall, labeled, multi-section)
+```
+# firecrawl_scrape(url="[COMPETITOR_URL]", formats=["markdown","links"], onlyMainContent=false) → count image references in markdown
+# Falls back to: browser_snapshot() → count img elements in accessibility tree
 ```
 - Image count on homepage
 - Infographics present? (y/n) — describe if yes
@@ -112,9 +111,9 @@ If blog exists:
 - Bird photography quality (professional / stock / user-generated)
 
 ### Category 7 — Schema Markup
-```bash
-# playwright evaluate_script: document.querySelectorAll('script[type="application/ld+json"]')
-# Or: playwright get_page_text → search for "application/ld+json"
+```
+# firecrawl_scrape(url="[COMPETITOR_URL]", formats=["rawHtml"], onlyMainContent=false) → search rawHtml for "application/ld+json"
+# If schema not found in rawHtml: browser_evaluate(script="JSON.stringify([...document.querySelectorAll('script[type=application/ld+json]')].map(s=>s.textContent))")
 ```
 - Schema types present: FAQPage / LocalBusiness / Product / BreadcrumbList / Organization / Article
 - Note: any schema CAG is missing that competitors use
@@ -132,10 +131,10 @@ If blog exists:
 - Urgency elements: "X birds available", waitlist, limited availability
 
 ### Category 10 — Technical
-```bash
-# Run Lighthouse via Playwright or check PageSpeed Insights URL
-# playwright navigate "https://pagespeed.web.dev/report?url=[competitor-url]"
-# playwright snapshot → extract scores
+```
+# browser_navigate(url="https://pagespeed.web.dev/report?url=[COMPETITOR_URL]")
+# browser_snapshot() → extract scores
+# (PageSpeed Insights requires JS rendering — Playwright MCP used here intentionally)
 ```
 - Mobile-friendly? (y/n)
 - Page speed estimate (fast/average/slow from visual inspection)
@@ -243,7 +242,7 @@ Ranked by: number of competitors using the term
 
 ## Rules
 
-1. **Playwright CLI for all page fetching** — never guess or fabricate page content
+1. **Firecrawl MCP for all page fetching** — `firecrawl_scrape` primary, Playwright MCP fallback for JS-heavy or interactive pages; never guess or fabricate page content
 2. **Three data points minimum per category** — don't leave categories blank
 3. **Keyword gaps must be specific** — exact phrases, not general topics
 4. **State gaps mapped to 22-state list** — always use the canonical 22 states
