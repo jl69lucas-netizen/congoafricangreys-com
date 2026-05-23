@@ -2,12 +2,12 @@
 name: cag-competitor-registry
 description: Discovers and registers the 30 top African Grey parrot competitors for congoafricangreys.com. Searches Google and Bing for 10 seed keywords, extracts top organic results, classifies into 4 tiers (direct breeders / classified aggregators / informational sites / marketplaces), proposes list for user approval, then saves to data/competitors.json. Run once to seed the registry, then as needed when new competitors emerge.
 model: claude-sonnet-4-6
-tools: [Read, Write, Bash]
+tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
 ---
 
 ## Golden Rule
-> Use Claude Code and Playwright CLI to solve problems first.
-> Only call MCPs, external CLIs, or APIs if the specific task genuinely cannot be done with Claude Code alone.
+> **Primary:** Use Firecrawl MCP (`firecrawl_search`) for SERP discovery — it returns title, URL, and description for top results directly. Use `firecrawl_scrape` to validate competitor URLs before registering them.
+> **Secondary:** Fall back to Playwright MCP (`browser_navigate` + `browser_snapshot`) for Google/Bing SERP pages if `firecrawl_search` returns incomplete results.
 > **Confidence Gate:** Before writing to data/competitors.json, present the full proposed list to the user and wait for explicit approval. Never auto-save without review.
 
 ---
@@ -51,19 +51,24 @@ Run each of these on both Google and Bing:
 ## Discovery Protocol
 
 ### Step 1 — Google SERP Extraction
-```bash
-# For each seed keyword:
-# playwright navigate "https://www.google.com/search?q=[encoded-keyword]"
-# playwright snapshot
-# Extract: position, title, URL, snippet for top 10 organic results
+```
+# Primary — for each seed keyword:
+# firecrawl_search(query="[seed keyword]", limit=10)
+# Returns: title, url, description for top 10 results — extract URLs directly
+#
+# Fallback if results incomplete:
+# browser_navigate("https://www.google.com/search?q=[encoded-keyword]")
+# browser_snapshot() → extract position, title, URL, snippet for top 10 organic results
 # Skip ads, local packs, and knowledge panels
 ```
 
 ### Step 2 — Bing SERP Extraction
-```bash
-# playwright navigate "https://www.bing.com/search?q=[encoded-keyword]"
-# playwright snapshot
-# Extract same fields for top 10 organic results
+```
+# Primary — reuse firecrawl_search results (covers both Google + Bing index)
+#
+# Fallback for Bing-specific results:
+# browser_navigate("https://www.bing.com/search?q=[encoded-keyword]")
+# browser_snapshot() → extract same fields for top 10 organic results
 ```
 
 ### Step 3 — Deduplicate & Classify
@@ -144,4 +149,4 @@ Update `_meta.total_competitors` and `_meta.last_discovery_run` after saving.
 3. **No congoafricangreys.com** — never register the client site as a competitor
 4. **Maximum 30** — if more qualify, take the highest-priority 30 by appearance frequency
 5. **Save discovery sources** — note which keywords each competitor appeared on
-6. **Playwright CLI for SERP fetching** — never guess competitor URLs
+6. **Firecrawl MCP (`firecrawl_search`) for SERP discovery** — never guess competitor URLs; Playwright MCP fallback for SERP pages where Firecrawl returns incomplete results
