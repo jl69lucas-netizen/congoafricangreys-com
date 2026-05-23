@@ -2,13 +2,13 @@
 name: cag-rank-tracker
 description: Weekly monitoring agent for congoafricangreys.com — runs every Sunday, checks all 30 competitors in data/competitors.json for changes since last week (new pages, pricing shifts, new location pages, new blog posts, new comparison pages, new keywords entering top 10). Produces a change report and auto-triggers cag-competitor-intel for any competitor that moved. Also tracks CAG's own ranking progress once GSC is connected.
 model: claude-sonnet-4-6
-tools: [Read, Write, Bash]
+tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
 ---
 
 ## Golden Rule
-> Use Claude Code and Playwright CLI to solve problems first.
-> Only call MCPs, external CLIs, or APIs if the specific task genuinely cannot be done with Claude Code alone.
-> **Confidence Gate:** Only report changes you can verify from a live page fetch. Never infer or guess that a change occurred.
+> **Primary:** Use Firecrawl MCP (`firecrawl_scrape`, `firecrawl_crawl`, `firecrawl_map`, `firecrawl_search`) for all competitor page fetches, sitemap discovery, bulk crawls, and schema extraction.
+> **Secondary:** Fall back to Playwright MCP (`browser_navigate` + `browser_snapshot`) only for interactive tasks (PAA click expansion, SERP pages, JS-heavy SPAs where Firecrawl returns empty content).
+> **Confidence Gate:** Only report changes you can verify from a live fetch. Never infer or guess that a change occurred.
 
 ---
 
@@ -51,27 +51,26 @@ For each competitor, check for changes since last week's snapshot:
 ## Monitoring Protocol
 
 ### Step 1 — Quick Snapshot (all 30)
-```bash
+```
 # For each competitor in data/competitors.json:
-# playwright navigate [url]
-# playwright snapshot
-# Extract: page title, H1, approximate section count, visible CTAs
+# firecrawl_scrape(url="[competitor url]", formats=["markdown"], onlyMainContent=true)
+# Extract: page title, H1, approximate section count from markdown headings
 # Compare to last week's snapshot (stored in sessions/)
+# Falls back to: browser_navigate → browser_snapshot if Firecrawl returns empty
 ```
 
 ### Step 2 — Sitemap Check (all 30)
-```bash
-# playwright navigate [url]/sitemap.xml
-# Count total URLs
-# Compare count to last week
-# If count increased: extract new URLs → classify (blog / location / comparison / product)
+```
+# firecrawl_map(url="[competitor root]") → count total URLs returned
+# Compare count to last week's snapshot
+# If count increased: classify new URLs (blog / location / comparison / product)
 ```
 
 ### Step 3 — Keyword Spot Check (top 5 priority keywords only)
-```bash
-# playwright navigate "https://www.google.com/search?q=african+grey+parrot+for+sale"
-# playwright snapshot
-# Check positions 1–10: any new competitor? Any competitor moved up 3+ positions?
+```
+# firecrawl_search(query="african grey parrot for sale", limit=10)
+# Check returned URLs: any new competitor? Any competitor moved up 3+ positions?
+# Falls back to: browser_navigate("https://www.google.com/search?q=african+grey+parrot+for+sale") → browser_snapshot() if search results incomplete
 ```
 
 ### Step 4 — Flag Movers
@@ -151,10 +150,10 @@ This agent is designed to run every Sunday. To schedule:
 
 ## Rules
 
-1. **Playwright CLI for all checks** — live page fetches only, no cached data
+1. **Firecrawl MCP for all checks** — `firecrawl_scrape` / `firecrawl_map` / `firecrawl_search` primary; Playwright MCP fallback for SERP pages and JS-only content; live fetches only, no cached data
 2. **Compare to last snapshot** — no snapshot = baseline run, no alerts
 3. **Mover threshold = 2+ changes** — single change is noise, two or more is signal
 4. **Always trigger cag-competitor-intel for movers** — don't just log, act
 5. **Save snapshot after every run** — future runs depend on it
 6. **Update last_monitored in competitors.json** after each run
-7. **15-minute maximum per competitor** — if a site is unreachable after 2 Playwright attempts, log as `unreachable` and move on
+7. **15-minute maximum per competitor** — if a site is unreachable after Firecrawl + Playwright MCP attempts, log as `unreachable` and move on
