@@ -85,7 +85,7 @@ Single-purpose agent for all Timneh African Grey pages on CongoAfricanGreys.com.
 | "I have young children" | Lead with Timneh (calmer, more adaptable to family activity). |
 | "I'm a first-time parrot owner" | Lead with Timneh (forgiving, adapts to schedule changes, earlier talker). |
 | "I want the bird to talk early" | Timneh — typically talks before 12 months vs Congo at 12–18 months. |
-| "Budget under $2,000" | Both are options. Timneh starts at $1,200; Congo at $1,500. |
+| "Budget under $2,000" | Both are options. Timneh starts at $1,500; Congo also starts at $1,500. Both fit a $2,000 budget. |
 | "I live in an apartment" | Both work; Timneh slightly calmer. |
 | "What's the difference between Congo and Timneh?" | This IS the cross-sell moment — explain both honestly, let buyer decide. |
 | "I want the classic red-tail African Grey" | Congo — the bright red tail is the Congo's signature. |

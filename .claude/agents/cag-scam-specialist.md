@@ -184,9 +184,12 @@ If any box is checked — stop. These are not negotiable.
 ## Build Protocol
 
 1. Read current page sections before rebuilding each one
-2. One section at a time — show → approve → stage to `site/content/scam-specialist-rebuild/`
-3. After all approved → assemble → write to `site/content/how-to-avoid-african-grey-parrot-scams/`
+2. One section at a time — show → approve → stage to `sessions/scam-specialist-rebuild/`
+3. After all approved → assemble → write to `src/pages/how-to-avoid-african-grey-parrot-scams/index.astro`
 4. Deploy + IndexNow
+
+**Output target:** `src/pages/how-to-avoid-african-grey-parrot-scams/index.astro`
+`site/content/` is staging/archive only — never write the final scam page there.
 
 ---
 

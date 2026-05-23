@@ -33,10 +33,17 @@ You save time by parallelizing work that would otherwise take multiple sequentia
 
 ## On Startup — Read These First
 
-1. **Read** `docs/architecture/04_FORK_PATTERNS.md` — all 4 fork patterns with exact protocols
-2. **Read** `docs/reference/site-overview.md` — deploy flow
-3. **Read** `data/locations.json` — for location batch jobs
-4. **Ask user:** "Which fork pattern — Location Batch (22 states), Site Rebuild Batch (all pages), Image Metadata Batch, or Section Build Batch (one page, parallel tracks)?"
+1. **Read** `docs/reference/site-overview.md` — deploy flow and page inventory
+2. **Read** `data/locations.json` — for location batch jobs
+3. **Ask user:** "Which batch mode — Location Batch (22 states), Site Rebuild Batch (all pages), Image Metadata Batch, or Section Build Batch (one page, parallel tracks)?"
+
+**Fork pattern reference (inline):** Set `CLAUDE_CODE_FORK_SUBAGENT=1` before invoking specialist subagents to run them in parallel. Each state/page gets its own isolated subagent invocation. No shared write state between forks — each fork writes to its own `src/pages/[slug]/` directory. Parent agent tracks completion via sessions/batch-[jobid].json.
+
+**4 batch modes:**
+- **Location Batch** — one subagent per state in `data/locations.json` where `"live": false`; delegates to `@cag-location-builder`
+- **Site Rebuild Batch** — one subagent per page in `docs/reference/page-inventory.md`; delegates to page specialist
+- **Image Metadata Batch** — one subagent per image directory; delegates to `@cag-image-pipeline`
+- **Section Build Batch** — parallel section agents for one page; delegates to `@cag-section-builder`
 
 ---
 

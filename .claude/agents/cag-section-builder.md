@@ -44,23 +44,34 @@ Only after reading both files do you begin writing HTML.
 
 ---
 
-## Design System Tokens (read docs/reference/design-system.md first)
+## Design System Tokens
 
-> **IMPORTANT:** CAG design tokens are TBD (Phase 2). Read `docs/reference/design-system.md`
-> before producing any HTML. Until tokens are finalized, use placeholder values below.
+**Step 0 — Always read design tokens before building any section:**
+
+```bash
+grep "^--" src/styles/cag-design-system.css | head -40
+```
+
+**Confirmed CAG design tokens (from docs/design.md — these are production values):**
 
 ```css
-/* Read docs/reference/design-system.md for current values */
---primary: TBD;
---cta: TBD;
---text: #000000;
---canvas: #FFFFFF;
---canvas-alt: #F8F9FA;
---font-heading: TBD;
---font-body: TBD;
---radius: 8px;
---btn-bg: TBD;
---btn-text: #000000;
+/* CAG "Terracotta Warmth" Design System — confirmed production values */
+--primary: #2D6A4F;          /* Forest Green — nav/headers */
+--cta: #e8604c;              /* Clay — ALL CTAs and buttons. --gold MUST equal --clay */
+--gold: #e8604c;             /* Same as --cta — never use a different value */
+--canvas: #faf7f4;           /* Cream — page surface background */
+--text: #1a1a1a;             /* Near-black — body text */
+--font-heading: 'Lora', serif;   /* 700 weight — ALL headlines, no exceptions */
+--font-body: 'Sora', sans-serif; /* 400-700 — ALL body, labels, buttons */
+--radius-btn: 50px;          /* Primary CTA pill — brand signature */
+--radius-form: 12px;         /* Form submit buttons only */
+--radius-card: 20px;         /* Cards — 20px radius */
+--shadow: 0 4px 20px rgba(60,30,10,0.12); /* Always warm-tinted — never neutral grey */
+```
+
+**If you need to verify a specific token, read `src/styles/cag-design-system.css` directly:**
+```bash
+grep "^--cta\|^--primary\|^--gold\|^--canvas" src/styles/cag-design-system.css
 ```
 
 ---
