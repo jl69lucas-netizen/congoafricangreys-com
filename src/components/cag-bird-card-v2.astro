@@ -1,0 +1,157 @@
+---
+/**
+ * cag-bird-card-v2 — Parrot card with full vitals grid.
+ * Adds sex/age/temperament/DNA/vaccinated/microchipped to the classic card.
+ * Use inside a 3-col grid (Style E, 1100px) or as a horizontal inline card (Style D).
+ */
+export interface Props {
+  name: string;
+  species?: 'Congo African Grey' | 'Timneh African Grey';
+  sex: 'Male' | 'Female' | 'Pair';
+  age: string;
+  price: string;
+  temperament?: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  badge?: string;
+  available?: boolean;
+  horizontal?: boolean;
+  href?: string;
+}
+
+const {
+  name,
+  species = 'Congo African Grey',
+  sex,
+  age,
+  price,
+  temperament = 'Social & Playful',
+  imageSrc,
+  imageAlt,
+  badge = 'Available',
+  available = true,
+  horizontal = false,
+  href = '/contact-us/',
+} = Astro.props;
+---
+
+{!horizontal && (
+<article class="bg-white rounded-3xl border border-stone-100 overflow-hidden flex flex-col cag-card-shadow hover:-translate-y-1 transition-all duration-200">
+  <!-- Image -->
+  <div class="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-amber-50 to-orange-100">
+    {imageSrc
+      ? <img src={imageSrc} alt={imageAlt ?? `${name} — ${species}`} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      : <div class="absolute inset-0 flex items-center justify-center">
+          <img src="/emoji/cag-congo.png" alt="" style="width:120px;height:120px;object-fit:contain;opacity:.6;" loading="lazy" />
+        </div>
+    }
+    {available && (
+      <span class="absolute top-3 right-3 bg-green-lt text-green text-[11px] font-sora font-bold tracking-widest uppercase px-3 py-1 rounded-full border border-green/20">
+        {badge}
+      </span>
+    )}
+  </div>
+
+  <!-- Body -->
+  <div class="p-5 flex flex-col flex-1">
+    <span class="text-clay text-[11px] font-sora font-bold tracking-widest uppercase mb-1">{species}</span>
+    <h3 class="font-lora font-bold text-2xl text-logo-dark leading-tight mb-3">{name}</h3>
+
+    <!-- Vitals grid -->
+    <dl class="grid grid-cols-2 gap-x-3 gap-y-2 mb-3">
+      <div>
+        <dt class="text-[10px] font-sora font-bold tracking-wider uppercase text-stone-400">🎀 Sex</dt>
+        <dd class="text-[13px] font-sora text-stone-600 mt-0.5">{sex}</dd>
+      </div>
+      <div>
+        <dt class="text-[10px] font-sora font-bold tracking-wider uppercase text-stone-400">🍼 Age</dt>
+        <dd class="text-[13px] font-sora text-stone-600 mt-0.5">{age}</dd>
+      </div>
+      <div>
+        <dt class="text-[10px] font-sora font-bold tracking-wider uppercase text-stone-400">🎨 Temperament</dt>
+        <dd class="text-[13px] font-sora text-stone-600 mt-0.5">{temperament}</dd>
+      </div>
+      <div>
+        <dt class="text-[10px] font-sora font-bold tracking-wider uppercase text-stone-400">📏 DNA Sexed</dt>
+        <dd class="text-[13px] font-sora text-stone-600 mt-0.5">Yes</dd>
+      </div>
+      <div>
+        <dt class="text-[10px] font-sora font-bold tracking-wider uppercase text-stone-400">🛡️ Vaccinated</dt>
+        <dd class="text-[13px] font-sora text-stone-600 mt-0.5">Yes</dd>
+      </div>
+      <div>
+        <dt class="text-[10px] font-sora font-bold tracking-wider uppercase text-stone-400">💉 Microchipped</dt>
+        <dd class="text-[13px] font-sora text-stone-600 mt-0.5">Yes</dd>
+      </div>
+      <div class="col-span-2">
+        <dt class="text-[10px] font-sora font-bold tracking-wider uppercase text-stone-400">🤲 Raised</dt>
+        <dd class="text-[13px] font-sora text-stone-600 mt-0.5">Hand Raised · Hand Fed · Weaned & Tamed</dd>
+      </div>
+    </dl>
+
+    <hr class="border-stone-100 my-3" />
+
+    <!-- Price + CTA -->
+    <div class="flex items-end justify-between mt-auto">
+      <div>
+        <div class="font-lora font-bold text-2xl text-clay">{price}</div>
+        <div class="text-[11px] font-sora text-stone-400 mt-0.5">+ $185 shipping</div>
+      </div>
+    </div>
+    <a
+      href={`${href}?bird=${name.toLowerCase()}`}
+      class="mt-3 block text-center bg-clay hover:bg-clay-dk text-white text-[14px] font-sora font-semibold px-5 py-3 rounded-full transition-colors duration-200 cag-btn-glow"
+    >
+      Inquire About {name} →
+    </a>
+  </div>
+</article>
+)}
+
+{horizontal && (
+<article class="bg-white rounded-2xl border border-stone-100 overflow-hidden flex cag-card-shadow hover:-translate-y-0.5 transition-all duration-200">
+  <!-- Image -->
+  <div class="relative w-44 shrink-0 bg-gradient-to-br from-amber-50 to-orange-100">
+    {imageSrc
+      ? <img src={imageSrc} alt={imageAlt ?? `${name} — ${species}`} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      : <div class="absolute inset-0 flex items-center justify-center">
+          <img src="/emoji/cag-congo.png" alt="" style="width:80px;height:80px;object-fit:contain;opacity:.6;" loading="lazy" />
+        </div>
+    }
+  </div>
+  <!-- Body -->
+  <div class="p-4 flex-1 flex flex-col">
+    <span class="text-clay text-[10px] font-sora font-bold tracking-widest uppercase">{species}</span>
+    <h3 class="font-lora font-bold text-xl text-logo-dark leading-tight mb-2">{name}</h3>
+    <div class="text-[12px] font-sora text-stone-400">{sex} · {age} · DNA Sexed · Vaccinated</div>
+    <div class="flex items-center justify-between mt-auto pt-3">
+      <span class="font-lora font-bold text-xl text-clay">{price}</span>
+      <a
+        href={`${href}?bird=${name.toLowerCase()}`}
+        class="bg-clay hover:bg-clay-dk text-white text-[13px] font-sora font-semibold px-4 py-2 rounded-full transition-colors"
+      >
+        Inquire →
+      </a>
+    </div>
+  </div>
+</article>
+)}
+
+<style>
+  .cag-card-shadow {
+    box-shadow: 0 2px 16px rgba(60, 30, 10, 0.08), 0 8px 40px rgba(60, 30, 10, 0.06);
+  }
+  .cag-card-shadow:hover {
+    box-shadow: 0 4px 24px rgba(60, 30, 10, 0.1), 0 16px 56px rgba(60, 30, 10, 0.08);
+  }
+  .cag-btn-glow {
+    box-shadow: 0 6px 20px rgba(232, 96, 76, 0.38);
+  }
+  .cag-btn-glow:hover {
+    box-shadow: 0 10px 28px rgba(232, 96, 76, 0.48);
+  }
+  /* Tailwind v4 doesn't expose these from @theme yet — define here */
+  .text-green { color: #2D6A4F; }
+  .bg-green-lt { background-color: #eaf4ef; }
+  .border-green\/20 { border-color: rgba(45, 106, 79, 0.2); }
+</style>

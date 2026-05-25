@@ -1,0 +1,527 @@
+---
+/**
+ * cag-inquiry-form — Full 10-field adoption inquiry form.
+ * Desktop: 2-column layout (form left ~640px, sidebar right ~380px).
+ * Mobile: form stacked, sidebar below.
+ * Field 8 radio cards for delivery method.
+ * Field 7 checkbox grid for bird selection.
+ * Submit button: border-radius 12px (NOT pill — form submit exception).
+ * Uses Formspree — set FORMSPREE_URL in .env
+ */
+
+const formAction = import.meta.env.FORMSPREE_URL ?? 'https://formspree.io/f/xgvkepyw';
+
+const birds = [
+  { id: 'roys',   label: 'ROYS — Congo African Grey, Male, 4 months',          price: '$2,300' },
+  { id: 'amie',   label: 'AMIE — Congo African Grey, Female, 3 months',         price: '$2,500' },
+  { id: 'bery',   label: 'BERY — Congo African Grey, Female, 1 year',           price: '$1,700' },
+  { id: 'pair',   label: 'JINS/JENI — Unrelated Pair, must go together',        price: '$3,500' },
+  { id: 'elad',   label: 'ELAD — Timneh African Grey, Male, 5 months',          price: '$1,600' },
+  { id: 'evie',   label: 'EVIE — Timneh African Grey, Female, 6 months',        price: '$1,500' },
+  { id: 'pair2',  label: 'Breeding Pair — Congo African Grey',                   price: '$3,000' },
+  { id: 'eggs',   label: 'Eggs — Candled African Grey Eggs',                    price: '$95/ea, 5+ = free ship' },
+];
+
+const pricingRows = [
+  { name: 'ROYS — Congo, Male, 4 mo',      price: '$2,300' },
+  { name: 'AMIE — Congo, Female, 3 mo',    price: '$2,500' },
+  { name: 'BERY — Congo, Female, 1 yr',    price: '$1,700' },
+  { name: 'JINS/JENI — Pair',              price: '$3,500' },
+  { name: 'ELAD — Timneh, Male, 5 mo',     price: '$1,600' },
+  { name: 'EVIE — Timneh, Female, 6 mo',   price: '$1,500' },
+  { name: 'Breeding Pair',                  price: '$3,000' },
+  { name: 'Eggs (each)',                    price: '$95' },
+];
+---
+
+<section class="inq-section">
+  <div class="inq-wrap">
+
+    <!-- ── FORM COLUMN ── -->
+    <div class="inq-form-col">
+      <h2 class="font-lora inq-heading">Adopt an African Grey — Inquiry Form</h2>
+      <p class="font-sora inq-subtext">We review every application. Expect a response within 24 hours.</p>
+
+      <form class="inq-form" action={formAction} method="POST">
+        <input type="hidden" name="_subject" value="African Grey Adoption Inquiry" />
+        <input type="hidden" name="_next" value="https://congoafricangreys.com/contact-us/?thanks=1" />
+
+        <!-- Field 1: Full Name -->
+        <div class="inq-field">
+          <label class="inq-label font-sora" for="full-name">Full Name <span class="inq-required">*</span></label>
+          <input
+            type="text"
+            id="full-name"
+            name="full_name"
+            required
+            placeholder="Your legal full name"
+            class="inq-input font-sora"
+            autocomplete="name"
+          />
+        </div>
+
+        <!-- Field 2: Mobile + Confirm Mobile (2-col) -->
+        <div class="inq-field-2col">
+          <div class="inq-field">
+            <label class="inq-label font-sora" for="phone">Mobile Number <span class="inq-required">*</span></label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              required
+              placeholder="+1 (555) 000-0000"
+              class="inq-input font-sora"
+              autocomplete="tel"
+            />
+          </div>
+          <div class="inq-field">
+            <label class="inq-label font-sora" for="phone-confirm">Confirm Number <span class="inq-required">*</span></label>
+            <input
+              type="tel"
+              id="phone-confirm"
+              name="phone_confirm"
+              required
+              placeholder="Repeat your number"
+              class="inq-input font-sora"
+            />
+          </div>
+        </div>
+
+        <!-- Field 3: Email + Confirm Email (2-col) -->
+        <div class="inq-field-2col">
+          <div class="inq-field">
+            <label class="inq-label font-sora" for="email">E-mail <span class="inq-required">*</span></label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="you@example.com"
+              class="inq-input font-sora"
+              autocomplete="email"
+            />
+          </div>
+          <div class="inq-field">
+            <label class="inq-label font-sora" for="email-confirm">Confirm Email <span class="inq-required">*</span></label>
+            <input
+              type="email"
+              id="email-confirm"
+              name="email_confirm"
+              required
+              placeholder="Repeat your email"
+              class="inq-input font-sora"
+            />
+          </div>
+        </div>
+
+        <!-- Field 4: Surrender history -->
+        <div class="inq-field">
+          <label class="inq-label font-sora" for="surrender">
+            Have you ever surrendered a pet to a shelter or given one away? <span class="inq-required">*</span>
+          </label>
+          <textarea
+            id="surrender"
+            name="surrender_history"
+            required
+            rows="4"
+            placeholder="If yes, please explain in detail."
+            class="inq-input inq-textarea font-sora"
+          ></textarea>
+          <p class="inq-helper font-sora">If yes, please explain in detail. Honest answers are appreciated.</p>
+        </div>
+
+        <!-- Field 5: Resale screening -->
+        <div class="inq-field">
+          <fieldset class="inq-fieldset">
+            <legend class="inq-label font-sora">
+              Are you involved in any pet store, commercial parrot breeding operation, or getting parrots for cheap resale? <span class="inq-required">*</span>
+            </legend>
+            <div class="inq-radio-pills">
+              <label class="inq-radio-pill font-sora">
+                <input type="radio" name="resale_screening" value="yes" required /> YES
+              </label>
+              <label class="inq-radio-pill font-sora">
+                <input type="radio" name="resale_screening" value="no" required /> NO
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Field 6: Address -->
+        <div class="inq-field">
+          <label class="inq-label font-sora" for="address">Address <span class="inq-required">*</span></label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            required
+            placeholder="Street, City, State, ZIP"
+            class="inq-input font-sora"
+            autocomplete="street-address"
+          />
+        </div>
+
+        <!-- Field 7: Select bird (checkbox grid) -->
+        <div class="inq-field">
+          <fieldset class="inq-fieldset">
+            <legend class="inq-label font-sora">
+              Select what you want below <span class="inq-required">*</span>
+              <span class="inq-helper-inline"> — Our price is the same for pickup or shipping.</span>
+            </legend>
+            <div class="inq-checkbox-grid">
+              {birds.map(bird => (
+                <label class="inq-checkbox-item font-sora">
+                  <input type="checkbox" name="bird_selection" value={bird.id} class="inq-checkbox" />
+                  <span class="inq-checkbox-text">
+                    <span class="inq-checkbox-label">{bird.label}</span>
+                    <span class="inq-checkbox-price">{bird.price}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Field 8: Delivery method (radio cards) -->
+        <div class="inq-field">
+          <fieldset class="inq-fieldset">
+            <legend class="inq-label font-sora">How to get your grey parrot? <span class="inq-required">*</span></legend>
+            <div class="inq-delivery-cards">
+              <label class="inq-delivery-card font-sora">
+                <input type="radio" name="delivery_method" value="airport" required />
+                <div class="inq-delivery-card-body">
+                  <span class="inq-delivery-icon">✈️</span>
+                  <span class="inq-delivery-title">Airport Pickup · $185</span>
+                  <span class="inq-delivery-desc">Receive your grey at your nearest airport. Delta, United, American Airlines.</span>
+                </div>
+              </label>
+              <label class="inq-delivery-card font-sora">
+                <input type="radio" name="delivery_method" value="home" />
+                <div class="inq-delivery-card-body">
+                  <span class="inq-delivery-icon">🏠</span>
+                  <span class="inq-delivery-title">Home Delivery · $350</span>
+                  <span class="inq-delivery-desc">We deliver to your provided home address.</span>
+                </div>
+              </label>
+              <label class="inq-delivery-card font-sora">
+                <input type="radio" name="delivery_method" value="pickup" />
+                <div class="inq-delivery-card-body">
+                  <span class="inq-delivery-icon">🚗</span>
+                  <span class="inq-delivery-title">Local Pickup · Free</span>
+                  <span class="inq-delivery-desc">Pick up in Midland, TX — call to schedule.</span>
+                </div>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Field 9: Experience level -->
+        <div class="inq-field">
+          <fieldset class="inq-fieldset">
+            <legend class="inq-label font-sora">Are you a First-Time or Experienced Parrot Owner? <span class="inq-required">*</span></legend>
+            <div class="inq-radio-pills">
+              <label class="inq-radio-pill font-sora">
+                <input type="radio" name="experience" value="experienced" required /> Experienced Owner
+              </label>
+              <label class="inq-radio-pill font-sora">
+                <input type="radio" name="experience" value="first-time" /> First-Time Owner
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Field 10: Message -->
+        <div class="inq-field">
+          <label class="inq-label font-sora" for="message">Message or Questions?</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="6"
+            placeholder="Questions, timeline, anything else we should know?"
+            class="inq-input inq-textarea font-sora"
+          ></textarea>
+        </div>
+
+        <!-- Submit — 12px radius (form submit exception, NOT pill) -->
+        <button type="submit" class="inq-submit font-sora">Submit Adoption Inquiry →</button>
+        <p class="inq-privacy font-sora">🔒 Your information is private and never shared. We respond within 24 hours.</p>
+      </form>
+    </div>
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="inq-sidebar">
+      <!-- Why Apply card -->
+      <div class="inq-sidebar-card">
+        <h3 class="font-lora inq-sidebar-heading">Why Apply With Us?</h3>
+        <ul class="inq-trust-list font-sora">
+          <li>✅ Every bird DNA sexed + CITES documented</li>
+          <li>✅ Avian vet health certificate included</li>
+          <li>✅ Full post-purchase support</li>
+          <li>✅ Family-owned aviary since 2014</li>
+          <li>✅ USDA AWA licensed facility</li>
+        </ul>
+      </div>
+
+      <!-- Pricing card -->
+      <div class="inq-sidebar-card inq-pricing-card">
+        <h3 class="font-lora inq-sidebar-heading">Current Pricing</h3>
+        <table class="inq-price-table">
+          <tbody>
+            {pricingRows.map((row, i) => (
+              <tr class:list={[{ 'inq-price-row-alt': i % 2 === 0 }]}>
+                <td class="font-sora inq-price-name">{row.name}</td>
+                <td class="font-lora inq-price-val">{row.price}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="font-sora inq-price-footer">Shipping: $185 · Home delivery: $350</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  /* Layout */
+  .inq-section { padding: 64px 24px; background: #faf7f4; }
+  .inq-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* Form column header */
+  .inq-heading {
+    font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+    font-weight: 700;
+    color: #1c1a18;
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+  .inq-subtext {
+    font-size: 15px;
+    color: #5a5248;
+    margin: 0 0 32px;
+    max-width: none;
+  }
+
+  /* Field containers */
+  .inq-field { margin-bottom: 22px; }
+  .inq-field-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+  .inq-fieldset { border: none; padding: 0; margin: 0; }
+
+  /* Labels */
+  .inq-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: #1c1a18;
+    margin-bottom: 6px;
+  }
+  .inq-required { color: #e8604c; }
+  .inq-helper {
+    font-size: 12px;
+    color: #9b9189;
+    margin: 6px 0 0;
+    max-width: none;
+  }
+  .inq-helper-inline {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #9b9189;
+  }
+
+  /* Inputs */
+  .inq-input {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid #ede5dc;
+    border-radius: 10px;
+    font-size: 14.5px;
+    background: #fff9f6;
+    color: #1c1a18;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+  }
+  .inq-input:focus {
+    border-color: #e8604c;
+    box-shadow: 0 0 0 3px rgba(232, 96, 76, 0.1);
+  }
+  .inq-input::placeholder { color: #9b9189; }
+  .inq-textarea { resize: vertical; min-height: 96px; }
+
+  /* Radio pills (Field 5 + Field 9) */
+  .inq-radio-pills { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+  .inq-radio-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 2px solid #ede5dc;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #5a5248;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+  }
+  .inq-radio-pill input[type="radio"] { accent-color: #e8604c; }
+  .inq-radio-pill:has(input:checked) {
+    border-color: #e8604c;
+    background: rgba(232, 96, 76, 0.06);
+    color: #e8604c;
+  }
+
+  /* Checkbox grid (Field 7) */
+  .inq-checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .inq-checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid #ede5dc;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    background: #fff9f6;
+  }
+  .inq-checkbox-item:has(.inq-checkbox:checked) {
+    border-color: #2D6A4F;
+    background: #eaf4ef;
+  }
+  .inq-checkbox { accent-color: #2D6A4F; margin-top: 2px; flex-shrink: 0; }
+  .inq-checkbox-text { display: flex; flex-direction: column; gap: 2px; }
+  .inq-checkbox-label { font-size: 13px; font-weight: 600; color: #1c1a18; line-height: 1.35; }
+  .inq-checkbox-price { font-size: 12px; color: #e8604c; font-weight: 700; }
+
+  /* Delivery radio cards (Field 8) */
+  .inq-delivery-cards { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+  .inq-delivery-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    cursor: pointer;
+    border: 2px solid #ede5dc;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.15s, background 0.15s;
+    background: #fff9f6;
+  }
+  .inq-delivery-card input[type="radio"] { display: none; }
+  .inq-delivery-card:has(input:checked) {
+    border-color: #e8604c;
+    background: rgba(232, 96, 76, 0.04);
+  }
+  .inq-delivery-card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 14px 16px;
+    gap: 3px;
+    width: 100%;
+  }
+  .inq-delivery-icon { font-size: 20px; margin-bottom: 2px; }
+  .inq-delivery-title { font-size: 14px; font-weight: 700; color: #1c1a18; }
+  .inq-delivery-desc { font-size: 12px; color: #5a5248; line-height: 1.5; }
+
+  /* Submit button — 12px radius (NOT pill) */
+  .inq-submit {
+    display: block;
+    width: 100%;
+    background: #e8604c;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 16px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(232, 96, 76, 0.38);
+    transition: background 0.2s, box-shadow 0.2s;
+    margin-top: 8px;
+  }
+  .inq-submit:hover {
+    background: #c94d3a;
+    box-shadow: 0 10px 28px rgba(232, 96, 76, 0.48);
+  }
+  .inq-privacy {
+    font-size: 12px;
+    color: #9b9189;
+    margin: 12px 0 0;
+    text-align: center;
+    max-width: none;
+  }
+
+  /* ── Sidebar ── */
+  .inq-sidebar { display: flex; flex-direction: column; gap: 20px; }
+  .inq-sidebar-card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #ede5dc;
+    padding: 24px;
+    box-shadow: 0 2px 16px rgba(60, 30, 10, 0.07);
+  }
+  .inq-sidebar-heading {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1c1a18;
+    margin: 0 0 14px;
+    line-height: 1.25;
+  }
+  .inq-trust-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    color: #5a5248;
+    line-height: 1.4;
+  }
+
+  /* Pricing card */
+  .inq-price-table { width: 100%; border-collapse: collapse; }
+  .inq-price-table td { padding: 7px 8px; }
+  .inq-price-row-alt td { background: #faf7f4; }
+  .inq-price-name { font-size: 13px; color: #5a5248; }
+  .inq-price-val { font-size: 14px; font-weight: 700; color: #e8604c; text-align: right; white-space: nowrap; }
+  .inq-price-footer {
+    font-size: 12px;
+    color: #9b9189;
+    margin: 12px 0 0;
+    border-top: 1px solid #ede5dc;
+    padding-top: 10px;
+    max-width: none;
+  }
+
+  /* Mobile */
+  @media (max-width: 1024px) {
+    .inq-wrap { grid-template-columns: 1fr; max-width: 760px; }
+    .inq-sidebar { order: 1; }
+    .inq-form-col { order: 0; }
+  }
+  @media (max-width: 640px) {
+    .inq-section { padding: 40px 16px; }
+    .inq-field-2col { grid-template-columns: 1fr; }
+    .inq-checkbox-grid { grid-template-columns: 1fr; }
+  }
+</style>

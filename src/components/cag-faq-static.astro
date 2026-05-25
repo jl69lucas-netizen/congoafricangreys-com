@@ -1,0 +1,229 @@
+---
+/**
+ * cag-faq-static — Non-accordion FAQ, 3 zones (top / middle / bottom).
+ * No JavaScript required. Zone Top: header. Zone Middle: 2-col card grid.
+ * Zone Bottom: dark CTA strip.
+ *
+ * Pass `faqs` as an array or use the built-in African Grey defaults.
+ * Use inside .container-text (760px) for Style D pages.
+ */
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface Props {
+  eyebrow?: string;
+  heading?: string;
+  subtext?: string;
+  faqs?: FaqItem[];
+  ctaHeading?: string;
+  ctaText?: string;
+  primaryCta?: string;
+  primaryCtaHref?: string;
+  secondaryCta?: string;
+  secondaryCtaHref?: string;
+}
+
+const {
+  eyebrow = 'Common Questions',
+  heading = 'Frequently Asked Questions',
+  subtext = 'Everything you need to know before bringing home your African Grey.',
+  faqs = [
+    {
+      question: 'How much does an African Grey parrot cost?',
+      answer: 'Congo African Greys range from $1,700–$2,500 depending on age and sex. Timneh African Greys are $1,500–$1,600. Breeding pairs are $3,000. Shipping is $185 nationwide to your nearest airport.',
+    },
+    {
+      question: 'What is CITES documentation?',
+      answer: 'CITES Appendix II requires all African Grey parrots to have legal captive-bred documentation. Every bird from our aviary includes a CITES certificate proving legal US captive breeding.',
+    },
+    {
+      question: 'Do you ship African Grey parrots?',
+      answer: 'Yes — $185 nationwide via Delta, United, or American Airlines. Your bird travels in an IATA-approved carrier with food, water, and bedding. Home delivery is available for $350.',
+    },
+    {
+      question: 'How old are the birds when they leave?',
+      answer: 'Our babies leave fully weaned at 3–6 months old for Congos, and similar timing for Timnehs. BERY is an exception at 1 year — fully matured and already bonded to humans.',
+    },
+    {
+      question: 'Are the birds hand-raised?',
+      answer: 'Yes. Every bird is hand-fed from hatching, weaned by our family, and socialized daily. They arrive tame, trusting, and ready to bond.',
+    },
+    {
+      question: 'What health guarantees do you offer?',
+      answer: 'Each bird comes with a written health guarantee, avian vet health certificate, DNA sex certificate, vaccination record, and CITES documentation packet.',
+    },
+  ],
+  ctaHeading = 'Still have questions?',
+  ctaText = 'Call or message us — we respond within 24 hours.',
+  primaryCta = 'Send a Message →',
+  primaryCtaHref = '/contact-us/',
+  secondaryCta = 'View All Birds',
+  secondaryCtaHref = '/african-grey-parrots-for-sale/',
+} = Astro.props;
+---
+
+<!-- ZONE TOP: Section header -->
+<div class="faq-top">
+  <span class="faq-eyebrow font-sora">{eyebrow}</span>
+  <h2 class="font-lora faq-heading">{heading}</h2>
+  <p class="font-sora faq-subtext">{subtext}</p>
+</div>
+
+<!-- ZONE MIDDLE: 2-column card grid -->
+<div class="faq-grid">
+  {faqs.map(item => (
+    <div class="faq-card">
+      <div class="faq-card-accent" aria-hidden="true"></div>
+      <div class="faq-card-body">
+        <h3 class="font-sora faq-question">{item.question}</h3>
+        <p class="font-sora faq-answer">{item.answer}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+<!-- ZONE BOTTOM: Dark CTA strip -->
+<div class="faq-bottom">
+  <h3 class="font-lora faq-bottom-heading">{ctaHeading}</h3>
+  <p class="font-sora faq-bottom-text">{ctaText}</p>
+  <div class="faq-bottom-btns">
+    <a href={primaryCtaHref} class="faq-btn-primary font-sora">{primaryCta}</a>
+    <a href={secondaryCtaHref} class="faq-btn-outline font-sora">{secondaryCta}</a>
+  </div>
+</div>
+
+<style>
+  /* ZONE TOP */
+  .faq-top {
+    text-align: center;
+    padding: 0 0 40px;
+  }
+  .faq-eyebrow {
+    display: inline-block;
+    background: #eaf4ef;
+    color: #2D6A4F;
+    border: 1px solid rgba(45, 106, 79, 0.2);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    padding: 5px 14px;
+    margin-bottom: 14px;
+  }
+  .faq-heading {
+    font-size: clamp(1.5rem, 2vw + 0.8rem, 2rem);
+    font-weight: 700;
+    color: #1c1a18;
+    margin: 0 0 12px;
+    line-height: 1.2;
+  }
+  .faq-subtext {
+    font-size: 1rem;
+    color: #5a5248;
+    margin: 0 auto;
+    max-width: 52ch;
+    line-height: 1.6;
+  }
+
+  /* ZONE MIDDLE */
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding-bottom: 40px;
+  }
+  .faq-card {
+    display: flex;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #ede5dc;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(60, 30, 10, 0.06);
+  }
+  .faq-card-accent {
+    width: 3px;
+    flex-shrink: 0;
+    background: #e8604c;
+    border-radius: 2px 0 0 2px;
+  }
+  .faq-card-body {
+    padding: 18px 20px;
+  }
+  .faq-question {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1c1a18;
+    margin: 0 0 8px;
+    line-height: 1.35;
+  }
+  .faq-answer {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #5a5248;
+    margin: 0;
+    max-width: none;
+  }
+
+  /* ZONE BOTTOM */
+  .faq-bottom {
+    background: #1c1a18;
+    border-radius: 20px;
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .faq-bottom-heading {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #e8604c;
+    margin: 0 0 10px;
+    line-height: 1.2;
+  }
+  .faq-bottom-text {
+    font-size: 15px;
+    color: #9b9189;
+    margin: 0 0 24px;
+    max-width: none;
+  }
+  .faq-bottom-btns {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .faq-btn-primary {
+    background: #e8604c;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(232, 96, 76, 0.38);
+    transition: background 0.2s;
+  }
+  .faq-btn-primary:hover { background: #c94d3a; }
+  .faq-btn-outline {
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: 2px solid rgba(255,255,255,0.35);
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .faq-btn-outline:hover {
+    border-color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .faq-grid { grid-template-columns: 1fr; }
+    .faq-bottom { padding: 32px 20px; }
+  }
+</style>
