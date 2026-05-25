@@ -1,0 +1,280 @@
+---
+/**
+ * cag-newsletter-v2 — Email signup in 3 variants.
+ *   top:    2-col banner, green left border, cream bg (Style E 1100px)
+ *   middle: dark bg split with parrot image placeholder (Style E 1100px)
+ *   bottom: slim centered bar (Style D 760px)
+ *
+ * Formspree endpoint: set FORMSPREE_NEWSLETTER env var in .env
+ */
+export interface Props {
+  variant?: 'top' | 'middle' | 'bottom';
+  formAction?: string;
+}
+
+const {
+  variant = 'top',
+  formAction = import.meta.env.FORMSPREE_NEWSLETTER ?? 'https://formspree.io/f/placeholder',
+} = Astro.props;
+---
+
+{variant === 'top' && (
+  <div class="nl-top-wrap">
+    <div class="nl-top-inner">
+      <div class="nl-top-text">
+        <h3 class="font-lora nl-top-heading">Be First to Know When New Babies Are Available</h3>
+        <p class="font-sora nl-top-sub">African Grey clutches are rare. Join 800+ families on our waitlist.</p>
+      </div>
+      <form class="nl-top-form" action={formAction} method="POST">
+        <input type="hidden" name="_subject" value="Newsletter Signup" />
+        <div class="nl-top-row">
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="Your email address"
+            class="nl-input font-sora"
+            aria-label="Email address"
+          />
+          <button type="submit" class="nl-btn-primary font-sora">Join Waitlist</button>
+        </div>
+        <p class="nl-top-privacy font-sora">🔒 No spam. Unsubscribe anytime.</p>
+      </form>
+    </div>
+  </div>
+)}
+
+{variant === 'middle' && (
+  <div class="nl-mid-wrap">
+    <div class="nl-mid-inner">
+      <!-- Left: parrot image placeholder -->
+      <div class="nl-mid-image" aria-hidden="true">
+        <img src="/emoji/cag-congo.png" alt="" style="width:160px;height:160px;object-fit:contain;opacity:.55;" loading="lazy" />
+      </div>
+      <!-- Right: copy + form -->
+      <div class="nl-mid-content">
+        <span class="nl-mid-tag font-sora">New Clutch Alerts</span>
+        <h2 class="font-lora nl-mid-heading">Parrots Sell Fast. Be First.</h2>
+        <p class="font-sora nl-mid-sub">Sign up to receive availability updates 48 hours before we post publicly.</p>
+        <form class="nl-mid-form" action={formAction} method="POST">
+          <input type="hidden" name="_subject" value="Newsletter Signup — Priority" />
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="Your email address"
+            class="nl-input nl-input-dark font-sora"
+            aria-label="Email address"
+          />
+          <button type="submit" class="nl-btn-primary font-sora" style="margin-top: 10px;">Notify Me First →</button>
+        </form>
+        <p class="font-sora nl-mid-trust">Join 800+ families on our waitlist</p>
+      </div>
+    </div>
+  </div>
+)}
+
+{variant === 'bottom' && (
+  <div class="nl-bot-wrap">
+    <div class="nl-bot-inner">
+      <p class="font-sora nl-bot-text">New birds available — get notified first.</p>
+      <form class="nl-bot-form" action={formAction} method="POST">
+        <input type="hidden" name="_subject" value="Newsletter Signup — Footer" />
+        <div class="nl-bot-row">
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="Your email"
+            class="nl-input font-sora nl-input-sm"
+            aria-label="Email address"
+          />
+          <button type="submit" class="nl-btn-primary font-sora nl-btn-sm">Notify Me</button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
+<style>
+  /* ── Shared input + button ── */
+  .nl-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1.5px solid #ede5dc;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #fff9f6;
+    color: #1c1a18;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    min-width: 0;
+  }
+  .nl-input:focus {
+    border-color: #e8604c;
+    box-shadow: 0 0 0 3px rgba(232, 96, 76, 0.1);
+  }
+  .nl-input::placeholder { color: #9b9189; }
+  .nl-input-dark {
+    background: #2a2826;
+    border-color: #3d3830;
+    color: #faf7f4;
+  }
+  .nl-input-dark::placeholder { color: #6b6258; }
+  .nl-input-dark:focus {
+    border-color: #e8604c;
+    box-shadow: 0 0 0 3px rgba(232, 96, 76, 0.15);
+  }
+  .nl-input-sm { padding: 10px 14px; font-size: 13px; }
+
+  .nl-btn-primary {
+    background: #e8604c;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 6px 20px rgba(232, 96, 76, 0.38);
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .nl-btn-primary:hover {
+    background: #c94d3a;
+    box-shadow: 0 10px 28px rgba(232, 96, 76, 0.48);
+  }
+  .nl-btn-sm { padding: 10px 20px; font-size: 13px; }
+
+  /* ── VARIANT: top ── */
+  .nl-top-wrap {
+    background: linear-gradient(90deg, #f0f9f4, #faf7f4);
+    border-left: 4px solid #2D6A4F;
+    border-radius: 16px;
+    padding: 32px 36px;
+  }
+  .nl-top-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .nl-top-text { flex: 1; min-width: 240px; }
+  .nl-top-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1c1a18;
+    margin: 0 0 6px;
+    line-height: 1.3;
+  }
+  .nl-top-sub {
+    font-size: 14px;
+    color: #5a5248;
+    margin: 0;
+    max-width: none;
+  }
+  .nl-top-form { flex: 1; min-width: 280px; }
+  .nl-top-row { display: flex; gap: 10px; }
+  .nl-top-privacy {
+    font-size: 12px;
+    color: #9b9189;
+    margin: 8px 0 0;
+  }
+
+  /* ── VARIANT: middle ── */
+  .nl-mid-wrap {
+    background: #1c1a18;
+    border-radius: 20px;
+    padding: 48px 40px;
+    overflow: hidden;
+  }
+  .nl-mid-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .nl-mid-image {
+    width: 260px;
+    height: 260px;
+    flex-shrink: 0;
+    background: linear-gradient(145deg, #3d2e26, #2a2018);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nl-mid-content { flex: 1; }
+  .nl-mid-tag {
+    display: inline-block;
+    background: rgba(232, 96, 76, 0.15);
+    color: #e8604c;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    padding: 4px 12px;
+    margin-bottom: 12px;
+  }
+  .nl-mid-heading {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #faf7f4;
+    margin: 0 0 10px;
+    line-height: 1.15;
+  }
+  .nl-mid-sub {
+    font-size: 15px;
+    color: #9b9189;
+    margin: 0 0 20px;
+    line-height: 1.6;
+    max-width: none;
+  }
+  .nl-mid-form { display: flex; flex-direction: column; }
+  .nl-mid-trust {
+    font-size: 12px;
+    color: #6b6258;
+    margin: 12px 0 0;
+  }
+
+  /* ── VARIANT: bottom ── */
+  .nl-bot-wrap {
+    padding: 28px 0;
+    border-top: 1px solid #ede5dc;
+  }
+  .nl-bot-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    text-align: center;
+  }
+  .nl-bot-text {
+    font-size: 14px;
+    color: #5a5248;
+    font-weight: 600;
+    margin: 0;
+    max-width: none;
+  }
+  .nl-bot-form { flex-shrink: 0; }
+  .nl-bot-row { display: flex; gap: 8px; }
+
+  /* Mobile */
+  @media (max-width: 767px) {
+    .nl-top-inner { flex-direction: column; align-items: stretch; gap: 20px; }
+    .nl-top-row { flex-direction: column; }
+    .nl-top-wrap { padding: 24px 20px; }
+    .nl-mid-inner { flex-direction: column; gap: 28px; }
+    .nl-mid-image { width: 100%; height: 180px; }
+    .nl-mid-wrap { padding: 36px 24px; }
+    .nl-bot-inner { flex-direction: column; }
+    .nl-bot-row { flex-direction: column; }
+  }
+</style>
