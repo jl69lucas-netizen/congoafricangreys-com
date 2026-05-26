@@ -128,7 +128,7 @@ const {
 .nav-drawer {
   position: fixed; top: 0; right: -100%;
   width: min(320px, 85vw); height: 100vh;
-  background: #faf7f4;
+  background: var(--cream, #faf7f4);
   box-shadow: -4px 0 32px rgba(60,30,10,.15);
   z-index: 9999;
   transition: right 0.28s cubic-bezier(.4,0,.2,1);
@@ -139,14 +139,14 @@ const {
 .nav-drawer-link {
   font-family: 'Sora', system-ui, sans-serif;
   font-size: 1.125rem; font-weight: 600;
-  color: #1c1a18;
+  color: var(--text, #1c1a18);
   padding: 14px 0;
-  border-bottom: 1px solid #ede5dc;
+  border-bottom: 1px solid var(--border, #ede5dc);
   text-decoration: none; display: block;
 }
 .nav-drawer-link:last-of-type { border-bottom: none; }
 .nav-drawer-cta {
-  background: #e8604c; color: white;
+  background: var(--clay, #e8604c); color: white;
   border-radius: 50px; padding: 16px 24px;
   text-align: center; font-weight: 700; font-size: 1rem;
   margin-top: auto; text-decoration: none; display: block;
@@ -173,16 +173,29 @@ const {
     drawer?.classList.add('open');
     overlay?.classList.add('open');
     toggle?.setAttribute('aria-expanded', 'true');
+    toggle?.setAttribute('aria-label', 'Close menu');
     document.body.style.overflow = 'hidden';
+    const firstLink = drawer?.querySelector('.nav-drawer-link');
+    if (firstLink) (firstLink as HTMLElement).focus();
   }
   function closeDrawer() {
     drawer?.classList.remove('open');
     overlay?.classList.remove('open');
     toggle?.setAttribute('aria-expanded', 'false');
+    toggle?.setAttribute('aria-label', 'Open menu');
     document.body.style.overflow = '';
+    toggle?.focus();
   }
   toggle?.addEventListener('click', () =>
     drawer?.classList.contains('open') ? closeDrawer() : openDrawer()
   );
   overlay?.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer?.classList.contains('open')) closeDrawer();
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1025 && drawer?.classList.contains('open')) {
+      closeDrawer();
+    }
+  });
 </script>
