@@ -17,14 +17,16 @@ description: Generates context-aware images for CongoAfricanGreys.com pages. Fou
 | **Nano Banana 2 / Google Imagen** | `nanobanna` or `google` | Photorealistic lifestyle shots + AI infographics; 9:16 native high-res | `.google-key` (= `GEMINI_API_KEY`) |
 | Anthropic Claude | `anthropic` | Claude refines prompt → calls OpenAI to generate | `.anthropic-key` + `.openai-key` |
 | **Claude Code HTML** | `claude-html` | HTML/CSS infographics — no image file, no API cost, fully editable | none (Claude generates code) |
+| **Higgsfield MCP** | `higgsfield` | Character-consistent lifestyle images, video clips, marketing studio assets | MCP UUID `dd46f66a` — no key file; already installed |
 
 **How to invoke a specific provider:**
 - "use Nano Banana" or "use nanobanna" → Nano Banana 2 (Google Imagen)
 - "use Claude Code" or "use HTML" → `claude-html` mode (HTML/CSS infographic)
 - "use OpenAI" → DALL-E 3
 - "use Gemini" or "use Google" → Nano Banana 2 (same API)
+- "use Higgsfield" or "use Higgsfield MCP" → Higgsfield MCP (character-consistent, video, marketing)
 
-**Recommendation for CAG:** Use `nanobanna` for AI infographics and lifestyle bird photos. Use `claude-html` for 90% of infographics — instant, no cost, fully brand-compliant. Use `openai` for icons or creative brand assets. Use `anthropic` when the prompt needs Claude to sharpen it first.
+**Recommendation for CAG:** Use `claude-html` for 90% of infographics — instant, no cost, fully brand-compliant. Use `nanobanna` for one-off high-res 9:16 lifestyle shots. Use `higgsfield` when you need character consistency across multiple images, video generation, or marketing studio assets. Use `openai` for icons. Use `anthropic` when the prompt needs Claude to sharpen it first.
 
 **Nano Banana 2 setup:**
 ```bash
@@ -293,6 +295,45 @@ When generating OR processing a hero image for CongoAfricanGreys.com:
 6. **Format**: WebP, quality 85, under 200 KB. Run `python3 scripts/process-hero.py` after any new source image lands in `assets/`. Hero section height is `md:h-[480px]` — sized to fit description paragraph; do not reduce below this or description will be cut.
 7. **`fetchpriority="high"`** on all hero `<img>` tags — direct LCP improvement, required for every hero.
 8. **`<picture>` tag required** for heroes — serve `/hero-mobile.webp` on `max-width: 767px`, `/hero-desktop.webp` on `min-width: 768px`. Never a bare `<img>` for hero images.
+
+---
+
+---
+
+## Provider 5: Higgsfield MCP
+
+**When to use:** Character-consistent lifestyle images (same bird across multiple shots), video generation (reels/shorts), marketing studio ads, or any multi-image campaign requiring visual continuity.
+
+**MCP server ID:** `dd46f66a-ceb9-4042-b533-7b3fc3409318` (already installed — no API key file needed)
+
+**Available models via Higgsfield:**
+- `nano_banana_pro` — ultimate quality, text/diagrams, 9:16 support (2 credits)
+- `nano_banana_2` — fast high-quality, 9:16 support (2 credits)
+- `soul_2` — UGC/fashion/editorial character generation with reference image
+- `cinematic_studio_2_5` — cinematic stills up to 4K
+- `marketing_studio_image` — product/social campaign ads
+
+**How to invoke:**
+1. Load tool schema: `ToolSearch: select:mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__generate_image`
+2. Check credits: `mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__balance`
+3. Read `data/parrot-image-schema.json` for precise Congo/Timneh attributes + CITES safety
+4. Build structured prompt using `prompt_safety` + `visual_style` fields from the schema
+5. Call `mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__generate_image` with chosen model + prompt
+6. Save output URL/data → hand off to `@cag-image-pipeline` for WebP optimization + placement
+
+**Uploading user photos as reference:**
+1. `ToolSearch: select:mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__media_upload,mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__media_confirm`
+2. Upload photo → get media ID → pass as `medias: [{value: "<media_id>", role: "image"}]` in generate call
+3. Use `soul_2` model for character-consistent generation with a reference photo
+
+**CITES safety rule — applies to ALL Higgsfield prompts:**
+Always include from `data/parrot-image-schema.json` `prompt_safety`:
+- `always_include`: "captive-bred, domestic setting, hand-raised"
+- `never_include`: "wild-caught", "tropical jungle", "imported", "exotic wildlife"
+
+**Higgsfield vs Nano Banana (script):**
+- Use Higgsfield MCP when: character consistency needed, video generation needed, user uploads a reference photo
+- Use `generate_nb_image.sh` script when: one-off 9:16 portrait, no MCP available, or script workflow is preferred
 
 ---
 

@@ -159,3 +159,45 @@ After writing (or skipping) the CLAUDE.md patch:
 4. **One question at a time** — if you need to ask about uncommitted changes AND about CLAUDE.md, ask sequentially
 5. **Never commit site/content/ files without preview gate approval** — always check before touching content files
 6. **Golden Rule** — only Read, Write, and Bash (`git log`, `git status`, `ls sessions/`). No MCPs.
+
+---
+
+## Episodic Memory Distillation Protocol
+
+Run at the END of any session that involved debugging, a failed approach, or a non-obvious decision.
+
+**Trigger:** Any session where you:
+- Hit a bug and found the root cause
+- Tried approach A, failed, then succeeded with approach B
+- Made a non-obvious architectural decision
+- Found that a file/function/agent behaves differently than expected
+
+**How to distil (not just save):**
+1. Identify the **insight**, not the event: "The canonical fixer fails silently on .astro files because..." — NOT "Today I debugged the canonical fixer"
+2. Write to the correct memory type:
+   - Root cause of a bug → `memory/feedback_*.md`
+   - Architectural discovery → `memory/project_*.md`
+   - Agent/skill behavior quirk → `memory/feedback_*.md`
+3. **DISCARD:** Full transcripts, step-by-step debug logs, interim attempts. Keep only the conclusion.
+4. **UPDATE existing memory files** — don't create duplicates. If `feedback_check_before_asking.md` already exists, add a new rule there instead of creating `feedback_check_before_asking_2.md`.
+
+**Distillation template:**
+
+```markdown
+---
+name: feedback-[topic]
+description: [specific rule — what to do or avoid, with why]
+metadata:
+  type: feedback
+---
+
+[Rule stated directly]
+
+**Why:** [What happened that proved this rule necessary]
+
+**How to apply:** [Specific context where this fires]
+```
+
+**Compression rule:** If a memory file exceeds 400 words, compress it — keep only the rule + why + how-to-apply. Delete intermediate context.
+
+**When to run:** After any session with debugging, architecture decisions, or agent behavior discoveries. Skip for pure content sessions (page builds, copy edits).
