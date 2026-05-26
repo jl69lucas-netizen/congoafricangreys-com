@@ -49,6 +49,11 @@ const {
       <div class="flex items-center gap-3">
         {phone && <a href={`tel:${phone.replace(/\D/g,'')}`} class="hidden md:flex items-center gap-1.5 text-[13px] text-white/80 hover:text-white">📞 {phone}</a>}
         <a href={ctaHref} class="bg-clay hover:bg-clay-dk transition rounded-full px-5 py-2 text-[13px] font-semibold cag-glow">{ctaLabel}</a>
+        <button class="nav-hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
@@ -66,6 +71,11 @@ const {
         ))}
       </nav>
       <a href={ctaHref} class="bg-clay hover:bg-clay-dk transition rounded-full px-5 py-2.5 text-[13px] font-semibold text-white cag-glow">{ctaLabel} →</a>
+      <button class="nav-hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M3 6h18M3 12h18M3 18h18"/>
+        </svg>
+      </button>
     </div>
   </header>
 )}
@@ -84,7 +94,95 @@ const {
       <div class="flex items-center gap-3">
         <a class="text-[14px] text-mid hover:text-ink">Sign in</a>
         <a href={ctaHref} class="bg-clay hover:bg-clay-dk transition rounded-full px-5 py-2 text-[13px] font-semibold text-white cag-glow">{ctaLabel} →</a>
+        <button class="nav-hamburger" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
 )}
+
+<!-- Mobile nav overlay + drawer (shared across all variants) -->
+<div class="nav-overlay" id="nav-overlay"></div>
+<nav class="nav-drawer" id="nav-drawer" aria-label="Mobile navigation">
+  {links.map(l => (
+    <a href={l.href} class="nav-drawer-link">{l.label}</a>
+  ))}
+  <a href={ctaHref} class="nav-drawer-cta">{ctaLabel} →</a>
+</nav>
+
+<style>
+/* Desktop: show links, hide hamburger */
+.nav-hamburger { display: none; }
+/* Mobile overlay */
+.nav-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(28,26,24,.45);
+  z-index: 9998;
+}
+.nav-overlay.open { display: block; }
+/* Drawer */
+.nav-drawer {
+  position: fixed; top: 0; right: -100%;
+  width: min(320px, 85vw); height: 100vh;
+  background: #faf7f4;
+  box-shadow: -4px 0 32px rgba(60,30,10,.15);
+  z-index: 9999;
+  transition: right 0.28s cubic-bezier(.4,0,.2,1);
+  padding: 80px 32px 32px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.nav-drawer.open { right: 0; }
+.nav-drawer-link {
+  font-family: 'Sora', system-ui, sans-serif;
+  font-size: 1.125rem; font-weight: 600;
+  color: #1c1a18;
+  padding: 14px 0;
+  border-bottom: 1px solid #ede5dc;
+  text-decoration: none; display: block;
+}
+.nav-drawer-link:last-of-type { border-bottom: none; }
+.nav-drawer-cta {
+  background: #e8604c; color: white;
+  border-radius: 50px; padding: 16px 24px;
+  text-align: center; font-weight: 700; font-size: 1rem;
+  margin-top: auto; text-decoration: none; display: block;
+}
+@media (max-width: 1024px) {
+  .nav-hamburger {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px;
+    background: none; border: none; cursor: pointer;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+@media (min-width: 1025px) {
+  .nav-drawer, .nav-overlay { display: none !important; }
+}
+</style>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const drawer = document.getElementById('nav-drawer');
+  const overlay = document.getElementById('nav-overlay');
+  function openDrawer() {
+    drawer?.classList.add('open');
+    overlay?.classList.add('open');
+    toggle?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    drawer?.classList.remove('open');
+    overlay?.classList.remove('open');
+    toggle?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  toggle?.addEventListener('click', () =>
+    drawer?.classList.contains('open') ? closeDrawer() : openDrawer()
+  );
+  overlay?.addEventListener('click', closeDrawer);
+</script>
