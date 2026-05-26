@@ -16,11 +16,46 @@ description: Build 400–450px-tall HTML/CSS infographics for CongoAfricanGreys.
 |------|------------|---------|
 | **HTML/CSS (Claude Code native)** | Default. Instant, brand-perfect, no API cost, fully editable. Use for 90% of cases. | Claude Code generates code directly — say "use Claude Code" or "use HTML" |
 | **AI-Generated Image** | Photorealistic/artistic style needed, or design complexity beyond HTML. | `nanobanna` (Google Imagen) · `openai` (DALL-E 3) |
+| **Higgsfield MCP** | Character-consistent images, video, marketing studio assets, or when user provides a reference photo. | Higgsfield MCP (UUID `dd46f66a`) — `nano_banana_pro` / `soul_2` / `cinematic_studio_2_5` |
 
 **How to request each mode:**
 - "Build an infographic using Claude Code" → HTML/CSS (Types 1–3 below)
 - "Build an AI infographic using Nano Banana" → Type 4 below
 - "Build an AI infographic using OpenAI" → Type 4 with `openai` flag
+- "Build an infographic using Higgsfield" or "use Higgsfield MCP" → Type 5 below
+
+## Width Determination Rules (Desktop)
+
+The agent MUST select the correct `max-width` for the outer wrapper based on page type **before writing any HTML**:
+
+| Page type | Desktop max-width | Layout style |
+|---|---|---|
+| Species guide body, blog posts, care guides, articles | **760px** | Two-panel horizontal split — matches `.container-text` |
+| Homepage, location pages, hero sections | **1100px** | Three-zone dashboard — matches `.container` |
+
+**Responsive behavior — required in every infographic:**
+
+| Viewport | Width | Height | Layout |
+|---|---|---|---|
+| Desktop ≥1025px | 760px or 1100px (fixed max-width) | **400px fixed** | Horizontal (two-panel or three-zone) |
+| Tablet 768–1024px | 100% fluid within parent | 400px (if layout fits) or auto | Horizontal or transitioning |
+| Mobile ≤767px | 100% screen width | **auto** | Stacks vertically |
+
+**Breakpoint rule:**
+- 760px variant: stack at `@media (max-width: 640px)`
+- 1100px variant: stack at `@media (max-width: 767px)`
+
+Set width on the outer **wrapper div**, not on the infographic shell itself. The shell is always `width: 100%` so it fills its wrapper.
+
+```html
+<!-- 760px wrapper (informational pages) -->
+<div style="margin: 2rem auto; max-width: 760px; padding: 0 1rem;">
+
+<!-- 1100px wrapper (homepage / location / hero sections) -->
+<div style="margin: 2rem auto; max-width: 1100px; padding: 0 1rem;">
+```
+
+---
 
 ## Height Determination Rules
 
@@ -37,6 +72,7 @@ The agent MUST pick a height in the 400–450px range before writing any HTML:
 
 **Default: 400px. Never exceed 450px. Never go below 380px.**
 Set height via: `style="height: 400px; min-height: 380px; max-height: 450px;"`
+On mobile (`≤767px`): override to `height: auto; min-height: unset;` so stacked content is not clipped.
 
 ## Brand Colors
 
@@ -51,20 +87,32 @@ Set height via: `style="height: 400px; min-height: 380px; max-height: 450px;"`
 
 ## Placement Wrapper
 
-Always wrap the infographic in this container regardless of type or page:
+Always wrap the infographic in this container. **Choose max-width based on page type** (see Width Determination Rules above):
 
 **In Astro pages (.astro files):**
 ```astro
-{/* Infographic: [description] — height: [X]px */}
-<div class="my-8 mx-auto max-w-4xl px-4">
+{/* Infographic: [description] — width: [760|1100]px — height: [X]px */}
+{/* 760px: species guides, blogs, care pages */}
+<div class="my-8 mx-auto px-4" style="max-width: 760px;">
+  <ComparisonInfographic ... />
+</div>
+
+{/* 1100px: homepage, location pages, hero sections */}
+<div class="my-8 mx-auto px-4" style="max-width: 1100px;">
   <ComparisonInfographic ... />
 </div>
 ```
 
 **In static HTML pages (.html files):**
 ```html
-<!-- Infographic: [description] — height: [X]px -->
-<div style="margin: 2rem auto; max-width: 900px; padding: 0 1rem;">
+<!-- Infographic: [description] — width: [760|1100]px — height: [X]px -->
+<!-- 760px: species guides, blogs, care pages -->
+<div style="margin: 2rem auto; max-width: 760px; padding: 0 1rem;">
+  <!-- paste full infographic HTML here -->
+</div>
+
+<!-- 1100px: homepage, location pages, hero sections -->
+<div style="margin: 2rem auto; max-width: 1100px; padding: 0 1rem;">
   <!-- paste full infographic HTML here -->
 </div>
 ```
@@ -209,14 +257,16 @@ Always wrap the infographic in this container regardless of type or page:
 
 ## Integration Checklist (run before every commit)
 
-- [ ] Height set in 400–450px range: `style="height: Xpx; min-height: 380px; max-height: 450px;"`
+- [ ] **Width:** wrapper `max-width` is 760px (informational pages) or 1100px (homepage/location/hero) — not 900px or 4xl
+- [ ] **Height:** 400–450px on desktop; `height: auto` on mobile via media query
+- [ ] **Responsive:** `@media (max-width: 640px)` for 760px variant; `@media (max-width: 767px)` for 1100px variant — stacks vertically
 - [ ] `overflow: hidden` on root element
 - [ ] `flex-shrink: 0` on title and footer bars
 - [ ] No `<script>` tags — pure HTML/CSS only
 - [ ] All font sizes between 8px and 14px
 - [ ] Row count matches on both columns (Comparison type)
 - [ ] Zero placeholder text `[LIKE THIS]` remaining in output
-- [ ] Wrapped in `max-w-4xl mx-auto px-4 my-8` container div
+- [ ] Wrapper div comment includes width and height: `<!-- Infographic: [desc] — width: Xpx — height: Ypx -->`
 
 ## File Placement Rules
 
@@ -301,3 +351,47 @@ CITES Safety: No wire cages, no aviary settings. Birds in loving home environmen
 - [ ] `max-width: 350px; width: 100%; height: auto;` CSS applied
 - [ ] Alt text includes primary keyword
 - [ ] Handed off to `cag-image-pipeline` for SEO filename rename
+
+---
+
+## Type 5: Higgsfield MCP (Character-Consistent / Video / Marketing)
+
+**Use for:** Character-consistent lifestyle shots (same bird identity across pages), video generation (reels/shorts), marketing studio campaign assets, or when the user uploads an OG photo and wants AI-enhanced output.
+
+**When to invoke:** Say "use Higgsfield" or "use Higgsfield MCP"
+
+**Best Higgsfield models for CAG content:**
+
+| Goal | Model to use | Credits |
+|------|-------------|---------|
+| High-quality lifestyle image, text overlay | `nano_banana_pro` | 2 |
+| Character-consistent bird across multiple shots | `soul_2` with reference image | 2 |
+| Cinematic still, dramatic lighting | `cinematic_studio_2_5` | varies |
+| Marketing/ad creative | `marketing_studio_image` | varies |
+
+**Dimensions:** 9:16 for portrait (1200×2133px display at 350px CSS), 16:9 for landscape
+
+**Steps:**
+1. `ToolSearch: select:mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__generate_image`
+2. Check credits: `mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__balance`
+3. Read `data/parrot-image-schema.json` — use `visual_style` + `prompt_safety` fields
+4. Build prompt with species-accurate details (Congo: bright red tail, 400–600g; Timneh: maroon tail, 275–375g)
+5. Call `generate_image` with chosen model + 9:16 aspect ratio
+6. Save output → `@cag-image-pipeline` for WebP optimization + page placement
+
+**User photo as reference (Higgsfield only):**
+1. `ToolSearch: select:mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__media_upload`
+2. Upload photo → confirm → get media ID
+3. Pass `medias: [{value: "<media_id>", role: "image"}]` in generate_image call
+4. Use `soul_2` model for best character-consistent results with a reference
+
+**CITES rule:** Always include from `data/parrot-image-schema.json`:
+- `prompt_safety.always_include`: "captive-bred, domestic setting, hand-raised"
+- Never include: "wild-caught", "jungle", "imported", "exotic wildlife"
+
+**Integration checklist (Higgsfield):**
+- [ ] Credits checked before generation
+- [ ] `data/parrot-image-schema.json` read — CITES safety fields included in prompt
+- [ ] Species accuracy: Congo = bright red tail / Timneh = dark maroon tail
+- [ ] Output handed to `@cag-image-pipeline`
+- [ ] Displayed at `max-width: 350px; width: 100%; height: auto;` in HTML

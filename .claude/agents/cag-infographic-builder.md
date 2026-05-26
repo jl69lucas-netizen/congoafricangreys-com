@@ -30,13 +30,19 @@ Check caller input for `MODE` and `PROVIDER`:
 | "use Claude Code" / "use HTML" / no MODE given | `html` | n/a |
 | "use Nano Banana" / "use nanobanna" / "use Google" | `ai` | `nanobanna` |
 | "use OpenAI" / "use DALL-E" | `ai` | `openai` |
+| "use Higgsfield" / "use Higgsfield MCP" | `ai` | `higgsfield` |
 
 **If MODE=html:** proceed with Steps 1–9 below (HTML/CSS generation).
 
-**If MODE=ai:** read `skills/cag-infographic.md` → Type 4. Build the pro-grade prompt, run
+**If MODE=ai (nanobanna or openai):** read `skills/cag-infographic.md` → Type 4. Build the pro-grade prompt, run
 `./scripts/generate_nb_image.sh` (nanobanna) or `./scripts/generate_image.sh` (openai),
 then insert the responsive `<img>` wrapper into the target page. Skip Steps 2–4
 (type/height selection — not applicable for AI image mode).
+
+**If MODE=ai (higgsfield):** read `skills/cag-infographic.md` → Type 5. Read `data/parrot-image-schema.json`.
+Load `ToolSearch: select:mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__generate_image`. Check balance.
+Build CITES-compliant prompt using schema `prompt_safety` + `visual_style`. If user uploaded a photo,
+also load `media_upload` + `media_confirm` tools. Generate → insert `<img>` wrapper into target page.
 
 ### Step 1: Read files
 
@@ -66,6 +72,21 @@ Apply height rule from skill (400px baseline):
 - 5 process steps → 420px
 
 **Announce height decision before generating HTML:** "Selecting height: 440px — 4 feature rows of content in Comparison type."
+
+### Step 3b: Determine width
+
+Read `TARGET_PAGE` path to identify page type, then select the correct `max-width`:
+
+| Page type | max-width | Breakpoint (stack to vertical) |
+|---|---|---|
+| Species guide, blog, care guide, article | **760px** | `@media (max-width: 640px)` |
+| Homepage, location page, hero section | **1100px** | `@media (max-width: 767px)` |
+
+- Set `max-width` on the **outer wrapper div** — never hardcode width inside the infographic shell
+- The infographic shell itself uses `width: 100%` to fill its wrapper
+- On mobile: apply `height: auto; min-height: unset;` and `flex-direction: column` on `.content-row` / `.zones`
+
+**Announce width decision before generating HTML:** "Selecting width: 760px — species guide page, informational layout."
 
 ### Step 4: Generate complete infographic HTML
 
@@ -100,8 +121,14 @@ Read the target page and find the best insertion point:
 **For static HTML pages (.html files):**
 Insert raw HTML directly:
 ```html
-<!-- Infographic: [desc] — height: [X]px -->
-<div style="margin: 2rem auto; max-width: 900px; padding: 0 1rem;">
+<!-- Infographic: [desc] — width: [760|1100]px — height: [X]px -->
+<!-- 760px: species guide / blog / care / article -->
+<div style="margin: 2rem auto; max-width: 760px; padding: 0 1rem;">
+  [FULL INFOGRAPHIC HTML]
+</div>
+
+<!-- 1100px: homepage / location / hero section -->
+<div style="margin: 2rem auto; max-width: 1100px; padding: 0 1rem;">
   [FULL INFOGRAPHIC HTML]
 </div>
 ```
@@ -109,13 +136,15 @@ Insert raw HTML directly:
 ### Step 7: Run integration checklist
 
 Before saving the file, verify against `skills/cag-infographic.md` Integration Checklist:
-- [ ] Height in 400–450px range
+- [ ] Width: wrapper is 760px (informational) or 1100px (homepage/location/hero) — not 900px
+- [ ] Height: 400–450px desktop; `height: auto` on mobile via media query
+- [ ] Responsive: stacks vertically at correct breakpoint (640px or 767px)
 - [ ] `overflow: hidden` on root
 - [ ] `flex-shrink: 0` on header/footer bars
 - [ ] No script tags
 - [ ] Font sizes 8–14px
 - [ ] Zero `[PLACEHOLDER]` text remaining
-- [ ] Wrapped in max-width container
+- [ ] Wrapper comment includes width + height
 
 ### Step 8: Save to file and update memory
 

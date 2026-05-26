@@ -356,6 +356,70 @@ window.cagCitesStep = function(step) {
 
 ---
 
+## Component Type 6: Variant Comparison Card (Congo vs Timneh)
+
+**Trigger:** Any page where user or agent asks for a Congo vs Timneh comparison widget, or where a visitor might ask "which one is right for me?"
+
+**Data sources:** `data/parrot-image-schema.json` (species attributes) + `data/price-matrix.json` (prices) — read both before building.
+
+**Output:** Self-contained HTML/CSS/JS block. No external dependencies. No CDN.
+
+**Key specs:**
+- Two-column layout on desktop: Congo (left, clay `#e8604c` header) vs Timneh (right, green `#2D6A4F` header)
+- Comparison rows: Weight, Size, Tail Color, Price Range, Personality, Best For
+- Interactive toggle: user flips between "Quick Look" (4 rows) and "Full Comparison" (all rows) via a single JS event
+- Mobile (≤640px): stacks vertically, Congo on top
+- CTA row at bottom: "Ask About Congo" + "Ask About Timneh" — both `href="/contact-us/"`
+- `aria-label="Congo vs Timneh African Grey comparison"` on outer wrapper
+- No page schema needed — parent page already has relevant schema
+
+**Exact data to use (from `data/parrot-image-schema.json`):**
+
+| Row | Congo | Timneh |
+|---|---|---|
+| Weight | 400–600g | 275–375g |
+| Size | 33 cm | 28 cm |
+| Tail Color | Bright scarlet red | Dark maroon-brown |
+| Price Range | $1,500–$3,500 | $1,200–$2,500 |
+| CITES Status | Appendix II captive-bred | Appendix II captive-bred |
+
+**HTML skeleton:**
+
+```html
+<div class="cag-variant-compare" role="region" aria-label="Congo vs Timneh African Grey comparison">
+  <div class="cvc-toggle-bar">
+    <button class="cvc-toggle active" onclick="cagCvcToggle('quick')" aria-pressed="true">Quick Look</button>
+    <button class="cvc-toggle" onclick="cagCvcToggle('full')" aria-pressed="false">Full Comparison</button>
+  </div>
+  <div class="cvc-grid">
+    <div class="cvc-header cvc-congo">Congo African Grey</div>
+    <div class="cvc-header cvc-timneh">Timneh African Grey</div>
+    <!-- quick rows (always visible) -->
+    <div class="cvc-cell cvc-congo cvc-val">400–600g</div><div class="cvc-cell cvc-timneh cvc-val">275–375g</div>
+    <!-- ... price row, tail row, size row ... -->
+    <!-- full rows (hidden until toggle) -->
+    <div class="cvc-cell cvc-full cvc-congo cvc-val" hidden>...</div>
+    <!-- ... -->
+  </div>
+  <div class="cvc-cta-row">
+    <a href="/contact-us/" class="cvc-btn cvc-btn-congo">Ask About Congo</a>
+    <a href="/contact-us/" class="cvc-btn cvc-btn-timneh">Ask About Timneh</a>
+  </div>
+</div>
+<script>
+window.cagCvcToggle = function(mode) {
+  var fullCells = document.querySelectorAll('.cvc-full');
+  fullCells.forEach(function(el) { el.hidden = mode !== 'full'; });
+  document.querySelectorAll('.cvc-toggle').forEach(function(btn) {
+    btn.classList.toggle('active', btn.textContent.toLowerCase().includes(mode === 'full' ? 'full' : 'quick'));
+    btn.setAttribute('aria-pressed', btn.classList.contains('active'));
+  });
+};
+</script>
+```
+
+---
+
 ## Build Protocol
 
 1. Identify which component type is needed and which page it goes on
