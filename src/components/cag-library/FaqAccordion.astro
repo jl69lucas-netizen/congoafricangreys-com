@@ -30,6 +30,20 @@ const {
   details > summary::-webkit-details-marker { display: none; }
 </style>
 
+<style>
+@media (max-width: 480px) {
+  .faq-item {
+    padding: 16px 0;
+  }
+  .faq-question {
+    min-height: 44px;
+    font-size: 15px !important;
+    display: flex;
+    align-items: center;
+  }
+}
+</style>
+
 {variant === 'classic' && (
   <div class="grid md:grid-cols-[1fr_2fr] gap-10">
     <div>
@@ -39,8 +53,8 @@ const {
     </div>
     <div class="space-y-3">
       {items.map((it, i) => (
-        <details class="bg-white rounded-2xl border border-line p-5" open={i===0}>
-          <summary class="flex items-center justify-between gap-4">
+        <details class="faq-item bg-white rounded-2xl border border-line p-5" open={i===0}>
+          <summary class="faq-question flex items-center justify-between gap-4">
             <span class="font-display font-bold text-[17px]">{it.q}</span>
             <span class="cag-faq-icon text-clay text-2xl font-light shrink-0">+</span>
           </summary>
@@ -57,8 +71,8 @@ const {
     <p class="text-mid text-center mb-8 max-w-2xl mx-auto">Quick answers — tap any question to expand.</p>
     <div class="grid md:grid-cols-2 gap-3">
       {items.map(it => (
-        <details class="bg-white rounded-xl border border-line px-5 py-4">
-          <summary class="flex items-center justify-between font-display font-bold text-[15px]">
+        <details class="faq-item bg-white rounded-xl border border-line px-5 py-4">
+          <summary class="faq-question flex items-center justify-between font-display font-bold text-[15px]">
             {it.q} <span class="cag-faq-icon text-clay">+</span>
           </summary>
           <p class="text-[13px] text-mid mt-2">{it.a}</p>
@@ -78,8 +92,8 @@ const {
       </div>
       <div>
         {items.map((it, i) => (
-          <details class="border-b border-white/10 py-4" open={i===0}>
-            <summary class="flex items-center gap-4">
+          <details class="faq-item border-b border-white/10 py-4" open={i===0}>
+            <summary class="faq-question flex items-center gap-4">
               <span class="font-display text-clay font-bold text-2xl shrink-0">{String(i+1).padStart(2,'0')}</span>
               <span class="font-display font-bold text-[17px] flex-1">{it.q}</span>
               <span class="cag-faq-icon text-clay text-2xl shrink-0">+</span>
