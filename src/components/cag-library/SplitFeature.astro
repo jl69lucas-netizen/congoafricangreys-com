@@ -34,9 +34,16 @@ const {
 } = Astro.props;
 ---
 
+<style>
+@media (max-width: 1024px) {
+  .split-grid { grid-template-columns: 1fr !important; flex-direction: column !important; }
+  .split-image { order: -1; aspect-ratio: 16/9; width: 100%; }
+}
+</style>
+
 {variant === 'classic' && (
-  <div class="grid md:grid-cols-2 gap-12 items-center">
-    <div class="cag-bird-ph aspect-[5/4] rounded-3xl cag-warm-shadow-lg flex items-center justify-center opacity-70">
+  <div class="split-grid grid md:grid-cols-2 gap-12 items-center">
+    <div class="split-image cag-bird-ph aspect-[5/4] rounded-3xl cag-warm-shadow-lg flex items-center justify-center opacity-70">
       {imageSrc ? <img src={imageSrc} alt="" class="w-full h-full object-cover rounded-3xl" /> : <img src="/emoji/cag-congo.png" alt="" style="width:200px;height:200px;object-fit:contain;" loading="lazy" />}
     </div>
     <div>
@@ -58,7 +65,7 @@ const {
 
 {variant === 'editorial' && (
   <div class="cag-hero-grad rounded-3xl border border-line p-10">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
+    <div class="split-grid grid md:grid-cols-2 gap-12 items-center">
       <div>
         {eyebrow && <div class="cag-tag text-clay">{eyebrow}</div>}
         <h3 class="font-display font-bold text-4xl mt-4 leading-[1.1]" set:html={title} />
@@ -66,7 +73,7 @@ const {
         {quote && <blockquote class="mt-6 border-l-4 border-clay pl-5 italic font-display text-[18px] text-ink">"{quote}"</blockquote>}
         <a href={ctaHref} class="mt-6 inline-flex items-center gap-2 text-clay font-semibold border-b-2 border-clay pb-0.5">{ctaLabel} →</a>
       </div>
-      <div class="relative">
+      <div class="split-image relative">
         <div class="cag-bird-ph aspect-[4/5] rounded-3xl cag-warm-shadow-lg flex items-center justify-center opacity-70 -rotate-2"><img src="/emoji/cag-congo.png" alt="" style="width:200px;height:200px;object-fit:contain;" loading="lazy" /></div>
       </div>
     </div>
@@ -74,8 +81,8 @@ const {
 )}
 
 {variant === 'dark' && (
-  <div class="bg-white border border-line rounded-3xl cag-warm-shadow overflow-hidden grid md:grid-cols-[1.3fr_1fr]">
-    <div class="cag-bird-ph relative min-h-[440px]">
+  <div class="split-grid bg-white border border-line rounded-3xl cag-warm-shadow overflow-hidden grid md:grid-cols-[1.3fr_1fr]">
+    <div class="split-image cag-bird-ph relative min-h-[440px]">
       <div class="absolute inset-0 flex items-center justify-center opacity-70"><img src="/emoji/cag-congo.png" alt="" style="width:280px;height:280px;object-fit:contain;" loading="lazy" /></div>
       <div class="absolute bottom-6 left-6 right-6 bg-panel/90 backdrop-blur rounded-2xl p-5 text-white">
         <div class="cag-tag text-clay">{eyebrow || 'FEATURED CONTENT'}</div>

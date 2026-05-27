@@ -28,11 +28,20 @@ const {
 } = Astro.props;
 ---
 
+<style>
+@media (max-width: 768px) {
+  .care-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 480px) {
+  .care-grid { grid-template-columns: 1fr !important; }
+}
+</style>
+
 {variant === 'classic' && (
   <div>
     <h3 class="font-display font-bold text-3xl mb-2" set:html={title} />
     <p class="text-mid mb-8 max-w-2xl text-[15px]">{body}</p>
-    <div class="grid md:grid-cols-3 gap-5">
+    <div class="care-grid grid md:grid-cols-3 gap-5">
       {items.map((it, i) => (
         <article class="bg-warm rounded-2xl border border-line p-7">
           <div class="font-display text-clay font-bold text-2xl">{String(i+1).padStart(2,'0')}</div>

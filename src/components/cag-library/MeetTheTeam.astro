@@ -47,13 +47,25 @@ const {
 } = Astro.props;
 ---
 
+<style>
+@media (max-width: 1024px) {
+  .team-grid { grid-template-columns: 1fr !important; }
+  .team-card { display: flex !important; flex-direction: row; gap: 16px; align-items: flex-start; }
+  .team-photo { width: 80px !important; height: 80px !important; flex-shrink: 0; border-radius: 50%; }
+}
+@media (max-width: 480px) {
+  .team-card { flex-direction: column !important; }
+  .team-photo { width: 64px !important; height: 64px !important; }
+}
+</style>
+
 {variant === 'duo' && (
-  <div class="grid md:grid-cols-2 gap-6">
+  <div class="team-grid grid md:grid-cols-2 gap-6">
     {members.slice(0, 2).map(m => (
-      <article class="bg-white border border-line rounded-3xl cag-warm-shadow overflow-hidden">
+      <article class="team-card bg-white border border-line rounded-3xl cag-warm-shadow overflow-hidden">
         {m.imageSrc
-          ? <img src={m.imageSrc} alt={m.name} class="w-full aspect-[5/4] object-cover" />
-          : <div class="cag-bird-ph w-full aspect-[5/4] flex items-center justify-center text-[100px] opacity-60">📷</div>}
+          ? <img src={m.imageSrc} alt={m.name} class="team-photo w-full aspect-[5/4] object-cover" />
+          : <div class="team-photo cag-bird-ph w-full aspect-[5/4] flex items-center justify-center text-[100px] opacity-60">📷</div>}
         <div class="p-7">
           <div class="cag-tag text-clay">{m.role}</div>
           <h3 class="font-display font-bold text-2xl mt-2">{m.name}</h3>
