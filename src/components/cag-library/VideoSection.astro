@@ -28,14 +28,21 @@ const {
 } = Astro.props;
 ---
 
+<style>
+@media (max-width: 1024px) {
+  .video-stack { flex-direction: column !important; grid-template-columns: 1fr !important; }
+  .video-player { border-radius: 12px; width: 100%; }
+}
+</style>
+
 {variant === 'vertical' && (
-  <div class="grid md:grid-cols-2 gap-12 items-center">
+  <div class="video-stack grid md:grid-cols-2 gap-12 items-center">
     <div>
       <h3 class="font-display font-bold text-3xl leading-tight">See our birds <em class="text-clay">in action</em> — real video, not pretty stills.</h3>
       <p class="text-mid mt-5 leading-relaxed">Our YouTube channel posts unedited weekly videos of every available chick — feeding, playing, learning new words.</p>
       <a href={channelUrl} class="mt-6 inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 transition text-white rounded-full px-5 py-3 font-semibold text-[14px]">▶ Subscribe on YouTube</a>
     </div>
-    <div class="relative aspect-[9/16] max-w-[320px] mx-auto bg-panel rounded-3xl overflow-hidden cag-warm-shadow-lg">
+    <div class="video-player relative aspect-[9/16] max-w-[320px] mx-auto bg-panel rounded-3xl overflow-hidden cag-warm-shadow-lg">
       <div class="absolute inset-0 cag-bird-ph opacity-80 flex items-center justify-center"><img src="/emoji/cag-congo.png" alt="" style="width:180px;height:180px;object-fit:contain;" loading="lazy" /></div>
       <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
       <div class="absolute inset-0 grid place-items-center">

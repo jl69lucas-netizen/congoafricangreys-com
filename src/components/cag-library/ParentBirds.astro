@@ -34,13 +34,19 @@ const {
 } = Astro.props;
 ---
 
+<style>
+@media (max-width: 768px) {
+  .parents-grid { grid-template-columns: 1fr !important; }
+}
+</style>
+
 {variant === 'classic' && (
   <div>
     <div class="grid md:grid-cols-[1fr_2.5fr] gap-8 mb-8">
       <h3 class="font-display font-bold text-3xl leading-tight" set:html={title} />
       <p class="text-mid leading-relaxed">{body}</p>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+    <div class="parents-grid grid grid-cols-2 md:grid-cols-4 gap-5">
       {parents.map((p, i) => (
         <article class="bg-white rounded-2xl border border-line cag-warm-shadow overflow-hidden hover:-translate-y-1 hover:cag-warm-shadow-lg transition-all">
           <div class="cag-bird-ph aspect-square flex items-center justify-center opacity-70" style={`filter: saturate(${[100,50,150,100][i % 4]}%)`}><img src="/emoji/cag-congo.png" alt="" style="width:100px;height:100px;object-fit:contain;" loading="lazy" /></div>
