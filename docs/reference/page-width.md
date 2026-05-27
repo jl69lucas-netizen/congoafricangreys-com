@@ -111,6 +111,37 @@ body content readable.
 
 ---
 
+---
+
+## Infographic Width Rules
+
+**Confirmed 2026-05-22. Applies to all HTML/CSS infographics built with `@cag-infographic-builder`.**
+
+| Page type | Infographic max-width | Wrapper class / style |
+|---|---|---|
+| Species guide, blog, care guide, article | **760px** | `style="max-width:760px; margin:2rem auto; padding:0 1rem;"` |
+| Homepage, location pages, hero sections | **1100px** | `style="max-width:1100px; margin:2rem auto; padding:0 1rem;"` |
+
+**Responsive height behavior:**
+
+| Viewport | Height | Layout |
+|---|---|---|
+| Desktop ≥1025px | **400px fixed** | Horizontal (two-panel or three-zone) |
+| Tablet 768–1024px | 400px (if layout holds) or auto | Fluid within parent |
+| Mobile ≤767px | **auto** | Stacks vertically |
+
+**Breakpoints for stacking:**
+- 760px variant → stack at `@media (max-width: 640px)`
+- 1100px variant → stack at `@media (max-width: 767px)`
+
+**Rules:**
+- Set `max-width` on the **wrapper div** — not inside the infographic shell
+- The infographic shell is always `width: 100%` inside its wrapper
+- On mobile: `height: auto; min-height: unset;` on the shell; `flex-direction: column` on layout rows
+- Never use `max-width: 900px` or Tailwind `max-w-4xl` (896px) — these are legacy values replaced by 760px / 1100px
+
+---
+
 ## Agent Rules
 
 1. **Every new page** must use `.container` as the outermost content wrapper.
@@ -118,3 +149,4 @@ body content readable.
 3. **Never** hard-code `max-width: 1180px` — use `1200px` or `var(--container)`.
 4. **All `<p>` tags** get `max-width: 70ch` — this is in the global stylesheet; do not override.
 5. **Two-column grids** stack at 1024px. **Everything** is single-column at 768px.
+6. **Infographics** use 760px wrapper on informational pages and 1100px wrapper on transactional/homepage pages — see Infographic Width Rules above.
