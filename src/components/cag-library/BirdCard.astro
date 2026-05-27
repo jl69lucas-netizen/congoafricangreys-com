@@ -48,7 +48,7 @@ const priceFmt = `$${price.toLocaleString()}`;
 ---
 
 {variant === 'classic' && (
-  <article class="bg-white rounded-3xl border border-line cag-warm-shadow overflow-hidden hover:cag-warm-shadow-lg hover:-translate-y-1 transition-all">
+  <article class="card-classic bg-white rounded-3xl border border-line cag-warm-shadow overflow-hidden hover:cag-warm-shadow-lg hover:-translate-y-1 transition-all">
     <div class="cag-bird-ph aspect-[4/3] relative">
       {imageSrc
         ? <img src={imageSrc} alt={name} class="absolute inset-0 w-full h-full object-cover" />
@@ -56,7 +56,7 @@ const priceFmt = `$${price.toLocaleString()}`;
       {badge && <span class={`absolute top-4 left-4 cag-tag rounded-full px-3 py-1.5 ${badgeBg}`}>{badge}</span>}
       <span class="absolute top-4 right-4 bg-white/90 backdrop-blur cag-tag text-forest rounded-full px-3 py-1.5">📍 {location.toUpperCase()}</span>
     </div>
-    <div class="p-6">
+    <div class="card-content p-6">
       <h3 class="font-display font-bold text-2xl">{name}</h3>
       <div class="text-[13px] text-mid mt-1">{sex} · {age} · Congo African Grey</div>
       {quote && <p class="font-display italic text-[15px] mt-4 leading-snug">"{quote}"</p>}
@@ -69,15 +69,15 @@ const priceFmt = `$${price.toLocaleString()}`;
           <div class="font-display font-bold text-2xl text-clay">{priceFmt}</div>
           <div class="text-[11px] text-mid">+ ${deposit} deposit</div>
         </div>
-        <a href={href} class="bg-clay hover:bg-clay-dk transition text-white rounded-full px-5 py-2.5 font-semibold text-[13px] cag-glow">Inquire →</a>
+        <a href={href} class="card-cta bg-clay hover:bg-clay-dk transition text-white rounded-full px-5 py-2.5 font-semibold text-[13px] cag-glow">Inquire →</a>
       </div>
     </div>
   </article>
 )}
 
 {variant === 'horizontal' && (
-  <article class="bg-white rounded-2xl border border-line cag-warm-shadow overflow-hidden flex flex-col md:flex-row hover:border-clay/40 transition">
-    <div class="cag-bird-ph md:w-64 aspect-[4/3] md:aspect-auto flex items-center justify-center opacity-70 flex-shrink-0"><img src="/emoji/cag-congo.png" alt="" style="width:110px;height:110px;object-fit:contain;" loading="lazy" /></div>
+  <article class="horizontal-article bg-white rounded-2xl border border-line cag-warm-shadow overflow-hidden flex flex-col md:flex-row hover:border-clay/40 transition">
+    <div class="horizontal-image cag-bird-ph md:w-64 aspect-[4/3] md:aspect-auto flex items-center justify-center opacity-70 flex-shrink-0"><img src="/emoji/cag-congo.png" alt="" style="width:110px;height:110px;object-fit:contain;" loading="lazy" /></div>
     <div class="p-6 flex-1 flex flex-col md:flex-row md:items-center gap-6">
       <div class="flex-1">
         <div class="flex items-center gap-2 mb-2">
@@ -100,7 +100,7 @@ const priceFmt = `$${price.toLocaleString()}`;
 )}
 
 {variant === 'feature' && (
-  <article class="bg-panel text-white rounded-3xl overflow-hidden relative">
+  <article class="feature-article bg-panel text-white rounded-3xl overflow-hidden relative">
     <div class="cag-bird-ph aspect-[16/10] relative">
       <div class="absolute inset-0 flex items-center justify-center opacity-60"><img src="/emoji/cag-congo.png" alt="" style="width:260px;height:260px;object-fit:contain;" loading="lazy" /></div>
       <div class="absolute inset-0 bg-gradient-to-t from-panel via-panel/30 to-transparent"></div>
@@ -119,3 +119,21 @@ const priceFmt = `$${price.toLocaleString()}`;
     </div>
   </article>
 )}
+
+<style>
+@media (max-width: 1024px) {
+  .horizontal-article { flex-direction: column !important; }
+  .horizontal-image { width: 100% !important; aspect-ratio: 16/9; flex-shrink: unset; }
+  .card-cta {
+    width: 100%;
+    text-align: center;
+    padding: 14px 20px !important;
+    font-size: 15px !important;
+    display: block;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 480px) {
+  .card-content { padding: 16px !important; }
+}
+</style>
