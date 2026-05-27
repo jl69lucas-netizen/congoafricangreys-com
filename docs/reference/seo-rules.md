@@ -403,6 +403,33 @@ All keyword variations planned for the page: exact match, phrase match, LSI clus
 
 ---
 
+**Rule 54 — Infographic Width Standards (CLS + UX)**
+
+All HTML/CSS infographics built for CAG pages MUST use these `max-width` values on the outer wrapper div. Using the wrong width causes layout shift (CLS penalty) on desktop and wastes the content column width.
+
+| Page type | Wrapper max-width | Desktop height |
+|---|---|---|
+| Species guide, blog, care guide, article | **760px** — matches `.container-text` | 400px fixed |
+| Homepage, location pages, hero sections | **1100px** — matches `.container` | 400px fixed |
+| Mobile (≤767px / ≤640px) | 100% width | auto — stacks vertically |
+
+- **Never** use `max-width: 900px` or `max-w-4xl` (896px) — these are legacy values
+- The infographic shell is always `width: 100%` inside the wrapper — width is controlled by the wrapper only
+- Responsive `@media` query must be included in every infographic to stack content vertically on mobile
+- Full spec and responsive CSS patterns: `docs/reference/page-width.md §Infographic Width Rules`
+
+---
+
+**Rule [IMAGE-01]:** Before generating any image or infographic, read `data/image-specs.json` for the current page_type and section. Use the specified `dims`, `source`, and `infographic_type` exactly. Overrides: user instruction > image-specs.json > agent defaults.
+
+**Rule [IMAGE-02]:** Infographic dimensions — 760px wrapper for guide/blog/care pages; 1100px wrapper for homepage/location/hero. Height always 400px desktop, auto mobile. Never use 900px or max-w-4xl (legacy values).
+
+**Rule [IMAGE-03]:** AI-generated portrait images always 1200×2133px native (9:16). CSS display width: 350px. This ratio scales better on mobile than 16:9 landscape.
+
+**Rule [IMAGE-04]:** Every page needs a 1200×630px OG image (separate generation). Never reuse article images for OG without cropping to 16:9.
+
+---
+
 ## Quick Reference — GSC Priority Pages (2026-04-28)
 
 | Page | Impressions | CTR | Position | Action |
