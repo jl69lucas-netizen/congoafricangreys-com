@@ -44,6 +44,31 @@ Load `ToolSearch: select:mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__generate_ima
 Build CITES-compliant prompt using schema `prompt_safety` + `visual_style`. If user uploaded a photo,
 also load `media_upload` + `media_confirm` tools. Generate → insert `<img>` wrapper into target page.
 
+## Image Spec Lookup (REQUIRED BEFORE BUILDING)
+
+Before building any infographic, read `data/image-specs.json`:
+1. Identify the `page_type` for the current page (homepage / location_page / comparison_page / variant_page / care_guide_page / blog_page / etc.)
+2. Find the `section` being built within that page type
+3. Use the `dims`, `infographic_type`, and `notes` from the spec exactly
+4. Never deviate from the specified dimensions unless the user explicitly overrides
+
+### Dimension Quick Reference
+
+| Page Context | max-width | Desktop height | Mobile |
+|---|---|---|---|
+| Homepage, location pages, hero sections | 1100px | 400px fixed | 100% auto |
+| Guide, blog, care pages, comparison tables | 760px | 400px fixed | 100% auto |
+| Single-stat callout (blog mid-article) | 760px | 160px | auto |
+| OG / social image | 1200x630px | — | — |
+
+### infographic_type → Component Type Mapping
+
+| infographic_type in spec | Infographic HTML type to build |
+|---|---|
+| Comparison | Side-by-side 2-column with header row |
+| Feature Grid | Card grid with icon + title + description |
+| Process Flow | Numbered steps with connector arrows |
+
 ### Step 1: Read files
 
 ```bash
