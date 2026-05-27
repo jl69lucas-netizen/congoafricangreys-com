@@ -41,8 +41,29 @@ const {
 const stars = (n: number = 5) => '⭐'.repeat(n);
 ---
 
+<style>
+@media (max-width: 1024px) {
+  .testimonials-grid {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding: 0 20px 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .testimonials-grid::-webkit-scrollbar { display: none; }
+  .testimonials-grid > * {
+    flex: 0 0 85vw;
+    max-width: 340px;
+    scroll-snap-align: start;
+  }
+}
+</style>
+
 {variant === 'grid' && (
-  <div class="grid md:grid-cols-3 gap-5">
+  <div class="testimonials-grid grid md:grid-cols-3 gap-5">
     {testimonials.map(t => (
       <article class="bg-white border border-line rounded-3xl cag-warm-shadow p-7 flex flex-col">
         <div class="text-clay text-lg">{stars(t.rating)}</div>

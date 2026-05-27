@@ -52,10 +52,40 @@ const {
 } = Astro.props;
 ---
 
+<style>
+@media (max-width: 768px) {
+  .footer-cols { grid-template-columns: 1fr !important; }
+  .footer-col-title {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .footer-col-title::after { content: '+'; font-size: 1.25rem; color: var(--light, #9b9189); }
+  .footer-col.open .footer-col-title::after { content: '−'; }
+  .footer-col-links {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+  .footer-col.open .footer-col-links { max-height: 400px; }
+}
+</style>
+
+<script>
+  document.querySelectorAll('.footer-col-title').forEach(title => {
+    title.addEventListener('click', () => {
+      const col = title.closest('.footer-col');
+      if (col) col.classList.toggle('open');
+    });
+  });
+</script>
+
 {variant === 'dark' && (
   <footer class="bg-panel text-white">
-    <div class="mx-auto max-w-[1200px] px-10 py-14 grid md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10">
-      <div>
+    <div class="footer-cols mx-auto max-w-[1200px] px-10 py-14 grid md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10">
+      <div class="footer-col">
         <div class="font-display font-bold text-2xl flex items-center gap-2"><img src="/emoji/cag-congo.png" alt="African Grey Parrot" class="cag-emoji" style="width:1.875rem;height:1.875rem;vertical-align:-0.4rem;" loading="lazy" /> {brand}</div>
         <p class="mt-4 text-white/70 text-[14px] max-w-xs leading-relaxed">{description}</p>
         <div class="mt-5 flex gap-2 flex-wrap">
@@ -64,16 +94,16 @@ const {
         </div>
       </div>
       {columns.map(c => (
-        <div>
-          <div class="cag-tag text-clay mb-4">{c.heading}</div>
-          <ul class="space-y-2.5 text-[14px] text-white/80">
+        <div class="footer-col">
+          <div class="footer-col-title cag-tag text-clay mb-4">{c.heading}</div>
+          <ul class="footer-col-links space-y-2.5 text-[14px] text-white/80">
             {c.links.map(l => <li><a href={l.href} class="hover:text-clay">{l.label}</a></li>)}
           </ul>
         </div>
       ))}
-      <div>
-        <div class="cag-tag text-clay mb-4">REACH US</div>
-        <ul class="space-y-2.5 text-[14px] text-white/80">
+      <div class="footer-col">
+        <div class="footer-col-title cag-tag text-clay mb-4">REACH US</div>
+        <ul class="footer-col-links space-y-2.5 text-[14px] text-white/80">
           {phone && <li>📞 <a href={`tel:${phone.replace(/\D/g,'')}`} class="hover:text-clay">{phone}</a></li>}
           {email && <li>✉️ <a href={`mailto:${email}`} class="hover:text-clay">{email}</a></li>}
           {address && <li>📍 {address}</li>}

@@ -25,8 +25,14 @@ const {
 } = Astro.props;
 ---
 
+<style>
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+</style>
+
 {variant === 'classic' && (
-  <div class="bg-white border border-line rounded-2xl cag-warm-shadow grid grid-cols-2 md:grid-cols-4 divide-x divide-line">
+  <div class="stats-grid bg-white border border-line rounded-2xl cag-warm-shadow grid grid-cols-2 md:grid-cols-4 divide-x divide-line">
     {stats.map(s => (
       <div class="p-8 text-center">
         <div class="font-display font-bold text-4xl text-forest">{s.value}</div>
@@ -37,7 +43,7 @@ const {
 )}
 
 {variant === 'editorial' && (
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  <div class="stats-grid grid grid-cols-2 md:grid-cols-4 gap-4">
     {stats.map(s => (
       <div class="bg-warm rounded-3xl p-7 border border-line">
         <div class="cag-tag text-clay">{s.label}</div>
@@ -51,7 +57,7 @@ const {
 {variant === 'dark' && (
   <div class="bg-panel rounded-3xl p-10 text-white relative overflow-hidden">
     <div class="absolute -right-10 -bottom-10 opacity-[0.04] leading-none"><img src="/emoji/cag-congo.png" alt="" style="width:280px;height:280px;object-fit:contain;" loading="lazy" /></div>
-    <div class="relative grid md:grid-cols-4 gap-y-8 gap-x-4">
+    <div class="stats-grid relative grid md:grid-cols-4 gap-y-8 gap-x-4">
       {stats.map(s => (
         <div>
           <div class="font-display font-bold text-5xl text-clay leading-none">{s.value}</div>
