@@ -25,19 +25,27 @@ const {
 } = Astro.props;
 ---
 
+<style>
+@media (max-width: 768px) {
+  .newsletter-inner { flex-direction: column !important; align-items: stretch !important; }
+  .newsletter-input-row { flex-direction: column !important; }
+  .newsletter-btn { width: 100%; font-size: 16px !important; padding: 16px !important; }
+}
+</style>
+
 {variant === 'banner' && (
   <div class="bg-clay rounded-3xl p-12 text-center text-white relative overflow-hidden">
     <div class="absolute -right-10 -top-10 opacity-10 leading-none"><img src="/emoji/cag-congo.png" alt="" style="width:260px;height:260px;object-fit:contain;" loading="lazy" /></div>
-    <div class="relative">
+    <div class="newsletter-inner relative">
       <div class="text-4xl">🔔</div>
       <h3 class="font-display font-bold text-4xl mt-3 max-w-2xl mx-auto leading-[1.1]">{title}</h3>
       <p class="mt-4 text-white/85 max-w-xl mx-auto text-[15px]">{body}</p>
       <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-[13px]">
         {perks.map(p => <span class="flex items-center gap-1.5">✅ <span>{p}</span></span>)}
       </div>
-      <form action={action} class="mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+      <form action={action} class="newsletter-input-row mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
         <input type="email" required placeholder="Enter your email address…" class="flex-1 rounded-full bg-white text-ink px-5 py-3.5 placeholder:text-mute outline-none focus:ring-4 focus:ring-white/30" />
-        <button class="bg-white text-clay hover:bg-cream transition rounded-full px-6 py-3.5 font-semibold text-[14px] flex items-center justify-center gap-2 cag-warm-shadow">
+        <button class="newsletter-btn bg-white text-clay hover:bg-cream transition rounded-full px-6 py-3.5 font-semibold text-[14px] flex items-center justify-center gap-2 cag-warm-shadow">
           <img src="/emoji/cag-congo.png" alt="" class="cag-emoji" loading="lazy" /> Subscribe
         </button>
       </form>

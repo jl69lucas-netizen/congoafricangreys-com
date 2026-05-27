@@ -64,8 +64,29 @@ const {
   </div>
 )}
 
+<style>
+@media (max-width: 1024px) {
+  .pricing-track {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding: 0 20px 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .pricing-track::-webkit-scrollbar { display: none; }
+  .pricing-track > * {
+    flex: 0 0 80vw;
+    max-width: 300px;
+    scroll-snap-align: start;
+  }
+}
+</style>
+
 {variant === 'tiers' && (
-  <div class="grid md:grid-cols-3 gap-5">
+  <div class="pricing-track grid md:grid-cols-3 gap-5">
     {rows.slice(0,3).map((r, i) => {
       const isPick = r.topPick || i === 1;
       return isPick
