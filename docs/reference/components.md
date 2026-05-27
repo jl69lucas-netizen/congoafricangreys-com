@@ -26,6 +26,35 @@ Design system tokens: `src/styles/cag-design-system.css` (non-Tailwind) or `src/
 
 ---
 
+## Mobile Behavior Reference
+
+All components are mobile-responsive as of 2026-05-27. The table below shows the mobile pattern and the CSS class hooks added to each component's key elements.
+
+| Component | Mobile Pattern (≤1024px) | Key CSS Class Hooks |
+|---|---|---|
+| `Navbar` | Hamburger button + slide-in drawer (right) | `nav-links`, `nav-hamburger`, `nav-drawer`, `nav-drawer-link`, `nav-overlay` |
+| `MobileNav` *(new)* | Fixed bottom tab bar — 4 tabs | — (standalone component) |
+| `StickyCtaBar` *(new)* | Fixed bottom CTA bar | `sticky-bar`, `sticky-btn`, `sticky-sub` |
+| `SnapCarousel` *(new)* | CSS snap-scroll single-card carousel | `snap-track`, `snap-dots`, `dot` |
+| `cag-split-hero` | Full-width image top → content below | `hero-grid`, `hero-image-col`, `hero-content-col`, `hero-ctas`, `trust-strip` |
+| `cag-bird-card` | Full-width card; horizontal variant stacks | `card-classic`, `card-content`, `card-cta`, `horizontal-article`, `horizontal-image` |
+| `cag-testimonials` | Horizontal snap-scroll carousel | `testimonials-grid` |
+| `cag-contact-form` | Stacked layout; 16px inputs (iOS zoom) | `form-layout`, `form-input`, `form-submit` |
+| `cag-pricing-table` | Horizontal scroll carousel (tiers variant) | `pricing-track` |
+| `cag-care-grid` | 2-col tablet / 1-col mobile | `care-grid` |
+| `cag-faq-accordion` | 44px min touch targets on questions | `faq-item`, `faq-question` |
+| `cag-scam-awareness` | 1-col stacked | `scam-grid`, `scam-compare` |
+| `cag-meet-the-team` | Row layout (80px photo left + bio text) | `team-grid`, `team-card`, `team-photo` |
+| `cag-parent-birds` | 1-col stacked | `parents-grid` |
+| `cag-split-feature` | Image above text (order: -1) | `split-grid`, `split-image` |
+| `cag-video-section` | Full-width player, stacked layout | `video-stack`, `video-player` |
+| `cag-newsletter` | Stacked column, full-width button | `newsletter-inner`, `newsletter-input-row`, `newsletter-btn` |
+| `cag-footer` | Accordion (tap heading to expand section) + JS | `footer-cols`, `footer-col`, `footer-col-title`, `footer-col-links` |
+| `cag-stats-bar` | 2-col grid (from 4-col) | `stats-grid` |
+| `cag-trust-stats` | 2-col grid (from 4-col) | `trust-grid` |
+
+---
+
 ## How to Use
 
 ### Astro components
