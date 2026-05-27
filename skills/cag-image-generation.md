@@ -9,6 +9,29 @@ description: Generates context-aware images for CongoAfricanGreys.com pages. Fou
 
 ---
 
+## Per-Page Image Strategy
+
+Read `data/image-specs.json` FIRST. For every image request:
+1. Identify page_type + section from context
+2. Check `source` field: `original_photo` → do not generate, use breeder photo; `html_css` → build HTML infographic; `ai_generated` → proceed to generation
+3. Use `prompt_guide` field as the base prompt (add technical quality suffixes: "photorealistic, warm natural lighting, editorial photography style")
+4. Use `dims` field for dimensions
+
+### Priority Hierarchy (always follow this order)
+1. Original breeder photos (source: original_photo) — no generation needed
+2. HTML/CSS infographics (source: html_css) — never AI-generate for data/stats sections
+3. Higgsfield MCP (source: higgsfield) — for hero lifestyle images where character consistency matters
+4. Nano Banana / Google Imagen 3 (source: nano_banana) — for mid-article and care guide images
+5. DALL-E 3 — fallback if Higgsfield and Nano Banana are unavailable
+
+### CITES Safety on All Prompts
+Append to every AI prompt: "captive-bred companion bird, domestic home environment, no wild habitat, no endangered species imagery"
+
+### OG Image Rule
+Every page needs a separate 1200×630px OG image. Generate this in addition to the article/page image. Same prompt, different crop/composition. Save as `[slug]-og.webp`.
+
+---
+
 ## Provider Selection Guide
 
 | Provider | Command flag | Best for | Key file |
