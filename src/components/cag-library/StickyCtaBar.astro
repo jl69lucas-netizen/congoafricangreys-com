@@ -1,0 +1,79 @@
+---
+/**
+ * StickyCtaBar — fixed bottom CTA bar for mobile transactional pages.
+ *
+ * Desktop (≥1025px): hidden via CSS.
+ * Mobile (≤1024px): fixed bar at bottom with prominent CTA button.
+ *
+ * Use on: location pages, variant pages (Congo/Timneh for sale), shipping page.
+ * Do NOT use alongside MobileNav on the same page — they both occupy the bottom.
+ *
+ * @prop label   — CTA button text
+ * @prop href    — CTA destination URL
+ * @prop subtext — optional small text below the button (e.g., response time)
+ */
+export interface Props {
+  label?: string;
+  href?: string;
+  subtext?: string;
+}
+const {
+  label   = 'Inquire About a Bird',
+  href    = '/contact-us/',
+  subtext = 'Response within 24 hours',
+} = Astro.props;
+---
+
+<div class="sticky-bar">
+  <a href={href} class="sticky-btn">{label} →</a>
+  {subtext && <p class="sticky-sub">{subtext}</p>}
+</div>
+
+<style>
+.sticky-bar {
+  display: none;
+}
+@media (max-width: 1024px) {
+  .sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid var(--border, #ede5dc);
+    padding: 12px 20px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    z-index: 8999;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    box-shadow: 0 -4px 24px rgba(60,30,10,.10);
+  }
+  .sticky-btn {
+    background: var(--clay, #e8604c);
+    color: white;
+    border-radius: 50px;
+    padding: 16px 24px;
+    text-align: center;
+    font-family: var(--font-sans, 'Sora', system-ui, sans-serif);
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    display: block;
+    box-shadow: 0 6px 20px rgba(232,96,76,.38);
+    transition: background 0.15s;
+  }
+  .sticky-btn:hover,
+  .sticky-btn:active {
+    background: var(--clay-dk, #c94d3a);
+  }
+  .sticky-sub {
+    font-family: var(--font-sans, 'Sora', system-ui, sans-serif);
+    font-size: 11px;
+    color: var(--light, #9b9189);
+    text-align: center;
+    margin: 0;
+  }
+}
+</style>
