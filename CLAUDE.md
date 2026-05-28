@@ -83,6 +83,7 @@ All three steps completed — outputs in `docs/research/` and `data/competitors.
 - `skills/framework-pdb.md` — Problem→Diagnosis→Bridge; diagnostic content for scam-recovery + comparison pages
 
 #### SEO & Content Skills
+- `skills/cag-seo-master-checklist.md` — **MASTER SEO EXECUTION GUIDE (v2.0): 4-phase workflow — Phase 1: Pre-Build Research (competitor analysis, keyword fan-out, 150+ entity research) → Phase 2: Planning Gate (Rule 51 outline approval) → Phase 3: Build (section-by-section writing with 5-tier form, 50+ internal links, 50+ external links) → Phase 4: Optimization + QA (meta 4-tone system, schema, voice search, 15-point QA checklist); applies to all pages EXCEPT location pages and comparison pages; includes homepage keyword strategy ("African Grey Parrot Breeder" primary + multi-cluster), Internal Linking Library (Appendix A), example execution, and full term conversion table (dog→CAG); invoke via Skill tool BEFORE starting any page build**
 - `skills/grill-me.md` — pre-session context builder; extracts SESSION CONTEXT before any page build; run before `@cag-content-audit-agent`
 - `skills/cag-branded-search-skill.md` — branded query optimization; /why-choose-cag/ + /african-grey-reviews/ page specs; ReviewAggregateSchema; counter snippets; Contextual Intelligence for local SEO; CITES framing in all branded content
 - `skills/keyword-cluster.md` — groups keywords into primary/secondary/LSI/long-tail/PAA tiers
