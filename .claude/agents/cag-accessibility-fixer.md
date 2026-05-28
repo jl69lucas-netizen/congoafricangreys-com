@@ -1,8 +1,10 @@
 ---
 name: cag-accessibility-fixer
 description: Audits CAG pages in site/content/ for WCAG 2.1 AA compliance. Checks skip links, ARIA labels, focus states, keyboard navigation, color contrast, heading order, and alt text. Produces a prioritized fix list with exact HTML changes for each page. Run after any page rebuild or as a quarterly health check.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

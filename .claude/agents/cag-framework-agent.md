@@ -1,8 +1,10 @@
 ---
 name: cag-framework-agent
 description: Deep-dives competitor pages for any CAG keyword and extracts what they do well, what they miss, and what CongoAfricanGreys.com can do better. Reads competitor pages via Firecrawl MCP (Playwright MCP fallback). Outputs a competitive gap analysis and content differentiation blueprint.
-model: claude-opus-4-7
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
+model: claude-opus-4-8
+effort: max
+dynamic_workflow: false
 ---
 
 ## Golden Rule

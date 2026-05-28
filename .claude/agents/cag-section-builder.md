@@ -1,8 +1,10 @@
 ---
 name: cag-section-builder
 description: Builds individual HTML sections for CAG pages using the CAG design system. Takes a section type + content inputs and returns a ready-to-paste HTML block. Section types — hero, features, faq, cta, testimonials, comparison-table, price-card, jump_link, counter_snippet, toc, cites-trust-bar. Called by all page builder agents.
-model: claude-opus-4-7
 tools: [Read, Write, Bash]
+model: claude-opus-4-7
+effort: high
+dynamic_workflow: false
 ---
 
 ## Golden Rule

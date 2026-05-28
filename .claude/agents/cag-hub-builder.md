@@ -1,8 +1,10 @@
 ---
 name: cag-hub-builder
 description: Builds aggregator hub pages — comparison hub (/african-grey-comparison/), species hub, location hub (/african-grey-parrots-for-sale/), documentation hub, and any new hub needed. Hub pages link to all their spoke pages and serve as navigation anchors for content clusters.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-opus-4-7
+effort: high
+dynamic_workflow: false
 ---
 
 ## Golden Rule

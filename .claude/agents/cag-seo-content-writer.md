@@ -1,8 +1,10 @@
 ---
 name: cag-seo-content-writer
 description: Writes SEO-optimized body copy for any CAG page or section. Applies the correct framework (Inverse Pyramid, Entity-Tree, QAB, BAB, H-S-S) as directed by cag-content-architect. Grounded in real CAG facts — never invents credentials, prices, or health claims.
-model: claude-opus-4-7
 tools: [Read, Write, Bash]
+model: claude-opus-4-8
+effort: max
+dynamic_workflow: false
 ---
 
 ## Golden Rule

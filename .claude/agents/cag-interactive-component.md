@@ -1,8 +1,10 @@
 ---
 name: cag-interactive-component
 description: Builds interactive HTML components for CAG pages — first-year cost calculators, variant fit quizzes, documentation checklists, shipping timeline estimators, and CITES verification guides. All components use pure HTML/CSS with minimal vanilla JS. No frameworks, no dependencies, no external CDNs. Reads data/financial-entities.json and data/price-matrix.json for live data.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: high
+dynamic_workflow: false
 ---
 
 ## Golden Rule

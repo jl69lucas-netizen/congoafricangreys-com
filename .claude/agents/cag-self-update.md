@@ -1,8 +1,10 @@
 ---
 name: cag-self-update
 description: Self-update agent for CongoAfricanGreys.com
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash, WebFetch, WebSearch]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

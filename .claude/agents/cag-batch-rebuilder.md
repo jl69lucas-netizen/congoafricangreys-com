@@ -1,8 +1,10 @@
 ---
 name: cag-batch-rebuilder
 description: Coordinates batch page rebuilds across multiple pages simultaneously using CLAUDE_CODE_FORK_SUBAGENT=1. Delegates each page to its specialist agent in parallel. Tracks completion, merges results, and runs final deploy + IndexNow submission. Reads data/locations.json for location batches.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: true
 ---
 
 ## Golden Rule

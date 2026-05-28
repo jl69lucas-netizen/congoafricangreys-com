@@ -1,8 +1,10 @@
 ---
 name: cag-branded-search-monitor-agent
 description: Monitors branded search queries for "CongoAfricanGreys", "congoafricangreys.com", and breeder name variants in Google Search Console GSC exports. Tracks branded impressions and CTR trends weekly, flags when branded search drops more than 20%, and proposes content responses. Run weekly alongside cag-rank-tracker.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

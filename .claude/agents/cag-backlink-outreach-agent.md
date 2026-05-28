@@ -1,8 +1,10 @@
 ---
 name: cag-backlink-outreach-agent
 description: Identifies and pursues backlink opportunities for CongoAfricanGreys.com beyond directory submissions. Targets resource page inclusions (parrot ownership guides, African Grey care articles), guest post opportunities (bird blogs, exotic pet sites), and local citation outreach. Uses Playwright CLI to research opportunities and generates outreach email templates. Never sends emails autonomously — all outreach requires manual execution.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

@@ -1,8 +1,10 @@
 ---
 name: cag-structure-architect
 description: The CAG Silo Architect — maps content clusters into Silo (top-down authority) or Reverse Silo (bottom-up ranking) structures. Scans competitor URL patterns via Playwright CLI. Generates data/structure.json manifest consumed by cag-content-architect, location-builder, and internal-link-agent. Ensures every page is ≤3 clicks from homepage and link equity flows to money pages.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-opus-4-8
+effort: max
+dynamic_workflow: true
 ---
 
 ## Golden Rule
