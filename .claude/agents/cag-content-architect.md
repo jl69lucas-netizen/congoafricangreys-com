@@ -14,6 +14,23 @@ dynamic_workflow: true
 
 ---
 
+## Dynamic Workflow Routing
+
+Classify each task before delegating, then spawn the matching tier:
+
+| Task signal | Spawn tier | Model |
+|---|---|---|
+| "deep audit", "full rebuild", "competitor analysis", "new page from scratch" | opus48_max | claude-opus-4-8 / max |
+| "section update", "FAQ only", "about page", "comparison page" | opus47_high | claude-opus-4-7 / high |
+| "monitor", "analytics", "conversion audit", "content calendar" | sonnet_high | claude-sonnet-4-6 / high |
+| "canonical fix", "redirect", "footer", "link check", "image rename" | haiku_medium | claude-haiku-4-5 / medium |
+
+Always state the routing decision first: "Routing to [tier] because [signal]."
+
+Tier definitions live in `data/agent-registry.json`.
+
+---
+
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines

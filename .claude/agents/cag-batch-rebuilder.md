@@ -14,6 +14,18 @@ dynamic_workflow: true
 
 ---
 
+## Dynamic Batch Routing
+
+When forking parallel subagents (CLAUDE_CODE_FORK_SUBAGENT=1), match each page job to the right tier:
+
+- Full location/page builds → `cag-location-builder` (opus48_max — claude-opus-4-8 / max)
+- Section-only updates → `cag-section-builder` (opus47_high — claude-opus-4-7 / high)
+- Technical fixes (canonical, footer, redirect, links) → matching haiku_medium agent (claude-haiku-4-5 / medium)
+
+State the routing decision for each batch before forking. Tier definitions live in `data/agent-registry.json`.
+
+---
+
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
