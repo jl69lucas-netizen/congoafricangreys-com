@@ -430,6 +430,87 @@ All HTML/CSS infographics built for CAG pages MUST use these `max-width` values 
 
 ---
 
+## Category J — Execution Standards
+
+**Rule 55 — Competitor Analysis Output Format**
+Every competitor analysis must be delivered as a structured markdown report covering:
+- URL, word count, complete H2 topic list, primary keywords used
+- Special elements present (calculators, quizzes, newsletters, comparison tables, video)
+- Unique angles and ICP (ideal customer profile) they target
+- Specific weaknesses CAG can exploit
+- "How to outrank them" strategy with 3–5 concrete actions
+Output format: markdown table + gap matrix + outranking strategy summary.
+Minimum 8 competitors per page: top 3 Google + top 3 Bing + 2 specialized aviaries + 1 authority site (World Parrot Trust or AAV).
+
+**Rule 56 — 10-Category Keyword Fan-Out (MANDATORY Pre-Write)**
+Every page requires keyword fan-out across all 10 categories BEFORE writing any section:
+1. Transactional (Bottom-Funnel) — buy, for sale, available, pricing
+2. Long-Tail Conversational (6+ words) — natural questions, search intent phrases
+3. Voice Search Optimized — How, What, Are, Can, Is, Do questions
+4. Problem-Solution — fear resolution, outcome-driven phrases
+5. Comparison — Congo vs Timneh, CAG vs Macaw, captive-bred vs wild-caught
+6. Geographic/Local — cities, states, airport codes, nationwide delivery
+7. LSI (Latent Semantic Indexing) — synonyms, related topic terms
+8. NLP (Natural Language Processing) — semantic meaning clusters
+9. Branded — C.A.Gs, Mark & Teri Benjamin, Midland TX, CongoAfricanGreys.com
+10. Review/Testimonial — trust and social proof queries
+Minimum 15–20 keywords per category = 150–200 total keyword variations per page.
+Full fan-out template: `skills/cag-seo-master-checklist.md` Phase 1 Step 3.
+
+**Rule 57 — 150+ Entity Requirement**
+Every full-length page (22+ sections) requires 150+ named entities across 6 categories:
+1. **People Entities (10+):** Mark Benjamin, Teri Benjamin, Dr. Irene Pepperberg, Sally Blanchard, Dr. Sarah Walsh DVM
+2. **Location Entities (80+):** Midland TX + nationwide cities + airport codes (DEN, LAX, MIA, ORD, JFK, PHX)
+3. **Medical/Health Entities (40+):** PBFD, Avian Polyomavirus (APV), Psittacosis, Bornavirus, Hypocalcemia, Aspergillosis, Feather Destructive Behavior
+4. **Brand/Product Entities (20+):** Harrison's Bird Foods, ZuPreem, Roudybush, Tops Parrot Food, Avian Biotech DNA Testing
+5. **Statistical Entities (20+):** 500+ birds placed since 2014, 40–60 year lifespan, 400–500g adult weight, $1,500–$3,500 CAG / $1,200–$2,500 TAG
+6. **Credential/Certification Entities (15+):** CITES Appendix II, USDA AWA License, AFA Registered Aviary, IATA-approved shipping, AAV (Association of Avian Veterinarians)
+Entity density target: 8–12 entities per 100 words (naturally integrated — never forced or listed robotically).
+
+**Rule 58 — 3 Anchor Text Strategies**
+All pages must use all three anchor text types across internal links:
+1. **Exact Match** — anchor text = target page's exact primary keyword; use sparingly (1–2 per page) for hub/category pages
+2. **Conversational/Descriptive** — longer phrase that describes the destination naturally within a sentence; Google's preferred NLP pattern; use for most links
+3. **Branded** — "C.A.Gs", "Mark & Teri Benjamin's aviary", "CongoAfricanGreys.com"; builds brand authority
+Never repeat the same anchor text twice on a page. Position all internal links at the BEGINNING or MIDDLE of sentences/paragraphs — never at the END of a sentence or paragraph.
+
+**Rule 59 — 5-Tier Section Creation Form**
+Every section of a 22+ section page must complete the 5-tier form BEFORE writing copy:
+- **Tier 1:** Section number + title, target word count (min/max), primary keywords (3–5 with frequency targets)
+- **Tier 2:** Content angle (Transactional / Comparison / E-E-A-T / Blended), conversational opening (75–100 words, framework-matched), H2/H3/H4/H5/H6 header structure
+- **Tier 3:** Internal links (5–8 per section, varied anchor text), external authority links (1–2 per section)
+- **Tier 4:** Geographic/local entities (3–5 per section), authority entities (1–2 per section), trust signals (2–3 per section)
+- **Tier 5:** Special elements checklist, image requirements, CTA placement, final QA checklist (15 items)
+Full form template: `skills/cag-seo-master-checklist.md` Phase 3 Step 7.
+
+**Rule 60 — 4-Part Content Delivery Format**
+Every full-length page build delivers 4 documents as separate outputs:
+1. **Competitor Analysis Report** — 8–12 competitors, gap matrix, outranking strategy
+2. **Complete Page Content** — full markdown with anchor tags, all 22+ sections
+3. **SEO Metadata Sheet** — 3 meta title options (4-tone system), 3 meta descriptions, keyword list (primary + secondary + LSI), schema recommendations
+4. **Linking Strategy Map** — complete internal link source→target table, external authority link catalog by category
+
+**Rule 61 — Phone Number Policy (CRITICAL)**
+Phone number `402-696-0317` MUST appear ONLY in:
+- `src/components/Footer.astro` (footer display — `tel:4026960317`)
+- Organization schema telephone field in `src/components/Schema.astro` (E.164: `+14026960317`)
+- Individual page Organization schema blocks where a `telephone` field exists
+Phone MUST NOT appear in:
+- Hero sections, body copy, CTA buttons, mid-page contact sections, or any page content
+All body CTAs must point to the inquiry FORM at `/contact-us/` for trackable lead generation.
+Acceptable CTA patterns:
+- `👉 <a href="/contact-us/">Submit an inquiry</a> — we respond within 24 hours`
+- `<a href="/contact-us/" class="cag-btn-primary">Inquire About a Bird</a>`
+Phone calls cannot be attributed to specific pages in GA4; form submissions can. This is the tracking foundation.
+
+**Rule 62 — Internal Linking Library**
+The canonical CAG internal URL list is maintained in `skills/cag-seo-master-checklist.md` Appendix A.
+Consult this list BEFORE writing internal links for any page.
+Never invent internal URLs — only link to pages that exist in `src/pages/` or are confirmed in `data/structure.json`.
+All internal links must use the relative path format: `/slug/` (with trailing slash).
+
+---
+
 ## Quick Reference — GSC Priority Pages (2026-04-28)
 
 | Page | Impressions | CTR | Position | Action |
