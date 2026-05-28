@@ -159,6 +159,38 @@ echo "=== SESSIONS ===" && ls -lt sessions/ 2>/dev/null | head -10 || echo "⚠�
 
 ---
 
+### Check 9 — 2026-05-27 New Rules Compliance
+
+Verify all agents comply with Rules 55-62 and IMAGE-01-04 added on 2026-05-27:
+
+```bash
+# Check 1: Page builder agents must reference data/image-specs.json in startup
+echo "=== image-specs.json startup reads ==="
+for f in cag-location-builder cag-homepage-builder cag-blog-post-agent cag-species-guide-builder cag-comparison-builder cag-image-pipeline cag-content-architect cag-seo-content-writer; do
+  grep -q "image-specs" .claude/agents/$f.md && echo "✅ $f" || echo "❌ MISSING image-specs: $f"
+done
+
+# Check 2: cag-content-architect and cag-seo-content-writer must reference seo-master-checklist
+echo "=== seo-master-checklist references ==="
+for f in cag-content-architect cag-seo-content-writer; do
+  grep -q "seo-master-checklist" .claude/agents/$f.md && echo "✅ $f" || echo "❌ MISSING seo-master-checklist: $f"
+done
+
+# Check 3: cag-keyword-verifier must have Rules 55-62 compliance block
+echo "=== Rules 55-62 in keyword-verifier ==="
+grep -q "Rules 55-62\|Rule 55" .claude/agents/cag-keyword-verifier.md && echo "✅ cag-keyword-verifier" || echo "❌ MISSING Rules 55-62 block: cag-keyword-verifier"
+
+# Check 4: No agent should reference old infographic height 300-350px
+echo "=== Old infographic height references (should be zero) ==="
+grep -rn "300–350px\|300-350px" .claude/agents/ docs/reference/ 2>/dev/null && echo "❌ Old height still present — update to 400px" || echo "✅ No 300-350px height references found"
+
+# Check 5: Rule 61 — no phone numbers in body copy of page agents
+echo "=== Rule 61 phone number policy ==="
+grep -q "Rule 61\|phone number\|402-696" .claude/agents/cag-keyword-verifier.md && echo "✅ cag-keyword-verifier has Rule 61 check" || echo "❌ MISSING Rule 61 check in cag-keyword-verifier"
+```
+
+---
+
 ## Audit Report Format
 
 After all checks complete, produce a report in this format:
@@ -172,7 +204,7 @@ Auditor: cag-agent-system-qa
 - Agents on disk: [X]
 - Skills on disk: [X]
 - Binary skill files (need re-export): [X]
-- Checks run: 8
+- Checks run: 9
 - Total failures: [X]
 
 ## Check Results
@@ -187,6 +219,7 @@ Auditor: cag-agent-system-qa
 | 6 — CLAUDE.md Registry | ✅ / ❌ | [n] |
 | 7 — Staging Hygiene | ✅ / ❌ | [n] |
 | 8 — Sessions Dir | ✅ / ❌ | [n] |
+| 9 — 2026-05-27 Rules Compliance | ✅ / ❌ | [n] |
 
 ## Failures — Action Required
 
@@ -228,7 +261,7 @@ This agent should be run:
 
 ## Rules
 
-1. **Run all 8 checks before reporting** — partial audits hide failures
+1. **Run all 9 checks before reporting** — partial audits hide failures
 2. **Show evidence before claims** — every pass/fail backed by bash output
 3. **Binary files are warnings, not errors** — they can't be patched as markdown
 4. **Never auto-deploy** — QA agent reads and reports; it does not trigger builds

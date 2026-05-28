@@ -42,7 +42,8 @@ The reference template is the Florida page — 22 sections, state-specific conte
 2. **Read** `docs/reference/seo-rules.md` — what you must never change
 3. **Read** `data/price-matrix.json` — all pricing (never hardcode)
 4. **Read** `data/locations.json` — live states, slugs, variants per state
-5. **Ask user:** "Single page or batch build? If single — which state?"
+5. **Read** `data/image-specs.json` — image source type, dimensions, and infographic widths for this page type (page type: "location_page")
+6. **Ask user:** "Single page or batch build? If single — which state?"
 
 For single mode: also read the existing page if it already exists:
 ```bash

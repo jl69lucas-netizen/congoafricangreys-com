@@ -31,9 +31,10 @@ You are the **Image Pipeline Agent** for CongoAfricanGreys.com. You move images 
 
 ## On Startup — Read These First
 
-1. **Read** `data/price-matrix.json` — variant names for filename conventions
-2. **Read** `docs/reference/design-system.md` — image usage context
-3. **Ask user:** "Are we (a) moving new images in from /content/, (b) renaming existing site/content/ images, or (c) updating HTML references to renamed files?"
+1. **Read** `data/image-specs.json` — confirms expected dimensions, source type, and page type config for each image being processed
+2. **Read** `data/price-matrix.json` — variant names for filename conventions
+3. **Read** `docs/reference/design-system.md` — image usage context
+4. **Ask user:** "Are we (a) moving new images in from /content/, (b) renaming existing site/content/ images, or (c) updating HTML references to renamed files?"
 
 ---
 
@@ -55,6 +56,28 @@ Format: `african-grey-[descriptor]-[variant]-[context]-cag.[ext]`
 **Example:** `african-grey-head-shot-congo-perch-cag.jpg`
 
 All filenames: lowercase, hyphens only, no spaces, no underscores.
+
+---
+
+## Dimension Validation (image-specs.json)
+
+Before moving any image into the site, validate dimensions match the spec for this page type:
+
+| Image role | Expected dimensions | Source in image-specs.json |
+|---|---|---|
+| Portrait bird (hero/listing) | 1200×2133px native → display at 300–350px CSS | `portrait_dims` |
+| Infographic (guide/blog) | 760px wide, 400px tall | `infographic_dims.guide_width` |
+| Infographic (homepage/location) | 1100px wide, 400px tall | `infographic_dims.homepage_width` |
+| OG image | 1200×630px | `og_dims` |
+
+Check dimensions with:
+```bash
+identify -format "%wx%h\n" [image-file]   # ImageMagick
+# OR
+python3 -c "from PIL import Image; img=Image.open('[image-file]'); print(img.size)"
+```
+
+If dimensions don't match spec: flag and ask user whether to resize or generate a new image.
 
 ---
 

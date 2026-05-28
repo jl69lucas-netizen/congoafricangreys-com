@@ -164,6 +164,15 @@ Step 5: cag-content-architect
    → Passes question set to cag-faq-agent
    → Target: Position 0 + AIO citation
 
+3.5. cag-seo-master-checklist skill  ← INVOKE BEFORE WRITING BEGINS
+   → Skills path: skills/cag-seo-master-checklist.md
+   → Phase 1: Competitor analysis (8+ competitors) + 10-category keyword fan-out (150–200 variants) + 150+ entity research
+   → Phase 2: Page Outline Gate (Rule 51 — FULL STOP until outline approved)
+   → Phase 3: 5-Tier Section Creation Form for each section (Rule 59)
+   → Phase 4: 4-Part Delivery Format output (Rule 60)
+   → Also defines: 3 anchor text strategies (Rule 58), Internal Linking Library (Rule 62 + Appendix A)
+   → Reads: data/image-specs.json for image/infographic placement per page type
+
 4A. cag-seo-content-writer [for standard optimization]
     → Writes SEO-optimized body copy
     → Uses framework assigned in Sprint 1
@@ -187,8 +196,10 @@ Step 5: cag-content-architect
    → Called by all page builder agents
 
 7. cag-infographic-builder [if visual reinforcement needed]
-   → 300–350px HTML/CSS infographics
-   → Types: Comparison / Feature Grid / Process Flow
+   → Reads data/image-specs.json FIRST — confirms image type, width, and source for this page type
+   → HTML/CSS infographics: 400px height fixed (desktop), auto (mobile)
+   → Width: 760px for guides/blogs/care pages · 1100px for homepage/location/hero sections
+   → Types: Comparison / Feature Grid / Process Flow / AI-Generated (Type 4) / Higgsfield MCP (Type 5)
 
 8. cag-interactive-component [if calculator/quiz/checklist needed]
    → Pure HTML/CSS + minimal vanilla JS
@@ -309,6 +320,16 @@ AEO/GEO GATE — RUN IN THIS ORDER:
 
 5. cag-infographic-builder [if section needs visual reinforcement]
    → Comparisons, flag lists, benefit grids, process steps
+
+6. Rules 55-62 Compliance Check (seo-rules.md)
+   → Rule 55: Competitor analysis output — 8+ competitors, gap matrix, outranking strategy present
+   → Rule 56: 10-category keyword fan-out documented (150–200 keyword variants)
+   → Rule 57: 150+ entity mentions verified (people, locations, medical, brands, credentials)
+   → Rule 58: 3 anchor text strategies used — exact match, conversational, branded (never repeat same anchor)
+   → Rule 59: 5-Tier Section Creation Form completed for all sections
+   → Rule 60: 4-Part Content Delivery Format present in output
+   → Rule 61: Phone number (402-696-0317) appears ONLY in footer/schema — not in body copy
+   → Rule 62: Internal links use Appendix A canonical URLs from skills/cag-seo-master-checklist.md
 ```
 
 ### AEO/GEO Schema Checklist (verify presence before deploy)
@@ -323,6 +344,10 @@ AEO/GEO GATE — RUN IN THIS ORDER:
 ☐ LocalBusiness schema on all location pages
 ☐ VideoObject schema if YouTube video embedded (cag-video-seo-agent)
 ☐ No language implying wild-caught origin (CITES check)
+☐ IMAGE-01: All images have alt text ≥250 characters (descriptive + keyword + context)
+☐ IMAGE-02: Featured/hero images have 300+ word image description block in page copy
+☐ IMAGE-03: Infographic widths match page type (760px for guides · 1100px for homepage/location pages)
+☐ IMAGE-04: OG image (og:image) is 1200×630px — separate from portrait bird images
 ```
 
 ### LLM Visibility Probe (run after page goes live)
@@ -512,6 +537,7 @@ START: What are you trying to do?
 | `data/competitor-prices.json` | competitor-pricing-alert-agent | (reporting) | Weekly |
 | `data/seasonal-calendar.json` | seasonal-content-agent | seasonal-content-agent | Annual |
 | `data/backlink-tracker.json` | backlink-outreach-agent | (reporting) | Post-outreach |
+| `data/image-specs.json` | Manual (design system updates) | cag-image-generation (skill), cag-infographic-builder, cag-image-pipeline, cag-location-builder, cag-homepage-builder, cag-blog-post-agent, cag-species-guide-builder, cag-comparison-builder | As-needed (design system changes) |
 | `docs/reference/top-pages.md` | gsc-analytics, llm-keyword-intel | Most agents (traffic context) | Monthly |
 
 ---
@@ -574,3 +600,5 @@ Before building any new page, check `docs/reference/page-inventory.md` to confir
 - No existing page already covers this topic at a different URL
 - If URLs will differ from what's linked, add a redirect BEFORE building the page
 10. **Data Files Are Truth** — Never fabricate data. All claims come from: data files, GSC CSV exports, real page fetches, or direct breeder input.
+11. **Phone Number Policy (Rule 61)** — Phone number 402-696-0317 appears ONLY in the footer and schema markup. All body copy CTAs must link to `/contact-us/` form — never display or link a phone number in page body content.
+12. **Image-Specs Lookup Required** — Before any image generation or infographic creation, read `data/image-specs.json` to confirm the correct image source type, dimensions, and placement for the current page type.
