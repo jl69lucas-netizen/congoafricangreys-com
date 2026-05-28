@@ -70,6 +70,9 @@ All three steps completed — outputs in `docs/research/` and `data/competitors.
 
 ## Phase 2 — Full Agent System (Active)
 
+### Model Tiers
+All 65 agents are assigned to a 4-tier model system (Opus 4.8 / Opus 4.7 / Sonnet 4.6 / Haiku 4.5) with per-tier effort levels, driven by `data/agent-registry.json`. Each agent's frontmatter carries `model:`, `effort:`, `dynamic_workflow:`. See `docs/reference/WORKFLOW.md §Model Tier System`. Dynamic Workflow routing is active on the 3 orchestrators (content-architect, structure-architect, batch-rebuilder). To change models site-wide: edit the registry → `python3 scripts/apply_model_tiers.py` → `bash scripts/verify_model_tiers.sh`.
+
 ### Skills
 
 #### Framework Reference Skills
