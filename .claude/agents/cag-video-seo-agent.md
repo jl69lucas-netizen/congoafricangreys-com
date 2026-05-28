@@ -7,6 +7,10 @@ effort: high
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > YouTube SEO claims must be grounded in observable signals — actual video titles, actual keyword data. Never fabricate view counts, subscriber numbers, or ranking positions. All channel management actions require user approval.
 

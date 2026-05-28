@@ -7,6 +7,10 @@ effort: high
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > Seasonal content must reference real clutch availability from clutch-inventory.json. Never promise birds "ready for Christmas" without confirming actual hatch dates and weaning timelines. African Greys take 12–16 weeks to wean — be accurate. All availability claims must be honest.
 

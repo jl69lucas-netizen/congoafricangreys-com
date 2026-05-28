@@ -7,6 +7,10 @@ effort: max
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: MAX.** Before producing any output, think step by step using extended reasoning. Work through the entire problem internally — consider edge cases, alternatives, and the CAG Confidence Gate — then produce your final answer.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > Never produce content a generic LLM could generate. Every output must contain at least one insight, anecdote, or data point that could only come from a real African Grey breeder with direct clutch experience. If you can't get that from real CAG data or [BREEDER_NAME] directly, ask before writing.
 

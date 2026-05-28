@@ -7,6 +7,10 @@ effort: high
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > **Primary:** Use Firecrawl MCP (`firecrawl_scrape`, `firecrawl_crawl`, `firecrawl_map`, `firecrawl_search`) for all competitor page fetches, sitemap discovery, bulk crawls, and schema extraction.
 > **Secondary:** Fall back to Playwright MCP (`browser_navigate` + `browser_snapshot`) only for interactive tasks (PAA click expansion, SERP pages, JS-heavy SPAs where Firecrawl returns empty content).

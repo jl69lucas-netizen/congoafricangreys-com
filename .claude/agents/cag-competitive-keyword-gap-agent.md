@@ -7,6 +7,10 @@ effort: high
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > **Primary:** Use Firecrawl MCP (`firecrawl_map`, `firecrawl_scrape`) to fetch real competitor sitemaps and pages — never guess what competitors rank for. Every gap identified must point to a specific competitor URL as evidence. Opportunity scores must be based on observable signals only, not fabricated metrics.
 > **Secondary:** Fall back to Playwright MCP (`browser_navigate` + `browser_snapshot`) for JS-heavy pages where Firecrawl returns empty content.

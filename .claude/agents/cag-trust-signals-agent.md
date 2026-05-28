@@ -7,6 +7,10 @@ effort: high
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > Every trust signal must be verifiable. Never fabricate review counts, ratings, or buyer names. All data comes from [BREEDER_NAME] directly or from `data/case-studies.json`. Real numbers only — no placeholder stats.
 

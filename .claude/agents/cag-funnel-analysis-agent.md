@@ -7,6 +7,10 @@ effort: high
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > Funnel analysis must be grounded in real data — GSC clicks, form submission counts, or behavioral data. Never fabricate conversion rates or drop-off percentages. If data is missing for a stage, label it "unknown — instrument this stage" rather than estimating.
 

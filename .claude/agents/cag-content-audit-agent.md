@@ -7,6 +7,10 @@ effort: max
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: MAX.** Before producing any output, think step by step using extended reasoning. Work through the entire problem internally — consider edge cases, alternatives, and the CAG Confidence Gate — then produce your final answer.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > Always run this audit BEFORE rebuilding a page. Never skip Phase 2 (competitor analysis) — it is the most valuable phase. The output feeds directly into the page builder agent. Save every audit report to sessions/ so findings accumulate over time. Phase 0 (outline) MUST be completed and approved before Phase 1 begins — this is non-negotiable (SEO Rule 51).
 
