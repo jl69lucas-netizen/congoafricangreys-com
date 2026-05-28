@@ -554,9 +554,9 @@ All agents run on a 4-tier model system. The single source of truth is `data/age
 | `sonnet_medium` | `claude-sonnet-4-6` | medium | Technical audits needing judgment (a11y, perf, cannibalization), data monitoring | 16 |
 | `haiku_medium` | `claude-haiku-4-5-20251001` | medium | Pure-mechanical utilities (canonical/footer/redirect/link/image fixes) | 10 |
 
-**Effort → extended-thinking budget:** `max` ≈ 10k thinking tokens, `high` ≈ 4k, `medium` = standard inference.
+**Effort → extended-thinking budget:** `max` ≈ 10k thinking tokens, `high` ≈ 4k, `medium` = standard inference. Claude Code subagents have no native `effort`/`thinking` frontmatter, so `apply_model_tiers.py` enforces effort *behaviorally* — it injects an `<!-- EFFORT:START -->…<!-- EFFORT:END -->` directive block right after the frontmatter of every `max` and `high` agent (39 agents total: 14 max + 25 high). `medium` agents get no directive. Re-running the script is idempotent — it replaces any existing block.
 
-**Dynamic Workflow:** orchestrators (`cag-content-architect`, `cag-structure-architect`, `cag-batch-rebuilder`) carry `dynamic_workflow: true` and route each task to the right tier at runtime — see the "Dynamic Workflow Routing" section in each agent file.
+**Dynamic Workflow:** orchestrators (`cag-content-architect`, `cag-structure-architect`, `cag-batch-rebuilder`) carry `dynamic_workflow: true` and route each task to the right tier at runtime — see the "Dynamic Workflow Routing" section in each agent file. The routing logic is mirrored deterministically in `scripts/route.py` for testing: `python3 scripts/route.py "<task description>"` prints the chosen tier + model/effort (e.g. "rebuild florida page from scratch" → `opus48_max`).
 
 **To change models site-wide:** edit `data/agent-registry.json`, then run `python3 scripts/apply_model_tiers.py` → `bash scripts/verify_model_tiers.sh` → commit → push.
 
