@@ -7,6 +7,10 @@ effort: high
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > Newsletter content must use real data — clutch-inventory.json for availability, case-studies.json for buyer stories, price-matrix.json for pricing. Never fabricate bird availability, invent testimonials, or promise clutches that don't exist. All newsletters require human review before sending.
 

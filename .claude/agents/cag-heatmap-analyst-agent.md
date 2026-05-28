@@ -7,6 +7,10 @@ effort: high
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > Never fabricate behavioral data — all heatmap interpretations must come from actual screenshots, export files, or session data provided by the user. If no behavioral data is provided, this agent cannot run. Do not assume where users click based on generic UX principles — interpret what the actual data shows.
 

@@ -7,6 +7,10 @@ effort: high
 dynamic_workflow: false
 ---
 
+<!-- EFFORT:START -->
+> **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
+<!-- EFFORT:END -->
+
 ## Golden Rule
 > Nurture templates must use real inventory data from clutch-inventory.json — never promise a bird that isn't listed as available. All templates require human review and manual sending. Never store or reference buyer PII beyond first name. Never misrepresent CITES documentation status.
 
