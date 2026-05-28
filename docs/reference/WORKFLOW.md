@@ -542,12 +542,23 @@ START: What are you trying to do?
 
 ---
 
-## Quick Reference: Model Assignments
+## Model Tier System
 
-| Model | Agents | Why |
-|-------|--------|-----|
-| `claude-opus-4-7` | content-architect, all page builders, content writers, faq-agent, comparison-builder, financial-strategist, variant-specialist, scam-specialist, email-lead-nurture | Complex writing, framework selection, long-form content |
-| `claude-sonnet-4-6` | All monitoring agents, technical agents, data agents, section-builder components | Speed-sensitive, structured output, audits |
+All agents run on a 4-tier model system. The single source of truth is `data/agent-registry.json`. Each agent's frontmatter carries `model:`, `effort:`, and `dynamic_workflow:` fields written from that registry.
+
+| Tier | Model | Effort | Use For | Count |
+|---|---|---|---|---|
+| `opus48_max` | `claude-opus-4-8` | max | Orchestrators, deep creative, competitor intelligence, high-traffic builds | 14 |
+| `opus47_high` | `claude-opus-4-7` | high | Specialist page builders, narrative/schema content | 10 |
+| `sonnet_high` | `claude-sonnet-4-6` | high | SEO monitoring, analytics, conversion audits, content calendars | 15 |
+| `sonnet_medium` | `claude-sonnet-4-6` | medium | Technical audits needing judgment (a11y, perf, cannibalization), data monitoring | 16 |
+| `haiku_medium` | `claude-haiku-4-5-20251001` | medium | Pure-mechanical utilities (canonical/footer/redirect/link/image fixes) | 10 |
+
+**Effort → extended-thinking budget:** `max` ≈ 10k thinking tokens, `high` ≈ 4k, `medium` = standard inference.
+
+**Dynamic Workflow:** orchestrators (`cag-content-architect`, `cag-structure-architect`, `cag-batch-rebuilder`) carry `dynamic_workflow: true` and route each task to the right tier at runtime — see the "Dynamic Workflow Routing" section in each agent file.
+
+**To change models site-wide:** edit `data/agent-registry.json`, then run `python3 scripts/apply_model_tiers.py` → `bash scripts/verify_model_tiers.sh` → commit → push.
 
 ---
 
