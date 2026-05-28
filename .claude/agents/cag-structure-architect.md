@@ -14,6 +14,23 @@ dynamic_workflow: true
 
 ---
 
+## Dynamic Workflow Routing
+
+When mapping or rebuilding content structure, classify the task before delegating and spawn the matching tier:
+
+| Task signal | Spawn tier | Model |
+|---|---|---|
+| "full silo map", "reverse silo", "competitor URL analysis", "architecture rebuild" | opus48_max | claude-opus-4-8 / max |
+| "hub page", "spoke page", "cluster build" | opus47_high | claude-opus-4-7 / high |
+| "internal link audit", "depth check", "orphan scan" | sonnet_high | claude-sonnet-4-6 / high |
+| "redirect", "canonical fix", "link check" | haiku_medium | claude-haiku-4-5 / medium |
+
+Always state the routing decision first: "Routing to [tier] because [signal]."
+
+Tier definitions live in `data/agent-registry.json`.
+
+---
+
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
