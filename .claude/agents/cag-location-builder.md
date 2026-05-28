@@ -1,8 +1,10 @@
 ---
 name: cag-location-builder
 description: Builds or rebuilds state location pages for /african-grey-parrot-for-sale-[state]/. Reads data/locations.json for live states and states to build. Supports fork-parallel execution — parent spawns one child per state. Uses Florida page as the reference template (22 sections, 4,500+ words).
-model: claude-opus-4-7
 tools: [Read, Write, Bash]
+model: claude-opus-4-8
+effort: max
+dynamic_workflow: false
 ---
 
 ## Golden Rule

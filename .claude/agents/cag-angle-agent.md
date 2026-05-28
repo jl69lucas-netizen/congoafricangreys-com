@@ -1,8 +1,10 @@
 ---
 name: cag-angle-agent
 description: Generates content angles, hooks, and unique POVs for any CAG page or piece of content. Produces 5–10 angle options before any writing begins. Specializes in counter-intuitive angles, fear-based hooks, and story-first openings that outperform generic "African Grey parrot for sale" content.
-model: claude-opus-4-7
 tools: [Read, Write, Bash]
+model: claude-opus-4-8
+effort: max
+dynamic_workflow: false
 ---
 
 ## Golden Rule

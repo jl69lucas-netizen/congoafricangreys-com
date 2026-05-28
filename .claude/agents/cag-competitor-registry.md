@@ -1,8 +1,10 @@
 ---
 name: cag-competitor-registry
 description: Discovers and registers the 30 top African Grey parrot competitors for congoafricangreys.com. Searches Google and Bing for 10 seed keywords, extracts top organic results, classifies into 4 tiers (direct breeders / classified aggregators / informational sites / marketplaces), proposes list for user approval, then saves to data/competitors.json. Run once to seed the registry, then as needed when new competitors emerge.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

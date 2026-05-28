@@ -1,8 +1,10 @@
 ---
 name: cag-paa-agent
 description: Builds People Also Asked (PAA) content for CAG — extracts real PAA questions from Google for any target keyword using Playwright CLI, formats answers for Featured Snippet capture, and feeds the question set to cag-faq-agent for FAQ section integration. Targets position 0 (Featured Snippet) and AIO citation.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

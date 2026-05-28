@@ -1,8 +1,10 @@
 ---
 name: cag-performance-monitor-agent
 description: Runs Lighthouse audits on top CongoAfricanGreys.com pages via Playwright CLI after every deploy and weekly. Tracks LCP, CLS, FCP, and TBT against baselines. Flags any page that regresses below thresholds. Saves reports to sessions/. Recommended to run after any cag-batch-rebuilder job completes.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

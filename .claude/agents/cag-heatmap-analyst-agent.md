@@ -1,8 +1,10 @@
 ---
 name: cag-heatmap-analyst-agent
 description: Interprets behavioral data from heatmap and session recording tools (Hotjar, Microsoft Clarity, FullStory) to identify where African Grey buyers click, scroll, and abandon on CongoAfricanGreys.com pages. Translates behavioral data into specific CTA placement, copy, and layout recommendations. Requires the user to export/share heatmap screenshots or session recording data. Works with cag-conversion-tracker and cag-ab-test-agent.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: high
+dynamic_workflow: false
 ---
 
 ## Golden Rule

@@ -1,8 +1,10 @@
 ---
 name: cag-competitor-intel
 description: Deep multi-metric competitive intelligence agent for congoafricangreys.com. Analyzes any or all 30 competitors from data/competitors.json across 10 metric categories — authority signals, content depth, keyword intelligence, page types, blog analysis, visual assets, schema, geography (22 states), conversion, and technical. Produces individual reports + a master gap matrix. Run @cag-competitor-intel [id] for single competitor or @cag-competitor-intel --all for full sweep.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
+model: claude-opus-4-8
+effort: max
+dynamic_workflow: false
 ---
 
 ## Golden Rule

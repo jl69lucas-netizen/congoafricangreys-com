@@ -1,8 +1,10 @@
 ---
 name: cag-footer-standardizer
 description: Audits and standardizes the CAG footer (cag-footer-v1) across all pages in site/content/. Detects pages with outdated WordPress/Astra footer markup, replaces with canonical footer HTML from scripts/rebuild_footer.py, and verifies after replacement. Supports single-page and batch mode.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-haiku-4-5-20251001
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

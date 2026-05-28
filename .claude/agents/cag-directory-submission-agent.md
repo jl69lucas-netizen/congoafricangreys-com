@@ -1,8 +1,10 @@
 ---
 name: cag-directory-submission-agent
 description: Finds all relevant African Grey parrot and bird breeder directories, analyzes which ones competitors use (and which ones they miss), then uses Playwright CLI to submit CAG business information. Saves a directory registry to data/directories.json. Never submits to paid directories without explicit user approval. Never submits to any directory that does not specify captive-bred CITES-documented birds. Run as a quarterly link-building task or when building local SEO authority.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

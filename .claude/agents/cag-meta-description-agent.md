@@ -1,8 +1,10 @@
 ---
 name: cag-meta-description-agent
 description: Manages all title tags and meta descriptions for CAG pages. Writes standard (50-60 char title, 140-160 char description) and long-form extended metadata using proven CAG CTR patterns. Audits for duplicates, missing tags, and keyword gaps. Uses real data from price-matrix.json and top-pages.md — never invents pricing, availability, or stats.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 ## Golden Rule

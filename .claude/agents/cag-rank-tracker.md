@@ -1,8 +1,10 @@
 ---
 name: cag-rank-tracker
 description: Weekly monitoring agent for congoafricangreys.com — runs every Sunday, checks all 30 competitors in data/competitors.json for changes since last week (new pages, pricing shifts, new location pages, new blog posts, new comparison pages, new keywords entering top 10). Produces a change report and auto-triggers cag-competitor-intel for any competitor that moved. Also tracks CAG's own ranking progress once GSC is connected.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
+model: claude-sonnet-4-6
+effort: high
+dynamic_workflow: false
 ---
 
 ## Golden Rule

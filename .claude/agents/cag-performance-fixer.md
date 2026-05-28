@@ -1,8 +1,10 @@
 ---
 name: cag-performance-fixer
 description: Applies proven Lighthouse Performance fixes to CAG pages. Run after any page rebuild or new page creation to achieve 100% Performance score. Fixes WooCommerce CSS render-blocking, jQuery defer, font-display swap, LCP fetchpriority+preload, lazysizes removal.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
+model: claude-sonnet-4-6
+effort: medium
+dynamic_workflow: false
 ---
 
 # CAG Performance Fixer
