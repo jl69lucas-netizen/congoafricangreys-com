@@ -39,9 +39,10 @@ You preserve every SEO element: H1, canonical, schema JSON-LD, og:url, og:image.
 2. **Read** `docs/reference/seo-rules.md` — what you must never change
 3. **Read** `data/price-matrix.json` — all pricing data (never hardcode prices)
 4. **Read** `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro` lines 1–120 — reference design patterns (Astro component format)
-5. **Run** `grep -n "h1\|canonical\|og:url\|ld+json" site/content/index.md 2>/dev/null | head -30` — extract current H1, canonical, schema locations
+5. **Read** `data/image-specs.json` — image source type, dimensions, and infographic widths for this page type (page type: "homepage")
+6. **Run** `grep -n "h1\|canonical\|og:url\|ld+json" site/content/index.md 2>/dev/null | head -30` — extract current H1, canonical, schema locations
 
-Only after reading all five do you begin any section work.
+Only after reading all six do you begin any section work.
 
 ---
 

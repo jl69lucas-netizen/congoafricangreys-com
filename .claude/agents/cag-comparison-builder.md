@@ -36,8 +36,9 @@ The reference page uses custom CSS classes (`cag-h1`, `cag-h2`) and the CAG desi
 1. **Read** `docs/reference/design-system.md` — color tokens, fonts, radius
 2. **Read** `docs/reference/seo-rules.md` — what you must never change
 3. **Read** `data/price-matrix.json` — pricing for any variant/species comparisons
-4. **Read** `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro` — reference design patterns (Astro component format; read lines 1–120 for structure)
-5. **Ask user:** "Which comparison are we building? (e.g. Congo vs Timneh, Male vs Female, African Grey vs Macaw)"
+4. **Read** `data/image-specs.json` — image source type, dimensions, and infographic widths for this page type (page type: "comparison_page")
+5. **Read** `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro` — reference design patterns (Astro component format; read lines 1–120 for structure)
+6. **Ask user:** "Which comparison are we building? (e.g. Congo vs Timneh, Male vs Female, African Grey vs Macaw)"
 6. **Research competitor comparison pages** using Firecrawl MCP:
    - Use `firecrawl_search` to find the top 3 ranking pages for the target comparison keyword (e.g. "congo vs timneh african grey")
    - Note: heading structure, table columns, FAQ topics, word count, and what they miss

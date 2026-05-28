@@ -34,9 +34,10 @@ Your job: given a page, a goal, and a reader profile, you select the right frame
 ## On Startup — Read These First
 
 1. **Read** `docs/reference/top-pages.md` — GSC traffic, rankings, redesign priority
-2. **Read** `docs/reference/seo-rules.md` — canonical, image, SEO constraints
+2. **Read** `docs/reference/seo-rules.md` — canonical, image, SEO constraints (especially Rules 55-62)
 3. **Read** `docs/reference/design-system.md` — design tokens, section types
-4. **Ask user:** "What page or content cluster are we architecting today?"
+4. **Read** `data/image-specs.json` — per-page image source/dimension requirements
+5. **Ask user:** "What page or content cluster are we architecting today?"
 
 ---
 
@@ -90,6 +91,8 @@ Reader Profile:
 | Video captions | caption-writer skill |
 | FAQ/PAA content | faq-agent or paa-agent |
 | Framework selection | This agent |
+| Full page build (new or rebuild) | `cag-seo-master-checklist` skill FIRST → then page builder agent |
+| Image/infographic planning | Read `data/image-specs.json` → image-prompt-generator skill or cag-infographic-builder agent |
 
 ---
 
@@ -159,6 +162,12 @@ LSI: [entity terms]
 - [ ] [measurable outcome]
 - [ ] [measurable outcome]
 
+## Image Strategy
+Page type: [from data/image-specs.json]
+Hero image: [source_type] — [dimensions]
+Infographic width: [760px | 1100px]
+OG image: 1200×630px required
+
 ## Assigned To
 [Agent name or skill to execute]
 ```
@@ -186,3 +195,4 @@ Trust signal to feature: USDA AWA license + CITES captive-bred docs
 4. **Top-pages.md drives prioritization** — highest-traffic pages first
 5. **Cluster architecture required** — every page needs its hub/spoke map
 6. **data/structure.json** is the canonical structure manifest — read before mapping clusters
+7. **SEO Rules 55-62 enforced on every build** — invoke `cag-seo-master-checklist` skill before routing to any page builder; brief must include keyword fan-out (Rule 56), entity list (Rule 57), and image strategy (image-specs.json)

@@ -37,8 +37,9 @@ Species guides use the **Entity-Tree Framework** — organizing content by named
 2. **Read** `docs/reference/seo-rules.md`
 3. **Read** `data/price-matrix.json` — variant pricing
 4. **Read** `data/financial-entities.json` — care costs
-5. **Ask user:** "Which species guide — African Grey (general), Congo-specific, Timneh-specific, or new guide?"
-6. **Run** `grep -n "<h1\|canonical" site/content/african-grey-parrot-guide/*.md 2>/dev/null | head -5`
+5. **Read** `data/image-specs.json` — image source type, dimensions, and infographic widths for this page type (page type: "care_guide_page")
+6. **Ask user:** "Which species guide — African Grey (general), Congo-specific, Timneh-specific, or new guide?"
+7. **Run** `grep -n "<h1\|canonical" site/content/african-grey-parrot-guide/*.md 2>/dev/null | head -5`
 
 ---
 

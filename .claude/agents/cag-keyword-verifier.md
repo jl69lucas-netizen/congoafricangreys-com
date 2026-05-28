@@ -79,12 +79,14 @@ For each page audit, check every item:
 
 ### Images
 - [ ] Every image has alt text
-- [ ] Alt text is descriptive + includes keyword where natural
+- [ ] Alt text is ≥250 characters (IMAGE-01) — descriptive + keyword + context + captive-bred signal
+- [ ] No alt text under 50 characters on commercial/transactional pages
 - [ ] No "image001.jpg" filenames — filenames are descriptive
 - [ ] No images over 200KB (check file size)
 
 ### Internal Links
-- [ ] At least 3 internal links to related pages
+- [ ] Full pages (22+ sections): 50+ internal links (Rule 62 — use Appendix A from cag-seo-master-checklist)
+- [ ] Short pages (<10 sections): at least 8 internal links
 - [ ] Hub linked from spoke; spoke linked back to hub
 - [ ] Anchor text is descriptive (not "click here")
 - [ ] No orphan page (every page linked from at least one other)
@@ -106,6 +108,7 @@ For each page audit, check every item:
 - [ ] Avian vet cert referenced on health-related pages
 - [ ] CITES captive-bred documentation mentioned on sales/availability pages
 - [ ] No language implying wild-caught origin
+- [ ] Rule 61: No phone number in body copy — CTAs link to /contact-us/ form only (402-696-0317 in footer/schema ONLY)
 
 ---
 
@@ -134,6 +137,22 @@ Run these checks AFTER the standard keyword checklist above. Every item must pas
 - [ ] NO passive voice in first 100 words (passive = harder for LLMs to extract)
 - [ ] NO vague qualifiers ("some," "many," "often") in factual claims — use specific numbers
 - [ ] All statistics cited with source or grounded in data files (never fabricated)
+
+### Rules 55-62 Compliance
+- [ ] Rule 55: Competitor analysis covers ≥8 competitors with gap matrix
+- [ ] Rule 56: 10-category keyword fan-out documented (150–200 variants in brief or session file)
+- [ ] Rule 57: Entity count — 150+ entities across 8–12 per 100 words
+- [ ] Rule 58: Anchor text — 3 strategies used; no repeated anchor text patterns
+- [ ] Rule 59: 5-Tier Section Creation Form completed for all sections (check session file)
+- [ ] Rule 60: 4-Part Delivery Format present in content output
+- [ ] Rule 61: Zero phone numbers in body copy — grep confirms
+- [ ] Rule 62: Internal links use canonical URLs from cag-seo-master-checklist Appendix A
+
+Run Rule 61 grep check:
+```bash
+grep -n "402-696\|402.696\|(402)\|tel:" src/pages/[slug]/index.astro | grep -v "footer\|schema\|schema.org\|telephone"
+```
+Expected: zero results (phone only in footer/schema).
 
 ### Output AEO/GEO Summary
 
