@@ -1,0 +1,88 @@
+---
+// cag-compare-table-e — "Compare Table · Style E (1100px)"
+// Decoded from NEW CAG COMPONENTS bundle (Component 6 — Compare Table: Congo vs Timneh).
+// Green-gradient Congo header · Clay-gradient Timneh header · striped rows.
+// Data verified against data/price-matrix.json + homepage birds[] (2026-05-29).
+export interface Props {
+  eyebrow?: string;
+  heading?: string;
+  sub?: string;
+  congoHref?: string;
+  timnehHref?: string;
+}
+const {
+  eyebrow = 'Compare Variants',
+  heading = 'Is a Congo or a Timneh African Grey Right for You?',
+  sub = 'Both make exceptional companions. The right one depends on your home and experience — here is the Congo vs Timneh African Grey comparison side by side.',
+  congoHref = '/congo-african-grey-for-sale/',
+  timnehHref = '/timneh-african-grey-for-sale/',
+} = Astro.props;
+
+// [feature, congo, timneh]
+const rows: [string, string, string][] = [
+  ['Size', '12–14 in · 400–600 g', '9–11 in · 275–375 g'],
+  ['Lifespan', '40–60 years', '40–60 years'],
+  ['Talking ability', '★★★★★ exceptional', '★★★★☆ excellent, earlier'],
+  ['Temperament', 'Confident, dramatic', 'Calmer, steadier'],
+  ['Best for', 'Experienced owners', 'First-time owners'],
+  ['Price (from C.A.Gs)', '$1,700–$2,500', '$1,500–$1,600'],
+  ['Available now', 'Roys · Amie · Bery · Jins/Jeni', 'Elad · Evie'],
+  ['DNA sexed', '✅ Yes', '✅ Yes'],
+  ['CITES docs', '✅ Appendix I, captive-bred', '✅ Appendix I, captive-bred'],
+];
+---
+
+<div class="bg-cream py-14 md:py-16 px-4">
+  <div class="mx-auto" style="max-width:1100px;">
+    <div class="mb-7 border-l-4 border-green pl-4">
+      <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">{eyebrow}</p>
+      <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">{heading}</h2>
+      <p class="font-sora text-stone-500 mt-2 text-sm leading-relaxed" style="max-width:70ch;">{sub}</p>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white"
+         style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse" style="min-width:640px;">
+          <thead>
+            <tr>
+              <th class="text-left font-sora text-[11px] font-bold uppercase tracking-[0.09em] text-stone-400 bg-white px-6 py-5 border-b border-black/[0.07]" style="width:24%;">Feature</th>
+              <th class="text-left px-6 py-5 text-white" style="width:38%;background:linear-gradient(135deg,#2D6A4F,#1f4d39);">
+                <div class="flex items-center gap-2.5">
+                  <img src="/emoji/cag-congo.png" alt="" width="30" height="30" loading="lazy" style="width:30px;height:30px;object-fit:contain;" />
+                  <span>
+                    <span class="block font-lora font-bold text-[1.1rem] leading-tight">Congo African Grey</span>
+                    <span class="block font-sora text-[12px] font-normal opacity-85 mt-0.5">The classic, dramatic talker</span>
+                  </span>
+                </div>
+              </th>
+              <th class="text-left px-6 py-5 text-white" style="width:38%;background:linear-gradient(135deg,#e8604c,#c94d3a);">
+                <div class="flex items-center gap-2.5">
+                  <img src="/emoji/cag-timneh.png" alt="" width="30" height="30" loading="lazy" style="width:30px;height:30px;object-fit:contain;" />
+                  <span>
+                    <span class="block font-lora font-bold text-[1.1rem] leading-tight">Timneh African Grey</span>
+                    <span class="block font-sora text-[12px] font-normal opacity-90 mt-0.5">Calmer, earlier to bond</span>
+                  </span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(([f, c, t], i) => (
+              <tr class={i % 2 === 0 ? 'bg-cream' : 'bg-white'}>
+                <td class="px-6 py-4 font-sora text-[13px] font-semibold text-ink" class:list={[i < rows.length - 1 && 'border-b border-black/[0.07]']}>{f}</td>
+                <td class="px-6 py-4 font-sora text-sm text-stone-600 border-l border-black/[0.07]" class:list={[i < rows.length - 1 && 'border-b border-black/[0.07]']} set:html={c}></td>
+                <td class="px-6 py-4 font-sora text-sm text-stone-600 border-l border-black/[0.07]" class:list={[i < rows.length - 1 && 'border-b border-black/[0.07]']} set:html={t}></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-3 mt-7">
+      <a href={congoHref} class="inline-flex items-center justify-center rounded-full bg-clay px-6 py-3 font-sora text-sm font-semibold text-white transition-colors hover:bg-clay-dk" style="box-shadow:0 4px 14px rgba(232,96,76,0.25);">Inquire about a Congo →</a>
+      <a href={timnehHref} class="inline-flex items-center justify-center rounded-full border-2 border-green px-6 py-3 font-sora text-sm font-semibold text-green transition-colors hover:bg-green hover:text-white">Inquire about a Timneh →</a>
+    </div>
+  </div>
+</div>
