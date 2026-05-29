@@ -9,9 +9,14 @@ interface Props {
   tagType: 'new' | 'talker' | 'family' | 'value';
   notes: string;
   hook: string;
+  image?: string;
+  variant?: string;
+  objectPos?: string;
 }
 
-const { id, name, sex, age, price, tag, tagType, notes, hook } = Astro.props;
+const { id, name, sex, age, price, tag, tagType, notes, hook,
+  image = '/african-grey-hero.webp', variant = 'Congo African Grey',
+  objectPos = 'object-top' } = Astro.props;
 
 const tagColors: Record<string, string> = {
   new:    'bg-clay text-white',
@@ -25,12 +30,14 @@ const tagClass = tagColors[tagType] ?? tagColors.new;
 
 <article class="bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-100 flex flex-col hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
   <!-- Photo -->
-  <div class="relative bg-green/10 h-52 overflow-hidden">
+  <div class="relative bg-green/10 h-64 overflow-hidden">
     <img
-      src="/african-grey-hero.webp"
-      alt={`${name} — ${sex} Congo African Grey parrot`}
-      class="w-full h-full object-cover object-center"
+      src={image}
+      alt={`${name} — ${sex} ${variant} parrot, captive-bred, Midland TX`}
+      class={`w-full h-full object-cover ${objectPos}`}
       loading="lazy"
+      width="400"
+      height="256"
     />
     <span class={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${tagClass}`}>
       {tag}
@@ -45,7 +52,7 @@ const tagClass = tagColors[tagType] ?? tagColors.new;
     <!-- Name + meta row -->
     <div class="mb-2">
       <h3 class="font-lora font-bold text-xl text-logo-dark leading-tight">{name}</h3>
-      <p class="text-stone-400 text-xs font-sora mt-0.5">{sex} · {age} · Congo African Grey</p>
+      <p class="text-stone-400 text-xs font-sora mt-0.5">{sex} · {age} · {variant}</p>
     </div>
 
     <!-- Personality hook -->

@@ -1,0 +1,36 @@
+---
+/**
+ * cag-counter-snippet — 4-stat trust strip (Rule 31: 4 counter snippets after H1)
+ * Source design: CongoAfricanGreys Mobile Components.html (clay Lora numerals + muted labels).
+ * Ported to site Tailwind tokens. Light strip for contrast under the green hero.
+ * Values from data/price-matrix.json + breeder facts. Featured-snippet / AIO bait.
+ */
+const stats = [
+  { num: "12+",    label: "Years Aviary" },
+  { num: "100%",   label: "CITES Documented" },
+  { num: "$1,500", label: "Floor Price" },
+  { num: "24h",    label: "Reply Guarantee" },
+];
+
+const borderByIndex = [
+  "",
+  "border-l border-black/5",
+  "border-t border-black/5 md:border-t-0 md:border-l",
+  "border-l border-t border-black/5 md:border-t-0",
+];
+---
+
+<section class="counter-snippet border-y border-black/5 bg-warm-white" aria-label="C.A.Gs at a glance">
+  <div class="container mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-12">
+    <dl class="grid grid-cols-2 md:grid-cols-4">
+      {stats.map((s, i) => (
+        <div class={`flex flex-col items-center justify-center py-8 text-center md:py-10 ${borderByIndex[i]}`}>
+          <dd class="font-lora text-4xl font-bold leading-none text-clay md:text-5xl">{s.num}</dd>
+          <dt class="font-sora mt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-green/70 md:text-xs">
+            {s.label}
+          </dt>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
