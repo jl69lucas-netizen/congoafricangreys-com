@@ -16,6 +16,7 @@ import PricingTable from '../components/cag-library/PricingTable.astro';
 import Testimonials from '../components/cag-library/Testimonials.astro';
 import NewsletterV2 from '../components/cag-library/NewsletterV2.astro';
 import CompareTableE from '../components/cag-library/CompareTableE.astro';
+import InquiryForm  from '../components/cag-inquiry-form.astro';
 
 const title = "African Grey Parrot Breeder | USDA-Licensed Congo & Timneh";
 const description = "USDA-licensed African Grey parrot breeder. Mark & Teri Benjamin hand-raise captive-bred Congo & Timneh Greys in Midland, TX since 2014 — DNA-sexed, vet-checked, documented, nationwide shipping.";
@@ -790,73 +791,19 @@ const videoSchema = {
     </div>
   </section>
 
-  <!-- 25. Contact + Map — inline form, centered, map below -->
-  <section id="contact" class="py-16 px-4 scroll-mt-20">
-    <div class="max-w-xl mx-auto">
-      <div class="text-center mb-8">
-        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">START YOUR INQUIRY</p>
-        <h2 class="font-lora font-bold text-3xl text-logo-dark mb-2">Ready to Adopt a C.A.Gs African Grey?</h2>
-        <p class="text-stone-500 text-[14px]"><a href="/contact-us/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Teri answers personally</a> — typically within 24 hours.</p>
-      </div>
-
-      <form action="https://formspree.io/f/xgvkepyw" method="POST" class="bg-white rounded-3xl border border-line p-7 space-y-4" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
-        <div class="grid grid-cols-2 gap-3">
-          <label class="block">
-            <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Your name</span>
-            <input type="text" name="name" required placeholder="First Last"
-              class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10" />
-          </label>
-          <label class="block">
-            <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Email</span>
-            <input type="email" name="email" required placeholder="you@email.com"
-              class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10" />
-          </label>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <label class="block">
-            <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Phone <span class="normal-case font-normal">(optional)</span></span>
-            <input type="tel" name="phone" placeholder="(555) 000-0000"
-              class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10" />
-          </label>
-          <label class="block">
-            <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">State</span>
-            <input type="text" name="state" placeholder="TX"
-              class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10" />
-          </label>
-        </div>
-        <div>
-          <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Which Grey interests you?</span>
-          <div class="mt-2 flex flex-wrap gap-2">
-            {['Congo Grey', 'Timneh Grey', 'Breeding pair', 'Not sure yet'].map(opt => (
-              <label class="cursor-pointer">
-                <input type="radio" name="bird" value={opt} class="sr-only peer" />
-                <span class="block px-4 py-1.5 rounded-full border border-line font-sora text-[13px] bg-warm peer-checked:border-clay peer-checked:bg-clay/8 peer-checked:text-clay peer-checked:font-semibold transition">{opt}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-        <label class="block">
-          <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Tell us about your home</span>
-          <textarea name="message" rows={3} placeholder="Household members, other pets, schedule…"
-            class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10 resize-y"></textarea>
-        </label>
-        <input type="text" name="_gotcha" style="display:none" tabindex="-1" />
-        <button type="submit"
-          class="w-full bg-clay hover:bg-clay-dk transition text-white font-sora font-semibold py-3.5 text-[15px] cag-glow"
-          style="border-radius:12px;">Send inquiry →</button>
-        <p class="text-center font-sora text-[11px] text-stone-400">No bots, no auto-replies. Teri reads every message.</p>
-      </form>
-
-      <!-- Map — 250px, flush below form -->
-      <div class="mt-4 rounded-2xl overflow-hidden border border-line" style="box-shadow:0 2px 12px rgba(60,30,10,0.06);">
+  <!-- 25. Contact — full inquiry form + map below -->
+  <div id="contact" class="scroll-mt-20">
+    <InquiryForm />
+    <div class="px-6 pb-10" style="max-width:1100px;margin:0 auto;">
+      <div class="rounded-2xl overflow-hidden border border-line" style="box-shadow:0 2px 12px rgba(60,30,10,0.06);">
         <iframe
-          title="C.A.Gs – Midland, TX aviary"
-          src="https://maps.google.com/maps?q=2508+Briaroaks+Ct,+Midland,+TX+79707&z=15&output=embed"
+          title="C.A.Gs – 2508 Briaroaks Ct, Midland TX 79707"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3307.2!2d-102.0569!3d31.9716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86fb0d4a7c25e4d1%3A0x1!2s2508+Briaroaks+Ct%2C+Midland%2C+TX+79707!5e0!3m2!1sen!2sus!4v1715000000000!5m2!1sen!2sus"
           width="100%" height="250" style="border:0;display:block;"
           loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- Schema -->
   <Schema type="faq" data={{ mainEntity: faqItems.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) }} />
