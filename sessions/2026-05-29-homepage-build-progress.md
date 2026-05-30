@@ -1,6 +1,22 @@
 # Homepage REBUILD v2 — Build Progress / Continuation Handoff
-**Last updated:** 2026-05-30 (batch 22–25 done && PUSHED, commit ba676c5) · **Status: ALL 25 SECTIONS COMPLETE — rebuild done. Next: on-page AEO/GEO gate.**
-**Page:** `src/pages/index.astro` (878 lines) · **Build:** `npx astro build` clean (98 pages, 0 errors) · **Deploy:** pushed to `origin/main` → GitHub Actions → Cloudflare Pages.
+**Last updated:** 2026-05-31 (post-build polish session PUSHED, commit 1589e03) · **Status: ALL 25 SECTIONS COMPLETE + POLISH DONE. Next: on-page AEO/GEO gate.**
+**Page:** `src/pages/index.astro` · **Deploy:** live on Cloudflare Pages.
+
+## ✅ POLISH SESSION (2026-05-31) — ALL PUSHED
+
+| Fix | File(s) | Commit |
+|---|---|---|
+| BirdCard image height h-64→h-72 (288px), default object-center | `BirdCard.astro` | e7d507e |
+| Newsletter heading one line, text-2xl→text-lg mobile, whitespace-nowrap, removed `<br>` | `NewsletterV2.astro` | e7d507e, 04a9c32 |
+| Testimonials feature: image fills mobile width, blockquote text-base md:text-xl | `Testimonials.astro` | e7d507e |
+| Testimonials grid: smaller padding, font, lazy loading on avatars | `Testimonials.astro` | e7d507e |
+| Review names updated: Clifford Hutter (top), Albert Schroder (mid) | `index.astro` | e7d507e |
+| bottomReviews array added: Archie Obrien, Richard Woodard, Catherine Kempf + photos | `index.astro` | e7d507e |
+| 3 buyer review photos copied to public/ (clean filenames) | `public/` | e7d507e |
+| Lazy load audit: SplitFeature classic + Testimonials mosaic fixed | `SplitFeature.astro`, `Testimonials.astro` | a6732dc |
+| Evie bird card objectPos: object-top (shows head) | `index.astro` | cbab52d |
+| TrustStats classic: emoji text-2xl md:text-3xl, title text-sm md:text-lg, p-4 md:p-6 | `TrustStats.astro` | 04a9c32 |
+| Shipping section: all 14 states/cities linked to location pages | `index.astro` | 1589e03 |
 
 ---
 
