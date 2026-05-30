@@ -16,8 +16,6 @@ import PricingTable from '../components/cag-library/PricingTable.astro';
 import Testimonials from '../components/cag-library/Testimonials.astro';
 import NewsletterV2 from '../components/cag-library/NewsletterV2.astro';
 import CompareTableE from '../components/cag-library/CompareTableE.astro';
-import FaqAccordion from '../components/cag-library/FaqAccordion.astro';
-import ContactForm  from '../components/cag-library/ContactForm.astro';
 
 const title = "African Grey Parrot Breeder | USDA-Licensed Congo & Timneh";
 const description = "USDA-licensed African Grey parrot breeder. Mark & Teri Benjamin hand-raise captive-bred Congo & Timneh Greys in Midland, TX since 2014 — DNA-sexed, vet-checked, documented, nationwide shipping.";
@@ -718,9 +716,23 @@ const videoSchema = {
     </div>
   </section>
 
-  <!-- 23. FAQ — cag-faq-accordion:classic (PAA-sourced) -->
-  <section id="faq" class="scroll-mt-20 py-12">
-    <FaqAccordion variant="classic" title="What Do Buyers Most Often Ask Before Adopting a C.A.Gs African Grey Parrot?" items={faqItems} />
+  <!-- 23. FAQ — compact 2-col card grid (top 6 buyer questions) -->
+  <section id="faq" class="scroll-mt-20 py-16 px-4 bg-warm-white">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-10">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">COMMON QUESTIONS</p>
+        <h2 class="font-lora font-bold text-3xl text-logo-dark">What Do Buyers Ask Most Before Choosing a C.A.Gs African Grey?</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5">
+        {faqItems.slice(0, 6).map(item => (
+          <div class="bg-white rounded-2xl border border-line p-6" style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
+            <h3 class="font-lora font-bold text-[16px] text-logo-dark mb-2 leading-snug">{item.q}</h3>
+            <p class="font-sora text-stone-600 text-[13px] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+      <p class="text-center mt-8 font-sora text-sm text-stone-500">More questions? <a href="/contact-us/" class="text-clay font-semibold underline decoration-clay/30 hover:decoration-clay">Ask Teri directly →</a></p>
+    </div>
   </section>
 
   <!-- 24. How to Buy — entity-tree, 4-step reservation process -->
@@ -778,21 +790,70 @@ const videoSchema = {
     </div>
   </section>
 
-  <!-- 25. Contact + Map — cag-contact-form:classic -->
+  <!-- 25. Contact + Map — inline form, centered, map below -->
   <section id="contact" class="py-16 px-4 scroll-mt-20">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-10">
+    <div class="max-w-xl mx-auto">
+      <div class="text-center mb-8">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">START YOUR INQUIRY</p>
-        <h2 class="font-lora font-bold text-3xl text-logo-dark mb-3">Ready to Inquire About a C.A.Gs African Grey Parrot — What Should You Tell Us?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] max-w-xl mx-auto"><a href="/contact-us/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Teri reads and personally answers every inquiry</a> from our Midland, TX home — tell us about your household and which Congo or Timneh Grey you have your eye on. Typical response: within 24 hours.</p>
+        <h2 class="font-lora font-bold text-3xl text-logo-dark mb-2">Ready to Adopt a C.A.Gs African Grey?</h2>
+        <p class="text-stone-500 text-[14px]"><a href="/contact-us/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Teri answers personally</a> — typically within 24 hours.</p>
       </div>
-      <div class="grid lg:grid-cols-[1fr_1fr] gap-8 items-start">
-        <ContactForm variant="classic" action="https://formspree.io/f/xgvkepyw" />
-        <div class="rounded-2xl overflow-hidden border border-green/15 shadow-sm" style="min-height:420px;">
-          <iframe title="C.A.Gs – Midland, TX aviary location"
-            src="https://maps.google.com/maps?q=2508+Briaroaks+Ct,+Midland,+TX+79707&z=15&output=embed"
-            width="100%" height="420" style="border:0;display:block;" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+
+      <form action="https://formspree.io/f/xgvkepyw" method="POST" class="bg-white rounded-3xl border border-line p-7 space-y-4" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block">
+            <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Your name</span>
+            <input type="text" name="name" required placeholder="First Last"
+              class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10" />
+          </label>
+          <label class="block">
+            <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Email</span>
+            <input type="email" name="email" required placeholder="you@email.com"
+              class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10" />
+          </label>
         </div>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block">
+            <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Phone <span class="normal-case font-normal">(optional)</span></span>
+            <input type="tel" name="phone" placeholder="(555) 000-0000"
+              class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10" />
+          </label>
+          <label class="block">
+            <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">State</span>
+            <input type="text" name="state" placeholder="TX"
+              class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10" />
+          </label>
+        </div>
+        <div>
+          <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Which Grey interests you?</span>
+          <div class="mt-2 flex flex-wrap gap-2">
+            {['Congo Grey', 'Timneh Grey', 'Breeding pair', 'Not sure yet'].map(opt => (
+              <label class="cursor-pointer">
+                <input type="radio" name="bird" value={opt} class="sr-only peer" />
+                <span class="block px-4 py-1.5 rounded-full border border-line font-sora text-[13px] bg-warm peer-checked:border-clay peer-checked:bg-clay/8 peer-checked:text-clay peer-checked:font-semibold transition">{opt}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+        <label class="block">
+          <span class="font-sora text-[11px] font-semibold uppercase tracking-widest text-stone-500">Tell us about your home</span>
+          <textarea name="message" rows={3} placeholder="Household members, other pets, schedule…"
+            class="mt-1.5 w-full rounded-xl border border-line bg-warm px-4 py-2.5 font-sora text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay/10 resize-y"></textarea>
+        </label>
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" />
+        <button type="submit"
+          class="w-full bg-clay hover:bg-clay-dk transition text-white font-sora font-semibold py-3.5 text-[15px] cag-glow"
+          style="border-radius:12px;">Send inquiry →</button>
+        <p class="text-center font-sora text-[11px] text-stone-400">No bots, no auto-replies. Teri reads every message.</p>
+      </form>
+
+      <!-- Map — 250px, flush below form -->
+      <div class="mt-4 rounded-2xl overflow-hidden border border-line" style="box-shadow:0 2px 12px rgba(60,30,10,0.06);">
+        <iframe
+          title="C.A.Gs – Midland, TX aviary"
+          src="https://maps.google.com/maps?q=2508+Briaroaks+Ct,+Midland,+TX+79707&z=15&output=embed"
+          width="100%" height="250" style="border:0;display:block;"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
       </div>
     </div>
   </section>
