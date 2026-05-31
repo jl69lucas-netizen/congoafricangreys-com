@@ -1,0 +1,140 @@
+---
+/**
+ * JumpLinks.astro — Option B: Section-bottom Prev/Dots/Next nav strip.
+ * Place at the bottom of any section to guide readers step-by-step.
+ * Pure HTML anchor links — no JS required.
+ *
+ * Usage:
+ *   <JumpLinks
+ *     current={3}
+ *     total={18}
+ *     prevLabel="Eggs & Pairs"   prevHref="#eggs-pairs"
+ *     nextLabel="Timneh Grey"    nextHref="#timneh"
+ *   />
+ */
+
+export interface Props {
+  current: number;          // 1-based index of this section
+  total:   number;          // total section count
+  prevLabel?: string;       // omit on section 1
+  prevHref?:  string;
+  nextLabel?: string;       // omit on last section
+  nextHref?:  string;
+}
+
+const { current, total, prevLabel, prevHref, nextLabel, nextHref } = Astro.props;
+
+// Build a compact dot array (max 8 shown; collapse middle if total > 8)
+const MAX_DOTS = 8;
+let dots: Array<'done' | 'cur' | 'next'> = [];
+if (total <= MAX_DOTS) {
+  for (let i = 1; i <= total; i++) {
+    dots.push(i < current ? 'done' : i === current ? 'cur' : 'next');
+  }
+} else {
+  // Show first 3, ellipsis slot, last 3, with current always visible
+  const visible = new Set([1, 2, 3, current - 1, current, current + 1, total - 1, total].filter(n => n >= 1 && n <= total));
+  let prev2 = 0;
+  Array.from(visible).sort((a, b) => a - b).forEach(n => {
+    if (prev2 && n - prev2 > 1) dots.push('next'); // gap marker
+    dots.push(n < current ? 'done' : n === current ? 'cur' : 'next');
+    prev2 = n;
+  });
+}
+---
+
+<div class="jump-links-strip">
+  {prevHref ? (
+    <a href={prevHref} class="jl-prev" aria-label={`Previous section: ${prevLabel}`}>
+      <span class="jl-arrow">←</span>
+      <span class="jl-label">{ prevLabel }</span>
+    </a>
+  ) : <span />}
+
+  <div class="jl-dots" aria-hidden="true">
+    {dots.map(state => (
+      <span class:list={['jl-dot', state === 'done' ? 'done' : state === 'cur' ? 'cur' : '']} />
+    ))}
+  </div>
+
+  {nextHref ? (
+    <a href={nextHref} class="jl-next" aria-label={`Next section: ${nextLabel}`}>
+      <span class="jl-label">{ nextLabel }</span>
+      <span class="jl-arrow">→</span>
+    </a>
+  ) : <span />}
+</div>
+
+<style>
+  .jump-links-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0 4px;
+    border-top: 1px solid rgba(237, 229, 220, 0.7);
+    margin-top: 24px;
+  }
+
+  .jl-prev,
+  .jl-next {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 50px;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .jl-prev {
+    color: #8a7b72;
+    border: 1.5px solid #e8ddd8;
+  }
+  .jl-prev:hover {
+    border-color: #2D6A4F;
+    color: #2D6A4F;
+    background: rgba(45, 106, 79, 0.05);
+  }
+
+  .jl-next {
+    color: #e8604c;
+    background: rgba(232, 96, 76, 0.08);
+    border: 1.5px solid rgba(232, 96, 76, 0.25);
+  }
+  .jl-next:hover {
+    background: #e8604c;
+    color: #fff;
+    border-color: #e8604c;
+    box-shadow: 0 4px 12px rgba(232, 96, 76, 0.28);
+  }
+
+  .jl-arrow { font-size: 13px; }
+
+  .jl-dots {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .jl-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e0d8d2;
+    transition: background 0.2s;
+  }
+  .jl-dot.done { background: #2D6A4F; }
+  .jl-dot.cur  { width: 18px; border-radius: 4px; background: #e8604c; }
+
+  @media (max-width: 600px) {
+    .jl-label { display: none; }
+    .jl-prev, .jl-next { padding: 7px 10px; }
+  }
+</style>

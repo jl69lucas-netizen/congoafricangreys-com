@@ -1,5 +1,5 @@
 # CAG Component Registry
-**Version 2 — 2026-05-19**
+**Version 2.1 — 2026-05-29** *(Added cag-newsletter-v2; updated Quick Reference Table to reflect modern vs legacy status.)*
 
 All components live in `src/components/cag-library/`.
 Design system tokens: `src/styles/cag-design-system.css` (non-Tailwind) or `src/styles/global.css` (Astro/Tailwind).
@@ -18,10 +18,10 @@ Design system tokens: `src/styles/cag-design-system.css` (non-Tailwind) or `src/
 
 | Page Type | Default Variant |
 |---|---|
-| Homepage | `editorial` or `dark` — for visual impact |
+| Homepage | `cag-hero-v3:b` + `cag-toc-v3:02` + `cag-key-takeaway-v2:02` |
 | Location pages (50 states) | `classic` — for consistency |
-| Informational / long-form | `classic` + `cag-toc-v1` or `cag-toc-v2` in sidebar |
-| Scam / trust pages | `cag-scam-awareness:checklist` + `cag-key-takeaway` |
+| Informational / long-form | `classic` + `cag-toc-v3:02` in sidebar |
+| Scam / trust pages | `cag-scam-awareness:checklist` + `cag-key-takeaway-v2:03` |
 | Contact / inquiry pages | `cag-contact-form:application` |
 
 ---
@@ -49,9 +49,17 @@ All components are mobile-responsive as of 2026-05-27. The table below shows the
 | `cag-split-feature` | Image above text (order: -1) | `split-grid`, `split-image` |
 | `cag-video-section` | Full-width player, stacked layout | `video-stack`, `video-player` |
 | `cag-newsletter` | Stacked column, full-width button | `newsletter-inner`, `newsletter-input-row`, `newsletter-btn` |
+| `cag-newsletter-v2` *(new)* | Stacked column; dark split collapses to single | `newsletter-v2`, `nv2-inner`, `nv2-btn` |
 | `cag-footer` | Accordion (tap heading to expand section) + JS | `footer-cols`, `footer-col`, `footer-col-title`, `footer-col-links` |
 | `cag-stats-bar` | 2-col grid (from 4-col) | `stats-grid` |
 | `cag-trust-stats` | 2-col grid (from 4-col) | `trust-grid` |
+| `cag-hero-v3` *(new)* | Image top → headline/CTA stack; credential bar wraps | `hero-v3`, `hero-credential-bar`, `hero-ctas` |
+| `cag-toc-v3` *(new)* | Collapsible accordion / stacked parts | `toc-v3`, `toc-part`, `toc-link` |
+| `cag-key-takeaway-v2` *(new)* | Stat tiles → 2-col then 1-col | `kt-v2`, `kt-stat`, `kt-grid` |
+| `cag-counter-snippet` *(new)* | 4 stats → 2×2 grid on mobile | `counter-snippet`, `counter-stat` |
+| `cag-available-grid` *(new)* | Filter pills scroll horizontally; cards full-width snap | `available-grid`, `filter-pills`, `bird-card`, `card-cta` |
+| `cag-compare-table-e` *(new)* | Horizontal scroll / stacked column cards | `compare-e`, `compare-col`, `compare-row` |
+| `cag-owner-card` *(new)* | Photo top → name/credentials/bio stack | `owner-card`, `owner-photo`, `owner-chips` |
 
 ---
 
@@ -79,12 +87,77 @@ Requires `src/styles/cag-design-system.css` to be loaded on the page.
 
 ## Hero Components
 
-| Canonical Name | File | Description | Best For |
+### `cag-hero-v3` — MODERN ✅ USE THIS (homepage)
+Source: `UNIQUE CAGs NEW COMPONENTS.zip` → `standalone/Hero {A,B,C}.html`. Full-bleed, responsive.
+Astro file: `src/components/cag-library/HeroV3.astro`
+
+| Variant | Label | Use when |
+|---|---|---|
+| `cag-hero-v3:a` | Scattered Flock | Photo-led, image-heavy visual hero |
+| `cag-hero-v3:b` | **Authority Green** | **Trust-first breeder authority + credential bar. Homepage pick.** |
+| `cag-hero-v3:c` | Mosaic Metrics | Data-forward hero with embedded metric tiles |
+
+#### `cag-hero-v3:b` — Confirmed Specs (live 2026-05-31)
+
+**Section height:** ~483px desktop at 1280px viewport. Driven by content column (text), not image.
+
+**Grid padding (confirmed):**
+- Mobile: `py-8` (32px each side)
+- Desktop: `md:py-12 lg:py-12` (48px each side)
+
+**Image circle (confirmed):**
+- Mobile: `h-[220px] w-[220px]`
+- sm (≥640px): `sm:h-[260px] sm:w-[260px]`
+- Desktop (≥768px): `md:h-[300px] md:w-[300px]`
+
+**H1 typography (confirmed — 2 lines on desktop):**
+```
+class="font-lora mt-4 text-3xl font-bold leading-[1.08] sm:text-4xl md:text-[2.25rem] lg:text-[2.5rem] md:leading-[1.1]"
+```
+- Do NOT use `md:text-[3.25rem]` — wraps to 3 lines at desktop column width (~560px)
+- `2.25rem` at md = 2 lines: "African Grey Parrot Breeder / You Can Trust"
+
+**Eyebrow span (confirmed):**
+```
+class="font-sora text-[10px] font-medium tracking-[0.12em] text-white/60 md:text-[11px]"
+```
+- No `uppercase` class — HTML already uses title case ("C.A.Gs · Midland, Texas · Family Aviary Since 2014")
+- Never add `uppercase` to this element
+
+**Trust pills `<ul>` (confirmed):**
+```
+class="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2.5 md:flex-nowrap md:justify-start"
+```
+- Mobile: `flex-wrap` → 2×2 grid (2 left, 2 right)
+- Desktop: `md:flex-nowrap` → single row
+- Each `<li>` must have `whitespace-nowrap` to prevent "CITES Appendix I" wrapping within the pill
+
+**Pill items (confirmed):**
+```
+class="font-sora flex items-center gap-2 text-[13px] text-white/85 whitespace-nowrap"
+```
+
+**Pills content (4 items, in this order):**
+1. USDA Licensed
+2. CITES Appendix I
+3. DNA Sexed
+4. 10+ Year Support
+
+### Legacy (do not use on new builds)
+| Canonical Name | File | Status |
+|---|---|---|
+| `cag-hero-v1` | `html/hero-v1.html` | ⚠️ LEGACY |
+| `cag-hero-v2` | `html/hero-v2.html` | ⚠️ LEGACY |
+| `cag-hero-mobile` | `html/hero-mobile.html` | ⚠️ LEGACY |
+| `cag-split-hero` | `SplitHero.astro` | ⚠️ LEGACY — `classic`/`editorial`/`dark`; superseded by `cag-hero-v3` |
+
+---
+
+## Counter Snippet Component
+
+| Canonical Name | File | Variant | Description |
 |---|---|---|---|
-| `cag-hero-v1` | `html/hero-v1.html` | Desktop split-layout hero: 12-col grid, Lora headline, clay CTA pill, warm-gradient bg, trust ribbon, forest-green nav | Homepage, high-intent landing pages |
-| `cag-hero-v2` | `html/hero-v2.html` | Alternative desktop hero: different column balance, badge treatment varies | A/B testing against v1 |
-| `cag-hero-mobile` | `html/hero-mobile.html` | Mobile-first hero: compact stack, large clay CTA button, Sora subtext, Lora headline | Mobile override, standalone mobile page |
-| `cag-split-hero` | `SplitHero.astro` | Astro hero with 3 variants: `classic` / `editorial` / `dark` | Any page where Astro rendering is preferred |
+| `cag-counter-snippet` | `CounterSnippet.astro` | `4-stat` | ✅ MODERN 4-stat trust strip: **"12+ Years aviary · 100% CITES · $1,500 Floor price · 24h"**. Replaces the old 4-tile counter design. Featured-snippet/AIO bait; pairs with `cag-key-takeaway-v2:02`. |
 
 ---
 
@@ -99,11 +172,32 @@ Requires `src/styles/cag-design-system.css` to be loaded on the page.
 
 ## Bird Listing Components
 
-| Canonical Name | File | Variants | Description |
+### `cag-available-grid` — MODERN ✅ USE THIS (filterable product grid + filter pills)
+Source: `UNIQUE CAGs NEW COMPONENTS.zip` → `standalone/Available {A,B,C}.html`. Filterable by variant (Congo/Timneh) · type · availability · price.
+Astro file: Uses inline JSX + `BirdCard.astro` — no standalone `.astro` file; import `BirdCard` from `src/components/BirdCard.astro`.
+
+| Variant | Label | Use when |
+|---|---|---|
+| `cag-available-grid:a` | Pill Tabs | Filter pills above a card grid (All / Congo / Timneh / Pairs / Breeding / Eggs). Homepage default candidate. |
+| `cag-available-grid:b` | Sidebar | Left filter sidebar + grid. Catalog-style. |
+| `cag-available-grid:c` | Tile Gateway | Category tiles → drill into listings. |
+
+Uses the **new filterable BirdCard** (badge, sex/age, price, clay "Inquire About [name]" CTA).
+
+### Legacy / supporting
+| Canonical Name | File | Variants | Status |
 |---|---|---|---|
-| `cag-bird-card` | `BirdCard.astro` | `classic` · `horizontal` · `feature` | Single available-bird listing card with name, sex, age, price, badge, personality quote |
-| `cag-parent-birds` | `ParentBirds.astro` | `classic` · `editorial` · `dark` | Breeding pair showcase with individual portraits, age, lineage notes |
-| `cag-pricing-table` | `PricingTable.astro` | `classic` · `tiers` · `matrix` | Subspecies & pricing comparison — Congo vs Timneh, weaned vs unweaned age tiers |
+| `cag-bird-card` | `BirdCard.astro` | `classic` · `horizontal` · `feature` | ⚠️ Old standalone card — use the `cag-available-grid` card on new builds |
+| `cag-parent-birds` | `ParentBirds.astro` | `classic` · `editorial` · `dark` | ✓ Breeding-pair showcase (still current) |
+| `cag-pricing-table` | `PricingTable.astro` | `classic` · `tiers` · `matrix` | ✓ Pricing table (still current) |
+
+---
+
+## Comparison Components
+
+| Canonical Name | File | Width | Description |
+|---|---|---|---|
+| `cag-compare-table-e` | `CompareTableE.astro` | **1100px** full-section | ✅ MODERN three-zone branded comparison: green Congo column + clay Timneh column, branded headers, dual CTAs ("Inquire About a Congo" / "Inquire About a Timneh"). Use for Congo-vs-Timneh + species comparison. Replaces inline tables and `cag-pricing-table:matrix` for comparison sections. |
 
 Props for `cag-bird-card`:
 ```astro
@@ -131,7 +225,8 @@ Props for `cag-bird-card`:
 | `cag-scam-awareness` | `ScamAwareness.astro` | `grid` · `compare` · `checklist` | Buyer-protection infographic — scam red flags, legitimate vs fraudulent seller, verified checklist |
 | `cag-faq-accordion` | `FaqAccordion.astro` | `classic` · `editorial` · `dark` | FAQ section using native `<details>` — accessible by default, no JS required |
 | `cag-video-section` | `VideoSection.astro` | `vertical` · `cinematic` · `playlist` | YouTube embed block with optional playlist and chapter markers |
-| `cag-meet-team` | `MeetTheTeam.astro` | `duo` · `story` · `feature` | Founder bio section — Mark & Teri Benjamin, family aviary story |
+| `cag-owner-card` ✅ MODERN | `OwnerCard.astro` | `mark-teri` | **NEW Mark & Teri Benjamin owner card** — USDA + CITES credential chips, Midland TX, est. 2014. Use on homepage/about. Replaces `cag-meet-team`. |
+| `cag-meet-team` ⚠️ LEGACY | `MeetTheTeam.astro` | `duo` · `story` · `feature` | Old founder bio section — superseded by `cag-owner-card` |
 
 ---
 
@@ -143,23 +238,131 @@ Props for `cag-bird-card`:
 
 ---
 
+## Jump Link / Section Navigation Components
+
+Three designs for section-to-section navigation. All use CAG design tokens (clay active, green done). Choose one per page — don't mix designs on the same page.
+
+### `cag-jump-rail` — Option C ✅ RECOMMENDED for long pages (homepage, pillar pages)
+File: `src/components/cag-library/JumpRail.astro`
+Floating fixed right-side dot rail. Scroll-spy via IntersectionObserver. Shows all sections at once with live progress (hollow → green done → clay active). Desktop 1024px+ only — auto-hides on mobile/tablet (TocV3 handles those). Requires section `id` anchors on all target sections.
+
+**Props:** none (section list hardcoded per page — duplicate and edit `sections[]` array for each page)
+
+**States:** hollow circle = not yet reached · green fill = scrolled past · clay fill + glow = current section
+
+**Use on:** homepage, species guides, purchase guide, scam guide, any pillar with ≥8 sections
+
+**Example:**
+```astro
+import JumpRail from '@/components/cag-library/JumpRail.astro';
+<JumpRail />
+```
+
+---
+
+### `cag-jump-links` — Option B · Section-bottom Prev/Dots/Next strip
+File: `src/components/cag-library/JumpLinks.astro`
+Placed at the bottom of each individual section. Shows ← Prev label / progress dots / Next label → strip. Pure HTML anchor links — zero JS. Good for linear guided reading flow on shorter pages (blog posts, care guides, comparison pages). Prev hidden on section 1. Labels hidden on mobile (dots only).
+
+**Props:**
+```
+current:    number   // 1-based section index
+total:      number   // total section count
+prevLabel?: string   // omit on section 1
+prevHref?:  string
+nextLabel?: string   // omit on last section
+nextHref?:  string
+```
+
+**Use on:** blog posts, care guides, comparison pages, any page with 4–12 sections
+
+**Example:**
+```astro
+import JumpLinks from '@/components/cag-library/JumpLinks.astro';
+// Inside section 3 of 10:
+<JumpLinks current={3} total={10} prevLabel="Congo Grey" prevHref="#congo" nextLabel="Timneh Grey" nextHref="#timneh" />
+```
+
+---
+
+### `cag-jump-nav` — Option A · Sticky scroll-spy pill bar
+File: `src/components/cag-jump-nav.astro`
+Horizontal scrolling pill bar, sticky below the navbar (`top: 72px`). Shows all section labels as clickable pills. Current section pill turns clay on scroll. Mobile: horizontal scroll with hidden scrollbar. Best for pages with ≤10 sections where all labels fit in one row without heavy scrolling. Requires passing a `links` array.
+
+**Props:**
+```
+links?:      NavLink[]   // { label: string; href: string }[]
+sticky?:     boolean     // default true
+activeHref?: string      // currently active href (for SSR pre-highlight)
+```
+
+**Use on:** location pages, FAQ pages, any page where section labels are short enough to scan at a glance
+
+**Example:**
+```astro
+import CagJumpNav from '@/components/cag-jump-nav.astro';
+<CagJumpNav links={[
+  { label: 'Available Birds', href: '#available-birds' },
+  { label: 'Shipping',        href: '#shipping' },
+  { label: 'FAQ',             href: '#faq' },
+  { label: 'Contact',         href: '/contact-us/' },
+]} />
+```
+
+---
+
+### Design Comparison
+
+| | Option A — Pill Bar | Option B — Prev/Next Strip | Option C — Rail ★ |
+|---|---|---|---|
+| File | `cag-jump-nav.astro` | `JumpLinks.astro` | `JumpRail.astro` |
+| Placement | Sticky top (after hero) | Bottom of each section | Fixed right side |
+| JS required | Scroll-spy (optional) | None | IntersectionObserver |
+| Mobile | Horizontal scroll | Dots only | Hidden (TocV3 covers) |
+| Best for | ≤10 short-label sections | Linear guided flow | Long pillars ≥8 sections |
+| Live on | — | — | Homepage (`index.astro`) |
+
+---
+
 ## Table of Contents Components
 
-| Canonical Name | File | Description |
-|---|---|---|
-| `cag-toc-v1` | `html/toc-v1.html` | Sidebar TOC v1 — minimal flat list, anchor links, Sora font. Use on long-form guides. |
-| `cag-toc-v2` | `html/toc-v2.html` | Sidebar TOC v2 — bordered card, active-state highlight, progress dot. More polished. |
+### `cag-toc-v3` — MODERN (responsive: desktop / mobile / tablet) ✅ USE THIS
+Astro file: `src/components/cag-library/TocV3.astro`
+Source bundles (May 29 2026): `page-components-desktop.html`, `page-components-mobile.html`, `page-components-tablet.html` (each carries all 3 variants; mobile/tablet are thumb-first ports of the same set).
 
-Use on: Scam Guide, Care Guide, Species Guide, any article with ≥4 H2 sections.
+| Variant | Label | Use when |
+|---|---|---|
+| `cag-toc-v3:01` | Classic two-column | Compact flat anchor list, minimal weight |
+| `cag-toc-v3:02` | **Grouped by part** | **Default for long pillars (≥10 sections)** — labeled parts, sitelink-friendly. Homepage pick. |
+| `cag-toc-v3:03` | Chapter cards | Visual numbered cards, taller footprint |
+
+### Legacy (do not use on new builds)
+| Canonical Name | File | Status |
+|---|---|---|
+| `cag-toc-v1` | `html/toc-v1.html` | ⚠️ LEGACY — superseded by `cag-toc-v3` |
+| `cag-toc-v2` | `html/toc-v2.html` | ⚠️ LEGACY — superseded by `cag-toc-v3` |
+
+Use on: homepage pillar, Scam Guide, Care Guide, Species Guide, any article with ≥4 H2 sections.
 
 ---
 
 ## Callout Components
 
-| Canonical Name | File | Description |
+### `cag-key-takeaway-v2` — MODERN (responsive: desktop / mobile / tablet) ✅ USE THIS
+Astro file: `src/components/cag-library/KeyTakeawayV2.astro`
+Source bundles (May 29 2026): `page-components-{desktop,mobile,tablet}.html` (all 3 variants in each).
+
+| Variant | Label | Use when |
 |---|---|---|
-| `cag-key-takeaway` | `html/key-takeaway-v1.html` | Highlighted insight callout — clay left border accent, green eyebrow tag ("KEY TAKEAWAY"), cream background. Use after each major section in long-form articles. |
-| `cag-toc-keytakeaway` | `html/toc-keytakeaway-combined.html` | Combined sidebar: TOC stacked above Key Takeaway. Best for long-form pages that need both navigation and article insights in one sidebar column. |
+| `cag-key-takeaway-v2:01` | Classic green card | Single BLUF callout, editorial |
+| `cag-key-takeaway-v2:02` | **Stat-forward grid** | **Answer-engine / featured-snippet summary box** — stat tiles (years · CITES · DNA · placed). Homepage pick; aligns with the new counter-snippet numbers. |
+| `cag-key-takeaway-v2:03` | Do / Don't checklist | Scam-wary trust angle, two-column do/don't |
+
+### Legacy (do not use on new builds)
+| Canonical Name | File | Status |
+|---|---|---|
+| `cag-key-takeaway` | `html/key-takeaway-v1.html` | ⚠️ LEGACY — superseded by `cag-key-takeaway-v2` |
+| `cag-toc-keytakeaway` | `html/toc-keytakeaway-combined.html` | ⚠️ LEGACY — superseded by v3/v2 set |
 
 ---
 
@@ -168,7 +371,8 @@ Use on: Scam Guide, Care Guide, Species Guide, any article with ≥4 H2 sections
 | Canonical Name | File | Variants | Description |
 |---|---|---|---|
 | `cag-contact-form` | `ContactForm.astro` | `classic` · `application` · `sidebar` | Buyer inquiry form — posts to Formspree. `application` variant adds bird-preference fields. `sidebar` variant is narrow for two-column layouts. |
-| `cag-newsletter` | `Newsletter.astro` | `banner` · `split` · `footer` | Clutch-alert email subscribe — `banner` is full-width, `split` is two-column, `footer` is compact for footer placement. |
+| `cag-newsletter` | `Newsletter.astro` | `banner` · `split` · `footer` | Clutch-alert email subscribe — `banner` is full-width, `split` is two-column, `footer` is compact for footer placement. ⚠️ LEGACY on new builds — use `cag-newsletter-v2`. |
+| `cag-newsletter-v2` ✅ MODERN | `NewsletterV2.astro` | `top` · `middle` · `bottom` | **NEW newsletter block (3 variants)** — `top` light banner, `middle` dark split (mid-page), `bottom` slim footer strip. Homepage uses `middle` + `bottom`. Use on all new homepage/pillar builds. |
 | `cag-testimonials` | `Testimonials.astro` | `grid` · `mosaic` · `feature` | Review / testimonial block — reads from case-studies.json or inline props. `feature` variant spotlights one testimonial large. |
 
 ---
@@ -183,25 +387,35 @@ Use on: Scam Guide, Care Guide, Species Guide, any article with ≥4 H2 sections
 
 ## Quick Reference Table
 
-| Use Case | Component | Recommended Variant |
-|---|---|---|
-| Page hero | `cag-hero-v1` or `cag-split-hero` | v1 desktop / `editorial` |
-| Credibility strip | `cag-stats-bar` | `classic` or `dark` |
-| Trust credentials | `cag-trust-stats` | `classic` |
-| Bird listing card | `cag-bird-card` | `classic` |
-| Breeding pair | `cag-parent-birds` | `classic` |
-| Pricing | `cag-pricing-table` | `classic` or `matrix` |
-| Care tips | `cag-care-grid` | `classic` |
-| Feature / why us | `cag-split-feature` | `editorial` |
-| Scam content | `cag-scam-awareness` | `checklist` |
-| FAQ | `cag-faq-accordion` | `classic` |
-| Video | `cag-video-section` | `vertical` |
-| About / founders | `cag-meet-team` | `story` |
-| Long-form sidebar | `cag-toc-v2` | — |
-| Article callout | `cag-key-takeaway` | — |
-| Long-form sidebar + callout | `cag-toc-keytakeaway` | — |
-| Inquiry form | `cag-contact-form` | `classic` or `application` |
-| Newsletter | `cag-newsletter` | `banner` or `split` |
-| Reviews | `cag-testimonials` | `grid` or `feature` |
-| Navigation | `cag-navbar` | `classic` |
-| Footer | `cag-footer` | `dark` |
+> ✅ = MODERN (use on new builds) · ⚠️ = LEGACY (do not use on new builds)
+
+| Use Case | Component | Recommended Variant | Status |
+|---|---|---|---|
+| Page hero | `cag-hero-v3` | `b` Authority Green | ✅ |
+| Filterable bird grid | `cag-available-grid` | `a` pill tabs | ✅ |
+| Comparison table | `cag-compare-table-e` | (1100px) | ✅ |
+| Answer / featured snippet box | `cag-key-takeaway-v2` | `02` stat-forward grid | ✅ |
+| Page nav / TOC | `cag-toc-v3` | `02` grouped by part | ✅ |
+| Breeder / owner bio | `cag-owner-card` | `mark-teri` | ✅ |
+| Counter trust strip | `cag-counter-snippet` | `4-stat` | ✅ |
+| Newsletter | `cag-newsletter-v2` | `middle` or `bottom` | ✅ |
+| Trust credentials | `cag-trust-stats` | `classic` | ✅ |
+| Care tips | `cag-care-grid` | `classic` | ✅ |
+| Feature / why us | `cag-split-feature` | `editorial` | ✅ |
+| Scam content | `cag-scam-awareness` | `checklist` or `compare` | ✅ |
+| FAQ | `cag-faq-accordion` | `classic` or `editorial` | ✅ |
+| Video | `cag-video-section` | `vertical` | ✅ |
+| Social proof | `cag-testimonials` | `grid` or `feature` | ✅ |
+| Breeding pair | `cag-parent-birds` | `classic` | ✅ |
+| Pricing | `cag-pricing-table` | `classic` or `matrix` | ✅ |
+| Inquiry form | `cag-contact-form` | `classic` or `application` | ✅ |
+| Navigation | `cag-navbar` | `classic` | ✅ |
+| Jump nav — fixed rail (long pages) | `cag-jump-rail` | — | ✅ |
+| Jump nav — prev/next strip (linear) | `cag-jump-links` | — | ✅ |
+| Jump nav — sticky pill bar (short pages) | `cag-jump-nav` | — | ✅ |
+| Footer | `cag-footer` | `dark` | ✅ |
+| Page hero (legacy) | `cag-hero-v1` or `cag-split-hero` | v1 desktop / `editorial` | ⚠️ |
+| About / founders (legacy) | `cag-meet-team` | `story` | ⚠️ |
+| Long-form sidebar (legacy) | `cag-toc-v1` or `cag-toc-v2` | — | ⚠️ |
+| Article callout (legacy) | `cag-key-takeaway` | — | ⚠️ |
+| Newsletter (legacy) | `cag-newsletter` | `banner` or `split` | ⚠️ |
