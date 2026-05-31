@@ -102,6 +102,24 @@ Verify `public/_headers` contains all of these in the CSP `frame-src` directive:
 
 ---
 
+## Why Repeated Fix Attempts Failed
+
+This issue was attempted 4+ times before this fix. The pattern of failure:
+
+| Commit | What was tried | Why it still failed |
+|--------|---------------|---------------------|
+| `8a0610e` | `maps.google.com?output=embed` | Correct format — but push may not have gone live |
+| `28e25c8` | `www.google.com/maps/embed?pb=FAKE` | Labeled "working" but pb= was AI-fabricated → rejected |
+| `c1b9b9f` | Fixed CSP `frame-src` + "corrected" pb= | pb= coordinates still not a real Google Maps embed token |
+| `99cab2f` | Reverted pb= → `?output=embed` BUT used `www.google.com` | Wrong subdomain (`www` vs `maps`) |
+| `d536c2c` | Both pages → `maps.google.com/maps?q=...&output=embed` | **Correct — push needed to go live** |
+
+**Key lesson:** The push (`git push`) failing silently leaves a broken live site even when the local code is correct. Always verify the Cloudflare Pages build completed after every commit.
+
+## CRITICAL: Always Push After Commit
+
+The deploy is `git push origin main` → GitHub Actions → Cloudflare Pages. If push is blocked by the Claude Code permission system, the user must run it manually in terminal. A committed-but-not-pushed fix does nothing on the live site.
+
 ## Files Fixed (2026-05-31)
 
 | File | Change |
