@@ -107,6 +107,7 @@ All 65 agents are assigned to a 4-tier model system (Opus 4.8 / Opus 4.7 / Sonne
 - `skills/cag-infographic.md` — infographic system: **5 types** — Comparison / Feature Grid / Process Flow / **AI-Generated Image** (Type 4, Nano Banana 2 or OpenAI, 9:16 1200×2133px, responsive CSS) / **Higgsfield MCP** (Type 5, character-consistent / video / marketing studio; say "use Higgsfield"); **400px desktop fixed** HTML types; mode selection: "use Claude Code" = HTML, "use Nano Banana" = AI image, "use Higgsfield" = Higgsfield MCP
 - `skills/cag-photo-ingest.md` — User-uploaded OG photo → AI generation pipeline; Phase 1: CITES safety check + bird ID; Phase 2: routes to Higgsfield reference image (`soul_2`), Nano Banana lifestyle edit, or HTML/CSS infographic; `media_upload` → `media_confirm` → `generate_image` with reference; CITES safety enforced on every prompt; output → `@cag-image-pipeline`
 - `skills/cag-site-patterns.md` — 4 confirmed site fix patterns: gold→clay color, Pagefind search, header layout, birds listing; full code references
+- `skills/cag-direction-d-theme.md` — **DIRECTION D "MODERN EDITORIAL" — THE LIVE SITE-WIDE THEME (default on every page):** Newsreader serif headings + IBM Plex Sans body, lead-line paragraphs, clay-tick eyebrows, soft-warm `<article>` cards, calm button motion. Lives in `src/styles/direction-d.css` + `body.theme-d` (BaseLayout). **It is already global — agents must NOT re-implement it per page**; build normal design-system markup and it applies automatically. Homepage-only structural dividers/compact-padding stay scoped to `.home-d` in `src/pages/index.astro`. Read before building or restyling any page.
 
 ### Agents
 
@@ -209,13 +210,14 @@ Transfer and adapt all MFS agents + skills for African Grey domain.
 
 ## Design System & Component Rules
 
-### Design System v2 — "Terracotta Warmth"
+### Design System v2 — "Terracotta Warmth" + Direction D "Modern Editorial" (active theme)
 
 Active design system: `docs/design.md` (master reference) + `docs/design-system/README.md` (full narrative spec).
+**Active visual theme (site default): Direction D "Modern Editorial"** — `skills/cag-direction-d-theme.md`, implemented in `src/styles/direction-d.css` + `body.theme-d`. It refines Terracotta Warmth (same locked palette + clay pill) with Newsreader serif headings and IBM Plex Sans body, and is inherited by every page through BaseLayout. Do NOT re-implement it per page.
 
 **Non-Negotiable Design Rules — enforced on every page build and rebuild:**
-1. **Colors:** Three anchors only — Forest Green `#2D6A4F` (nav/headers), Clay `#e8604c` (all CTAs/buttons), Cream `#faf7f4` (page surface). `--gold` MUST always equal `--clay`.
-2. **Type:** Lora 700 (serif) for ALL headlines. Sora 400–700 (sans) for ALL body, labels, buttons. No exceptions.
+1. **Colors:** Three anchors only — Forest Green `#2D6A4F` (nav/headers), Clay `#e8604c` (all CTAs/buttons), Cream `#faf7f4` (page surface). `--gold` MUST always equal `--clay`. (Direction D does NOT change the palette.)
+2. **Type:** Direction D is live → **Newsreader** serif for ALL headlines (H1–H6) and **IBM Plex Sans** for ALL body/labels/buttons, applied globally via `body.theme-d`. Keep using the `font-lora`/`font-sora` utility classes in markup — `direction-d.css` restyles them automatically; Lora/Sora remain the token-level fallback. Do not hard-code `font-family` on elements to fight the theme.
 3. **Buttons:** Primary CTA = clay pill, `border-radius: 50px`. This is the brand signature. Form submit buttons only use `border-radius: 12px`.
 4. **Cards:** 20px radius, 1px `--border`, warm shadow, white surface. Info cards use green header band.
 5. **Shadows:** Always warm-tinted `rgba(60,30,10,…)`. Never neutral grey.
