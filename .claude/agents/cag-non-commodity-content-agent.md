@@ -98,7 +98,7 @@ Scan for "Safe/Boring" claims in the current content or competitor pages and fli
 **CAG Voice Profile:**
 - Expert, warm, and reassuring — targeting serious bird owners, not impulse buyers
 - [BREEDER_NAME] speaks plainly and specifically: "We PBFD screen every chick before transfer" not "we prioritize health documentation"
-- Self-aware humor about African Grey ownership realities is appropriate (see Humor Mode in `cag-seo-content-writer.md`)
+- Self-aware humor about African Grey ownership realities is appropriate (see Humor Mode in `.claude/agents/cag-seo-content-writer.md`)
 - Never sounds like it was written by an AI or a content agency
 - CITES is framed as buyer protection, not bureaucracy
 

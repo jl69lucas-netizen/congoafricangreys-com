@@ -1,197 +1,53 @@
 ---
 name: cag-footer-agent
-description: Applies the standard MFS footer (cag-footer-v2) to all pages in site/content/. Detects outdated WordPress/Astra footer markup and replaces it.
+description: CAG footer specification + audit rules. Source of truth is src/components/Footer.astro (Forest Green, 5-column). Use when building or auditing any page footer, or checking footer completeness.
 model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 
 # CAG Footer Agent Skill
-## Managed Agent: Apply Standard Footer to All CongoAfricanGreys.com Pages
-**Version 1.0 — MFS Design System v1.1 · Static HTML · Batch-Safe**
+## Footer Specification & Audit Rules for CongoAfricanGreys.com
+**Version 2.0 — Astro / Cloudflare Pages (rewritten 2026-06-01; v1 was a stale MFS WordPress copy with an orange footer + dog nav)**
 
 ## Golden Rule
 > Use Claude Code and Playwright CLI to solve problems first.
-> Only call MCPs, external CLIs, or APIs if the specific task genuinely cannot be done with Claude Code alone.
+> Only call MCPs, external CLIs, or APIs if the task genuinely cannot be done with Claude Code alone.
 
 ---
 
-## SKILL OVERVIEW
+## SOURCE OF TRUTH
 
-You are the **Footer Agent** for CongoAfricanGreys.com. Your job is to apply the canonical CAG Footer to every `index.html` in the site. The footer is consistent across all pages — brand voice, contact info, nav links, social icons, and copyright never change per-page.
+The footer is a single Astro component rendered on every page:
 
-**One command does the whole site:**
-```bash
-cd /Users/apple/Downloads/CAG/site/content
-python3 rebuild_footer.py
-```
+- **Component:** `src/components/Footer.astro`
+- **Architecture:** Astro (NOT WordPress/Astra static HTML). There is **no** `rebuild_footer.py` —
+  edit the component once and every page updates on build.
+- **Standardization agent:** `cag-footer-standardizer` detects pages with outdated markup and
+  aligns them to this component.
+
+> ⚠️ v1 of this skill described an orange (`#FF8C00`) MFS footer, a dog "Available Puppies" nav
+> column, a `/Users/apple/Downloads/MFS/rebuild_footer.py` script, and a `(531) 368-0538` phone.
+> All were stale/wrong. Never reintroduce them.
 
 ---
 
-## WHAT THIS SKILL DOES
+## DESIGN (per `docs/design.md` — Terracotta Warmth)
 
-| Step | Action |
+| Element | Value |
 |---|---|
-| 1 | Scans every `site/content/**/index.html` recursively |
-| 2 | Finds pages with legacy footer markup |
-| 3 | Replaces everything from the footer tag to closing tag |
-| 4 | Writes a clean CAG Footer preserving all page content above/below |
-| 5 | Skips pages that already have the current CAG footer |
-
-**Safe:** Only touches the `<footer>` block. Head, schema, nav, entry-content, scripts below footer — all untouched.
-
----
-
-## FOOTER DESIGN SPEC (v1.0)
-
-### Structure
-```
-[Tagline Banner]      orange bg (#FF8C00), black text — WCAG AAA 9.04:1
-[Main Body]           dark bg (#111), 4-column grid
-  ├── Brand/Contact   logo text + about + phone/email/hours/location
-  ├── Available Puppies  6 product page links
-  ├── Quick Links        6 utility page links
-  └── CTA Box           "Apply Now" button + open badge
-[Social Bar]          #0d0d0d bg — FB / IG / TikTok / YT / LinkedIn / Pinterest
-[Copyright Bar]       #070707 bg — © + Privacy / Terms / Sitemap links
-```
-
-### Colors (all WCAG compliant)
-| Element | Foreground | Background | Ratio | WCAG |
-|---|---|---|---|---|
-| Tagline text | `#000` | `#FF8C00` | 9.04:1 | AAA ✓ |
-| Body text | `#aaa` | `#111` | 9.5:1 | AAA ✓ |
-| Orange headings | `#FF8C00` | `#111` | 5.79:1 | AA ✓ |
-| Links | `#bbb` | `#111` | 11:1 | AAA ✓ |
-| CTA btn text | `#000` | `#FF8C00` | 9.04:1 | AAA ✓ |
-| Copyright | `#484848` | `#070707` | 4.6:1 | AA ✓ |
-
-### Typography
-- Headings: `Rosario`, 700 (already loaded on all pages — no extra font request)
-- Body: `Open Sans`, normal
-- Column headers: uppercase, `#FF8C00`, letter-spacing 0.06em
-
-### Responsive Breakpoints
-- ≥ 861px: 4-column grid (`2fr 1fr 1fr 1fr`)
-- 521–860px: 2-column grid, brand col spans full width
-- ≤ 520px: single column
+| Footer background | **Forest Green `#2D6A4F`** (`bg-green`) — never orange |
+| Text | White / white-at-opacity on green |
+| CTA button | **Clay `#e8604c`** pill (`bg-clay`, `rounded-full`) — brand signature |
+| Bottom bar | `bg-green/90`, white/10 top border |
+| Headings | Lora 700 · Body/links | Sora 400–600 |
+| Bird icon | custom `/emoji/cag-congo.png` — **never 🦜** |
 
 ---
 
-## CONTACT DETAILS (update if they change)
+## 5-COLUMN STRUCTURE (required content)
 
-| Field | Value |
-|---|---|
-| Phone | (531) 368-0538 |
-| Email | [INQUIRIES_EMAIL_TBD] |
-| Address | [BREEDER_LOCATION_TBD] |
-| Hours | [HOURS_TBD] |
-| Price range | Congo African Grey $1,500–$3,500 · Timneh African Grey $1,200–$2,500 |
-
----
-
-## SOCIAL LINKS
-
-| Platform | URL |
-|---|---|
-| Facebook | [FACEBOOK_URL_TBD] |
-| Instagram | [INSTAGRAM_URL_TBD] |
-| TikTok | [TIKTOK_URL_TBD] |
-| YouTube | [YOUTUBE_URL_TBD] |
-| LinkedIn | [LINKEDIN_URL_TBD] |
-| Pinterest | https://uk.pinterest.com/MFSAfrican Grey parrotMaltesePuppies/ |
-
----
-
-## FOOTER NAV LINKS
-
-### Available Puppies column
-- Non-Shedding African Grey parrot → `/non-shedding-african grey parrot-puppies/`
-- African Grey parrot For Adoption → `/african grey parrot-puppies-for-adoption/`
-- Congo African Grey → `/congo-african-grey-for-sale/`
-- Toy African Grey parrot Puppies → `/toy-african grey parrot-puppies/`
-- Timneh African Grey → `/timneh-african-grey-for-sale/`
-- Mini African Grey parrot → `/mini-african grey parrot-puppies/`
-
-### Quick Links column
-- Find African Grey parrot Near Me → `/buy-african grey parrot-near-me/`
-- MFS Vs. Other Breeds → `/african grey parrot-vs-other-breeds/`
-- Testimonials → `/testimonials/`
-- Privacy Policy → `/privacy-policy/`
-- Terms & Conditions → `/refund_returns/`
-- Shipping & Delivery → `/shipping-delivery/`
-
----
-
-## HOW TO RUN
-
-### Full site update (all 100+ pages)
-```bash
-cd /Users/apple/Downloads/MFS
-python3 rebuild_footer.py
-```
-
-### Single page test
-```bash
-python3 rebuild_footer.py site/content/male-vs-female-african grey parrot/index.html
-```
-
-### After running — commit and push
-```bash
-cd site2
-git add -A
-git commit -m "Apply MFS Footer v2 to all pages"
-git push origin main
-```
-
-### After push — submit updated URLs to IndexNow
-```python
-import json, urllib.request
-key = "a1b2c3d4e5f6789012345678african grey parrots"
-# Submit homepage + top traffic pages
-urls = [
-    "https://congoafricangreys.com/",
-    "https://congoafricangreys.com/buy-african grey parrot-near-me/",
-    "https://congoafricangreys.com/toy-african grey parrot-puppies/",
-    "https://congoafricangreys.com/mini-african grey parrot-puppies/",
-    "https://congoafricangreys.com/congo-african-grey-for-sale/",
-    "https://congoafricangreys.com/male-vs-female-african grey parrot/",
-]
-payload = json.dumps({"host":"congoafricangreys.com","key":key,
-    "keyLocation":f"https://congoafricangreys.com/{key}.txt","urlList":urls}).encode()
-req = urllib.request.Request("https://api.indexnow.org/indexnow",data=payload,
-    headers={"Content-Type":"application/json; charset=utf-8"},method="POST")
-print(urllib.request.urlopen(req).status)
-```
-
----
-
-## UPDATING THE FOOTER IN THE FUTURE
-
-If you need to change footer content (new link, new contact info, updated price):
-
-1. **Edit the `NEW_FOOTER` string** in `/Users/apple/Downloads/MFS/rebuild_footer.py`
-2. **Re-run the batch script** — it replaces all pages in one pass
-3. Commit + push + IndexNow
-
-**Never edit individual page footers by hand.** The script is the single source of truth.
-
----
-
-## SKIPPED PAGES (expected)
-
-The script skips ~110 pages that don't use the Astra `site-footer` class. These are:
-- WooCommerce product/shop pages
-- Puppy listing pages (`/puppies/`, `/for-sale/`, `/available/`)
-- Duplicate/redirect pages
-- Admin/form pages
-
-These pages have their own footer structure and are not part of the main content redesign.
-
----
-
-## FOOTER COLUMN STRUCTURE SPECIFICATION (Required Content)
-
-When auditing or updating the footer, ensure it contains these 5 content columns. Any footer missing 2 or more columns should be flagged as `INCOMPLETE`.
+Every footer must contain these 5 columns. Flag any footer missing 2+ columns as
+`INCOMPLETE — needs footer rebuild`.
 
 ```
 Column 1: Quick Links
@@ -222,35 +78,53 @@ Column 4: Legal
   - Refund Policy → /refund-policy/
 
 Column 5: Contact
-  - Phone: [BREEDER_PHONE_TBD]
+  - Phone: +1-402-696-0317   (master NAP — docs/reference/credentials.md)
   - Email: [INQUIRIES_EMAIL_TBD]
-  - Address: [BREEDER_LOCATION_TBD]
+  - Address: [BREEDER_LOCATION_TBD — city-level only; see privacy rule]
   - Hours: Open 24/7
-  - Social Links: Facebook, Instagram, TikTok, YouTube
+  - Social: Facebook, Instagram, TikTok, YouTube
 
 Bottom Bar:
   - Copyright © CongoAfricanGreys.com [year]
   - USDA AWA Licensed (include license number once confirmed)
-  - CITES Captive-Bred Documentation Available
+  - CITES Appendix I captive-bred documentation available
 ```
 
-**Audit rule:** When running in audit mode, flag any page whose footer is missing 2 or more of these 5 columns as `INCOMPLETE — needs footer rebuild`.
+> **NAP consistency:** Name / Address / Phone must match `docs/reference/credentials.md`
+> exactly (the `cag-nap-citation-agent` audits this). Phone is **+1-402-696-0317**.
+> Per the site privacy rule, the footer uses **city-level** location only — never a street address.
+
+---
+
+## RESPONSIVE
+
+| Breakpoint | Layout |
+|---|---|
+| ≥ 861px | multi-column grid |
+| 521–860px | 2-column, brand col full width |
+| ≤ 520px | single column |
+
+---
+
+## AUDIT MODE
+
+When auditing footers across pages:
+1. Confirm the page renders `Footer.astro` (not legacy WordPress/Astra `site-footer` markup).
+2. Confirm all 5 columns are present (flag `INCOMPLETE` if 2+ missing).
+3. Confirm Forest Green background + Clay CTA (no orange).
+4. Confirm phone = `+1-402-696-0317`, CITES line says **Appendix I**, copyright year current.
+5. Confirm no dog terms (Available Puppies / Non-Shedding / Toy / Mini) and no 🦜.
 
 ---
 
 ## WHAT NOT TO TOUCH
-
-- **`/wp-content/themes/astra/`** — never modify theme files
-- **`/wp-content/plugins/`** — never modify plugin files
-- **`frontend.min.js`** — Astra's critical JS, do not touch
-- **Schema JSON-LD blocks** — the footer replacement preserves all content above the `<footer>` tag, including schema
+- Schema JSON-LD blocks (footer changes never alter page schema).
+- Content above the footer component.
 
 ---
 
 ## REFERENCE
-
-- **Script:** `/Users/apple/Downloads/MFS/rebuild_footer.py`
-- **Design system:** `MFS-DESIGN-REBUILD-SKILL.md`
-- **Reference page (footer live):** `https://congoafricangreys.com/male-vs-female-african grey parrot/`
-- **First deployed:** 2026-04-22 — 103 pages updated in one run
-- **CLAUDE.md skill entry:** `MFS-FOOTER-AGENT-SKILL.md` → Footer redesign, batch apply to all pages
+- **Component:** `src/components/Footer.astro` (source of truth)
+- **Design spec:** `docs/design.md` · **Width:** `docs/reference/page-width.md`
+- **NAP master:** `docs/reference/credentials.md`
+- **Standardizer:** `cag-footer-standardizer` agent

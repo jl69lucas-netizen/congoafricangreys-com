@@ -20,13 +20,18 @@ Each section provides three CTA variations. Select the voice matching the reader
 
 Place the selected CTA as an H2 or lead paragraph directly above the button pair.
 
+> **Brand note:** owners are **Mark & Teri Benjamin** (Midland, TX). Established figures:
+> **12+ years** aviary experience, **500+ families**, 100% CITES captive-bred documentation.
+> Never use dog terms (puppy/litter/grooming/hypoallergenic) — see `cag-seo-master-checklist`
+> Appendix C. Button emoji: canonical set only (✅ ✈️ 📞) — never marketing emoji.
+
 ---
 
 ## Section 1: Hero
 
 🛡️ **Trust & Security:**
 > "Don't settle for 'maybe' when it comes to your parrot's health." Join 500+ happy families who chose the security of a CAG-backed health guarantee.
-> **Button:** Shop Puppies 🧸
+> **Button:** Browse Available Birds
 
 ⚡ **Direct & Transactional:**
 > "Ready to meet your new best friend?" Browse current clutches — DNA-sexed African Grey parrots with avian vet health certificates. IATA-compliant shipping nationwide. Prices from $1,500–$3,500.
@@ -34,7 +39,7 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 
 🌱 **Ethical & Quality:**
 > "Discover the difference of a family breeder who puts health first." Raised in our home with species-appropriate enrichment and avian behavioral protocols.
-> **Button:** View Available Puppies 🎀
+> **Button:** View Available African Greys
 
 ---
 
@@ -45,8 +50,8 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 > **Button:** Verify Our Credentials
 
 ⚡ **Direct & Transactional:**
-> "15+ years · Avian vet partnerships · Nationwide IATA shipping · Transparent pricing"
-> **Button:** See Our Puppies
+> "12+ years · Avian vet partnerships · Nationwide IATA shipping · Transparent pricing"
+> **Button:** See Our Birds
 
 🌱 **Ethical & Quality:**
 > "Breeding African Greys is not a transaction — it's a 40-year commitment. We honor that responsibility every day."
@@ -54,19 +59,19 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 
 ---
 
-## Section 3: Available Puppies
+## Section 3: Available Birds
 
 🛡️ **Trust & Security:**
 > "These birds are going fast — and for good reason." Every parrot: avian vet health certificate, DNA sexing results, lifetime breeder support.
-> **Button:** Reserve a Puppy Now
+> **Button:** Reserve a Bird Now
 
 ⚡ **Direct & Transactional:**
 > "Only [X] birds available this clutch." Congo and Timneh variants. Prices from $1,500.
-> **Button:** View All Available Puppies
+> **Button:** View All Available Birds
 
 🌱 **Ethical & Quality:**
 > "We raise a small number of parrots so we can give every one the socialization and care they deserve."
-> **Button:** Meet the Current Litter
+> **Button:** Meet the Current Clutch
 
 ---
 
@@ -169,11 +174,11 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 ## Section 10: Testimonials
 
 🛡️ **Trust & Security:**
-> "2,000+ families trusted MFS with one of the biggest decisions of their year."
+> "500+ families trusted C.A.Gs with one of the biggest decisions of their year."
 > **Button:** Read All Reviews
 
 ⚡ **Direct & Transactional:**
-> "★★★★★ from 2,000+ families. See what they're saying."
+> "★★★★★ from 500+ families. See what they're saying."
 > **Button:** View Reviews
 
 🌱 **Ethical & Quality:**
@@ -182,34 +187,34 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 
 ---
 
-## Section 11: Hypoallergenic
+## Section 11: Talking Ability & Intelligence
 
 🛡️ **Trust & Security:**
-> "We've matched allergy-sensitive families with African Grey parrots for 15 years."
-> **Button:** Allergy Family Guide
+> "African Greys are the most gifted talkers in the parrot world — and ours are raised around constant human conversation."
+> **Button:** Talking & Bonding Guide
 
 ⚡ **Direct & Transactional:**
-> "95% hypoallergenic. 2,000+ allergy families approved. Test visit welcome."
-> **Button:** Find My Allergy-Safe Puppy
+> "Hand-raised for vocal confidence. Socialized daily. Ready to bond, learn, and talk."
+> **Button:** Meet Our Talkers
 
 🌱 **Ethical & Quality:**
-> "Hypoallergenic is a claim we make only because DNA sexing certificate testing confirms the gene expression in our parent dogs."
-> **Button:** See the Science
+> "An African Grey's intelligence is a lifelong responsibility — we raise ours with the enrichment that mind demands."
+> **Button:** How We Socialize
 
 ---
 
 ## Section 12: About [BREEDER_NAME]
 
 🛡️ **Trust & Security:**
-> "You're not buying from a website. You're buying from Lawrence and Cathy — and their phone number is on every page."
+> "You're not buying from a website. You're buying from Mark and Teri — and their phone number is on every page."
 > **Button:** Meet the Breeders
 
 ⚡ **Direct & Transactional:**
-> "16 years. 2,000+ puppies. One family. One phone number."
+> "12+ years. 500+ families. One family aviary. One phone number."
 > **Button:** Call Us Now
 
 🌱 **Ethical & Quality:**
-> "We didn't start MFS as a business. We started it because we fell in love with these dogs."
+> "We didn't start C.A.Gs as a business. We started it because we fell in love with these birds."
 > **Button:** Our Story
 
 ---
@@ -233,7 +238,7 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 ## Section 14: Contact / Inquiry
 
 🛡️ **Trust & Security:**
-> "Before you commit, talk to Lawrence or Cathy. No sales pressure — just honest answers."
+> "Before you commit, talk to Mark or Teri. No sales pressure — just honest answers."
 > **Button:** Send a Question
 
 ⚡ **Direct & Transactional:**
@@ -249,15 +254,15 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 ## Section 15: Location Pages
 
 🛡️ **Trust & Security:**
-> "Trusting a breeder you've never met is a leap of faith. Here's how to verify everything about MFS."
-> **Button:** Verify MFS
+> "Trusting a breeder you've never met is a leap of faith. Here's how to verify everything about C.A.Gs."
+> **Button:** Verify C.A.Gs
 
 ⚡ **Direct & Transactional:**
-> "MFS delivers to [State] — [City1], [City2], [City3] airports. Prices from $1,200."
-> **Button:** Reserve Your [State] Puppy
+> "C.A.Gs ships to [State] — [City1], [City2], [City3] airports. Prices from $1,200."
+> **Button:** Reserve Your [State] African Grey
 
 🌱 **Ethical & Quality:**
-> "We've delivered healthy, happy puppies to [State] families for [X] years."
+> "We've placed healthy, happy African Greys with [State] families for [X] years."
 > **Button:** [State] Family Stories
 
 ---
@@ -265,15 +270,15 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 ## Section 16: Comparison Pages
 
 🛡️ **Trust & Security:**
-> "We only compare breeds we actually breed — we're not guessing about the African Grey parrot."
-> **Button:** Honest Breed Comparison
+> "We only compare birds we actually raise — we're not guessing about the African Grey."
+> **Button:** Honest Species Comparison
 
 ⚡ **Direct & Transactional:**
-> "African Grey parrot vs [Breed]: side-by-side on price, size, grooming, and allergy score."
+> "African Grey vs [Other Species]: side-by-side on price, lifespan, talking ability, and temperament."
 > **Button:** See the Comparison
 
 🌱 **Ethical & Quality:**
-> "The best breed comparison comes from someone who has raised hundreds of both."
+> "The best species comparison comes from someone who has raised hundreds of African Greys."
 > **Button:** Read the Comparison
 
 ---
@@ -285,7 +290,7 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 > **Button:** Adoption vs Breeder Guide
 
 ⚡ **Direct & Transactional:**
-> "Rescue African Grey parrot or MFS puppy — we help you make the right call for your family."
+> "Rescue African Grey or a C.A.Gs hand-raised bird — we help you make the right call for your family."
 > **Button:** Compare Your Options
 
 🌱 **Ethical & Quality:**
@@ -294,62 +299,62 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 
 ---
 
-## Section 18: Waitlist / Future Litters
+## Section 18: Waitlist / Future Clutches
 
 🛡️ **Trust & Security:**
-> "Joining the waitlist costs nothing and guarantees your position for the next litter."
+> "Joining the waitlist costs nothing and guarantees your position for the next clutch."
 > **Button:** Join the Waitlist
 
 ⚡ **Direct & Transactional:**
-> "Next litter: [date]. Only [X] spots remaining."
+> "Next clutch: [date]. Only [X] spots remaining."
 > **Button:** Reserve Your Spot
 
 🌱 **Ethical & Quality:**
-> "We limit each litter because quality can't scale."
+> "We limit each clutch because quality can't scale."
 > **Button:** Get on the List
 
 ---
 
-## Section 19: Color Guide
+## Section 19: Congo vs Timneh Plumage
 
 🛡️ **Trust & Security:**
-> "Color doesn't determine health — but we've learned color preferences run deep. We respect yours."
-> **Button:** See All Colors
+> "Congo's silver-grey plumage and crimson tail, or Timneh's charcoal coat and maroon tail — both stunning, both healthy."
+> **Button:** See Both Variants
 
 ⚡ **Direct & Transactional:**
-> "Apricot, white, black, red, brown. See which colors are available now."
-> **Button:** Available Colors
+> "Congo African Grey: light grey, red tail. Timneh: darker grey, maroon tail. See current birds."
+> **Button:** View Available Birds
 
 🌱 **Ethical & Quality:**
-> "We don't breed for color at the expense of health — but we do breed for the full spectrum of beautiful."
-> **Button:** Color Guide
+> "We never compromise health for looks — every Grey is bred for vitality first."
+> **Button:** Our Breeding Standards
 
 ---
 
-## Section 20: Training Resources
+## Section 20: Early Socialization & Hand-Rearing
 
 🛡️ **Trust & Security:**
-> "A puppy is only as prepared as its breeder — and we start training on Day 1 of life."
-> **Button:** Our Training Approach
+> "A confident parrot starts with its breeder — ours are hand-fed and socialized from the first weeks of life."
+> **Button:** Our Rearing Approach
 
 ⚡ **Direct & Transactional:**
-> "Potty trained faster. Calmer with strangers. Less anxious at the vet. That's Puppy Culture."
-> **Button:** See Training Results
+> "Hand-fed. Step-up trained. Calm with handling. Confident around new people."
+> **Button:** See How We Raise Them
 
 🌱 **Ethical & Quality:**
-> "Early neurological stimulation is documented science that improves a puppy's lifelong resilience."
-> **Button:** The Science Behind ENS
+> "Early, gentle socialization shapes an African Grey's lifelong temperament — we invest in it every day."
+> **Button:** How We Hand-Rear
 
 ---
 
-## Section 21: Health Warranty Detail
+## Section 21: Health Guarantee Detail
 
 🛡️ **Trust & Security:**
 > "Print this page and compare it to any other breeder's guarantee. We'll wait."
 > **Button:** Download the Guarantee
 
 ⚡ **Direct & Transactional:**
-> "10-year guarantee. No fine print. No exceptions."
+> "Written health guarantee. No fine print. No exceptions."
 > **Button:** Read the Full Terms
 
 🌱 **Ethical & Quality:**
@@ -361,12 +366,12 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 ## Section 22: Footer / Final CTA
 
 🛡️ **Trust & Security:**
-> "Still have questions? Lawrence and Cathy answer every inquiry personally."
+> "Still have questions? Mark and Teri answer every inquiry personally."
 > **Button:** Contact the Breeders
 
 ⚡ **Direct & Transactional:**
-> "Ready? Available puppies are waiting."
-> **Button:** View Available Puppies →
+> "Ready? Available African Greys are waiting."
+> **Button:** View Available Birds →
 
 🌱 **Ethical & Quality:**
 > "Every family we've matched has been the right match. We won't rush yours."
@@ -382,3 +387,4 @@ Place the selected CTA as an H2 or lead paragraph directly above the button pair
 4. **CTA button text: 2–5 words** — never a full sentence
 5. **Availability numbers must be accurate** — check cag-clutch-manager data before using "[X] available"
 6. **Update seasonally** — "2026" and "this month" references expire
+7. **No dog terms, no marketing emoji** — never puppy/litter/grooming/hypoallergenic; buttons use only canonical emoji (✅ ✈️ 📞)
