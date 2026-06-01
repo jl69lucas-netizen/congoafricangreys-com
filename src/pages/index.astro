@@ -167,6 +167,85 @@ const videoSchema = {
 
 <BaseLayout {title} {description} {canonical}>
 
+<!-- Direction D display + body typefaces -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" />
+
+<style is:global>
+/* ============================================================
+   HOMEPAGE THEME — "Modern Editorial" (Direction D, approved 2026-06-01)
+   Newsreader literary serif headings (lower-contrast, calmer) + IBM
+   Plex Sans body. CIRCULAR hero kept. Clear hairline dividers + compact
+   rhythm. SOFT WARM cards (radius + warm shadow). Lead-line paragraphs
+   (Layout B). Locked palette (Forest / Clay / Cream); clay pill CTA.
+   ============================================================ */
+.home-d { --ink:#20342b; --line:rgba(32,52,43,.12); --rule:rgba(45,106,79,.16); }
+
+/* --- BODY type -> IBM Plex Sans (base + the font-sora utility).
+   Headings + their child spans inherit the serif below, so the hero's
+   "Trust" accent is unaffected. --- */
+.home-d { font-family:'IBM Plex Sans', system-ui, sans-serif; }
+.home-d .font-sora { font-family:'IBM Plex Sans', system-ui, sans-serif !important; }
+
+/* --- HEADINGS -> Newsreader, optical size pinned, calm weight --- */
+.home-d h1, .home-d h2, .home-d h3, .home-d h4, .home-d h5, .home-d h6 {
+  font-family:'Newsreader', Georgia, 'Times New Roman', serif !important;
+  font-weight:600 !important;
+  font-optical-sizing:none;
+  font-variation-settings:'opsz' 18;
+  letter-spacing:-.003em;
+}
+.home-d .hero-v3-b h1 { font-size:clamp(1.8rem, 1.2rem + 2.6vw, 2.4rem) !important; line-height:1.12 !important; font-weight:500 !important; }
+.home-d .hero-v3-b .text-clay { font-style:italic; font-weight:500; }
+
+/* --- HERO PORTRAIT: CIRCLE KEPT (no radius override) --- */
+
+/* --- DIVIDERS + COMPACT RHYTHM: clear lines, no big gaps --- */
+.home-d > * + * { border-top:1px solid var(--rule); }
+.home-d > section.hero-v3-b { border-top:0 !important; }
+.home-d > section:not(.hero-v3-b), .home-d > nav, .home-d > div { padding-top:2.25rem; padding-bottom:2.25rem; }
+@media (min-width:768px){ .home-d > section:not(.hero-v3-b), .home-d > nav, .home-d > div { padding-top:2.9rem; padding-bottom:2.9rem; } }
+.home-d .py-16, .home-d .py-14, .home-d .py-12 { padding-top:2.25rem !important; padding-bottom:2.25rem !important; }
+@media (min-width:768px){ .home-d .py-16, .home-d .py-14, .home-d .py-12 { padding-top:2.9rem !important; padding-bottom:2.9rem !important; } }
+
+/* --- PARAGRAPH LAYOUT B — lead line: first paragraph after a heading reads larger/ink --- */
+.home-d p { max-width:64ch !important; }
+.home-d .text-center p { margin-left:auto; margin-right:auto; }
+.home-d h1 + p, .home-d h2 + p { font-size:1.08em !important; line-height:1.7 !important; color:var(--ink) !important; }
+
+/* --- EYEBROWS: calm uppercase label with a clay underline tick --- */
+.home-d .border-l-4 { border-left:0 !important; padding-left:0 !important; }
+.home-d p.uppercase, .home-d span.uppercase { letter-spacing:.18em !important; font-weight:600; }
+.home-d .text-center > p.uppercase::after,
+.home-d .mb-8 > p.uppercase::after, .home-d .mb-7 > p.uppercase::after, .home-d .mb-6 > p.uppercase::after, .home-d .mb-2 > p.uppercase::after {
+  content:""; display:block; width:44px; height:2px; background:var(--color-clay,#e8604c); margin:10px 0 0; border-radius:2px;
+}
+.home-d .text-center > p.uppercase::after { margin-left:auto; margin-right:auto; }
+
+/* --- History SplitFeature (classic): keep the origin photo crisp (component dims to 70%)
+   and scale the feature title so it stays subordinate to the section H2 on every device --- */
+.home-d #history .split-image.cag-bird-ph { opacity:1 !important; }
+.home-d #history .split-grid h3 { font-size:clamp(1.15rem, 2.2vw, 1.5rem) !important; line-height:1.2 !important; }
+
+/* --- CARDS: SOFT WARM frame — larger radius + warm shadow --- */
+.home-d .rounded-2xl { border-radius:20px !important; }
+.home-d article {
+  border-radius:18px !important; border:1px solid var(--line) !important;
+  box-shadow:0 6px 26px rgba(60,30,10,0.08) !important;
+  transition:transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s ease !important;
+}
+.home-d article:hover { transform:translateY(-4px) !important; box-shadow:0 14px 38px rgba(60,30,10,0.14) !important; }
+
+/* --- BUTTONS: keep clay pill (brand signature); calm rise on hover --- */
+.home-d a[class*="rounded-full"], .home-d button[class*="rounded-full"] {
+  transition:transform .18s cubic-bezier(.22,1,.36,1), background-color .18s ease, border-color .18s ease !important;
+}
+.home-d a[class*="rounded-full"]:hover, .home-d button[class*="rounded-full"]:hover { transform:translateY(-2px); }
+</style>
+
+<div class="home-d">
+
   <!-- Jump Rail — fixed right-side progress nav (desktop 1024px+) -->
   <JumpRail />
 
@@ -494,52 +573,26 @@ const videoSchema = {
 
   <!-- 15. African Grey History & Origin (entity-tree · Alex / Pepperberg moat) -->
   <section id="history" class="py-16 px-4 scroll-mt-20">
-    <div class="container mx-auto max-w-[1200px]">
-
-      <!-- Higgsfield AI — cinematic Congo African Grey, 2K 16:9 -->
-      <div class="mb-10">
-        <img src="/congo-african-grey-natural-habitat-origin.webp"
-          alt="Congo African Grey Parrot (Psittacus erithacus) perched on natural wood — species origin and habitat, West and Central Africa"
-          width="1200" height="675" loading="lazy" decoding="async"
-          class="w-full rounded-2xl object-cover h-[220px] md:h-[300px] lg:h-[420px]"
-          style="box-shadow:0 8px 40px rgba(60,30,10,0.14);" />
-      </div>
-
-      <div class="container-text mx-auto" style="max-width:760px;">
+    <div class="container mx-auto max-w-[1100px]">
+      <div class="mb-8 border-l-4 border-green pl-4">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Species, Origin &amp; Intelligence</p>
-        <h2 class="font-lora font-bold text-logo-dark mb-5 leading-tight">What Is the True History of the African Grey Parrot — From Congo Rainforests to Your Living Room?</h2>
-        <div class="space-y-4 text-stone-600 leading-relaxed" style="max-width:70ch;">
-          <p>Native to the equatorial rainforests of <strong>West and Central Africa</strong>, the African Grey ranges across the Democratic Republic of the Congo, the Republic of the Congo, Cameroon, Gabon, Nigeria, Ghana, and the Ivory Coast — and conservation bodies like <a href="https://www.worldparrottrust.org/" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">the World Parrot Trust</a> have tracked the species there for decades. In the wild, Greys are intensely social, gathering in large communal roosts and foraging at the rainforest canopy on palm nuts, seeds, and fruit; they are strong, direct fliers and famously wary, which is exactly the observant, cautious-with-strangers temperament a thoughtful owner sees at home.</p>
-          <p>That same wild psychology is what turns a "moody" parrot into a loyal one once it trusts you. At C.A.Gs in Midland, TX, both subspecies we hand-rear trace straight back to that rainforest lineage — every <a href="/congo-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Congo African Grey</a> and every <a href="/timneh-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Timneh African Grey</a> is U.S. captive-bred, never taken from the wild, and the daily routine that respects that heritage is laid out in our <a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey care guide</a>.</p>
-        </div>
-
-        <h5 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-8 mb-1.5"><em>Psittacus erithacus</em> — the Congo African Grey</h5>
-        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Catalogued by <a href="https://www.birdlife.org/" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">BirdLife International's species assessments</a> and the wider ornithological record, <em>Psittacus erithacus</em> is the larger of the two Greys — a dove-grey body, scarlet tail, and the clearest human-sounding voice in the parrot world.</p>
-        <h5 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5"><em>Psittacus timneh</em> — the Timneh African Grey</h5>
-        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;"><em>Psittacus timneh</em>, native to the western edge of the range, was long lumped in with the Congo before being recognised as a full species — smaller, darker, with a maroon tail and a calmer temperament that often makes it the better first Grey.</p>
-
-        <h3 class="font-lora font-bold text-logo-dark mt-9 mb-3">How Did Alex the African Grey Change What Scientists Believe About Bird Intelligence?</h3>
-        <div class="space-y-4 text-stone-600 leading-relaxed" style="max-width:70ch;">
-          <p>The single reason the African Grey is called the smartest companion parrot on earth is a thirty-year study documented by <a href="https://alexfoundation.org/" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">The Alex Foundation</a>: animal-cognition researcher <strong>Dr. Irene Pepperberg</strong> worked with a Congo Grey named <strong>Alex</strong> who learned more than 100 labels for objects, colors, shapes, and materials, could count to six, understood the concepts of "same" and "different," and grasped a zero-like idea of absence — abilities once thought unique to primates and young children.</p>
-          <p>Pepperberg's work reset the scientific baseline for avian cognition, and cognitive scientists now routinely compare a Grey's reasoning to that of a four- to six-year-old child. For an owner, that intelligence is not an abstraction: it shows up as a bird that uses words in context, anticipates your routine, solves foraging puzzles, and invents its own games. It is also why a Grey needs genuine mental work — rotated foraging toys, training sessions, and daily conversation are how you prevent the boredom that leads to feather-plucking. The Cornell Lab of Ornithology's <a href="https://www.allaboutbirds.org/" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">All About Birds</a> resource echoes the same point: a well-engaged Grey is one of the most rewarding animals you can live with, and an under-stimulated one is simply unhappy.</p>
-        </div>
-
-        <h4 class="font-sora font-bold text-base text-logo-dark mt-9 mb-2">Why Were African Greys Uplisted from CITES Appendix II to Appendix I in 2017?</h4>
-        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-          <p>The very intelligence that makes Greys so desirable also made wild birds a target. In 2017, both subspecies were uplisted from <strong>CITES Appendix II to Appendix I</strong> — the highest level of international protection — to halt the commercial trade in wild-caught birds and protect collapsing wild populations from rampant poaching and habitat loss. That decision is precisely why ethical, captive-bred sourcing matters: it is the difference between a documented bird and a stolen one. Every Grey we place is hatched and hand-reared in the United States, closed-banded, and documented from egg to airport — legal to own and transfer domestically because the paperwork proves it was never wild-caught.</p>
-        </div>
-
-        <div class="mt-8 space-y-3">
-          <details class="border border-stone-200 rounded-xl overflow-hidden group bg-white">
-            <summary class="flex items-center justify-between p-4 cursor-pointer font-sora font-semibold text-sm text-logo-dark hover:bg-stone-50"><h6 class="font-sora font-semibold text-sm text-logo-dark m-0">Is an African Grey a good first parrot?</h6><span class="text-clay group-open:rotate-180 transition-transform">⌄</span></summary>
-            <div class="px-4 pb-4 text-stone-600 text-sm leading-relaxed">It can be, with preparation. The calmer, less reactive <a href="/timneh-african-grey-for-sale/" class="text-clay font-medium underline">Timneh African Grey</a> is the gentler introduction for most first-time owners, while the more sensitive Congo rewards a patient, consistent home. Either way, plan for daily interaction and a 40–60 year commitment before you bring one home.</div>
-          </details>
-          <details class="border border-stone-200 rounded-xl overflow-hidden group bg-white">
-            <summary class="flex items-center justify-between p-4 cursor-pointer font-sora font-semibold text-sm text-logo-dark hover:bg-stone-50"><h6 class="font-sora font-semibold text-sm text-logo-dark m-0">How long do African Greys live?</h6><span class="text-clay group-open:rotate-180 transition-transform">⌄</span></summary>
-            <div class="px-4 pb-4 text-stone-600 text-sm leading-relaxed">African Greys live 40 to 60 years in captivity, and well-cared-for birds frequently reach the upper end of that range. It is a multi-decade relationship — many owners name their Grey in their estate plans, and we talk every buyer through that reality before placement.</div>
-          </details>
-        </div>
+        <h2 class="font-lora font-bold text-logo-dark">Where Do African Greys Come From, and Why Are They So Smart?</h2>
+        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Native to the rainforests of <strong>West and Central Africa</strong>, the African Grey is intensely social, wary, and famously intelligent — a temperament conservation groups like <a href="https://www.worldparrottrust.org/" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">the World Parrot Trust</a> have studied for decades. Both species we hand-rear, the Congo (<em>Psittacus erithacus</em>) and the Timneh (<em>Psittacus timneh</em>), trace to that lineage, and our <a href="/african-grey-parrot-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">full African Grey guide</a> covers it in depth — every bird is U.S. captive-bred, never wild-caught.</p>
       </div>
+      <SplitFeature variant="classic"
+        eyebrow="THE SMARTEST COMPANION PARROT"
+        title="How Did Alex the African Grey Rewrite the Science of Bird Intelligence?"
+        body="A thirty-year study by Dr. Irene Pepperberg of a Congo Grey named Alex reset what science believed a bird could think; cognitive scientists now compare a Grey's reasoning to that of a four- to six-year-old child. It is the reason the African Grey is called the smartest companion parrot on earth."
+        bullets={[
+          { label: '<b class="text-ink">Native range:</b> rainforests of West &amp; Central Africa' },
+          { label: '<b class="text-ink">Alex the Grey:</b> 100+ words, counted to six, grasped "same / different" — studied by <a href="https://alexfoundation.org/" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">The Alex Foundation</a>' },
+          { label: '<b class="text-ink">CITES Appendix I (2017):</b> wild trade banned — every C.A.Gs bird is U.S. captive-bred and documented' },
+          { label: '<b class="text-ink">Lifespan:</b> 40–60 years — a true lifetime companion' },
+        ]}
+        ctaLabel="Read the Full African Grey Guide"
+        ctaHref="/african-grey-parrot-guide/"
+        imageSrc="/congo-african-grey-natural-habitat-origin.webp"
+      />
     </div>
   </section>
 
@@ -916,6 +969,7 @@ const videoSchema = {
   <Schema type="faq" data={{ mainEntity: faqItems.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) }} />
   <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} />
+</div>
 </BaseLayout>
 
 <script is:inline>
