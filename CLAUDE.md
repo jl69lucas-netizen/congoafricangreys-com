@@ -324,8 +324,8 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 - Desktop renders new desktop components; mobile/tablet renders new mobile components.
 - Governance docs reconciled to v2 (2026-05-29): `components.md`, `component-page-matrix.md`, `component-themes.md`
   now register the new bundles and route the homepage to them.
-- Status: content build. Per the "Always commit + push after build" rule, finished work is committed and pushed (push = deploy).
-- **Progress: Sections 1–8 built & approved (Hero · Counter · Key Takeaway · TOC · Owner Card · Review#1 · Products · Eggs&Pairs). RESUME AT SECTION 9 (Congo).**
+- Status: **DONE and LIVE** (2026-06-01). Homepage fully built + deployed — `src/pages/index.astro` (989 lines), 24 H2 sections live. Per "Always commit + push after build", all work committed + pushed.
+- **Progress: COMPLETE.** All sections built, approved, and live. (The earlier "RESUME AT SECTION 9" note is superseded — homepage was finished after 2026-05-29.)
 - Added `--color-panel/line/mid/forest` to `global.css` (fixed undefined cag-library tokens site-wide) + Rule 28b (Two-Keyword Headers) to the SEO checklist.
 - **Continuation handoff:** `sessions/2026-05-29-homepage-build-progress.md` (read first next session; do NOT re-run grill-me).
 - Session brief: `sessions/2026-05-29-session-brief.md` (see "REBUILD v2" section).
@@ -334,3 +334,4 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 - Homepage Video section: using a YouTube **placeholder** (embed + VideoObject schema scaffold) — breeder to supply the real URL later.
 - Homepage `.mov` clip not browser-usable (ffmpeg/cwebp not installed to convert → mp4).
 - GSC not connected → `docs/reference/top-pages.md` has no live clicks/impressions/LLM Visibility yet.
+- MFS deploy may be broken — the shared "MFS Dashboard" GitHub PAT was deleted during CAG token rotation (2026-06-01). Run `git push --dry-run` in the MFS repo before next MFS work; it needs its own token. (CAG uses the new "CAGs-Website Workflow" PAT in keychain; remote is tokenless.)
