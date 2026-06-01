@@ -469,6 +469,6 @@ ACTIONS TAKEN:
   ✅ Homepage: replaced 5-field form with 17-field form
   ✅ Newsletter: replaced broken SureForms with [PAYMENT_METHOD_TBD] email form
   ✅ CSS updated to CAG design system
-  ✅ Deployed to Netlify via GitHub push
+  ✅ Deployed to Cloudflare Pages via GitHub push
   ✅ IndexNow notified: 2 URLs
 ```

@@ -241,7 +241,7 @@ cd /Users/apple/Downloads/MFS/site2
 git add video-sitemap.xml [any .html files fixed]
 git commit -m "Fix YouTube iframes and video sitemap"
 git push origin main
-# Netlify auto-deploys in 1-3 min
+# Cloudflare Pages auto-deploys in 1-3 min
 ```
 
 Then submit changed video pages to IndexNow:
@@ -251,13 +251,13 @@ import json, urllib.request
 
 key = "a1b2c3d4e5f6789012345678african grey parrots"
 urls = [
-    "https://african grey parrotsforsale.com/",
+    "https://congoafricangreys.com/",
     # Add any other pages with fixed YouTube embeds
 ]
 payload = json.dumps({
-    "host": "african grey parrotsforsale.com",
+    "host": "congoafricangreys.com",
     "key": key,
-    "keyLocation": f"https://african grey parrotsforsale.com/{key}.txt",
+    "keyLocation": f"https://congoafricangreys.com/{key}.txt",
     "urlList": urls
 }).encode()
 req = urllib.request.Request(
@@ -297,7 +297,7 @@ After deploy, resubmit `video-sitemap.xml` in Google Search Console:
 | Issue | Fix |
 |---|---|
 | Homepage YouTube iframes using `data-src` (lazy-load bug) | Fixed `data-src` → `src` on 2 iframes |
-| video-sitemap.xml: 9 relative `info=` attributes | Made absolute with `https://african grey parrotsforsale.com` prefix |
+| video-sitemap.xml: 9 relative `info=` attributes | Made absolute with `https://congoafricangreys.com` prefix |
 | video-sitemap.xml: 1 missing `thumbnail_loc` (MTHXZlZtIk0) | Added `https://i.ytimg.com/vi/MTHXZlZtIk0/maxresdefault.jpg` |
 | video-sitemap.xml: 6 mp4 entries missing `thumbnail_loc` | Added site thumbnail to all mp4 entries |
 
@@ -308,7 +308,7 @@ After deploy, resubmit `video-sitemap.xml` in Google Search Console:
 After running this skill, output:
 
 ```
-YOUTUBE AUDIT — african grey parrotsforsale.com
+YOUTUBE AUDIT — congoafricangreys.com
 =====================================
 Pages scanned:          103
 Broken iframes fixed:   2

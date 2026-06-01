@@ -80,7 +80,7 @@ The only pages requiring individual design attention are the **hero sections** o
 ```
 Domain:       https://congoafricangreys.com
 Stack:        Static HTML — NO React, NO Next.js, NO build tools
-Host:         Cloudflare Pages (via Netlify → GitHub)
+Host:         Cloudflare Pages (via GitHub)
 Fonts:        Rosario (headings, 700), Open Sans (body, 500) — already loaded
 Images:       /wp-content/uploads/ — local files
 Two variants: Congo African Grey ($1,500–$3,500) + Timneh African Grey ($1,200–$2,500)

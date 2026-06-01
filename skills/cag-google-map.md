@@ -272,9 +272,9 @@ Then submit to IndexNow:
 ```python
 import json, urllib.request
 key = "a1b2c3d4e5f6789012345678african grey parrots"
-urls = ["https://african grey parrotsforsale.com/PAGE-SLUG/"]
-payload = json.dumps({"host":"african grey parrotsforsale.com","key":key,
-    "keyLocation":f"https://african grey parrotsforsale.com/{key}.txt","urlList":urls}).encode()
+urls = ["https://congoafricangreys.com/PAGE-SLUG/"]
+payload = json.dumps({"host":"congoafricangreys.com","key":key,
+    "keyLocation":f"https://congoafricangreys.com/{key}.txt","urlList":urls}).encode()
 req = urllib.request.Request("https://api.indexnow.org/indexnow",data=payload,
     headers={"Content-Type":"application/json; charset=utf-8"},method="POST")
 urllib.request.urlopen(req)
@@ -293,7 +293,7 @@ urllib.request.urlopen(req)
 ## Reporting Format
 
 ```
-GOOGLE MAP AUDIT — african grey parrotsforsale.com
+GOOGLE MAP AUDIT — congoafricangreys.com
 ========================================
 Pages audited:         103
 Broken <embed> maps:   1 → fixed
