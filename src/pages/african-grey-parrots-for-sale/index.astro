@@ -4,8 +4,8 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import TrustBar from '../../components/TrustBar.astro';
 import CTA from '../../components/CTA.astro';
 
-const title = "African Grey Parrots for Sale Near You | By State & City | C.A.Gs";
-const description = "Find a captive-bred, CITES-documented African Grey parrot for sale near you. C.A.Gs ships nationwide from Midland, TX — browse African Greys by state or city: Florida, Texas, New York, California, Chicago, Miami and 35+ more.";
+const title = "African Grey Parrots for Sale Near You — by State | C.A.Gs";
+const description = "African Grey parrots for sale near you — browse by state or city. C.A.Gs ships captive-bred, CITES-documented Congo & Timneh Greys nationwide from Midland, TX.";
 const canonical = "https://congoafricangreys.com/african-grey-parrots-for-sale/";
 
 const breadcrumbs = [
@@ -59,20 +59,33 @@ const cities = [
   { name: "Cleveland, OH", slug: "african-grey-parrot-for-sale-cleveland" },
 ];
 
-const breadcrumbSchema = {
+// BreadcrumbList JSON-LD is emitted by <Breadcrumb> itself — no duplicate here.
+// Semantic SEO: this page is a directory of regional offerings — model it as a
+// CollectionPage whose mainEntity is an ItemList enumerating every state + city page.
+const collectionSchema = {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: breadcrumbs.map((b, i) => ({
-    "@type": "ListItem",
-    position: i + 1,
-    name: b.name,
-    item: `https://congoafricangreys.com${b.url}`,
-  })),
+  "@type": "CollectionPage",
+  "name": "African Grey Parrots for Sale Near You — by State & City",
+  "description": description,
+  "url": canonical,
+  "isPartOf": { "@type": "WebSite", "name": "C.A.Gs – Midland, TX", "url": "https://congoafricangreys.com/" },
+  "about": { "@type": "Product", "name": "Captive-bred Congo & Timneh African Grey parrots" },
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "African Grey Parrots for Sale by Location",
+    "numberOfItems": states.length + cities.length,
+    "itemListElement": [...states, ...cities].map((loc, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": `African Grey Parrots for Sale in ${loc.name}`,
+      "url": `https://congoafricangreys.com/${loc.slug}/`,
+    })),
+  },
 };
 ---
 
 <BaseLayout {title} {description} {canonical}>
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
 
   <!-- Hero -->
   <div style="max-width:1200px;margin:0 auto;">
