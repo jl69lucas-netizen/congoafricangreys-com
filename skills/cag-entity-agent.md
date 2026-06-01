@@ -16,7 +16,7 @@ tools: [Read, Write, Bash]
 For every entity mention on an MFS page:
 1. **Entity** — name the thing: "DNA sexing certificate testing"
 2. **Benefit** — what it does: "screens 250+ genetic conditions before pairing"
-3. **Purpose** — why it matters to buyer: "so you know your puppy won't develop a preventable inherited condition"
+3. **Purpose** — why it matters to buyer: "so you know your African Grey won't develop a preventable inherited condition"
 
 **Without EBP (weak):** "We use DNA sexing."
 **With EBP (strong):** "DNA sexing determines the bird's biological sex with 100% accuracy — so you know what you're getting and can plan breeding responsibly if desired."

@@ -177,10 +177,10 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 - "hand-raised African Grey [State]"
 
 #### 5. Geographic/City-Level (Critical for Local SEO)
-- "[Breed] puppies [Major City, State]"
+- "[Breed] parrots [Major City, State]"
 - "[Breed] breeders near [Major City]"
-- "[Breed] puppies [County] County"
-- "[Breed] puppies delivered to [Multiple Cities]"
+- "[Breed] parrots [County] County"
+- "[Breed] parrots delivered to [Multiple Cities]"
 
 **Example for Florida:**
 - "African Grey parrot for sale Miami"
@@ -846,10 +846,10 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 **Anchor Tag:** `<a name="faqs"></a>`
 
 **H2 Header Format:**
-`Frequently Asked Questions: [Breed] Puppies for [State] Families`
+`Frequently Asked Questions: [Breed] Parrots for [State] Families`
 
 **Alternative H2 Options:**
-- `Your [State] [Breed] Puppy Questions Answered`
+- `Your [State] [Breed] Parrot Questions Answered`
 - `[Breed] FAQs for [State] Buyers`
 
 **Content Guidelines:**
@@ -1023,11 +1023,11 @@ Note: Hawaii residents — strict agricultural quarantine applies; contact us be
 **Anchor Tag:** `<a name="contact"></a>`
 
 **H2 Header Format:**
-`Ready to Welcome a [Breed] Puppy to Your [State] Home?`
+`Ready to Welcome a [Breed] Parrot to Your [State] Home?`
 
 **Alternative H2 Options:**
 - `Contact [Brand] Today: [State]'s Trusted [Breed] Breeder`
-- `Let's Find Your Perfect [Breed] Puppy for [State]!`
+- `Let's Find Your Perfect [Breed] Parrot for [State]!`
 
 **Content Guidelines:**
 - ✅ Strong, compelling CTA with trust bar reiteration: `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
@@ -1176,7 +1176,7 @@ Each section MUST include anchor tag at beginning:
 Example:
 ```
 <a name="introduction"></a>
-## Why Choose MFS for African Grey parrot Puppies in Florida?
+## Why Choose C.A.Gs for African Grey Parrots in Florida?
 ```
 
 ---

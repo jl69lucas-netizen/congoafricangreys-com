@@ -173,7 +173,7 @@ File location: `/Users/apple/Downloads/MFS/site/content/video-sitemap.xml`
     <video:thumbnail_loc>https://i.ytimg.com/vi/VIDEO_ID/maxresdefault.jpg</video:thumbnail_loc>
     <video:publication_date>2025-12-09T00:00:00+00:00</video:publication_date>
     <video:duration>SECONDS</video:duration>
-    <video:tag><![CDATA[african grey parrot puppies for sale]]></video:tag>
+    <video:tag><![CDATA[african grey parrots for sale]]></video:tag>
     <video:family_friendly>yes</video:family_friendly>
     <video:uploader info="https://congoafricangreys.com/about/">CongoAfricanGreys</video:uploader>
   </video:video>
