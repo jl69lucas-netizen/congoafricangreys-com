@@ -57,6 +57,7 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - `docs/reference/top-pages.md` — traffic baseline (populate after GSC API connected)
 - `docs/reference/components.md` — **COMPONENT REGISTRY v2: 24 named components with variants — read before building any page section**
 - `docs/reference/page-width.md` — **PAGE WIDTH RULES: Option A 1200px container system, breakpoints, responsive typography scale**
+- `docs/reference/secure-credentials.md` — **SECRETS HANDLING: the clipboard method (`$(pbpaste)`) for saving API keys/tokens; git-token rotation runbook; never put a literal secret in a command, file, or chat**
 - `docs/design.md` — **MASTER DESIGN SPEC v2: Terracotta Warmth — colors, type, buttons, cards, motion, voice rules**
 - `docs/design-system/README.md` — full narrative brand spec with identity, voice, iconography, and motion
 - `src/styles/cag-design-system.css` — canonical CSS custom-property tokens (import in non-Tailwind pages)
@@ -296,7 +297,10 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 ---
 
 ## Scripts
-- TBD — Phase 2
+- `scripts/health-sweep.sh` — **FULL SYSTEM HEALTH CHECK** (one command). Covers git/deploy state (incl. secret-leak detection), agent integrity (65 agents + model tiers), Astro build, live-site 200s, and `dist/` output hygiene. Run for any "is the site/system healthy?" request. `--no-build` skips the build. Owned/documented by the `cag-website-health` skill.
+- `scripts/apply_model_tiers.py` + `scripts/verify_model_tiers.sh` — apply/verify the 4-tier model assignment from `data/agent-registry.json`
+- `scripts/generate_nb_image.sh` — Nano Banana 2 / Imagen image generation (reads `GEMINI_API_KEY` from gitignored `.google-key`)
+- TBD — more in Phase 2
 
 ## Data Files
 - `data/competitors.json` — managed by cag-competitor-registry

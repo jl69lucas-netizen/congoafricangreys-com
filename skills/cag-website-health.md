@@ -57,6 +57,40 @@ a deeper look (CWV, page-speed, a specific fix).
 
 ---
 
+## STEP 0.5: GIT / DEPLOY / SECRET-LEAK HEALTH
+
+Sweep section 1 covers this. The fix procedures for what it flags:
+
+### Token embedded in git remote URL (CRITICAL)
+A token in `.git/config`'s remote URL (`https://user:ghp_...@github.com/...`) is a
+credential leak — plaintext on disk, and it lands in any transcript that prints the remote.
+
+**Fix (agent does the local half; USER must rotate):**
+1. **User rotates** the token in the provider dashboard (revoke + regenerate). Agents
+   must NOT delete/create tokens — that's a security-settings change.
+2. Strip the token from the URL and move auth to the keychain helper:
+   ```bash
+   git remote set-url origin https://github.com/jl69lucas-netizen/congoafricangreys-com.git
+   ```
+3. Re-store the new token via the **clipboard method** (never put the literal in a command):
+   ```bash
+   printf 'protocol=https\nhost=github.com\nusername=jl69lucas-netizen\npassword=%s\n\n' "$(pbpaste)" | git credential approve
+   ```
+4. Verify: `git push --dry-run origin main` (success = auth OK) and re-run the sweep.
+
+Full procedure + API-key recipes: **`docs/reference/secure-credentials.md`**.
+⚠️ Classic GitHub PATs are account-wide — revoking one can break other repos (e.g. MFS)
+that reused it. Note: `git ls-remote` works anonymously on **public** repos, so it does
+NOT prove push auth — always test with `git push --dry-run`.
+
+### Uncommitted / unpushed work (not deployed)
+Per CLAUDE.md "Always commit + push after build", finished work must be committed and
+pushed (push = deploy). The sweep WARNs on a dirty tree or unpushed commits.
+Build artifacts (`dist/`, `.astro/`, `node_modules/`, `.build-extract/`) and key files
+(`.env`, `.*-key`) are gitignored — confirm with `git check-ignore <path>` before committing.
+
+---
+
 ## STEP 1: DIAGNOSE (manual / deeper checks)
 
 ### A. Broken lazy-load images (WordPress GIF placeholders)
