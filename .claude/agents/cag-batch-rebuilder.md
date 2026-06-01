@@ -203,7 +203,7 @@ Duration: [estimated time]
 ## Deploy
 - Commit: [hash]
 - IndexNow: [X URLs submitted]
-- Netlify: [deploy URL]
+- Cloudflare Pages: [deploy URL]
 ```
 
 Save to `sessions/YYYY-MM-DD-batch-[job].md`.

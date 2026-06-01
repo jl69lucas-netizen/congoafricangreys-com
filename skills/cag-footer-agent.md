@@ -149,15 +149,15 @@ import json, urllib.request
 key = "a1b2c3d4e5f6789012345678african grey parrots"
 # Submit homepage + top traffic pages
 urls = [
-    "https://african grey parrotsforsale.com/",
-    "https://african grey parrotsforsale.com/buy-african grey parrot-near-me/",
-    "https://african grey parrotsforsale.com/toy-african grey parrot-puppies/",
-    "https://african grey parrotsforsale.com/mini-african grey parrot-puppies/",
+    "https://congoafricangreys.com/",
+    "https://congoafricangreys.com/buy-african grey parrot-near-me/",
+    "https://congoafricangreys.com/toy-african grey parrot-puppies/",
+    "https://congoafricangreys.com/mini-african grey parrot-puppies/",
     "https://congoafricangreys.com/congo-african-grey-for-sale/",
-    "https://african grey parrotsforsale.com/male-vs-female-african grey parrot/",
+    "https://congoafricangreys.com/male-vs-female-african grey parrot/",
 ]
-payload = json.dumps({"host":"african grey parrotsforsale.com","key":key,
-    "keyLocation":f"https://african grey parrotsforsale.com/{key}.txt","urlList":urls}).encode()
+payload = json.dumps({"host":"congoafricangreys.com","key":key,
+    "keyLocation":f"https://congoafricangreys.com/{key}.txt","urlList":urls}).encode()
 req = urllib.request.Request("https://api.indexnow.org/indexnow",data=payload,
     headers={"Content-Type":"application/json; charset=utf-8"},method="POST")
 print(urllib.request.urlopen(req).status)
@@ -251,6 +251,6 @@ Bottom Bar:
 
 - **Script:** `/Users/apple/Downloads/MFS/rebuild_footer.py`
 - **Design system:** `MFS-DESIGN-REBUILD-SKILL.md`
-- **Reference page (footer live):** `https://african grey parrotsforsale.com/male-vs-female-african grey parrot/`
+- **Reference page (footer live):** `https://congoafricangreys.com/male-vs-female-african grey parrot/`
 - **First deployed:** 2026-04-22 — 103 pages updated in one run
 - **CLAUDE.md skill entry:** `MFS-FOOTER-AGENT-SKILL.md` → Footer redesign, batch apply to all pages

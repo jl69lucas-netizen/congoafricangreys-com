@@ -51,7 +51,7 @@ Before submitting, always audit for issues that block indexing:
 import re, glob
 
 SITE_ROOT = "/Users/apple/Downloads/MFS/site2"
-DOMAIN = "https://african grey parrotsforsale.com"
+DOMAIN = "https://congoafricangreys.com"
 
 issues = []
 for fpath in glob.glob(f"{SITE_ROOT}/**/index.html", recursive=True):
@@ -104,7 +104,7 @@ for fpath in glob.glob(f"{SITE_ROOT}/*.xml"):
 import re, glob, os
 
 SITE_ROOT = "/Users/apple/Downloads/MFS/site2"
-DOMAIN = "https://african grey parrotsforsale.com"
+DOMAIN = "https://congoafricangreys.com"
 
 def fix_sitemap(content):
     # Fix <loc>
@@ -156,7 +156,7 @@ print(f"Access token: {access_token[:30]}...")
 ```python
 import urllib.request
 
-SITE = "https://african grey parrotsforsale.com/"
+SITE = "https://congoafricangreys.com/"
 SITEMAPS = [
     "sitemap_index.xml",
     "page-sitemap.xml",
@@ -169,7 +169,7 @@ from urllib.parse import quote
 site_encoded = quote(SITE, safe='')
 
 for sm in SITEMAPS:
-    sm_url = quote(f"https://african grey parrotsforsale.com/{sm}", safe='')
+    sm_url = quote(f"https://congoafricangreys.com/{sm}", safe='')
     req = urllib.request.Request(
         f"https://www.googleapis.com/webmasters/v3/sites/{site_encoded}/sitemaps/{sm_url}",
         headers={"Authorization": f"Bearer {access_token}"},
@@ -224,9 +224,9 @@ indexable = [u for u in urls if not any(n in u for n in NOINDEX_PATHS)]
 print(f"Submitting {len(indexable)} URLs to IndexNow...")
 
 payload = json.dumps({
-    "host": "african grey parrotsforsale.com",
+    "host": "congoafricangreys.com",
     "key": INDEXNOW_KEY,
-    "keyLocation": f"https://african grey parrotsforsale.com/{INDEXNOW_KEY}.txt",
+    "keyLocation": f"https://congoafricangreys.com/{INDEXNOW_KEY}.txt",
     "urlList": indexable
 }).encode()
 
@@ -248,9 +248,9 @@ INDEXNOW_KEY = "a1b2c3d4e5f6789012345678african grey parrots"
 
 def submit_url(url: str):
     payload = json.dumps({
-        "host": "african grey parrotsforsale.com",
+        "host": "congoafricangreys.com",
         "key": INDEXNOW_KEY,
-        "keyLocation": f"https://african grey parrotsforsale.com/{INDEXNOW_KEY}.txt",
+        "keyLocation": f"https://congoafricangreys.com/{INDEXNOW_KEY}.txt",
         "urlList": [url]
     }).encode()
     req = urllib.request.Request(
@@ -263,7 +263,7 @@ def submit_url(url: str):
         print(f"IndexNow: {r.status} for {url}")
 
 # Example:
-submit_url("https://african grey parrotsforsale.com/new-page-slug/")
+submit_url("https://congoafricangreys.com/new-page-slug/")
 ```
 
 ---
@@ -284,8 +284,8 @@ Disallow: /*?add-to-cart=
 
 And sitemap entries are absolute:
 ```
-Sitemap: https://african grey parrotsforsale.com/sitemap_index.xml
-Sitemap: https://african grey parrotsforsale.com/local-sitemap.xml
+Sitemap: https://congoafricangreys.com/sitemap_index.xml
+Sitemap: https://congoafricangreys.com/local-sitemap.xml
 ```
 
 ---
@@ -297,7 +297,7 @@ All URLs must be absolute. Run this fix:
 import re
 from html import unescape
 
-DOMAIN = "https://african grey parrotsforsale.com"
+DOMAIN = "https://congoafricangreys.com"
 with open('/Users/apple/Downloads/MFS/site/content/llms.txt') as f:
     content = f.read()
 

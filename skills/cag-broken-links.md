@@ -119,7 +119,7 @@ Append to `/Users/apple/Downloads/MFS/site/content/_redirects`:
 - Always add both `/path/` (trailing slash) and `/path` (no trailing slash) variants
 - Use `301` (permanent) for SEO — not `302`
 - Put more-specific rules ABOVE catch-all rules
-- The `!` suffix forces a redirect even if Netlify finds a matching file
+- The `!` suffix forces a redirect even if Cloudflare finds a matching file
 
 ---
 
@@ -162,7 +162,7 @@ h1 { font-family: 'Rosario', serif; color: #2D6A4F; }
 ```
 
 **Critical rules for hub pages:**
-- `canonical` must be absolute: `https://african grey parrotsforsale.com/slug/`
+- `canonical` must be absolute: `https://congoafricangreys.com/slug/`
 - `og:url` must be absolute
 - No schema JSON-LD required for hub pages (optional)
 - H1 must contain the target keyword

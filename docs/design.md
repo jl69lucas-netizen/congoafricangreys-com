@@ -15,7 +15,7 @@ Related files:
 ## Brand Identity
 
 **Site:** CongoAfricanGreys.com — family-owned, captive-bred African Grey parrot breeder,
-Midland TX, est. 2014. Owners: Mark & Teri Benjamin. USDA AWA-licensed, CITES Appendix II.
+Midland TX, est. 2014. Owners: Mark & Teri Benjamin. USDA AWA-licensed, CITES Appendix I captive-bred.
 
 **Tone:** Warm, trustworthy, premium — like a high-end pet boutique, not a generic directory.
 **Audience:** Parrot buyers (first-timers and experienced) making a 30+ year commitment.
@@ -36,7 +36,7 @@ new companion") to the buyer. Never corporate "the company".
 - Buttons: Title Case ("Reserve Your African Grey", "Send Inquiry").
 
 **Words we use:** "captive-bred", "hand-fed", "weaned", "hen / cock", "clutch", "aviary",
-"companion bird", "CITES Appendix II", "DNA-sexed", "avian vet certified", "health guarantee",
+"companion bird", "CITES Appendix I", "DNA-sexed", "avian vet certified", "health guarantee",
 "lifetime support".
 
 **Words we avoid:** "stock", "inventory", "product", "purchase", "shop now", "limited time",
@@ -62,7 +62,7 @@ No 🎉 🔥 🚀 "marketing" emoji.
 
 **Trust signals — at least two on every transactional page:**
 - "USDA-Licensed Breeder"
-- "CITES Appendix II Documented"
+- "CITES Appendix I Documented"
 - "DNA-Sexed & Vet-Certified"
 - "Ships Nationwide from $185"
 - "24–48 Hour Response Guarantee"
