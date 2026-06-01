@@ -482,3 +482,16 @@ Section Builder — build a `hero` section:
 - cta_secondary: "Ask a Question"
 - cta_secondary_href: "#contact"
 ```
+
+---
+
+## Direction D — Site Theme (MANDATORY default)
+
+> **Skill:** `skills/cag-direction-d-theme.md` — read before building or restyling any page/section.
+
+Direction D "Modern Editorial" is the **live, site-wide theme**, applied globally via `src/styles/direction-d.css` + `body.theme-d` (in `BaseLayout.astro`). Every page inherits it automatically:
+- **Headings** render in **Newsreader** serif (even with `font-lora` on them); **body** in **IBM Plex Sans** (overrides `.font-sora`).
+- First `<p>` after an H1/H2 = lead line (larger/inkier). `.uppercase` eyebrows get a clay tick. `<article>` = soft-warm card. Clay pill CTAs keep a calm hover rise.
+- Palette is unchanged (Forest / Clay / Cream); the clay pill stays the brand signature.
+
+**Do NOT** add font links, a `.theme-d`/`.home-d` block, or any Direction D CSS into a page — it's already global. Build normal design-system markup and the theme applies. To change the theme, edit `src/styles/direction-d.css` only. (Homepage-only hairline dividers + compact padding stay scoped to `.home-d` in `src/pages/index.astro` — do not copy them elsewhere.)

@@ -1,0 +1,106 @@
+/* ============================================================
+   DIRECTION D — "Modern Editorial" SITE THEME (global default)
+   ------------------------------------------------------------
+   Promoted from the homepage (approved 2026-06-01) to EVERY page
+   via `body.theme-d` (set in BaseLayout.astro). This is now the
+   site-wide default look. Do NOT re-implement it per page.
+
+   INCLUDED here (universal, structure-safe):
+     • Newsreader literary-serif headings (optical size pinned)
+     • IBM Plex Sans body (overrides the .font-sora utility)
+     • Lead-line paragraphs (Layout B): first <p> after a heading
+     • Eyebrow ticks: clay underline under uppercase labels
+     • Soft-warm cards: larger radius + warm shadow + hover lift
+     • Calm button motion on clay pill CTAs
+
+   DELIBERATELY EXCLUDED (homepage-structural — stays scoped to the
+   homepage's `.home-d` wrapper in src/pages/index.astro):
+     • Hairline dividers between top-level sections (`> * + *`)
+     • Compact-padding overrides on py-12/14/16 bands
+
+   Locked palette (Forest / Clay / Cream) — colors are untouched.
+   Loaded AFTER global.css so it wins ties; font overrides use
+   !important to beat the Tailwind `font-sora` utility.
+   ============================================================ */
+
+body.theme-d {
+  --ink:  #20342b;
+  --line: rgba(32, 52, 43, .12);
+}
+
+/* --- BODY type -> IBM Plex Sans (base + the .font-sora utility).
+   Headings + their child spans inherit the serif below, so accent
+   words inside a heading keep the serif. --- */
+body.theme-d,
+body.theme-d .font-sora {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif !important;
+}
+
+/* --- HEADINGS -> Newsreader, optical size pinned, calm weight --- */
+body.theme-d h1,
+body.theme-d h2,
+body.theme-d h3,
+body.theme-d h4,
+body.theme-d h5,
+body.theme-d h6 {
+  font-family: 'Newsreader', Georgia, 'Times New Roman', serif !important;
+  font-weight: 600 !important;
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 18;
+  letter-spacing: -.003em;
+}
+
+/* --- PARAGRAPH LAYOUT B — lead line: the first paragraph after a
+   heading reads slightly larger and inkier --- */
+body.theme-d h1 + p,
+body.theme-d h2 + p {
+  font-size: 1.08em;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+/* --- EYEBROWS: calm uppercase label with a clay underline tick --- */
+body.theme-d p.uppercase,
+body.theme-d span.uppercase {
+  letter-spacing: .18em;
+  font-weight: 600;
+}
+body.theme-d .text-center > p.uppercase::after,
+body.theme-d .mb-8 > p.uppercase::after,
+body.theme-d .mb-7 > p.uppercase::after,
+body.theme-d .mb-6 > p.uppercase::after,
+body.theme-d .mb-2 > p.uppercase::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 2px;
+  background: var(--color-clay, #e8604c);
+  margin: 10px 0 0;
+  border-radius: 2px;
+}
+body.theme-d .text-center > p.uppercase::after {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- CARDS: SOFT WARM frame — larger radius + warm shadow + hover lift --- */
+body.theme-d article {
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 26px rgba(60, 30, 10, 0.08);
+  transition: transform .18s cubic-bezier(.22, 1, .36, 1), box-shadow .18s ease;
+}
+body.theme-d article:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 38px rgba(60, 30, 10, 0.14);
+}
+
+/* --- BUTTONS: keep the clay pill (brand signature); calm rise on hover --- */
+body.theme-d a[class*="rounded-full"],
+body.theme-d button[class*="rounded-full"] {
+  transition: transform .18s cubic-bezier(.22, 1, .36, 1), background-color .18s ease, border-color .18s ease;
+}
+body.theme-d a[class*="rounded-full"]:hover,
+body.theme-d button[class*="rounded-full"]:hover {
+  transform: translateY(-2px);
+}

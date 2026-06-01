@@ -240,3 +240,16 @@ FAQ answers become YouTube video talking points and infographic data points. Han
 6. **6–10 questions per page** — fewer is thin, more than 10 Google may not display
 7. **Feed answers to cag-paa-agent** — FAQ and PAA content should share a question bank
 8. **Distribution mode available** — use the 7 strategies above to integrate FAQ content throughout pages beyond the dedicated FAQ section
+
+---
+
+## Direction D — Site Theme (MANDATORY default)
+
+> **Skill:** `skills/cag-direction-d-theme.md` — read before building or restyling any page/section.
+
+Direction D "Modern Editorial" is the **live, site-wide theme**, applied globally via `src/styles/direction-d.css` + `body.theme-d` (in `BaseLayout.astro`). Every page inherits it automatically:
+- **Headings** render in **Newsreader** serif (even with `font-lora` on them); **body** in **IBM Plex Sans** (overrides `.font-sora`).
+- First `<p>` after an H1/H2 = lead line (larger/inkier). `.uppercase` eyebrows get a clay tick. `<article>` = soft-warm card. Clay pill CTAs keep a calm hover rise.
+- Palette is unchanged (Forest / Clay / Cream); the clay pill stays the brand signature.
+
+**Do NOT** add font links, a `.theme-d`/`.home-d` block, or any Direction D CSS into a page — it's already global. Build normal design-system markup and the theme applies. To change the theme, edit `src/styles/direction-d.css` only. (Homepage-only hairline dividers + compact padding stay scoped to `.home-d` in `src/pages/index.astro` — do not copy them elsewhere.)

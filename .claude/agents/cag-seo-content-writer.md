@@ -260,3 +260,16 @@ After the hero H1/subheadline, include 4 short counter snippets:
 9. **Counter snippets required** — every page hero gets 4 counter snippets pulled from real data files
 10. **Outline before sections (Rule 51)** — never write section 1 without an approved Page Outline; the outline approval is a hard gate that cannot be skipped regardless of how the task was briefed
 11. **Header/footer off-limits (Rule 53)** — never write or modify `<header>` or `<footer>` elements in any page file; content always starts at the hero `<section>`; `src/layouts/BaseLayout.astro` handles header/footer injection automatically for all Astro pages
+
+---
+
+## Direction D — Site Theme (MANDATORY default)
+
+> **Skill:** `skills/cag-direction-d-theme.md` — read before building or restyling any page/section.
+
+Direction D "Modern Editorial" is the **live, site-wide theme**, applied globally via `src/styles/direction-d.css` + `body.theme-d` (in `BaseLayout.astro`). Every page inherits it automatically:
+- **Headings** render in **Newsreader** serif (even with `font-lora` on them); **body** in **IBM Plex Sans** (overrides `.font-sora`).
+- First `<p>` after an H1/H2 = lead line (larger/inkier). `.uppercase` eyebrows get a clay tick. `<article>` = soft-warm card. Clay pill CTAs keep a calm hover rise.
+- Palette is unchanged (Forest / Clay / Cream); the clay pill stays the brand signature.
+
+**Do NOT** add font links, a `.theme-d`/`.home-d` block, or any Direction D CSS into a page — it's already global. Build normal design-system markup and the theme applies. To change the theme, edit `src/styles/direction-d.css` only. (Homepage-only hairline dividers + compact padding stay scoped to `.home-d` in `src/pages/index.astro` — do not copy them elsewhere.)
