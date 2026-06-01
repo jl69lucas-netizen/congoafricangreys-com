@@ -145,7 +145,7 @@ p  { font-family: 'Open Sans', sans-serif; font-size: 1.125rem; font-weight: 500
 /* TBD — finalize hex values in docs/reference/design-system.md before using */
 
 /* ── Trust Bar (REQUIRED above fold on all pages) ─ */
-/* CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified */
+/* CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified */
 .cag-trust-bar { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center;
   background: /* TBD — update docs/reference/design-system.md before using */;
   padding: .75rem 1.5rem; }
@@ -244,7 +244,7 @@ p  { font-family: 'Open Sans', sans-serif; font-size: 1.125rem; font-weight: 500
 
 ### 9-Section Page Structure Template
 ```
-1. TRUST BAR       — CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified
+1. TRUST BAR       — CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified
 2. HERO            — Forest-green gradient, H1, trust badges, single primary CTA
 3. KEY TAKEAWAYS   — Card grid (surface background)
 4. CONTENT SECTIONS— Alternating white/surface, H2 + H3 + body copy
@@ -263,7 +263,7 @@ Use this split layout instead:
 ```html
 <!-- Trust bar — REQUIRED above every hero -->
 <div class="cag-trust-bar">
-  <span class="cag-trust-bar-item">CITES Appendix II</span>
+  <span class="cag-trust-bar-item">CITES Appendix I</span>
   <span class="cag-trust-bar-item">Captive-Bred</span>
   <span class="cag-trust-bar-item">USDA AWA Licensed</span>
   <span class="cag-trust-bar-item">DNA Sexed</span>
@@ -363,10 +363,10 @@ BRAND:
 - CITES compliance must be immediately visible
 
 TRUST BAR (above hero, required):
-"CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified"
+"CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified"
 
 HERO CONTENT TO USE:
-- Eyebrow label: "CITES Appendix II · Captive-Bred Since [YEAR]"
+- Eyebrow label: "CITES Appendix I · Captive-Bred Since [YEAR]"
 - H1: "Congo & Timneh African Grey Parrots For Sale"
 - Subheadline: "DNA-sexed, avian vet-certified, CITES documented. Hatch certificate + band number included."
 - Urgency: "Limited clutch availability — inquire early"
@@ -392,7 +392,7 @@ This bar must appear ABOVE the fold on every page.
 BRAND: Forest green background, white text, Open Sans font.
 
 CONTENT (5 trust signals in a horizontal row, collapse to 2-col on mobile):
-1. CITES Appendix II
+1. CITES Appendix I
 2. Captive-Bred
 3. USDA AWA Licensed
 4. DNA Sexed
@@ -442,7 +442,7 @@ BRAND: Forest green highlight column, charcoal text, white/warm-cream background
 
 CONTENT:
 H2: "Congo or Timneh African Grey? Find Your Perfect Match"
-Subtext: "Both are CITES Appendix II captive-bred with full documentation. Here's how they differ."
+Subtext: "Both are CITES Appendix I captive-bred with full documentation. Here's how they differ."
 
 COMPARISON TABLE — 2 columns side by side:
 Left — Congo African Grey: $1,500–$3,500 | Size: Larger (400–650g) | Plumage: Bright red tail, lighter grey | Temperament: Bold, outgoing | Talking: Earlier talker, larger vocabulary potential
@@ -493,13 +493,13 @@ H2: "Common Questions About Our African Grey Parrots"
 
 6 FAQ items (accordion — only one open at a time, JS toggle):
 Q: "Are your African Greys CITES compliant?"
-A: "Yes. All our birds are captive-bred with full CITES Appendix II documentation including hatch certificate, band number, DNA sexing certificate, and avian vet health certificate."
+A: "Yes. All our birds are captive-bred with full CITES Appendix I documentation including hatch certificate, band number, DNA sexing certificate, and avian vet health certificate."
 
 Q: "What is the difference between Congo and Timneh African Greys?"
 A: "Congo African Greys ($1,500–$3,500) are larger with a bright red tail and lighter grey plumage. Timneh African Greys ($1,200–$2,500) are smaller with a dark maroon tail, often considered less nervous and a good choice for first-time large-parrot owners."
 
 Q: "What documentation comes with each bird?"
-A: "Every bird includes: CITES Appendix II captive-bred certificate, hatch certificate with band number, DNA sexing certificate, and avian veterinarian health certificate. We also hold a USDA AWA license."
+A: "Every bird includes: CITES Appendix I captive-bred certificate, hatch certificate with band number, DNA sexing certificate, and avian veterinarian health certificate. We also hold a USDA AWA license."
 
 Q: "How do I reserve a bird?"
 A: "Contact us via our inquiry form with your preferred variant (Congo or Timneh) and your state. We will follow up with availability, documentation details, and next steps."
@@ -523,7 +523,7 @@ Design a footer for CongoAfricanGreys.com — captive-bred African Grey parrot b
 BRAND: Dark charcoal #1A1A1A background, white text, forest-green link hover, Open Sans font.
 
 CONTENT:
-Column 1 — About: Logo + "CongoAfricanGreys.com: Captive-bred Congo and Timneh African Grey parrots. CITES Appendix II · USDA AWA Licensed."
+Column 1 — About: Logo + "CongoAfricanGreys.com: Captive-bred Congo and Timneh African Grey parrots. CITES Appendix I · USDA AWA Licensed."
 Column 2 — Quick Links: Available Birds | Congo African Grey | Timneh African Grey | Species Guide | CITES Documentation | FAQ
 Column 3 — Species: Congo African Grey For Sale | Timneh African Grey For Sale | Male vs Female African Grey | African Grey Care Guide | African Grey Training
 Column 4 — Contact: [contact email] | [contact form link] | USDA AWA License | CITES Documentation
@@ -562,7 +562,7 @@ Design reference page: `site/content/male-vs-female-african-grey-parrots-for-sal
 
 <!-- TRUST BAR — REQUIRED above every hero -->
 <div class="cag-trust-bar">
-  <span class="cag-trust-bar-item">CITES Appendix II</span>
+  <span class="cag-trust-bar-item">CITES Appendix I</span>
   <span class="cag-trust-bar-item">Captive-Bred</span>
   <span class="cag-trust-bar-item">USDA AWA Licensed</span>
   <span class="cag-trust-bar-item">DNA Sexed</span>

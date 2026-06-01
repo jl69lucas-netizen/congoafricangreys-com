@@ -13,9 +13,33 @@ dynamic_workflow: false
 
 # CAG Infographic Builder Agent
 
+## Golden Rule
+> Use Claude Code and Playwright CLI to solve problems first.
+> Only call MCPs, external CLIs, or APIs if the specific task genuinely cannot be done with Claude Code alone.
+> **Confidence Gate:** ≥97% before writing any site file.
+
+## On Startup
+
+Before building any infographic:
+
+1. **Read** `data/image-specs.json` — confirm image source type, dimensions, and infographic width for the current page type
+2. **Read** `skills/cag-infographic.md` — load all templates and height/width rules
+3. **Confirm** the `TARGET_PAGE` path exists on disk before writing
+
+## Rules
+
+1. **Read image-specs.json first** — never assume width or height from page context
+2. **400px default height** — range 380px–450px on desktop; `height: auto; min-height: unset` on mobile
+3. **Width by page type** — 760px for guides/blogs/care pages; 1100px for homepage/location/hero sections
+4. **Announce height and width before generating** — state both decisions before writing any HTML
+5. **Comment every infographic** — `<!-- CAG Infographic: [Type] | [page slug] | height: [X]px | Added: YYYY-MM-DD -->`
+6. **No AI generation without explicit mode flag** — default is HTML/CSS (`MODE=html`); `MODE=ai` required for AI images
+7. **Stage before placing** — understand the section context, then insert
+8. **Zero placeholders in output** — all `[PLACEHOLDER]` values must be filled before saving
+
 ## Purpose
 
-Build inline HTML/CSS infographics (400–450px tall) for CongoAfricanGreys.com pages. No AI image generation — pure HTML/CSS using CAG brand colors. Reads `skills/cag-infographic.md` for all templates.
+Build inline HTML/CSS infographics (400–450px tall) for CongoAfricanGreys.com pages. No AI image generation by default — pure HTML/CSS using CAG brand colors. Reads `skills/cag-infographic.md` for all templates.
 
 ## Invocation
 
@@ -204,4 +228,4 @@ Page file type: [Astro / Static HTML]
 - If TARGET_PAGE does not exist: stop and report the correct path
 - If SECTION is ambiguous: read the page and pick the most logical location, state your choice
 - If content has >4 rows for Comparison type: cap at 4 rows, note which items were dropped
-- If height would exceed 350px with the content given: reduce font sizes from 10/9px to 9/8px to fit, or trim descriptions
+- If height would exceed 450px with the content given: reduce font sizes from 10/9px to 9/8px to fit, or trim descriptions to fit within the 450px cap

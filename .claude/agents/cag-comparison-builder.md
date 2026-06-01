@@ -21,7 +21,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,500–$1,600) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -150,5 +150,5 @@ Never change either. When building a **new** page, set:
 3. **FAQ schema required** — FAQPage JSON-LD no exceptions
 4. **Prices from data/price-matrix.json** — never hardcode
 5. **Mid-page CTA required** — every comparison page needs a conversion point at the halfway mark
-6. **CITES note required** — every comparison involving African Greys must note CITES Appendix II status and that all documentation is included
+6. **CITES note required** — every comparison involving African Greys must note CITES Appendix I status and that all documentation is included
 7. **Congo vs Timneh is highest priority** — build this first; it addresses the most common buyer decision point

@@ -1,31 +1,37 @@
 # CAG Component Theme Configurations
 
-**Version 1.0 — 2026-05-27**
+**Version 2.0 — 2026-05-29** *(Heritage Trust reconciled to the NEW component bundles for the homepage rebuild.)*
 
 Three named theme packages — one per page purpose. When building a page, select the theme that matches the page's goal, then swap individual components only when the user explicitly requests a different variant.
 
 ---
 
-## Theme 1: "Heritage Trust"
+## Theme 1: "Heritage Trust" — v2 (NEW components)
 
 **Character:** Warm, editorial, content-first. Authority without aggression.
-**Use for:** Homepage, care guides, species guides, scam awareness page, about page.
+**Use for:** Homepage (REBUILD v2), care guides, species guides, scam awareness page, about page.
 
 | Section | Component | Variant |
 |---|---|---|
 | Navigation | `Navbar` | `classic` |
-| Hero | `cag-split-hero` | `editorial` |
-| Credibility Strip | `cag-stats-bar` | `dark` |
+| Hero | `cag-hero-v3` | **`b` Authority Green** |
+| Counter strip | `cag-counter-snippet` | `4-stat` |
+| Answer box | `cag-key-takeaway-v2` | `02` stat-forward grid |
+| Page nav | `cag-toc-v3` | `02` grouped by part |
+| Breeder card | `cag-owner-card` | `mark-teri` |
+| Bird Listings | `cag-available-grid` | `a` pill tabs (filterable) |
+| Comparison | `cag-compare-table-e` | (1100px) |
 | Why Choose Us | `cag-split-feature` | `editorial` |
-| Bird Listings | `SnapCarousel` + `cag-bird-card` | `classic` |
 | Trust Credentials | `cag-trust-stats` | `classic` |
 | Social Proof | `cag-testimonials` | `feature` |
-| FAQ | `cag-faq-accordion` | `editorial` |
+| FAQ | `cag-faq-accordion` | `editorial` (PAA-sourced) |
 | Email Capture | `cag-newsletter` | `banner` |
 | Footer | `cag-footer` | `dark` |
 | Mobile Nav | `MobileNav` | (default) |
 
-**CSS signature:** Cream page surface (`#faf7f4`), Lora serif headings, editorial spacing (64px vertical sections), forest-green dividers and tags, no light-colored panels except the hero gradient. Dark stats bar, dark footer.
+**CSS signature:** Cream page surface (`#faf7f4`), Lora serif headings, editorial spacing (64px vertical sections), forest-green dividers and tags, no light-colored panels except the hero gradient. Dark footer.
+
+> **Legacy v1 Heritage Trust** (superseded): Hero `cag-split-hero:editorial`, Bird Listings `SnapCarousel + cag-bird-card:classic`, no TOC/Key-Takeaway/counter. Do not use on the homepage.
 
 ---
 

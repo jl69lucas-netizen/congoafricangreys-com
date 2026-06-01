@@ -21,7 +21,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -131,7 +131,7 @@ Position CAG against what most buyers accept as standard.
 
 ### Documentation Angles
 - "The $600 Facebook Grey vs the $1,500 CITES-documented Grey — what you're actually paying for"
-- "CITES Appendix II explained in plain English — what it means for your bird purchase"
+- "CITES Appendix I explained in plain English — what it means for your bird purchase"
 - "How to verify a CITES captive-bred permit before sending any deposit"
 
 ### Variant Angles

@@ -14,7 +14,7 @@ tools: [Read, Write, Bash]
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -42,7 +42,7 @@ CAG operates in a trust-scarce market. African Grey buyers have been burned by:
 - Sites that say "captive-bred" with no documentation to show
 - "Cheap african grey" sites with no USDA license, no vet cert, no recourse
 
-EBP converts vague claims into verifiable proof. "All our birds are documented" becomes "CITES Appendix II captive-bred permit #[NUMBER] — verifiable at usfws.gov."
+EBP converts vague claims into verifiable proof. "All our birds are documented" becomes "CITES Appendix I captive-bred permit #[NUMBER] — verifiable at usfws.gov."
 
 ---
 
@@ -50,7 +50,7 @@ EBP converts vague claims into verifiable proof. "All our birds are documented" 
 
 | Claim | Evidence Source | How to Cite |
 |-------|---------------|-------------|
-| Legally documented | CITES captive-bred permit | "CITES Appendix II captive-bred permit — verifiable at usfws.gov" |
+| Legally documented | CITES captive-bred permit | "CITES Appendix I captive-bred permit — verifiable at usfws.gov" |
 | Licensed breeder | USDA AWA license | "USDA AWA license #[NUMBER] — verifiable at aphis.usda.gov" |
 | DNA sexed | DNA sexing certificate | "DNA sexing certificate — [LAB_NAME], certificate included with bird" |
 | Health tested | Avian vet health cert | "Avian vet health certificate — [VET_NAME], issued on [date]" |
@@ -65,7 +65,7 @@ EBP converts vague claims into verifiable proof. "All our birds are documented" 
 
 ### Basic EBP Block (for inline credibility)
 ```
-[Claim]: African Greys from CongoAfricanGreys.com are fully documented under CITES Appendix II.
+[Claim]: African Greys from CongoAfricanGreys.com are fully documented under CITES Appendix I.
 [Evidence]: CITES captive-bred permit issued under our USDA AWA license. Permit number 
             available before any deposit is sent. Verifiable independently at usfws.gov.
 [Profile]: Every bird ships with the CITES permit, DNA sexing certificate, avian vet health 
@@ -78,9 +78,9 @@ EBP converts vague claims into verifiable proof. "All our birds are documented" 
   <h3>Documentation — What "CITES Documented" Actually Means at CongoAfricanGreys.com</h3>
   
   <div class="cag-ebp-item">
-    <strong>CITES Appendix II Captive-Bred Permit</strong>
+    <strong>CITES Appendix I Captive-Bred Permit</strong>
     <p>Every African Grey parrot from CongoAfricanGreys.com is captive-bred under a CITES 
-       Appendix II captive-bred permit. This permit is issued by the U.S. Fish &amp; Wildlife 
+       Appendix I captive-bred permit. This permit is issued by the U.S. Fish &amp; Wildlife 
        Service and is required by federal law for any legal sale of African Greys. 
        Permit number available before any deposit is sent.</p>
     <p class="cag-evidence-note">Evidence: CITES captive-bred permit included with every bird. 
@@ -120,7 +120,7 @@ Profile:  The $1,500–$3,500 (CAG) / $1,200–$2,500 (TAG) price + $300–$500 
 
 | Assertion (weak) | EBP (strong) |
 |-----------------|-------------|
-| "All our birds are legal" | "CITES Appendix II captive-bred permit — verifiable at usfws.gov" |
+| "All our birds are legal" | "CITES Appendix I captive-bred permit — verifiable at usfws.gov" |
 | "Our birds are health tested" | "Avian vet certificate — [VET_NAME], certificate included" |
 | "DNA sexed" | "DNA sexing certificate — [LAB_NAME], included with bird" |
 | "Hand-raised from hatch" | "Hand-feeding log from day 1 — available on request" |

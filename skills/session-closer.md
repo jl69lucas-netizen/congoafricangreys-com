@@ -14,7 +14,7 @@ tools: [Read, Write, Bash]
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -101,7 +101,7 @@ Confirm: `"What's Next filled in today's session brief."`
 
 ### Step 3 — Propose Next Session Agenda
 
-Show the user a proposed agenda for the next session — formatted so it can go directly into Grill Me's Q11 ("Repeat/Avoid"):
+Show the user a proposed agenda for the next session — formatted so it can go directly into Grill Me's Q13 ("Repeat/Avoid"):
 
 ```
 Proposed Next Session Agenda:
@@ -145,7 +145,7 @@ After writing (or skipping) the CLAUDE.md patch:
 >
 > Brief: `sessions/[today's date]-session-brief.md` — What's Next filled.
 > CLAUDE.md: [updated / no changes needed]
-> Next session starts with: `/grill-me`
+> Next session: Sprint 0 done? **YES** → `/grill-me` · **NO** → `@cag-competitor-intel --all` first, then grill-me
 >
 > See you next session."
 

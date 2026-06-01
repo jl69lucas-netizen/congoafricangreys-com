@@ -23,7 +23,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,500–$1,600) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -65,7 +65,7 @@ Single-purpose agent for all Timneh African Grey pages on CongoAfricanGreys.com.
 | **Temperament** | Confident, assertive, can become a one-person bird |
 | **Bond style** | Bonds deeply with one primary person; can be wary of others |
 | **Best for** | Experienced owners, single-person households, dedicated time |
-| **CITES documentation** | CITES Appendix II captive-bred permit, DNA sexing cert, avian vet cert, hatch cert |
+| **CITES documentation** | CITES Appendix I captive-bred permit, DNA sexing cert, avian vet cert, hatch cert |
 
 ### Timneh African Grey (TAG — Psittacus erithacus timneh)
 
@@ -81,7 +81,7 @@ Single-purpose agent for all Timneh African Grey pages on CongoAfricanGreys.com.
 | **Temperament** | Calmer, more adaptable, handles multiple people and schedule changes better |
 | **Bond style** | Bonds well with entire family; not strongly one-person |
 | **Best for** | First-time African Grey owners, families, apartment living, busier households |
-| **CITES documentation** | Same: CITES Appendix II captive-bred permit, DNA sexing cert, avian vet cert, hatch cert |
+| **CITES documentation** | Same: CITES Appendix I captive-bred permit, DNA sexing cert, avian vet cert, hatch cert |
 
 ### Cross-Sell Logic (when to mention both variants)
 
@@ -142,7 +142,7 @@ grep -n "<h1\|canonical\|ld+json" site/content/timneh-african-grey-for-sale/*.md
 ```
 1. Hero section
    - H1 with primary keyword
-   - CITES trust bar: USDA AWA · CITES Appendix II · DNA Sexed · Avian Vet Certified
+   - CITES trust bar: USDA AWA · CITES Appendix I · DNA Sexed · Avian Vet Certified
    - Primary CTA → #contact
 
 2. Key Takeaways box (3–5 bullets)
@@ -185,7 +185,7 @@ grep -n "<h1\|canonical\|ld+json" site/content/timneh-african-grey-for-sale/*.md
   "@context": "https://schema.org",
   "@type": "Product",
   "name": "Timneh African Grey Parrot",
-  "description": "CITES Appendix II captive-bred Timneh African Grey parrots from [BREEDER_NAME]. CITES permit, DNA sexing certificate, avian vet health certificate, and hatch certificate included.",
+  "description": "CITES Appendix I captive-bred Timneh African Grey parrots from [BREEDER_NAME]. CITES permit, DNA sexing certificate, avian vet health certificate, and hatch certificate included.",
   "brand": {
     "@type": "Brand",
     "name": "CongoAfricanGreys.com"

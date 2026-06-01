@@ -21,7 +21,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -84,7 +84,7 @@ Florida (FL)
   Cities: Miami, Orlando, Tampa, Jacksonville, Fort Lauderdale, St. Petersburg, Hialeah, Tallahassee
   Climate: Subtropical — hot humid summers, mild winters. No cold-weather shipping restrictions.
   Import note: No state-level restrictions beyond federal CITES requirements.
-  State law: CITES Appendix II requires documentation. No additional state permit for buyers.
+  State law: CITES Appendix I — federal captive-bred documentation required. No additional state permit for buyers.
   Avian vet note: Florida has a large avian vet community. Post-arrival vet visit within 72h recommended.
 
 California (CA)
@@ -98,56 +98,56 @@ Texas (TX)
   Cities: Houston, San Antonio, Dallas, Austin, Fort Worth, El Paso, Arlington, Corpus Christi, Plano, Laredo
   Climate: Varied — humid in Houston, dry in El Paso, hot statewide. Year-round shipping possible with temperature windows.
   Import note: No state-level restrictions beyond federal CITES requirements.
-  State law: CITES Appendix II documentation required at federal level. No additional TX state permit for buyers.
+  State law: CITES Appendix I documentation required at federal level. No additional TX state permit for buyers.
   Avian vet note: Good avian vet coverage in DFW/Houston/Austin metros. Post-arrival vet visit within 72h recommended.
 
 New York (NY)
   Cities: New York City, Buffalo, Rochester, Yonkers, Syracuse, Albany, New Rochelle, Mount Vernon
   Climate: Humid continental — cold winters, warm summers. NYC milder than upstate.
   Import note: No state-level bird import restrictions beyond federal CITES. Health certificate included.
-  State law: CITES Appendix II documentation required. NY has no additional state-level parrot permit for buyers.
+  State law: CITES Appendix I documentation required. NY has no additional state-level parrot permit for buyers.
   Avian vet note: Strong avian vet community in NYC metro. Post-arrival vet visit within 72h recommended.
 
 Georgia (GA)
   Cities: Atlanta, Augusta, Columbus, Macon, Savannah, Athens, Sandy Springs, Roswell, Albany, Johns Creek
   Climate: Humid subtropical — hot summers, mild winters. Year-round shipping possible.
   Import note: No state-level restrictions beyond federal CITES requirements.
-  State law: CITES Appendix II documentation required at federal level.
+  State law: CITES Appendix I documentation required at federal level.
   Avian vet note: Good avian vet coverage in Atlanta metro. Post-arrival vet visit within 72h recommended.
 
 Illinois (IL)
   Cities: Chicago, Aurora, Joliet, Naperville, Rockford, Springfield, Elgin, Peoria, Champaign, Waukegan
   Climate: Humid continental — cold winters, hot summers. Winter shipping requires temperature-safe IATA protocols.
   Import note: No state-level restrictions beyond federal CITES requirements.
-  State law: CITES Appendix II documentation required at federal level.
+  State law: CITES Appendix I documentation required at federal level.
   Avian vet note: Strong avian vet community in Chicago area. Post-arrival vet visit within 72h recommended.
 
 Pennsylvania (PA)
   Cities: Philadelphia, Pittsburgh, Allentown, Erie, Reading, Scranton, Bethlehem, Lancaster, Harrisburg, York
   Climate: Humid continental — cold winters, hot summers. Temperature windows required for winter shipping.
   Import note: No state-level restrictions beyond federal CITES requirements.
-  State law: CITES Appendix II documentation required at federal level.
+  State law: CITES Appendix I documentation required at federal level.
   Avian vet note: Good avian vet coverage in Philadelphia and Pittsburgh metros.
 
 Ohio (OH)
   Cities: Columbus, Cleveland, Cincinnati, Toledo, Akron, Dayton, Parma, Canton, Youngstown, Lorain
   Climate: Humid continental — cold winters, hot summers. Temperature windows required for winter shipping.
   Import note: No state-level restrictions beyond federal CITES requirements.
-  State law: CITES Appendix II documentation required at federal level.
+  State law: CITES Appendix I documentation required at federal level.
   Avian vet note: Good avian vet coverage in Columbus, Cleveland, Cincinnati metros.
 
 North Carolina (NC)
   Cities: Charlotte, Raleigh, Greensboro, Durham, Winston-Salem, Fayetteville, Cary, Wilmington, High Point, Concord
   Climate: Humid subtropical — hot summers, mild winters. Year-round shipping possible.
   Import note: No state-level restrictions beyond federal CITES requirements.
-  State law: CITES Appendix II documentation required at federal level.
+  State law: CITES Appendix I documentation required at federal level.
   Avian vet note: Good avian vet coverage in Charlotte and Raleigh-Durham metros.
 
 Washington (WA)
   Cities: Seattle, Spokane, Tacoma, Vancouver, Bellevue, Kent, Everett, Renton, Spokane Valley, Kirkland
   Climate: Oceanic west of Cascades (mild, rainy), semi-arid east. Year-round shipping possible.
   Import note: No state-level restrictions beyond federal CITES requirements.
-  State law: CITES Appendix II documentation required at federal level.
+  State law: CITES Appendix I documentation required at federal level.
   Avian vet note: Strong avian vet community in Seattle metro. Post-arrival vet visit within 72h recommended.
 ```
 
@@ -158,7 +158,7 @@ For any of the 15 remaining states (MI, NJ, VA, AZ, MA, TN, IN, MO, MD, WI, CO, 
 1. **Cities:** Use your knowledge of the state's 5–8 largest cities (flag as "agent-derived — verify with breeder if needed")
 2. **Climate:** Use regional climate knowledge (Northeast = cold winters; Southeast = hot humid; Mountain West = dry; Pacific = mild)
 3. **Import note:** Default to "No state-level restrictions beyond federal CITES requirements" unless you know of specific restrictions
-4. **State law:** Default to "CITES Appendix II documentation required at federal level. No additional state-level parrot permit for buyers."
+4. **State law:** Default to "CITES Appendix I documentation required at federal level. No additional state-level parrot permit for buyers."
 5. **Avian vet note:** Default to "Contact us for avian vet referrals in [STATE]. Post-arrival vet visit within 72h recommended."
 
 **Never leave `{MAJOR_CITIES}` or `{STATE_AVIAN_VET_NOTE}` as unfilled placeholders in final output.** If uncertain about cities, use the state capital + 2–3 major metros — that is always better than an empty placeholder.

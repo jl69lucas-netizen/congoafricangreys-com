@@ -108,7 +108,7 @@ Every generated image MUST use these prompt guardrails from `data/parrot-image-s
 |---|---|
 | `prompt_safety.always_include` | "captive-bred, domestic setting, hand-raised" |
 | `prompt_safety.never_include` | "wild-caught, imported, trapped, CITES violation, illegal" |
-| `prompt_safety.cites_framing` | "All birds bred in our Midland TX home aviary with full CITES Appendix II documentation" |
+| `prompt_safety.cites_framing` | "All birds bred in our Midland TX home aviary with full CITES Appendix I documentation" |
 
 **If any uploaded photo shows an ambiguous background**, do NOT generate an image claiming that setting is domestic. Either use Higgsfield `flux_kontext` to swap the background first, or generate a fresh image using the photo only as a character reference (not a scene reference).
 

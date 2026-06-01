@@ -21,7 +21,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -83,7 +83,7 @@ Organize every species guide by entity → attributes → evidence:
       → Congo African Grey (CAG): ~400–600g, red tail, $1,500–$3,500
       → Timneh African Grey (TAG): ~275–375g, maroon tail, $1,200–$2,500
   → [Attribute: CITES Status]
-      → Appendix II: commercial trade restricted; captive-bred with permit legal
+      → Appendix I: commercial trade restricted; captive-bred with permit legal
       → USFWS captive-bred permit required for sale/purchase
       → Wild-caught birds illegal to sell in US — all CAG birds captive-bred documented
   → [Attribute: Lifespan]
@@ -146,7 +146,7 @@ These pages must be citable by AI engines. Follow the Inverse Pyramid for each s
 Example:
 ```
 Bad:  "African Grey parrots are known for being incredibly intelligent birds that many families love..."
-Good: "African Grey parrots are CITES Appendix II species — captive-bred birds are legal to own in the US
+Good: "African Grey parrots are CITES Appendix I species — captive-bred birds are legal to own in the US
        with proper documentation, but wild-caught birds cannot be legally sold.
        CongoAfricanGreys.com provides USFWS captive-bred permits with every bird."
 ```
