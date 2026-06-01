@@ -19,7 +19,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -123,12 +123,12 @@ Analyze the current page for 3 specific missing verifiable entities that must be
 | Page Type | What to Look For |
 |---|---|
 | Location page | USDA AWA facility state, state avian import regulations, local avian vet references |
-| Species guide | Specific disease names (PBFD, Psittacosis, Proventricular Dilatation Disease), named test protocols, CITES Appendix II legal reference |
+| Species guide | Specific disease names (PBFD, Psittacosis, Proventricular Dilatation Disease), named test protocols, CITES Appendix I legal reference |
 | Pricing page | CITES permit costs, DNA sexing lab costs, avian vet exam costs, full cost-of-ownership breakdown |
 | Comparison page | Specific differentiating facts (Congo weight range vs Timneh, talking onset age, personality differences) with sources |
 | Bird listing | Real bird name, weight, age, health records, specific temperament observations |
 | Scam recovery | USDA AWA license number, CITES permit verification steps, DNA sexing lab name |
-| CITES education | Specific CITES Appendix II citation, USFWS reference, legal ownership requirements by state |
+| CITES education | Specific CITES Appendix I citation, USFWS reference, legal ownership requirements by state |
 
 ### Step 1.3 — Check Current Page State
 ```bash

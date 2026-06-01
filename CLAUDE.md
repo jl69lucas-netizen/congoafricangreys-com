@@ -10,8 +10,9 @@
 - **Preview before apply** — Any page redesign MUST be previewed and approved before writing to site files.
 - **Same content** — Redesigns never add or remove page content. Visual layer only.
 - **Confidence Gate** — ≥97% confidence required before writing any site file. If below: stop, state uncertainty, ask.
-- **CITES Awareness** — African Greys are CITES Appendix II. Never imply illegal trade. All birds captive-bred with proper documentation.
+- **CITES Awareness** — African Greys are CITES **Appendix I** (uplisted from Appendix II at CoP17, effective Jan 2017) and IUCN Endangered (Congo) / Vulnerable (Timneh). Never imply illegal/wild-caught trade. All birds are **captive-bred in the USA** with full documentation — captive-bred Appendix-I birds are legal to own and transfer domestically with proper paperwork. (Corrected from "Appendix II" per World Parrot Trust, 2026-05-29 homepage audit.)
 - **src/pages is deployed** — All HTML page edits MUST go to `src/pages/<slug>/index.html` or `src/pages/<slug>/index.astro`. The `site/content/` directory is a staging area; it does NOT get built directly. If both exist, `src/pages/` is authoritative.
+- **Always commit + push after build** — After any agent or skill completes a build/edit, commit and `git push` immediately. Push = deploy (GitHub Actions → Cloudflare Pages, auto on push to `main`). Do not leave finished work uncommitted or unpushed. Applies to all agents.
 
 ## Site Model
 Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple/Downloads/MFS/`).
@@ -22,7 +23,10 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 ## Quick Start Commands
 
 ### "I want to build a new page"
-→ `grill-me` skill → SESSION CONTEXT → `@cag-content-audit-agent`
+→ Sprint 0 done? **NO** → `@cag-competitor-intel --all` + `@cag-gsc-analytics` first
+→ Sprint 0 done? **YES** → `grill-me` skill (loads gap matrix + top-pages before asking)
+→ `@cag-content-audit-agent` → **Section Map + Component Gate** (approve before writing)
+→ `@cag-angle-agent` → `@cag-paa-agent` → `skills/cag-seo-master-checklist` → build
 
 ### "I want to build all location pages"
 → `@cag-batch-rebuilder` → reads `data/locations.json` → forks `@cag-location-builder` per state
@@ -48,7 +52,7 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - `docs/reference/WORKFLOW.md` — **MASTER WORKFLOW: read this before starting any new page, sprint, or monitoring cycle**
 - `docs/reference/project-context.md` — **MASTER CONTEXT: read this at the start of every session**
 - `docs/reference/site-overview.md` — site structure, page inventory, target states
-- `docs/reference/seo-rules.md` — **MASTER SEO RULES (50 rules): read this before creating or modifying any page**
+- `docs/reference/seo-rules.md` — **MASTER SEO RULES (62 rules): read this before creating or modifying any page**
 - `docs/reference/domain-knowledge.md` — variants, trust signals, health conditions, PAA questions
 - `docs/reference/top-pages.md` — traffic baseline (populate after GSC API connected)
 - `docs/reference/components.md` — **COMPONENT REGISTRY v2: 24 named components with variants — read before building any page section**
@@ -87,7 +91,7 @@ All 65 agents are assigned to a 4-tier model system (Opus 4.8 / Opus 4.7 / Sonne
 
 #### SEO & Content Skills
 - `skills/cag-seo-master-checklist.md` — **MASTER SEO EXECUTION GUIDE (v2.0): 4-phase workflow — Phase 1: Pre-Build Research (competitor analysis, keyword fan-out, 150+ entity research) → Phase 2: Planning Gate (Rule 51 outline approval) → Phase 3: Build (section-by-section writing with 5-tier form, 50+ internal links, 50+ external links) → Phase 4: Optimization + QA (meta 4-tone system, schema, voice search, 15-point QA checklist); applies to all pages EXCEPT location pages and comparison pages; includes homepage keyword strategy ("African Grey Parrot Breeder" primary + multi-cluster), Internal Linking Library (Appendix A), example execution, and full term conversion table (dog→CAG); invoke via Skill tool BEFORE starting any page build**
-- `skills/grill-me.md` — pre-session context builder; extracts SESSION CONTEXT before any page build; run before `@cag-content-audit-agent`
+- `skills/grill-me.md` — Sprint 0.5 session starter; reads gap matrix + top-pages + last brief before asking 13–14 questions; outputs SESSION CONTEXT with framework choice, AIO/GEO approach, and visual plan; run AFTER Sprint 0 intelligence is complete; handoff: grill-me → `@cag-content-audit-agent` → **Section Map + Component Gate** → build
 - `skills/cag-branded-search-skill.md` — branded query optimization; /why-choose-cag/ + /african-grey-reviews/ page specs; ReviewAggregateSchema; counter snippets; Contextual Intelligence for local SEO; CITES framing in all branded content
 - `skills/keyword-cluster.md` — groups keywords into primary/secondary/LSI/long-tail/PAA tiers
 - `skills/internal-link-agent.md` — orphan page finder, hub→spoke gap audit, anchor text fixes
@@ -99,7 +103,7 @@ All 65 agents are assigned to a 4-tier model system (Opus 4.8 / Opus 4.7 / Sonne
 - `skills/sitemap-agent.md` — manages sitemap files after any page change
 - `skills/cag-image-generation.md` — multi-provider AI image generation: OpenAI DALL-E 3 · **Nano Banana 2 / Google Imagen** (`nanobanna` flag, key in `.google-key` as `GEMINI_API_KEY`, script: `scripts/generate_nb_image.sh`) · Anthropic Claude prompt-refine · **Claude Code HTML** (native HTML/CSS, no API) · **Higgsfield MCP** (`higgsfield` flag, MCP UUID `dd46f66a-ceb9-4042-b533-7b3fc3409318`, tools: `generate_image` / `generate_video` / `show_characters`; say "use Higgsfield" to invoke; reads `data/parrot-image-schema.json`; supports reference image via `media_upload` → `generate_image`) · Pro-grade 9:16 prompt template (1200×2133px → scales to 350px CSS) · WebP optimization · CITES safety rule; hands off to cag-image-pipeline
 - `skills/cag-logo-generator.md` — circular emblem logo spec for CongoAfricanGreys.com; African Grey parrot head centerpiece; top arc: "CongoAfricanGreys.com"; bottom arc: "Captive-Bred African Grey Breeders"; deep green/teal palette; DALL-E prompt + responsive HTML implementation
-- `skills/cag-infographic.md` — infographic system: **5 types** — Comparison / Feature Grid / Process Flow / **AI-Generated Image** (Type 4, Nano Banana 2 or OpenAI, 9:16 1200×2133px, responsive CSS) / **Higgsfield MCP** (Type 5, character-consistent / video / marketing studio; say "use Higgsfield"); 300–350px HTML types; mode selection: "use Claude Code" = HTML, "use Nano Banana" = AI image, "use Higgsfield" = Higgsfield MCP
+- `skills/cag-infographic.md` — infographic system: **5 types** — Comparison / Feature Grid / Process Flow / **AI-Generated Image** (Type 4, Nano Banana 2 or OpenAI, 9:16 1200×2133px, responsive CSS) / **Higgsfield MCP** (Type 5, character-consistent / video / marketing studio; say "use Higgsfield"); **400px desktop fixed** HTML types; mode selection: "use Claude Code" = HTML, "use Nano Banana" = AI image, "use Higgsfield" = Higgsfield MCP
 - `skills/cag-photo-ingest.md` — User-uploaded OG photo → AI generation pipeline; Phase 1: CITES safety check + bird ID; Phase 2: routes to Higgsfield reference image (`soul_2`), Nano Banana lifestyle edit, or HTML/CSS infographic; `media_upload` → `media_confirm` → `generate_image` with reference; CITES safety enforced on every prompt; output → `@cag-image-pipeline`
 - `skills/cag-site-patterns.md` — 4 confirmed site fix patterns: gold→clay color, Pagefind search, header layout, birds listing; full code references
 
@@ -127,7 +131,7 @@ All 65 agents are assigned to a 4-tier model system (Opus 4.8 / Opus 4.7 / Sonne
 - `.claude/agents/cag-financial-strategist.md` — rebuilds pricing/cost guide; reads `data/financial-entities.json`; CAG vs TAG cost comparison; 40–60 year lifetime estimate
 - `.claude/agents/cag-blog-post-agent.md` — creates commercial, transactional, review, alternative, and comparison blog posts; keyword intent classification
 - `.claude/agents/cag-hub-builder.md` — builds aggregator hub pages: comparison hub, species hub, location hub (`/african-grey-parrots-for-sale/`), documentation hub
-- `.claude/agents/cag-infographic-builder.md` — builds infographics; **Mode selection**: "use Claude Code/HTML" = HTML/CSS (3 types, 300–350px), "use Nano Banana/OpenAI" = AI image (Type 4, 9:16, script: generate_nb_image.sh), **"use Higgsfield"** = Higgsfield MCP (Type 5, UUID `dd46f66a`, `nano_banana_pro`/`soul_2`/`cinematic_studio_2_5`, reads `data/parrot-image-schema.json`); works for Astro + static HTML pages
+- `.claude/agents/cag-infographic-builder.md` — builds infographics; **Mode selection**: "use Claude Code/HTML" = HTML/CSS (3 types, **400px desktop fixed**), "use Nano Banana/OpenAI" = AI image (Type 4, 9:16, script: generate_nb_image.sh), **"use Higgsfield"** = Higgsfield MCP (Type 5, UUID `dd46f66a`, `nano_banana_pro`/`soul_2`/`cinematic_studio_2_5`, reads `data/parrot-image-schema.json`); works for Astro + static HTML pages
 - `.claude/agents/cag-interactive-component.md` — builds interactive HTML components: first-year cost calculators, variant fit quizzes, CITES checklists, shipping estimators; pure HTML/CSS/vanilla JS
 
 #### Tier 3 — Content Intelligence
@@ -188,8 +192,9 @@ See `docs/reference/WORKFLOW.md` for the authoritative sprint-based workflow.
 
 ### Sprint Order (Quick Reference)
 1. **Sprint 0** — Intelligence: `competitor-registry` → `competitor-intel --all` → `gsc-analytics` → `llm-keyword-intel`
+1.5. **Sprint 0.5** — Session Orientation: `grill-me` skill (after Sprint 0 Gate passes — needs gap matrix + top-pages)
 2. **Sprint 1** — Architecture: `structure-architect` → `competitive-keyword-gap` → `hub-builder` → `content-architect`
-3. **Sprint 2** — Content: `content-audit` → `angle-agent` → `paa-agent` → writer → `faq-agent` → `section-builder`
+3. **Sprint 2** — Content: `content-audit` → **Section Map + Component Gate** → `angle-agent` → `paa-agent` → writer → `faq-agent` → `section-builder`
 4. **Sprint 3** — AEO/GEO Gate: `keyword-verifier` → `meta-description` → `external-link` → `trust-signals`
 5. **Sprint 4** — Technical: `accessibility-fixer` → `performance-fixer` → `canonical-fixer` → `footer-standardizer`
 6. **Sprint 5** — Deploy: `git push` → `deploy-verifier` → `redirect-manager` → `sitemap-agent`
@@ -298,3 +303,30 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 - `data/keywords/` — keyword clusters (Phase 2)
 - `data/rankings/` — weekly rank snapshots (Phase 2)
 - `data/analytics/` — GSC / performance data
+
+---
+
+## Active Session — Homepage REBUILD v2 (2026-05-29 PM)
+- v1 build used OLD/inline components + skipped the SEO checklist → full section-by-section rebuild.
+- **LOCKED:** Hero B Authority Green · `cag-toc-v3:02` Grouped-by-part · `cag-key-takeaway-v2:02` Stat-forward grid ·
+  Compare Table Style E (1100px) · new Mark & Teri owner card · new counter snippet
+  (12+ Yrs aviary / 100% CITES / $1,500 Floor price / 24h) · new filterable BirdCard.
+- **Content contract:** "C.A.Gs" / "C.A.Gs – Midland, TX" brand voice (never "congoafricangreys.com") ·
+  ALL of H1–H6 used · every header conversational/Quora-style (What/How/Is/Can) · EBP framework per paragraph ·
+  internal+external links woven mid-sentence (never at end) · PAA-only FAQs · `assets/brand/` shipping photos ·
+  CITES Appendix I + captive-bred-USA · 8–15 top states/cities in shipping.
+- **MANDATORY:** `MANUAL SEO CHECKLIST-HOMEPAGE.md` + `skills/cag-seo-master-checklist.md` — not optional.
+- **AEO/GEO gate runs ON the page:** keyword-verifier → meta-description → trust-signals.
+- Desktop renders new desktop components; mobile/tablet renders new mobile components.
+- Governance docs reconciled to v2 (2026-05-29): `components.md`, `component-page-matrix.md`, `component-themes.md`
+  now register the new bundles and route the homepage to them.
+- Status: content build. Per the "Always commit + push after build" rule, finished work is committed and pushed (push = deploy).
+- **Progress: Sections 1–8 built & approved (Hero · Counter · Key Takeaway · TOC · Owner Card · Review#1 · Products · Eggs&Pairs). RESUME AT SECTION 9 (Congo).**
+- Added `--color-panel/line/mid/forest` to `global.css` (fixed undefined cag-library tokens site-wide) + Rule 28b (Two-Keyword Headers) to the SEO checklist.
+- **Continuation handoff:** `sessions/2026-05-29-homepage-build-progress.md` (read first next session; do NOT re-run grill-me).
+- Session brief: `sessions/2026-05-29-session-brief.md` (see "REBUILD v2" section).
+
+## Known Issues
+- Homepage Video section: using a YouTube **placeholder** (embed + VideoObject schema scaffold) — breeder to supply the real URL later.
+- Homepage `.mov` clip not browser-usable (ffmpeg/cwebp not installed to convert → mp4).
+- GSC not connected → `docs/reference/top-pages.md` has no live clicks/impressions/LLM Visibility yet.

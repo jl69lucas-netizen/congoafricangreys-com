@@ -255,4 +255,4 @@ Ranked by: number of competitors using the term
 5. **Master gap matrix required after --all** — individual reports alone are incomplete
 6. **Update last_analyzed in competitors.json** after each analysis
 7. **Never modify site files** — research and reporting only
-8. **Flag CITES/legal issues** — African Greys are CITES Appendix II; note if competitors make dubious claims (important trust differentiator for CAG)
+8. **Flag CITES/legal issues** — African Greys are CITES Appendix I; note if competitors make dubious claims (important trust differentiator for CAG)

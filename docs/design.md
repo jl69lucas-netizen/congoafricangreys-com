@@ -83,21 +83,31 @@ No 🎉 🔥 🚀 "marketing" emoji.
 | Uppercase tags | Sora | 700 | 11px, letter-spacing 1px |
 | Meta / caption | Sora | 400 | 12px |
 
-**Responsive Typography Scale (Option A):**
+**Responsive Typography Scale — Option A Fluid Clamp (LIVE — implemented 2026-05-30):**
 
-| Element | Mobile ≤480px | Tablet 481–1024px | Desktop ≥1025px | Notes |
+All sizes use `clamp(min, fluid, max)` in `src/styles/global.css` `@layer base`. Verified at 375px mobile and 1280px desktop.
+
+| CSS var | Clamp expression | Mobile (375px) | Desktop (1280px) | Applied to |
 |---|---|---|---|---|
-| H1 | 28–32px | 36–40px | 44–48px | line-height 1.2, bold |
-| H2 | 22–24px | 26–28px | 32–34px | major sub-sections |
-| H3 | 18–20px | 22–24px | 24–26px | card headings |
-| H4 | 16px | 18px | 20px | sidebar / feature titles |
-| H5/H6 | 14px ALL-CAPS | 14px ALL-CAPS | 16px ALL-CAPS | utility text, labels |
-| Lead / subheader | 16–17px | 18–19px | 20–21px | first paragraph of page |
-| Body | 15–16px | 16–17px | 17–18px | line-height 1.6–1.7 |
-| Caption | 12px | 13px | 14px | image captions, sources |
+| `--fs-h1` | `clamp(1.75rem, 5vw, 3rem)` | 28px | 48px | `h1` — line-height 1.1 |
+| `--fs-h2` | `clamp(1.25rem, 3.5vw, 2rem)` | 20px | 32px | `h2` — line-height 1.18 |
+| `--fs-h3` | `clamp(1.0625rem, 2.2vw, 1.5rem)` | 17px | 24px | `h3` — line-height 1.25 |
+| `--fs-h4` | `clamp(0.9375rem, 1.8vw, 1.25rem)` | 15px | 20px | `h4` — line-height 1.3 |
+| `--fs-h5` | `clamp(0.6875rem, 1.1vw, 0.875rem)` | 11px | 14px | `h5, h6` — line-height 1.3 |
+| `--fs-body` | `clamp(0.9375rem, 1.5vw, 1.0625rem)` | 15px | 17px | `body` — line-height 1.65 |
+| `--fs-eyebrow` | `clamp(0.625rem, 1.2vw, 0.75rem)` | 10px | 12px | eyebrow/prefix spans |
+| `--fs-caption` | `clamp(0.75rem, 1vw, 0.875rem)` | 12px | 14px | captions, sources |
 
-Font weights: H1–H3 = 700 (bold) or 600 (semi-bold). Body = 400 (regular).
-Paragraph max-width: `max-width: 70ch` — applies inside any container to prevent long lines.
+Font weights: H1–H3 = 700. Body = 400. Paragraph `line-height: 1.65`, `margin-bottom: 1.25em`.
+Paragraph max-width: `max-width: 65ch` — applied in base layer; inline `style="max-width:70ch"` overrides where needed.
+
+**CRITICAL — do NOT break the fluid scale:**
+- ❌ Never add `text-3xl`, `text-2xl`, `md:text-4xl` to H2/H3 section headings — Tailwind utilities override `@layer base` and break mobile sizing
+- ✅ Hero H1 keeps `text-3xl sm:text-4xl md:text-[3.25rem]` explicitly — intentional display override
+- ✅ FAQ H3 with `text-[16px]` is intentional — keep it
+- ✅ Card H3 with `text-xl` is intentional — keep it
+- ❌ Eyebrow/prefix: never `font-semibold tracking-[0.18em]` — use `font-medium tracking-[0.12em]`
+- ❌ Testimonial blockquote: never bare `text-3xl` — always `text-lg md:text-3xl`
 
 **Google Fonts import (every page `<head>`):**
 ```html

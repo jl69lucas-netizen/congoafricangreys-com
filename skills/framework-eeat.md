@@ -14,7 +14,7 @@ tools: [Read, Write, Bash]
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -48,7 +48,7 @@ CongoAfricanGreys.com is a YMYL site (buying a living animal is a significant de
 
 ### Expertise Signals (knowledge, credentials)
 - USDA Animal Welfare Act license — include license number where possible
-- CITES Appendix II captive-bred documentation — named and numbered
+- CITES Appendix I captive-bred documentation — named and numbered
 - DNA sexing certificate — names the specific avian lab provider
 - Avian vet health certificate — names the vet clinic and vet
 - Hand-feeding/hand-raising socialization protocol — documented from hatch
@@ -124,7 +124,7 @@ With: "In our years of breeding, we've placed African Grey parrots with hundreds
 
 ## CITES E-E-A-T — The CAG Differentiator
 
-African Greys are CITES Appendix II — the same international treaty that governs ivory and rhino horn trade. This makes CITES compliance documentation the single strongest E-E-A-T signal available to CAG, because:
+African Greys are CITES Appendix I — the same international treaty that governs ivory and rhino horn trade. This makes CITES compliance documentation the single strongest E-E-A-T signal available to CAG, because:
 
 1. **No competitor uses it.** The gap matrix shows only birdsforsales.com mentions USDA + CITES. Every other Tier 1 breeder is silent.
 2. **It is externally verifiable.** CITES documentation is issued by the USDA/USFWS — not self-reported.
@@ -134,7 +134,7 @@ African Greys are CITES Appendix II — the same international treaty that gover
 ```html
 <div class="cag-trust-bar">
   <span>USDA AWA Licensed</span>
-  <span>CITES Appendix II Captive-Bred</span>
+  <span>CITES Appendix I Captive-Bred</span>
   <span>DNA Sexed</span>
   <span>Avian Vet Certified</span>
 </div>
@@ -157,7 +157,7 @@ For any page audit, score each dimension 1–5 (total range: 4–20):
 
 ### Expertise (1–5)
 - [ ] Credentials named (USDA AWA, CITES, DNA sexing lab, avian vet)
-- [ ] Technical terms used correctly (clutch, fledgling, PBFD, CITES Appendix II)
+- [ ] Technical terms used correctly (clutch, fledgling, PBFD, CITES Appendix I)
 - [ ] Data cited with sources ("per USFWS CITES captive-bred permit requirements")
 
 ### Authoritativeness (1–5)
@@ -184,7 +184,7 @@ For any page audit, score each dimension 1–5 (total range: 4–20):
 
 | Failure | Fix |
 |---------|-----|
-| "All our birds are legal" (vague) | "CITES Appendix II captive-bred docs — permit number available" |
+| "All our birds are legal" (vague) | "CITES Appendix I captive-bred docs — permit number available" |
 | "Health tested" (unverified) | "Avian vet cert — [VET_NAME], certificate included with bird" |
 | No author name on content | Add [BREEDER_NAME] author block |
 | Prices hidden ("contact us") | Show price ranges openly ($1,500–$3,500 CAG, $1,200–$2,500 TAG) |

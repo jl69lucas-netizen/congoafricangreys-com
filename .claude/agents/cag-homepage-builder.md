@@ -21,7 +21,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -92,7 +92,7 @@ The outline must include:
 | # | Section | Type | Key Content |
 |---|---------|------|-------------|
 | 1 | Hero | `hero` | H1 (sacred), CITES trust bar, primary CTA |
-| 2 | CITES Trust Bar | `cag-trust-bar` | USDA AWA · CITES Appendix II · DNA Sexed · Avian Vet Certified |
+| 2 | CITES Trust Bar | `cag-trust-bar` | USDA AWA · CITES Appendix I · DNA Sexed · Avian Vet Certified |
 | 3 | Available Birds | `price-card` | Congo + Timneh cards from data/price-matrix.json |
 | 4 | Why CAG (5 trust signals) | `features` | CITES docs, USDA license, DNA cert, avian vet cert, [X]+ years |
 | 5 | Congo vs Timneh Quick Guide | `comparison-table` | Weight, price, tail, temperament |
@@ -153,6 +153,27 @@ Assemble the full page (Astro pattern):
 
 ---
 
+## Typography Rules — MANDATORY (confirmed live 2026-05-30)
+
+The homepage uses **Option A fluid clamp** typography. All H2/H3 section headings must have NO font-size utility classes — the `@layer base` clamp scale handles sizing automatically.
+
+| Rule | ✅ Correct | ❌ Wrong |
+|---|---|---|
+| Section H2 | `class="font-lora font-bold text-logo-dark"` | `class="font-lora font-bold text-3xl md:text-4xl"` |
+| Section H3 | `class="font-lora font-bold text-logo-dark"` | `class="font-lora font-bold text-2xl"` |
+| Eyebrow span | `font-medium tracking-[0.12em] text-[10px] md:text-[11px]` | `font-semibold tracking-[0.18em] text-[11px]` |
+| Testimonial blockquote | `text-lg md:text-3xl` | `text-3xl` |
+| Testimonial feature wrapper | `p-6 md:p-12` | `p-12` |
+
+**Exceptions — keep explicit sizing on these:**
+- Hero H1: `text-3xl sm:text-4xl md:text-[3.25rem]` — intentional large display
+- FAQ accordion H3: `text-[16px]` — intentional compact
+- Calculator output `<p id="calc-total">`: `text-3xl text-clay` — display number
+
+Confirmed mobile results: H2 = 20px, H3 = 17px, body = 15px, prefix = 10px.
+
+---
+
 ## Design Rules for This Page
 
 ### Hero Section (Section 1)
@@ -165,7 +186,7 @@ Assemble the full page (Astro pattern):
 ### CITES Trust Bar (Section 2)
 - 4 trust badges in a row: icons + labels
 - Background: white
-- Stats to use: **USDA AWA Licensed · CITES Appendix II · DNA Sexed · Avian Vet Certified**
+- Stats to use: **USDA AWA Licensed · CITES Appendix I · DNA Sexed · Avian Vet Certified**
 
 ### Available Birds (Section 3)
 - Read `data/price-matrix.json` for price ranges

@@ -78,7 +78,7 @@ Topics the breeder can authentically write:
 1. "The Real Cost of Owning an African Grey for 50 Years" → links to /african-grey-price/
 2. "How to Tell a Legitimate CITES-Compliant Breeder from a Scam" → links to /african-grey-for-sale/
 3. "Congo vs Timneh African Grey: What Families Need to Know" → links to /congo-vs-timneh/
-4. "What CITES Appendix II Means for African Grey Buyers" → trust + authority content
+4. "What CITES Appendix I Means for African Grey Buyers" → trust + authority content
 
 ### Guest Post Pitch Template
 

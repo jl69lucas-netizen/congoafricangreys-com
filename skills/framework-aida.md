@@ -14,7 +14,7 @@ tools: [Read, Write, Bash]
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -102,7 +102,7 @@ Rules:
 
 **Feature → Desire transformation:**
 ```
-Feature:  "CITES Appendix II captive-bred documentation on every bird"
+Feature:  "CITES Appendix I captive-bred documentation on every bird"
 Desire:   "You'll know your bird is legally documented before it ever ships — no customs seizure risk, 
            no questions at your door, no heartbreak after bonding with a bird that can't legally stay."
 

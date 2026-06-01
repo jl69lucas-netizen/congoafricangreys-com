@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Session starter — reads current project state, grills you on business goals and today's task (10-12 questions one at a time), writes a session brief, and proposes a CLAUDE.md patch. Run this before any build work.
+description: Session starter — reads current project state, grills you on business goals and today's task (12–13 questions one at a time), writes a session brief with framework/AIO/visual plan, and proposes a CLAUDE.md patch. Run AFTER Sprint 0 intelligence is complete.
 model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
@@ -18,7 +18,7 @@ This rule applies to you and every agent you hand off to.
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -44,11 +44,14 @@ Before asking any questions:
 4. **Read** `data/structure.json` — check if topical authority map exists
 5. **Read** `docs/reference/site-overview.md` — site facts, stack, deploy flow
 6. **Run** `ls sessions/` via Bash — find the most recent session brief file (if any)
-7. **Read** the most recent session brief — extract the "What's Next" or "Urgency" notes to pre-fill Q11
+7. **Read** the most recent session brief — extract the "What's Next" or "Urgency" notes to pre-fill Q13
+8. **Run** `ls docs/research/gap-matrix-*.md 2>/dev/null` via Bash — check if competitor gap matrix exists
+9. **Run** `ls data/keywords/ 2>/dev/null` via Bash — check if keyword fan-out data exists
 
-After step 4, determine sprint readiness:
+After steps 4–9, determine sprint readiness:
 - If `data/structure.json` does NOT exist → note that Sprint 1 (Architecture) hasn't run yet
 - If `data/competitors.json` is empty or missing → note that Sprint 0 (Intelligence) hasn't run yet
+- If no `docs/research/gap-matrix-*.md` exists → **WARN the user:** "Competitor gap matrix not found. Grill-me answers will be less precise without it. Run `@cag-competitor-intel --all` first for best results."
 - If `docs/reference/top-pages.md` has no LLM Visibility column → note that `@cag-llm-keyword-intel` hasn't run yet
 
 Only after completing all steps above do you begin asking questions.
@@ -82,7 +85,7 @@ If all top pages are healthy, ask about the page with the biggest gap between im
 
 ---
 
-### Task Layer (narrows to today's specific work — Q6 through Q12)
+### Task Layer (narrows to today's specific work — Q6 through Q14)
 
 **Q6 — Specific Target**
 > "What exact page or feature are we building or fixing today? Give me the slug (e.g., /african-grey-parrot-for-sale-florida/)."
@@ -130,17 +133,44 @@ When discussing buyer hesitations, the ranked fears for African Grey buyers are:
 **Q9 — Benchmark**
 > "Is there a competitor page, or a page already on your site, that's close to what you want this to look like or perform like? Give me a URL."
 
-**Q10 — Design Direction**
-Choose one:
-> "For this page — are we: (A) applying the CAG design system (Phase 2 TBD) from scratch, (B) patching the existing layout with targeted fixes, or (C) matching the style of /african-grey-parrot-for-sale-florida/ as the reference page?"
+**Q10 — Framework Choice**
+> "Which content framework fits this page, and why?
+>
+> - **AIDA** — high-intent commercial (location pages, variant pages, buy-now pages)
+> - **QAB** — FAQ-heavy or pricing content (cost guides, comparison tables)
+> - **H-S-S** — trust/breeder story (about page, CITES education)
+> - **Entity-Tree** — species guides (AIO/citation-optimized, declarative entity statements)
+> - **BAB** — comparison pages (before/after framing works well for breed comparisons)
+> - **EBP** — credibility-first sections (evidence → benefit → proof, good for trust bars)
+>
+> Name the framework and tell me why it fits this page's goal."
 
-**Q11 — Repeat / Avoid** *(skip entirely if no prior session brief exists)*
-If a prior session brief was found in startup step 4, pre-fill with its "What's Next" note:
+**Q11 — AIO / GEO Approach**
+> "For AI search visibility on this page, which approach should we take?
+>
+> - **(A) Featured Snippet capture** — direct answer in the first paragraph, short declarative sentence, question as H2
+> - **(B) Entity-first AIO citation** — declarative statements per H2 section, FAQPage schema, 150+ entity mentions
+> - **(C) Both** — Featured Snippet target + full entity coverage
+>
+> Also: are there specific AI engines (ChatGPT, Perplexity, Google AIO) where CAG already appears for this keyword that we should protect?"
+
+**Q12 — Visual Plan**
+> "For images and infographics — walk me through the sections that need a visual and what type each should be:
+>
+> - **AI portrait** — Nano Banana 2 / Google Imagen (9:16, 1200×2133px, photorealistic bird lifestyle)
+> - **HTML/CSS infographic** — Comparison table / Feature grid / Process flow (300–450px, no external API)
+> - **Higgsfield** — character-consistent video or cinematic still (say 'use Higgsfield' to invoke)
+> - **No visual** — copy and schema carry the section
+>
+> List each section that needs one and its type. If unsure, say 'decide during build' and we'll flag each section."
+
+**Q13 — Repeat / Avoid** *(skip entirely if no prior session brief exists)*
+If a prior session brief was found in startup step 7, pre-fill with its "What's Next" note:
 > "Last session you noted: '[what's next from brief]' — is that still the plan, or has anything changed? Also: anything Claude did last session you want repeated or avoided?"
 
-If no prior brief: skip this question. Total questions = 10.
+If no prior brief: skip this question. Total questions = 13 (Q1–Q12 + Q14). With prior brief: 14 (all questions).
 
-**Q12 — Urgency**
+**Q14 — Urgency**
 > "Is there a deadline on this — a client promise, an indexing window, a content calendar date, or just 'today would be great'?"
 
 ---
@@ -160,7 +190,12 @@ Write to `sessions/YYYY-MM-DD-session-brief.md` (use today's actual date):
 ## SESSION CONTEXT
 - Page Type: [location | species guide | comparison | blog | money page | hub]
 - Target Keyword: [exact keyword from Q6]
-- Framework: [AIDA | PAS | QAB | Entity-Tree | H-S-S | Inverse Pyramid — assigned by content-architect]
+- Framework: [AIDA | QAB | H-S-S | Entity-Tree | BAB | EBP — from Q10]
+- Framework Reason: [why this framework fits — from Q10 answer]
+- AIO / GEO Approach: [Featured Snippet | Entity-first | Both — from Q11]
+- AIO Notes: [specific engines where CAG appears / needs protection — from Q11]
+- Component Style: [informational 760px | transactional 1200px | hybrid]
+- Visual Plan: [section → type mapping from Q12, or "decide during build"]
 - Audit Status: [complete | pending → run cag-content-audit-agent first]
 - LLM Visibility: [0–10 score | "not measured" → run cag-llm-keyword-intel]
 - Structure.json Entry: [yes | no → run cag-structure-architect first]
@@ -172,23 +207,33 @@ Write to `sessions/YYYY-MM-DD-session-brief.md` (use today's actual date):
 - Goal: [Q7 answer — what done looks like]
 - Reader: [Q8 answer — who they are, what they fear]
 - Benchmark: [Q9 URL or "none given"]
-- Design: [Q10 answer — new system / patch / match reference]
 
 ## Constraints
 [Q5 answer — any hard limits]
 
 ## Repeat / Avoid
-- Repeat: [from Q11, or "first session"]
-- Avoid: [from Q11, or "first session"]
+- Repeat: [from Q13, or "first session"]
+- Avoid: [from Q13, or "first session"]
 
 ## Urgency
-[Q12 answer]
+[Q14 answer]
 
-## Recommended Next Agent
-[Based on SESSION CONTEXT, recommend the exact next agent to run:
-- If audit not done: @cag-content-audit-agent [slug] [keyword] [page-type]
-- If structure.json missing: @cag-structure-architect
-- If ready to build: @cag-angle-agent → @cag-paa-agent → @cag-seo-content-writer]
+## Recommended Next Steps
+[Based on SESSION CONTEXT, the exact sequence to run next:]
+
+**If Sprint 0 not done:**
+→ `@cag-competitor-registry` → `@cag-competitor-intel --all` → `@cag-gsc-analytics` → return here
+
+**If audit not done:**
+→ `@cag-content-audit-agent /[slug]/ "[keyword]" [PAGE_TYPE]`
+
+**If structure.json missing:**
+→ `@cag-structure-architect`
+
+**If audit done and ready to build:**
+→ SECTION MAP + COMPONENT GATE (list every section → pick component → get approval)
+→ `@cag-angle-agent` → `@cag-paa-agent` → `skills/cag-seo-master-checklist`
+→ `@cag-seo-content-writer` or `@cag-non-commodity-content-agent`
 
 ## What's Next
 [Leave this blank — filled in at end of build session by the build agent]
@@ -235,17 +280,18 @@ After writing (or skipping) the CLAUDE.md patch, say:
 > Based on your session context, here's the recommended next step:
 > [Insert one of the following based on SESSION CONTEXT:]
 >
-> **If audit not run:**
-> → Run `@cag-content-audit-agent /[slug]/ "[keyword]" [PAGE_TYPE]` — 10 minutes, prevents wasted work
+> **If Sprint 0 not done (no gap matrix):**
+> → Run `@cag-competitor-registry` → `@cag-competitor-intel --all` → `@cag-gsc-analytics` → then re-run grill-me with full data
 >
 > **If structure.json missing:**
 > → Run `@cag-structure-architect` — maps the full site architecture before building
 >
-> **If ready to write content:**
-> → Run `@cag-angle-agent` → then `@cag-paa-agent` → then `@cag-seo-content-writer` or `@cag-non-commodity-content-agent`
+> **If audit not run:**
+> → Run `@cag-content-audit-agent /[slug]/ "[keyword]" [PAGE_TYPE]` — 10 minutes, prevents wasted work
 >
-> **If Sprint 0 hasn't run:**
-> → Run `@cag-competitor-registry` first (Sprint 0 — needed before anything else)
+> **If audit done and ready to build:**
+> → SECTION MAP + COMPONENT GATE (mandatory before any writing):
+>    List every section Hero → final CTA, assign component + variant per section from `docs/reference/components.md`, get approval — THEN run `@cag-angle-agent`
 >
 > See `docs/reference/WORKFLOW.md` for the full sprint sequence."
 

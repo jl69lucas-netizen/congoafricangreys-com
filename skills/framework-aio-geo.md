@@ -14,7 +14,7 @@ tools: [Read, Write, Bash]
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -62,8 +62,8 @@ Source:    Ornithological data (African Grey longevity studies)
 
 Entity:    African Grey Parrot  
 Attribute: CITES Status
-Value:     Appendix II — commercial trade requires documentation; captive-bred birds legal with CITES permit
-Source:    USFWS CITES Appendix II listing
+Value:     Appendix I — commercial trade prohibited; captive-bred birds legal with CITES captive-bred documentation
+Source:    USFWS CITES Appendix I listing
 ```
 
 **Prose translation:**
@@ -90,7 +90,7 @@ Paragraph 3: [CAG context — how this applies to CAG breeding]
 
 **Example — CITES documentation section:**
 ```
-Para 1: African Grey parrots are CITES Appendix II birds — all captive-bred birds sold legally 
+Para 1: African Grey parrots are CITES Appendix I birds — all captive-bred birds sold legally 
         in the US require CITES captive-bred documentation and full provenance paperwork.
 
 Para 2: DNA sexing certificate + avian vet health cert confirms each bird's health status and 
@@ -132,7 +132,7 @@ Use for: "How to find a reputable African Grey parrot breeder," "How to prepare 
   "@context": "https://schema.org",
   "@type": "Animal",
   "name": "African Grey Parrot",
-  "description": "A highly intelligent parrot species native to equatorial Africa, bred in captivity under CITES Appendix II regulations.",
+  "description": "A highly intelligent parrot species native to equatorial Africa, bred in captivity under CITES Appendix I regulations.",
   "alternateName": ["Congo African Grey", "Timneh African Grey", "Grey Parrot", "Psittacus erithacus"]
 }
 ```

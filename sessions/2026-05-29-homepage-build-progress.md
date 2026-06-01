@@ -97,6 +97,17 @@ Build in batches, preview, get approval. Current batch to do next = **Sections 9
 - **Screenshot gotcha:** `preview_screenshot` reliably captures only at `scrollY=0`. To shoot a below-fold section: set a TALL viewport (height ≥ section bottom px), `window.scrollTo(0,0)`, then screenshot. Sections use `FadeIn` (opacity:0 until IntersectionObserver) — at scroll 0 with a tall viewport they're in view and fade in. DOM eval (getBoundingClientRect/innerText) is the authoritative verifier.
 - Verify each section: `preview_logs` (errors) + `preview_eval` (DOM checks) + tall-viewport screenshot.
 
+## ✅ POST-BUILD ADDITIONS (2026-05-31 session 2)
+
+| Addition | File | Commit |
+|---|---|---|
+| JumpRail (Option C) — floating right-side dot rail, 18 sections, scroll-spy | `src/components/cag-library/JumpRail.astro` | 7520f8a |
+| JumpLinks (Option B) — section-bottom Prev/Dots/Next strip (reusable props) | `src/components/cag-library/JumpLinks.astro` | 7520f8a |
+| All 3 designs registered in components.md with props + usage examples | `docs/reference/components.md` | 7520f8a |
+| Design preview saved | `sessions/jump-link-preview.html` | 7520f8a |
+
+JumpRail wired into homepage via `<JumpRail />` just inside `<BaseLayout>` (before Section 1 Hero). Desktop 1024px+ only. Uses same 18 section IDs as TocV3.
+
 ## OPEN ITEMS / PENDING
 - **▶ NEXT STEP — On-page AEO/GEO gate (run ON the live homepage):** `@cag-keyword-verifier` → `@cag-meta-description-agent` → `@cag-trust-signals-agent`; then 15-point QA (`skills/cag-seo-master-checklist` Phase 4); then `@cag-deploy-verifier` (200 check + IndexNow) + `sitemap-agent`.
 - Sync `component-page-matrix.md` homepage order to the final 25-section sequence (still shows the 19-block v2 draft).

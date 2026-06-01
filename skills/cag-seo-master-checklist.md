@@ -252,7 +252,7 @@ Every full-length page (22+ sections) requires 150+ named entities across 6 cate
 - 95%+ vocabulary mimicry success rate in properly socialized birds
 
 **6. Credential/Certification Entities (15+ required):**
-- CITES Appendix II (Convention on International Trade in Endangered Species)
+- CITES Appendix I (Convention on International Trade in Endangered Species)
 - USDA AWA License (Animal Welfare Act)
 - AFA Registered Aviary
 - IATA Live Animals Regulations (shipping compliance)
@@ -407,6 +407,15 @@ For pages with a shipping/delivery section, use web search to gather these entit
 - H5: 5–10 MANDATORY — carries deep LSI/technical authority terms
 - H6: 3–8 MANDATORY — carries voice search/natural language queries
 - ALL SIX LEVELS required on every full-length page. H5 and H6 are not optional.
+
+**Two-Keyword Header Method (Rule 28b — apply to every header that can carry a second term):**
+Each header should pull double SEO duty: **[secondary/conversational keyword] + [related LSI · NLP · entity · concurrent keyword · or long-form modifier]**. Don't stop at the obvious keyword — append a second, *useful* term that broadens the header's reach without keyword-stuffing.
+- ✅ "Why Choose C.A.Gs For Your **Hand-Reared** African Grey Parrots?" (secondary KW + LSI "hand-reared")
+- ✅ "How Much Does a **Congo** African Grey Cost — and What's the **First-Year Total**?" (variant entity + long-form concurrent KW)
+- ✅ "How Does C.A.Gs **Ship** an African Grey **to Your State**?" (transactional KW + geographic NLP)
+- ✅ "What Is a **Timneh** African Grey — the **Calmer, Earlier-Talking** Subspecies?" (entity + LSI cluster)
+- ❌ "Why Choose Us?" (no keyword) · ❌ "Shipping" (single bare term)
+Keep it natural and conversational (What/How/Is/Can/Who). One secondary keyword + one related term per header — never three+ stacked. Applies across H2–H4 especially.
 
 **Full section menu (27 possible sections — final selection determined by competitor research):**
 
@@ -577,7 +586,7 @@ TIER 4: ENTITY & TRUST
 11. Trust Signals (2–3 per section):
     ☐ "500+ birds placed since 2014..."
     ☐ "40–60 year lifespan commitment..."
-    ☐ "CITES Appendix II captive-bred..."
+    ☐ "CITES Appendix I captive-bred..."
     ☐ "USDA AWA licensed aviary..."
     ☐ Customer testimonial quote
     ☐ Specific success statistic
@@ -647,7 +656,7 @@ Use Appendix A URL Library at end of this skill for all valid URLs.
 
 **4. Contextual Links (Within Paragraphs):**
 Example: `"Our [Parrot Culture protocols](#parrot-culture) ensure emotionally resilient birds."`
-Example: `"Learn more about [CITES Appendix II documentation](/cites-african-grey-documentation/)"`
+Example: `"Learn more about [CITES Appendix I documentation](/cites-african-grey-documentation/)"`
 
 #### B. External Links (50+ Required Per Full Page)
 
@@ -1373,7 +1382,7 @@ When migrating content from dog-breeder templates or MFS reference material, app
 | Litter | Clutch |
 | Puppy Culture | Parrot Culture |
 | Early Neurological Stimulation (ENS) | Early Neonatal Handling (ENH) |
-| AKC Registered | CITES Appendix II documented, USDA AWA licensed |
+| AKC Registered | CITES Appendix I documented, USDA AWA licensed |
 | Embark DNA Testing | Avian Biotech DNA Testing |
 | OFA Certified | AAV certified / avian vet certified |
 | Dog food brands (Purina, Hill's, Royal Canin) | Parrot food brands (Harrison's, ZuPreem, Roudybush, Tops) |

@@ -10,7 +10,7 @@
 - **Business:** African Grey parrot breeder (captive-bred, CITES-compliant)
 - **Mission:** Ethical, health-documented African Grey breeding — trust and transparency over volume
 - **Voice:** Expert, warm, reassuring — serious bird owners, not impulse buyers
-- **Legal requirement:** All birds CITES Appendix II captive-bred with documentation
+- **Legal requirement:** All birds CITES Appendix I captive-bred with documentation
 
 ## Family & Aviary Story
 

@@ -29,7 +29,7 @@ NEVER remove or modify existing schema JSON-LD blocks. Preserve verbatim. Only a
 `og:url`, `og:image`, `og:title`, and `canonical` MUST be absolute URLs. Never relative.
 
 **Rule 7 — CITES Language**
-NEVER imply birds are wild-caught. Every page must say "captive-bred" and reference CITES Appendix II documentation. Wild-caught language — even neutral phrasing — is a compliance and trust risk.
+NEVER imply birds are wild-caught. Every page must say "captive-bred" and reference CITES Appendix I documentation. Wild-caught language — even neutral phrasing — is a compliance and trust risk.
 
 **Rule 8 — Image Source Paths**
 NEVER use base64 data URIs for images. Always use real `src="/wp-content/uploads/filename.jpg"`. Base64 bloats HTML, kills page speed, and breaks image SEO.
@@ -268,7 +268,7 @@ Establish the correct content angle(s) BEFORE creating any section or page. Use 
 **Rule 40 — Opening Paragraph Snippet Formula**
 Every section opening (50–80 words) must include:
 - ✅ Direct answer in first sentence (for Google AI Overview capture)
-- ✅ Specific numbers ($1,500–$3,500, 40-year lifespan, CITES Appendix II, DNA sexed)
+- ✅ Specific numbers ($1,500–$3,500, 40-year lifespan, CITES Appendix I, DNA sexed)
 - ✅ Primary keyword early in the paragraph
 - ✅ Entity mentions (C.A.Gs, Mark & Teri Benjamin, Midland TX)
 - ✅ Benefit statements (CITES documentation included, avian vet certified, DNA sexed)
@@ -298,7 +298,7 @@ Four patterns to rotate across pages:
 ## Extended Rules — African Grey–Specific
 
 **Rule 44 — CITES First-300-Words Rule**
-Every page must mention "CITES Appendix II", "captive-bred", and "USDA AWA licensed" at least once within the first 300 words. Google E-E-A-T depends on early trust signal establishment.
+Every page must mention "CITES Appendix I", "captive-bred", and "USDA AWA licensed" at least once within the first 300 words. Google E-E-A-T depends on early trust signal establishment.
 
 **Rule 45 — Variant Labeling**
 Every page must clearly state at the top whether it covers Congo African Grey, Timneh African Grey, or both. Use correct pricing from `data/price-matrix.json` for each variant. Never mix variant pricing.
@@ -464,7 +464,7 @@ Every full-length page (22+ sections) requires 150+ named entities across 6 cate
 3. **Medical/Health Entities (40+):** PBFD, Avian Polyomavirus (APV), Psittacosis, Bornavirus, Hypocalcemia, Aspergillosis, Feather Destructive Behavior
 4. **Brand/Product Entities (20+):** Harrison's Bird Foods, ZuPreem, Roudybush, Tops Parrot Food, Avian Biotech DNA Testing
 5. **Statistical Entities (20+):** 500+ birds placed since 2014, 40–60 year lifespan, 400–500g adult weight, $1,500–$3,500 CAG / $1,200–$2,500 TAG
-6. **Credential/Certification Entities (15+):** CITES Appendix II, USDA AWA License, AFA Registered Aviary, IATA-approved shipping, AAV (Association of Avian Veterinarians)
+6. **Credential/Certification Entities (15+):** CITES Appendix I, USDA AWA License, AFA Registered Aviary, IATA-approved shipping, AAV (Association of Avian Veterinarians)
 Entity density target: 8–12 entities per 100 words (naturally integrated — never forced or listed robotically).
 
 **Rule 58 — 3 Anchor Text Strategies**

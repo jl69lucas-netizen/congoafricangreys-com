@@ -128,8 +128,8 @@ Always wrap the infographic in this container. **Choose max-width based on page 
 **Raw HTML template (for static HTML pages):**
 
 ```html
-<!-- CAG Infographic: Comparison | height: 340px -->
-<div aria-label="[TITLE]" style="display:flex;flex-direction:column;height:340px;min-height:300px;max-height:350px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.14);border:1px solid rgba(0,0,0,0.08);">
+<!-- CAG Infographic: Comparison | height: 400px -->
+<div aria-label="[TITLE]" style="display:flex;flex-direction:column;height:400px;min-height:380px;max-height:450px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.14);border:1px solid rgba(0,0,0,0.08);">
 
   <!-- Title bar -->
   <div style="background:#1a1a2e;color:#fff;padding:9px 16px;text-align:center;font-family:'Lora',serif;font-size:13px;font-weight:700;flex-shrink:0;line-height:1.3;">[TITLE]</div>
@@ -197,8 +197,8 @@ Always wrap the infographic in this container. **Choose max-width based on page 
 **Raw HTML template:**
 
 ```html
-<!-- CAG Infographic: Feature Grid | height: 320px -->
-<div aria-label="[TITLE]" style="background:#2D6A4F;color:#fff;height:320px;min-height:300px;max-height:350px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.2);display:flex;flex-direction:column;padding:12px 16px;">
+<!-- CAG Infographic: Feature Grid | height: 400px -->
+<div aria-label="[TITLE]" style="background:#2D6A4F;color:#fff;height:400px;min-height:380px;max-height:450px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.2);display:flex;flex-direction:column;padding:12px 16px;">
 
   <!-- Header -->
   <div style="text-align:center;margin-bottom:10px;flex-shrink:0;">
@@ -230,8 +230,8 @@ Always wrap the infographic in this container. **Choose max-width based on page 
 **Raw HTML template:**
 
 ```html
-<!-- CAG Infographic: Process Flow | height: 310px -->
-<div aria-label="[TITLE]" style="background:#faf7f4;height:310px;min-height:300px;max-height:350px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.1);border:1px solid rgba(45,106,79,0.15);display:flex;flex-direction:column;">
+<!-- CAG Infographic: Process Flow | height: 400px -->
+<div aria-label="[TITLE]" style="background:#faf7f4;height:400px;min-height:380px;max-height:450px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.1);border:1px solid rgba(45,106,79,0.15);display:flex;flex-direction:column;">
 
   <!-- Header bar -->
   <div style="background:#2D6A4F;color:#fff;padding:10px 16px;text-align:center;font-family:'Lora',serif;font-size:13px;font-weight:700;flex-shrink:0;">[TITLE]</div>

@@ -197,7 +197,7 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 - [Breed] aviary and housing needs
 - [State] avian veterinarians
 - [State] bird import regulations
-- CITES Appendix II documentation
+- CITES Appendix I documentation
 
 #### 7. NLP (Natural Language Processing) - Conversational
 - "What should I know before buying an African Grey parrot in [State]?"
@@ -298,7 +298,7 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 
 ##### 5. Statistical Entities (25+ - Location-Specific When Possible)
 - 500+ birds placed with verified buyers
-- CITES Appendix II — international trade regulated since 1981
+- CITES Appendix I (uplisted from Appendix II at CoP17, 2017) — international trade regulated
 - 40–60 year lifespan (Congo); 40–50 years (Timneh)
 - 400–650 grams adult weight (Congo avg 490g)
 - 1,000+ word vocabulary possible
@@ -314,7 +314,7 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 - USDA AWA license — federally regulated breeder
 
 ##### 6. Regulatory/Legal Entities (State-Specific)
-- CITES Appendix II (Convention on International Trade in Endangered Species)
+- CITES Appendix I (Convention on International Trade in Endangered Species)
 - U.S. Fish & Wildlife Service (USFWS) — CITES enforcement authority
 - USDA Animal Welfare Act (AWA) — federal breeder licensing
 - [State] Department of Agriculture
@@ -387,7 +387,7 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 **Anchor Tag:** `<a name="introduction"></a>`
 
 **REQUIRED TRUST BAR (above fold, every page):**
-`CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
+`CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
 
 **H2 Header Format:**
 `Why Choose CongoAfricanGreys.com for African Grey Parrots in [State]?`
@@ -397,7 +397,7 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 - `Bringing Lifelong Companions to [State] Homes: Congo & Timneh African Greys`
 
 **Content Guidelines:**
-- ✅ Display trust bar immediately: `CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
+- ✅ Display trust bar immediately: `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
 - ✅ Open with emotional connection about lifelong companionship ("Imagine a companion that speaks your name...")
 - ✅ Introduce CAG as USDA AWA licensed breeder serving [State]
 - ✅ Emphasize CITES compliance and captive-bred status (not wild-caught)
@@ -487,7 +487,7 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 - ✅ Timneh African Grey (TAG): Psittacus erithacus timneh — smaller, darker charcoal grey, dark maroon tail
 - ✅ Intelligence: vocabulary of 1,000+ words, 5-year-old child intelligence level
 - ✅ Lifespan: Congo 40–60 years; Timneh 40–50 years — a lifelong commitment
-- ✅ CITES Appendix II: captive-bred required, wild-caught import banned
+- ✅ CITES Appendix I: captive-bred required, wild-caught import banned
 - ✅ Daily interaction requirement: 4+ hours — NOT a hands-off pet
 - ✅ Powder-down feathers: may trigger bird dander allergies (disclose to buyers)
 - ✅ Why suited for [State] (indoor living, climate-controlled environments)
@@ -803,7 +803,7 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 **Content Guidelines:**
 - ✅ Congo (CAG): larger (400–650g, avg 490g), bright red tail, louder, more outgoing
 - ✅ Timneh (TAG): smaller, darker charcoal grey, dark maroon tail, often considered less nippy
-- ✅ Both: Psittacus erithacus species complex, CITES Appendix II, 40-60 year lifespan
+- ✅ Both: Psittacus erithacus species complex, CITES Appendix I, 40-60 year lifespan
 - ✅ Price difference: CAG $1,500–$3,500 vs. TAG $1,200–$2,500 — explain why
 - ✅ Brief comparison to other large parrots: African Grey vs. Blue-and-Gold Macaw (louder, shorter lifespan), vs. Amazon parrots (different vocalizations)
 - ✅ Use comparison table format for readability
@@ -962,7 +962,7 @@ Note: Hawaii residents — strict agricultural quarantine applies; contact us be
 [STATE-SPECIFIC-BIRD-REGULATIONS — verify current state requirements before publishing]
 ```
 
-- ✅ CITES Appendix II explanation — legal to own captive-bred, not wild-caught
+- ✅ CITES Appendix I explanation — legal to own captive-bred, not wild-caught
 - ✅ USDA AWA breeder licensing — what it means for buyers
 - ✅ USFWS enforcement role — brief explanation
 - ✅ Interstate health certificate requirement — USDA-accredited vet, within 30 days
@@ -1030,7 +1030,7 @@ Note: Hawaii residents — strict agricultural quarantine applies; contact us be
 - `Let's Find Your Perfect [Breed] Puppy for [State]!`
 
 **Content Guidelines:**
-- ✅ Strong, compelling CTA with trust bar reiteration: `CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
+- ✅ Strong, compelling CTA with trust bar reiteration: `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
 - ✅ Email address or inquiry form link
 - ✅ Website: CongoAfricanGreys.com
 - ✅ Business location: [BREEDER_LOCATION]
@@ -1185,7 +1185,7 @@ Example:
 
 For each state location page, customize:
 - ✅ Meta title & description (state name, major cities)
-- ✅ H1 header (state name) with trust bar: `CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
+- ✅ H1 header (state name) with trust bar: `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
 - ✅ Introduction (mention state, major cities, IATA shipping)
 - ✅ 15-25 cities listed with nearest airport codes
 - ✅ 10-15 airports listed (with IATA codes) — verify they accept live bird cargo
@@ -1270,7 +1270,7 @@ Before finalizing, verify:
 - NEVER omit CITES certificate language — it is the primary buyer trust signal
 - NEVER use "adopt" language — these are purchases, not adoptions
 - NEVER reference "Flight Nanny" — IATA-compliant bird shipping only
-- ALWAYS include trust bar: `CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
+- ALWAYS include trust bar: `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
 
 ### Success Criteria:
 ✅ Outranks all competitors for "African Grey parrot for sale [State]"

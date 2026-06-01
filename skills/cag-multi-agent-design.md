@@ -115,7 +115,7 @@ The visual identity must balance "Ethical Authority" with "Knowledgeable Breeder
   \- Headlines: Use bold Sans-Serif (Ink) to convey trust and clarity.  
   \- Body: 18px Noto Serif (Ink) for readability on long-form articles like "Congo vs Timneh African Grey" care guides.  
 \- \*\*Mobile Priority:\*\* Mobile users drive the majority of traffic. All designs must prioritize high-speed loading and thumb-friendly CTAs.  
-\- \*\*Trust Bar (required above fold on every page):\*\* `CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
+\- \*\*Trust Bar (required above fold on every page):\*\* `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`
 
 \#\# Methodology 3: The Multi-Agent Validation Loop (Linting)  
 \# This methodology allows agents to "check their own work" autonomously \[1, 3\].
@@ -218,7 +218,7 @@ Yes, the sources provide a detailed view of the **CongoAfricanGreys.com** homepa
 Based on the sources, here are the primary headings and sections of the homepage that your frontend design agent can use for the section-by-section redesign:  
 **Core Identity & Value Proposition**
 
-* **Hero/Intro:** Congo African Grey Parrots for Sale ($1,500–$3,500) and Timneh African Grey Parrots ($1,200–$2,500) — CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified.  
+* **Hero/Intro:** Congo African Grey Parrots for Sale ($1,500–$3,500) and Timneh African Grey Parrots ($1,200–$2,500) — CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified.  
 * **Trust Section:** **What Makes CAG the Right African Grey Breeder for Your Family?** Here’s Everything You Need to Know at a Glance.  
 * **Authority Header:** **CAG – America’s Most Trusted Captive-Bred African Grey Parrot Breeder.**
 
@@ -237,7 +237,7 @@ These specific anchors serve as the "spine" of the homepage redesign:
 
 * **The CAG Story:** Why Did Our Family Start Breeding African Grey Parrots? (Featuring [BREEDER_NAME]).  
 * **Program Pillars:**  
-  * CITES Appendix II Captive-Bred Documentation.  
+  * CITES Appendix I Captive-Bred Documentation.  
   * Full Avian Vet Health Certification.  
   * DNA Sexing for Every Bird.  
   * Safe IATA-compliant bird shipping Service.  
@@ -258,7 +258,7 @@ These specific anchors serve as the "spine" of the homepage redesign:
 * **Post-Purchase Support:** Essential African Grey Parrot Training Tips.
 
 **Design Note for the Frontend Agent**  
-Your agent should note that several components, such as the "Bird Profile at a Glance" cards, are repeated UI patterns that should be tokenized in your design.md file to ensure consistency. Every page must include the CAG trust bar above the fold: `CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`. Reference `docs/reference/design-system.md` for the full token set.  
+Your agent should note that several components, such as the "Bird Profile at a Glance" cards, are repeated UI patterns that should be tokenized in your design.md file to ensure consistency. Every page must include the CAG trust bar above the fold: `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`. Reference `docs/reference/design-system.md` for the full token set.  
 i like both, Option 1: The "Playwright Polisher" (High-Fidelity Component Focus)  
 This agent is optimized for section-by-section precision. It uses the Playwright CLI to "see" your existing structure and then applies the Impeccable command suite to rebuild every block with pixel-perfect accuracy  
 .  
@@ -363,7 +363,7 @@ Following the **DESIGN.md** standard of combining "reasoning" with "tokens," thi
 
 * **Canon 50mm Prime (The "Portrait" Shot):** Used for individual bird profile cards. This preset dictates a **shallow depth of field** (soft blurred backgrounds) and warm, saturated colors to emphasize "Knowledgeable Breeder Warmth".  
 * **Sony 16-35mm G-Master (The "Wide Architecture"):** Used for the **100-page Sitemap**. This preset ensures edge-to-edge sharpness and a wide field of view to capture the full scope of the TX, CA, and FL location hubs.  
-* **Macro Detail:** High-contrast, close-up rendering of specific trust signals (e.g., the CITES Appendix II documentation badge and DNA Sexing certificate).
+* **Macro Detail:** High-contrast, close-up rendering of specific trust signals (e.g., the CITES Appendix I documentation badge and DNA Sexing certificate).
 
 **2\. Composition & Dimensions** The agent will use /layout to define the "Camera Frame":
 
@@ -411,7 +411,7 @@ Modern agencies focus on **Generative Engine Optimization (GEO)**. This agent do
 **3\. DESIGN.md Brand Compliance**  
 Every edit is governed by your **named design decisions** to ensure visual consistency across all 100 pages.
 
-* **Chroma Matching:** If the agent adds a "CITES Appendix II · Captive-Bred" badge over a bird photo, it must use the design tokens defined in `docs/reference/design-system.md`.  
+* **Chroma Matching:** If the agent adds a "CITES Appendix I · Captive-Bred" badge over a bird photo, it must use the design tokens defined in `docs/reference/design-system.md`.  
 * **Automated Linting:** Before saving an edit, the agent runs the design-md-cli to verify that text overlays meet WCAG 2.1 AA accessibility standards.
 
 **4\. Production Resilience & Cost Control**  
@@ -448,7 +448,7 @@ I have analyzed the brand voice and data for **CongoAfricanGreys.com** and initi
 **Brand Voice Analysis**  
 Based on the website content and search data, your brand voice is defined by **Ethical Authority** and **Heartfelt Transparency**.
 
-* **The "Expert" Persona:** You position yourself as "America’s Most Trusted Captive-Bred African Grey Parrot Breeder," emphasizing technical expertise like "CITES Appendix II documentation," "DNA Sexing," and "Congo vs. Timneh variant knowledge."  
+* **The "Expert" Persona:** You position yourself as "America’s Most Trusted Captive-Bred African Grey Parrot Breeder," emphasizing technical expertise like "CITES Appendix I documentation," "DNA Sexing," and "Congo vs. Timneh variant knowledge."  
 * **The "Responsible Owner" Persona:** Phrases like "raised with enrichment" and "socialized from hatching" create a professional yet deeply educational connection with first-time parrot owners.  
 * **Transactional Trust:** With "Full CITES Documentation," "Avian Vet Certification," and "Transparent Pricing," the voice is designed to eliminate buyer anxiety in an industry prone to scams and illegal trade.
 
@@ -475,13 +475,13 @@ See `docs/reference/design-system.md` for the authoritative CAG token set. Refer
 
 * **Primary CTA Button:** Background: **Accent Amber**; Text: **Neutral White**; Border-Radius: **8px**. This softness aligns with the "Ethical Warmth" aesthetic. See `docs/reference/design-system.md`.  
 * **Educational Cards:** Surface background with sharp Ink headlines. Used for the high-impression "Training Tips" and "Species Comparison" clusters.  
-* **Trust Bar (required above fold):** `CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified` — must appear on every page above the fold.  
+* **Trust Bar (required above fold):** `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified` — must appear on every page above the fold.  
 * **Mobile-First Grid:** Mobile users drive the majority of traffic. The design system enforces stackable vertical layouts and thumb-friendly interaction zones.
 
 \--------------------------------------------------------------------------------
 
 **Multi-Agent Validation (Linting)**  
-As part of your organization settings, the system includes an automated **Linting Loop**. Whenever Claude generates a new landing page (like the Texas or California hubs), it will run the design-md-cli to verify that the contrast meets **WCAG 2.1 AA** standards, and that the CITES trust bar (`CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`) is present above the fold. Corrects itself recursively if the accessibility score is too low or the trust bar is missing.  
+As part of your organization settings, the system includes an automated **Linting Loop**. Whenever Claude generates a new landing page (like the Texas or California hubs), it will run the design-md-cli to verify that the contrast meets **WCAG 2.1 AA** standards, and that the CITES trust bar (`CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`) is present above the fold. Corrects itself recursively if the accessibility score is too low or the trust bar is missing.  
 I have successfully called the tool to generate the visual infographic representing this entire design system. You can view the final result in the **Studio tab** shortly.  
 I have attached two images for the homepage hero section, since the website features two variants with Congo African Grey being the primary, how would you design the hero with the photos generate examples as a slide deck use brand color  
 I have designed a hero section strategy for **CongoAfricanGreys.com** that prioritizes your primary variant (Congo African Grey) while maintaining strong visibility for the Timneh African Grey. This design utilizes your newly established **DESIGN.md** tokens and "Cinematic Reasoning" to create a high-fidelity, trust-building experience.  
@@ -490,7 +490,7 @@ Based on your brand voice of **Ethical Authority** and **Knowledgeable Breeder W
 **1\. Layout Option: The Dynamic 60/40 Split**  
 To address the two-variant requirement, I recommend a split-screen desktop layout:
 
-* **Congo African Grey (Main Focus \- 60%):** The left side features a high-fidelity portrait of a Congo African Grey. This area carries the primary **Ink Black (\#000000)** headline: *"America’s Most Trusted Captive-Bred African Grey Parrot Breeder"*. Trust bar immediately below: `CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`.  
+* **Congo African Grey (Main Focus \- 60%):** The left side features a high-fidelity portrait of a Congo African Grey. This area carries the primary **Ink Black (\#000000)** headline: *"America’s Most Trusted Captive-Bred African Grey Parrot Breeder"*. Trust bar immediately below: `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified`.  
 * **Timneh African Grey (Secondary Focus \- 40%):** The right side features a sharp portrait of a Timneh African Grey. A secondary sub-headline highlights the Timneh’s calmer temperament and lower price point ($1,200–$2,500).
 
 **2\. Layout Option: The Compositional Overlay**  
@@ -498,7 +498,7 @@ This design uses overlapping layers to create depth:
 
 * A large background hero image of a Congo African Grey in an enriched environment.  
 * A smaller, circular **Ink Black** bordered inset (a "stamp") featuring a Timneh African Grey.  
-* **Trust Bar (above fold):** `CITES Appendix II · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified` in a high-contrast banner.  
+* **Trust Bar (above fold):** `CITES Appendix I · Captive-Bred · USDA AWA Licensed · DNA Sexed · Vet Certified` in a high-contrast banner.  
 * **Strategic CTA:** A large, thumb-friendly **Accent Amber** button placed on a grid intersection to drive the "Inquire Now" transactional goal.
 
 **Mobile-First Execution**  
@@ -506,4 +506,4 @@ Mobile users drive the majority of traffic. These designs are engineered to stac
 
 * The Congo African Grey photo remains **top-of-fold** to satisfy the main search intent.  
 * The Timneh section follows immediately after, ensuring the "Two Variant" identity is clear within the first two scrolls.  
-* All trust signals—including the **CITES Appendix II documentation badge**, **DNA Sexed**, and **Vet Certified** indicators—are placed in high-contrast headers for professional authority.
+* All trust signals—including the **CITES Appendix I documentation badge**, **DNA Sexed**, and **Vet Certified** indicators—are placed in high-contrast headers for professional authority.

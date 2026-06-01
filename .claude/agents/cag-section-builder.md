@@ -21,7 +21,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -79,6 +79,56 @@ grep "^--" src/styles/cag-design-system.css | head -40
 ```bash
 grep "^--cta\|^--primary\|^--gold\|^--canvas" src/styles/cag-design-system.css
 ```
+
+---
+
+## Typography Rules — MUST FOLLOW (confirmed live 2026-05-30)
+
+The site uses **Option A fluid clamp** typography in `src/styles/global.css` `@layer base`. Tailwind utility classes override this base layer, so incorrect utility classes on headings break mobile sizing.
+
+**H2 / H3 on section headings — DO NOT add font-size utilities:**
+```html
+<!-- ✅ CORRECT — let base clamp cascade -->
+<h2 class="font-lora font-bold text-logo-dark mb-4">Section Heading</h2>
+
+<!-- ❌ WRONG — text-3xl overrides base on mobile (30px fixed, too large) -->
+<h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">Section Heading</h2>
+```
+
+**Exceptions** (explicit size classes ARE correct on these):
+- Hero H1: `text-3xl sm:text-4xl md:text-[3.25rem]` — intentional display override
+- FAQ accordion H3: `text-[16px]` — intentional compact size
+- Calculator output `<p>`: `text-3xl text-clay` — display number, not a heading
+
+**Confirmed scale (computed values):**
+| Element | Mobile 375px | Desktop 1280px |
+|---|---|---|
+| H2 | **20px** | **26–32px** |
+| H3 | **17px** | **24px** |
+| Body | **15px** | **17px** |
+
+**Eyebrow / prefix spans:**
+```html
+<!-- ✅ CORRECT -->
+<span class="font-sora text-[10px] font-medium uppercase tracking-[0.12em] text-clay md:text-[11px]">EYEBROW</span>
+
+<!-- ❌ WRONG — semibold + wide tracking makes 11px look 14px -->
+<span class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em]">EYEBROW</span>
+```
+
+**Testimonial blockquotes:**
+```html
+<!-- ✅ CORRECT — mobile constrained -->
+<blockquote class="font-display text-lg md:text-3xl leading-tight">
+
+<!-- ❌ WRONG — 30px fixed on all viewports -->
+<blockquote class="font-display text-3xl leading-tight">
+```
+
+**Paragraph defaults (set in base layer — no class needed):**
+- `line-height: 1.65`
+- `margin-bottom: 1.25em`
+- `max-width: 65ch` (use inline `style="max-width:70ch"` to loosen if needed)
 
 ---
 
@@ -378,7 +428,7 @@ Inputs: none (trust signals are fixed)
 ```html
 <div class="cag-trust-bar">
   <span class="cag-trust-item">✓ USDA AWA Licensed</span>
-  <span class="cag-trust-item">✓ CITES Appendix II Captive-Bred</span>
+  <span class="cag-trust-item">✓ CITES Appendix I Captive-Bred</span>
   <span class="cag-trust-item">✓ DNA Sexed</span>
   <span class="cag-trust-item">✓ Avian Vet Certified</span>
 </div>

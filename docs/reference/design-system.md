@@ -24,5 +24,5 @@ as the reference page for any section patterns.
 
 ## Design Rules
 1. Every page must have CITES trust bar visible above the fold
-2. Trust signals on every listing: USDA AWA · CITES Appendix II · DNA Sexed · Avian Vet Certified
+2. Trust signals on every listing: USDA AWA · CITES Appendix I · DNA Sexed · Avian Vet Certified
 3. Inquiry form: 3 fields max — name, email, variant preference (Congo / Timneh)

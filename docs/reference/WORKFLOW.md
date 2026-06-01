@@ -53,36 +53,57 @@ Before any work begins, verify these exist:
   → Output: LLM Visibility column in top-pages.md
 ```
 
-**Track C — Discovery**
-```
-grill-me skill (always first in a new session)
-  → Reads: CLAUDE.md + top-pages.md + site-overview.md + last session brief
-  → Asks 10-12 questions one at a time
-  → Output: sessions/YYYY-MM-DD-session-brief.md
-  → Includes: SESSION CONTEXT block (see format below)
-```
+**Note — Session Orientation moved to Sprint 0.5:**
+grill-me runs AFTER Sprint 0 Gate passes (gap matrix + top-pages must exist). See Sprint 0.5 block below.
 
 ### SESSION CONTEXT Block (output of grill-me)
 ```
 SESSION CONTEXT:
 - Page Type: [location | species guide | comparison | blog | money page | hub]
 - Target Keyword: [exact keyword]
-- Framework: [AIDA | PAS | QAB | Entity-Tree | H-S-S | Inverse Pyramid]
+- Framework: [AIDA | QAB | H-S-S | Entity-Tree | BAB | EBP]
+- Framework Reason: [why this framework fits this page's goal]
+- AIO / GEO Approach: [Featured Snippet | Entity-first | Both]
+- AIO Notes: [AI engines where CAG appears / needs protection]
+- Component Style: [informational 760px | transactional 1200px | hybrid]
+- Visual Plan: [section → type mapping, or "decide during build"]
 - Audit Status: [complete | pending → run cag-content-audit-agent first]
 - LLM Visibility: [0–10 score | "not measured" → run cag-llm-keyword-intel]
 - Structure.json Entry: [yes | no → run cag-structure-architect first]
-- Hub Page: [/url/ of parent hub]
-- Internal Links Needed: [list from cag-internal-link-agent]
-- Competitor Benchmark: [URL or "none"]
+- Hub Page: [/url/ of parent hub | "needs to be built first"]
+- Internal Links Needed: [from workflow gate check, or "TBD after audit"]
 ```
 
 ### Sprint 0 Gate
-Before proceeding to Sprint 1:
+Before proceeding to Sprint 0.5:
 - [ ] `data/competitors.json` written (30 competitors)
 - [ ] `docs/research/gap-matrix-[date].md` written
 - [ ] `docs/reference/top-pages.md` updated
 - [ ] LLM Visibility scores recorded for top 10 keywords
-- [ ] Session brief written
+
+---
+
+## Sprint 0.5 — Session Orientation
+*Run once per page build, after Sprint 0 Gate passes. grill-me now runs here — with full intelligence data loaded.*
+
+```
+grill-me skill
+  → Reads: CLAUDE.md + top-pages.md + site-overview.md + gap-matrix-*.md + last session brief
+  → WARNS if gap matrix missing (intelligence incomplete — answers will be imprecise)
+  → Asks 13–14 questions one at a time (13 without prior brief; 14 with one):
+      Business Layer: outcome, traffic reality, worst performer, customer journey, constraints
+      Task Layer: target slug, workflow gate check, done-looks-like, reader profile, benchmark
+      NEW: framework choice + reason, AIO/GEO approach, visual plan section-by-section, urgency
+  → Output: sessions/YYYY-MM-DD-session-brief.md
+  → Includes: SESSION CONTEXT block with framework, AIO approach, visual plan, component style
+```
+
+### Sprint 0.5 Gate
+Before proceeding to Sprint 1:
+- [ ] Session brief written with full SESSION CONTEXT block
+- [ ] Framework chosen + reason documented
+- [ ] AIO/GEO approach chosen
+- [ ] Visual plan sketched (or "decide during build" noted per section)
 
 ---
 
@@ -125,9 +146,9 @@ Step 5: cag-content-architect
     | Location pages | AIDA + Entity-Tree |
     | Species guides | Entity-Tree + QAB |
     | Comparison pages | BAB + QAB |
-    | Scam/trust pages | H-S-S + EBD |
-    | Pricing pages | QAB + Inverse Pyramid |
-    | Blog posts | PAS or AIDA |
+    | Scam/trust pages | H-S-S + EBP |
+    | Pricing pages | QAB + EBP |
+    | Blog posts | AIDA or BAB |
     | About / breeder story | H-S-S |
   → Output: content brief queue (priority ordered by opportunity score)
 ```
@@ -152,6 +173,15 @@ Step 5: cag-content-architect
    → Phase 2: Competitor analysis (most valuable phase)
    → Phase 3: Action plan + internal linking opportunities
    → Output: sessions/YYYY-MM-DD-[slug]-audit.md
+
+1.5. SECTION MAP + COMPONENT SELECTION GATE  ← MANDATORY BEFORE ANY WRITING
+   → Based on audit output, list every section from Hero → final CTA
+   → For each section: assign component + variant from docs/reference/components.md
+   → Show user table: | Section | Content Purpose | Component | Variant |
+   → USER APPROVES the full map — explicit approval required
+   → LOCKED after approval — no component changes after this point
+   → Session brief updated with locked component map
+   → Only THEN proceed to step 2
 
 2. cag-angle-agent
    → Generates 5–10 content angles before any writing begins
@@ -484,7 +514,10 @@ Events that trigger agent chains regardless of schedule:
 START: What are you trying to do?
 
 ├── "Start a new session / new page"
-│   └── grill-me skill → SESSION CONTEXT → cag-content-audit-agent
+│   ├── Sprint 0 done? NO → @cag-competitor-intel --all + @cag-gsc-analytics first
+│   └── Sprint 0 done? YES → grill-me skill (with gap matrix loaded)
+│       → SESSION CONTEXT → cag-content-audit-agent
+│       → SECTION MAP + COMPONENT GATE → approved → build
 
 ├── "Don't know what to build next"
 │   └── cag-competitive-keyword-gap-agent → sort by score ≥7 → cag-content-architect

@@ -17,7 +17,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -96,7 +96,7 @@ Google shows 4 initial PAA questions. Clicking each expands more. Use Playwright
 
 ### CITES / Legal
 - Are African Grey parrots legal to own in the US?
-- What is CITES Appendix II and why does it matter?
+- What is CITES Appendix I and why does it matter?
 - What documentation comes with a captive-bred African Grey?
 - Can CBP seize my African Grey parrot?
 - What does USDA AWA license mean for a bird breeder?

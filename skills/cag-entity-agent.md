@@ -33,7 +33,7 @@ For every entity mention on an MFS page:
 | Congo African Grey | Congo, CAG, larger African Grey | Variant sections, H2, species guide |
 | Timneh African Grey | TAG, Timneh, smaller African Grey | Variant sections, H2, species guide |
 | Psittacus erithacus | Scientific name, avian nomenclature | Species guide, scientific sections |
-| CITES Appendix II | CITES A-II, protected species | Credentials, legal pages |
+| CITES Appendix I | CITES A-I, protected species | Credentials, legal pages |
 | Captive-bred | Domestically bred, bred in captivity | Trust bar, credentials |
 | Hand-raised | Hand-fed, socialized, behavioral training | Care sections, about page |
 | Lifetime breeder support | Ongoing breeder relationship, lifetime advisory | Trust, FAQ |

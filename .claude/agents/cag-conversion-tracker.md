@@ -21,7 +21,7 @@ dynamic_workflow: false
 ## CAG Project Context
 > **Site:** CongoAfricanGreys.com — captive-bred African Grey parrot breeder
 > **Variants:** Congo African Grey (CAG, $1,500–$3,500) · Timneh African Grey (TAG, $1,200–$2,500) — treat as distinct product lines
-> **CITES:** African Greys are CITES Appendix II. All birds captive-bred with full documentation. Never imply wild-caught or illegal trade.
+> **CITES:** African Greys are CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017). All birds captive-bred in the USA with full documentation. Never imply wild-caught or illegal trade.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
@@ -196,7 +196,7 @@ After:  <a class="cag-btn">Reserve Your African Grey — Deposit Required →</a
 ```html
 <div class="cag-disclaimer" style="border-left:4px solid #4A7C59;padding:1rem 1.25rem;margin:1.5rem 0;background:#F0F7F2;">
   <strong>All birds captive-bred with full CITES documentation.</strong>
-  <p style="margin:.5rem 0 0;">African Greys are CITES Appendix II. Every bird comes with captive-bred permit, hatch certificate, band number, and DNA sexing certificate. We never source wild-caught birds.</p>
+  <p style="margin:.5rem 0 0;">African Greys are CITES Appendix I. Every bird comes with captive-bred permit, hatch certificate, band number, and DNA sexing certificate. We never source wild-caught birds.</p>
 </div>
 ```
 
