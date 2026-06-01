@@ -95,7 +95,7 @@ For state/city location pages, use the city center as the map target:
       src="https://maps.google.com/maps?q=CITY%2C%20STATE&z=10&hl=en&t=m&output=embed&iwloc=near"
       width="100%" height="300" style="border:0;display:block;" allowfullscreen=""
       loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-      title="African Grey parrot Puppies for Sale in CITY, STATE — CongoAfricanGreys.com">
+      title="African Grey Parrots for Sale in CITY, STATE — CongoAfricanGreys.com">
     </iframe>
   </div>
   <p style="text-align:center;font-size:.85rem;color:#888;margin:10px 0 0;">📍 Serving CITY, STATE — shipping &amp; flight nanny delivery available</p>
@@ -214,7 +214,7 @@ When creating or editing a location page, insert the map template after the main
 ```python
 from pathlib import Path
 
-page_path = Path("/Users/apple/Downloads/MFS/site/content/usa-locations/african grey parrot-puppies-STATENAME/index.html")
+page_path = Path("src/pages/african-grey-parrot-for-sale-STATENAME/index.astro")
 content = page_path.read_text(errors="ignore")
 
 STATE = "Arizona"
@@ -227,7 +227,7 @@ MAP_HTML = f"""
       src="https://maps.google.com/maps?q={ENCODED}&z=7&hl=en&t=m&output=embed&iwloc=near"
       width="100%" height="300" style="border:0;display:block;" allowfullscreen=""
       loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-      title="African Grey parrot Puppies for Sale in {STATE} — CongoAfricanGreys.com">
+      title="African Grey Parrots for Sale in {STATE} — CongoAfricanGreys.com">
     </iframe>
   </div>
   <p style="text-align:center;font-size:.85rem;color:#888;margin:10px 0 0;">📍 Serving {STATE} — flight nanny &amp; ground transport available</p>
