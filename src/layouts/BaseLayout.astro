@@ -13,10 +13,12 @@ interface Props {
   ogType?: string;
   schemaJson?: string;
   extraHeadHtml?: string;
+  /** Robots directive. Defaults to index,follow; pass "noindex, follow" on thank-you / utility pages. */
+  robots?: string;
   /** Pages that render their own <CTA /> set this to suppress the global pre-footer band (avoids a double CTA). */
   hideGlobalCta?: boolean;
 }
-const { title, description, canonical, ogType = 'website', schemaJson, extraHeadHtml, hideGlobalCta = false } = Astro.props;
+const { title, description, canonical, ogType = 'website', schemaJson, extraHeadHtml, robots = 'index, follow', hideGlobalCta = false } = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang="en-US">
@@ -34,6 +36,7 @@ const { title, description, canonical, ogType = 'website', schemaJson, extraHead
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <meta name="robots" content={robots} />
   <link rel="canonical" href={canonical} />
 
   <!-- Favicons -->
