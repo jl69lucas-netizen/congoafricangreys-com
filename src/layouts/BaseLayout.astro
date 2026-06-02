@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 import '../styles/direction-d.css';
-import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileTabBar from '../components/MobileTabBar.astro';
@@ -61,24 +60,27 @@ const { title, description, canonical, ogType = 'website', schemaJson, extraHead
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content="https://congoafricangreys.com/og-twitter.png" />
 
-  <!-- Fonts -->
+  <!-- Fonts — preconnect + non-render-blocking load (media=print swap). Direction D
+       (Newsreader + IBM Plex) and the Lora/Sora token fallback share one combined
+       request. display=swap means fallback text paints immediately, then swaps. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Sora:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Sora:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    media="print"
+    onload="this.media='all'"
   />
-  <!-- Direction D — "Modern Editorial" site theme (see src/styles/direction-d.css) -->
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
-  />
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Sora:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    />
+  </noscript>
 
   <!-- Structured data -->
   {schemaJson && <script type="application/ld+json" set:html={schemaJson} />}
   {extraHeadHtml && <Fragment set:html={extraHeadHtml} />}
-
-  <ClientRouter />
 </head>
 <body class="theme-d bg-warm-white font-sora text-stone-800 antialiased pb-16 md:pb-0">
   <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-clay focus:px-4 focus:py-2 focus:font-semibold focus:text-white">Skip to main content</a>
