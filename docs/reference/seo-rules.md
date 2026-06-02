@@ -520,6 +520,13 @@ Consult this list BEFORE writing internal links for any page.
 Never invent internal URLs — only link to pages that exist in `src/pages/` or are confirmed in `data/structure.json`.
 All internal links must use the relative path format: `/slug/` (with trailing slash).
 
+**Rule 63 — Recommend + Why (ALWAYS, all agents/tasks)**
+Whenever any agent or skill presents the user options or choices (meta variants, keyword swaps, design/component options, A/B picks, section placements, framework selection — anything), it MUST:
+1. Mark exactly **one** option **(Recommended)**.
+2. Explain **WHY**, grounded in real data — GSC, competitor analysis, or the codebase — never "feelings" or vague preference.
+3. Stay honest: name the **trade-off / downside** of the recommended pick too.
+In `AskUserQuestion`, the recommended option goes **first** with "(Recommended)" appended to its label. A bare list of options with no reasoned recommendation is an incomplete deliverable. Mirrors CLAUDE.md §Non-Negotiable Rules.
+
 ---
 
 ## Quick Reference — GSC Priority Pages (2026-04-28)
