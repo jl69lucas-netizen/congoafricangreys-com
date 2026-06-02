@@ -114,30 +114,41 @@ Three required deflection patterns — every product/available page must address
 
 ## Category E — Meta Titles & Descriptions
 
-**Rule 21 — Standard Meta Title Formula**
-Structure: `[Primary Keyword] | [Power Word] + [Number] | [Long-tail Conversational Query] | C.A.Gs - Midland, TX`
-- Begin with primary keyword
-- Add a number where authentic ("7 Signs", "Top 3 Reasons")
-- Include a power word: Certified, Ethical, Trusted, CITES-Documented
-- Insert long-tail conversational query
-- End with brand: `C.A.Gs - Midland, TX`
-- Use `|` separators
-- Max 275 characters
+> **⚠️ CANONICAL META FORMAT — THIS IS THE ONLY SOURCE OF TRUTH.** C.A.Gs uses two long-form meta formats. NEVER ship a generic short title (e.g. "African Grey Parrot Breeder | Congo & Timneh"). Every page picks Format 1 OR Format 2. These caps supersede all prior/agent values (the old 275 / 290 / 155 / 600 numbers are RETIRED). `cag-meta-description-agent.md` must mirror these exactly.
 
-**Rule 22 — Extended 4-Tone Meta Title System**
-For high-intent pages, choose one of 4 tone variants based on page intent.
-Format: `[Primary Keyword] | [Conversational Query] | [Comparison/LSI/NLP] | C.A.Gs Trust Ending`
+**Rule 21 — Meta FORMAT 1 (Standard Long Title)**
+Structure: `[Primary Keyword] | [Number] + [Power Word] | [Long-tail Conversational Query] | C.A.Gs – Midland, TX`
+Build order — every element is mandatory:
+1. **Begin with the primary keyword** (e.g. `African Grey Parrot Breeder`).
+2. **Add a number** where authentic — "7 Reasons", "Top 10", "12 Years".
+3. **Include a positive/power word** — Trusted, Healthy, Ethical, Certified, CITES-Documented, USDA-Licensed.
+4. **Insert a long-tail conversational query** — `African Grey Parrot Breeder near me that has available parrots`.
+5. **End with the brand** — `C.A.Gs – Midland, TX` (or `C.A.Gs` where space-tight, per page).
+6. Use `|` separators.
+- **Title cap: ≤ 205 characters.**
+- **Description cap: ≤ 185 characters** (see Rule 23, Format 1 desc).
 
-- 🔴 **Urgency** — Scarcity signals, limited clutch availability, act-now framing
-- 🆚 **Comparison** — C.A.Gs vs competitor, price comparison, documentation comparison
-- 💰 **Transactional** — Price, buy now, available today, skip overpriced alternatives
-- 🛡️ **Trust/Health** — CITES proof, DNA sexed, avian vet certified, not just promises
+**Rule 22 — Meta FORMAT 2 (4-Part Long Title + Tone System)**
+For homepage, hubs, and high-intent/high-competition pages.
+Format: `[Primary Keyword] | [Conversational Query] | [Comparison / LSI / NLP] | C.A.Gs – Midland, TX Trust Ending`
+Still required: a **number** and a **positive/power word** somewhere in the title.
+Choose the tone that matches page intent:
+- 🔴 **Urgency** — Scarcity, limited clutch availability, act-now (best on PRODUCT/LOCATION pages, NOT the homepage).
+- 🆚 **Comparison** — C.A.Gs vs competitor / vs unverified sellers, price/documentation comparison.
+- 💰 **Transactional** — Price, reserve now, available today, skip overpriced alternatives.
+- 🛡️ **Trust/Health** — CITES proof, DNA-sexed, avian-vet-certified, captive-bred — not just promises.
+- **Title cap: ≤ 205 characters.**
+- **Description cap: ≤ 300 characters** (see Rule 23, Format 2 desc).
+- **Homepage default tone = Comparison + Trust (🆚 + 🛡️). Lead with authority, NOT urgency** — the homepage is top-of-funnel and the #1 buyer fear is scam/fraud.
 
-**Rule 23 — Meta Description**
-- Standard: max 155 characters — clear, conversational, benefit-driven
-- Extended: up to 290 characters for high-competition pages
-- Must include: primary keyword + long-tail query + trust signal + CTA
-- Emphasize: CITES documentation, DNA sexing, avian vet cert, C.A.Gs experience
+**Rule 23 — Meta Description (matches the chosen format)**
+- **Format 1 description: ≤ 185 characters** — clear, conversational, benefit-driven, single sentence flow.
+- **Format 2 description: ≤ 300 characters** — `|`-separated multi-part, for homepage/hubs/high-competition pages.
+- Every description MUST include: primary keyword + a long-tail/LSI variation + a trust signal + a CTA.
+- Emphasize: CITES Appendix I captive-bred documentation, DNA sexing, avian vet cert, C.A.Gs Midland-TX experience since 2014, nationwide shipping.
+- **Worked homepage example (Format 2, 🆚+🛡️ — LIVE):**
+  - Title (197): `African Grey Parrot Breeder | Where Can I Buy a Healthy Congo African Grey Near Me? | Captive-Bred C.A.Gs vs Unverified Online Sellers | C.A.Gs – America's Trusted Congo & Timneh Breeder Since 2014`
+  - Desc (291): `Trusted African Grey parrot breeder Mark & Teri raise hand-fed Congo & Timneh Greys in Midland, TX | Why families choose captive-bred C.A.Gs over unverified online sellers | Every bird is DNA-sexed, vet-checked, and ships with CITES Appendix I paperwork | Reserve yours — nationwide delivery`
 
 **Rule 24 — Uniqueness**
 Every page must have a unique title tag and meta description. No duplicates across the site. Duplicate metas = cannibalization signal to Google.
