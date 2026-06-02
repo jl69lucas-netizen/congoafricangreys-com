@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import TrustBar from '../../components/TrustBar.astro';
 import CTA from '../../components/CTA.astro';
+import Schema from '../../components/Schema.astro';
 
 const title = "African Grey Parrots for Sale Near You — by State | C.A.Gs";
 const description = "African Grey parrots for sale near you — browse by state or city. C.A.Gs ships captive-bred, CITES-documented Congo & Timneh Greys nationwide from Midland, TX.";
@@ -59,6 +60,24 @@ const cities = [
   { name: "Cleveland, OH", slug: "african-grey-parrot-for-sale-cleveland" },
 ];
 
+// Location / shipping FAQ — PAA-sourced "near me" intent. CITES-compliant.
+const faqItems = [
+  { q: "Can you ship an African Grey parrot to my state?",
+    a: "Yes. C.A.Gs ships captive-bred Congo and Timneh African Greys to all 50 states from our home aviary in Midland, Texas. Your bird travels in an IATA-compliant live-animal carrier with an avian-vet health certificate dated within 10 days of departure, and you collect it at the cargo facility of your nearest major airport — calm, hydrated, and fully documented." },
+  { q: "Is there an African Grey breeder near me?",
+    a: "Most buyers are not within driving distance of a licensed African Grey breeder — there are very few in the country. Rather than risk an unverified local seller, families in all 50 states have a fully documented bird shipped directly from our USDA-licensed Texas aviary. Browse your state or city above to see the shipping routes and airport pickup details for your area." },
+  { q: "Is it legal to own an African Grey parrot in my state?",
+    a: "Yes. African Greys are listed on CITES Appendix I, which bans trade in wild-caught birds — but captive-bred African Greys are legal to own and transfer in every U.S. state with proper documentation. Every C.A.Gs bird is U.S. captive-bred and ships with its CITES captive-bred record, so your ownership is on solid legal ground anywhere in the country." },
+  { q: "How much does it cost to ship an African Grey parrot?",
+    a: "Shipping is quoted per route, based on your nearest airport and the season, and always uses an airline-approved live-animal carrier with full health documentation. Teri gives you the exact figure before any deposit, so there are never surprise charges on travel day." },
+  { q: "Do you have African Greys available near my city?",
+    a: "Availability changes with each clutch rather than by city — every available Congo and Timneh can ship to any of the 40+ metros listed above. Tell us your city in your inquiry and we will confirm which birds can travel to you and when." },
+  { q: "Why don't you have a store in my city?",
+    a: "C.A.Gs is a family aviary, not a pet store — Mark and Teri Benjamin hand-raise every bird in their Midland, Texas home and ship directly to your family. That direct-from-breeder model is exactly why every bird arrives fully socialized, DNA-sexed, and documented, with no middleman handling it along the way." },
+  { q: "How do I pick up my African Grey after it ships?",
+    a: "Your bird flies as live-animal cargo to the major airport nearest you. You collect it at the airline's cargo counter — not the passenger terminal — a few hours after landing, present your ID, and bring it home in the carrier it traveled in. We walk you through the exact steps for your specific airport before travel day." },
+];
+
 // BreadcrumbList JSON-LD is emitted by <Breadcrumb> itself — no duplicate here.
 // Semantic SEO: this page is a directory of regional offerings — model it as a
 // CollectionPage whose mainEntity is an ItemList enumerating every state + city page.
@@ -87,32 +106,46 @@ const collectionSchema = {
 <BaseLayout {title} {description} {canonical}>
   <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
 
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
+  <div class="mx-auto max-w-[1200px]">
     <Breadcrumb items={breadcrumbs} />
   </div>
 
+  <!-- Hero -->
   <section class="bg-logo-dark text-cream py-16 px-4">
     <div class="max-w-4xl mx-auto text-center">
-      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-4">CITES Documented · Ships Nationwide · USDA Licensed</p>
+      <p class="text-clay font-sora text-sm font-semibold uppercase tracking-widest mb-4">CITES Documented · Ships Nationwide · USDA Licensed</p>
       <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">African Grey Parrots for Sale Near You</h1>
-      <p class="text-cream/80 text-lg max-w-2xl mx-auto">Looking for an African Grey parrot for sale in your state or city? C.A.Gs ships captive-bred Congo and Timneh African Greys nationwide from Mark &amp; Teri Benjamin's USDA-licensed aviary in Midland, TX. Pick your location below — or <a href="/african-grey-parrot-for-sale/" class="text-gold underline hover:text-white">see every available bird and current pricing</a> on our main listings page.</p>
-      <a href="/contact-us/" class="inline-block mt-8 bg-clay text-white font-sora font-semibold px-8 py-3 rounded-full hover:bg-clay/90 transition-colors">Inquire About Available Birds</a>
+      <p class="text-cream/85 text-lg max-w-2xl mx-auto leading-relaxed">Looking for an African Grey parrot for sale in your state or city? C.A.Gs ships captive-bred Congo and Timneh African Greys nationwide from Mark &amp; Teri Benjamin's USDA-licensed aviary in Midland, TX. Pick your location below — or <a href="/african-grey-parrot-for-sale/" class="text-clay underline decoration-clay/40 hover:text-white">see every available bird and current pricing</a> on our main listings page.</p>
+      <a href="/contact-us/" class="inline-block mt-8 bg-clay text-white font-sora font-semibold px-8 py-3.5 rounded-full hover:bg-clay-dk transition-colors">Inquire About Available Birds</a>
     </div>
   </section>
 
   <TrustBar />
 
+  <!-- Intro / content depth (EBP) -->
+  <section class="py-16 px-4 bg-warm-white">
+    <div class="mx-auto max-w-3xl">
+      <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Near You, Done Right</p>
+      <h2 class="font-lora font-bold text-logo-dark mb-4">How Do You Find an African Grey Parrot for Sale Near You?</h2>
+      <p class="text-stone-600 leading-relaxed mb-4" style="max-width:70ch;">Type "African Grey parrot for sale near me" into any search engine and you get two kinds of results: anonymous classified listings with stock photos and impossibly low prices, and a small handful of licensed breeders — almost none of them in your city. The hard truth is that legitimate, CITES-documented African Greys are raised by only a few families in the United States, so "near you" almost never means "down the street."</p>
+      <p class="text-stone-600 leading-relaxed mb-4" style="max-width:70ch;">That is why C.A.Gs ships directly. From our USDA-licensed aviary in <a href="/african-grey-parrot-for-sale-texas/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Midland, Texas</a>, Mark and Teri Benjamin place hand-raised <a href="/congo-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Congo</a> and <a href="/timneh-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Timneh</a> African Greys with families in all 50 states. Instead of settling for whatever an unverified local seller happens to have, you choose a fully documented bird and have it flown to the major airport nearest you in an IATA-compliant carrier.</p>
+      <p class="text-stone-600 leading-relaxed" style="max-width:70ch;">Every bird leaves with the same packet, whether it is going to Florida or Oregon: a CITES Appendix I captive-bred record, a DNA sexing certificate, an avian-vet health certificate dated within 10 days of travel, a hatch certificate with band number, and a written health guarantee. Browse your state or city below to see shipping routes and pickup details for your area — or, if you would rather start with the birds themselves, see <a href="/african-grey-parrot-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">every African Grey currently available and its price</a>.</p>
+    </div>
+  </section>
+
   <!-- State Grid -->
-  <section class="py-16 px-4 bg-cream">
-    <div class="max-w-5xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark text-center mb-4">Find an African Grey Near You</h2>
-      <p class="text-stone-600 text-center max-w-2xl mx-auto mb-12">Select your state below. We ship IATA-compliant to all 50 states. Every bird travels in an airline-approved carrier with live animal documentation.</p>
+  <section class="py-16 px-4">
+    <div class="mx-auto max-w-[1100px]">
+      <div class="text-center mb-10">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Browse by State</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-3">Find an African Grey Parrot for Sale in Your State</h2>
+        <p class="text-stone-600 max-w-2xl mx-auto text-[15px] leading-relaxed">Select your state below. We ship IATA-compliant to all 50 states — every bird travels in an airline-approved carrier with live-animal documentation.</p>
+      </div>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {states.map((s) => (
           <a
             href={`/${s.slug}/`}
-            class="bg-white border border-stone-200 rounded-2xl p-4 text-center font-sora font-semibold text-logo-dark hover:border-clay hover:text-clay transition-colors shadow-sm"
+            class="bg-white border border-line rounded-2xl p-4 text-center font-sora font-semibold text-logo-dark hover:border-clay hover:text-clay transition-colors cag-warm-shadow"
           >
             {s.name}
           </a>
@@ -123,15 +156,18 @@ const collectionSchema = {
   </section>
 
   <!-- Cities Grid -->
-  <section class="py-16 px-4">
-    <div class="max-w-5xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark text-center mb-4">Browse by City</h2>
-      <p class="text-stone-600 text-center max-w-2xl mx-auto mb-12">Looking for a breeder near a specific city? Each page covers shipping routes, local regulations, and airport cargo pickup for that metro area.</p>
+  <section class="py-16 px-4 bg-warm-white">
+    <div class="mx-auto max-w-[1100px]">
+      <div class="text-center mb-10">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Browse by City</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-3">African Grey Parrots for Sale by City</h2>
+        <p class="text-stone-600 max-w-2xl mx-auto text-[15px] leading-relaxed">Looking for a breeder near a specific city? Each page covers shipping routes, local regulations, and airport cargo pickup for that metro area.</p>
+      </div>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {cities.map((c) => (
           <a
             href={`/${c.slug}/`}
-            class="bg-white border border-stone-200 rounded-2xl p-4 text-center font-sora font-semibold text-logo-dark hover:border-clay hover:text-clay transition-colors shadow-sm text-sm"
+            class="bg-white border border-line rounded-2xl p-4 text-center font-sora font-semibold text-logo-dark hover:border-clay hover:text-clay transition-colors cag-warm-shadow text-sm"
           >
             {c.name}
           </a>
@@ -140,25 +176,51 @@ const collectionSchema = {
     </div>
   </section>
 
-  <!-- Trust section -->
-  <section class="py-16 px-4 bg-cream">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">Why Families Choose C.A.Gs for an African Grey for Sale</h2>
+  <!-- Why C.A.Gs -->
+  <section class="py-16 px-4">
+    <div class="mx-auto max-w-4xl">
+      <div class="text-center mb-10">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Why C.A.Gs</p>
+        <h2 class="font-lora font-bold text-logo-dark">Why Families Choose C.A.Gs for an African Grey for Sale</h2>
+      </div>
       <div class="grid md:grid-cols-2 gap-6">
         {[
-          ["CITES Appendix I Documentation", "Every bird ships with official CITES captive-bred documentation. No paperwork, no purchase."],
-          ["USDA Licensed Aviary", "Our Midland, TX facility is USDA AWA licensed. You can verify our license number before any deposit."],
-          ["DNA Sexed & Vet Certified", "Each bird is DNA sexed and examined by an avian veterinarian before shipping."],
-          ["IATA-Compliant Shipping", "We use airline-approved carriers and live animal shipping protocols. Birds arrive safely."],
+          ["CITES Appendix I Documentation", "Every bird ships with official CITES captive-bred documentation. No paperwork, no purchase — that rule never bends."],
+          ["USDA Licensed Aviary", "Our Midland, TX facility is USDA AWA licensed, and you can verify our license number before any deposit changes hands."],
+          ["DNA Sexed & Vet Certified", "Each bird is DNA sexed and examined by an avian veterinarian before shipping, and the certificates travel home with it."],
+          ["IATA-Compliant Shipping", "We use airline-approved carriers and live-animal shipping protocols so your Grey arrives calm, hydrated, and safe."],
         ].map(([h, p]) => (
-          <div class="bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
+          <article class="bg-white rounded-2xl border border-line cag-warm-shadow p-6">
             <h3 class="font-lora font-bold text-lg text-logo-dark mb-2">{h}</h3>
             <p class="text-stone-600 text-sm leading-relaxed">{p}</p>
-          </div>
+          </article>
         ))}
       </div>
     </div>
   </section>
 
-  <CTA />
+  <!-- FAQ -->
+  <section id="faq" class="py-16 px-4 bg-warm-white scroll-mt-20">
+    <div class="mx-auto max-w-4xl">
+      <div class="text-center mb-10">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Common Questions</p>
+        <h2 class="font-lora font-bold text-logo-dark">African Grey for Sale Near You — Your Questions Answered</h2>
+      </div>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <details class="group bg-white rounded-2xl border border-line cag-warm-shadow p-5 open:shadow-md">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 font-lora font-bold text-[16px] text-logo-dark leading-snug list-none">
+              {item.q}
+              <span class="text-clay text-xl transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <p class="font-sora text-stone-600 text-[14px] leading-relaxed mt-3" style="max-width:70ch;">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Schema type="faq" data={{ mainEntity: faqItems.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) }} />
+
+  <CTA headline="Find Your African Grey — Anywhere in the U.S." />
 </BaseLayout>
