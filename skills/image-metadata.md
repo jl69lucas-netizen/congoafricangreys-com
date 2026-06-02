@@ -24,30 +24,45 @@ You are the **Image Metadata Skill** for CongoAfricanGreys.com. You write and au
 
 ---
 
-## Image Metadata Rules
+## Image Metadata Rules — CANONICAL 5-ELEMENT C.A.Gs SET
 
-### Alt Text
-- **Length:** 100–150 characters optimal
-- **Pattern:** [descriptive content] + [keyword where natural] + [location if location page]
-- **Format:** Sentence-style, no keyword stuffing, describes what a blind user would need to know
-- **Never:** "image001," "photo," "picture of dog," empty alt=""
-- **Example:** `Congo African Grey parrot perched on hand at CongoAfricanGreys.com Omaha Nebraska breeder — DNA sexing certificate tested and ready for adoption`
+> **⚠️ EVERY C.A.Gs image gets ALL FIVE elements — no exceptions.** This is the standard the user confirmed; earlier 4-element / 100–150-char-alt versions are RETIRED. Brand string = **C.A.Gs** / **CongoAfricanGreys.com** (never generic "the breeder").
 
-### File Names
+**Each metadata set includes:**
+1. **Filename** (SEO-optimized)
+2. **Alt Text** (≤190 characters, entity-rich)
+3. **Title** (keyword + benefit)
+4. **Caption** (conversational, with a CTA)
+5. **Description** (250+ words, comprehensive — for media library / structured data / on-page figure text)
+
+### 1. Filename (SEO-optimized)
 - **Format:** `[descriptor]-[keyword]-[location]-[number].jpg`
-- **Example:** `congo-african-grey-parrot-omaha-nebraska-01.jpg`
+- **Example:** `congo-african-grey-parrot-midland-tx-01.jpg`
 - **Never:** `IMG_3847.jpg`, `photo1.png`, `DSC00234.jpg`
 - **Max length:** 60 characters including extension
 
-### Title Attribute
-- Supplementary to alt text — shown on hover
-- Use when extra context helps but would bloat alt text
-- Pattern: `[Bird name/description] from CongoAfricanGreys.com`
+### 2. Alt Text (≤190 characters, entity-rich)
+- **Length:** up to **190 characters** — entity-rich, primary keyword + variant + location + a trust/health entity.
+- **Pattern:** [descriptive content] + [keyword where natural] + [variant: Congo/Timneh] + [location if location page] + [trust entity: DNA-sexed / vet-checked / CITES].
+- **Format:** Sentence-style, no keyword stuffing, describes what a screen-reader user needs.
+- **Never:** "image001," "photo," "picture of parrot," empty `alt=""`, generic 🦜.
+- **Accessibility caveat (honest):** screen readers often truncate alt around ~125 chars, so front-load the most important description in the first 125; the remaining length carries SEO entities.
+- **Example:** `Hand-raised Congo African Grey parrot perched on Mark's hand at C.A.Gs in Midland, TX — DNA-sexed, avian-vet-checked, captive-bred with CITES Appendix I paperwork, ready to reserve`
 
-### Caption Text (visible below image)
-- Used for infographics, size reference images, before/after
-- Should add information not visible from the image itself
-- **Example:** `Congo African Grey parrot at 8 weeks — adults weigh 400–650 grams (approx. 1.4 lbs) | CongoAfricanGreys.com`
+### 3. Title (keyword + benefit)
+- Shown on hover; pairs the keyword with a concrete benefit.
+- **Pattern:** `[Primary keyword + variant] — [benefit] | C.A.Gs`
+- **Example:** `Congo African Grey Parrot — DNA-sexed & vet-checked | C.A.Gs – Midland, TX`
+
+### 4. Caption (conversational, with CTA)
+- Visible below the image; adds info not obvious from the photo + a soft CTA.
+- **Example:** `This hand-fed Congo baby is already on a pellet diet at 12 weeks — ask Mark & Teri which clutch is available next. 👉 Reserve yours at C.A.Gs.`
+
+### 5. Description (250+ words, comprehensive)
+- Long-form, for the media-library field, `ImageObject` schema `description`, and/or on-page `<figcaption>`/figure copy.
+- Must weave: primary keyword + 2–3 GSC variations/LSI, variant (Congo/Timneh), location (Midland, TX), trust entities (DNA-sexed, avian vet, CITES Appendix I captive-bred, USDA AWA), and a closing CTA to `/contact-us/`.
+- Entity-rich and conversational — written as if answering "what am I looking at and why does it matter?"
+- **Never** fabricate a bird's age, sex, price, or health status — pull only from `data/clutch-inventory.json` / `data/price-matrix.json` or confirmed breeder input.
 
 ---
 
@@ -128,7 +143,7 @@ Priority: [top 3 fixes]
 
 ## Rules
 
-1. **Every image gets all four elements** — alt, filename, title, caption (even if caption is empty)
+1. **Every image gets all FIVE elements** — filename, alt (≤190), title, caption (with CTA), and a 250+ word description. None are optional.
 2. **No keyword in every alt text** — natural placement only, 50–60% of images max
 3. **Location in alt text on location pages** — always include state/city
 4. **Audit before writing new** — always check what exists first

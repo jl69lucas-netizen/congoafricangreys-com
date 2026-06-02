@@ -186,13 +186,14 @@ grep -rn "[old-filename]" site/content/ --include="*.html" | wc -l
 
 ## Handoff to image-metadata Agent
 
-After every image move or rename, trigger alt text work:
+After every image move or rename, trigger the **full 5-element C.A.Gs metadata set** (filename, alt ≤190, title, caption+CTA, 250+ word description — see `skills/image-metadata.md`). Alt text alone is NOT sufficient.
 
 ```
 Handoff to image-metadata agent:
 - New images added: [list filenames]
 - Pages affected: [list slugs]
 - Primary keyword context for each page: [from top-pages.md]
+- Required: ALL 5 elements per image (filename, alt ≤190, title, caption+CTA, 250+ word description)
 ```
 
 ---

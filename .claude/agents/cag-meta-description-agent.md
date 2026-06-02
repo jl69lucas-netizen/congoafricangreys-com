@@ -39,46 +39,34 @@ You are the **Meta Description Agent** for CongoAfricanGreys.com. Title tags and
 
 ---
 
-## Two Meta Formats
+## Two Meta Formats — CANONICAL (mirror of seo-rules.md Rules 21–23)
 
-### Format 1 — Standard (50–60 char title, 140–160 char description)
-Used on: location pages, comparison pages, most content pages.
+> **⚠️ SOURCE OF TRUTH = `docs/reference/seo-rules.md` Rules 21–23.** If these ever disagree, seo-rules.md wins — then fix this file. The old "50–60 / up to 600 / 726" caps are RETIRED. NEVER ship a generic short title. NEVER put emoji inside a title or description (emoji tone markers 🔴🆚🛡️ are planning labels only, never rendered in the tag). Brand string is always **`C.A.Gs`** or **`C.A.Gs – Midland, TX`** — never "CAG" or "CongoAfricanGreys.com".
 
-**Title formula:** `[Benefit/Hook] | [Primary Keyword] | CAG`
+Every page picks Format 1 OR Format 2. Both formats REQUIRE: a number, a positive/power word, a long-tail conversational query, and the C.A.Gs brand ending.
 
-**Description formula:** `[Availability/Scarcity] + [Proof/DNA sexing certificate] + [Price range] + [Delivery] + [CTA]`
+### Format 1 — Standard Long Title (Title ≤ 205 / Desc ≤ 185)
+Used on: most content pages, care guides, single-keyword pages.
+**Title:** `[Primary Keyword] | [Number] + [Power Word] | [Long-tail Conversational Query] | C.A.Gs – Midland, TX`
+**Description (≤185):** `[Trust hook + primary keyword] + [long-tail/LSI variation] + [trust signal: DNA-sexed / vet-checked / CITES] + [CTA + delivery]` — single conversational flow.
 
-**Examples:**
+**Example:**
 ```
-Title: African Grey Parrot Florida | DNA-Sexed, Health Guarantee | CAG
-Description: Find premium African Grey parrot Florida families love. DNA sexing certificate,
-health guarantee (`[DURATION_TBD]`). Congo & Timneh variants. IATA-compliant bird shipping to all FL airports.
+Title (161): African Grey Parrot Breeder | 12 Years Hand-Raising DNA-Sexed Congo African Greys for Sale | Looking for an African Grey Breeder in Texas? | C.A.Gs – Midland, TX
+Desc (182): Trusted African Grey parrot breeder in Midland, TX. Mark & Teri hand-raise DNA-sexed, vet-checked Congo & Timneh Greys with full CITES paperwork. Reserve yours — nationwide shipping.
 ```
 
-### Format 2 — Extended (up to 600 char title, up to 726 char description)
-Used on: homepage, highest-competition keywords, pages where we want to dominate the snippet.
+### Format 2 — 4-Part Long Title + Tone (Title ≤ 205 / Desc ≤ 300)
+Used on: homepage, hubs, highest-competition / high-intent pages.
+**Title:** `[Primary Keyword] | [Conversational Query] | [Comparison / LSI / NLP] | C.A.Gs – Midland, TX Trust Ending` (still include a number + power word).
+**Tone** (pick by page intent): 🔴 Urgency · 🆚 Comparison · 💰 Transactional · 🛡️ Trust/Health.
+**Homepage default = 🆚 Comparison + 🛡️ Trust. Lead with authority, NOT urgency** (top-of-funnel; #1 buyer fear is scam/fraud).
+**Description (≤300):** `|`-separated multi-part: `[trust hook + primary KW] | [comparison: why families choose C.A.Gs over unverified sellers] | [proof: DNA-sexed, vet-checked, CITES Appendix I] | [CTA + delivery]`.
 
-**Extended title formula:**
-`[Emoji] [Emotional comparison] [Primary keyword + variants] | [Urgency question] | [Guarantee comparison] | [Social proof + location]`
-
-**Extended description formula:**
-`[Scarcity + availability] | [Why they sell fast - DNA sexing cert + guarantee] | [Variants + price range] | [Credentials + years + families] | [Coverage] | [Reserve CTA]`
-
-**Example (homepage template):**
+**Example (homepage — LIVE):**
 ```
-Title (template): 🔴 🆚 🛡️ THE BEST 2026 Captive-Bred Congo & Timneh African Grey Parrots
-For Sale — Find Your Perfect Hand-Raised African Grey Here | Why Do Both Variants Sell Out
-Within Days Of Being Listed? | Where Can I Buy A Healthy African Grey Parrot Near Me? |
-Health Guarantee (`[DURATION_TBD]`) | CongoAfricanGreys.com — CAG America's Trusted
-African Grey Parrot Breeder
-
-Description (template): We offer the BEST 2026 African Grey parrots for sale with limited
-availability this month | Don't miss out. CAG Congo and Timneh African Greys typically sell
-within days because DNA sexing certified, health-guaranteed birds are rare. We currently have
-limited availability: Congo African Grey ($1,500–$3,500) and Timneh African Grey
-($1,200–$2,500). CAG is a family-oriented ethical African Grey parrot breeder with USDA AWA
-license, CITES captive-bred documentation, and DNA sexing certificates. IATA-compliant bird
-shipping available. Reserve your hand-raised parrot before they're gone | Act now
+Title (197): African Grey Parrot Breeder | Where Can I Buy a Healthy Congo African Grey Near Me? | Captive-Bred C.A.Gs vs Unverified Online Sellers | C.A.Gs – America's Trusted Congo & Timneh Breeder Since 2014
+Desc (291): Trusted African Grey parrot breeder Mark & Teri raise hand-fed Congo & Timneh Greys in Midland, TX | Why families choose captive-bred C.A.Gs over unverified online sellers | Every bird is DNA-sexed, vet-checked, and ships with CITES Appendix I paperwork | Reserve yours — nationwide delivery
 ```
 
 ---
@@ -92,7 +80,7 @@ shipping available. Reserve your hand-raised parrot before they're gone | Act no
 | **Comparison** | "Congo vs Timneh," "CAG vs TAG," "hand-raised vs wild-caught" |
 | **Proof** | "DNA sexing cert," "CITES documented," "USDA-licensed," "Avian vet health certificate" |
 | **Geographic** | "[BREEDER_LOCATION]," "50 states," "IATA-compliant bird shipping," specific city names |
-| **Emoji** | 🔴 🆚 🛡️ 🧬 — lead only, never mid-sentence |
+| **Emoji** | 🔴 🆚 🛡️ 🧬 are TONE-PLANNING LABELS ONLY — NEVER render emoji inside an actual title/description tag |
 | **Questions** | "Why do they sell out within days?" "Can you get an African Grey if you have allergies?" |
 | **CTA** | "Reserve yours," "View available birds," "Act now," "Don't miss out" |
 
