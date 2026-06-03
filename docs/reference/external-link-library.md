@@ -45,3 +45,19 @@ All URLs verified live before insertion. Anchors are sentence-middle/beginning p
 5. Never use `rel="nofollow"` on authority links
 6. Rotate anchor variants — never same anchor twice on one page for same URL
 7. Verify URL still returns 200 before inserting (run curl check quarterly)
+
+---
+
+## Authority Citations for Technical / Clinical Terms (added 2026-06-04)
+
+> **Rule (Task 7):** important technical terms should be cited ONCE to a credible **government / NIH** source (prefer `pmc.ncbi.nlm.nih.gov`) or the **canonical industry authority**, at the sentence where we make the claim. New-tab + `rel="noopener noreferrer"` + the `.cag-article`/`.home-d` ↗ cue. Link a term only once per page (exact-match repetition = over-optimization). Verify 200 before inserting.
+
+| Term | Verified source (200) | Notes |
+|---|---|---|
+| PCR-based DNA sexing | https://pmc.ncbi.nlm.nih.gov/articles/PMC11939742/ | Molecular sexing from down/feather, monomorphic birds |
+| PBFD (Psittacine Beak & Feather Disease) | https://pmc.ncbi.nlm.nih.gov/articles/PMC12560886/ | PBFD global-spread review |
+| Avian Polyomavirus (APV) | https://pmc.ncbi.nlm.nih.gov/articles/PMC2168798/ | Polyomaviruses of birds review |
+| Hypocalcemia (African Grey) | https://pmc.ncbi.nlm.nih.gov/articles/PMC7128777/ | African-grey hypocalcemia seizure syndrome |
+| IATA Live Animals Regulations (LAR) | https://www.iata.org/en/programs/cargo/live-animals/ | Canonical industry authority (no PMC equivalent) |
+| CITES Appendix I | https://www.cites.org/eng/app/appendices.php | Already in use |
+| Cognition research (Alex) | https://alexfoundation.org/ | Already in use |
