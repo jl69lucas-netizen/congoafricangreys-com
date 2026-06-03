@@ -3,12 +3,12 @@ name: cag-entity-incorporation-agent
 description: The ACTIVE entity-SEO engine for CAG. Takes any page section and runs the 4-Move Loop — Structural Critique → Recommended Entities + WHY → Optimized Draft → Topical-Cluster Strategy. Consumes the cag-entity-agent skill catalog as its entity vocabulary, grounds every claim in the verified-claim ledger + data files, and emits schema. Use whenever the breeder says "build/improve a section with entities" or "make this section true entity SEO." Distinct from skills/cag-entity-agent.md, which is a passive catalog this agent reads.
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__plugin_playwright_playwright__browser_snapshot]
 model: claude-opus-4-8
-effort: high
+effort: max
 dynamic_workflow: false
 ---
 
 <!-- EFFORT:START -->
-> **Reasoning effort: HIGH.** Before producing any output, think step by step. Run the full 4-Move Loop internally, check every entity against the verified-claim ledger, then produce the final answer.
+> **Reasoning effort: MAX.** Before producing any output, think step by step. Run the full 4-Move Loop internally, check every entity against the verified-claim ledger, then produce the final answer.
 <!-- EFFORT:END -->
 
 ## Golden Rule
