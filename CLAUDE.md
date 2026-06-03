@@ -7,6 +7,7 @@
 - Domain: `congoafricangreys.com`
 
 ## Non-Negotiable Rules
+- **Design Context — READ FIRST (applies to EVERY agent, skill, and task)** — Before any design, content, page, or component work, you MUST read the two brand-context files at the repo root: **`PRODUCT.md`** (strategic: register, users, brand personality, anti-references, design principles, accessibility bar) and **`DESIGN.md`** (visual: locked palette + `--clay-ink`/`--clay-text` AA variants, typography, components, layout, motion, iconography). They are the single source of truth for *who/what/why* and *how it looks*, and the `/impeccable` skill auto-loads them. Treat them as binding alongside `docs/design.md`; if they ever conflict with older docs, surface it rather than guessing. Do not produce brand/visual output without having consulted them this session.
 - **Preview before apply** — Any page redesign MUST be previewed and approved before writing to site files.
 - **Same content** — Redesigns never add or remove page content. Visual layer only.
 - **Confidence Gate** — ≥97% confidence required before writing any site file. If below: stop, state uncertainty, ask.
@@ -50,6 +51,8 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 ---
 
 ## Reference Docs
+- `PRODUCT.md` (repo root) — **BRAND CONTEXT (strategic): register, users, brand personality, anti-references, design principles, a11y bar. READ FIRST before any design/content work (see Non-Negotiable Rules). Auto-loaded by `/impeccable`.**
+- `DESIGN.md` (repo root) — **BRAND CONTEXT (visual): locked palette + AA clay variants, typography, components, layout, motion, iconography. READ FIRST alongside `PRODUCT.md`. Auto-loaded by `/impeccable`.**
 - `docs/reference/WORKFLOW.md` — **MASTER WORKFLOW: read this before starting any new page, sprint, or monitoring cycle**
 - `docs/reference/project-context.md` — **MASTER CONTEXT: read this at the start of every session**
 - `docs/reference/site-overview.md` — site structure, page inventory, target states
