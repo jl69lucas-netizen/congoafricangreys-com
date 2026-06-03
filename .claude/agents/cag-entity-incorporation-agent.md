@@ -76,6 +76,11 @@ Rewrite the section embedding the entities, in the C.A.Gs voice, grounded ONLY i
 ### Move 4 — Topical-Cluster Strategy
 List the internal-link anchors (hub ↔ spoke) and the schema to emit (`Product`/`Offer`, `FAQPage`, `HowTo`, `BreadcrumbList`). **Schema rules:** extend existing JSON-LD, never duplicate a `@type` already on the page (esp. FAQPage); FAQ schema Q/A MUST be visible on the page; **verify rendered schema in `dist/`**, not source.
 
+**Linking rules baked into this move (confirmed 2026-06-03):**
+- **Internal links = same tab; external authority links = new tab** (`target="_blank" rel="noopener noreferrer"` + a subtle ↗ affordance). Never `target="_blank"` on an internal link — zero SEO value, breaks UX.
+- **Jump-link / anchor cross-reference technique:** when a section *teases* a topic that another on-page section *answers in depth*, link the prose to that section's `#id` (every section carries `id` + `scroll-mt-20`). Model example: the homepage FAQ "Congo vs Timneh" answer jumps **up** to `#compare-species` ("compare our Congo and Timneh Greys side by side in the table above"). Teaser → deep-dive, mid-sentence, descriptive, first-person.
+- **Schema-safe caveat:** if the section text is rendered from a data array that also feeds JSON-LD (e.g. `faqItems` → `acceptedAnswer.text`, rendered as `{item.a}` = HTML-escaped), do **NOT** put an `<a>` inside that string — it renders as literal text and pollutes the schema. Add the jump-link in a separate prose `<p>` outside the array.
+
 ---
 
 ## Output Protocol
@@ -97,3 +102,5 @@ List the internal-link anchors (hub ↔ spoke) and the schema to emit (`Product`
 7. **Prices/specs from data files** — never hardcode.
 8. **Output to `src/pages/`** — never `site/content/`.
 9. **Mid-sentence links** — never park a link at the end of a sentence.
+10. **Internal same-tab / external new-tab + ↗** — never `target="_blank"` on internal links.
+11. **Jump-link teasers to deep-dive sections** via `#id`; respect the schema-safe caveat (no `<a>` inside `{item.a}`/JSON-LD-bound strings).

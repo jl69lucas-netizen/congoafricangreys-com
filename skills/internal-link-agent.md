@@ -39,9 +39,9 @@ All pages → Contact/Inquiry (via CTA — check this exists)
 
 ### Known Cluster Maps
 
-**Comparison cluster:**
-- Hub: `/african-grey-parrot-vs-other-birds/`
-- Spokes: `/male-vs-female-african-grey-parrot/`, `/african-grey-vs-macaw/`, `/african-grey-vs-cockatoo/`, `/congo-vs-timneh-african-grey/`, `/african-grey-parrot-lifespan/`
+**Comparison cluster (slugs verified 2026-06-03):**
+- Hub: `/african-grey-comparison/`
+- Spokes: `/congo-vs-timneh-african-grey/`, `/male-vs-female-african-grey-parrots-for-sale/`, `/african-grey-vs-macaw/`, `/african-grey-vs-cockatoo/`, `/african-grey-vs-amazon-parrot/`, `/african-grey-parrot-breeders-comparison/`, `/african-grey-parrot-lifespan/`
 
 **Location cluster:**
 - Hub: `/usa-locations/african grey parrot-parrots-usa/`
@@ -148,6 +148,35 @@ Links must appear at the **beginning or middle** of a sentence — never at the 
 - `"Learn about variant differences in our <a href="/congo-vs-timneh-african-grey/">Congo vs Timneh guide</a>."`
 - `"For pricing details, see our <a href="/african-grey-parrot-price/">price page</a>."`
 
+### Open-in-New-Tab Policy (confirmed 2026-06-03)
+
+> Best practice — verified against SEO + WCAG. `target="_blank"` is **not** a ranking factor; forcing every link to a new tab gives **zero SEO value** and hurts UX (breaks the back button, tab clutter on mobile).
+
+- **Internal links → SAME tab, always.** Never add `target="_blank"` to an internal `/slug/` link. (Internal new-tab breaks navigation and is an anti-pattern.)
+- **External authority links → NEW tab** (`target="_blank" rel="noopener noreferrer"`) **+ a visual/a11y cue.** On a sales page this keeps the high-intent buyer on our page instead of shipping them to cites.org/usda with no easy return. Pattern used site-wide: a subtle CSS `::after { content:"↗" }` affordance scoped to `.home-d a[target="_blank"]` (see `src/pages/index.astro`).
+- Note: warning of a new window is WCAG **3.2.5 (Level AAA)**, not AA — so `target+rel` alone is AA-compliant; the ↗ cue is the courtesy affordance.
+
+### Anchor / Jump-Link Cross-Reference Technique (in-content `#anchor` links) — confirmed 2026-06-03
+
+> When a later paragraph references a topic that an **earlier on-page section already answers in depth**, link the prose to that section via its `#id` (e.g. `href="#compare-species"`). This is a high-value, low-effort technique that improves dwell time, scannability, and on-page topical signals — and it costs nothing because every section already carries an `id` + `scroll-mt-20`.
+
+**Worked example (homepage, the model to copy):** the FAQ "What's the difference between a Congo and a Timneh?" answer points readers **up** to the Compare Variants section (`Is a Congo or a Timneh African Grey Right for You?`) via `href="#compare-species"`. The deep-dive table is the payoff; the FAQ is the teaser.
+
+**How to apply it everywhere:**
+1. **Inventory section IDs first:** `grep -n 'id="' <page>` — every major section should have a stable `id` + `scroll-mt-20` (so the jump doesn't hide under a sticky header).
+2. **Link teaser → deep-dive in the same page.** FAQ answers, "still deciding?" lines, and pros/cons sections are prime spots to jump **up** to a comparison/spec table or **down** to the available-birds grid / contact form.
+3. **First-person + descriptive anchor, mid-sentence** — e.g. `you can <a href="#compare-species">compare our Congo and Timneh Greys side by side</a> in the table above`. Never a bare "click here," never parked at the end.
+4. **Schema-safe caveat (critical):** if a section's text is rendered from a data array that also feeds JSON-LD (e.g. `faqItems` → `FAQPage` `acceptedAnswer.text`, rendered via `{item.a}` = HTML-escaped), you **cannot** put an `<a>` inside that string — it will show as literal text and pollute the schema. Instead add the jump-link in a **separate prose `<p>`** outside the array (the homepage adds a "Still weighing it up?" line under the FAQ accordion).
+5. Cap ~1–2 jump links per section; they supplement, not replace, contextual links to other pages.
+
+**Well vs. badly done (save for every future build):**
+| ✅ Good | ❌ Bad |
+|---|---|
+| `#anchor` jump from a teaser to the in-depth section it summarizes | Linking to a section that doesn't exist / has no `id` |
+| Descriptive first-person anchor mid-sentence | "see above", "click here", anchor at sentence end |
+| Jump-link added in standalone prose when the source is schema-bound | `<a>` injected into a `{item.a}`/schema-bound string (renders as literal text) |
+| 1–2 jumps per section | 5+ jumps stuffed into one paragraph (over-optimization) |
+
 ### External URL Verification (Before Any External Link Insert)
 ```bash
 # Always verify external URLs return 200 before inserting
@@ -230,3 +259,6 @@ Date: [YYYY-MM-DD]
 4. **Hub/spoke architecture takes priority** — fix cluster links before cross-links
 5. **Max 3 new links per edit session** per page — avoid over-optimization signals
 6. **Save audit** — write to `docs/research/internal-link-audit-[date].md`
+7. **Internal = same tab, external = new tab + ↗ cue** — never `target="_blank"` on an internal link (see Open-in-New-Tab Policy)
+8. **Use the jump-link technique** — cross-reference earlier in-depth sections from later teaser prose via `#id`; respect the schema-safe caveat (no `<a>` inside `{item.a}`/JSON-LD-bound strings)
+9. **Duplicate-slug check before redirecting** — confirm two similar slugs are truly the same *intent* before proposing a 301; hub vs guide, availability vs cost, etc. are distinct pages → link them, don't redirect (and use **301** for permanent consolidation, never 302)
