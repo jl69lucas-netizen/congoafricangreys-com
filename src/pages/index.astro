@@ -100,9 +100,9 @@ const faqItems = [
   { q: 'How much does an African Grey parrot cost?',
     a: 'Our Congo African Greys range from $1,700 to $2,500 for individual birds, with the bonded Jins + Jeni pair at $3,500. Timneh African Greys are $1,500–$1,600. Proven breeding pairs are $3,000, and candled fertile eggs are $95 each (buy 5, free US shipping). A $200 deposit reserves your bird.' },
   { q: 'Do you ship African Grey parrots nationwide?',
-    a: 'Yes. We ship IATA-compliant to all 50 states. Your bird travels in an approved live-animal carrier with an avian-vet health certificate dated within 10 days of travel, and you collect it at your nearest airport — calm, hydrated, and ready to meet you.' },
+    a: 'Yes. We ship IATA-compliant to all 50 states under the IATA Live Animals Regulations (LAR). Your bird travels in an approved live-animal carrier with an avian-vet health certificate dated within 10 days of travel. Choose airport pickup at your nearest major airport for $185, or door-to-door home delivery for $350 — either way your Grey arrives calm, hydrated, and ready to meet you.' },
   { q: 'Are the birds DNA-sexed and vet-checked?',
-    a: 'Every bird is DNA-sexed and examined by an avian veterinarian before placement. You receive the DNA certificate and the health certificate with your bird.' },
+    a: 'Every bird is sexed by PCR-based DNA testing and examined by a board-certified avian veterinarian before placement, with PBFD and Polyomavirus screening as part of our health protocol. You receive the PCR DNA sexing certificate and the avian-vet health certificate with your bird.' },
   { q: 'What is the difference between a Congo and a Timneh African Grey?',
     a: 'Both are African Greys. The Congo (Psittacus erithacus) is larger (400–600g) with a bright red tail and a famous talking vocabulary. The Timneh (Psittacus timneh) is smaller (275–375g) with a maroon tail, a calmer temperament, and often starts talking earlier — a great fit for first-time owners.' },
   { q: 'Is the deposit refundable?',
@@ -165,6 +165,44 @@ const videoSchema = {
   "thumbnailUrl": "https://congoafricangreys.com/congo-african-grey-variant.webp",
   "uploadDate": "2026-05-01",
   "contentUrl": "https://congoafricangreys.com/talking-african-grey-parrot-video.mp4"
+};
+
+const productSchema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Congo African Grey (Psittacus erithacus)",
+    "description": "Hand-raised, PCR DNA-sexed, CITES Appendix I captive-bred Congo African Grey from C.A.Gs in Midland, TX. Every bird includes a board-certified avian-veterinarian health certificate with PBFD and Polyomavirus screening, a hatch certificate, a closed band, and a 3-day written health guarantee.",
+    "category": "Live pet bird / companion parrot",
+    "brand": { "@type": "Brand", "name": "C.A.Gs – Midland, TX" },
+    "image": "https://congoafricangreys.com/congo-african-grey-variant.webp",
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127" },
+    "offers": { "@type": "AggregateOffer", "priceCurrency": "USD", "lowPrice": "1700", "highPrice": "3500", "availability": "https://schema.org/InStock", "url": "https://congoafricangreys.com/congo-african-grey-for-sale/" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Timneh African Grey (Psittacus timneh)",
+    "description": "Hand-raised, PCR DNA-sexed, CITES Appendix I captive-bred Timneh African Grey from C.A.Gs in Midland, TX — the calmer, earlier-talking African Grey species. Includes a board-certified avian-veterinarian health certificate with PBFD and Polyomavirus screening, a hatch certificate, a closed band, and a 3-day written health guarantee.",
+    "category": "Live pet bird / companion parrot",
+    "brand": { "@type": "Brand", "name": "C.A.Gs – Midland, TX" },
+    "image": "https://congoafricangreys.com/timneh-african-grey-variant.webp",
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127" },
+    "offers": { "@type": "AggregateOffer", "priceCurrency": "USD", "lowPrice": "1500", "highPrice": "1600", "availability": "https://schema.org/InStock", "url": "https://congoafricangreys.com/timneh-african-grey-for-sale/" }
+  }
+];
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Reserve a Hand-Raised African Grey Parrot from C.A.Gs",
+  "description": "The four-step process to reserve a captive-bred, CITES Appendix I documented Congo or Timneh African Grey from C.A.Gs in Midland, TX.",
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Browse Available Birds & Ask Questions", "text": "Tell us which Congo or Timneh Grey caught your eye and we send fresh dated photos and a live video call so you can watch the exact bird before deciding." },
+    { "@type": "HowToStep", "position": 2, "name": "Reserve With a $200 Deposit", "text": "A $200 deposit holds your chosen Grey, is applied in full to the final price, and stays fully refundable any time before the ship date." },
+    { "@type": "HowToStep", "position": 3, "name": "Paperwork & Vet Certificate", "text": "We assemble the CITES Appendix I captive-bred certificate, the PCR DNA sexing certificate, and a board-certified avian-vet health certificate dated within 10 days of travel, all backed by our verifiable USDA Animal Welfare Act license." },
+    { "@type": "HowToStep", "position": 4, "name": "Airport Pickup or Home Delivery", "text": "Your bird travels in an IATA Live Animals Regulations (LAR) compliant carrier. Choose airport pickup ($185) at your nearest major airport or door-to-door home delivery ($350)." }
+  ]
 };
 ---
 
@@ -690,7 +728,7 @@ const videoSchema = {
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Transparent Pricing</p>
         <h2 class="font-lora font-bold text-logo-dark mb-3">What Does a Hand-Raised, CITES-Documented African Grey Parrot Cost From C.A.Gs?</h2>
       </div>
-      <p class="text-stone-600 leading-relaxed text-[15px] mb-8 mx-auto" style="max-width:70ch;"><a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot prices</a> at C.A.Gs are never just a number on a chick — the Congo African Grey price you see already includes the CITES Appendix I captive-bred paperwork, our verifiable USDA AWA license, the DNA sexing certificate, and a current avian-vet health certificate, because at C.A.Gs – Midland, TX a documented, captive-bred Grey is the only kind we will ever sell.</p>
+      <p class="text-stone-600 leading-relaxed text-[15px] mb-8 mx-auto" style="max-width:70ch;"><a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot prices</a> at C.A.Gs are never just a number on a chick — the Congo African Grey price you see already includes the CITES Appendix I captive-bred paperwork, our verifiable USDA AWA license, the PCR DNA sexing certificate, and a current board-certified avian-vet health certificate, because at C.A.Gs – Midland, TX a documented, captive-bred Grey is the only kind we will ever sell.</p>
       <PricingTable variant="classic"
         note="Anyone listing a Congo African Grey under $1,500 is selling a wild-caught bird, a sick bird, or no bird at all. Real, documented, captive-bred Greys reflect the cost of ethical breeding."
         rows={[
@@ -703,7 +741,15 @@ const videoSchema = {
         ]}
       />
       <div class="mt-8 space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-        <p><strong>What the price includes.</strong> Every C.A.Gs bird price covers the CITES Appendix I captive-bred certificate, the hatch certificate and closed band, the DNA sexing certificate, an avian-vet health certificate, our written health guarantee, and the diet plan your bird is already eating. A $200 deposit reserves your Grey and is applied to your final total; nationwide IATA shipping is arranged separately at cost.</p>
+        <p><strong>What the price includes.</strong> Every C.A.Gs bird price is all-inclusive — never just the chick. Each documented Grey ships with:</p>
+        <ul class="space-y-2 list-none pl-0">
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>CITES Appendix I captive-bred certificate</strong> — proof your Grey was never wild-caught</span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Hatch certificate + closed leg band</strong> — the aviary-raised paper trail</span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>PCR DNA sexing certificate</strong> — biological sex confirmed by lab, not by sight</span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Board-certified avian-vet health certificate</strong> — backed by PBFD &amp; Polyomavirus screening</span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>3-day written health guarantee</strong> + the exact diet plan your bird is already eating</span></li>
+        </ul>
+        <p>A $200 deposit reserves your Grey and is applied to your final total; nationwide IATA shipping is arranged separately — <strong>$185 airport pickup</strong> or <strong>$350 home delivery</strong>.</p>
         <p><strong>Think in decades, not dollars.</strong> The diet, cage, and enrichment routine in our <a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot care guide</a> matter far more than the sticker price, because a healthy Grey lives 40–60 years and the purchase is the smallest line item across that lifespan. Use the first-year calculator below to estimate your real startup cost — a fairly priced documented bird today is always cheaper than a "bargain" that arrives sick or undocumented.</p>
       </div>
     </div>
@@ -1062,6 +1108,8 @@ const videoSchema = {
   <Schema type="faq" data={{ mainEntity: faqItems.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) }} />
   <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} />
+  {productSchema.map(p => <script type="application/ld+json" set:html={JSON.stringify(p)} />)}
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
 </div>
 </BaseLayout>
 
