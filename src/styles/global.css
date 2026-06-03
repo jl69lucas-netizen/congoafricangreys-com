@@ -10,6 +10,7 @@
   --color-clay:       #e8604c;
   --color-clay-lt:    #f08070;
   --color-clay-dk:    #c94d3a;
+  --color-clay-ink:   #c8472f;   /* WCAG AA: white text 4.78:1; small clay text on white. Brand fill stays --color-clay. */
   --color-green:      #2D6A4F;
   --color-green-lt:   #eaf4ef;
 
@@ -23,6 +24,15 @@
   --font-lora: 'Lora', Georgia, serif;
   --font-sora: 'Sora', system-ui, sans-serif;
 }
+
+/* ── WCAG AA contrast (2026-06-03) ──────────────────────────────────────────
+   Solid clay fills carry white text below the large-text threshold, so the
+   brand fill (#e8604c, 3.38:1) fails AA on buttons. Unlayered rule overrides
+   the generated .bg-clay utility site-wide with the AA-safe clay (#c8472f,
+   4.78:1). --color-clay stays the brand identity token (tints, large display).
+   ──────────────────────────────────────────────────────────────────────── */
+.bg-clay { background-color: var(--color-clay-ink); }
+.hover\:bg-clay-dk:hover { background-color: #b03e28; }   /* keep hover darker than the new base */
 
 /* ── Fluid type scale (Option A) ────────────────────────────────────────────
    All sizes are clamp(mobile-min, fluid-mid, desktop-max).
