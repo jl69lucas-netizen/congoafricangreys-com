@@ -134,10 +134,24 @@ Card load fade-up 8–12px / 250ms is allowed. **No** bounce, spring, parallax, 
 
 ## Iconography & emoji
 
-Functional icons only, one per element, always paired with text, never in a colored circle chip.
-**Canonical set 🔒:** 📞 ✉️ 📍 🕐 ✈️ 🚗 ✅ ❋. Bird marks use images, **never 🦜**:
-`/emoji/cag-congo.png`, `/emoji/cag-timneh.png`. Banned: 🎉 🔥 🚀 and (per 2026-06-03 audit, currently
-violated on the homepage) 🏆 🧬 ⚠️ — replace with the canonical set or consistent line icons.
+**Line icons, not emoji** (site-wide sweep 2026-06-03, commit `9ff570f`). Functional icons are inline
+**Feather-style SVGs** — `viewBox="0 0 24 24"`, `width/height="1em"`, `stroke="currentColor"` so each icon
+inherits the call site's size + color. One per element, always paired with text, never in a colored circle
+chip. The icon map + repeatable transform live in **`scripts/emoji_to_icons.py`** (copy a path from its `P`
+map, or from any TrustBar / ScamAwareness icon). ~60 decorative emoji across 44 files were replaced; the
+former canonical contact set (📞 ✉️ 📍 🕐 ✈️ 🚗) is now phone / mail / map-pin / clock / plane / car line icons.
+
+- **✅ → green `#2D6A4F` check-circle** line icon. *(This supersedes ✅'s former spot in the locked canonical
+  set — reconciled 2026-06-03 per the full line-icon consistency decision.)*
+- **Kept as text glyphs (NOT converted):** ✔ ✗ ★ — list / pros-cons / rating markers. `⌂` `⌄` are technical
+  UI symbols (mobile-nav home, dropdown caret), also fine as text.
+- **Bird marks use images, never 🦜:** `/emoji/cag-congo.png`, `/emoji/cag-timneh.png`.
+- **Banned permanently:** 🎉 🔥 🚀 and *any* colorful pictograph emoji (🏆 🧬 ⚠️ 📋 📜 🩺 🏛 … ) — use a
+  line-icon SVG instead.
+
+**Render rule 🔒:** an icon supplied from a data array rendered via `{x.icon}` / `{b}` must use `set:html`,
+or the SVG string shows as literal `<svg>` text. After any icon change: `npx astro build`, then confirm
+`grep -rl "&lt;svg" dist/` is empty.
 
 ## Accessibility
 
