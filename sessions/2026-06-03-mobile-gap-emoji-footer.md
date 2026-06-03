@@ -93,6 +93,19 @@ links untouched (minimal diff). Footer hierarchy is carried by size+weight, so f
 - An `Edit` exact-match failed on the footer clay link due to an indentation assumption; had to
   grep the precise line first. Minor, but: for shared/wide files, confirm the literal line before Edit.
 
+## Site-wide emoji → line-icon sweep (commit `9ff570f`)
+The "~7 page" estimate was wrong — real scope was **~60 decorative emoji across 44 files**. Did the full sweep (user-approved).
+
+**Approach that worked:** one reviewable script (`scripts/emoji_to_icons.py`) with a single emoji→Feather-SVG map. Every SVG uses `width="1em" height="1em" stroke="currentColor"` so it inherits the call site's size + color → true drop-in, layout/theming preserved, zero per-file styling. Text glyphs ✔ ✗ ★ kept as list/rating markers. ✅ (colorful emoji) → green check-circle (overrides DESIGN.md's locked ✅ allowance; flagged for revert).
+
+**The trap that bit us (twice):** an emoji rendered via `{x.icon}` / `{b}` (escaped Astro expression) becomes **literal `<svg>` text** once you swap the emoji for an SVG string. You MUST convert those render sites to `set:html`. Detection: after build, `grep -rl "&lt;svg" dist/` — any hit = a missed set:html site. Found 5 components + 3 page icon-arrays this way. Inline-literal emoji in markup (`<div>📜</div>`) need NO set:html — direct substitution is valid Astro.
+
+**Other gotchas:**
+- The script polluted a JS `//` comment that *named* the emoji (it replaced them too). Harmless (compiles) but clean comments shouldn't spell out the glyphs.
+- A pre-existing `ReferenceError: yr is not defined` on the scams page is **unrelated** to the sweep — proved by confirming no `<script>` block contains an injected SVG (markup-only changes can't cause a JS ReferenceError) and the same minified `yr` exists on the pre-sweep live page. Left as a separate pre-existing bug.
+- `⌂` (mobile-nav home), `⌄` (FAQ dropdown caret) are **technical text symbols**, not colorful pictographs — left as-is.
+- Scope discipline: protected the canonical contact set first, then folded 📍✈🚗📞✉🕐 in only after the user confirmed "full sweep to consistent line icons."
+
 ## OPEN / NEXT
 - **Site-wide emoji→icon sweep (deferred):** off-brand glyphs still live on OTHER pages —
   `SplitHero.astro` 📜🧬, `ParentBirds.astro` 📜, `MeetTheTeam.astro` 📜, `dna-tested…` 🧬📋,
