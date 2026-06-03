@@ -155,6 +155,7 @@ Links must appear at the **beginning or middle** of a sentence — never at the 
 - **Internal links → SAME tab, always.** Never add `target="_blank"` to an internal `/slug/` link. (Internal new-tab breaks navigation and is an anti-pattern.)
 - **External authority links → NEW tab** (`target="_blank" rel="noopener noreferrer"`) **+ a visual/a11y cue.** On a sales page this keeps the high-intent buyer on our page instead of shipping them to cites.org/usda with no easy return. Pattern used site-wide: a subtle CSS `::after { content:"↗" }` affordance scoped to `.home-d a[target="_blank"]` (see `src/pages/index.astro`).
 - Note: warning of a new window is WCAG **3.2.5 (Level AAA)**, not AA — so `target+rel` alone is AA-compliant; the ↗ cue is the courtesy affordance.
+- **Authority citations on technical terms:** cite important technical/clinical terms ONCE to a credible **government/NIH** source (prefer `pmc.ncbi.nlm.nih.gov`) or the canonical industry authority, at the claim sentence. Reusable verified-source table: `docs/reference/external-link-library.md §Authority Citations` (PCR DNA sexing, PBFD, Polyomavirus, hypocalcemia, IATA LAR, CITES). Verify 200 first; link a term only once per page.
 
 ### Anchor / Jump-Link Cross-Reference Technique (in-content `#anchor` links) — confirmed 2026-06-03
 
