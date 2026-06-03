@@ -4,6 +4,47 @@
 (auto-deploys → Cloudflare Pages) and verified live. Also committed prior-session learnings
 that had been written to disk but never committed.
 
+**Commit trail (this session):** `caf8145` orphaned 2026-06-02 learnings · `2125283` mobile gap +
+TrustStats de-emoji + footer AA · `fb3c874` learnings doc · `9ff570f` **site-wide emoji→icon sweep
+(44 files)** · `8f22849` sweep learnings · `5c93ccd` **DESIGN.md + CLAUDE.md reconciled to line-icon
+system**. All pushed (auto-push hook), all live-verified.
+
+---
+
+## FULL-SESSION RETROSPECTIVE (read this first — meta-lessons for all agents)
+
+### ✅ What went well (repeat these)
+- **Verified rendered + live, never source greps.** Mobile screenshot for the gap, dist CSS-bundle
+  greps, live curl, preview screenshots of icons/footer. Caught real state every time.
+- **Root-cause before editing.** Traced the gap to the exact `.home-d > div` rule + the fixed-position-
+  wrapper mechanism, *then* edited; proved it with a 375px screenshot (seamless navbar→hero).
+- **The `grep -rl "&lt;svg" dist/` gate** caught the escaped-SVG bug before it shipped — twice. Make this
+  a standing post-build check for any icon/`set:html` work.
+- **One reviewable, idempotent script** for the 44-file sweep (`scripts/emoji_to_icons.py`) beat 44 manual
+  edits — auditable, re-runnable, documents the transform.
+- **Scope discipline + honesty.** Verified component usage/variant before edits; protected footer/contact;
+  and *told the user my "~7 page" estimate was wrong (~60 emoji / 44 files) BEFORE proceeding.*
+- **Surfaced the DESIGN.md ✅ conflict** instead of silently overriding a locked token; let the user decide;
+  then reconciled BOTH docs (DESIGN.md + CLAUDE.md) so they match the site.
+- **Committed orphaned prior-session work** that had never been committed (honored always-commit/push).
+- **Recommend + Why on every fork** (AskUserQuestion: recommended option first + named trade-off).
+
+### ❌ What went wrong (avoid these)
+- **Badly under-scoped the sweep** (~7 pages → 44 files / ~60 emoji). **Lesson: run the FULL inventory scan
+  before quoting any scope number.** A 30-second Python emoji scan would have given the real number up front.
+- **Hit the escaped-`<svg>` trap, then hit it again.** First pass only fixed component `{x.icon}` render
+  sites; missed 3 *page-level* icon arrays (where-to-buy, health-guarantee, trusted-breeders) → re-run.
+  **Lesson: `grep -rn "\.icon}" src/ | grep -v set:html` to find ALL escaped render sites up front.**
+- **Script polluted a JS `//` comment** that *named* the emoji glyphs (it replaced them too). **Lesson:
+  don't spell target glyphs inside comments a substitution script will process.**
+- **First 5 `set:html` Edit calls failed** (read-before-edit requirement) — wasted a round. Pivoting to the
+  script was the better approach anyway. **Lesson: for many-file mechanical changes, script it from the
+  start (script file-IO has no read-before-edit gate).**
+- **Bundled a sub-choice inside one AskUserQuestion option** ("(b) leave ✅ … vs revert") → ambiguous, needed
+  a follow-up. **Lesson: one decision per option; never nest a vs. inside a choice.**
+- **Pre-existing `yr is not defined`** on the scams page surfaced but was left unfixed (correctly out of
+  scope, proven unrelated) — logged as OPEN for a future pass.
+
 **Commits (pushed + live, verified):**
 | Hash | What |
 |---|---|
