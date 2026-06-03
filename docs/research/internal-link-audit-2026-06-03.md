@@ -36,3 +36,18 @@ Homepage currently links out to **31 / 97** pages.
 
 ## Recommended implementation
 Add links #1–#6 (descriptive, mid-sentence, ≤2 per section), skip the duplicate-slug pages pending a cannibalization check. Then save the well/bad learnings to the internal-link skill + entity-incorporation agent.
+
+---
+
+## ✅ Implemented 2026-06-03 (PM session)
+All 8 gaps added as **contextual prose** links (the jump-rail nav already pointed at some, but in-content links carry more weight):
+- #1 `/congo-vs-timneh-african-grey/` — lead-out under CompareTableE
+- #2–4 `/african-grey-vs-{macaw,cockatoo,amazon-parrot}/` — woven into the "vs Macaw/Cockatoo/Amazon" closing paragraph
+- #5 `/african-grey-parrot-lifespan/` + jump-link `#compare-species` — new schema-safe "Still weighing it up?" line under the FAQ
+- #6 `/congo-african-grey-parrot-pair-for-sale/` — "bonded Jins + Jeni Congo pair" in Congo FAQ
+- #7 `/african-grey-parrot-breeders-comparison/` — scam/legitimacy paragraph
+- #8 `/blog/african-grey-parrot-talking-ability/` — video caption
+
+**Duplicate-slug verdict:** `/african-grey-care/` (hub) vs `/african-grey-parrot-care-guide/` (guide), and `/african-grey-adoption/` (availability) vs `/african-grey-parrot-adoption-cost/` (cost) are **distinct intents — NO redirect.** Link hub↔spoke instead.
+
+**Also shipped:** internal=same-tab / external=new-tab+↗ policy; "every bird" → first-person/branded (11 inline + 8 component instances → homepage renders 0). Learnings saved to `skills/internal-link-agent.md` + `cag-entity-incorporation-agent.md`.
