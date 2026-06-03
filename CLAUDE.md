@@ -228,7 +228,7 @@ Active design system: `docs/design.md` (master reference) + `docs/design-system/
 4. **Cards:** 20px radius, 1px `--border`, warm shadow, white surface. Info cards use green header band.
 5. **Shadows:** Always warm-tinted `rgba(60,30,10,…)`. Never neutral grey.
 6. **Motion:** Max 0.2s transitions. No bounce, no parallax, no auto-playing video.
-7. **Emoji:** Canonical set only (📞 ✉️ 📍 🕐 ✈️ 🚗 ✅ ❋). One per element. No marketing emoji (🎉 🔥 🚀).
+7. **Icons = line-icon SVGs, NOT emoji** (site-wide sweep 2026-06-03, commit `9ff570f`; full spec in `DESIGN.md §Iconography`). Use inline Feather-style SVGs (`width/height="1em"`, `stroke="currentColor"`) — map + transform in `scripts/emoji_to_icons.py`. The former canonical emoji set (📞 ✉️ 📍 🕐 ✈️ 🚗 ✅) is now line icons (✅ → green `#2D6A4F` check-circle). KEEP only the text glyphs ✔ ✗ ★ (list/rating markers). One per element. Banned: 🎉 🔥 🚀 and any colorful pictograph emoji. **Render rule:** a data-array icon rendered via `{x.icon}` must use `set:html`, then verify `grep -rl "&lt;svg" dist/` is empty.
    - **African Grey bird icon — NEVER use 🦜** (generic green parrot, NOT an African Grey). Use custom images:
      - Congo African Grey: `<img src="/emoji/cag-congo.png" alt="Congo African Grey" class="cag-emoji" loading="lazy">`
      - Timneh African Grey: `<img src="/emoji/cag-timneh.png" alt="Timneh African Grey" class="cag-emoji" loading="lazy">`
