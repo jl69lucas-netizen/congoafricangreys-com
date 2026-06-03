@@ -776,7 +776,10 @@ const howToSchema = {
             <option value="1600">Timneh — $1,600</option>
             <option value="3500">Jins + Jeni pair — $3,500</option>
           </select>
-          <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-1.5"><input type="checkbox" id="calc-ship" checked /> IATA airport pickup ($185 · home delivery $350)</label>
+          <span class="block text-xs font-sora text-stone-500 mb-1.5">Delivery method</span>
+          <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-1"><input type="radio" name="calc-delivery" class="calc-delivery" value="185" checked /> IATA airport pickup ($185)</label>
+          <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-1"><input type="radio" name="calc-delivery" class="calc-delivery" value="350" /> Home delivery ($350)</label>
+          <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-3"><input type="radio" name="calc-delivery" class="calc-delivery" value="0" /> Local pickup in Midland, TX (free)</label>
           <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-1.5"><input type="checkbox" id="calc-cage" checked /> Cage + setup (~$450)</label>
           <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-4"><input type="checkbox" id="calc-vet" checked /> First-year food + vet (~$700)</label>
           <div class="bg-green/5 rounded-xl p-4 text-center">
@@ -970,14 +973,26 @@ const howToSchema = {
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">COMMON QUESTIONS</p>
         <h2 class="font-lora font-bold text-logo-dark">What Do Buyers Ask Most Before Choosing a C.A.Gs African Grey?</h2>
       </div>
-      <div class="grid md:grid-cols-2 gap-5">
-        {faqItems.slice(0, 6).map(item => (
-          <div class="bg-white rounded-2xl border border-line p-6" style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
-            <h3 class="font-lora font-bold text-[16px] text-logo-dark mb-2 leading-snug">{item.q}</h3>
-            <p class="font-sora text-stone-600 text-[13px] leading-relaxed">{item.a}</p>
+      <div class="cag-faq-acc max-w-3xl mx-auto space-y-3">
+        {faqItems.map((item, i) => (
+          <div class:list={["cag-faq-item bg-white rounded-2xl border border-line overflow-hidden", i === 0 && "open"]} style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
+            <button type="button" class="cag-faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4" aria-expanded={i === 0 ? "true" : "false"}>
+              <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
+              <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0">{item.a}</p></div></div>
           </div>
         ))}
       </div>
+      <style is:global>
+        .cag-faq-q { cursor: pointer; background: transparent; transition: background .2s ease; }
+        .cag-faq-q:hover { background: rgba(45,106,79,.04); }
+        .cag-faq-chevron { transition: transform .2s ease; }
+        .cag-faq-item.open .cag-faq-chevron { transform: rotate(180deg); }
+        .cag-faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .2s ease; }
+        .cag-faq-item.open .cag-faq-panel { grid-template-rows: 1fr; }
+        .cag-faq-panel-inner { overflow: hidden; }
+      </style>
       <div class="text-center mt-8">
         <a href="#contact" class="inline-block bg-clay hover:bg-clay-dk text-white font-sora font-semibold px-7 py-3 rounded-full text-sm transition-colors cag-glow">Ask Teri Directly →</a>
       </div>
@@ -1144,18 +1159,19 @@ const howToSchema = {
     const bird = document.getElementById('calc-bird');
     const total = document.getElementById('calc-total');
     if (!bird || !total) return;
-    const ship = document.getElementById('calc-ship');
+    const delivery = Array.from(document.querySelectorAll('.calc-delivery'));
     const cage = document.getElementById('calc-cage');
     const vet = document.getElementById('calc-vet');
     const fmt = n => '$' + n.toLocaleString('en-US');
     function recalc() {
       let t = Number(bird.value);
-      if (ship.checked) t += 185;
+      const chosen = delivery.find(r => r.checked);
+      if (chosen) t += Number(chosen.value);
       if (cage.checked) t += 450;
       if (vet.checked) t += 700;
       total.textContent = fmt(t);
     }
-    [bird, ship, cage, vet].forEach(el => el.addEventListener('change', recalc));
+    [bird, cage, vet, ...delivery].forEach(el => el.addEventListener('change', recalc));
     recalc();
   })();
 
@@ -1170,6 +1186,17 @@ const howToSchema = {
       score.style.color = n === checks.length ? '#2D6A4F' : '#5a5248';
     }
     checks.forEach(c => c.addEventListener('change', upd));
+  })();
+
+  // FAQ accordion (smooth open/close)
+  (function () {
+    const qs = document.querySelectorAll('.cag-faq-q');
+    if (!qs.length) return;
+    qs.forEach(btn => btn.addEventListener('click', () => {
+      const item = btn.closest('.cag-faq-item');
+      const open = item.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }));
   })();
 </script>
 
