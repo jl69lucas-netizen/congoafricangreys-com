@@ -148,12 +148,34 @@ The "~7 page" estimate was wrong — real scope was **~60 decorative emoji acros
 - Scope discipline: protected the canonical contact set first, then folded 📍✈🚗📞✉🕐 in only after the user confirmed "full sweep to consistent line icons."
 
 ## OPEN / NEXT
-- **Site-wide emoji→icon sweep (deferred):** off-brand glyphs still live on OTHER pages —
-  `SplitHero.astro` 📜🧬, `ParentBirds.astro` 📜, `MeetTheTeam.astro` 📜, `dna-tested…` 🧬📋,
-  `how-to-avoid…scams` 📋, `african-greys-…health-guarantee` 📋, `trusted-…breeders` 📋. Same
-  Feather-SVG treatment. (DESIGN.md §Iconography bans 🏆🧬⚠️; 📋📜 are also off the canonical set.)
+- ~~**Site-wide emoji→icon sweep (deferred)**~~ → **DONE this session** (commit `9ff570f`, all 44 files;
+  DESIGN.md + CLAUDE.md reconciled in `5c93ccd`). No longer open.
 - **Dark testimonial author cards** still use `text-white/60` on the `#1c1a18` panel (a PRODUCT.md
   known issue) — separate from the footer green; not addressed here.
 - **Footer hover states** remain `hover:text-clay` (#e8604c on green ≈1.90:1). Transient (not a
   resting-state AA node) so left as the brand signal; if an audit flags hover contrast, switch to
   `hover:text-clay-lt` (still ~2.45 — insufficient) or `hover:text-white hover:underline`.
+
+---
+
+## What's Next (session-closer, 2026-06-03)
+1. **Fix the pre-existing `ReferenceError: yr is not defined`** on `/how-to-avoid-african-grey-parrot-scams/`
+   (inline script, ~line 99 of the built page — likely the cost/WHOIS calculator widget). High-intent scam
+   page; JS error is unrelated to the icon sweep but real. *(User-flagged as next-session option "a".)*
+2. **Dark testimonial cards AA contrast** — `text-white/60` on `#1c1a18` fails AA; bump to ≥`#e7ddd2`
+   per DESIGN.md dark-panel rule. Shared component → site-wide win.
+3. **Footer hover-state contrast (optional)** — `hover:text-clay` on green ≈1.90:1; switch to
+   `hover:text-white hover:underline` if a hover-contrast audit flags it.
+
+## Unfinished
+- None from this session's committed scope. Mobile gap, de-emoji (homepage + full site-wide), and footer
+  AA all shipped and live-verified. Working tree clean, HEAD = origin = `0e31324`.
+
+## Discovered This Session
+- **Astro `<style>` is externalized** to `dist/_astro/*.css` — grep the bundle, not the HTML, for CSS rules.
+- **`set:html` bypasses scoped styles**; data-array icons rendered via `{x.icon}` need `set:html` or the
+  SVG shows as literal text. Gate: `grep -rl "&lt;svg" dist/` must be empty. (Now in DESIGN.md + memory.)
+- **`.home-d > div/nav` blanket padding** hits fixed-position chrome wrappers → invisible mobile gap
+  (memory: `project_mobile_gap_jumprail`).
+- **Pre-existing `yr is not defined`** on the scams page (see What's Next #1).
+- **DESIGN.md ✅ allowance reconciled** → green check-circle line icon (DESIGN.md + CLAUDE.md updated).
