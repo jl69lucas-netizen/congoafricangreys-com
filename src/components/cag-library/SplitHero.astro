@@ -24,10 +24,10 @@ const {
 } = Astro.props;
 
 const trust = [
-  { icon: '🏅', label: 'USDA Licensed' },
-  { icon: '📜', label: 'CITES Certified' },
-  { icon: '🧬', label: 'DNA Sexed' },
-  { icon: '✈️', label: 'Ships nationwide' },
+  { icon: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></svg>', label: 'USDA Licensed' },
+  { icon: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>', label: 'CITES Certified' },
+  { icon: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9"/><path d="M16 3c0 4.5-8 4.5-8 9s8 4.5 8 9"/><line x1="9" y1="6.5" x2="15" y2="6.5"/><line x1="9.5" y1="12" x2="14.5" y2="12"/><line x1="9" y1="17.5" x2="15" y2="17.5"/></svg>', label: 'DNA Sexed' },
+  { icon: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>', label: 'Ships nationwide' },
 ];
 ---
 
@@ -53,7 +53,7 @@ const trust = [
     <div class="border-t border-line grid grid-cols-2 md:grid-cols-4 divide-x divide-line bg-warm trust-strip">
       {trust.map(t => (
         <div class="p-5 text-center">
-          <div class="text-[20px]">{t.icon}</div>
+          <div class="text-[20px]" set:html={t.icon}></div>
           <div class="cag-tag text-mid mt-1">{t.label}</div>
         </div>
       ))}
@@ -81,7 +81,7 @@ const trust = [
     </div>
     <div class="border-t border-line/60 bg-white/40 backdrop-blur grid grid-cols-2 md:grid-cols-4 divide-x divide-line/60 trust-strip">
       {trust.map(t => (
-        <div class="p-5 text-center"><div class="text-[20px]">{t.icon}</div><div class="cag-tag text-forest mt-1">{t.label}</div></div>
+        <div class="p-5 text-center"><div class="text-[20px]" set:html={t.icon}></div><div class="cag-tag text-forest mt-1">{t.label}</div></div>
       ))}
     </div>
   </div>
