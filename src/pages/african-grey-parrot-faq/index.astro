@@ -145,17 +145,6 @@ const faqSchema = {
   })),
 };
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: breadcrumbs.map((b, i) => ({
-    "@type": "ListItem",
-    position: i + 1,
-    name: b.name,
-    item: `https://congoafricangreys.com${b.url}`,
-  })),
-};
-
 const navItems = [
   { id: "about", label: "About the Species" },
   { id: "buying", label: "Buying & Documentation" },
@@ -167,7 +156,6 @@ const navItems = [
 
 <BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
   <div style="max-width:1200px;margin:0 auto;">
     <Breadcrumb items={breadcrumbs} />

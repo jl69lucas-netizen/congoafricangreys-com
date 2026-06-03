@@ -62,17 +62,6 @@ const faqSchema = {
   })),
 };
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: breadcrumbs.map((b, i) => ({
-    "@type": "ListItem",
-    position: i + 1,
-    name: b.name,
-    item: `https://congoafricangreys.com${b.url}`,
-  })),
-};
-
 function yesNo(val: any): string {
   if (val === true || val === "true") return "Yes — stated";
   if (val === false || val === "false") return "Not found on site";
@@ -87,7 +76,6 @@ function yesClass(val: any): string {
 
 <BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
   <div style="max-width:1200px;margin:0 auto;">
     <Breadcrumb items={breadcrumbs} />
