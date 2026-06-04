@@ -8,6 +8,7 @@ dynamic_workflow: false
 ---
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > Only report pricing explicitly stated on a competitor's page via a live fetch. Never infer, estimate, or fabricate competitor pricing. If a price is not found, log "price not displayed" — do not guess.
 > **Primary:** Use `firecrawl_scrape` for all pricing pages. **Fallback:** `browser_navigate` + `browser_snapshot` if the price appears JS-rendered and Firecrawl returns empty content.
 

@@ -13,6 +13,7 @@ dynamic_workflow: false
 
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > Always run this audit BEFORE rebuilding a page. Never skip Phase 2 (competitor analysis) — it is the most valuable phase. The output feeds directly into the page builder agent. Save every audit report to sessions/ so findings accumulate over time. Phase 0 (outline) MUST be completed and approved before Phase 1 begins — this is non-negotiable (SEO Rule 51).
 
 ---

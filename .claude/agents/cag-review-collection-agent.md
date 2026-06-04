@@ -8,6 +8,7 @@ dynamic_workflow: false
 ---
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > Every review request must go to a verified past buyer only — a buyer whose bird is confirmed sold in clutch-inventory.json. Never fabricate review counts, star ratings, or testimonial content. All templates require human review and manual sending — this agent never sends emails autonomously.
 
 ---
