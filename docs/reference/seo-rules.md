@@ -527,6 +527,14 @@ Whenever any agent or skill presents the user options or choices (meta variants,
 3. Stay honest: name the **trade-off / downside** of the recommended pick too.
 In `AskUserQuestion`, the recommended option goes **first** with "(Recommended)" appended to its label. A bare list of options with no reasoned recommendation is an incomplete deliverable. Mirrors CLAUDE.md §Non-Negotiable Rules.
 
+**Rule 64 — Authority Citations on Technical/Clinical Terms (E-E-A-T)**
+Important technical or clinical terms must be cited **once** to a credible **government / NIH** source (prefer `pmc.ncbi.nlm.nih.gov`) or the **canonical industry authority** — at the sentence where the claim is made, not as a footnote.
+- External authority links → **new tab**: `target="_blank" rel="noopener noreferrer"` + the `.home-d`/`.cag-article` `↗` cue. (Internal links stay same-tab — see Rule 62.)
+- **Cite a term only once per page** — exact-match repetition reads as over-optimization.
+- **Verify HTTP 200 before inserting** (`curl -sI`), and only assert a clinical entity if it is inside the Verified-Claim Ledger (`sessions/2026-06-03-homepage-entity-map.md`).
+- The reusable verified-source table (PCR DNA sexing, PBFD, Polyomavirus/APV, African-Grey hypocalcemia, IATA LAR, CITES Appendix I, Alex/cognition) lives in `docs/reference/external-link-library.md §Authority Citations` — pull URLs from there; do not invent new ones.
+Proven live on the homepage (4 NIH/PMC + IATA authority links, `src/pages/index.astro`, commits `f8c947f`/`aa095ee`/`8bafd8f`).
+
 ---
 
 ## Quick Reference — GSC Priority Pages (2026-04-28)

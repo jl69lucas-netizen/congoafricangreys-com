@@ -250,6 +250,19 @@ Every post must link to at least 3 CAG pages. Priority targets:
 
 ---
 
+## External Authority Citations (E-E-A-T) — REQUIRED
+
+Every post that makes a technical or clinical claim must cite it **once** to a credible **government / NIH** source (prefer `pmc.ncbi.nlm.nih.gov`) or the **canonical industry authority**, at the claim sentence (beginning/middle, never the end). This is the E-E-A-T pattern proven live on the homepage.
+
+- **Pull URLs from the verified table** — `docs/reference/external-link-library.md §Authority Citations` (PCR DNA sexing, PBFD, Polyomavirus/APV, African-Grey hypocalcemia, IATA LAR, CITES Appendix I, Alex/cognition). Never invent a source URL.
+- **New tab + rel:** `target="_blank" rel="noopener noreferrer"` on every external authority link (Direction D adds the `↗` cue automatically). Internal links stay same-tab.
+- **Once per term per page** — exact-match repetition = over-optimization. Verify HTTP 200 (`curl -sI`) before inserting.
+- **Verified-Claim Ledger governs** which clinical entities you may assert (`sessions/2026-06-03-homepage-entity-map.md`) — never assert PBFD/PCR/board-cert beyond what the breeder has confirmed. Mirrors seo-rules.md **Rule 64**.
+
+Target: **1–2 authority citations per post**, on the post's strongest technical terms (e.g. a "how DNA sexing works" post cites PCR; a shipping post cites IATA LAR).
+
+---
+
 ## Post File Output
 
 Save each blog post to:
@@ -287,6 +300,8 @@ def seo_check(filepath, primary_keyword):
         "H1 contains keyword": primary_keyword.lower() in re.search(r'<h1[^>]*>(.*?)</h1>', content, re.I|re.S).group(1).lower() if re.search(r'<h1[^>]*>(.*?)</h1>', content) else False,
         "BlogPosting schema": '"@type": "BlogPosting"' in content,
         "Internal links >= 3": len(re.findall(r'href="/[^"]+/', content)) >= 3,
+        "Authority citation >= 1 (E-E-A-T)": bool(re.search(r'href="https://(pmc\.ncbi\.nlm\.nih\.gov|www\.iata\.org|www\.cites\.org|alexfoundation\.org)', content)),
+        "External links are new-tab": all('rel="noopener' in seg for seg in re.findall(r'<a[^>]*target="_blank"[^>]*>', content)) if 'target="_blank"' in content else True,
         "CTA present": '/contact/' in content or '/available/' in content,
         "No price invented": not bool(re.search(r'\$[0-9]{5,}', content)),
     }
@@ -329,8 +344,9 @@ r = urllib.request.urlopen(req); print(f"IndexNow: {r.status}")
 6. **No embed tags** — if adding maps or video, use `<iframe>` only (CSP blocks embed)
 7. **Canonical must be absolute** — `https://congoafricangreys.com/blog/[slug]/` not a relative URL
 8. **BlogPosting schema required** — every post needs it for Google News / rich results eligibility
-9. **Save to `site/content/blog/[slug]/index.html`** — all blog posts live under `/blog/`
-10. **Add to `page-sitemap.xml`** — never leave a new page out of the sitemap
+9. **Authority citation required (E-E-A-T)** — 1–2 per post on the strongest technical terms, from `external-link-library.md §Authority Citations`, new-tab + `rel="noopener noreferrer"`, inside the Verified-Claim Ledger; mirrors seo-rules.md Rule 64
+10. **Save to `site/content/blog/[slug]/index.html`** — all blog posts live under `/blog/`
+11. **Add to `page-sitemap.xml`** — never leave a new page out of the sitemap
 
 ---
 
