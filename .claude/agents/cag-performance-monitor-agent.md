@@ -1,13 +1,16 @@
 ---
 name: cag-performance-monitor-agent
 description: Runs Lighthouse audits on top CongoAfricanGreys.com pages via Playwright CLI after every deploy and weekly. Tracks LCP, CLS, FCP, and TBT against baselines. Flags any page that regresses below thresholds. Saves reports to sessions/. Recommended to run after any cag-batch-rebuilder job completes.
-tools: [Read, Write, Bash]
+tools: [Read, Write, Bash, mcp__plugin_chrome-devtools-mcp_chrome-devtools__lighthouse_audit, mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot]
 model: claude-sonnet-4-6
 effort: medium
 dynamic_workflow: false
 ---
 
 ## Golden Rule
+
+> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. If the MCP is unavailable, fall back to `npx playwright` / `npx lighthouse` via Bash (run `npx playwright install` first).
+
 > Use Playwright CLI to run real Lighthouse audits — never estimate or guess scores. Always compare against the previous session baseline before declaring a regression. A regression is only declared when the score drops AND the metric falls below the absolute threshold.
 
 ---

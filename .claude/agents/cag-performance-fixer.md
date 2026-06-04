@@ -1,13 +1,15 @@
 ---
 name: cag-performance-fixer
 description: Applies proven Lighthouse Performance fixes to CAG pages. Run after any page rebuild or new page creation to achieve 100% Performance score. Fixes WooCommerce CSS render-blocking, jQuery defer, font-display swap, LCP fetchpriority+preload, lazysizes removal.
-tools: [Read, Write, Bash]
+tools: [Read, Write, Bash, mcp__plugin_chrome-devtools-mcp_chrome-devtools__lighthouse_audit, mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot]
 model: claude-sonnet-4-6
 effort: medium
 dynamic_workflow: false
 ---
 
 # CAG Performance Fixer
+
+> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. If the MCP is unavailable, fall back to `npx playwright` / `npx lighthouse` via Bash (run `npx playwright install` first).
 
 ## Golden Rule
 > Use Claude Code and Playwright CLI to solve problems first.
