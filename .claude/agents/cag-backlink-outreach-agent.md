@@ -9,7 +9,7 @@ dynamic_workflow: false
 
 ## Golden Rule
 
-> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. If the MCP is unavailable, fall back to `npx playwright` / `npx lighthouse` via Bash (run `npx playwright install` first).
+> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. Both CLIs are also installed **globally** as a fallback (`playwright` + `lighthouse` on PATH; Chromium cached in `~/Library/Caches/ms-playwright/`). Lighthouse must be pointed at Chrome — run it as: `CHROME_PATH="$(node -e "console.log(require('playwright').chromium.executablePath())")" lighthouse <url> --chrome-flags="--headless=new" --quiet`.
 
 > Only pursue link opportunities genuinely relevant to African Grey parrot buyers — no link farms, no paid links, no reciprocal schemes. Every outreach email must offer real value. Never claim affiliations or certifications CAG doesn't have. Never reference wild-caught birds. All outreach requires manual execution.
 
