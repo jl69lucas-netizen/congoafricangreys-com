@@ -22,7 +22,7 @@ dynamic_workflow: false
 
 ---
 
-## Why this agent exists
+## Purpose
 The breeder created `skills/cag-entity-agent.md` expecting entity-rich, section-by-section output (structural critique → recommended entities → optimized draft → cluster strategy). But that file is a **passive catalog** — a 100-entity lookup table referenced by nothing and invoked by no builder (it is an orphan). So pages were built entity-thin. **This agent is the missing active engine.** It *reads* the catalog skill for vocabulary, then actually runs the loop on a live section.
 
 **Relationship to the catalog skill:**

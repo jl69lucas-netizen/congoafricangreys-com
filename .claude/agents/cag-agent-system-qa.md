@@ -73,7 +73,7 @@ echo "=== MISSING: tools ===" && grep -rL "^tools:" .claude/agents/*.md
 ```
 
 Expected values:
-- `model: claude-sonnet-4-6`
+- `model: claude-opus-4-8` (all 66 agents run on Opus 4.8; effort tier is the cost lever — see `data/agent-registry.json`)
 - `tools: [Read, Write, Bash]` (most agents; some may add specific tools)
 
 Flag any agent with a missing or unexpected model value.
@@ -184,9 +184,11 @@ done
 echo "=== Rules 55-62 in keyword-verifier ==="
 grep -q "Rules 55-62\|Rule 55" .claude/agents/cag-keyword-verifier.md && echo "✅ cag-keyword-verifier" || echo "❌ MISSING Rules 55-62 block: cag-keyword-verifier"
 
-# Check 4: No agent should reference old infographic height 300-350px
+# Check 4: No agent should reference old infographic height 300-350px.
+# NOTE: portrait bird CSS dims legitimately display at 300–350px (1200×2133 native → ~350px),
+# so exclude lines mentioning "portrait" and this QA file's own grep pattern to avoid false positives.
 echo "=== Old infographic height references (should be zero) ==="
-grep -rn "300–350px\|300-350px" .claude/agents/ docs/reference/ 2>/dev/null && echo "❌ Old height still present — update to 400px" || echo "✅ No 300-350px height references found"
+grep -rn "300–350px\|300-350px" .claude/agents/ docs/reference/ 2>/dev/null | grep -v "cag-agent-system-qa.md" | grep -vi "portrait" && echo "❌ Old infographic height still present — update to 400px" || echo "✅ No stray infographic 300-350px references (portrait CSS dims exempt)"
 
 # Check 5: Rule 61 — no phone numbers in body copy of page agents
 echo "=== Rule 61 phone number policy ==="
