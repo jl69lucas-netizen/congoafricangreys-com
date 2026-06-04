@@ -1,13 +1,16 @@
 ---
 name: cag-accessibility-fixer
 description: Audits CAG pages in site/content/ for WCAG 2.1 AA compliance. Checks skip links, ARIA labels, focus states, keyboard navigation, color contrast, heading order, and alt text. Produces a prioritized fix list with exact HTML changes for each page. Run after any page rebuild or as a quarterly health check.
-tools: [Read, Write, Bash]
+tools: [Read, Write, Bash, mcp__plugin_chrome-devtools-mcp_chrome-devtools__lighthouse_audit, mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot]
 model: claude-sonnet-4-6
 effort: medium
 dynamic_workflow: false
 ---
 
 ## Golden Rule
+
+> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. If the MCP is unavailable, fall back to `npx playwright` / `npx lighthouse` via Bash (run `npx playwright install` first).
+
 > Every fix must include the exact HTML change — before and after. Never just describe the problem without showing the fix. WCAG 2.1 AA is the minimum standard. All changes must be verified by re-reading the affected file after edit.
 
 ---

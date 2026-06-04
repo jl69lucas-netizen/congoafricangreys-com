@@ -1,7 +1,7 @@
 ---
 name: cag-llm-keyword-intel
 description: LLM Keyword Intelligence Agent — queries ChatGPT, Claude, Gemini, Perplexity, and Google AIO for any CAG keyword cluster, extracts keywords used, citations, and answer structures, then auto-routes gaps to keyword-verifier, faq-agent, framework-aio-geo, and content-architect. Updates top-pages.md with LLM Visibility scores. Runs weekly alongside rank-tracker.
-tools: [Read, Write, Bash]
+tools: [Read, Write, Bash, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
 model: claude-sonnet-4-6
 effort: high
 dynamic_workflow: false
@@ -12,6 +12,9 @@ dynamic_workflow: false
 <!-- EFFORT:END -->
 
 ## Golden Rule
+
+> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. If the MCP is unavailable, fall back to `npx playwright` / `npx lighthouse` via Bash (run `npx playwright install` first).
+
 > Use Claude Code and Playwright CLI to solve problems first.
 > Only call MCPs, external CLIs, or APIs if the specific task genuinely cannot be done with Claude Code alone.
 > **Confidence Gate:** Before writing or modifying any file in site/content/, confidence must be ≥97%. If uncertain: stop, state the uncertainty, ask. Never guess on live files.
