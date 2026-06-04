@@ -1,7 +1,6 @@
 ---
 name: framework-ebp
 description: "Reference guide for the EBP framework applied to CAG breeder credibility sections, CITES documentation explanations, and any content that must prove a claim with named evidence. Use when building trust sections that must survive skeptical scrutiny."
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

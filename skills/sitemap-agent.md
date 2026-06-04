@@ -1,7 +1,6 @@
 ---
 name: sitemap-agent
 description: Manages all CAG sitemap XML files after page additions, removals, or URL changes. Updates page-sitemap.xml, local-sitemap.xml, and sitemap_index.xml. Validates XML structure, checks for broken URLs, and submits updated sitemaps to Google Search Console via cag-indexing skill.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

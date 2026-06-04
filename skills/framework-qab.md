@@ -1,7 +1,6 @@
 ---
 name: framework-qab
 description: "Reference guide for the QAB framework applied to CAG FAQ sections, price pages, and comparison content. Use whenever writing FAQ items, cost breakdowns, or any content that must answer a buyer's question AND connect the answer to a personal benefit."
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

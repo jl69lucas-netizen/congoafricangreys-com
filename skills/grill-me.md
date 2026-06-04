@@ -1,7 +1,6 @@
 ---
 name: grill-me
 description: Session starter — reads current project state, grills you on business goals and today's task (12–13 questions one at a time), writes a session brief with framework/AIO/visual plan, and proposes a CLAUDE.md patch. Run AFTER Sprint 0 intelligence is complete.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

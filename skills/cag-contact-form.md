@@ -1,7 +1,6 @@
 ---
 name: cag-contact-form
 description: Audits, fixes, and deploys the parrot inquiry contact form and newsletter signup across all CAG pages. Uses [PAYMENT_METHOD_TBD] backend (ID xpqoeazq).
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

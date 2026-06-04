@@ -1,7 +1,6 @@
 ---
 name: cag-multi-agent-design
 description: Multi-agent design reference for CAG (CongoAfricanGreys.com). Explains DESIGN.md standard, agent orchestration patterns, and how agents share visual identity tokens.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

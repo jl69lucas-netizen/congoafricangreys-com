@@ -1,7 +1,6 @@
 ---
 name: social-content
 description: Writes social media content for CAG — Instagram captions, Facebook posts, TikTok hooks, Pinterest descriptions. Adapts CAG page content into platform-native formats. Reads content/social/ for existing content templates. Uses CAG brand voice — warm, specific, never generic.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

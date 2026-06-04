@@ -1,7 +1,6 @@
 ---
 name: caption-writer
 description: Writes captions for CAG video content — YouTube auto-caption edits, TikTok/Reels overlay text, on-screen callouts, and natural language video captions. Adapts spoken word to readable on-screen text. Reads content/social/CAG-Natural-Video-Captions.md for existing examples.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

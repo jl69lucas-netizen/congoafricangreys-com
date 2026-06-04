@@ -1,7 +1,6 @@
 ---
 name: framework-heading-hierarchy
 description: H1–H6 strategic keyword placement guide for CAG pages. Maps each heading level to a specific keyword type and user intent. Use before writing or auditing any page's heading structure. Prevents empty headings, keyword-stuffed headers, and wrong intent-level targeting.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

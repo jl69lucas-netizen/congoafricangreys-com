@@ -1,7 +1,6 @@
 ---
 name: framework-bab
 description: "Reference guide for the BAB framework applied to CAG buyer-fear content, scam-prevention sections, and CITES safety content. Use when the reader needs to see a clear contrast between their current risky situation and the documented outcome — and CAG as the bridge."
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 
