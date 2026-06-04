@@ -9,7 +9,7 @@ Usage:
     python3 scripts/route.py "rebuild the florida location page from scratch"
     -> opus48_max  claude-opus-4-8 / max
 
-Exit code 0 always (a tier is always chosen; default is sonnet_medium).
+Exit code 0 always (a tier is always chosen; default is opus48_medium).
 """
 import json
 import sys
@@ -25,21 +25,19 @@ ROUTING = [
         "competitor analysis", "competitor url", "architecture rebuild",
         "new page from scratch", "from scratch", "full page build",
     ]),
-    ("opus47_high", [
+    ("opus48_high", [
         "section update", "faq only", "faq", "about page", "comparison page",
         "comparison", "hub page", "spoke page", "cluster build", "variant page",
-    ]),
-    ("sonnet_high", [
         "monitor", "analytics", "conversion audit", "content calendar",
         "rank track", "keyword gap", "newsletter", "case study",
     ]),
-    ("haiku_medium", [
+    ("opus48_medium", [
         "canonical fix", "canonical", "redirect", "footer", "link check",
         "internal link audit", "depth check", "orphan scan", "image rename",
         "deploy", "nap citation", "google map",
     ]),
 ]
-DEFAULT = "sonnet_medium"
+DEFAULT = "opus48_medium"
 
 
 def route(task: str) -> str:
