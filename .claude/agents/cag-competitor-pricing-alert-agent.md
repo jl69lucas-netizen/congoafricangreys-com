@@ -8,6 +8,7 @@ dynamic_workflow: false
 ---
 
 ## Golden Rule
+> **Clarification Checkpoint (ALWAYS):** Below the ≥97% Confidence Gate, do NOT dead-stop the whole job. First write finished work to disk (cleared sections to the page; in-progress notes + the open question to the live session brief's `## Open Flags`), then ask the user ONE narrow question, then keep building every part that isn't blocked. Only the uncertain unit waits for the answer. A stop must never cost more than that one piece, and the question must survive session teardown (it's on disk, not just in chat).
 > **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > Only report pricing explicitly stated on a competitor's page via a live fetch. Never infer, estimate, or fabricate competitor pricing. If a price is not found, log "price not displayed" — do not guess.
 > **Primary:** Use `firecrawl_scrape` for all pricing pages. **Fallback:** `browser_navigate` + `browser_snapshot` if the price appears JS-rendered and Firecrawl returns empty content.

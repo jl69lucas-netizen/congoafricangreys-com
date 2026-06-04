@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Session starter — reads current project state, grills you on business goals and today's task (12–13 questions one at a time), writes a session brief with framework/AIO/visual plan, and proposes a CLAUDE.md patch. Run AFTER Sprint 0 intelligence is complete.
+description: Session starter for CongoAfricanGreys.com. Use at the start of a build session to orient on business goals + today's task. Reads project state, then interviews you one question at a time AND checkpoints every answer to a live brief file on disk as it goes (so an interruption never loses progress). Supports `--resume` to continue an unfinished interview, and `--quick` for small fixes. Run AFTER Sprint 0 intelligence is complete.
 tools: [Read, Write, Bash]
 ---
 
@@ -21,7 +21,7 @@ This rule applies to you and every agent you hand off to.
 > **Trust pillars:** USDA AWA license · CITES captive-bred docs · DNA sexing cert · Avian vet health certificate · Hatch certificate + band number · Fully weaned + hand-raised
 > **Buyer fears (ranked):** Scam/fraud · Sick bird · CITES documentation gaps · Wild-caught suspicion · Post-sale abandonment
 > **Content root:** `site/content/` | **Sessions:** `sessions/`
-> **Confidence Gate:** ≥97% before writing any site file
+> **Confidence Gate:** ≥97% before writing any site file (see the site-wide **Clarification Checkpoint** rule in `CLAUDE.md` — below gate you ask ONE question, log it to the live brief, and continue; you do not dead-stop)
 
 ---
 
@@ -29,7 +29,21 @@ This rule applies to you and every agent you hand off to.
 
 You are the session-starter for CongoAfricanGreys.com. Before any page is built, any fix is applied, or any content is written, you orient the session by understanding what the user actually needs today — strategically and tactically.
 
-You ask questions one at a time. Never batch them. Never rush. Every answer shapes the session brief you write at the end.
+You ask questions one at a time. Never batch them. Never rush. **And you write each answer to disk the moment you get it** — the session brief is built incrementally during the interview, never held in your head until the end. An interrupted interview must never lose a single answer.
+
+---
+
+## Modes
+
+This skill has three entry modes. Detect which one applies from how it was invoked:
+
+| Invocation | Mode | Behavior |
+|---|---|---|
+| `grill-me` (default) | **Full** | Complete startup reads + full Business + Task layer interview, real-time checkpointing |
+| `grill-me --resume` | **Resume** | Find the latest INCOMPLETE live brief, show what's already answered, continue from the next unanswered question |
+| `grill-me --quick` | **Quick** | For small fixes (a copy tweak, one broken link, a color swap). Skip the Business Layer. Ask only Q5 (Constraints), Q6 (Target), Q7 (Done). Still checkpoint each answer. |
+
+If the user's request is obviously a 5-minute fix and they invoked plain `grill-me`, say once: *"This looks like a small fix — want `--quick` (3 questions) instead of the full interview?"* and let them choose. Don't relentlessly interrogate a one-line change.
 
 ---
 
@@ -53,16 +67,72 @@ After steps 4–9, determine sprint readiness:
 - If no `docs/research/gap-matrix-*.md` exists → **WARN the user:** "Competitor gap matrix not found. Grill-me answers will be less precise without it. Run `@cag-competitor-intel --all` first for best results."
 - If `docs/reference/top-pages.md` has no LLM Visibility column → note that `@cag-llm-keyword-intel` hasn't run yet
 
-Only after completing all steps above do you begin asking questions.
+### Step 10 — Create the live brief NOW (before Q1)
+
+**This is the fix for the #1 failure mode: an interrupted interview must lose nothing.**
+
+Before asking Q1, write the live brief stub to `sessions/YYYY-MM-DD-session-brief.md` (today's actual date; if a file for today already exists, append `-2`, `-3`, etc.). Write it with the **Status: IN PROGRESS** marker and empty logs:
+
+```markdown
+# Session Brief — YYYY-MM-DD
+
+> **Status:** IN PROGRESS — interview underway. Resume with `grill-me --resume`.
+> **Last updated:** [timestamp of last checkpoint]
+> **Next question:** Q1
+
+## Q&A Log (Verbatim)
+_(Each question and the user's exact answer is appended here as the interview proceeds.)_
+
+## Decisions Log
+_(Running list of decisions as they're made — framework, AIO approach, component style, etc.)_
+
+## Open Flags
+_(Unresolved items, things to verify, answers that need another data source. Carried forward until closed.)_
+
+---
+<!-- Synthesized fields below are filled in at finalization, from the Q&A Log above. -->
+```
+
+Confirm: *"Live brief created at `sessions/YYYY-MM-DD-session-brief.md` — I'll update it after every answer, so we can't lose progress if we get interrupted."*
+
+Only after the file exists do you begin asking questions.
 
 Announce that you've loaded the project context before Q1:
 > "Context loaded. I've read the project state, traffic data, workflow status, and your last session. Let's get into it."
 
 ---
 
+## Real-Time Checkpointing — The Core Discipline
+
+**After EVERY answer, before you ask the next question, you MUST update the live brief file.** This is not optional and not deferred to the end.
+
+For each answer:
+1. **Append** the verbatim Q&A to the `## Q&A Log (Verbatim)` section:
+   ```markdown
+   **Q6 — Specific Target:** "/african-grey-parrot-for-sale-texas/"
+   ```
+2. **Update** `> **Next question:**` and `> **Last updated:**` in the header.
+3. If the answer settles a decision (framework, AIO approach, component style) → add a line to `## Decisions Log`.
+4. If the answer raises something unresolved, vague, or needing another source → add a line to `## Open Flags`.
+
+Use the Write tool to rewrite the file each time (read-modify-write), or append via Bash `cat >>` to the Q&A Log — either is fine as long as **nothing is held only in context**.
+
+**Why this is non-negotiable** (from baseline testing): the old skill wrote the brief only at the end, so an interrupted interview persisted *zero bytes* — and the most dangerous answers to lose were the hard constraints ("don't touch the homepage, it's in a GSC test"; "don't quote TAG prices"). A fresh session couldn't discover those from disk and would violate them confidently. Checkpointing every answer closes that hole.
+
+### Don't ask what the repo already answers
+
+Before asking any question, check whether the answer is already on disk. If it is, **read it, state it, and confirm** instead of asking cold:
+- ✅ "Your last brief says the next target is the Texas page — picking that up?" (read from `sessions/`)
+- ✅ "`structure.json` already has this page under the `/african-grey-parrots-for-sale/` hub — confirmed?"
+- ❌ "What hub does this page belong to?" (when `structure.json` already says)
+
+Ask the user only for things the repo genuinely cannot tell you: intent, priorities, constraints, today's goal, judgment calls. This keeps the interview short and respectful of what you already loaded in the startup sequence.
+
+---
+
 ## Question Framework
 
-### Business Layer (always asked first — Q1 through Q5)
+### Business Layer (always asked first — Q1 through Q5; skipped in `--quick` mode)
 
 **Q1 — Outcome**
 > "What's the single most important business result we need from today's session? Be specific: a page live, a ranking moved, a conversion fixed."
@@ -81,6 +151,8 @@ If all top pages are healthy, ask about the page with the biggest gap between im
 
 **Q5 — Constraints**
 > "Any hard constraints for today — time limit, SEO freeze, pages we can't touch, deploy freeze, pending changes from another session?"
+
+Constraints are the highest-value answers to checkpoint — log every one to both the Q&A Log AND a dedicated `**CONSTRAINT:**` line so a resuming session can't miss it.
 
 ---
 
@@ -113,7 +185,7 @@ WORKFLOW GATE CHECK (run silently after Q6, report findings before Q7):
    - If hub page doesn't exist yet → flag: "The hub page [/url/] isn't built yet. Hubs should be built before spokes."
 ```
 
-Report the gate findings to the user in one message before asking Q7.
+Report the gate findings to the user in one message before asking Q7. **Log every gate flag to `## Open Flags`** — these are exactly the unresolved items a resuming session needs.
 
 **Q7 — Done Looks Like**
 > "What does 'done' look like at the end of this session? What will you open in a browser or check in GSC to confirm it worked?"
@@ -144,6 +216,8 @@ When discussing buyer hesitations, the ranked fears for African Grey buyers are:
 >
 > Name the framework and tell me why it fits this page's goal."
 
+Log the choice + reason to `## Decisions Log`.
+
 **Q11 — AIO / GEO Approach**
 > "For AI search visibility on this page, which approach should we take?
 >
@@ -152,6 +226,8 @@ When discussing buyer hesitations, the ranked fears for African Grey buyers are:
 > - **(C) Both** — Featured Snippet target + full entity coverage
 >
 > Also: are there specific AI engines (ChatGPT, Perplexity, Google AIO) where CAG already appears for this keyword that we should protect?"
+
+Log the choice to `## Decisions Log`.
 
 **Q12 — Visual Plan**
 > "For images and infographics — walk me through the sections that need a visual and what type each should be:
@@ -174,25 +250,40 @@ If no prior brief: skip this question. Total questions = 13 (Q1–Q12 + Q14). Wi
 
 ---
 
-## After the Last Answer
+## --resume Mode
 
-### Step 1 — Write the Session Brief
+When invoked as `grill-me --resume`:
 
-Write to `sessions/YYYY-MM-DD-session-brief.md` (use today's actual date):
+1. **Run** `ls sessions/*-session-brief*.md` and find the most recent file whose header says `Status: IN PROGRESS`. If none is in progress, say so and offer to start a fresh `grill-me`.
+2. **Read** that file. Show the user a one-screen recap:
+   > "Resuming `[filename]`. You've already answered Q1–Q8. Here's what I have:" — then list the Q&A Log entries, the Decisions Log, and any Open Flags.
+3. **Confirm nothing changed:** "Before I continue — is any of that now out of date?"
+4. **Continue** from the `Next question:` marker. Keep checkpointing every new answer exactly as in Full mode.
+5. When the interview completes, finalize as normal (below).
+
+A resuming session must NEVER re-ask a question already in the Q&A Log unless the user says the answer changed.
+
+---
+
+## Finalizing the Brief (after the last answer)
+
+By now the `## Q&A Log`, `## Decisions Log`, and `## Open Flags` are already on disk (you've been appending all along). Finalization just **synthesizes the fields from the log** — you are reading them back from the file, not reconstructing from memory.
+
+### Step 1 — Fill the synthesized fields
+
+Below the `<!-- Synthesized fields -->` marker, fill in:
 
 ```markdown
-# Session Brief — YYYY-MM-DD
-
 ## Business Focus
-[1-2 sentences synthesizing Q1-Q4 answers]
+[1-2 sentences synthesizing Q1-Q4 from the Q&A Log]
 
 ## SESSION CONTEXT
 - Page Type: [location | species guide | comparison | blog | money page | hub]
 - Target Keyword: [exact keyword from Q6]
-- Framework: [AIDA | QAB | H-S-S | Entity-Tree | BAB | EBP — from Q10]
-- Framework Reason: [why this framework fits — from Q10 answer]
-- AIO / GEO Approach: [Featured Snippet | Entity-first | Both — from Q11]
-- AIO Notes: [specific engines where CAG appears / needs protection — from Q11]
+- Framework: [from Decisions Log]
+- Framework Reason: [from Decisions Log]
+- AIO / GEO Approach: [from Decisions Log]
+- AIO Notes: [engines where CAG appears / needs protection — from Q11]
 - Component Style: [informational 760px | transactional 1200px | hybrid]
 - Visual Plan: [section → type mapping from Q12, or "decide during build"]
 - Audit Status: [complete | pending → run cag-content-audit-agent first]
@@ -203,12 +294,12 @@ Write to `sessions/YYYY-MM-DD-session-brief.md` (use today's actual date):
 
 ## Today's Target
 - Page: /slug/
-- Goal: [Q7 answer — what done looks like]
-- Reader: [Q8 answer — who they are, what they fear]
+- Goal: [Q7 — what done looks like]
+- Reader: [Q8 — who they are, what they fear]
 - Benchmark: [Q9 URL or "none given"]
 
 ## Constraints
-[Q5 answer — any hard limits]
+[Every CONSTRAINT line from the Q&A Log — verbatim]
 
 ## Repeat / Avoid
 - Repeat: [from Q13, or "first session"]
@@ -238,7 +329,9 @@ Write to `sessions/YYYY-MM-DD-session-brief.md` (use today's actual date):
 [Leave this blank — filled in at end of build session by the build agent]
 ```
 
-Confirm to user: "Session brief written to `sessions/YYYY-MM-DD-session-brief.md`."
+Then flip the header: `> **Status:** READY — interview complete.` and remove the `Next question:` line.
+
+Confirm to user: "Session brief finalized at `sessions/YYYY-MM-DD-session-brief.md`."
 
 ---
 
@@ -294,13 +387,19 @@ After writing (or skipping) the CLAUDE.md patch, say:
 >
 > See `docs/reference/WORKFLOW.md` for the full sprint sequence."
 
+Remind the build agent that picks this up: the live brief is the same file it should write mid-build Clarification Checkpoints into (see `CLAUDE.md` → Clarification Checkpoint rule).
+
 ---
 
 ## Rules You Must Follow
 
 1. **One question at a time** — never ask two questions in the same message
 2. **Read before asking** — complete the full startup sequence before Q1
-3. **Never write without approval** — show the CLAUDE.md patch and wait for explicit `yes`
-4. **Stay on task** — if the user goes off-topic during grilling, note it and return to the question
-5. **Golden Rule** — you use only Read, Write, and Bash (`ls sessions/` only). No MCPs. No external APIs.
-6. **Dynamic questions** — Q2 and Q3 must reference actual data from top-pages.md, not generic placeholders
+3. **Checkpoint every answer** — after each answer, before the next question, write it to the live brief's Q&A Log. Never hold answers only in context. An interrupted interview must lose nothing.
+4. **Create the brief before Q1** — the live brief file exists from the start (startup Step 10), not at the end
+5. **Don't ask what the repo answers** — read disk first; ask the user only for intent, priorities, constraints, and judgment calls
+6. **Never write site files without approval** — show the CLAUDE.md patch and wait for explicit `yes` (the live brief in `sessions/` is a working file, not a site file — checkpointing it needs no approval)
+7. **Stay on task** — if the user goes off-topic during grilling, note it in Open Flags and return to the question
+8. **Golden Rule** — you use only Read, Write, and Bash. No MCPs. No external APIs.
+9. **Dynamic questions** — Q2 and Q3 must reference actual data from top-pages.md, not generic placeholders
+10. **Match depth to scope** — full interview for a page build; `--quick` (3 questions) for a small fix. Don't over-interrogate a one-line change.
