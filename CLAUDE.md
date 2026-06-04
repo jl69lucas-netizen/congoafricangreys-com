@@ -310,7 +310,7 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 
 ## Scripts
 - `scripts/health-sweep.sh` — **FULL SYSTEM HEALTH CHECK** (one command). Covers git/deploy state (incl. secret-leak detection), agent integrity (66 agents + model tiers), Astro build, live-site 200s, and `dist/` output hygiene. Run for any "is the site/system healthy?" request. `--no-build` skips the build. Owned/documented by the `cag-website-health` skill.
-- `scripts/apply_model_tiers.py` + `scripts/verify_model_tiers.sh` — apply/verify the 4-tier model assignment from `data/agent-registry.json`
+- `scripts/apply_model_tiers.py` + `scripts/verify_model_tiers.sh` — apply/verify the model + effort-tier assignment (all Opus 4.8; max/high/medium effort) from `data/agent-registry.json`
 - `scripts/generate_nb_image.sh` — Nano Banana 2 / Imagen image generation (reads `GEMINI_API_KEY` from gitignored `.google-key`)
 - TBD — more in Phase 2
 
