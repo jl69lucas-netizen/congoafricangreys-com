@@ -2,7 +2,7 @@
 name: cag-variant-specialist
 description: Rebuilds the two African Grey variant pages — /congo-african-grey-for-sale/ and /timneh-african-grey-for-sale/ — section-by-section. Inserts cross-links between both and a shared variant comparison table. Both pages form the variant cluster with cross-sell opportunities.
 tools: [Read, Write, Bash]
-model: claude-opus-4-7
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > Use Claude Code to solve problems first.

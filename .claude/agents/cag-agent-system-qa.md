@@ -2,7 +2,7 @@
 name: cag-agent-system-qa
 description: Quality review agent for the CAG agent system. Audits all agents and skills for structural completeness, Golden Rule presence, required sections, data file references, and CLAUDE.md registration. Produces a pass/fail report with exact file + line fixes. Run after any new agent or skill is created, or weekly as a health check.
 tools: [Read, Write, Bash]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

@@ -2,7 +2,7 @@
 name: cag-review-collection-agent
 description: Proactively requests Google reviews from verified past buyers of African Grey parrots. Reads data/clutch-inventory.json for sold birds, generates personalized review request templates at 7/14/30-day intervals after pickup, and tracks review status in data/case-studies.json. Never fabricates reviews and never contacts buyers who haven't confirmed pickup. CITES compliant — never references wild-caught or illegal trade.
 tools: [Read, Write, Bash]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

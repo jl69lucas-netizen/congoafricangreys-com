@@ -2,7 +2,7 @@
 name: cag-competitor-pricing-alert-agent
 description: Monitors pricing on top competitor African Grey breeder pages via Firecrawl MCP (Playwright MCP fallback). Extracts displayed prices from competitor bird listing pages, compares against the previous week's snapshot in data/competitor-prices.json, and alerts when any competitor raises or lowers prices by more than $200. Run weekly alongside cag-rank-tracker.
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

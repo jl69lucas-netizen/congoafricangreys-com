@@ -2,7 +2,7 @@
 name: cag-competitive-keyword-gap-agent
 description: Systematically identifies keywords that top African Grey competitor pages rank for that CongoAfricanGreys.com does not currently target. Uses Firecrawl MCP to map competitor sitemaps and scrape pages, extracts targeting topics and H1/H2/title patterns, compares against CAG page inventory, and produces a gap matrix with opportunity scores. Saves findings to docs/research/keyword-gap-YYYY-MM-DD.md and routes gaps to cag-content-architect.
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > **Primary:** Use Firecrawl MCP (`firecrawl_map`, `firecrawl_scrape`) to fetch real competitor sitemaps and pages — never guess what competitors rank for. Every gap identified must point to a specific competitor URL as evidence. Opportunity scores must be based on observable signals only, not fabricated metrics.

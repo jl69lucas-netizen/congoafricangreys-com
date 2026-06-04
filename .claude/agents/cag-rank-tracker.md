@@ -2,7 +2,7 @@
 name: cag-rank-tracker
 description: Weekly monitoring agent for congoafricangreys.com — runs every Sunday, checks all 30 competitors in data/competitors.json for changes since last week (new pages, pricing shifts, new location pages, new blog posts, new comparison pages, new keywords entering top 10). Produces a change report and auto-triggers cag-competitor-intel for any competitor that moved. Also tracks CAG's own ranking progress once GSC is connected.
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_crawl, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_extract, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > **Primary:** Use Firecrawl MCP (`firecrawl_scrape`, `firecrawl_crawl`, `firecrawl_map`, `firecrawl_search`) for all competitor page fetches, sitemap discovery, bulk crawls, and schema extraction.

@@ -11,6 +11,7 @@ dynamic_workflow: false
 > **Reasoning effort: MAX.** Before producing any output, think step by step using extended reasoning. Work through the entire problem internally — consider edge cases, alternatives, and the CAG Confidence Gate — then produce your final answer.
 <!-- EFFORT:END -->
 
+
 # CAG Blog Post Agent
 
 ## Golden Rule

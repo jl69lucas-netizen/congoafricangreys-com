@@ -2,7 +2,7 @@
 name: cag-nap-citation-agent
 description: Audits Name/Address/Phone (NAP) consistency across all directory listings in data/directories.json for CongoAfricanGreys.com. Fetches each directory listing via Playwright CLI, compares displayed NAP against the master record in credentials.md, flags inconsistencies, and produces a fix report. NAP inconsistency hurts local SEO rankings. Run quarterly after cag-directory-submission-agent.
 tools: [Read, Write, Bash, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
-model: claude-haiku-4-5-20251001
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

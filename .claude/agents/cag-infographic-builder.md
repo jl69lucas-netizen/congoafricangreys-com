@@ -2,7 +2,7 @@
 name: cag-infographic-builder
 description: Builds 400–450px HTML/CSS infographics for any CAG page section. Reads page context, selects infographic type (Comparison / Feature Grid / Process Flow), determines height, generates complete HTML, and places it in the target page. Works for both Astro pages (.astro) and static HTML pages (.html). Use when a section needs visual reinforcement — comparisons, flag lists, benefit grids, process steps.
 tools: [Read, Write, Bash]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 # CAG Infographic Builder Agent
 

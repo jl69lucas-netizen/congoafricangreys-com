@@ -2,7 +2,7 @@
 name: cag-external-link-agent
 description: Manages all outbound external links on CAG pages using the CAG external link library (docs/reference/external-link-library.md). Inserts links at the beginning or middle of sentences — never at the end. Verifies all URLs return 200 before inserting. Categorizes links as authority, partner, social, or transport. Maintains the library file.
 tools: [Read, Write, Bash]
-model: claude-haiku-4-5-20251001
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

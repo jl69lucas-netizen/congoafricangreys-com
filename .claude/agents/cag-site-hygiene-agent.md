@@ -2,7 +2,7 @@
 name: cag-site-hygiene-agent
 description: Technical SEO hygiene agent for CongoAfricanGreys.com. Runs 4 recurring maintenance tasks — (1) page cannibalization audit (keyword overlap clusters + 301 redirect recommendations), (2) breadcrumb audit + fix (detects pages missing Breadcrumb component + BreadcrumbList schema, adds them with correct trail), (3) footer link management (adds/removes links from the 5-column footer), (4) Google Analytics 4 install/verify (tag G-MEWJ9GVC4T in BaseLayout + generate_lead conversion event on /contact-us/). Run monthly or after any batch page build.
 tools: [Read, Write, Bash]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

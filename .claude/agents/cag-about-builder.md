@@ -2,7 +2,7 @@
 name: cag-about-builder
 description: Rebuilds /about/ — the [BREEDER_NAME] breeder story page for CongoAfricanGreys.com. Builds trust through H-S-S (Hook, Story, Solution) framework. Dual H1 pattern — decorative H1 "About Us" + semantic H1 focused on CITES documentation and captive-bred credentials. Connects to breeder background, USDA AWA license, and ethical breeding mission.
 tools: [Read, Write, Bash]
-model: claude-opus-4-7
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > Use Claude Code and Playwright CLI to solve problems first.

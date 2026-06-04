@@ -2,7 +2,7 @@
 name: cag-seasonal-content-agent
 description: Builds a seasonal content calendar for CongoAfricanGreys.com and generates seasonal announcement copy. African Grey buyer demand has seasonal patterns around Christmas, Valentine's Day, spring (bird season), and summer. Triggers cag-blog-post-agent and cag-homepage-builder for seasonal content. Manages data/seasonal-calendar.json as the schedule source of truth.
 tools: [Read, Write, Bash]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > Seasonal content must reference real clutch availability from clutch-inventory.json. Never promise birds "ready for Christmas" without confirming actual hatch dates and weaning timelines. African Greys take 12–16 weeks to wean — be accurate. All availability claims must be honest.

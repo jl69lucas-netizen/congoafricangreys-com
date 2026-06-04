@@ -2,7 +2,7 @@
 name: cag-hub-builder
 description: Builds aggregator hub pages — comparison hub (/african-grey-comparison/), species hub, location hub (/african-grey-parrots-for-sale/), documentation hub, and any new hub needed. Hub pages link to all their spoke pages and serve as navigation anchors for content clusters.
 tools: [Read, Write, Bash]
-model: claude-opus-4-7
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > Use Claude Code and Playwright CLI to solve problems first.

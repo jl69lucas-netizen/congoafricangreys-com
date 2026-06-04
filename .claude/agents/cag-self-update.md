@@ -2,7 +2,7 @@
 name: cag-self-update
 description: Self-update agent for CongoAfricanGreys.com
 tools: [Read, Write, Bash, WebFetch, WebSearch]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

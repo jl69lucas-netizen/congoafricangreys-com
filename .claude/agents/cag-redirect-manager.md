@@ -2,7 +2,7 @@
 name: cag-redirect-manager
 description: Manages all 301/302 redirects in site/content/_redirects. Adds new redirects when pages are renamed or consolidated, detects redirect chains (A→B→C flattened to A→C), validates that redirect targets exist on disk, and preserves the www→non-www rule. No netlify.toml exists — all rules live in site/content/_redirects.
 tools: [Read, Write, Bash]
-model: claude-haiku-4-5-20251001
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---
