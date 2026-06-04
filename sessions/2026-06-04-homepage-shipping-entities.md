@@ -24,5 +24,20 @@ section, divider logo). Kept here as a good+bad record so we don't repeat mistak
 4. **"Everything up-to-date" panic** — auto-push hook had already pushed; verify with `git log origin/main..HEAD`. → [[feedback_always_push_after_commit]].
 
 ## Deferred / open
-- **Adoption links** (`african-grey-adoption`, `african-grey-parrot-adoption-cost`) → homepage `#pricing`, 2nd pass (would push #pricing past the link cap). User approved deferral.
+- ~~Adoption links~~ — **DONE** (`d1850a1`): `african-grey-adoption` → `#pros-cons`, `adoption-cost` → `#pricing`, distributed. Nothing left from the 6-task brief.
 - Flight-nanny "from $750 · quoted per route" is the price the breeder set this session — keep `data/financial-entities.json` + llms.txt in sync if it changes.
+
+## What's Next
+1. **Submit updated sitemap + key URLs to GSC / IndexNow** — the sitemap jumped 13→100; ping Google so the ~87 newly-listed pages get crawled (`@cag-deploy-verifier` does IndexNow). Highest-leverage follow-up — indexation was the bottleneck.
+2. **Propagate the flight-nanny tier to deep pages** — `/buy-african-grey-parrots-with-shipping/` already mentions nannies but has no priced tier; align it + any location pages' shipping blocks to the new `from $750` tier (read `data/financial-entities.json`).
+3. **Sweep other pages for the llms/CITES + first-person voice fixes** — this session fixed the homepage + llms.txt; audit location/comparison pages for stale "Appendix II" or third-person brand copy.
+
+## Unfinished
+- None from this session's brief. (Pre-existing open items below are unchanged.)
+
+## Discovered This Session
+- `page-sitemap.xml` was 13 URLs for 91 live pages, with cross-shard dupes + phantom `/...-california/`, `/...-south-carolina/` (don't exist — California routes to LA).
+- `llms.txt` was CITES-wrong ("Appendix II" ×5) + stale pricing + 3 dead page links.
+- First-Person Voice was in only 4/66 agents; now in all 66 Golden Rules.
+- New reusable scripts: `scripts/generate_sitemaps.py` (run after adding any page), `scripts/add_first_person_golden_rule.py` (one-off, idempotent).
+- Tooling learnings distilled to memory (preview screenshot scroll-reset, viewport-on-navigate, grep `$` escaping, "up-to-date"≠failure).
