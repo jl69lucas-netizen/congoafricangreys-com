@@ -257,7 +257,7 @@ Date: [YYYY-MM-DD]
 2. **Descriptive anchor text required** — reject generic text
 3. **Orphan check on every full audit** — no page without inbound links
 4. **Hub/spoke architecture takes priority** — fix cluster links before cross-links
-5. **Max 3 new links per edit session** per page — avoid over-optimization signals
+5. **Max ~3 new links per edit session** per page — avoid over-optimization signals. **Intent clarified (2026-06-04):** the real risk is *clustered exact-match anchors* or *many links to the same target*, not a handful of distinct contextual links spread across a long page. On a large page (e.g. the 1000-line homepage), more than 3 is acceptable **if** each link has a different target, a descriptive non-duplicated anchor, sits mid-sentence, and is distributed one-per-section — and the user has approved the set. State the trade-off when exceeding 3.
 6. **Save audit** — write to `docs/research/internal-link-audit-[date].md`
 7. **Internal = same tab, external = new tab + ↗ cue** — never `target="_blank"` on an internal link (see Open-in-New-Tab Policy)
 8. **Use the jump-link technique** — cross-reference earlier in-depth sections from later teaser prose via `#id`; respect the schema-safe caveat (no `<a>` inside `{item.a}`/JSON-LD-bound strings)
