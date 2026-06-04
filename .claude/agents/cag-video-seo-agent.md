@@ -13,6 +13,7 @@ dynamic_workflow: false
 
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > YouTube SEO claims must be grounded in observable signals — actual video titles, actual keyword data. Never fabricate view counts, subscriber numbers, or ranking positions. All channel management actions require user approval.
 
 ---

@@ -13,6 +13,7 @@ dynamic_workflow: false
 
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > **Primary:** Use Firecrawl MCP (`firecrawl_scrape`, `firecrawl_map`, `firecrawl_search`) for all competitor page fetches, sitemap discovery, and schema extraction.
 > **Secondary:** Fall back to Playwright MCP (`browser_navigate` + `browser_snapshot`) for SERP pages, interactive elements, and JS-heavy SPAs where Firecrawl returns empty content.
 > **Confidence Gate:** Before writing or modifying any file in site/content/, confidence must be ≥97%. If uncertain: stop, state the uncertainty, ask. Never guess on live files.

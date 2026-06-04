@@ -8,6 +8,7 @@ dynamic_workflow: false
 ---
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > **Primary:** Use Firecrawl MCP (`firecrawl_search`) for SERP discovery — it returns title, URL, and description for top results directly. Use `firecrawl_scrape` to validate competitor URLs before registering them.
 > **Secondary:** Fall back to Playwright MCP (`browser_navigate` + `browser_snapshot`) for Google/Bing SERP pages if `firecrawl_search` returns incomplete results.
 > **Confidence Gate:** Before writing to data/competitors.json, present the full proposed list to the user and wait for explicit approval. Never auto-save without review.

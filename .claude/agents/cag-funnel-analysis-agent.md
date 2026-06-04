@@ -13,6 +13,7 @@ dynamic_workflow: false
 
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > Funnel analysis must be grounded in real data — GSC clicks, form submission counts, or behavioral data. Never fabricate conversion rates or drop-off percentages. If data is missing for a stage, label it "unknown — instrument this stage" rather than estimating.
 
 ---

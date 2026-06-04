@@ -13,6 +13,7 @@ dynamic_workflow: false
 
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > Use Claude Code and Playwright CLI to solve problems first. Only call MCPs/APIs if the task genuinely cannot be done with Claude Code alone.
 > **Confidence Gate:** ≥97% before writing any site file. If uncertain, stop, state the uncertainty, ask.
 > **Recommend + Why:** every entity you propose carries a data-grounded reason. No "feelings."

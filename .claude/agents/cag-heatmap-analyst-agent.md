@@ -13,6 +13,7 @@ dynamic_workflow: false
 
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > Never fabricate behavioral data — all heatmap interpretations must come from actual screenshots, export files, or session data provided by the user. If no behavioral data is provided, this agent cannot run. Do not assume where users click based on generic UX principles — interpret what the actual data shows.
 
 ---

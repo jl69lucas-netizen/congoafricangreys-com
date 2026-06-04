@@ -13,6 +13,7 @@ dynamic_workflow: false
 
 
 ## Golden Rule
+> **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > Never produce content a generic LLM could generate. Every output must contain at least one insight, anecdote, or data point that could only come from a real African Grey breeder with direct clutch experience. If you can't get that from real CAG data or [BREEDER_NAME] directly, ask before writing.
 
 ---
