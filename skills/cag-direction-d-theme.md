@@ -1,3 +1,8 @@
+---
+name: cag-direction-d-theme
+description: The LIVE site-wide visual theme for CongoAfricanGreys.com — Direction D "Modern Editorial" (Newsreader serif headings + IBM Plex Sans body, refined Terracotta Warmth palette). Read before building or restyling ANY page. Explains that the theme is already global via src/styles/direction-d.css + body.theme-d (BaseLayout) and must NOT be re-implemented per page. Use when designing, building, or restyling a page and you need the canonical theme rules (typography, palette, dividers, motion) or are unsure whether to add theme CSS.
+---
+
 # Skill: CAG Direction D — "Modern Editorial" Site Theme
 
 > **Status:** LIVE SITE DEFAULT (approved 2026-06-01, promoted site-wide 2026-06-01).
