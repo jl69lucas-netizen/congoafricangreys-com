@@ -1,7 +1,6 @@
 ---
 name: cag-google-map
 description: Inserts, fixes, or updates Google Maps embeds on any CAG page. Fixes broken WordPress UAG Google Map block exports and data-src iframe bugs.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

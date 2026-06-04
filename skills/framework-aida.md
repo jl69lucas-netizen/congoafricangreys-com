@@ -1,7 +1,6 @@
 ---
 name: framework-aida
 description: "Reference guide for the AIDA framework applied to CAG homepage, purchase guide, and high-intent commercial pages. Use when building pages that must move a visitor from cold awareness to inquiry submission in a single session."
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: cag-footer-agent
 description: CAG footer specification + audit rules. Source of truth is src/components/Footer.astro (Forest Green, 5-column). Use when building or auditing any page footer, or checking footer completeness.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

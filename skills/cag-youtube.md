@@ -1,7 +1,6 @@
 ---
 name: cag-youtube
 description: Audits, fixes, and optimizes all YouTube video embeds on MFS pages. Fixes data-src iframe bugs from WordPress migration and manages the video sitemap.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

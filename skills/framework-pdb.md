@@ -1,7 +1,6 @@
 ---
 name: framework-pdb
 description: "Reference guide for the PDB framework applied to CAG buyer-fear content, CITES safety pages, and high-stakes decision pages. Use when the reader arrives with a specific pain — a scam, a CITES documentation fear, a wild-caught suspicion — and needs content that names their pain before offering the solution."
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

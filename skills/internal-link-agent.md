@@ -1,7 +1,6 @@
 ---
 name: internal-link-agent
 description: Audits and improves internal link structure across CAG pages. Finds orphan pages (no inbound links), missing hub-to-spoke links, missing spoke-to-hub links, and anchor text opportunities. Produces a prioritized fix list with exact HTML insertions. Never modifies H1 or canonical.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

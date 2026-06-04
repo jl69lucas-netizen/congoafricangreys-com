@@ -1,7 +1,6 @@
 ---
 name: cag-design-rebuild
 description: Redesigns CAG pages using the nature-inspired forest-green design system. Full site redesign pipeline — Claude Design to static HTML, mobile-first, section by section.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

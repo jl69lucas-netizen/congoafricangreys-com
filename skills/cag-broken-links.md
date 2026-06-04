@@ -1,7 +1,6 @@
 ---
 name: cag-broken-links
 description: Audits all HTML pages in site/content/ for broken internal links, then fixes them. Checks image src paths, anchor hrefs, and canonical tags.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

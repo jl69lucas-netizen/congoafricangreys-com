@@ -1,7 +1,6 @@
 ---
 name: cag-website-health
 description: Technical site audit and auto-fixer for CongoAfricanGreys.com. Astro → Cloudflare Pages. Checks git/deploy state, build, canonicals, images, live site, Core Web Vitals. Runs scripts/health-sweep.sh as the one-command sweep.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

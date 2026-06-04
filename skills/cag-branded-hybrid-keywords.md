@@ -1,7 +1,6 @@
 ---
 name: cag-branded-hybrid-keywords
 description: In-content insertion playbook for BRANDED and HYBRID keywords on CongoAfricanGreys.com pages. Distinct from cag-branded-search-skill (which creates branded PAGES) — this skill weaves branded action anchors, hybrid query phrasing ("C.A.Gs reviews / pricing / vs competitor"), and Contextual-Intelligence intent language into existing page copy, CTAs, and final links. Run section-by-section after a page is built, or when branded impressions are high but the page copy contains no branded-search targets. Always show proposed insertions for approval before writing.
-model: claude-opus-4-8
 effort: high
 ---
 

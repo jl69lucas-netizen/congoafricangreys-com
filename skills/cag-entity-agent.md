@@ -1,7 +1,6 @@
 ---
 name: cag-entity-agent
 description: Entity management skill for CAG — 100+ entity catalog across parrot variant, health, credential, location, and pricing categories. Uses Entity-Benefit-Purpose (EBP) framework for AI/AIO optimization. Manages schema injection and entity coverage audits. Read when writing or auditing any CAG page for entity depth.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

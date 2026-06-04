@@ -1,7 +1,6 @@
 ---
 name: cag-location-page-builder
 description: Builds SEO-optimized state/city location pages for CongoAfricanGreys.com. Comprehensive content writer for African Grey parrot breeder location pages.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 

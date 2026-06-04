@@ -1,7 +1,6 @@
 ---
 name: cag-indexing
 description: Submits URLs to Google Search Console and IndexNow after any page change. Manages page-sitemap.xml, local-sitemap.xml, and sitemap_index.xml.
-model: claude-sonnet-4-6
 tools: [Read, Write, Bash]
 ---
 
