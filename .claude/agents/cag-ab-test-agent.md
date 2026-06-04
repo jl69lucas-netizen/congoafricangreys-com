@@ -2,7 +2,7 @@
 name: cag-ab-test-agent
 description: Creates A/B variant HTML files for CTAs, hero sections, and landing page sections on CongoAfricanGreys.com. Manages which variant is live, documents test hypothesis and success metrics, tracks rollback files. Works with cag-conversion-tracker output to prioritize what to test. Never auto-deploys — all variant swaps require explicit user approval.
 tools: [Read, Write, Bash]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > Use Claude Code and Playwright CLI to solve problems first.

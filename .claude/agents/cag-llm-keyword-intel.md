@@ -2,7 +2,7 @@
 name: cag-llm-keyword-intel
 description: LLM Keyword Intelligence Agent — queries ChatGPT, Claude, Gemini, Perplexity, and Google AIO for any CAG keyword cluster, extracts keywords used, citations, and answer structures, then auto-routes gaps to keyword-verifier, faq-agent, framework-aio-geo, and content-architect. Updates top-pages.md with LLM Visibility scores. Runs weekly alongside rank-tracker.
 tools: [Read, Write, Bash, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 

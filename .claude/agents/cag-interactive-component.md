@@ -2,7 +2,7 @@
 name: cag-interactive-component
 description: Builds interactive HTML components for CAG pages — first-year cost calculators, variant fit quizzes, documentation checklists, shipping timeline estimators, and CITES verification guides. All components use pure HTML/CSS with minimal vanilla JS. No frameworks, no dependencies, no external CDNs. Reads data/financial-entities.json and data/price-matrix.json for live data.
 tools: [Read, Write, Bash]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > Use Claude Code and Playwright CLI to solve problems first.

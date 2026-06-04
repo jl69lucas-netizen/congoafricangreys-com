@@ -2,7 +2,7 @@
 name: cag-clutch-manager
 description: Single source of truth for CAG bird inventory. Updates availability (available/reserved/sold) in site/content/available/, retires sold listings with sold overlays, adds clutch announcements to homepage, and syncs bird count in meta descriptions. Never deletes sold listings. Writes all inventory changes to data/clutch-inventory.json.
 tools: [Read, Write, Bash]
-model: claude-haiku-4-5-20251001
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

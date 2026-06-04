@@ -2,7 +2,7 @@
 name: cag-image-pipeline
 description: Manages the full image pipeline for CAG — moves AI-generated or sourced images from /content/ into site/content/wp-content/uploads/, renames files to SEO naming convention, updates all <img src> references in HTML, and hands off to image-metadata agent for alt text. Bridges image-prompt-generator (creates prompts) and image-metadata (writes alt text).
 tools: [Read, Write, Bash]
-model: claude-haiku-4-5-20251001
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

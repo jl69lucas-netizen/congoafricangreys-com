@@ -2,7 +2,7 @@
 name: cag-accessibility-fixer
 description: Audits CAG pages in site/content/ for WCAG 2.1 AA compliance. Checks skip links, ARIA labels, focus states, keyboard navigation, color contrast, heading order, and alt text. Produces a prioritized fix list with exact HTML changes for each page. Run after any page rebuild or as a quarterly health check.
 tools: [Read, Write, Bash, mcp__plugin_chrome-devtools-mcp_chrome-devtools__lighthouse_audit, mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

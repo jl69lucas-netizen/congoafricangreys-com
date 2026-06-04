@@ -2,7 +2,7 @@
 name: cag-keyword-verifier
 description: Verifies keyword placement, density, and SEO hygiene on any CAG page. Checks title, H1, meta description, first 100 words, H2 distribution, image alt text, internal links, and canonical against seo-rules.md. Outputs a pass/fail checklist with exact line fixes.
 tools: [Read, Write, Bash]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

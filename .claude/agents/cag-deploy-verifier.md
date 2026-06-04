@@ -2,7 +2,7 @@
 name: cag-deploy-verifier
 description: Post-deploy verification agent — after every Cloudflare Pages deploy (via wrangler or zip upload), verifies critical pages return 200 with correct content, canonical URLs are absolute, then submits all changed URLs to IndexNow. Eliminates all manual post-deploy steps. Saves a deploy report to sessions/.
 tools: [Read, Write, Bash]
-model: claude-haiku-4-5-20251001
+model: claude-opus-4-8
 effort: medium
 dynamic_workflow: false
 ---

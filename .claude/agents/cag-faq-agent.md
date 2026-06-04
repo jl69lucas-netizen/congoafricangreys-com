@@ -2,7 +2,7 @@
 name: cag-faq-agent
 description: Builds and audits FAQ sections for any CAG page using the QAB framework. Generates 6–12 questions per page from real buyer language (GSC Queries.csv, PAA boxes, CAG question bank). Produces FAQPage JSON-LD schema, <details>/<summary> accordion HTML, and verifies all answers against data files. Use after any page section audit flags a weak FAQ.
 tools: [Read, Write, Bash]
-model: claude-opus-4-7
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > Use Claude Code and Playwright CLI to solve problems first.

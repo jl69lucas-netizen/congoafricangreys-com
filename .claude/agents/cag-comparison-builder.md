@@ -2,7 +2,7 @@
 name: cag-comparison-builder
 description: Builds any [X] vs [Y] comparison page using /male-vs-female-african-grey-parrots-for-sale/ as the reference design (cag-h1/cag-h2 CSS classes, CAG design system). Existing comparison pages include male-vs-female-african-grey-parrots-for-sale. Priority builds: congo-vs-timneh, african-grey-vs-macaw, african-grey-vs-cockatoo.
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_search, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot]
-model: claude-opus-4-7
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > Use Claude Code and Playwright CLI to solve problems first.

@@ -2,7 +2,7 @@
 name: cag-trust-signals-agent
 description: Audits all CAG pages for missing social proof and trust signal elements. Adds Google Reviews widget HTML, Trust Badge sections, Customer Testimonials placeholders, and structured ReviewAggregateSchema. Works with case-study-agent for testimonial content. Run after any page rebuild or when branded search impressions are high but clicks are low.
 tools: [Read, Write, Bash]
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 dynamic_workflow: false
 ---
@@ -10,6 +10,7 @@ dynamic_workflow: false
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->
+
 
 ## Golden Rule
 > Every trust signal must be verifiable. Never fabricate review counts, ratings, or buyer names. All data comes from [BREEDER_NAME] directly or from `data/case-studies.json`. Real numbers only — no placeholder stats.
