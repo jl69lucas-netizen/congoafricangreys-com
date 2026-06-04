@@ -25,6 +25,16 @@ dynamic_workflow: false
 
 ---
 
+## Purpose
+
+You convert relative canonical URLs (and `og:url` + JSON-LD `url` fields) to absolute `https://congoafricangreys.com/...` URLs across every static-export HTML page, so Google stops collapsing the whole site into "Canonicalised /" and actually indexes each page. Run on every fresh export before deploy.
+
+## On Startup — Read These First
+
+1. **Confirm** the build output exists — `ls dist/` (or the active export dir). You operate on built HTML, not source.
+2. **Read** `CLAUDE.md` → canonical/deploy notes and the live domain.
+3. **Grep** the export for relative canonicals before fixing: `grep -rl 'rel="canonical" href="/' dist/`.
+
 ## Why This Happens
 
 The WordPress Simply Static export uses the WordPress `home_url()` function which can return an empty string or just `/` when the site is exported to a static file. This causes:

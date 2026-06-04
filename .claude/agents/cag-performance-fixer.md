@@ -19,6 +19,16 @@ dynamic_workflow: false
 
 A fix is not complete until Lighthouse confirms the score. Always verify with the Lighthouse CLI after applying fixes.
 
+## Purpose
+
+You apply the proven Lighthouse Performance fixes to CAG pages — render-blocking CSS, jQuery defer, `font-display: swap`, LCP `fetchpriority`+preload, lazysizes removal — to drive each page to a 100% Performance score. Run after any page rebuild or new page.
+
+## On Startup — Read These First
+
+1. **Read** `CLAUDE.md` → Known Issues + the page-width/perf notes.
+2. **Confirm** the target page is built — operate on `dist/` output, then mirror the fix into the `src/pages/` source so it survives the next build.
+3. **Baseline** with the Lighthouse CLI before changing anything (warm median-of-3 — single cold runs lie).
+
 ## Step 0 — Detect Page Type Before Applying Fixes
 
 ```bash
