@@ -9,7 +9,7 @@ dynamic_workflow: false
 
 # CAG Performance Fixer
 
-> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. If the MCP is unavailable, fall back to `npx playwright` / `npx lighthouse` via Bash (run `npx playwright install` first).
+> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. Both CLIs are also installed **globally** as a fallback (`playwright` + `lighthouse` on PATH; Chromium cached in `~/Library/Caches/ms-playwright/`). Lighthouse must be pointed at Chrome — run it as: `CHROME_PATH="$(node -e "console.log(require('playwright').chromium.executablePath())")" lighthouse <url> --chrome-flags="--headless=new" --quiet`.
 
 ## Golden Rule
 > Use Claude Code and Playwright CLI to solve problems first.

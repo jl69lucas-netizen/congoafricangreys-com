@@ -9,7 +9,7 @@ dynamic_workflow: false
 
 ## Golden Rule
 
-> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. If the MCP is unavailable, fall back to `npx playwright` / `npx lighthouse` via Bash (run `npx playwright install` first).
+> **Tooling note:** Prefer the granted MCP browser/Lighthouse tools. Both CLIs are also installed **globally** as a fallback (`playwright` + `lighthouse` on PATH; Chromium cached in `~/Library/Caches/ms-playwright/`). Lighthouse must be pointed at Chrome — run it as: `CHROME_PATH="$(node -e "console.log(require('playwright').chromium.executablePath())")" lighthouse <url> --chrome-flags="--headless=new" --quiet`.
 
 > Never submit to a directory without verifying it: (1) accepts African Grey / exotic bird breeders, (2) has real traffic (not a link farm), (3) is free OR user has approved payment, (4) clearly states it accepts only captive-bred CITES-documented birds (or does not imply wild-caught acceptance). All submissions use ONLY the verified CAG business info below. Save every submission to `data/directories.json` — never lose track of where CAG is listed.
 
