@@ -276,7 +276,9 @@ const howToSchema = {
 /* --- PARAGRAPH LAYOUT B — lead line: first paragraph after a heading reads larger/ink --- */
 .home-d p { max-width:64ch !important; }
 .home-d .text-center p { margin-left:auto; margin-right:auto; }
-.home-d h1 + p, .home-d h2 + p { font-size:1.08em !important; line-height:1.7 !important; color:var(--ink) !important; }
+.home-d h1 + p, .home-d h2 + p { font-size:1.08em !important; line-height:1.7 !important; }
+/* "inkier" lead color ONLY where the paragraph hasn't set its own (skips light-text paragraphs on dark sections — fixes WCAG contrast fails) */
+.home-d h1 + p:not([style*="color"]):not([class*="text-cream"]), .home-d h2 + p:not([style*="color"]):not([class*="text-cream"]) { color:var(--ink) !important; }
 
 /* --- EYEBROWS: calm uppercase label with a clay underline tick --- */
 .home-d .border-l-4 { border-left:0 !important; padding-left:0 !important; }
