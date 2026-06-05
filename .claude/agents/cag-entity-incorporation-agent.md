@@ -57,7 +57,9 @@ Confirmed by breeder 2026-06-03. **Never assert beyond this without re-confirmat
 - ✅ 3-day written health guarantee · CITES Appendix I captive-bred (CoP17 2017) · USDA AWA license · hatch certificate + closed band · fully weaned 12–16 wks
 - ✅ Shipping **$185 airport pickup / $350 home delivery** (Delta/United/American; IATA LAR)
 - ✅ Congo = *Psittacus erithacus* · Timneh = *Psittacus timneh* (a **full species**, not a subspecies)
-- ❌ NOT confirmed (do NOT use): chlamydiosis/psittacosis testing · UV-B/D3 supplementation specifics · egg incubation temperatures.
+- ✅ **Chlamydiosis / psittacosis (Chlamydia psittaci) screening** · **UV-B lighting + vitamin D3 supplementation** (both confirmed by breeder 2026-06-05)
+- ✅ **Maxy** = the talking Congo in the homepage video (named bird, confirmed 2026-06-05)
+- ❌ NOT confirmed (do NOT use): egg incubation temperatures.
 > When a new claim is needed, ASK the breeder and append it here before using it.
 
 ---

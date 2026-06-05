@@ -172,7 +172,7 @@ const productSchema = [
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "Congo African Grey (Psittacus erithacus)",
-    "description": "Hand-raised, PCR DNA-sexed, CITES Appendix I captive-bred Congo African Grey from C.A.Gs in Midland, TX. Each of our Congos includes a board-certified avian-veterinarian health certificate with PBFD and Polyomavirus screening, a hatch certificate, a closed band, and a 3-day written health guarantee.",
+    "description": "Hand-raised, PCR DNA-sexed, CITES Appendix I captive-bred Congo African Grey from C.A.Gs in Midland, TX. Each of our Congos includes a board-certified avian-veterinarian health certificate with PBFD, Polyomavirus and psittacosis (Chlamydia psittaci) screening, a hatch certificate, a closed band, and a 3-day written health guarantee.",
     "category": "Live pet bird / companion parrot",
     "brand": { "@type": "Brand", "name": "C.A.Gs – Midland, TX" },
     "image": "https://congoafricangreys.com/congo-african-grey-variant.webp",
@@ -183,7 +183,7 @@ const productSchema = [
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "Timneh African Grey (Psittacus timneh)",
-    "description": "Hand-raised, PCR DNA-sexed, CITES Appendix I captive-bred Timneh African Grey from C.A.Gs in Midland, TX — the calmer, earlier-talking African Grey species. Includes a board-certified avian-veterinarian health certificate with PBFD and Polyomavirus screening, a hatch certificate, a closed band, and a 3-day written health guarantee.",
+    "description": "Hand-raised, PCR DNA-sexed, CITES Appendix I captive-bred Timneh African Grey from C.A.Gs in Midland, TX — the calmer, earlier-talking African Grey species. Includes a board-certified avian-veterinarian health certificate with PBFD, Polyomavirus and psittacosis (Chlamydia psittaci) screening, a hatch certificate, a closed band, and a 3-day written health guarantee.",
     "category": "Live pet bird / companion parrot",
     "brand": { "@type": "Brand", "name": "C.A.Gs – Midland, TX" },
     "image": "https://congoafricangreys.com/timneh-african-grey-variant.webp",
@@ -203,6 +203,38 @@ const howToSchema = {
     { "@type": "HowToStep", "position": 3, "name": "Paperwork & Vet Certificate", "text": "We assemble the CITES Appendix I captive-bred certificate, the PCR DNA sexing certificate, and a board-certified avian-vet health certificate dated within 10 days of travel, all backed by our verifiable USDA Animal Welfare Act license." },
     { "@type": "HowToStep", "position": 4, "name": "Airport Pickup or Home Delivery", "text": "Your bird travels in an IATA Live Animals Regulations (LAR) compliant carrier. Choose airport pickup ($185) at your nearest major airport or door-to-door home delivery ($350)." }
   ]
+};
+
+// ─── Per-bird Product/Offer schema (data-driven from `birds`) ───
+const availMap: Record<string, string> = {
+  available: "https://schema.org/InStock",
+  reserved: "https://schema.org/PreOrder",
+  sold: "https://schema.org/SoldOut",
+};
+const birdListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Available Congo & Timneh African Greys at C.A.Gs",
+  "itemListElement": birds.map((b, i) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "item": {
+      "@type": "Product",
+      "name": `${b.name} — ${b.variant} (${b.sex})`,
+      "description": `${b.notes} Hand-raised, PCR DNA-sexed, screened for PBFD, Polyomavirus and psittacosis (Chlamydia psittaci), CITES Appendix I captive-bred, and fully weaned at 12–16 weeks. Includes a board-certified avian-vet health certificate, hatch certificate, closed band, and a 3-day written health guarantee.`,
+      "category": "Live pet bird / companion parrot",
+      "brand": { "@type": "Brand", "name": "C.A.Gs – Midland, TX" },
+      "image": `https://congoafricangreys.com${b.image}`,
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": String(b.priceVal),
+        "availability": availMap[b.status] ?? "https://schema.org/InStock",
+        "url": `https://congoafricangreys.com/contact-us/?bird=${b.id}`,
+        "seller": { "@type": "Organization", "name": "C.A.Gs – Midland, TX" }
+      }
+    }
+  }))
 };
 ---
 
@@ -350,7 +382,7 @@ const howToSchema = {
         <div class="border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">This Week's Aviary</p>
           <h2 class="font-lora font-bold text-logo-dark">Which Hand-Fed African Greys Are Available Right Now?</h2>
-          <p class="text-stone-500 mt-2 max-w-md text-sm leading-relaxed">Every Congo and Timneh African Grey we hand-feed here at C.A.Gs is PCR DNA-sexed, screened for PBFD and Polyomavirus, CITES Appendix I-documented, and fully weaned at 12–16 weeks — these are real birds we are raising right now, including our <a href="/baby-african-grey-parrot-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">baby African Greys for sale</a>, with real availability and no waitlist tricks or bait listings.</p>
+          <p class="text-stone-500 mt-2 max-w-md text-sm leading-relaxed">Every Congo and Timneh African Grey we hand-feed here at C.A.Gs is PCR DNA-sexed, screened for PBFD, Polyomavirus, and psittacosis, CITES Appendix I-documented, and fully weaned at 12–16 weeks — these are real birds we are raising right now, including our <a href="/baby-african-grey-parrot-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">baby African Greys for sale</a>, with real availability and no waitlist tricks or bait listings.</p>
         </div>
         <a href="/african-grey-parrot-for-sale/" class="inline-block bg-clay hover:bg-clay-dk text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors whitespace-nowrap cag-glow">View All Birds →</a>
       </div>
@@ -638,11 +670,11 @@ const howToSchema = {
       <SplitFeature variant="editorial"
         eyebrow="PAPERWORK BEFORE THE BIRD"
         title="What Makes C.A.Gs a USDA-Licensed African Grey Breeder You Can Verify?"
-        body="Every African Grey we place is hand-reared inside our Midland, Texas home, never a commercial warehouse — and every one of our Greys leaves with the receipts that prove it. You get a verifiable USDA Animal Welfare Act license number, CITES Appendix I captive-bred documentation, a PCR-based DNA sexing certificate, a board-certified avian-veterinarian health certificate backed by PBFD and Polyomavirus screening, a hatch certificate, and a closed band number. U.S. captive-bred, never wild-caught — and we put it all in your hands before any money moves."
+        body="Every African Grey we place is hand-reared inside our Midland, Texas home, never a commercial warehouse — and every one of our Greys leaves with the receipts that prove it. You get a verifiable USDA Animal Welfare Act license number, CITES Appendix I captive-bred documentation, a PCR-based DNA sexing certificate, a board-certified avian-veterinarian health certificate backed by PBFD, Polyomavirus, and psittacosis screening, a hatch certificate, and a closed band number. U.S. captive-bred, never wild-caught — and we put it all in your hands before any money moves."
         bullets={[
           { label: '<b class="text-ink">USDA AWA licensed:</b> a verifiable number you can check before paying' },
           { label: '<b class="text-ink">CITES Appendix I:</b> U.S. captive-bred documentation, never wild-caught' },
-          { label: '<b class="text-ink">PCR DNA-sexed &amp; vet-checked:</b> certificate plus a board-certified avian-vet exam, with PBFD &amp; Polyomavirus screening' },
+          { label: '<b class="text-ink">PCR DNA-sexed &amp; vet-checked:</b> certificate plus a board-certified avian-vet exam, with PBFD, Polyomavirus &amp; psittacosis screening' },
           { label: '<b class="text-ink">Family breeders since 2014:</b> Mark &amp; Teri Benjamin, Midland, TX' },
         ]}
         quote="We hand you the paperwork before the wire — because a real breeder has nothing to hide and everything to prove."
@@ -720,6 +752,7 @@ const howToSchema = {
         imageSrc="/congo-african-grey-natural-habitat-origin.webp"
         imageAlt="Congo African Grey parrot in its native West and Central African rainforest habitat — the wild origin behind every captive-bred C.A.Gs Grey"
       />
+      <p class="text-stone-600 leading-relaxed mt-8 text-[15px]" style="max-width:70ch;">You can hear a small, everyday echo of that intelligence in our own aviary: our Congo <strong>Maxy</strong> — <a href="#video" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">talking in the video further down this page</a> — is one of the hand-raised Greys we have learning and repeating words right now, the same capacity for a decades-long conversation that every C.A.Gs Grey we place carries.</p>
     </div>
   </section>
 
@@ -729,12 +762,12 @@ const howToSchema = {
       <TrustStats variant="classic"
         eyebrow="HEALTH & GUARANTEE"
         title="What Health Guarantees Come With Every C.A.Gs African Grey?"
-        body="Every African Grey from C.A.Gs – Midland, TX is examined by an avian veterinarian and ships with a health certificate dated within 10 days of travel, plus a 3-day health guarantee in writing, a DNA sexing certificate, and CITES Appendix I captive-bred paperwork. We send your bird home on the exact diet it is already eating — the same calcium-supported, pellet-based plan covered in our best African Grey parrot food guide — and Mark & Teri stay on the phone for lifetime breeder support long after pickup."
+        body="Every African Grey from C.A.Gs – Midland, TX is examined by a board-certified avian veterinarian — including PBFD, Polyomavirus, and psittacosis (Chlamydia psittaci) screening — and ships with a health certificate dated within 10 days of travel, plus a 3-day health guarantee in writing, a PCR DNA sexing certificate, and CITES Appendix I captive-bred paperwork. We send your bird home on the exact diet it is already eating — the same calcium-supported, pellet-based plan covered in our best African Grey parrot food guide — and Mark & Teri stay on the phone for lifetime breeder support long after pickup."
         ctaLabel="See our health guarantee →"
         ctaHref="/african-grey-parrot-health-guarantee/"
       />
       <div class="mt-10 grid md:grid-cols-2 gap-8 items-center" style="max-width:900px;margin-left:auto;margin-right:auto;">
-        <p class="text-stone-600 leading-relaxed text-[15px]">Every one of <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">our African Greys for sale comes with a written health guarantee</a>, and diet is the foundation of that promise — which is why we coach every new owner through the calcium-supported, pellet-based plan in our <a href="/best-african-grey-parrot-food/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey pellet food &amp; diet guide</a> before the transition home — African Greys are specifically prone to <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7128777/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">hypocalcemia</a>, and getting nutrition right from day one is how a healthy chick stays healthy.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]">Every one of <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">our African Greys for sale comes with a written health guarantee</a>, and diet is the foundation of that promise — which is why we coach every new owner through the calcium-supported, pellet-based plan in our <a href="/best-african-grey-parrot-food/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey pellet food &amp; diet guide</a> before the transition home — African Greys are specifically prone to <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7128777/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">hypocalcemia</a>, so alongside that diet we raise our Greys with UV-B lighting and vitamin D3 supplementation — the combination that lets a bird actually absorb the calcium it eats — and getting nutrition right from day one is how a healthy chick stays healthy.</p>
         <img src="/african-grey-parrot-health-review.webp"
           alt="Healthy hand-raised African Grey parrot at C.A.Gs — avian-vet certified, CITES Appendix I documented"
           width="440" height="320" loading="lazy" decoding="async"
@@ -771,7 +804,7 @@ const howToSchema = {
           <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>CITES Appendix I captive-bred certificate</strong> — proof your Grey was never wild-caught</span></li>
           <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Hatch certificate + closed leg band</strong> — the aviary-raised paper trail</span></li>
           <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>PCR DNA sexing certificate</strong> — every one of <a href="/dna-tested-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">our DNA-tested African Greys</a> has its biological sex confirmed by lab, not by sight</span></li>
-          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Board-certified avian-vet health certificate</strong> — backed by <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12560886/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">PBFD</a> &amp; <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2168798/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Polyomavirus</a> screening</span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Board-certified avian-vet health certificate</strong> — backed by <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12560886/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">PBFD</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2168798/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Polyomavirus</a> &amp; psittacosis screening</span></li>
           <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>3-day written health guarantee</strong> + the exact diet plan your bird is already eating</span></li>
         </ul>
         <p>A $200 deposit reserves your Grey and is applied to your final total; nationwide IATA shipping is arranged separately — <strong>$185 airport pickup</strong> or <strong>$350 home delivery</strong>.</p>
@@ -934,9 +967,10 @@ const howToSchema = {
       <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">After Pickup</p>
       <h3 class="font-lora font-bold text-logo-dark mb-5">What Happens in Your African Grey's First 30 Days at Home?</h3>
       <div class="space-y-4 text-stone-600 leading-relaxed" style="max-width:70ch;">
-        <p><strong>Week one — let them settle.</strong> Travel is stressful for any bird. For the first few days, keep the cage in a calm, central room, offer the exact diet your C.A.Gs Grey is already eating, and resist the urge to handle constantly. Talk softly, sit nearby, and let curiosity do the work. A new Grey that is quiet at first is normal — it is taking in everything.</p>
-        <p><strong>Weeks two to three — build trust.</strong> Working through the bonding and step-up routine in our <a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot care guide</a> turns those first wary days into real trust: start short, positive sessions — a favorite treat through the bars, then from your hand, then step-ups. Greys are sensitive and shut down under pressure, so reward and never punish, and keep words and routines consistent. This is usually when the first mimicked sounds appear.</p>
-        <p><strong>Week four and beyond — enrich and engage.</strong> Rotate foraging toys, puzzles, and safe novelty to keep that remarkable brain busy. Aim for daily out-of-cage time and real interaction, not just proximity. Book a wellness check with an avian veterinarian to establish care, and keep our number handy — Teri answers diet, behavior, and enrichment questions long after your bird comes home. Most C.A.Gs owners find their Grey is fully settled, talking, and bonded within the first month.</p>
+        <p>"The first week isn't about training — it's about trust." That's one of the first things <strong>Teri</strong> tells every C.A.Gs family before their Grey leaves for its new home, and it shapes everything we coach you through in the first month.</p>
+        <p><strong>Week one — let them settle.</strong> Many first-time owners worry when their African Grey goes quiet for a few days, eating a little less and studying everything from a favorite perch. "Don't panic if your Grey acts like a little detective the first week," Teri explains. "They're incredibly intelligent — before they decide a new home is safe, they want to study everything, and everyone." Keep the cage in a calm, central room, offer the exact diet your C.A.Gs Grey is already eating, and let curiosity do the work. One recent family called Teri three days after bringing home their young Congo, worried it wasn't talking, wasn't playing much, and just sat near the cage door — her advice was simply, "Give him time. Sit nearby. Read a book. Let him watch you without pressure."</p>
+        <p><strong>Weeks two to three — build trust.</strong> By the second week that same Congo was stepping up confidently and waiting at the cage door for the family each morning — the arc we see again and again. The bonding and step-up routine in our <a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot care guide</a> turns those first wary days into real trust: keep routines predictable, avoid overwhelming visitors, and start short, positive sessions — a favorite treat through the bars, then from your hand, then step-ups. Greys are sensitive and shut down under pressure, so reward and never punish. This is usually when the first mimicked sounds appear.</p>
+        <p><strong>Week four and beyond — enrich and engage.</strong> Rotate foraging toys, puzzles, and safe novelty to keep that remarkable brain busy, aim for daily out-of-cage time, and book a wellness check with an avian veterinarian to establish care. Keep our number handy — Teri answers diet, behavior, and enrichment questions long after your bird comes home. As she puts it, "You're not just bringing home a pet — you're beginning a friendship that can last decades, and the first 30 days are the foundation for everything that comes after."</p>
       </div>
     </div>
   </section>
@@ -946,7 +980,7 @@ const howToSchema = {
     <div class="max-w-4xl mx-auto text-center mb-10">
       <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Verified Buyers</p>
       <h2 class="font-lora font-bold text-logo-dark">What Do Families Say After Adopting a C.A.Gs African Grey?</h2>
-      <p class="text-stone-600 leading-relaxed text-[15px] mx-auto mt-4" style="max-width:70ch;">These C.A.Gs reviews come from verified buyers, not anonymous ratings. Every buyer we've worked with started the same way — worried about scams, unsure whether the bird would arrive healthy, and wondering if the <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">CITES documentation would actually be in order</a> when the crate landed. What changed the equation was the paperwork packet Teri sends home with every Grey — avian vet health certificate, CITES captive-bred record, DNA sex cert, hatch certificate, and a written care plan — plus the fact that she answers follow-up questions for as long as it takes. The families below weren't sure at first; now their Greys are the loudest members of the household.</p>
+      <p class="text-stone-600 leading-relaxed text-[15px] mx-auto mt-4" style="max-width:70ch;">These C.A.Gs reviews come from verified buyers, not anonymous ratings. Every buyer we've worked with started the same way — worried about scams, unsure whether the bird would arrive healthy, and wondering if the <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">CITES documentation would actually be in order</a> when the crate landed. What changed the equation was the paperwork packet Teri sends home with every Grey — avian vet health certificate, CITES captive-bred record, PCR DNA sex cert, hatch certificate, and a written care plan — plus the fact that she answers follow-up questions for as long as it takes. The families below weren't sure at first either — like Richard in Winter Haven, Florida, who was hesitant to buy a bird online and now calls his Congo "the star of our family, talking and entertaining us daily."</p>
     </div>
     <Testimonials variant="grid" testimonials={bottomReviews} />
   </section>
@@ -1005,7 +1039,7 @@ const howToSchema = {
           Your browser does not support the video tag.
         </video>
       </div>
-      <p class="text-stone-500 text-sm mt-4" style="max-width:70ch;margin-left:auto;margin-right:auto;">Hand-raised Congo &amp; Timneh African Greys at our Midland, TX home aviary — our guide to <a href="/blog/african-grey-parrot-talking-ability/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">how African Greys learn to talk</a> covers vocabulary, timeline, and what to expect. <span class="text-stone-400">(YouTube URL coming soon — breeder to supply.)</span></p>
+      <p class="text-stone-500 text-sm mt-4" style="max-width:70ch;margin-left:auto;margin-right:auto;">That's <strong>Maxy</strong>, one of our hand-raised Congo African Greys, talking at our Midland, TX home aviary — and our guide to <a href="/blog/african-grey-parrot-talking-ability/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">how African Greys learn to talk</a> covers vocabulary, timeline, and what to expect. <span class="text-stone-400">(YouTube URL coming soon — breeder to supply.)</span></p>
     </div>
   </section>
 
@@ -1171,6 +1205,7 @@ const howToSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} />
   {productSchema.map(p => <script type="application/ld+json" set:html={JSON.stringify(p)} />)}
   <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(birdListSchema)} />
 </div>
 </BaseLayout>
 
