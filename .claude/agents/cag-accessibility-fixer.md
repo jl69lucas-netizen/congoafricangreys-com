@@ -42,6 +42,22 @@ A fix is not complete until Lighthouse confirms ≥95 Accessibility score (targe
 2. **For single page:** Ask for the page slug. Read `site/content/[slug]/index.html`.
 3. **For full site audit:** Use batch mode (see below).
 
+> **⚠️ SCOPE — the LIVE site is `src/pages/` + `src/components/` (Astro), NOT `site/content/`.** (Confirmed 2026-06-05.) The grep/sed audit commands below were written for the legacy `site/content/*.html` export. For real fixes you almost always edit **`src/pages/<slug>/index.astro`** and the **shared components in `src/components/`** (Header, Footer, MobileTabBar, `cag-library/JumpRail|Testimonials|SplitFeature|BirdCard`, etc.). One component fix propagates to every page that uses it — verify the rendered result in `dist/` after `npm run build`, never trust source greps for scoped CSS/schema (Astro hashes class selectors + extracts CSS to `dist/_astro/*.css`).
+
+## CAG-Specific Antipatterns (found in real audits — check these every time)
+
+**A11y-1: SVG inside CSS `content:` (BROKEN icon + run-together text).** `content` only renders plain text — it CANNOT render `<svg>` markup. A rule like `.badge::before { content: '<svg ...></svg> '; }` dumps the raw SVG string (or drops it as invalid) AND, when the separator space lives only in that pseudo-element, adjacent badges run together (e.g. "Hand-Fed from Week 212–16 Week Socialization"). **Fix:** put a real inline `<svg>` in the markup (site convention — see `cag-hero-3split.astro`), `stroke="currentColor"` so it inherits the text color (white on dark/green bars, `#2D6A4F` on light). Spacing comes from the flex `gap` on the wrapper. Detect: `grep -rn "content: '<svg\|content:\"<svg" src/`. (Fixed on captive-bred / hand-raised / dna-tested pages, 2026-06-05.)
+
+**A11y-2: clay on green/dark = contrast fail.** `--clay #e8604c` only clears AA as *large* text/fill. Enforce DESIGN.md: nav links/active states on the green header → `text-white` (distinguish active with `underline underline-offset-4 font-semibold`, never clay). Small clay TEXT on light → `#b04228` (4.5:1). Clay text on a dark *tinted* chip (e.g. `bg-clay/15` on `#241c18`) → use clay-lt `#f08070` (the `/15` tint dilutes the bg below 4.5:1 for plain `text-clay`).
+
+**A11y-3: `bg-amber-500 text-white` badge = ~1.9:1 fail.** Use `bg-amber-500 text-amber-950` (dark text, vivid amber kept, ~7:1). Applies to BirdCard `family`/`amber` badge variants.
+
+**A11y-4: target-size (WCAG 2.5.8 AA = 24×24 CSS px).** Compact jump-rail / TOC links commonly fail. Bump `min-height` to ≥24px (we use 26px) + a little padding. Don't chase 44px (AAA) if it breaks a dense rail — 24px clears the axe/Lighthouse audit.
+
+**A11y-5: non-descriptive link text ("More", "Read more").** Add a destination-describing `aria-label` (Lighthouse honors it). Pattern: per-item optional `ariaLabel` prop → `aria-label={tab.ariaLabel ?? tab.label}`.
+
+**A11y-6: component-rendered `<img>` missing `width`/`height` (CLS audit).** Images passed as props (Testimonials avatars, SplitFeature `imageSrc`) render a shared `<img>` with no dims. Add `width`/`height` matching the CSS box ratio (`object-cover` + `aspect-*`/`w-12 h-12` means attrs won't distort) — e.g. `aspect-square`→`300×300`, `w-12 h-12`→`48×48`, `aspect-[5/4]`→`500×400`.
+
 ---
 
 ## WCAG 2.1 AA Audit Checklist

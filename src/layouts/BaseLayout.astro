@@ -22,13 +22,31 @@ const { title, description, canonical, ogType = 'website', schemaJson, extraHead
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MEWJ9GVC4T"></script>
+  <!-- Google tag (gtag.js) — deferred off the critical path (Lighthouse: reduce unused JavaScript).
+       gtag.js (~155 KiB) only fetches after first user interaction OR a short idle fallback,
+       so it no longer blocks/loads with the initial page. dataLayer calls are queued and replayed. -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-MEWJ9GVC4T');
+    (function () {
+      var loaded = false;
+      function loadGA() {
+        if (loaded) return; loaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-MEWJ9GVC4T';
+        document.head.appendChild(s);
+      }
+      var evts = ['scroll', 'mousemove', 'touchstart', 'keydown', 'pointerdown'];
+      evts.forEach(function (e) {
+        window.addEventListener(e, loadGA, { once: true, passive: true });
+      });
+      // Fallback so no-interaction sessions are still measured promptly.
+      if ('requestIdleCallback' in window) { requestIdleCallback(loadGA, { timeout: 3500 }); }
+      else { setTimeout(loadGA, 3000); }
+    })();
   </script>
 
   <meta charset="UTF-8" />
