@@ -41,7 +41,43 @@ head -3 [target_file] | grep "^---" && echo "ASTRO PAGE" || echo "LEGACY HTML PA
 | **Astro page** (`src/pages/**/*.astro`) | New site pages | Fix 3 (font-display), Fix 4 (LCP fetchpriority) only |
 | **Legacy HTML page** (`site/content/**/*.html`) | WordPress export | All 5 fixes |
 
-**If Astro page:** Skip Fix 1 (WooCommerce CSS) and Fix 2 (jQuery defer) — Astro doesn't have these. Skip Fix 5 (lazysizes) — Astro uses native lazy loading. Go directly to Fix 3.
+**If Astro page:** Skip Fix 1 (WooCommerce CSS) and Fix 2 (jQuery defer) — Astro doesn't have these. Skip Fix 5 (lazysizes) — Astro uses native lazy loading. Go directly to Fix 3. **Also apply Fix 6, 7, 8 below** (added 2026-06-05 — Astro/live-site reality).
+
+---
+
+## Astro Live-Site Fixes (src/pages + src/components) — added 2026-06-05
+
+> The live site is `src/pages/` + `src/components/`. Edit those, then `npm run build` and re-check `dist/`.
+
+### Fix 6: "Reduce unused JavaScript" — defer Google Analytics (gtag.js ~155 KiB)
+
+`async` is not enough — gtag.js still fetches with the initial page and Lighthouse counts ~108 KiB as unused. In `src/layouts/BaseLayout.astro`, REMOVE the `<script async src=".../gtag/js?id=...">` tag and instead inject it after first interaction OR a short idle fallback. Keep the inline `dataLayer`/`gtag('config', …)` calls — they queue and replay once the script loads:
+```js
+(function () {
+  var loaded = false;
+  function loadGA() { if (loaded) return; loaded = true;
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-MEWJ9GVC4T';
+    document.head.appendChild(s); }
+  ['scroll','mousemove','touchstart','keydown','pointerdown'].forEach(function(e){
+    window.addEventListener(e, loadGA, { once:true, passive:true }); });
+  if ('requestIdleCallback' in window) requestIdleCallback(loadGA, { timeout: 3500 });
+  else setTimeout(loadGA, 3000);
+})();
+```
+**Trade-off (state it):** GA fires on interaction or within ~3.5 s, so a sub-3.5 s no-interaction bounce is measured slightly later. Acceptable for this site; keeps GA off the critical path. Verify: `grep -c 'async src="https://www.googletagmanager.com/gtag/js' dist/index.html` → `0`.
+
+### Fix 7: 1st-party "unused JS" you can't see in the repo = Cloudflare-injected
+
+A 1st-party bundle on a hashed path (e.g. `/70de/…`) that is NOT in `src/` or `dist/` is **Cloudflare edge-injected** — Rocket Loader (look for `data-cf-settings`/`data-cf` and `cloudflare-static/…` on the live HTML) and/or email-obfuscation (`/cdn-cgi/scripts/.../email-decode.min.js`). **This is a Cloudflare dashboard fix, not a code fix:** Speed → Optimization → turn OFF **Rocket Loader** (it usually hurts modern Astro sites). Keep email obfuscation (small, anti-spam). Tell the user — do not hunt for it in the codebase.
+
+### Fix 8: Images missing intrinsic `width`/`height` (CLS audit)
+
+Lighthouse flags `<img>` without both `width` AND `height`. The usual offenders are **component-rendered images** passed via props (`Testimonials` avatars, `SplitFeature` `imageSrc`) — one shared `<img>` tag, no dims. Add `width`/`height` to the component's `<img>` matching its CSS box ratio (it uses `object-cover` so attrs don't distort): `aspect-square`→`300×300`, `w-12 h-12`→`48×48`, `w-16 h-16`→`64×64`, `aspect-[5/4]`→`500×400`, `aspect-[4/5]`→`400×500`. Audit script:
+```bash
+python3 -c "import re; h=open('dist/index.html').read(); print(len([t for t in re.findall(r'<img\b[^>]*>',h,re.I) if not(re.search(r'\bwidth=',t) and re.search(r'\bheight=',t))]))"
+```
+Also: any below-fold `<img>` without `loading=` → add `loading=\"lazy\" decoding=\"async\"` (e.g. the footer logo).
 
 ---
 
