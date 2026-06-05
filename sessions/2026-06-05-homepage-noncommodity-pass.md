@@ -11,6 +11,14 @@ Homepage is **~90% STRONG** already (breeder model copy + first-person pass did 
 3. Male-vs-Female intro (`index.astro` ~533) — dropped `"both make exceptional companions"` filler → first-person "in our experience hand-raising both…".
 4. `CompareTableE.astro` sub — same filler → specific **bold/headline Congo vs calmer, earlier-talking Timneh** contrast.
 
+## ✅ RESOLVED 2026-06-05 (commit b6f8f6c) — breeder fed material
+- **Per-bird card + schema** — added "Fully Weaned" badge + per-bird `ItemList` Product/Offer JSON-LD (6 birds).
+- **First-30-Days** — rewritten in Teri's real voice (the week-1 quiet-Congo story).
+- **History/Alex** — tied to real talking Congo **Maxy** + jump-link to the video; video caption now names Maxy.
+- **Reviews intro** — real named buyer outcome (Richard, Winter Haven FL).
+- **Health** — chlamydiosis/psittacosis screening + UV-B/D3 now confirmed → added site-wide + ledger updated.
+- **Video** — STILL placeholder (real YouTube URL pending — breeder to supply, deferred per instruction).
+
 ## ⚑ GAP-FLAGS — need real breeder material to lift STRONG → exceptional
 These are NOT fabrications I'll invent; they're prompts for Mark & Teri. Feed any of these and I'll weave them in (genuinely non-commodity, a generic LLM can't write them):
 
