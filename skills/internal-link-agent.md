@@ -180,10 +180,12 @@ Links must appear at the **beginning or middle** of a sentence — never at the 
 ### External URL Verification (Before Any External Link Insert)
 ```bash
 # Always verify external URLs return 200 before inserting
-url="https://www.cites.org/eng/app/appendices.php"
-status=$(curl -sI --max-time 10 "$url" | head -1 | awk '{print $2}')
+url="https://cites.org/eng/app/appendices.php"
+status=$(curl -sI -A "Mozilla/5.0" --max-time 10 "$url" | head -1 | awk '{print $2}')
 [ "$status" = "200" ] && echo "✅ Safe to link" || echo "❌ SKIP — HTTP $status"
 ```
+
+> **⚠️ Bot-block exception (learned 2026-06-05):** a curl 403/406 ≠ dead link. Some authority domains block non-browser user agents — **`cites.org` is the known case** (the recurring "CITES link is dead" was anti-bot blocking all along, not a broken URL — note the example above must use a browser UA, and the canonical host is `cites.org`, not `www.cites.org` which 301-hops). On a 403/406 for a known authority: retry with `-A "Mozilla/5.0"`, then browser-verify / accept user confirmation before skipping. Never drop a valid CITES/.gov/NIH citation on a bare curl 403. Also: cite a *species/topic* claim to the **specific resource page** (`parrots.org/encyclopedia/grey-parrot/`), not the org homepage.
 
 ## Why Claude Code + Playwright First
 

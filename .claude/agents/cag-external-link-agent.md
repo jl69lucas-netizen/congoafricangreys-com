@@ -90,6 +90,10 @@ echo "HTTP $status: $url"
 ```
 Only insert links that return 200 or 301 (permanent redirect to 200).
 
+> **⚠️ Bot-block exception (learned 2026-06-05):** some authority domains return **403/406 to curl** because they block non-browser user agents — they are NOT dead. **`cites.org` is the known case** (this is the "CITES link seems dead" confusion from earlier sessions — it was anti-bot blocking all along, not a broken URL). Before rejecting a known authority on a 403/406: (1) retry with a browser UA `curl -sI -A "Mozilla/5.0" "$url"`, and (2) if still blocked, verify in a real browser / accept user confirmation rather than auto-skipping. Never drop a valid CITES/government/authority citation just because curl got a 403.
+>
+> **Anchor-target precision (learned 2026-06-05):** when citing a source for a *species/topic* claim, link the **specific resource page**, not the org homepage. e.g. a sentence about African Grey biology → `https://parrots.org/encyclopedia/grey-parrot/` (the species profile), NOT `https://parrots.org/`. Reserve the homepage for generic "conservation groups such as the World Parrot Trust" org references. Prefer the canonical 200 URL over a `www.` variant that 301-hops.
+
 ### Step 3 — Match URLs to Page Context
 Read the page content and identify sentences where an authority link fits naturally:
 - Health claim → ASPCA, Avian vet resources, World Parrot Trust
