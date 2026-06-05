@@ -58,6 +58,8 @@ A fix is not complete until Lighthouse confirms ≥95 Accessibility score (targe
 
 **A11y-6: component-rendered `<img>` missing `width`/`height` (CLS audit).** Images passed as props (Testimonials avatars, SplitFeature `imageSrc`) render a shared `<img>` with no dims. Add `width`/`height` matching the CSS box ratio (`object-cover` + `aspect-*`/`w-12 h-12` means attrs won't distort) — e.g. `aspect-square`→`300×300`, `w-12 h-12`→`48×48`, `aspect-[5/4]`→`500×400`.
 
+**A11y-7: Direction-D lead-paragraph rule forcing `--ink` on dark-section paragraphs (DARK-ON-DARK fail).** (Found 2026-06-05; full writeup in MEMORY `reference_contrast_lead_paragraph_trap`.) When `color-contrast` reports a failing `<p>` whose **foreground is `#20342b`** (= `--ink`) on a *dark* bg (1.26–1.43:1), it's the lead-line rule `body.theme-d h1+p, h2+p { color: var(--ink) }` overriding light-text lead paragraphs (newsletter card, `bg-logo-dark` CTA). **It out-specifies Tailwind opacity utilities (`text-cream/80`) even without `!important`, so fix BOTH copies:** the homepage-scoped `.home-d h2+p{…!important}` in `src/pages/index.astro` AND the global rule in `src/styles/direction-d.css`. Fix = split size/line-height from color, scope color with `:not([style*="color"]):not([class*="text-cream"]):not([class*="text-white"])`. Same day: **`MobileTabBar.astro`** (`nav.md:hidden`, 10px labels — a separate component a homepage sweep misses) active `text-clay` #e8604c (3.38:1)→`text-[#b04228]`, inactive `text-stone-400` (2.58:1)→`text-stone-600`.
+
 ---
 
 ## WCAG 2.1 AA Audit Checklist

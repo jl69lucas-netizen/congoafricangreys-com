@@ -344,6 +344,7 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 - Added `--color-panel/line/mid/forest` to `global.css` (fixed undefined cag-library tokens site-wide) + Rule 28b (Two-Keyword Headers) to the SEO checklist.
 - **Continuation handoff:** `sessions/2026-05-29-homepage-build-progress.md` (read first next session; do NOT re-run grill-me).
 - Session brief: `sessions/2026-05-29-session-brief.md` (see "REBUILD v2" section).
+- **2026-06-05 addendum (a11y + non-commodity pass):** homepage a11y back to **100/100** (fixed the Direction-D lead-paragraph dark-on-dark trap + MobileTabBar contrast — see `cag-accessibility-fixer` A11y-7 + MEMORY `reference_contrast_lead_paragraph_trap`). Ran the **non-commodity pass** (audit-all → rewrite-only-weak; homepage was ~90% already strong) — added Teri's First-30-Days voice, **Maxy** (talking Congo in the video), per-bird **ItemList Product/Offer schema**, and newly-confirmed **psittacosis + UV-B/D3** entities. **Verified-Claim Ledger expanded** (psittacosis, UV-B/D3, Maxy → ✅) in `cag-entity-incorporation-agent.md` + `sessions/2026-06-03-homepage-entity-map.md`. External-link skill+agent now warn that **cites.org 403s to curl = bot-block, not dead**. Details: `sessions/2026-06-05-homepage-noncommodity-pass.md`.
 
 ## Known Issues
 - Homepage Video section: using a YouTube **placeholder** (embed + VideoObject schema scaffold) — breeder to supply the real URL later.
