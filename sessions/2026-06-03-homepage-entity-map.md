@@ -11,7 +11,10 @@ Confirmed by breeder 2026-06-03. **Never assert beyond this list without re-conf
 - ✅ **Board-certified avian veterinarian**
 - ✅ 3-day written health guarantee · CITES Appendix I captive-bred · USDA AWA license · hatch certificate + closed band
 - ✅ Shipping: **$185 airport pickup / $350 home delivery** (Delta, United, American cargo)
-- ❌ NOT confirmed (do not use): Chlamydiosis/psittacosis testing, UV-B/D3 supplementation specifics, specific incubation temps for the egg product unless breeder confirms.
+- ✅ **Chlamydiosis / psittacosis (Chlamydia psittaci) screening** (confirmed by breeder 2026-06-05)
+- ✅ **UV-B lighting + vitamin D3 supplementation** (confirmed by breeder 2026-06-05; ties to calcium absorption / hypocalcemia prevention)
+- ✅ **Named bird: Maxy** = the talking Congo in the homepage video (confirmed 2026-06-05); aviary roster lives in `index.astro` `birds[]`
+- ❌ NOT confirmed (do not use): specific incubation temps for the egg product unless breeder confirms.
 
 ## The 4-Move Loop (the format)
 1. **Structural Critique** — read the live section; name what is entity-thin / narrative-only.
