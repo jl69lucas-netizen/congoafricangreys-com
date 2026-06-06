@@ -502,9 +502,9 @@ Every full-length page build delivers 4 documents as separate outputs:
 4. **Linking Strategy Map** — complete internal link source→target table, external authority link catalog by category
 
 **Rule 61 — Phone Number Policy (CRITICAL)**
-Phone number `402-696-0317` MUST appear ONLY in:
-- `src/components/Footer.astro` (footer display — `tel:4026960317`)
-- Organization schema telephone field in `src/components/Schema.astro` (E.164: `+14026960317`)
+Phone number `281-545-3169` MUST appear ONLY in:
+- `src/components/Footer.astro` (footer display — `tel:2815453169`)
+- Organization schema telephone field in `src/components/Schema.astro` (E.164: `+12815453169`)
 - Individual page Organization schema blocks where a `telephone` field exists
 Phone MUST NOT appear in:
 - Hero sections, body copy, CTA buttons, mid-page contact sections, or any page content

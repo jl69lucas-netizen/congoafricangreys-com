@@ -22,7 +22,7 @@ Owner:              Mark & Teri Benjamin
 Street:             2508 Briaroaks Ct           ← HIDE on public/service-area listings
 City / State / ZIP: Midland, TX 79707
 Country:            United States
-Phone:              +1-402-696-0317             ← NOTE: 402 = Nebraska area code (see NAP flag)
+Phone:              +1-281-545-3169             ← corrected 2026-06-06 (TX number; old 402/NE number retired)
 Email:              Info@congoafricangreys.com
 Website:            https://congoafricangreys.com
 Facebook:           https://www.facebook.com/people/Congo-African-grey/61571657313840/
@@ -42,10 +42,10 @@ Long description: (see credentials.md / agent business-info block)
 
 ---
 
-## 1. GOOGLE BUSINESS PROFILE  (the named priority — USER-DRIVEN)
+## 1. GOOGLE BUSINESS PROFILE  (SKIPPED per user 2026-06-06 — revisit later)
 
-**Status:** prepped, awaiting user. **Cannot be automated by me** (Google login +
-verification are user-only).
+**Status:** DEFERRED at user request. Kept here as a prepped kit for when you're ready.
+**Cannot be automated by me** (Google login + verification are user-only). Resume any time.
 
 **Setup decisions (my recommendations):**
 - Business type → **Service-area business** (NOT storefront)
@@ -58,16 +58,41 @@ verification are user-only).
 **Verification:** Google will offer postcard / phone / email / video — **only you can
 complete it.** Pick whichever Google offers fastest (often phone or video for SABs).
 
-**Blocking inputs needed from user (see chat):**
-1. Which Google account owns it?  2. Hide home address? (rec: yes)
-3. Keep 402 phone or use a TX number?  4. Photos ready?
+**Inputs needed when resumed:** 1. Which Google account owns it? 2. Hide home address?
+(rec: yes) 3. Photos ready? (phone is now resolved → +1-281-545-3169)
 
-**Why it's still worth the friction:** it's the foundation citation — Yelp, Bing, Apple,
-MapQuest, and dozens of aggregators cross-reference Google's NAP. Get it exact here first.
+**Why it's worth the friction later:** foundation citation — Yelp, Bing, Apple, MapQuest,
+and dozens of aggregators cross-reference Google's NAP.
 
 ---
 
-## 2. FIRST-WAVE SUBMISSION TABLE (after GBP)
+## ORDER OF ATTACK — EASIEST → HARDEST (GBP skipped)
+
+Ranked by friction (account needed? verification? payment? audience-fit). Start at the top.
+
+| Rank | Target | Difficulty | Why this rank |
+|---|---|---|---|
+| 🟢 1 | **Hoobly** | Easiest | Free, instant post, no real verification, huge AG volume. Fast win. |
+| 🟢 2 | **Petzlover** | Easiest | "List for free", quick account, high AG traffic. |
+| 🟢 3 | **BirdsNow** | Easy | Free tier, simple "Sell Your Bird" form. |
+| 🟢 4 | **BirdTracks.io** | Easy | Free, UNTAPPED (0 competitors). Submit = one structured email (I draft, you send). |
+| 🟡 5 | **Parrots Mag Registry** | Easy-Med | Free but submit by email/phone to the magazine (I draft, you send). |
+| 🟡 6 | **BirdBreeders.com** | Medium | Account + list aviary (TX page). Verify free vs paid tier first. |
+| 🟡 7 | **Yelp** | Medium | Account + (sometimes) phone verify. High trust/review value. Set SAB, hide address. |
+| 🟡 8 | **FaunaClassifieds** | Medium | Free member ads; registration + forum norms. |
+| 🟠 9 | **Bing Places** | Med-Hard | Microsoft acct + verification (can import from Google later). |
+| 🟠 10 | **Apple Business Connect** | Med-Hard | Apple ID + verification. |
+| 🟠 11 | **AFA listing** | Med-Hard | Member benefit — confirm/claim via the org. |
+| 🔴 12 | **BBB** | Hardest (free part) | Listing free but heavy form; accreditation is paid (ask first). |
+| ⏸️ — | **Google Business Profile** | Deferred | Skipped per user; resume when ready. |
+
+**Recommended starting point: Hoobly** — zero account friction, free, instant, and it's
+one of the Tier-2 platforms competitors already rely on. Fastest proof-of-concept for the
+co-drive workflow before we hit the verification-heavy ones. Trade-off: Hoobly's domain
+authority is lower than Yelp/Bing, so it's a warm-up win, not the highest-SEO-value link —
+but starting easy de-risks the workflow and gets a live listing today.
+
+## FIRST-WAVE SUBMISSION TABLE (detail)
 
 | # | Target | Login needed? | Free? | Submission method | Per-site notes |
 |---|---|---|---|---|---|
@@ -102,7 +127,9 @@ Profile bio + signature link, after genuine participation.
 
 ---
 
-## NAP FLAG (for user decision)
-Phone **+1-402-696-0317** is a **Nebraska (402)** area code on a **Midland, TX** business.
-Not blocking, but a non-local number is a minor local-SEO/trust signal mismatch and will be
-replicated across every citation once we start. Decide now: keep it, or swap to a TX number.
+## NAP FLAG — RESOLVED 2026-06-06
+Phone corrected to **+1-281-545-3169** (Texas / 281 Houston area code). The old
+**+1-402-696-0317** (Nebraska) number has been retired site-wide: Footer.astro,
+Schema.astro, index.astro + scams-page schema, credentials.md, and all agent/skill refs.
+NAP is now in-state consistent. (281 is Houston-metro, not Midland-432, but it's an
+in-state business line — a clear improvement over the out-of-state number.)

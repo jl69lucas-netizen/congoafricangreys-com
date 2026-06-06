@@ -13,7 +13,7 @@ NAP Citation Agent compares every directory listing against this file.
 | **Display Name** | C.A.Gs – Midland, TX |
 | **Legal / Alternate Name** | Congo African Greys For Sale |
 | **Website** | congoafricangreys.com |
-| **Phone** | +1-402-696-0317 |
+| **Phone** | +1-281-545-3169 |
 | **Email** | Info@congoafricangreys.com |
 | **Street Address** | 2508 Briaroaks Ct |
 | **City / State / ZIP** | Midland, TX 79707 |

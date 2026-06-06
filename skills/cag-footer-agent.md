@@ -77,7 +77,7 @@ Column 4: Legal
   - Refund Policy → /refund-policy/
 
 Column 5: Contact
-  - Phone: +1-402-696-0317   (master NAP — docs/reference/credentials.md)
+  - Phone: +1-281-545-3169   (master NAP — docs/reference/credentials.md)
   - Email: [INQUIRIES_EMAIL_TBD]
   - Address: [BREEDER_LOCATION_TBD — city-level only; see privacy rule]
   - Hours: Open 24/7
@@ -90,7 +90,7 @@ Bottom Bar:
 ```
 
 > **NAP consistency:** Name / Address / Phone must match `docs/reference/credentials.md`
-> exactly (the `cag-nap-citation-agent` audits this). Phone is **+1-402-696-0317**.
+> exactly (the `cag-nap-citation-agent` audits this). Phone is **+1-281-545-3169**.
 > Per the site privacy rule, the footer uses **city-level** location only — never a street address.
 
 ---
@@ -111,7 +111,7 @@ When auditing footers across pages:
 1. Confirm the page renders `Footer.astro` (not legacy WordPress/Astra `site-footer` markup).
 2. Confirm all 5 columns are present (flag `INCOMPLETE` if 2+ missing).
 3. Confirm Forest Green background + Clay CTA (no orange).
-4. Confirm phone = `+1-402-696-0317`, CITES line says **Appendix I**, copyright year current.
+4. Confirm phone = `+1-281-545-3169`, CITES line says **Appendix I**, copyright year current.
 5. Confirm no dog terms (Available Puppies / Non-Shedding / Toy / Mini) and no 🦜.
 
 ---

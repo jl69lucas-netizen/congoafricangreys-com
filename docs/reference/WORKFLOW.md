@@ -358,7 +358,7 @@ AEO/GEO GATE — RUN IN THIS ORDER:
    → Rule 58: 3 anchor text strategies used — exact match, conversational, branded (never repeat same anchor)
    → Rule 59: 5-Tier Section Creation Form completed for all sections
    → Rule 60: 4-Part Content Delivery Format present in output
-   → Rule 61: Phone number (402-696-0317) appears ONLY in footer/schema — not in body copy
+   → Rule 61: Phone number (281-545-3169) appears ONLY in footer/schema — not in body copy
    → Rule 62: Internal links use Appendix A canonical URLs from skills/cag-seo-master-checklist.md
 ```
 
@@ -642,5 +642,5 @@ Before building any new page, check `docs/reference/page-inventory.md` to confir
 - No existing page already covers this topic at a different URL
 - If URLs will differ from what's linked, add a redirect BEFORE building the page
 10. **Data Files Are Truth** — Never fabricate data. All claims come from: data files, GSC CSV exports, real page fetches, or direct breeder input.
-11. **Phone Number Policy (Rule 61)** — Phone number 402-696-0317 appears ONLY in the footer and schema markup. All body copy CTAs must link to `/contact-us/` form — never display or link a phone number in page body content.
+11. **Phone Number Policy (Rule 61)** — Phone number 281-545-3169 appears ONLY in the footer and schema markup. All body copy CTAs must link to `/contact-us/` form — never display or link a phone number in page body content.
 12. **Image-Specs Lookup Required** — Before any image generation or infographic creation, read `data/image-specs.json` to confirm the correct image source type, dimensions, and placement for the current page type.
