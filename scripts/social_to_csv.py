@@ -40,7 +40,7 @@ POSTS = [
                  "Every grey we raise is hand-fed from hatch, fully weaned, DNA-sexed, and goes home "
                  "with full CITES Appendix I + health paperwork. Family aviary in Midland, TX since 2014.\n\n"
                  "Comment or DM us \"AVAILABLE\" and we'll send you who's looking for a home right now. 👇"),
-        "first_comment": IG_TAGS, "link": "https://congoafricangreys.com/available/",
+        "first_comment": IG_TAGS, "link": "https://congoafricangreys.com/african-grey-parrot-for-sale/",
         "media": "talking-african-grey-parrots-video.mp4 (REFRAME to 9:16 first)", "status": "draft",
     },
     {
@@ -48,7 +48,7 @@ POSTS = [
         "text": ("Maxy is 100% certain he's a person. 🗣️ Our hand-raised Congo African Greys are talkers "
                  "— and this is just a Tuesday. Follow for weekly parrot updates from our Midland, TX "
                  "aviary. #africangrey #talkingparrot #parrottok #fyp #congoafricangrey #parrotsoftiktok"),
-        "first_comment": "", "link": "https://congoafricangreys.com/available/",
+        "first_comment": "", "link": "https://congoafricangreys.com/african-grey-parrot-for-sale/",
         "media": "talking-african-grey-parrots-video.mp4 (REFRAME to 9:16 first)", "status": "draft",
     },
     {
@@ -56,9 +56,9 @@ POSTS = [
         "text": ("Maxy is one of our hand-raised Congo African Greys here at C.A.Gs in Midland, TX. "
                  "African Greys are the best talkers in the parrot world — and Maxy proves it daily. "
                  "Every bird we raise is captive-bred, DNA-sexed, and placed with full CITES Appendix I "
-                 "documentation. See available greys → https://congoafricangreys.com/available/\n"
+                 "documentation. See available greys → https://congoafricangreys.com/african-grey-parrot-for-sale/\n"
                  "#africangrey #talkingparrot #congoafricangrey #shorts"),
-        "first_comment": "", "link": "https://congoafricangreys.com/available/",
+        "first_comment": "", "link": "https://congoafricangreys.com/african-grey-parrot-for-sale/",
         "media": "talking-african-grey-parrots-video.mp4 (REFRAME to 9:16 first)", "status": "draft",
     },
     # ---- 2026-06-10 : Maxy story on Facebook ----
@@ -71,8 +71,8 @@ POSTS = [
                  "We've raised greys as a family here in Midland, TX since 2014. Every bird is captive-bred "
                  "in the USA, DNA-sexed, vet-checked, and goes home with full CITES Appendix I and hatch "
                  "paperwork. We ship nationwide — $185 airport pickup or $350 home delivery.\n\n"
-                 "See who's available → https://congoafricangreys.com/available/\n#africangrey #congoafricangrey #talkingparrot"),
-        "first_comment": "", "link": "https://congoafricangreys.com/available/",
+                 "See who's available → https://congoafricangreys.com/african-grey-parrot-for-sale/\n#africangrey #congoafricangrey #talkingparrot"),
+        "first_comment": "", "link": "https://congoafricangreys.com/african-grey-parrot-for-sale/",
         "media": "talking-african-grey-parrots-video.mp4", "status": "draft",
     },
     # ---- 2026-06-11 : Pinterest "do greys talk?" ----
@@ -119,7 +119,7 @@ POSTS = [
                  "how socialized they are.\n\nHere at C.A.Gs we hand-raise and fully wean every chick on a "
                  "fresh, varied diet before they go home. Family aviary, Midland TX, since 2014 · captive-bred "
                  "· DNA-sexed · CITES Appendix I.\n\nDM us \"AVAILABLE\" to meet our current greys. 👇"),
-        "first_comment": IG_TAGS_DIET, "link": "https://congoafricangreys.com/available/",
+        "first_comment": IG_TAGS_DIET, "link": "https://congoafricangreys.com/african-grey-parrot-for-sale/",
         "media": "African-grey-pair-eating.mp4", "status": "draft",
     },
     # ---- 2026-06-16 : Flock trust on YouTube (main) + FB ----
@@ -135,10 +135,10 @@ POSTS = [
                  "• Hand-raised, fully weaned temperament (placed at 12–16 weeks)\n"
                  "• Nationwide shipping — $185 airport pickup or $350 home delivery\n\n"
                  "Looking for an African Grey near you? We ship to all 50 states. "
-                 "See who's available → https://congoafricangreys.com/available/\n"
+                 "See who's available → https://congoafricangreys.com/african-grey-parrot-for-sale/\n"
                  "Questions? Info@congoafricangreys.com · +1-281-545-3169\n"
                  "#africangrey #congoafricangrey #africangreyparrot #talkingparrot #parrotbreeder"),
-        "first_comment": "", "link": "https://congoafricangreys.com/available/",
+        "first_comment": "", "link": "https://congoafricangreys.com/african-grey-parrot-for-sale/",
         "media": "buy-african-grey-parrot-near-me.mp4", "status": "draft",
     },
     {
@@ -150,8 +150,8 @@ POSTS = [
                  "captive-bred, DNA-sexed, vet-checked, and with full CITES Appendix I + hatch documentation. "
                  "We ship nationwide — $185 airport pickup or $350 home delivery, to all 50 states.\n\n"
                  "If you've been searching for an African Grey \"near me,\" near is wherever you are. "
-                 "Come meet our flock → https://congoafricangreys.com/available/\n#africangrey #congoafricangrey #parrotbreeder"),
-        "first_comment": "", "link": "https://congoafricangreys.com/available/",
+                 "Come meet our flock → https://congoafricangreys.com/african-grey-parrot-for-sale/\n#africangrey #congoafricangrey #parrotbreeder"),
+        "first_comment": "", "link": "https://congoafricangreys.com/african-grey-parrot-for-sale/",
         "media": "buy-african-grey-parrot-near-me.mp4", "status": "draft",
     },
 ]

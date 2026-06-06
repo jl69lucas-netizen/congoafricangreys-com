@@ -21,7 +21,7 @@ When you bring a grey home from us, you get:
 • Hand-raised, fully weaned temperament (placed at 12–16 weeks)
 • Nationwide shipping — $185 airport pickup or $350 home delivery
 
-Looking for an African Grey near you? We ship to all 50 states. See who's available → https://congoafricangreys.com/available/
+Looking for an African Grey near you? We ship to all 50 states. See who's available → https://congoafricangreys.com/african-grey-parrot-for-sale/
 Questions? Info@congoafricangreys.com · +1-281-545-3169
 
 #africangrey #congoafricangrey #africangreyparrot #talkingparrot #parrotbreeder
@@ -39,7 +39,7 @@ Four of our greys, and not one hesitates to step up to a hand. That's not luck �
 
 We're a family aviary here in Midland, TX, raising African Greys since 2014. Every bird goes home captive-bred, DNA-sexed, vet-checked, and with full CITES Appendix I + hatch documentation. We ship nationwide — $185 airport pickup or $350 home delivery, to all 50 states.
 
-If you've been searching for an African Grey "near me," near is wherever you are. Come meet our flock → https://congoafricangreys.com/available/
+If you've been searching for an African Grey "near me," near is wherever you are. Come meet our flock → https://congoafricangreys.com/african-grey-parrot-for-sale/
 
 #africangrey #congoafricangrey #parrotbreeder
 
