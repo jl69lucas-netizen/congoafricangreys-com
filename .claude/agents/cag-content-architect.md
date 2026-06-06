@@ -118,7 +118,10 @@ Reader Profile:
 | FAQ/PAA content | faq-agent or paa-agent |
 | Framework selection | This agent |
 | Full page build (new or rebuild) | `cag-seo-master-checklist` skill FIRST → then page builder agent |
+| Interior/informational page (health, shipping, faq, care, about, why-choose, scam, policy, etc.) | `MANUAL INTERIOR-PAGE CHECKLIST.md` + master-skill *Interior-Page Profile* → then the page builder agent |
 | Image/infographic planning | Read `data/image-specs.json` → image-prompt-generator skill or cag-infographic-builder agent |
+
+> **Interior-page routing rule:** when the requested page is informational/secondary (NOT a comparison, location, "…for-sale", or blog page), the builder MUST follow `MANUAL INTERIOR-PAGE CHECKLIST.md` (Hero → CTA) and the master skill's *Interior-Page Profile*. These pages reuse the homepage design + method (first-person voice, two-keyword headers, 4-Move entity loop, seam-logo dividers, GEO/AEO blocks, AA + perf gates), keep hero/counter/key-takeaway/TOC/FAQ/CTA, drop money/compare-only sections, and ADD `BreadcrumbList` schema.
 
 ---
 

@@ -22,6 +22,25 @@ description: Master SEO execution guide for all CAG pages (except location pages
 
 ---
 
+## INTERIOR-PAGE PROFILE (health · shipping · faq · care/resource · about · why-choose · scam · policy · etc.)
+
+These informational/secondary pages use the **homepage design + method**. The human, copy-paste,
+verify-each-step build guide is **`MANUAL INTERIOR-PAGE CHECKLIST.md`** (repo root, Hero → CTA).
+
+**Same as the homepage:** first-person C.A.Gs voice · two-keyword conversational headers (Rule 28b) ·
+full H1–H6 band · the 4-Move entity loop + Verified-Claim Ledger · woven mid-sentence links ·
+"Honesty Policy" humor · GEO/AEO declarative ≤320-char answer blocks · seam-logo dividers
+(`.cag-seam` + `/cag-footer-logo.png`) · AA contrast + Lighthouse perf gates · 5-element image SEO.
+
+**Deltas vs the homepage:**
+- **KEEP:** hero · counter snippet · key-takeaway/BLUF · TOC (if >1,500 words) · ≥1 trust element · FAQ · final CTA/contact.
+- **DROP** (money/comparison-page-owned): product/bird grid · breeding-pairs · full compare-table — link out instead.
+- **ADD `BreadcrumbList` schema** (interior pages get it; the homepage omits it).
+
+**Excludes (own structure, do NOT use this profile):** comparison · location · all "…for-sale" · blog posts.
+
+---
+
 ## HOMEPAGE-SPECIFIC RULES
 
 **Primary keyword: `african grey parrot breeder`**
