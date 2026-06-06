@@ -34,7 +34,7 @@ Fallbacks if a handle is ever taken (use the SAME one everywhere): `congoafrican
 **Bio (Facebook / Pinterest / YouTube — longer):**
 > Here at C.A.Gs in Midland, TX, we've hand-raised Congo & Timneh African Greys since 2014. Every bird is captive-bred in the USA, DNA-sexed, vet-checked, and placed with full CITES Appendix I + hatch documentation. Ships nationwide — $185 airport / $350 home. Questions? Info@congoafricangreys.com · +1-281-545-3169.
 
-**Link (all):** https://congoafricangreys.com (Pinterest/TikTok: deep-link to /available/ or /congo-african-grey-for-sale/)
+**Link (all):** https://congoafricangreys.com (Pinterest/TikTok: deep-link to /african-grey-parrot-for-sale/ or /congo-african-grey-for-sale/)
 
 > Do NOT use the generic 🪶 if you'd rather stay icon-free; never use 🦜 (it reads as a green parrot, not a grey). Text contexts: [CAG]/[TAG].
 

@@ -24,7 +24,7 @@ Comment or DM us "AVAILABLE" and we'll send you who's looking for a home right n
 #africangrey #africangreyparrot #congoafricangrey #talkingparrot #africangreysofinstagram #greyparrot #parrotsofinstagram #parrotlove #parrotlife #birdsofinstagram #parrotbreeder #captivebred #dnasexed #ethicalbreeder #usdalicensed #citesappendixI #handraised #parrottok #smartbird #midlandtx #texasparrots #africangreytexas
 
 ### Notes
-- Best time: weekday 6–8pm ET. Pair with on-screen captions (most watch muted). Link target: /available/
+- Best time: weekday 6–8pm ET. Pair with on-screen captions (most watch muted). Link target: /african-grey-parrot-for-sale/
 
 ---
 
@@ -42,7 +42,7 @@ Maxy is 100% certain he's a person. 🗣️ Our hand-raised Congo African Greys 
 ## YouTube Short (same reframed 9:16 file)
 **Title (≤60):** Our African Grey Maxy Won't Stop Talking 🗣️ #shorts
 ### Description
-Maxy is one of our hand-raised Congo African Greys here at C.A.Gs in Midland, TX. African Greys are the best talkers in the parrot world — and Maxy proves it daily. Every bird we raise is captive-bred, DNA-sexed, and placed with full CITES Appendix I documentation. See available greys → https://congoafricangreys.com/available/
+Maxy is one of our hand-raised Congo African Greys here at C.A.Gs in Midland, TX. African Greys are the best talkers in the parrot world — and Maxy proves it daily. Every bird we raise is captive-bred, DNA-sexed, and placed with full CITES Appendix I documentation. See available greys → https://congoafricangreys.com/african-grey-parrot-for-sale/
 #africangrey #talkingparrot #congoafricangrey #shorts
 > Hand off full YouTube SEO to @cag-video-seo-agent.
 
@@ -58,7 +58,7 @@ He's one of our hand-raised Congo African Greys, and if you've never lived with 
 
 We've raised greys as a family here in Midland, TX since 2014. Every bird is captive-bred in the USA, DNA-sexed, vet-checked, and goes home with full CITES Appendix I and hatch paperwork. We ship nationwide — $185 airport pickup or $350 home delivery.
 
-If you've been thinking about adding a grey to your home, we'd love to talk you through it. See who's available → https://congoafricangreys.com/available/
+If you've been thinking about adding a grey to your home, we'd love to talk you through it. See who's available → https://congoafricangreys.com/african-grey-parrot-for-sale/
 
 #africangrey #congoafricangrey #talkingparrot
 
