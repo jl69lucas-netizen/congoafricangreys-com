@@ -40,6 +40,56 @@ Date: 2026-06-06 · Source of truth: `docs/reference/credentials.md` · Companio
 
 ---
 
+## PER-BIRD LISTINGS — 6 available (live as of clutch-inventory.json 2026-05-23)
+
+> **Use these on the CLASSIFIEDS** (Hoobly, Petzlover, BirdsNow, PetClassifieds, FaunaClassifieds) —
+> classifieds list individual birds. **Business profiles** (Yelp/Bing/Apple/BBB/BirdBreeders) stay
+> the general breeder profile — just say "**6 African Greys available now (4 Congo, 2 Timneh), from $1,500**".
+> **Shared tail** (append to every per-bird description):
+> "Comes with full documentation — CITES Appendix I captive-bred paperwork, DNA-sexing certificate,
+> PBFD + Avian Polyomavirus screening, hatch certificate with leg-band number, and an avian-vet health
+> certificate. We never sell wild-caught birds. We ship nationwide via IATA-compliant transport —
+> Airport Pickup $185 · Home Delivery $350 · a $200 refundable deposit holds [him/her/them].
+> Photos + full profile: congoafricangreys.com[slug] · Info@congoafricangreys.com · +1-281-545-3169."
+
+### 1. Bery — Congo · female · 1 yr · **$1,700**
+- **Title:** Gentle Hand-Raised Female Congo African Grey (1 yr) — DNA-Sexed, Documented, Ships Nationwide
+- **Photo:** `/bery-congo-african-grey-female-1-year.webp` · **Slug:** /available/bery/
+- **Opening:** "Meet Bery — our gentle, hand-raised female Congo African Grey, 1 year old ($1,700). She's calm and easygoing, a wonderful first Grey for a patient home." → + shared tail (her)
+
+### 2. Amie — Congo · female · 3 mo · **$2,500**
+- **Title:** Baby Female Congo African Grey (3 mo) — Hand-Fed & Fully Socialized, CITES Documented
+- **Photo:** `/amie-congo-african-grey-female-3-months.webp` · **Slug:** /available/amie/
+- **Opening:** "Meet Amie — a hand-fed female Congo African Grey baby, 3 months old ($2,500), fully socialized and bonding beautifully with people." → + shared tail (her)
+
+### 3. Roys — Congo · male · 4 mo · **$2,300**
+- **Title:** Hand-Raised Male Congo African Grey (4 mo) — Family-Friendly, Health-Certified
+- **Photo:** `/roys-congo-african-grey-male-4-months.webp` · **Slug:** /available/roys/
+- **Opening:** "Meet Roys — our energetic, hand-raised male Congo African Grey, 4 months old ($2,300). He's playful and does great with active families." → + shared tail (him)
+
+### 4. Jins & Jeni — Congo · pair · **$3,500** (must go together)
+- **Title:** Bonded Congo African Grey Pair (Jins & Jeni) — Unrelated, Hand-Raised, Must Go Together
+- **Photo:** `/jins-jeni-congo-african-grey-pair.webp` · **Slug:** /available/jins-jeni/
+- **Opening:** "Meet Jins & Jeni — an unrelated, hand-raised Congo African Grey pair ($3,500 for the pair). They must go home together, as companions or a future breeding pair." → + shared tail (them)
+- **Quirk:** Sell ONLY as a pair — state this in the title + body so no one inquires for one.
+
+### 5. Elad — Timneh · male · 5 mo · **$1,600**
+- **Title:** Hand-Raised Male Timneh African Grey (5 mo) — Ready Now, DNA-Sexed & Documented
+- **Photo:** `/elad-timneh-african-grey-male-5-months.webp` · **Slug:** /available/elad/
+- **Opening:** "Meet Elad — our hand-raised male Timneh African Grey, 5 months old ($1,600), fully socialized and ready for his new home now." → + shared tail (him)
+
+### 6. Evie — Timneh · female · 6 mo · **$1,500**
+- **Title:** Hand-Raised Female Timneh African Grey (6 mo) — Ready Now, Health-Certified, Ships Nationwide
+- **Photo:** `/evie-timneh-african-grey-female-6-months.webp` · **Slug:** /available/evie/
+- **Opening:** "Meet Evie — our hand-raised female Timneh African Grey, 6 months old ($1,500), fully socialized and ready to go now." → + shared tail (her)
+
+> **Posting strategy (avoid spam flags):** don't post all 6 to all 5 classifieds at once. Lead with
+> **2–3 hero birds** per platform (e.g. Amie + Roys + Evie spans price range & both variants), and
+> rotate. Keep ONE canonical listing per bird per platform — never duplicate the same bird twice on
+> the same site. Update/retire the listing the moment a bird is reserved (sync with @cag-clutch-manager).
+
+---
+
 ## 🟢 1. HOOBLY  (easiest — free, instant)
 - **Category:** Pets & Animals → Birds → African Grey
 - **Location:** Midland, TX (it's national — buyers filter by state)
@@ -102,6 +152,7 @@ Hours:       By appointment / 24h inquiry response
 > breeding Congo and Timneh Greys since 2014. Every hand-raised, fully-weaned chick comes with
 > CITES Appendix I captive-bred documentation, DNA sexing, PBFD + Polyomavirus screening, and an
 > avian-vet health certificate. We ship nationwide and provide lifetime breeder support.
+> Currently 6 African Greys available (4 Congo, 2 Timneh), from $1,500.   ← update count as inventory changes
 
 - 🟡 **Yelp** — set as Service-Area Business, hide address. Strong review/trust value.
 - 🟠 **Bing Places** — can import from Google later; or enter manually now.
