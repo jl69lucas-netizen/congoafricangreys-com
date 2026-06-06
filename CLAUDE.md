@@ -134,7 +134,7 @@ All 66 agents run on **Opus 4.8** (`claude-opus-4-8`), with three **effort** tie
 - `.claude/agents/cag-section-builder.md` — builds individual HTML sections using CAG design system; section types: hero, features, faq, cta, testimonials, comparison-table, price-card; called by all page builders
 - `.claude/agents/cag-purchase-guide.md` — rebuilds `/buy-african-grey-parrot-near-me/`; high-intent buyer page covering CITES, IATA shipping, post-arrival support
 - `.claude/agents/cag-species-guide-builder.md` — builds species guide pages using Entity-Tree framework; reads `data/price-matrix.json`; AIO/citation optimized
-- `.claude/agents/cag-variant-specialist.md` — rebuilds `/congo-african-grey-for-sale/` and `/timneh-african-grey-for-sale/`; cross-sell comparison table between both
+- `.claude/agents/cag-variant-specialist.md` — rebuilds the variant pages `/congo-african-grey-for-sale/` + `/timneh-african-grey-for-sale/` **and the 3 attribute/feature pages** `/captive-bred-african-grey-parrot/` (interior-standard) · `/dna-tested-african-grey-for-sale/` · `/hand-raised-african-grey-parrot-for-sale/` (for-sale method); cross-sell comparison table across the cluster (orphan pages assigned 2026-06-06)
 - `.claude/agents/cag-timneh-specialist.md` — all Timneh pages; TAG pricing $1,200–$2,500; intelligent CAG/TAG cross-sell
 - `.claude/agents/cag-about-builder.md` — rebuilds `/about/`; H-S-S framework; USDA AWA + CITES credentials + breeder story
 - `.claude/agents/cag-scam-specialist.md` — rebuilds `/how-to-avoid-african-grey-parrot-scams/` and scam cluster; converts scam-fearful visitors into documented-purchase inquiries
