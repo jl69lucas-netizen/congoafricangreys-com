@@ -54,6 +54,7 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 ---
 
 ## Reference Docs
+- `MANUAL INTERIOR-PAGE CHECKLIST.md` (repo root) — **THE manual, copy-paste, verify-each-step build guide (Hero → CTA, Parts A–N) for every informational/secondary page** (health, shipping, FAQ, privacy, care/resource, about, why-choose, scam, etc.) — same design + SEO method as the homepage. Excludes comparison/location/"…for-sale"/blog (own structure). Machine cascade: master skill §Interior-Page Profile + `cag-content-architect` routing + 8 interior builders.
 - `PRODUCT.md` (repo root) — **BRAND CONTEXT (strategic): register, users, brand personality, anti-references, design principles, a11y bar. READ FIRST before any design/content work (see Non-Negotiable Rules). Auto-loaded by `/impeccable`.**
 - `DESIGN.md` (repo root) — **BRAND CONTEXT (visual): locked palette + AA clay variants, typography, components, layout, motion, iconography. READ FIRST alongside `PRODUCT.md`. Auto-loaded by `/impeccable`.**
 - `docs/reference/WORKFLOW.md` — **MASTER WORKFLOW: read this before starting any new page, sprint, or monitoring cycle**
@@ -316,6 +317,7 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 - `scripts/generate_sitemaps.py` — regenerates all sitemap shards from `src/pages/` (location/blog/page classification, priority tiers, validates zero phantom URLs). RUN AFTER ADDING/REMOVING ANY PAGE. (Replaced the stale 13-URL hand-maintained sitemap with a 100-URL filesystem-driven one — 2026-06-04.)
 - `scripts/add_first_person_golden_rule.py` — one-off idempotent injection of the First-Person Voice rule into every agent's `## Golden Rule` (applied to all 66, 2026-06-04).
 - `scripts/add_clarification_checkpoint_rule.py` — idempotent injection of the **Clarification Checkpoint** rule into every agent's `## Golden Rule` (applied to all 66, 2026-06-05). Upgrades the <97% Confidence-Gate dead-stop to ask-one-question-log-to-brief-and-continue. Re-run after adding any new agent.
+- `scripts/add_interior_standard_pointer.py` — idempotent injection of the **Interior-Page Standard** pointer into the 8 interior-page builder agents' `## Golden Rule` (cag-about/purchase-guide/species-guide/scam/financial/faq/section/trust-signals). Points them at `MANUAL INTERIOR-PAGE CHECKLIST.md` + the master skill's Interior-Page Profile (2026-06-06). Re-run after adding a new interior builder.
 - TBD — more in Phase 2
 
 ## Data Files
