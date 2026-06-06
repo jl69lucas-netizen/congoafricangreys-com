@@ -1,34 +1,77 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import CTA from '../../components/CTA.astro';
+import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
+import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
+import CompareTableE from '../../components/cag-library/CompareTableE.astro';
+import BirdCard from '../../components/BirdCard.astro';
+import InquiryForm from '../../components/cag-inquiry-form.astro';
 
-const title = "African Grey Parrot Diet | What to Feed & What to Avoid | CongoAfricanGreys.com";
-const description = "African Grey parrot diet guide: pellets, vegetables, fruits, toxic foods to avoid, and supplement needs. Written by USDA-licensed breeders.";
+const title = "African Grey Parrot Diet | What Do African Greys Eat, How Much Pellet vs Veg & Which Foods Are Toxic? | Nutrition, Calcium, Vitamin A & Foraging for Congo & Timneh Greys | C.A.Gs – Midland, TX";
+const description = "Our African Grey parrot diet & nutrition guide from USDA-licensed breeders: the right pellet base (60–80%), fresh vegetables for vitamin A, calcium + vitamin D3 for hypocalcemia-prone Greys, fruit and treats in moderation, foraging, water, and the complete toxic-food list (avocado, chocolate, onion, fruit pits, PTFE). Feed a captive-bred Congo or Timneh Grey for a 40–60 year life | CITES Appendix I.";
 const canonical = "https://congoafricangreys.com/african-grey-parrot-diet/";
+const updated = "June 2026";
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
-  { name: "African Grey Diet", url: "/african-grey-parrot-diet/" },
+  { name: "African Grey Diet & Nutrition", url: "/african-grey-parrot-diet/" },
 ];
 
+// ─── Available birds (cross-sell grid) — verified against data/clutch-inventory.json + price-matrix.json ───
+// Shipping line + trust badges are hardwired inside BirdCard.astro (Ships nationwide · $185 airport · $350 home).
+const birds = [
+  { id: 'roys',  name: 'Roys',  sex: 'Male',   age: '4 mo',  price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Already weaned onto pellets and greens.',
+    notes: "Hand-raised male, 4 months old — eating a full pellet-and-vegetable diet before he ever leaves us." },
+  { id: 'amie',  name: 'Amie',  sex: 'Female', age: '3 mo',  price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'Forages for her pellets like a pro.',
+    notes: 'Premium hand-raised female, 3 months old. Weaning onto the same foraging routine this guide describes.' },
+  { id: 'bery',  name: 'Bery',  sex: 'Female', age: '1 yr',  price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp',
+    hook: 'Loves leafy greens and bell pepper.',
+    notes: 'Soft temperament, easy to handle. 1-year-old female, fully established on a varied fresh diet.' },
+  { id: 'elad',  name: 'Elad',  sex: 'Male',   age: '5 mo',  price: '$1,600',
+    tag: 'Timneh', tagType: 'new' as const, variant: 'Timneh African Grey',
+    image: '/elad-timneh-african-grey-male-5-months.webp',
+    hook: 'Smaller appetite, same complete diet.',
+    notes: 'Hand-raised male Timneh African Grey, 5 months old. Eating pellets, veg and a little fruit daily.' },
+  { id: 'evie',  name: 'Evie',  sex: 'Female', age: '6 mo',  price: '$1,500',
+    tag: 'Timneh', tagType: 'value' as const, variant: 'Timneh African Grey',
+    image: '/evie-timneh-african-grey-female-6-months.webp', objectPos: 'object-top',
+    hook: 'Calm eater, ready to come home.',
+    notes: 'Hand-raised female Timneh African Grey, 6 months old. Fully weaned onto a balanced pellet-based diet.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Must-Go Pair', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair.webp',
+    hook: 'Two birds, one shared food bowl routine.',
+    notes: 'Unrelated pair, must be adopted together. Jins (male, 6mo) + Jeni (female, 4mo). Both weaned and eating well.' },
+];
+
+// ─── FAQ (PAA-sourced: current page + competitor union + Google PAA) — mirrored into FAQPage schema ───
 const faqs = [
-  {
-    q: "What is the best diet for an African Grey parrot?",
-    a: "The best diet is 70% high-quality pellets (Harrison's or Zupreem Natural), 20% fresh vegetables including leafy greens and bell peppers, and 10% fresh fruit. Seed-based diets cause hypovitaminosis A and significantly shorten lifespan — avoid them as a dietary staple.",
-  },
-  {
-    q: "Can African Grey parrots eat fruit?",
-    a: "Yes. Mango, papaya, pomegranate, berries, melon, and kiwi are excellent choices. Limit high-sugar fruits like grapes and bananas to occasional treats. Always remove fruit pits and seeds — cherry, apple, and peach seeds contain cyanogenic compounds toxic to parrots.",
-  },
-  {
-    q: "What foods are toxic to African Grey parrots?",
-    a: "Toxic foods include avocado (all parts), onion, garlic, chocolate, caffeine, alcohol, xylitol, and fruit pits. PTFE fumes from overheated non-stick cookware are airborne and lethal — never cook with Teflon near your bird.",
-  },
-  {
-    q: "Do African Grey parrots need calcium supplements?",
-    a: "African Greys are uniquely prone to hypocalcemia (low blood calcium). Provide cuttlebone for free-choice calcium. If your bird shows muscle tremors or seizure-like behavior, have an avian vet check calcium levels immediately.",
-  },
+  { q: "What do African Grey parrots eat?",
+    a: "A healthy African Grey eats a base of 60–80% formulated pellets, around 15–20% fresh vegetables — dark leafy greens plus orange veg like sweet potato, carrot and red bell pepper for vitamin A — and only a small amount of fruit, with a few nuts or seeds as treats. Never feed avocado, onion, garlic, chocolate, caffeine, alcohol, or fruit pits, all of which are toxic. We send every C.A.Gs Grey home on the exact diet it is already eating to prevent digestive stress." },
+  { q: "How much should I feed an African Grey each day?",
+    a: "A Congo African Grey eats roughly 1/4 to 1/3 cup of pellets a day plus a similar volume of fresh vegetables; a smaller Timneh eats a little less. Offer pellets free-choice, serve fresh food in the morning and remove it after a few hours, and weigh your bird weekly — a steady weight is the best sign the portion is right." },
+  { q: "Can African Grey parrots eat fruit?",
+    a: "Yes, but in moderation. Mango, papaya, pomegranate, berries, melon, apple (no seeds) and kiwi are great choices, while high-sugar fruits like grapes and banana are best kept as occasional treats. Always remove cherry, peach, plum and apricot pits and apple and pear seeds — they contain cyanogenic compounds toxic to parrots." },
+  { q: "What foods are toxic to African Grey parrots?",
+    a: "Never feed avocado (every part contains persin), onion and garlic (cause anemia), chocolate, caffeine, alcohol, xylitol, salt, or fruit pits and apple seeds. Just as dangerous is a non-food: PTFE (Teflon) fumes from overheated non-stick cookware are airborne and can kill a parrot within minutes, so keep your Grey well away from the kitchen." },
+  { q: "Do African Grey parrots need calcium supplements?",
+    a: "African Greys are uniquely prone to hypocalcemia (low blood calcium), so calcium matters more than for most parrots. Offer a cuttlebone or calcium block free-choice, feed calcium-rich greens daily, and provide UV-B light so your bird can make the vitamin D3 it needs to absorb that calcium. Only add an oral calcium or D3 supplement on your avian vet's advice — too much is harmful." },
+  { q: "Why are seed-only diets bad for African Greys?",
+    a: "An all-seed diet is high in fat and deficient in vitamin A, calcium, vitamin D3 and balanced amino acids, so a seed-junkie Grey develops hypovitaminosis A, chronic respiratory and sinus infections, fatty liver disease, and a shortened life. Seeds belong in the diet only as occasional treats, not as the staple — pellets and fresh vegetables are the foundation." },
+  { q: "How do I switch an African Grey from seeds to pellets?",
+    a: "Convert gradually over 4–8 weeks: mix a small amount of pellets into the familiar seed mix and slowly raise the pellet ratio, offer warm mashed pellets separately, and let your bird watch you 'eat' a pellet. Never starve a Grey onto pellets — birds have a fast metabolism and can crash quickly, so weigh daily and involve your avian vet if progress stalls." },
+  { q: "What vegetables are best for African Greys?",
+    a: "Build the fresh portion around dark leafy greens (kale, Swiss chard, collard, dandelion and mustard greens) for calcium and around orange and red vegetables (sweet potato, butternut squash, carrot and red bell pepper) for the beta-carotene a Grey converts to vitamin A. Rotate broccoli, snap peas, green beans and zucchini for variety, and introduce new veg patiently — a Grey may refuse a food 10–20 times before accepting it." },
+  { q: "Do Congo and Timneh African Greys eat different diets?",
+    a: "No — the nutrition is identical. Both our Congo and Timneh African Greys thrive on the same pellet-based diet with fresh vegetables, calcium support and UV-B lighting. The only real difference is volume: the larger Congo simply eats a bit more than the smaller Timneh, so portions scale with the bird, not the recipe." },
 ];
 
 const faqSchema = {
@@ -40,296 +83,512 @@ const faqSchema = {
     acceptedAnswer: { "@type": "Answer", text: f.a },
   })),
 };
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "African Grey Parrot Diet & Nutrition — Pellets, Vegetables, Calcium & Toxic Foods",
+  description: "A complete African Grey parrot diet and nutrition guide from USDA-licensed breeders C.A.Gs: the pellet base, fresh vegetables for vitamin A, calcium and vitamin D3 for hypocalcemia-prone Greys, fruit and treats in moderation, foraging, water, and the full toxic-food list for captive-bred Congo and Timneh Greys.",
+  image: "https://congoafricangreys.com/african-grey-parrot-free-exploration.webp",
+  inLanguage: "en-US",
+  datePublished: "2024-09-01",
+  dateModified: "2026-06-06",
+  author: {
+    "@type": "Organization",
+    name: "C.A.Gs – Midland, TX",
+    url: "https://congoafricangreys.com/about/",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Congo African Greys",
+    logo: { "@type": "ImageObject", url: "https://congoafricangreys.com/cag-footer-logo.png" },
+  },
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+};
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta
+  extraHeadHtml={'<link rel="preload" as="image" href="/african-grey-parrot-free-exploration.webp" fetchpriority="high" type="image/webp" />'}>
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <!-- HERO -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
-  </div>
+  <div class="diet-d cag-article">
 
-  <section class="diet-hero">
-    <div class="page-container">
-      <h1 class="diet-h1">African Grey Parrot Diet</h1>
-      <p class="diet-sub">
-        What to feed, what to avoid, and why seed-only diets are a leading cause of early
-        death in African Greys — from USDA-licensed breeders who feed these birds every day.
-      </p>
-      <a class="btn-primary" href="/african-grey-parrot-care-guide/">Full Care Guide</a>
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
+      <Breadcrumb items={breadcrumbs} />
     </div>
-  </section>
 
-  <!-- 70/20/10 RULE -->
-  <section class="diet-section">
-    <div class="page-container text-wrap">
-      <h2 class="diet-h2">The 70/20/10 Rule</h2>
-      <p>
-        The most effective and widely recommended feeding framework for African Greys is:
-      </p>
-      <ul class="diet-list">
-        <li><strong>70% high-quality pellets</strong> — the nutritional foundation</li>
-        <li><strong>20% fresh vegetables</strong> — variety, color, and micronutrients</li>
-        <li><strong>10% fresh fruit</strong> — natural sugars and enrichment</li>
-      </ul>
-      <p>
-        Seeds should not exceed 5% of the total diet and are best used as training rewards,
-        not dietary staples. Seeds are high in fat and low in vitamins A, D3, calcium, and
-        amino acids that African Greys require. A bird eating primarily seeds will show
-        hypovitaminosis A within months: blunted choanal papillae, chronic sinus infections,
-        and a suppressed immune system that shortens lifespan by years.
-      </p>
-      <p>
-        Converting a seed-addicted bird to pellets is possible but requires patience. Mix
-        increasing proportions of pellets into the seed dish over 4–6 weeks while offering
-        warm mashed pellets separately. Never withhold food to force acceptance — this causes
-        dangerous blood sugar drops in birds.
-      </p>
-    </div>
-  </section>
-
-  <!-- BEST PELLETS -->
-  <section class="diet-section diet-alt">
-    <div class="page-container text-wrap">
-      <h2 class="diet-h2">Best Pellets for African Greys</h2>
-      <p>
-        <strong>Harrison's Adult Lifetime Fine</strong> is the pellet most commonly recommended
-        by board-certified avian veterinarians. It is USDA-certified organic, uses no artificial
-        colors or preservatives, and is formulated specifically for medium to large parrots.
-        Harrison's is the gold standard.
-      </p>
-      <p>
-        <strong>Zupreem Natural</strong> is a widely available, veterinarian-approved alternative.
-        It is more accessible in retail stores and online, and many birds accept it more readily
-        due to its fruit-like aroma. Avoid Zupreem's colored FruitBlend variety — artificial dyes
-        have no nutritional benefit and some birds are sensitive to them.
-      </p>
-      <p>
-        Avoid pellets with artificial colors, cane sugar listed in the first three ingredients,
-        or "ethoxyquin" as a preservative. Pellets should be stored in an airtight container and
-        used within 60 days of opening — rancid pellets can cause digestive problems.
-      </p>
-    </div>
-  </section>
-
-  <!-- BEST VEGETABLES -->
-  <section class="diet-section">
-    <div class="page-container text-wrap">
-      <h2 class="diet-h2">Best Vegetables for African Greys</h2>
-      <p>
-        Prioritize <strong>dark leafy greens</strong>: kale, Swiss chard, collard greens, mustard
-        greens, and dandelion greens are all excellent. These are high in beta-carotene (provitamin A),
-        calcium, and antioxidants. Spinach is acceptable in moderation but contains oxalates that
-        can bind calcium — rotate with other greens rather than serving it daily.
-      </p>
-      <p>
-        <strong>Orange and red vegetables</strong> are particularly important for vitamin A precursors:
-        sweet potato, butternut squash, carrots, and red bell peppers. Cook starchy vegetables like
-        sweet potato and squash — lightly steamed or baked — to improve digestibility. Raw bell
-        peppers are fine and most birds enjoy them fresh.
-      </p>
-      <p>
-        Broccoli, cauliflower, snap peas, green beans, and zucchini round out the vegetable
-        rotation. Introduce new vegetables slowly and offer them alongside known favorites.
-        African Greys can be neophobic — a bird may reject a new food 10–20 times before
-        accepting it. Persistence pays off.
-      </p>
-    </div>
-  </section>
-
-  <!-- TOXIC FOODS -->
-  <section class="diet-section diet-alt">
-    <div class="page-container text-wrap">
-      <h2 class="diet-h2">Toxic Foods — Complete List</h2>
-      <p>
-        The following are confirmed toxic to African Greys and must never be offered:
-      </p>
-      <ul class="diet-toxic-list">
-        <li><strong>Avocado</strong> — all parts (flesh, skin, pit, leaves) contain persin, which causes cardiac and respiratory failure in birds. Even small amounts can be lethal.</li>
-        <li><strong>Onion and garlic</strong> — contain thiosulfate compounds that cause hemolytic anemia (destruction of red blood cells).</li>
-        <li><strong>Chocolate and cocoa</strong> — theobromine and caffeine in all chocolate products cause vomiting, tremors, seizures, and cardiac arrest.</li>
-        <li><strong>Caffeine</strong> — coffee, tea, energy drinks, and soda are all toxic. Caffeine causes cardiac arrhythmias in birds.</li>
-        <li><strong>Alcohol</strong> — even trace amounts cause serious neurological and organ damage.</li>
-        <li><strong>Xylitol</strong> — artificial sweetener found in sugar-free gum, candy, and some peanut butters. Causes rapid hypoglycemia and liver failure.</li>
-        <li><strong>Fruit pits and apple seeds</strong> — cherry, peach, plum, and apricot pits; apple and pear seeds contain cyanogenic glycosides that release hydrogen cyanide when metabolized.</li>
-        <li><strong>PTFE fumes (Teflon/non-stick cookware)</strong> — when non-stick pans overheat, they release polytetrafluoroethylene particles that are lethal to birds. This is an airborne toxin, not ingested. It kills within minutes. Never use non-stick cookware in a home with parrots.</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- CALCIUM / HYPOCALCEMIA -->
-  <section class="diet-section">
-    <div class="page-container text-wrap">
-      <h2 class="diet-h2">Calcium and African Grey Hypocalcemia</h2>
-      <p>
-        African Greys have a well-documented susceptibility to <strong>hypocalcemia</strong> —
-        abnormally low blood calcium levels — compared to other parrot species. The exact mechanism
-        is still being studied, but the condition is serious: affected birds experience muscle
-        tremors, seizures, ataxia (loss of coordination), and sudden collapse from the perch.
-      </p>
-      <p>
-        Prevention is straightforward. Offer <strong>cuttlebone free-choice</strong> at all times —
-        most birds will self-regulate their calcium intake. Feed calcium-rich vegetables daily
-        (kale, collard greens, bok choy, broccoli). Consider providing a <strong>full-spectrum
-        UVB light</strong> on a 10–12 hour daily cycle; UVB exposure allows birds to synthesize
-        vitamin D3 in the skin, which is essential for calcium absorption.
-      </p>
-      <p>
-        If your bird shows any tremors, falls off its perch, or exhibits seizure-like activity,
-        treat this as a veterinary emergency. Hypocalcemic episodes can be treated effectively
-        if caught quickly — delayed care is the primary cause of fatalities from this condition.
-        Have your avian vet check blood calcium levels at annual wellness exams.
-      </p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="diet-section diet-alt">
-    <div class="page-container text-wrap">
-      <h2 class="diet-h2">African Grey Diet: Frequently Asked Questions</h2>
-      <div class="diet-faq">
-        {faqs.map((f) => (
-          <details class="diet-faq-item">
-            <summary class="diet-faq-q">{f.q}</summary>
-            <p class="diet-faq-a">{f.a}</p>
-          </details>
-        ))}
+    <!-- 1. HERO (cag-hero-v3 idiom · Authority Green · photo-led) -->
+    <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
+      <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
+      <div class="container relative z-10 mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-12">
+        <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
+          <!-- COPY -->
+          <div class="order-2 text-center md:order-1 md:text-left">
+            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Owner's Nutrition Guide · Updated {updated}</p>
+            <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
+              African Grey Parrot Diet &amp; Nutrition
+            </h1>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
+              Here at C.A.Gs in Midland, Texas, Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and Timneh African Greys since 2014 — and diet is the single biggest thing that decides whether a Grey reaches its full 40 to 60 year life in good health. This is the exact pellet-and-vegetable plan we feed, the calcium and vitamin-A science behind it, and the toxic foods that can kill a Grey in minutes.
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+              <a href="#base-diet" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Start With the Base Diet →</a>
+              <a href="#toxic" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">See the Toxic-Food List →</a>
+            </div>
+          </div>
+          <!-- CIRCULAR IMAGE STAGE -->
+          <div class="order-1 flex justify-center md:order-2 md:justify-end">
+            <div class="relative">
+              <div class="absolute inset-0 -m-3 rounded-full border border-white/25 md:-m-5" aria-hidden="true"></div>
+              <div class="relative flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#0f3d2c] ring-4 ring-white/15 sm:h-[260px] sm:w-[260px] md:h-[300px] md:w-[300px]" style="box-shadow: 0 24px 60px rgba(60,30,10,0.35);">
+                <img src="/african-grey-parrot-free-exploration.webp"
+                  alt="Hand-raised Congo African Grey parrot foraging out of its cage at the C.A.Gs aviary in Midland, Texas — the kind of pellet-and-vegetable diet and foraging routine this nutrition guide explains."
+                  title="African Grey parrot diet & foraging — C.A.Gs nutrition guide"
+                  width="400" height="400" loading="eager" fetchpriority="high" decoding="async"
+                  class="h-full w-full object-cover object-top" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- INTERNAL LINKS -->
-  <section class="diet-section">
-    <div class="page-container text-wrap">
-      <h2 class="diet-h2">Related Guides</h2>
-      <ul class="diet-links">
-        <li><a href="/african-grey-parrot-care-guide/" class="diet-link">African Grey Parrot Care Guide</a> — housing, enrichment, veterinary care, and CITES documentation</li>
-        <li><a href="/african-grey-parrot-lifespan/" class="diet-link">African Grey Parrot Lifespan</a> — how diet affects 40–60 year lifespan</li>
-        <li><a href="/cites-african-grey-documentation/" class="diet-link">CITES African Grey Documentation</a> — what papers every bird must come with</li>
-      </ul>
-    </div>
-  </section>
+    <!-- 2. COUNTER SNIPPET -->
+    <CounterSnippet />
 
-  <div style="text-align:center;padding:8px 0 32px;font-family:Sora,sans-serif;font-size:0.88rem;color:#6b6560;">
-    This guide is part of the <a href="/african-grey-care/" style="color:#2D6A4F;font-weight:600;text-decoration:none;">African Grey Care Hub</a> →
+    <!-- 3. KEY TAKEAWAY / BLUF -->
+    <KeyTakeawayV2
+      eyebrow="The short version"
+      heading="What Is the Best Diet for an African Grey Parrot?"
+      badge="8 essentials · 90-sec read"
+      items={[
+        { stat: "60–80%", label: "Pellet Base", body: "Formulated pellets are the nutritional foundation — never an all-seed diet, which causes vitamin-A deficiency and a shorter life." },
+        { stat: "15–20%", label: "Fresh Veg", body: "Dark leafy greens plus orange veg (sweet potato, carrot, red pepper) supply the vitamin A and calcium a Grey needs most." },
+        { stat: "Calcium", label: "+ Vitamin D3", body: "Greys are prone to hypocalcemia — offer cuttlebone and UV-B light so the bird can absorb the calcium it eats." },
+        { stat: "≤10%", label: "Fruit & Treats", body: "Fruit, nuts and seeds are enrichment and training rewards, not the meal — they are sugar and fat, kept occasional." },
+        { stat: "Daily", label: "Fresh Water", body: "Change drinking water at least once a day; a Grey will bathe in and soil its bowl, and dirty water grows bacteria fast." },
+        { stat: "Forage", body: "Hide pellets in toys and paper so a clever bird works for food — foraging is mental health, not just feeding.", label: "How to Feed" },
+        { stat: "0", label: "Toxic Foods", body: "Never avocado, chocolate, onion, garlic, caffeine, alcohol, xylitol, salt, or fruit pits — and never PTFE/Teflon fumes." },
+        { stat: "Same", label: "Congo = Timneh", body: "Both species eat the identical diet; the larger Congo simply eats a bit more than the smaller Timneh." },
+      ]}
+    />
+
+    <!-- 4. TOC -->
+    <nav class="toc-diet py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
+      <div class="container mx-auto max-w-[1100px]">
+        <div class="rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-12 md:py-10" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+          <div class="flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end">
+            <div>
+              <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">Inside this guide</p>
+              <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark md:text-3xl">On This Page</h2>
+            </div>
+            <p class="font-sora text-[13px] text-stone-500">10 sections · the complete feeding plan</p>
+          </div>
+          <div class="mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part One</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">The everyday diet</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 1, t: "What Should the Base Diet Be — Pellets vs Seeds?", href: "#base-diet" },
+                  { n: 2, t: "Which Fresh Vegetables & Greens Are Best?", href: "#vegetables" },
+                  { n: 3, t: "How Much Fruit, Nuts & Seeds Are Safe?", href: "#fruit-treats" },
+                  { n: 4, t: "How Do Greys Get Enough Calcium & Vitamin D3?", href: "#calcium" },
+                  { n: 5, t: "How Should You Feed — Foraging, Schedule & Portions?", href: "#feeding" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part Two</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">Water, safety, species & buying</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 6, t: "How Much Water Does an African Grey Need?", href: "#water" },
+                  { n: 7, t: "Which Foods Are Toxic & Must Never Be Fed?", href: "#toxic" },
+                  { n: 8, t: "Do Congo & Timneh Greys Eat Different Diets?", href: "#congo-vs-timneh" },
+                  { n: 9, t: "Which Well-Fed C.A.Gs Greys Are Available?", href: "#available-birds" },
+                  { n: 10, t: "African Grey Diet Questions, Answered", href: "#faq" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 5. BASE DIET — PELLETS vs SEEDS -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="base-diet" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Base Diet · Pellets vs Seeds</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Should the Base of an African Grey's Diet Be — Pellets or Seeds?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>The foundation of a healthy African Grey diet is 60–80% formulated pellets, not seeds.</strong> A pellet is a baked, nutritionally complete food in which every bite carries the same balanced vitamins, minerals, and amino acids, which is exactly what prevents the selective "seed-junkie" feeding that drives most diet-related disease in parrots. Here at C.A.Gs every Grey is weaned straight onto a pellet base, and the veterinary fundamentals behind that choice are laid out in the <a href="https://lafeber.com/vet/avian-nutrition-basics/" target="_blank" rel="noopener noreferrer">LafeberVet avian nutrition basics</a> reference we hand new owners. For the specific brands we trust, see our <a href="/best-african-grey-parrot-food/">best African Grey parrot food picks</a>; this page is about the science of <em>what</em> a Grey should eat and why.</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-3">
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Why Pellets Win</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A formulated pellet should make up 60–80% of the daily diet because it delivers a complete, consistent base a loose seed mix simply cannot match. Pellets stop a clever Grey from cherry-picking sunflower seeds and leaving the nutrition behind, and they keep vitamin A, calcium, and protein in balance bite after bite.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Why Seed-Only Fails</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">An all-seed diet is high in fat and short on vitamin A, calcium, vitamin D3, and balanced amino acids. Within months a seed-fed Grey shows hypovitaminosis A — chronic sinus and respiratory infection, blunted choanal papillae — plus fatty liver disease and a life cut short by years. Seeds are a treat, never the meal.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Store Pellets Right</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Keep pellets in an airtight container out of heat and light, and use them within about 60 days of opening — the fat-soluble vitamins fade and oils turn rancid long before the food looks "off." We buy in sensible quantities so our Greys always eat fresh, and we coach new owners to do the same.</p>
+          </article>
+        </div>
+
+        <div class="max-w-3xl mt-10">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">How Do You Switch an African Grey From Seeds to Pellets?</h3>
+          <p class="text-stone-600 leading-relaxed text-[15px] mb-3" style="max-width:70ch;">Most birds we re-home are already pellet-eaters, but if you adopt a seed-addicted Grey from elsewhere, convert it slowly and safely. Mix a little pellet into the familiar seed mix and raise the pellet ratio gradually across 4–8 weeks, offer warm mashed pellets in a separate dish, and let your bird watch you pretend to nibble a pellet — Greys are social eaters and copy what the flock does.</p>
+          <div class="rounded-xl border border-green/20 bg-green/[0.04] p-5">
+            <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mb-1.5">Never Starve a Grey Onto Pellets</h4>
+            <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">A parrot's fast metabolism means withholding food to force acceptance can trigger a dangerous blood-sugar crash within a day. Weigh your bird on a gram scale daily through any diet change, keep a known food available, and bring your avian vet in if your Grey stops eating or starts losing weight. Patience converts a seed junkie; pressure endangers it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. VEGETABLES & GREENS -->
+    <section id="vegetables" class="py-16 px-4 bg-warm-white scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Vegetables · Leafy Greens</p>
+          <h2 class="font-lora font-bold text-logo-dark">Which Fresh Vegetables and Leafy Greens Are Best for an African Grey?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Fresh vegetables should make up roughly 15–20% of the diet, built around dark leafy greens for calcium and orange-and-red veg for vitamin A.</strong> These two nutrients are the ones African Greys most often run short on, because Greys are uniquely prone to both <a href="#calcium">hypocalcemia</a> and vitamin-A deficiency, and the right vegetable bowl quietly prevents the most common diet-related diseases we see. The fresh portion is where you turn a "surviving" Grey into a thriving one.</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-3">
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Dark Leafy Greens</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Kale, Swiss chard, collard greens, mustard greens, dandelion greens, and bok choy are the calcium-and-beta-carotene powerhouses of a Grey's diet. Offer them most days. Spinach and chard are fine in rotation but contain oxalates that bind calcium, so don't make them the daily green.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Orange &amp; Red Veg</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Sweet potato, butternut squash, carrot, and red bell pepper are loaded with beta-carotene, which a Grey converts to vitamin A — the single nutrient most lacking in poorly fed birds. Lightly steam or bake starchy squash and sweet potato for digestibility; raw bell pepper is a crunchy favorite.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Variety &amp; Sprouts</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Round out the rotation with broccoli, cauliflower, snap peas, green beans, zucchini, and fresh sprouts (a living, enzyme-rich food many Greys love). Variety covers nutritional gaps and keeps a sharp mind interested — wash everything well and serve organic where you can to limit pesticide exposure.</p>
+          </article>
+        </div>
+
+        <div class="max-w-3xl mt-10">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">What If My African Grey Refuses Vegetables?</h3>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">This is the most common feeding frustration owners bring to us, and the answer is almost always patience plus presentation. African Greys are naturally neophobic — a bird may reject a new vegetable ten to twenty times before tasting it — so keep offering, and change the format: chop it fine and mix it into a known food, clip a leaf of kale to the bars like a foraging toy, serve veg warm, or simply eat it yourself in front of your bird. Teri's rule with every C.A.Gs family is to <em>"never give up on a vegetable after one no"</em> — a Grey's diet is built over weeks, not days, and the greens that prevent disease are worth the persistence.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. FRUIT, NUTS & SEEDS (TREATS) -->
+    <section id="fruit-treats" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Fruit · Nuts · Treats</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Much Fruit, Nuts, and Seeds Can an African Grey Safely Eat?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Fruit, nuts, and seeds together should stay around 10% of the diet or less — they are treats and training rewards, not the meal.</strong> Fruit is mostly water and natural sugar, and nuts and seeds are concentrated fat, so a Grey allowed to free-feed on them gains weight, develops fatty liver, and turns its beak up at the pellets and greens that actually keep it healthy. Used well, though, a single nut is the most powerful training reward you own.</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-3">
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Best Fruits</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Mango, papaya, pomegranate, berries, melon, kiwi, and apple (seeds removed) are excellent, nutrient-dense choices. Keep high-sugar fruits like grapes and banana to occasional bites. Always remove cherry, peach, plum, and apricot pits and apple and pear seeds — they release cyanide compounds when chewed.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Nuts in Moderation</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Unsalted almonds, walnuts, and a prized whole in-shell nut give healthy fats and great foraging, but a few a day is plenty for a Grey. We reserve nuts almost entirely for training and bonding — when a single cracked walnut means "well done," it teaches faster than any amount of repetition.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Seeds &amp; Sprouts</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A pinch of seed is fine as a treat, and soaked or sprouted seed is far more nutritious than dry — sprouting converts stored fat into vitamins and live enzymes. What seed must never be is the staple: keep it under about 5% of the diet so it never crowds out the pellets and greens.</p>
+          </article>
+        </div>
+
+        <div class="max-w-3xl mt-10">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">Can African Greys Eat Human Food, Cooked Grains, or Eggs?</h3>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">In small, plain amounts, yes — cooked whole grains and legumes (brown rice, quinoa, oats, cooked beans, lentils), a little well-cooked egg, and unsweetened whole-grain pasta make wholesome additions to a Grey's fresh portion. The line we hold is simple: nothing salted, fried, buttered, sugared, or seasoned, because a Grey's small body handles salt, fat, and additives far worse than ours does. A bite of your unsalted vegetables shared at the table is also a bonding ritual — Greys are flock animals and genuinely value "eating with" their family.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. CALCIUM & VITAMIN D3 -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="calcium" class="py-16 px-4 bg-warm-white scroll-mt-20">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Calcium · Vitamin D3</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Do African Greys Get Enough Calcium and Vitamin D3?</h2>
+        </div>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>African Greys are uniquely prone to hypocalcemia — abnormally low blood calcium — so calcium plus the vitamin D3 needed to absorb it matters more for this species than almost any other parrot.</strong> The condition is well documented in avian medicine; the veterinary literature on <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7128777/" target="_blank" rel="noopener noreferrer">African Grey hypocalcemia and its seizure syndrome</a> describes birds that crash with muscle tremors, weakness, falling off the perch, and seizure-like episodes. A Grey can have plenty of calcium in its bowl and still collapse if it cannot make D3 to use that calcium — and indoors, behind window glass, it usually cannot.</p>
+        <div class="rounded-2xl border border-line bg-white p-6 mb-4" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">How We Cover Calcium &amp; D3 for Every C.A.Gs Grey</h3>
+          <ul class="space-y-2.5 list-none pl-0 text-stone-600 text-[15px]" style="max-width:70ch;">
+            <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span>Offer a <strong>cuttlebone or calcium block free-choice</strong> — most Greys self-regulate and chew it when their body needs calcium.</span></li>
+            <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span>Feed <strong>calcium-rich greens daily</strong> (kale, collard, dandelion, bok choy, broccoli) — diet is the safest calcium source.</span></li>
+            <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span>Provide <strong>full-spectrum UV-B light</strong> on a 10–12 hour cycle so a Grey can synthesise vitamin D3 in its skin and actually absorb that calcium.</span></li>
+            <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Ask your avian vet before adding oral D3 or calcium supplements</strong> — too much vitamin D3 is toxic, so test first, supplement second.</span></li>
+          </ul>
+          <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-clay-ink mt-5 mb-1.5">What Are the Warning Signs of Low Calcium in a Grey?</h4>
+          <p class="text-stone-600 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">Muscle tremors, weakness, clumsiness, falling off the perch, or any seizure-like episode are a veterinary emergency in an African Grey — hypocalcemic crises are treatable when caught fast, and delayed care is the main reason they turn fatal. Have your vet check blood calcium at the annual wellness exam so a problem shows up on paper before it shows up on the cage floor.</p>
+          <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-green mt-3 mb-1">Do Egg-Laying Females Need Extra Calcium?</h5>
+          <p class="text-stone-600 leading-relaxed text-[14px] m-0" style="max-width:70ch;">Yes — a hen pulls heavily on her own calcium reserves to form eggshells, so a female that starts laying (even without a mate) has a sharply higher calcium demand and is at real risk of egg-binding and a hypocalcemic crash if her diet falls short. Keep calcium and UV-B dialled in, and loop in your avian vet promptly, since chronic laying is itself a problem worth addressing.</p>
+          <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-clay-ink mt-2.5 mb-1">Keep a Calcium Baseline on File</h6>
+          <p class="text-stone-600 leading-relaxed text-[14px] m-0" style="max-width:70ch;">Asking for a baseline blood-calcium value at your Grey's first wellness exam gives your vet a number to compare against later — far more useful than a one-off reading taken only once a bird is already symptomatic.</p>
+        </div>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">This is exactly why, here at C.A.Gs, we raise our Greys with UV-B lighting and vitamin D3 support from the start and wean them onto a calcium-rich fresh diet — the routine that prevents hypocalcemia is already second nature by the time a bird goes home, and we walk every buyer through keeping it going. The full lighting setup lives in our <a href="/african-grey-parrot-care-guide/">African Grey care guide</a>, but the diet half of the equation starts on this page.</p>
+      </div>
+    </section>
+
+    <!-- 9. HOW TO FEED — FORAGING, SCHEDULE, PORTIONS -->
+    <section id="feeding" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Foraging · Schedule · Portions</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Should You Feed an African Grey — Foraging, Schedule, and Portion Size?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Feed pellets free-choice, serve fresh food in the morning and remove it after a few hours, and make your Grey forage for as much of it as you can.</strong> In the wild a Grey spends a huge share of its day searching for and processing food, so a bird handed a full bowl of pellets with nothing to do is under-stimulated — and a bored Grey is the one that screams and plucks. <em>How</em> you feed matters almost as much as what you feed.</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-3">
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Make Them Forage</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Hide pellets in foraging toys, wrap them in paper, tuck them into cardboard, or skewer veg on a kabob so your Grey has to work for the meal. Foraging turns feeding into the mental exercise a Grey is built for — start easy so the bird doesn't give up, then make the puzzles harder.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">A Simple Schedule</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Keep pellets available all day, serve the fresh "chop" of veg and a little fruit in the morning when appetite is highest, and pull perishable food after 2–4 hours so it can't spoil. A predictable food rhythm steadies a Grey's mood as much as its blood sugar.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">The Right Portion</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A Congo eats roughly 1/4–1/3 cup of pellets plus a similar volume of fresh food daily; a Timneh a little less. The real gauge isn't a measuring cup, though — it's the scale. Weigh weekly, and let a stable weight, not a guessed amount, tell you the portion is right.</p>
+          </article>
+        </div>
+
+        <div class="max-w-3xl mt-10">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">Why Is Weighing Your African Grey the Best Diet Tool You Own?</h3>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Because a Grey is a prey animal that hides illness, weight is your earliest warning system — a loss of even 10–15 grams (around 2–4% of body weight) can flag disease in a bird that still looks and acts normal. A cheap kitchen gram scale with a perch, used at the same time each week, turns "I think she's eating less" into a number you can act on. We send every C.A.Gs bird home with its current weight on record precisely so you have a baseline from day one, and we stay reachable when a reading drifts and you want a second opinion.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. WATER & HYDRATION -->
+    <section id="water" class="py-16 px-4 bg-warm-white scroll-mt-20">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Water · Hydration</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Much Water Does an African Grey Need, and How Often Should You Change It?</h2>
+        </div>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Fresh, clean drinking water must be available at all times and changed at least once a day — more if your Grey bathes in or soils the bowl.</strong> Parrots routinely dunk food, drop droppings, and splash in their water dish, and standing water at room temperature grows bacteria quickly, so a once-a-day minimum is the floor, not the goal. Clean, accessible water is the quietest, most overlooked half of good nutrition.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">Use a sturdy stainless-steel or ceramic bowl (or a no-drip water bottle, kept scrupulously clean), scrub it daily with hot water to remove the slimy biofilm that plain rinsing leaves behind, and place it away from perches where droppings fall. Filtered or bottled water is a sensible choice if your tap water is heavily chlorinated or high in minerals — what a Grey drinks should be as clean as what it eats.</p>
+        <div class="rounded-xl border border-clay/25 bg-clay/[0.05] p-5">
+          <h3 class="font-sora font-bold text-sm uppercase tracking-wide text-clay-ink mb-1.5">Watch for Signs of Dehydration</h3>
+          <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">Sunken or dull eyes, sticky or stringy saliva, lethargy, and dry, scant droppings can signal dehydration in a Grey — and because birds compensate until they are quite unwell, any of these warrants a same-day call to your avian vet. A bird that suddenly drinks far more than usual deserves a vet check too, since increased thirst can point to kidney or other illness.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. TOXIC / NEVER-FEED FOODS -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="toxic" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Toxic Foods · Never Feed</p>
+          <h2 class="font-lora font-bold text-logo-dark">Which Foods Are Toxic to African Greys and Must Never Be Fed?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Avocado, chocolate, caffeine, alcohol, onion, garlic, xylitol, salt, and fruit pits are all toxic to African Greys — and a Grey is small enough that a single exposure can be fatal.</strong> The independent <a href="https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/" target="_blank" rel="noopener noreferrer">LafeberVet African Grey information sheet</a> reinforces the same toxic list we hand every C.A.Gs family, and we'd rather a buyer over-worry about this one section than learn it the hard way. The deadliest hazard isn't even a food — keep reading.</p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <article class="bg-white rounded-2xl border border-clay/25 p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <h3 class="font-lora font-bold text-xl text-logo-dark flex items-center gap-2"><span class="text-clay-ink">✗</span> Avocado</h3>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Every part — flesh, skin, pit, and leaves — contains <strong>persin</strong>, which causes cardiac and respiratory failure in birds. Even a small amount can be lethal, and there is no safe quantity. Keep guacamole and avocado toast far from your Grey.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-clay/25 p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <h3 class="font-lora font-bold text-xl text-logo-dark flex items-center gap-2"><span class="text-clay-ink">✗</span> Chocolate &amp; Caffeine</h3>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Theobromine in chocolate and caffeine in coffee, tea, soda, and energy drinks cause vomiting, tremors, seizures, and cardiac arrest. Both act fast in a small bird — no sip of latte, no crumb of cookie.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-clay/25 p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <h3 class="font-lora font-bold text-xl text-logo-dark flex items-center gap-2"><span class="text-clay-ink">✗</span> Onion &amp; Garlic</h3>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Both contain thiosulfate compounds that destroy red blood cells and cause hemolytic anemia — raw, cooked, or powdered. That rules out most seasoned, sauced, and takeout human foods for your Grey.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-clay/25 p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <h3 class="font-lora font-bold text-xl text-logo-dark flex items-center gap-2"><span class="text-clay-ink">✗</span> Alcohol, Xylitol &amp; Salt</h3>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Even trace alcohol causes neurological and organ damage; <strong>xylitol</strong> (in sugar-free gum, candy, and some peanut butters) triggers rapid hypoglycemia and liver failure; and excess salt overloads a small bird's kidneys. Read labels — xylitol hides.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-clay/25 p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <h3 class="font-lora font-bold text-xl text-logo-dark flex items-center gap-2"><span class="text-clay-ink">✗</span> Fruit Pits &amp; Apple Seeds</h3>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Cherry, peach, plum, and apricot pits and apple and pear seeds contain cyanogenic glycosides that release hydrogen cyanide when chewed. The fruit flesh is fine — just always core and pit it before it reaches your bird.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-clay/40 p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.08);background:#fff8f6;">
+            <h3 class="font-lora font-bold text-xl text-logo-dark flex items-center gap-2"><span class="text-clay-ink">✗</span> PTFE / Teflon Fumes</h3>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed"><strong>The kitchen danger nobody warns you about</strong>, and it isn't a food at all. Overheated non-stick cookware releases airborne PTFE particles that are odorless and can kill a parrot within minutes. Retire non-stick pans, self-cleaning ovens, and aerosol sprays from any room your Grey breathes in.</p>
+          </article>
+        </div>
+
+        <div class="max-w-3xl mt-8">
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Beyond this list, treat anything heavily salted, sugared, fried, moldy, or seasoned as off-limits, and when you are unsure about a new food, leave it out and ask your avian vet first — "when in doubt, don't" has never harmed a single Grey. If you suspect your bird has eaten something toxic or breathed PTFE fumes, that is an immediate emergency: call your avian vet or an after-hours animal poison line right away rather than waiting to see what happens.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. CONGO vs TIMNEH DIET -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="congo-vs-timneh" class="scroll-mt-20">
+      <div class="bg-cream pt-14 px-4 md:pt-16">
+        <div class="max-w-3xl mx-auto mb-2">
+          <h2 class="font-lora font-bold text-logo-dark mb-3 text-center">Do Congo and Timneh African Greys Eat Different Diets?</h2>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;"><strong>No — the nutrition is identical; only the portion size changes.</strong> Both our <a href="/congo-african-grey-for-sale/">Congo African Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh African Greys</a> thrive on the same pellet-based diet, the same calcium and vitamin-A-rich vegetables, the same UV-B-supported D3, and the same toxic-food rules. The larger Congo (400–600 g) simply eats a bit more than the smaller Timneh (275–375 g), so you scale the bowl to the bird, not the recipe. Here is how our two Greys line up side by side.</p>
+        </div>
+      </div>
+      <CompareTableE
+        eyebrow="Compare Diet · Congo vs Timneh"
+        heading="Congo vs Timneh — Same Diet, Different Appetite"
+        sub="Here at C.A.Gs we hand-raise both, and we feed them the same way — an identical pellet base, the same calcium-and-vitamin-A vegetable rotation, UV-B lighting, and the same never-feed list. The only practical difference is that the larger Congo eats a little more than the smaller, calmer Timneh, which also tends to start talking earlier."
+      />
+    </section>
+
+    <!-- 13. AVAILABLE C.A.Gs GREYS -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="available-birds" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-8 gap-4 flex-wrap">
+          <div class="border-l-4 border-green pl-4">
+            <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">This Week's Aviary</p>
+            <h2 class="font-lora font-bold text-logo-dark">Which Well-Fed C.A.Gs African Greys Are Ready to Continue This Diet at Home?</h2>
+            <p class="text-stone-500 mt-2 max-w-2xl text-sm leading-relaxed">Every Congo and Timneh African Grey we hand-feed here at C.A.Gs is weaned onto the exact pellet-and-vegetable diet this guide describes, PCR DNA-sexed, examined by a board-certified avian vet, and CITES Appendix I-documented — and each one goes home on the food it is already eating, with lifetime feeding and care support from Mark &amp; Teri.</p>
+          </div>
+          <a href="/african-grey-parrot-for-sale/" class="inline-block bg-clay hover:bg-clay-dk text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors whitespace-nowrap">View All Birds →</a>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {birds.map(bird => <BirdCard {...bird} />)}
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-2 mt-8">
+          {['CITES Captive-Bred Cert', 'PCR DNA Sex Certificate', 'Avian Vet Health Cert', 'Hatch Certificate', 'Fully Weaned'].map(badge => (
+            <span class="text-xs font-sora text-green bg-green/8 border border-green/20 px-3 py-1 rounded-full">✓ {badge}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. FAQ -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="faq" class="scroll-mt-20 py-16 px-4 bg-warm-white">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-10">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Diet Questions</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Do Owners Ask Most About Feeding an African Grey?</h2>
+        </div>
+        <div class="cag-faq-acc max-w-3xl mx-auto space-y-3">
+          {faqs.map((item, i) => (
+            <div class:list={["cag-faq-item bg-white rounded-2xl border border-line overflow-hidden", i === 0 && "open"]} style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
+              <button type="button" class="cag-faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4" aria-expanded={i === 0 ? "true" : "false"}>
+                <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
+                <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0">{item.a}</p></div></div>
+            </div>
+          ))}
+        </div>
+        <style is:global>
+          .cag-faq-q { cursor: pointer; background: transparent; transition: background .2s ease; }
+          .cag-faq-q:hover { background: rgba(45,106,79,.04); }
+          .cag-faq-chevron { transition: transform .2s ease; }
+          .cag-faq-item.open .cag-faq-chevron { transform: rotate(180deg); }
+          .cag-faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .2s ease; }
+          .cag-faq-item.open .cag-faq-panel { grid-template-rows: 1fr; }
+          .cag-faq-panel-inner { overflow: hidden; }
+        </style>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mx-auto text-center mt-8" style="max-width:70ch;">Diet is just one piece of a long life with a Grey — our <a href="/african-grey-parrot-care-guide/">full African Grey care guide</a> covers housing, enrichment, and lighting, our <a href="/best-african-grey-parrot-food/">best African Grey food guide</a> names the exact pellet brands we trust, and our <a href="/african-grey-parrot-lifespan/">African Grey lifespan guide</a> shows how feeding right adds years to a 40–60-year companion.</p>
+        <div class="text-center mt-6">
+          <a href="/african-grey-parrot-faq/" class="inline-block bg-clay hover:bg-clay-dk text-white font-sora font-semibold px-7 py-3 rounded-full text-sm transition-colors">See All African Grey FAQs →</a>
+        </div>
+      </div>
+    </section>
+
+    <div style="text-align:center;padding:8px 0 4px;font-family:'IBM Plex Sans',sans-serif;font-size:0.88rem;color:#6b6560;">
+      This guide is part of the <a href="/african-grey-care/" style="color:#2D6A4F;font-weight:600;text-decoration:none;">African Grey Care Hub</a> →
+    </div>
+
+    <!-- 15. FINAL CTA + CONTACT -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section class="pt-14 px-4 md:pt-16 text-center">
+      <div class="max-w-3xl mx-auto">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Ready When You Are</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-4">Now You Know How to Feed One — Ready to Bring Home a Captive-Bred African Grey?</h2>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised and fully weaned onto this exact pellet-and-vegetable diet, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation — never wild-caught. Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Still comparing the two species' appetites? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
+      </div>
+    </section>
+
+    <div id="contact" class="scroll-mt-20">
+      <InquiryForm />
+    </div>
+
   </div>
-
-  <CTA
-    headline="Interested in a Captive-Bred African Grey?"
-    sub="Our birds are hand-raised on a proper pellet and vegetable diet from day one. Every bird ships with CITES documentation, DNA sexing, and a vet health certificate."
-  />
 </BaseLayout>
 
-<style>
-  .page-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 48px;
+<style is:global>
+  /* ============================================================
+     DIET PAGE — Direction-D-aware interior wrapper (.diet-d)
+     Mirrors the homepage .home-d + care-guide .care-d seam + lead-spacing
+     scope so the global theme applies and the seam-logo divider renders.
+     body.theme-d already supplies Newsreader/IBM Plex, lead paragraphs,
+     eyebrow ticks, card + button motion — NOT re-done here.
+     ============================================================ */
+  .diet-d { --rule: rgba(45,106,79,.16); }
+
+  /* AA: clay as small readable text on this page's LIGHT sections → #b04228 (4.5:1).
+     Mirrors the homepage .home-d rule. Clay on the green hero stays bright. */
+  .diet-d a.text-clay, .diet-d .text-clay { color:#b04228; }
+  .diet-d .hero-v3-b .text-clay, .diet-d .bg-clay { color:inherit; }
+
+  /* Woven in-content links: clay, underlined, AA-safe — applies to all the
+     mid-sentence internal/external links in body copy. */
+  .diet-d p a:not(.rounded-full):not(.bg-clay),
+  .diet-d li a:not(.rounded-full):not(.bg-clay) {
+    color:#b04228; font-weight:500; text-decoration:underline;
+    text-decoration-color:rgba(176,66,40,.35); text-underline-offset:2px;
+    transition:text-decoration-color .2s ease;
   }
-  .text-wrap {
-    max-width: 760px;
-  }
-  .diet-h1 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #faf7f4;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.2;
-    margin: 0 0 1rem;
-  }
-  .diet-h2 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
-    line-height: 1.25;
-    margin: 0 0 1.25rem;
-  }
-  .diet-hero {
-    background: #2D6A4F;
-    padding: 3.5rem 0 3rem;
-    text-align: center;
-  }
-  .diet-sub {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.65;
-    color: rgba(250,247,244,0.88);
-    max-width: 70ch;
-    margin: 0 auto 1.75rem;
-  }
-  .btn-primary {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.85rem 1.9rem;
-    border-radius: 50px;
-    text-decoration: none;
-    display: inline-block;
-    background: #e8604c;
-    color: #fff;
-    transition: background 0.2s ease;
-  }
-  .btn-primary:hover { background: #d44e3b; }
-  .diet-section { padding: 3rem 0; }
-  .diet-alt { background: #faf7f4; }
-  .diet-section p,
-  .diet-links li {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 0 1.2rem;
-  }
-  .diet-list,
-  .diet-toxic-list {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    padding-left: 1.5rem;
-    margin: 0.5rem 0 1.2rem;
-  }
-  .diet-list li,
-  .diet-toxic-list li {
-    margin-bottom: 0.5rem;
-    max-width: 70ch;
-  }
-  .diet-links {
-    padding-left: 1.5rem;
-    margin: 0;
-  }
-  .diet-link {
-    color: #e8604c;
-    text-decoration: underline;
-  }
-  .diet-link:hover { color: #d44e3b; }
-  .diet-faq { display: flex; flex-direction: column; gap: 0.75rem; }
-  .diet-faq-item {
-    border: 1px solid #e7e5e4;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    background: #fff;
-  }
-  .diet-faq-q {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #2D6A4F;
-    cursor: pointer;
-    list-style: none;
-  }
-  .diet-faq-q::-webkit-details-marker { display: none; }
-  .diet-faq-a {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.98rem;
-    line-height: 1.65;
-    color: #44403c;
-    margin: 0.75rem 0 0;
-    max-width: 70ch;
-  }
-  @media (max-width: 767px) { .page-container { padding: 0 16px; } }
-  @media (min-width: 768px) and (max-width: 1024px) { .page-container { padding: 0 32px; } }
+  .diet-d p a:not(.rounded-full):not(.bg-clay):hover,
+  .diet-d li a:not(.rounded-full):not(.bg-clay):hover { text-decoration-color:#b04228; }
+
+  /* Section seam — centered wordmark divider (verbatim scope from index.astro) */
+  .diet-d > .cag-seam{ display:flex; align-items:center; gap:26px; max-width:1100px; margin:0 auto; padding:.6rem 24px !important; }
+  .cag-seam__line{ flex:1; height:1px; background:var(--rule); }
+  .diet-d .cag-seam img{ height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+  @media (max-width:600px){ .diet-d > .cag-seam{ gap:16px; } .diet-d .cag-seam img{ height:24px; } }
 </style>

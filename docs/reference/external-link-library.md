@@ -1,5 +1,5 @@
 # CAG External Link Library
-Last updated: 2026-05-17
+Last updated: 2026-06-06
 Source: cag-external-link-agent
 
 All URLs verified live before insertion. Anchors are sentence-middle/beginning placement only (never at end of sentence).
@@ -24,6 +24,16 @@ All URLs verified live before insertion. Anchors are sentence-middle/beginning p
 | URL | Category | Anchor Variant 1 | Anchor Variant 2 | Anchor Variant 3 | Status |
 |-----|----------|-----------------|-----------------|-----------------|--------|
 | `https://en.wikipedia.org/wiki/Grey_parrot` | Authority | African Grey parrot natural history | Grey parrot (Psittacus erithacus) research | African Grey species taxonomy | ✅ 200 |
+| `https://parrots.org/encyclopedia/grey-parrot/` | Authority | World Parrot Trust grey parrot encyclopedia | Grey parrot wild diet & range | World Parrot Trust species profile | ✅ 200 (www→non-www 301) |
+
+---
+
+## Category: Authority — Avian Nutrition / Diet (added 2026-06-06, diet page)
+
+| URL | Category | Anchor Variant 1 | Anchor Variant 2 | Anchor Variant 3 | Status |
+|-----|----------|-----------------|-----------------|-----------------|--------|
+| `https://lafeber.com/vet/avian-nutrition-basics/` | Authority | LafeberVet avian nutrition basics | veterinary avian-nutrition reference | avian nutrition fundamentals (LafeberVet) | ✅ 200 (avian-nutrition→-basics 301) |
+| `https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/` | Authority | LafeberVet African Grey information sheet | LafeberVet African Grey care + toxic-food sheet | veterinary African Grey basics | ✅ 200 |
 
 ---
 
