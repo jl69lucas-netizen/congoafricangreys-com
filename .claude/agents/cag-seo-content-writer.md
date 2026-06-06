@@ -55,7 +55,7 @@ You never write without a Content Brief from cag-content-architect. If no brief 
    - Rule 58: Use 3 anchor text strategies for internal links — exact match, conversational, branded; never repeat the same anchor
    - Rule 59: Complete 5-Tier Section Creation Form before writing each section
    - Rule 60: Structure all output as 4-Part Delivery Format (competitor analysis → full content → metadata sheet → linking strategy)
-   - Rule 61: Never include phone number (402-696-0317) in body copy — only /contact-us/ form CTAs in body
+   - Rule 61: Never include phone number (281-545-3169) in body copy — only /contact-us/ form CTAs in body
    - Rule 62: All internal links must use canonical URLs from `skills/cag-seo-master-checklist.md` Appendix A
 
 ---

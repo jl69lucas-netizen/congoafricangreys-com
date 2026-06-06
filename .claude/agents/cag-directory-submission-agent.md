@@ -60,7 +60,7 @@ Address: 2508 Briaroaks Ct
 City / State / ZIP: Midland, TX 79707
 Country: United States
 Geo: 32.00275937134384, -102.17760079202473
-Phone: +1-402-696-0317
+Phone: +1-281-545-3169
 Email: Info@congoafricangreys.com
 Hours: Inquiry response within 24 hours
 Website: https://congoafricangreys.com
@@ -230,7 +230,7 @@ file_upload ...                    # logo if a logo/image field exists
 # Field mapping (common names → CAG data):
 #   business_name / company_name / listing_title → "C.A.Gs – Midland, TX"   (never the bare domain)
 #   contact_name / owner                         → "Mark Benjamin & Teri Benjamin"
-#   phone                                        → "+1-402-696-0317"
+#   phone                                        → "+1-281-545-3169"
 #   email                                        → "Info@congoafricangreys.com"
 #   address / street                             → "2508 Briaroaks Ct"
 #   city / state / zip                           → "Midland" / "TX" / "79707"

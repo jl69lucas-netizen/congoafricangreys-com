@@ -112,7 +112,7 @@ For each page audit, check every item:
 - [ ] Avian vet cert referenced on health-related pages
 - [ ] CITES captive-bred documentation mentioned on sales/availability pages
 - [ ] No language implying wild-caught origin
-- [ ] Rule 61: No phone number in body copy — CTAs link to /contact-us/ form only (402-696-0317 in footer/schema ONLY)
+- [ ] Rule 61: No phone number in body copy — CTAs link to /contact-us/ form only (281-545-3169 in footer/schema ONLY)
 
 ---
 

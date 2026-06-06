@@ -41,7 +41,7 @@ description: Master SEO execution guide for all CAG pages (except location pages
 African Grey Parrot Breeder | C.A.Gs — Captive-Bred Congo & Timneh African Greys | Midland, TX
 ```
 
-**Homepage CTA rule:** ALL CTAs use form links — NO phone number in body. Phone 402-696-0317 appears ONLY in the footer.
+**Homepage CTA rule:** ALL CTAs use form links — NO phone number in body. Phone 281-545-3169 appears ONLY in the footer.
 
 ---
 
@@ -768,7 +768,7 @@ Under 4 words each, start with a number or percentage:
 - ✅ `👉 [Submit an inquiry to reserve your Congo African Grey](/contact-us/)`
 - ✅ `📋 [Fill out our quick inquiry form — we respond within 24 hours](/contact-us/)`
 - ✅ `<a href="/contact-us/" class="cag-btn-primary">Inquire About a Bird</a>`
-- ❌ `📞 Call 402-696-0317 to reserve today!` — NEVER in body copy
+- ❌ `📞 Call 281-545-3169 to reserve today!` — NEVER in body copy
 
 **Newsletter Signups (3 per full hub page):**
 - Position 1 (Top — after Diet/Nutrition section): "Get our FREE African Grey Diet & Nutrition Guide!"
@@ -1393,7 +1393,7 @@ When migrating content from dog-breeder templates or MFS reference material, app
 | Grooming (nails, fur) | Feather care, beak maintenance, misting |
 | Hip dysplasia, luxating patella | PBFD, Polyomavirus, Psittacosis, Bornavirus |
 | $1,200–$1,700 price range | $1,500–$3,500 (CAG) / $1,200–$2,500 (TAG) |
-| (402) 555-0123 placeholder | 402-696-0317 — FOOTER ONLY (Rule 61) |
+| (402) 555-0123 placeholder | 281-545-3169 — FOOTER ONLY (Rule 61) |
 | 17 states served | Nationwide shipping (IATA-approved) |
 | Flight Nanny | IATA-certified avian flight nanny |
 | Ground transport | Climate-controlled avian ground transit |
