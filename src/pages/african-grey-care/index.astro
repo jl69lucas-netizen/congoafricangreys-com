@@ -1,237 +1,501 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
+import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
+import CompareTableE from '../../components/cag-library/CompareTableE.astro';
+import BirdCard from '../../components/BirdCard.astro';
+import InquiryForm from '../../components/cag-inquiry-form.astro';
 
-const title = "African Grey Parrot Care Hub | Diet, Training & Health Guides | CongoAfricanGreys.com";
-const description = "Complete African Grey parrot care resource: diet, taming, lifespan, cage setup, and health guides — written by USDA-licensed breeders with 10+ years raising Congos and Timnehs in Midland, TX.";
+const title = "African Grey Care | Your Hub for African Grey Parrot Care Resources | Diet, Lifespan, Health & Taming Guides for Congo & Timneh Greys | C.A.Gs – Midland, TX";
+const description = "The C.A.Gs African Grey care hub — one place that routes you to every African Grey parrot care resource we publish: the full care guide, diet & best foods, lifespan, the health guarantee, taming, and FAQ. Breeder-written by Mark & Teri Benjamin for captive-bred, CITES Appendix I Congo & Timneh Greys.";
 const canonical = "https://congoafricangreys.com/african-grey-care/";
-const ogType = "website";
+const updated = "June 2026";
 
-const schemaJson = JSON.stringify({
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Grey Care", url: "/african-grey-care/" },
+];
+
+// ─── Available birds (cross-sell grid) — verified against data/clutch-inventory.json + price-matrix.json ───
+const birds = [
+  { id: 'roys',  name: 'Roys',  sex: 'Male',   age: '4 mo',  price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Energetic, curious, and impossible to ignore.',
+    notes: "Hand-raised male, 4 months old. Thrives in a lively home where there's always something to watch." },
+  { id: 'amie',  name: 'Amie',  sex: 'Female', age: '3 mo',  price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'She mimics your laugh before you finish it.',
+    notes: 'Premium hand-raised female, 3 months old. Full social training. Responds to her name already.' },
+  { id: 'bery',  name: 'Bery',  sex: 'Female', age: '1 yr',  price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp',
+    hook: 'Gentle, easy, and the bird first-time owners dream of.',
+    notes: 'Soft temperament, easy to handle. 1-year-old female — personality fully developed, ready to bond.' },
+  { id: 'elad',  name: 'Elad',  sex: 'Male',   age: '5 mo',  price: '$1,600',
+    tag: 'Timneh', tagType: 'new' as const, variant: 'Timneh African Grey',
+    image: '/elad-timneh-african-grey-male-5-months.webp',
+    hook: 'Smaller bird. Bigger personality than you expected.',
+    notes: 'Hand-raised male Timneh African Grey, 5 months old. Full social training. Ready to go home.' },
+  { id: 'evie',  name: 'Evie',  sex: 'Female', age: '6 mo',  price: '$1,500',
+    tag: 'Timneh', tagType: 'value' as const, variant: 'Timneh African Grey',
+    image: '/evie-timneh-african-grey-female-6-months.webp', objectPos: 'object-top',
+    hook: 'Calm, clever, and ready to come home.',
+    notes: 'Hand-raised female Timneh African Grey, 6 months old. Full social training. Gentle and sociable.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Must-Go Pair', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair.webp',
+    hook: 'Two birds, one bond. They go together — and so do you.',
+    notes: 'Unrelated pair, must be adopted together. Jins (male, 6mo) + Jeni (female, 4mo). Both hand-raised with full social training.' },
+];
+
+// ─── Care resource spokes — each routes to one deep guide (this is the hub's core) ───
+const spokes = [
+  {
+    href: "/african-grey-parrot-care-guide/",
+    eyebrow: "Start here",
+    title: "Complete African Grey Care Guide",
+    body: "Our full pillar guide — diet ratios, exact cage specs, enrichment, UV-B lighting, grooming, the common health issues, and vet schedule in one long read. Everything below is a deeper cut of a section in here.",
+    cta: "Read the full care guide",
+    icon: `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2D6A4F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+  },
+  {
+    href: "/african-grey-parrot-diet/",
+    eyebrow: "Feeding",
+    title: "African Grey Diet & Feeding Schedule",
+    body: "The day-to-day plan: the 60–80% pellet base, which fresh vegetables deliver vitamin A, how we handle calcium, and a realistic feeding routine for a Congo or Timneh.",
+    cta: "See the diet guide",
+    icon: `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2D6A4F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.85-5.4 5.1-6"/></svg>`,
+  },
+  {
+    href: "/best-african-grey-parrot-food/",
+    eyebrow: "Food",
+    title: "Best African Grey Parrot Food",
+    body: "Which pellet brands we trust (and why), the safe fresh foods, foraging treat ideas, and the full toxic-food list every Grey owner must memorize before the first meal.",
+    cta: "Compare the best foods",
+    icon: `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2D6A4F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>`,
+  },
+  {
+    href: "/african-grey-parrot-lifespan/",
+    eyebrow: "Longevity",
+    title: "African Grey Lifespan & Aging",
+    body: "How long Congo and Timneh Greys really live, the husbandry factors that decide whether a bird hits the upper end of 40–60 years, and how to support a Grey at every life stage.",
+    cta: "Read the lifespan guide",
+    icon: `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2D6A4F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>`,
+  },
+  {
+    href: "/african-grey-parrot-health-guarantee/",
+    eyebrow: "Health",
+    title: "African Grey Health Guarantee",
+    body: "The written health guarantee behind every C.A.Gs Grey, the avian-vet exam and screening we do before placement, and exactly what your documentation covers when your bird arrives.",
+    cta: "See the health guarantee",
+    icon: `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2D6A4F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15.5 9.5"/></svg>`,
+  },
+  {
+    href: "/how-to-tame-african-grey-parrot/",
+    eyebrow: "Training",
+    title: "How to Tame an African Grey",
+    body: "Our step-by-step taming and trust-building method for a new bird — first-day handling, the step-up command, bite prevention, and building a bond that lasts decades.",
+    cta: "Learn the taming method",
+    icon: `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2D6A4F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  },
+  {
+    href: "/african-grey-parrot-faq/",
+    eyebrow: "Answers",
+    title: "African Grey Parrot FAQ",
+    body: "Quick, direct answers to the questions buyers and new owners ask us most — noise, being left alone, talking, sexing, legality, and the things people only think to ask after they own one.",
+    cta: "Browse the full FAQ",
+    icon: `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2D6A4F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+  },
+];
+
+// ─── FAQ (PAA-style HUB questions — routing-flavored, distinct from the pillar's care-detail FAQ) — mirrored into FAQPage schema ───
+const faqs = [
+  { q: "Where do I start with African Grey care?",
+    a: "Start with our complete African Grey parrot care guide — it walks the whole picture (diet, cage, enrichment, lighting, health, and vet care) in order. From there, dive into the specific resource you need next: the diet guide for feeding, the best-food guide for pellet brands and the toxic list, the lifespan guide for the long view, or the taming guide for a brand-new bird. This hub page exists to point you to the right one fast." },
+  { q: "What does African Grey care actually involve?",
+    a: "At a glance: a pellet-based diet (60–80% formulated pellets plus fresh vegetables), a large stainless-steel cage (at least 36\" W × 24\" D × 48\" H for a Congo), 3–4 hours of daily interaction and out-of-cage time, full-spectrum UV-B light for vitamin D3, regular bathing, and an annual avian-vet wellness exam. Each of those areas has its own deep-dive guide linked from this hub — this page is the map, the linked guides are the detail." },
+  { q: "Is the care different for a Congo versus a Timneh African Grey?",
+    a: "The husbandry is identical — diet, lighting, enrichment, and vet care don't change between the two species. The differences are size and temperament: a Congo African Grey is larger and needs the bigger end of every cage and perch spec, and is more sensitive to change, while a Timneh is smaller, calmer, and often a more forgiving first bird. Our care guide covers the shared routine, and our Congo vs Timneh comparison shows the day-to-day differences side by side." },
+  { q: "How much daily time does an African Grey really need?",
+    a: "Plan on 3–4 hours of direct interaction and supervised out-of-cage time every day. Greys are intensely social and as intelligent as a young child, so chronic boredom and loneliness are the leading causes of feather-plucking and screaming. A Grey is not a low-maintenance pet — it needs your time, not just your space." },
+  { q: "How long do African Grey parrots live, and what does that mean for me?",
+    a: "Properly cared-for African Greys commonly live 40 to 60 years, and some reach 70+. That makes a Grey a genuine multi-decade, lifetime commitment — many owners name a guardian for their bird in their estate documents. We talk every C.A.Gs buyer through that reality before placement, and our lifespan guide explains the husbandry that decides whether a bird reaches the upper end of that range." },
+  { q: "Are your African Greys captive-bred and documented?",
+    a: "Yes. African Greys are protected under CITES Appendix I, and every C.A.Gs Grey is captive-bred in the USA — never wild-caught — and placed with full documentation: a CITES captive-bred certificate, a PCR DNA sexing certificate, a board-certified avian-vet health certificate, a hatch certificate, and a closed band. Captive-bred Appendix I birds are legal to own and transfer domestically with that paperwork, which we hand you before any money moves." },
+  { q: "Do I need an avian vet before I bring an African Grey home?",
+    a: "Yes — find one first. African Greys are prey animals that mask illness until it is advanced, so they need a board-certified avian or exotics vet (not a general small-animal clinic) for an annual wellness exam and any emergency. Lining up that vet before your bird arrives means you are never scrambling. Every C.A.Gs Grey also ships with an avian-vet health certificate dated within 10 days of travel." },
+  { q: "How much does it cost to own an African Grey beyond the purchase price?",
+    a: "Budget for first-year setup — a large cage ($300–$800), perches and toys ($100–$300), and an initial avian-vet visit ($75–$200) — plus ongoing annual costs for quality food ($200–$400), a wellness exam ($75–$200), and replacement enrichment. Shipping a C.A.Gs Grey is $185 for airport pickup or $350 for home delivery. The bird is a decades-long companion, so we encourage every family to plan the lifetime cost, not just the sticker price." },
+];
+
+const faqSchema = {
   "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebPage",
-      "@id": "https://congoafricangreys.com/african-grey-care/",
-      "url": "https://congoafricangreys.com/african-grey-care/",
-      "name": "African Grey Parrot Care Hub",
-      "description": "Complete African Grey parrot care guides: diet, taming, lifespan, cage setup, and health — by USDA-licensed breeders.",
-      "isPartOf": { "@id": "https://congoafricangreys.com/#website" },
-      "breadcrumb": {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://congoafricangreys.com/" },
-          { "@type": "ListItem", "position": 2, "name": "African Grey Care", "item": "https://congoafricangreys.com/african-grey-care/" }
-        ]
-      }
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "How hard is it to care for an African Grey parrot?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "African Grey parrots require a significant time commitment — minimum 2–3 hours of daily interaction, a varied fresh-food diet, a large cage (minimum 36×24×48 inches), and annual avian vet visits. They are not beginner birds, but captive-bred hand-raised birds from reputable breeders are calmer and easier to manage than parent-raised or rescue Greys."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What do African Grey parrots eat?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "A healthy African Grey diet is 60–70% high-quality pellets, 20–30% fresh vegetables and fruits (leafy greens, carrots, bell peppers, pomegranate), and 10% seeds/nuts as treats. Avoid avocado, chocolate, caffeine, onion, and xylitol — all toxic to parrots."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How long do African Grey parrots live?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "African Grey parrots live 40–60 years in captivity with proper care. Congo African Greys typically live 45–60 years; Timneh African Greys average 40–50 years. The primary lifespan factors are diet quality, veterinary care, mental stimulation, and stress reduction."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do African Greys need an avian vet?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes — African Greys should see a board-certified avian veterinarian for a wellness exam within 72 hours of arrival and annually thereafter. Parrots hide illness until critically sick, so proactive exams catch problems early. Budget $150–$300 per wellness visit."
-          }
-        }
-      ]
-    }
-  ]
-});
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "African Grey Care — Hub for Every African Grey Parrot Care Resource",
+  description: "The C.A.Gs African Grey care hub: a breeder-written overview that routes owners to every African Grey parrot care resource — the full care guide, diet and best-food guides, lifespan, the health guarantee, taming, and FAQ — for captive-bred, CITES Appendix I Congo and Timneh Greys.",
+  image: "https://congoafricangreys.com/african-grey-parrot-free-exploration.webp",
+  inLanguage: "en-US",
+  datePublished: "2024-09-01",
+  dateModified: "2026-06-06",
+  author: {
+    "@type": "Organization",
+    name: "C.A.Gs – Midland, TX",
+    url: "https://congoafricangreys.com/about/",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Congo African Greys",
+    logo: { "@type": "ImageObject", url: "https://congoafricangreys.com/cag-footer-logo.png" },
+  },
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+};
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} ogType={ogType} schemaJson={schemaJson}>
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta
+  extraHeadHtml={'<link rel="preload" as="image" href="/african-grey-parrot-free-exploration.webp" fetchpriority="high" type="image/webp" />'}>
 
-<style>
-  :root {
-    --green: #2D6A4F;
-    --clay: #e8604c;
-    --cream: #faf7f4;
-    --dark: #1c1a18;
-    --muted: #6b6560;
-    --border: #ede5dc;
-    --green-lt: #eaf4ef;
-  }
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-  .container-text { max-width: 760px; margin: 0 auto; }
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  .breadcrumb a { color: var(--green); text-decoration: none; }
-  .breadcrumb a:hover { text-decoration: underline; }
+  <div class="care-d cag-article">
 
-  .care-hero { background: var(--green); color: #fff; padding: 56px 0 48px; }
-  .care-hero h1 { font-family: Lora, serif; font-size: clamp(1.7rem, 3.5vw, 2.6rem); font-weight: 700; margin: 0 0 16px; line-height: 1.2; }
-  .care-hero p { font-family: Sora, sans-serif; font-size: 1.05rem; opacity: 0.9; max-width: 640px; margin: 0 0 28px; line-height: 1.65; }
-  .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); color: #fff; font-family: Sora, sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 14px; border-radius: 50px; margin-bottom: 18px; }
-  .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--clay); color: #fff; font-family: Sora, sans-serif; font-weight: 600; font-size: 0.95rem; padding: 13px 28px; border-radius: 50px; text-decoration: none; transition: background 0.2s; }
-  .btn-primary:hover { background: #c94d3a; }
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
 
-  .spokes-section { padding: 64px 0; }
-  .spokes-section h2 { font-family: Lora, serif; font-size: 1.7rem; color: var(--green); margin: 0 0 8px; }
-  .spokes-intro { font-family: Sora, sans-serif; color: var(--muted); margin: 0 0 40px; max-width: 600px; font-size: 0.98rem; line-height: 1.65; }
-  .spokes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .spoke-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; text-decoration: none; color: var(--dark); transition: box-shadow 0.2s, transform 0.15s; display: flex; flex-direction: column; }
-  .spoke-card:hover { box-shadow: 0 6px 24px rgba(60,30,10,0.1); transform: translateY(-2px); }
-  .spoke-icon { font-size: 1.6rem; margin-bottom: 12px; }
-  .spoke-card h3 { font-family: Lora, serif; font-size: 1.1rem; color: var(--green); margin: 0 0 8px; }
-  .spoke-card p { font-family: Sora, sans-serif; font-size: 0.87rem; color: var(--muted); margin: 0; line-height: 1.6; flex: 1; }
-  .spoke-tag { display: inline-block; margin-top: 14px; font-size: 0.78rem; font-family: Sora, sans-serif; color: var(--clay); font-weight: 600; }
+    <!-- 1. HERO (cag-hero-v3 idiom · Authority Green · photo-led) -->
+    <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
+      <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
+      <div class="container relative z-10 mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-12">
+        <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
+          <!-- COPY -->
+          <div class="order-2 text-center md:order-1 md:text-left">
+            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Care Resource Hub · Updated {updated}</p>
+            <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
+              African Grey Care
+            </h1>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
+              This is our hub for every African Grey parrot care resource we publish here at C.A.Gs — a quick overview of what owning a Grey involves, with a clear link out to the deep-dive guide for each topic. Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and Timneh African Greys in Midland, Texas since 2014, and this is where we point families to the answer they need next.
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+              <a href="#care-resources" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Browse Care Guides →</a>
+              <a href="#available-birds" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">See Available Greys →</a>
+            </div>
+          </div>
+          <!-- CIRCULAR IMAGE STAGE -->
+          <div class="order-1 flex justify-center md:order-2 md:justify-end">
+            <div class="relative">
+              <div class="absolute inset-0 -m-3 rounded-full border border-white/25 md:-m-5" aria-hidden="true"></div>
+              <div class="relative flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#0f3d2c] ring-4 ring-white/15 sm:h-[260px] sm:w-[260px] md:h-[300px] md:w-[300px]" style="box-shadow: 0 24px 60px rgba(60,30,10,0.35);">
+                <img src="/african-grey-parrot-free-exploration.webp"
+                  alt="Hand-raised Congo African Grey parrot out of its cage during daily enrichment time at the C.A.Gs aviary in Midland, Texas — the kind of daily care this hub helps you plan."
+                  title="African Grey care hub — C.A.Gs, Midland TX"
+                  width="400" height="400" loading="eager" fetchpriority="high" decoding="async"
+                  class="h-full w-full object-cover" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  .faq-section { padding: 56px 0; background: var(--cream); }
-  .faq-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 32px; }
-  details { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; background: #fff; }
-  summary { font-family: Sora, sans-serif; font-weight: 600; font-size: 0.97rem; padding: 18px 20px; cursor: pointer; list-style: none; color: var(--dark); }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: '+'; float: right; color: var(--clay); font-size: 1.2rem; font-weight: 400; }
-  details[open] summary::after { content: '−'; }
-  .faq-body { padding: 0 20px 18px; font-family: Sora, sans-serif; font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
+    <!-- 2. COUNTER SNIPPET -->
+    <CounterSnippet />
 
-  .cta-section { padding: 64px 0; text-align: center; }
-  .cta-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--dark); margin: 0 0 12px; }
-  .cta-section p { font-family: Sora, sans-serif; color: var(--muted); max-width: 520px; margin: 0 auto 28px; font-size: 0.98rem; line-height: 1.65; }
+    <!-- 3. KEY TAKEAWAY / BLUF -->
+    <KeyTakeawayV2
+      eyebrow="The short version"
+      heading="What Does African Grey Care Involve?"
+      badge="6 essentials · 60-sec read"
+      items={[
+        { stat: "Pellets", label: "Daily Diet", body: "A base of 60–80% formulated pellets plus fresh veg — never seed-only, never avocado. Full plan in our diet guide." },
+        { stat: '48"', label: "Cage Height", body: "A Congo needs at least 36\" W × 24\" D × 48\" H in stainless steel; the care guide has the full spec." },
+        { stat: "3–4 hr", label: "Daily Time", body: "Greys are as social as a young child — they need hours of interaction and out-of-cage time, not just space." },
+        { stat: "UV-B", label: "Light + D3", body: "Full-spectrum UV-B lets a Grey make the vitamin D3 it needs to absorb calcium and avoid hypocalcemia." },
+        { stat: "Annual", label: "Avian Vet", body: "A yearly wellness exam catches the illness a Grey instinctively hides until it is advanced." },
+        { stat: "40–60 yr", label: "Lifespan", body: "An African Grey is a multi-decade commitment — care planning is care for life, not just for a year." },
+      ]}
+    />
 
-  @media (max-width: 767px) {
-    .spokes-grid { grid-template-columns: 1fr; gap: 16px; }
-    .care-hero { padding: 40px 0 36px; }
-    .spokes-section { padding: 48px 0; }
-    .faq-section { padding: 44px 0; }
-    .cta-section { padding: 48px 0; }
-  }
-  @media (min-width: 768px) and (max-width: 1024px) {
-    .spokes-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>
+    <!-- 4. TOC (grouped-by-part) -->
+    <nav class="toc-care py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
+      <div class="container mx-auto max-w-[1100px]">
+        <div class="rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-12 md:py-10" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+          <div class="flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end">
+            <div>
+              <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">Inside this hub</p>
+              <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark md:text-3xl">On This Page</h2>
+            </div>
+            <p class="font-sora text-[13px] text-stone-500">6 sections · your map to every care resource</p>
+          </div>
+          <div class="mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part One</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">Find your guide</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 1, t: "Every African Grey Care Guide, in One Place", href: "#care-resources" },
+                  { n: 2, t: "The 5 Pillars of African Grey Care", href: "#care-basics" },
+                  { n: 3, t: "Do Congo & Timneh Greys Need Different Care?", href: "#congo-vs-timneh" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part Two</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">Birds & answers</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 4, t: "Which Hand-Raised C.A.Gs Greys Are Available?", href: "#available-birds" },
+                  { n: 5, t: "African Grey Care Questions, Answered", href: "#faq" },
+                  { n: 6, t: "Bring Home a Captive-Bred African Grey", href: "#contact" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-<div>
+    <!-- 5. CARE RESOURCE GRID (the hub's core — one card per spoke) -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={[
-        { name: "Home", url: "/" },
-        { name: "African Grey Care", url: "/african-grey-care/" }
-      ]} />
+    <section id="care-resources" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Care Resource Library</p>
+          <h2 class="font-lora font-bold text-logo-dark">Every African Grey Care Guide, in One Place</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Rather than cram every detail onto one page, here at C.A.Gs we keep a focused guide for each part of African Grey ownership — and this hub is the index that points you to the right one. New to Greys? Begin with our <a href="/african-grey-parrot-care-guide/">complete African Grey care guide</a>, then branch into the specific topics below. Each card links straight to a guide written from the same routine we use to hand-raise our own birds.</p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {spokes.map((s) => (
+            <a href={s.href} class="spoke-card group flex flex-col bg-white rounded-2xl border border-line p-7 no-underline" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+              <div class="spoke-icon mb-3.5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-green/[0.08]" set:html={s.icon}></div>
+              <p class="font-sora text-[11px] font-bold uppercase tracking-[0.14em] text-clay-ink mb-1">{s.eyebrow}</p>
+              <h3 class="font-lora font-bold text-xl text-logo-dark leading-snug">{s.title}</h3>
+              <p class="font-sora text-stone-600 mt-2 text-[14px] leading-relaxed flex-1">{s.body}</p>
+              <span class="font-sora mt-4 inline-flex items-center gap-1 text-sm font-semibold text-clay-ink group-hover:gap-2 transition-all">{s.cta} →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. THE 5 PILLARS (overview that links DOWN to each spoke) -->
+    <section id="care-basics" class="py-16 px-4 bg-warm-white scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Quick-Start Basics</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Are the 5 Pillars of African Grey Care?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>African Grey care comes down to five things done well — diet, housing, enrichment, veterinary care, and social time.</strong> Here is the overview of each, with a link down to the full guide whenever you want the detail behind it. Get these five right and a captive-bred Grey can be a talking companion for <a href="/african-grey-parrot-lifespan/">40 to 60 years</a>.</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Diet</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Feed a base of 60–80% formulated pellets plus fresh, vitamin-A-rich vegetables and only limited fruit, and skip toxic foods like avocado and chocolate entirely. Diet is the single biggest driver of a Grey's health — our <a href="/african-grey-parrot-diet/">African Grey diet guide</a> and <a href="/best-african-grey-parrot-food/">best-food guide</a> cover the brands, ratios, and full toxic list.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Housing</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A single Congo needs a stainless-steel cage of at least 36" W × 24" D × 48" H with ¾"–1" bar spacing, placed against a wall in a busy room and far from kitchen fumes. The exact cage, perch, and placement specs live in our <a href="/african-grey-parrot-care-guide/">complete care guide</a>.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Enrichment</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Rotate foraging and puzzle toys, hide food to make a clever bird work for it, and give 3–4 hours of supervised out-of-cage time daily. A bored Grey plucks and screams — the same intelligence that makes our birds <a href="/how-to-tame-african-grey-parrot/">trainable and tameable</a> is what demands real mental stimulation.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">04</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Veterinary Care</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Line up a board-certified avian vet before your bird arrives, and book an annual wellness exam — Greys hide illness until it is advanced. Every C.A.Gs Grey ships with an avian-vet health certificate and the <a href="/african-grey-parrot-health-guarantee/">written health guarantee</a> behind it.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">05</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Social Time</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A Grey bonds deeply with its family and needs daily one-on-one attention, conversation, and routine. It does not need a second bird, but it does need <em>you</em> — chronic loneliness is the leading cause of behavioral problems, which is why we match each Grey to a home ready to engage with it.</p>
+          </article>
+          <article class="bg-green text-white rounded-2xl border border-green p-7 flex flex-col justify-center" style="box-shadow:0 4px 24px rgba(60,30,10,0.10);">
+            <h3 class="font-lora font-bold text-xl text-white">Want the whole picture?</h3>
+            <p class="font-sora text-white/85 mt-2 text-[14px] leading-relaxed">Our pillar guide ties all five together — with the cage specs, UV-B lighting setup, grooming, common health issues, and vet schedule in one read.</p>
+            <a href="/african-grey-parrot-care-guide/" class="font-sora mt-4 inline-flex items-center gap-1 text-sm font-semibold text-white hover:gap-2 transition-all no-underline">Open the full care guide →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CONGO vs TIMNEH CARE AT A GLANCE -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="congo-vs-timneh" class="scroll-mt-20">
+      <div class="bg-cream pt-14 px-4 md:pt-16">
+        <div class="max-w-3xl mx-auto mb-2">
+          <h2 class="font-lora font-bold text-logo-dark mb-3 text-center">Do Congo and Timneh African Greys Need Different Care?</h2>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;"><strong>The day-to-day care is the same for both — diet, lighting, enrichment, and vet care don't change between the species.</strong> What differs is size and temperament: a <a href="/congo-african-grey-for-sale/">Congo African Grey</a> is larger and a little more sensitive, while a <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a> is smaller, calmer, and often the easier first bird. The well-documented split between the two — recognized as separate species by conservation references such as the <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">World Parrot Trust grey parrot encyclopedia</a> — is summarized side by side below.</p>
+        </div>
+      </div>
+      <CompareTableE
+        eyebrow="Compare Care · Congo vs Timneh"
+        heading="Congo vs Timneh — Which Grey Fits Your Home?"
+        sub="Here at C.A.Gs we hand-raise both, and neither is harder to care for than the other — the Congo simply needs the larger cage and a steadier routine for its sensitivity, while the calmer Timneh is the gentler introduction for first-time owners. Both get identical diet, UV-B lighting, enrichment, and vet care."
+      />
+    </section>
+
+    <!-- 8. AVAILABLE C.A.Gs GREYS -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="available-birds" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-8 gap-4 flex-wrap">
+          <div class="border-l-4 border-green pl-4">
+            <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">This Week's Aviary</p>
+            <h2 class="font-lora font-bold text-logo-dark">Which Hand-Raised C.A.Gs African Greys Are Ready Right Now?</h2>
+            <p class="text-stone-500 mt-2 max-w-2xl text-sm leading-relaxed">Every Congo and Timneh African Grey we hand-feed here at C.A.Gs is PCR DNA-sexed, examined by a board-certified avian vet, CITES Appendix I-documented, and fully weaned at 12–16 weeks — and each one goes home on the exact diet and routine these care guides describe, with lifetime support from Mark &amp; Teri.</p>
+          </div>
+          <a href="/african-grey-parrot-for-sale/" class="inline-block bg-clay hover:bg-clay-dk text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors whitespace-nowrap">View All Birds →</a>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {birds.map(bird => <BirdCard {...bird} />)}
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-2 mt-8">
+          {['CITES Captive-Bred Cert', 'PCR DNA Sex Certificate', 'Avian Vet Health Cert', 'Hatch Certificate'].map(badge => (
+            <span class="text-xs font-sora text-green bg-green/8 border border-green/20 px-3 py-1 rounded-full">✓ {badge}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. FAQ -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="faq" class="scroll-mt-20 py-16 px-4 bg-warm-white">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-10">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Hub Questions</p>
+          <h2 class="font-lora font-bold text-logo-dark">African Grey Care Questions, Answered</h2>
+        </div>
+        <div class="cag-faq-acc max-w-3xl mx-auto space-y-3">
+          {faqs.map((item, i) => (
+            <div class:list={["cag-faq-item bg-white rounded-2xl border border-line overflow-hidden", i === 0 && "open"]} style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
+              <button type="button" class="cag-faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4" aria-expanded={i === 0 ? "true" : "false"}>
+                <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
+                <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0">{item.a}</p></div></div>
+            </div>
+          ))}
+        </div>
+        <style is:global>
+          .cag-faq-q { cursor: pointer; background: transparent; transition: background .2s ease; }
+          .cag-faq-q:hover { background: rgba(45,106,79,.04); }
+          .cag-faq-chevron { transition: transform .2s ease; }
+          .cag-faq-item.open .cag-faq-chevron { transform: rotate(180deg); }
+          .cag-faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .2s ease; }
+          .cag-faq-item.open .cag-faq-panel { grid-template-rows: 1fr; }
+          .cag-faq-panel-inner { overflow: hidden; }
+        </style>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mx-auto text-center mt-8" style="max-width:70ch;">Looking for the depth behind these answers? Our <a href="/african-grey-parrot-care-guide/">complete African Grey care guide</a> covers the full husbandry routine, and our <a href="/african-grey-parrot-faq/">African Grey FAQ</a> tackles the buyer-and-owner questions this hub doesn't.</p>
+        <div class="text-center mt-6">
+          <a href="/african-grey-parrot-faq/" class="inline-block bg-clay hover:bg-clay-dk text-white font-sora font-semibold px-7 py-3 rounded-full text-sm transition-colors">See All African Grey FAQs →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. FINAL CTA + CONTACT -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section class="pt-14 px-4 md:pt-16 text-center">
+      <div class="max-w-3xl mx-auto">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Ready When You Are</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-4">Ready to Bring Home a Captive-Bred African Grey?</h2>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised on the same routine these guides describe — fully weaned, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation, never wild-caught. Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Still comparing the two species? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
+      </div>
+    </section>
+
+    <div id="contact" class="scroll-mt-20">
+      <InquiryForm />
+    </div>
+
   </div>
 
-  <section class="care-hero">
-    <div class="container">
-      <div class="hero-badge">Care Resource Hub</div>
-      <h1>African Grey Parrot Care: Complete Owner's Resource</h1>
-      <p>Breeder-written care guides covering everything from day-one taming to lifelong diet, health, and enrichment — so your Grey thrives for 40–60 years.</p>
-      <a href="/contact-us/" class="btn-primary">Ask a Care Question</a>
-    </div>
-  </section>
-
-  <section class="spokes-section">
-    <div class="container">
-      <h2>African Grey Care Guides</h2>
-      <p class="spokes-intro">Each guide below covers one core area of African Grey ownership in depth. Start with the complete care guide, then dive into the topics most relevant to you.</p>
-
-      <div class="spokes-grid">
-
-        <a href="/african-grey-parrot-care-guide/" class="spoke-card">
-          <div class="spoke-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg></div>
-          <h3>Complete Care Guide</h3>
-          <p>Housing, diet, enrichment, health, and socialization — everything you need from day one through the lifetime of your Grey.</p>
-          <span class="spoke-tag">Start here →</span>
-        </a>
-
-        <a href="/african-grey-parrot-diet/" class="spoke-card">
-          <div class="spoke-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.85-5.4 5.1-6"/></svg></div>
-          <h3>Diet &amp; Nutrition</h3>
-          <p>What African Greys eat, what to avoid, pellet brands, fresh food ratios, and supplement guidelines for optimal health.</p>
-          <span class="spoke-tag">Read guide →</span>
-        </a>
-
-        <a href="/african-grey-parrot-lifespan/" class="spoke-card">
-          <div class="spoke-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-          <h3>Lifespan &amp; Aging</h3>
-          <p>How long Congo and Timneh Greys live, what affects longevity, and how to support your bird at every life stage.</p>
-          <span class="spoke-tag">Read guide →</span>
-        </a>
-
-        <a href="/best-african-grey-parrot-food/" class="spoke-card">
-          <div class="spoke-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.85-5.4 5.1-6"/></svg></div>
-          <h3>Best Foods &amp; Pellets</h3>
-          <p>Top-rated pellet brands, safe fresh foods, foraging treat ideas, and foods that are toxic to African Greys.</p>
-          <span class="spoke-tag">Read guide →</span>
-        </a>
-
-        <a href="/how-to-tame-african-grey-parrot/" class="spoke-card">
-          <div class="spoke-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <h3>Taming &amp; Trust Training</h3>
-          <p>Step-by-step taming method for new birds — covering first-day handling, step-up command, bite prevention, and bonding.</p>
-          <span class="spoke-tag">Read guide →</span>
-        </a>
-
-        <a href="/buy-african-grey-parrot-near-me/" class="spoke-card">
-          <div class="spoke-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-          <h3>Before You Buy</h3>
-          <p>Is an African Grey right for your lifestyle? Time commitment, real cost, and what to expect in year one as a new Grey owner.</p>
-          <span class="spoke-tag">Read guide →</span>
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-  <section class="faq-section">
-    <div class="container container-text">
-      <h2>African Grey Care — Common Questions</h2>
-
-      <details>
-        <summary>How hard is it to care for an African Grey parrot?</summary>
-        <div class="faq-body">African Grey parrots require a significant time commitment — minimum 2–3 hours of daily interaction, a varied fresh-food diet, a large cage (minimum 36×24×48 inches), and annual avian vet visits. They are not beginner birds, but captive-bred hand-raised birds from reputable breeders are calmer and easier to manage than parent-raised or rescue Greys.</div>
-      </details>
-
-      <details>
-        <summary>What do African Grey parrots eat?</summary>
-        <div class="faq-body">A healthy African Grey diet is 60–70% high-quality pellets, 20–30% fresh vegetables and fruits (leafy greens, carrots, bell peppers, pomegranate), and 10% seeds/nuts as treats. Avoid avocado, chocolate, caffeine, onion, and xylitol — all toxic to parrots.</div>
-      </details>
-
-      <details>
-        <summary>How long do African Grey parrots live?</summary>
-        <div class="faq-body">African Grey parrots live 40–60 years in captivity with proper care. Congo African Greys typically live 45–60 years; Timneh African Greys average 40–50 years. The primary lifespan factors are diet quality, veterinary care, mental stimulation, and stress reduction.</div>
-      </details>
-
-      <details>
-        <summary>Do African Greys need an avian vet?</summary>
-        <div class="faq-body">Yes — African Greys should see a board-certified avian veterinarian (not a general small-animal vet) for a wellness exam within 72 hours of arrival and annually thereafter. Parrots hide illness until they are critically sick, so proactive exams catch problems early. Budget $150–$300 per wellness visit.</div>
-      </details>
-    </div>
-  </section>
-
-  <section class="cta-section">
-    <div class="container">
-      <h2>Ready to Bring Home an African Grey?</h2>
-      <p>Our captive-bred, hand-raised Congos and Timnehs are raised under these same care standards from day one.</p>
-      <a href="/contact-us/" class="btn-primary">Inquire About Availability</a>
-    </div>
-  </section>
-
-</div>
-
+  <script is:inline>
+    // FAQ accordion (smooth open/close) — mirrors homepage/care-guide pattern
+    (function () {
+      const qs = document.querySelectorAll('.cag-faq-q');
+      if (!qs.length) return;
+      qs.forEach(btn => btn.addEventListener('click', () => {
+        const item = btn.closest('.cag-faq-item');
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }));
+    })();
+  </script>
 </BaseLayout>
+
+<style is:global>
+  /* ============================================================
+     CARE-HUB PAGE — Direction-D-aware interior wrapper (.care-d)
+     Mirrors the homepage .home-d + care-guide seam/lead scope so the
+     global body.theme-d (Newsreader/IBM Plex, lead paragraphs, eyebrow
+     ticks, card + button motion) applies and the seam-logo divider
+     renders correctly. Theme is NOT re-implemented here.
+     ============================================================ */
+  .care-d { --rule: rgba(45,106,79,.16); }
+
+  /* AA: clay as small readable text on this page's LIGHT sections → #b04228 (4.5:1).
+     Mirrors the homepage .home-d rule. Clay on the green hero/CTA stays bright. */
+  .care-d a.text-clay, .care-d .text-clay { color:#b04228; }
+  .care-d .hero-v3-b .text-clay, .care-d .bg-clay { color:inherit; }
+
+  /* Woven in-content links: clay, underlined, AA-safe — applies to the
+     mid-sentence internal/external links in body copy (not buttons/spoke cards). */
+  .care-d p a:not(.rounded-full):not(.bg-clay):not(.no-underline),
+  .care-d li a:not(.rounded-full):not(.bg-clay):not(.no-underline) {
+    color:#b04228; font-weight:500; text-decoration:underline;
+    text-decoration-color:rgba(176,66,40,.35); text-underline-offset:2px;
+    transition:text-decoration-color .2s ease;
+  }
+  .care-d p a:not(.rounded-full):not(.bg-clay):not(.no-underline):hover,
+  .care-d li a:not(.rounded-full):not(.bg-clay):not(.no-underline):hover { text-decoration-color:#b04228; }
+
+  /* Spoke resource cards — soft-warm lift on hover (matches Direction-D article cards) */
+  .care-d .spoke-card { color:#1c1a18; transition:transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s ease; }
+  .care-d .spoke-card:hover { transform:translateY(-4px); box-shadow:0 14px 38px rgba(60,30,10,0.14) !important; }
+  .care-d .spoke-card h3 { color:#2D6A4F; }
+
+  /* External-link outward arrow affordance (decision 2026-06-03) on this page's
+     in-content links, mirroring .home-d. Internal links stay marker-free. */
+  .care-d a[target="_blank"]::after { content:"\2197"; font-size:.7em; line-height:0; vertical-align:super; opacity:.5; margin-left:.12em; }
+
+  /* Section seam — centered wordmark divider (verbatim scope from index.astro / care-guide) */
+  .care-d > .cag-seam{ display:flex; align-items:center; gap:26px; max-width:1100px; margin:0 auto; padding:.6rem 24px !important; }
+  .cag-seam__line{ flex:1; height:1px; background:var(--rule); }
+  .care-d .cag-seam img{ height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+  @media (max-width:600px){ .care-d > .cag-seam{ gap:16px; } .care-d .cag-seam img{ height:24px; } }
+</style>
