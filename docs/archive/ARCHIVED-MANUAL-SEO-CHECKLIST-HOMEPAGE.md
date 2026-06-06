@@ -1,3 +1,16 @@
+> # ⚠️ ARCHIVED — DO NOT USE FOR NEW WORK (2026-06-06)
+> This is the original raw SEO checklist. It is **half-converted from the Maltipoo (MFS) project** —
+> ~196 lines still reference "maltipoo / maltese / MFS" and are NOT valid for African Greys.
+> It is kept ONLY for the genuine CAG fragments buried inside it (internal-domain-link list,
+> external-authority-link list, location-page notes).
+>
+> **Use these instead:**
+> - `MANUAL INTERIOR-PAGE CHECKLIST.md` (repo root) — the clean manual for informational/secondary pages (Hero → CTA).
+> - `skills/cag-seo-master-checklist.md` — the machine SEO workflow + Interior-Page Profile.
+> - `docs/reference/external-link-library.md` — the live external-authority links.
+
+---
+
 **THIS WILL BE USED TO DO SEO FOR ALL PAGES, EXCEPT THE LOCATION PAGES AND COMPARISON PAGES WCHICH HAVE THEIR OWN SEO CHHECKLIST RUULES.**
 
  **like can you check if this SEO, checklist rules already exist with some agents, etc it is accurate, or can you bake it agent-wide, or how do we do it?**
