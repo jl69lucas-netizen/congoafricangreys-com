@@ -8,16 +8,19 @@
 
 **Anchor handle: `congoafricangreys`** (your code already points YouTube here). Use it on every platform.
 
-| Platform | Handle | Status / action |
-|---|---|---|
-| YouTube | `@congoafricangreys` | Referenced in code — confirm it's claimed |
-| Instagram | `@congoafricangreys` | Register (fallback `@congoafricangreys.tx`) |
-| Facebook Page | `/congoafricangreys` | **Page exists** at the numeric `/people/...` URL — claim the vanity username `/congoafricangreys` |
-| Pinterest | `@congoafricangreys` | Register |
-| TikTok | `@congoafricangreys` | Register (fallback `@cags.midlandtx`) |
+**Availability verified via browser 2026-06-06:**
 
-Fallbacks if the exact handle is taken anywhere (use the SAME fallback everywhere): `congoafricangreys.tx` → `cags.midlandtx`.
-⚠️ Account creation must be done by the breeder (needs your email/phone). Verify availability at signup. NAP audits → @cag-nap-citation-agent.
+| Platform | Handle | Verified status | Action |
+|---|---|---|---|
+| YouTube | `@congoafricangreys` | ✅ **CLAIMED (yours)** — 1 sub, 3 Shorts | Activate/optimize. One Short titled `588bbcd0…` (raw hash) → real title via @cag-video-seo-agent |
+| Instagram | `@congoafricangreys` | ✅ **CLAIMED (yours)** — display "CongoAfricangreys" | Activate (post the Maxy Reel) |
+| Facebook | numeric `/people/…` | ✅ **Page exists** | Claim vanity URL `/congoafricangreys` |
+| Pinterest | `congoafricangreys` | 🟢 **AVAILABLE** | Register now |
+| TikTok | `@congoafricangreys` | 🟢 **AVAILABLE** | Register now |
+
+So you already own IG + YT + FB under the brand — they're just dormant. **To-do: (1) register Pinterest + TikTok, (2) claim the FB vanity URL, (3) activate the dormant IG/YT with this content pack.**
+Fallbacks if a handle is ever taken (use the SAME one everywhere): `congoafricangreys.tx` → `cags.midlandtx`.
+⚠️ Account creation/registration must be done by the breeder (needs your email/phone). NAP audits → @cag-nap-citation-agent.
 
 ---
 
