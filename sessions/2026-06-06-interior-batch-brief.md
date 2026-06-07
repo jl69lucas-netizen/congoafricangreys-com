@@ -55,7 +55,8 @@
 - Pricing: CAG **$1,500–$3,500**, TAG **$1,200–$2,500** (confirm against `data/price-matrix.json` per page).
 - Shipping: **$185 airport / $350 home**, IATA LAR, Delta/United/American (from `data/financial-entities.json` — never hardcode).
 - CITES: **Appendix I** (uplisted CoP17, 2017), captive-bred USA, USDA AWA licensed.
-- Verified-Claim Ledger: psittacosis, UV-B/D3, Maxy (talking Congo) = ✅. Never assert PBFD/PCR/board-cert beyond confirmed.
+- Verified-Claim Ledger ✅ CONFIRMED (USE these — they are site-wide on the homepage): **PCR-based DNA sexing · PBFD (Psittacine Beak & Feather Disease) screening · Polyomavirus (APV) screening · board-certified avian veterinarian** · psittacosis · UV-B/D3 · Maxy (talking Congo) · USDA AWA license · CITES Appendix I captive-bred · hatch certificate · closed band · 72-hr written guarantee. (Source: `.claude/agents/cag-entity-incorporation-agent.md:56` + `sessions/2026-06-03-homepage-entity-map.md:11,103.`) The CLAUDE.md note "never assert PBFD/PCR/board-cert beyond confirmed" means do not EXCEED this set — these specific four ARE confirmed, so name them. Do NOT invent: awards, association memberships, families-served counts, years before 2014.
+- **LESSON (health-guarantee build):** an agent stripped "board-certified" + PBFD/Polyomavirus thinking they were unconfirmed → under-claimed + broke site consistency. Fixed. All Cluster B/C/D agents MUST keep these confirmed entities.
 
 ---
 
