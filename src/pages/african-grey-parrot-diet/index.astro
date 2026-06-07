@@ -558,6 +558,19 @@ const articleSchema = {
     </div>
 
   </div>
+
+  <script is:inline>
+    // FAQ accordion (smooth open/close) — mirrors homepage/care-hub pattern
+    (function () {
+      const qs = document.querySelectorAll('.cag-faq-q');
+      if (!qs.length) return;
+      qs.forEach(btn => btn.addEventListener('click', () => {
+        const item = btn.closest('.cag-faq-item');
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }));
+    })();
+  </script>
 </BaseLayout>
 
 <style is:global>
