@@ -1,34 +1,75 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import CTA from '../../components/CTA.astro';
+import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
+import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
+import CompareTableE from '../../components/cag-library/CompareTableE.astro';
+import BirdCard from '../../components/BirdCard.astro';
+import InquiryForm from '../../components/cag-inquiry-form.astro';
 
-const title = "African Grey Parrot Lifespan | 40–60 Years: What You Need to Know";
-const description = "African Grey parrots live 40–60 years in captivity. What affects lifespan, vet care at each life stage, and how to plan for a bird that may outlive you.";
+const title = "African Grey Parrot Lifespan | How Long Do African Greys Live, Captive vs Wild & What Affects It? | Congo 50–60+ Yrs, Timneh 50+ Yrs — The 40–60 Year Commitment | C.A.Gs – Midland, TX";
+const description = "Our African Grey parrot lifespan guide from USDA-licensed breeders: Congo African Greys live 50–60+ years in captivity, Timneh Greys 50+, with documented records past 70. What shortens or extends a Grey's life — diet, avian vet care, hypocalcemia, exercise, mental health, air quality — how to maximize it, and why a captive-bred Congo or Timneh is a 40–60 year commitment to plan for | CITES Appendix I.";
 const canonical = "https://congoafricangreys.com/african-grey-parrot-lifespan/";
+const updated = "June 2026";
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "African Grey Lifespan", url: "/african-grey-parrot-lifespan/" },
 ];
 
+// ─── Available birds (cross-sell grid) — verified against data/clutch-inventory.json + price-matrix.json ───
+// Shipping line + trust badges are hardwired inside BirdCard.astro (Ships nationwide · $185 airport · $350 home).
+const birds = [
+  { id: 'roys',  name: 'Roys',  sex: 'Male',   age: '4 mo',  price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'A whole life ahead of him.',
+    notes: 'Hand-raised Congo male, 4 months old — a healthy start on what should be a 50-to-60-year companionship.' },
+  { id: 'amie',  name: 'Amie',  sex: 'Female', age: '3 mo',  price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'Decades of conversation in the making.',
+    notes: 'Premium hand-raised Congo female, 3 months old, weaned onto the calcium-rich diet that protects long-term health.' },
+  { id: 'bery',  name: 'Bery',  sex: 'Female', age: '1 yr',  price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp',
+    hook: 'Gentle, settled, and barely out of the nest.',
+    notes: 'Soft-tempered Congo female, 1 year old — a yearling at the very beginning of a long life.' },
+  { id: 'elad',  name: 'Elad',  sex: 'Male',   age: '5 mo',  price: '$1,600',
+    tag: 'Timneh', tagType: 'new' as const, variant: 'Timneh African Grey',
+    image: '/elad-timneh-african-grey-male-5-months.webp',
+    hook: 'A 50-year talker, ready early.',
+    notes: 'Hand-raised Timneh male, 5 months old — Timnehs match the Congo for longevity and tend to talk sooner.' },
+  { id: 'evie',  name: 'Evie',  sex: 'Female', age: '6 mo',  price: '$1,500',
+    tag: 'Timneh', tagType: 'value' as const, variant: 'Timneh African Grey',
+    image: '/evie-timneh-african-grey-female-6-months.webp', objectPos: 'object-top',
+    hook: 'Calm companion for the long haul.',
+    notes: 'Hand-raised Timneh female, 6 months old, fully weaned and ready to begin decades at home.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Must-Go Pair', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair.webp',
+    hook: 'Two long lives, one family.',
+    notes: 'Unrelated Congo pair, must be adopted together. Jins (male, 6mo) + Jeni (female, 4mo), both weaned and thriving.' },
+];
+
+// ─── FAQ (PAA-sourced: current page + competitor union + Google PAA) — mirrored into FAQPage schema ───
 const faqs = [
-  {
-    q: "How long do African Grey parrots live?",
-    a: "Captive African Grey parrots commonly live 40 to 60 years with proper diet, veterinary care, and enrichment. Some documented individuals have reached 70–80 years. Wild African Greys have a shorter average lifespan due to predation, disease, and habitat loss.",
-  },
-  {
-    q: "What shortens an African Grey's lifespan?",
-    a: "The most common lifespan-shortening factors in captivity are seed-heavy diets (hypovitaminosis A causing chronic infection), PTFE/Teflon fume exposure, delayed veterinary care (prey-animal instinct to hide illness), feather destructive behavior leading to self-mutilation, and chronic stress from understimulation.",
-  },
-  {
-    q: "How old is an African Grey in human years?",
-    a: "African Greys mature sexually at 3–5 years, reach behavioral maturity at 10–12 years, and are considered middle-aged at 20–25 years. A 40-year-old African Grey is in the final quarter of its natural lifespan — roughly equivalent to a 75-year-old human.",
-  },
-  {
-    q: "What should I do if my African Grey outlives me?",
-    a: "Include your bird in your estate planning. Designate a guardian in your will and provide them with the bird's complete medical history, diet log, behavioral notes, and CITES documentation. The African Parrot Society and World Parrot Trust maintain rehoming networks for parrots that outlive their owners.",
-  },
+  { q: "How long do African Grey parrots live?",
+    a: "In captivity, with proper diet, avian veterinary care, and enrichment, African Grey parrots commonly live 50 to 60 years or more, and well-documented individuals have reached 70 to 80. Wild African Greys average far less — often 20 to 30 years — because predation, disease, and habitat loss cut life short. Congo and Timneh Greys share the same long lifespan, so the species you choose should not be decided on longevity." },
+  { q: "What is the oldest African Grey on record?",
+    a: "The longevity literature records captive African Greys living past 70 years, with the longevity database AnAge listing a maximum of roughly 60+ years and individual reports reaching the high 70s. The famous research Grey 'Alex' lived to about 31, while pet and aviary birds kept on excellent diets have outlived that by decades. These are credible records, not folklore — which is exactly why we tell every buyer to treat a Grey as a multi-decade commitment." },
+  { q: "Do Congo and Timneh African Greys live the same length of time?",
+    a: "Yes — lifespan is essentially identical between the two. Both our Congo African Greys and Timneh African Greys live 50 to 60-plus years in captivity when fed and cared for well; the Congo is simply larger and the Timneh smaller. Body size, tail color, and how early a bird talks differ between them, but neither subspecies is meaningfully longer-lived than the other." },
+  { q: "What shortens an African Grey's lifespan?",
+    a: "The biggest lifespan-shorteners in captivity are an all-seed diet (causing vitamin-A deficiency, chronic infection, and fatty liver), untreated hypocalcemia (Greys are uniquely prone to low blood calcium), PTFE/Teflon and smoke fumes that can kill in minutes, delayed veterinary care because birds hide illness, and chronic stress or feather-destructive behavior from boredom. Most of these are preventable, which is why husbandry — not luck — decides how long a Grey lives." },
+  { q: "How can I help my African Grey live longer?",
+    a: "Feed a pellet-and-vegetable diet with calcium and UV-B support, see an avian-certified vet every year for proactive bloodwork, keep the air free of PTFE fumes and smoke, provide daily out-of-cage exercise and foraging for mental health, and weigh your bird weekly to catch illness early. A Grey that is well fed, well exercised, mentally engaged, and seen by a bird vet annually is the one that reaches the top of its 50-to-60-year range." },
+  { q: "How old is an African Grey in human years?",
+    a: "African Greys mature sexually around 3 to 5 years, reach behavioral maturity at 10 to 12, and are middle-aged at roughly 25 to 30 given their long lifespan. A 40-year-old Grey is well into its senior years but can still be vocal and engaged, while a 50-plus-year bird is genuinely elderly. There is no exact conversion, but a useful rule of thumb is that a Grey's first year packs in a great deal of development, then it ages slowly across many decades." },
+  { q: "What should I do if my African Grey outlives me?",
+    a: "Plan for it before you need to. Name a guardian for the bird in your will, leave them the complete medical history, diet notes, weight log, and the CITES Appendix I documentation that must travel with the bird for life, and consider a modest pet trust to cover care. Reputable parrot organizations and breeders — including us — maintain rehoming networks for Greys that outlive their owners, so connect with one early rather than in a crisis." },
+  { q: "Why does an African Grey's long lifespan matter before I buy one?",
+    a: "Because a Congo or Timneh African Grey is a 40-to-60-year commitment — often the longest of any companion animal you will own. That means decades of daily attention, diet, vet bills, and social interaction, plus a real chance the bird outlives you. Here at C.A.Gs we would rather a buyer think hard about that timeline now than rehome a grieving, bonded bird later, so we walk every family through the full lifetime reality before placing a Grey." },
 ];
 
 const faqSchema = {
@@ -40,323 +81,485 @@ const faqSchema = {
     acceptedAnswer: { "@type": "Answer", text: f.a },
   })),
 };
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "African Grey Parrot Lifespan — How Long Do African Greys Live, Captive vs Wild & How to Maximize It",
+  description: "A complete African Grey parrot lifespan guide from USDA-licensed breeders C.A.Gs: Congo Greys live 50–60+ years and Timneh Greys 50+ in captivity, with records past 70; what shortens and extends a Grey's life, how to maximize longevity, and why a captive-bred Congo or Timneh is a 40–60 year commitment.",
+  image: "https://congoafricangreys.com/african-grey-parrot-free-exploration.webp",
+  inLanguage: "en-US",
+  datePublished: "2024-09-01",
+  dateModified: "2026-06-07",
+  author: {
+    "@type": "Organization",
+    name: "C.A.Gs – Midland, TX",
+    url: "https://congoafricangreys.com/about/",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Congo African Greys",
+    logo: { "@type": "ImageObject", url: "https://congoafricangreys.com/cag-footer-logo.png" },
+  },
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+};
+
+// Longevity practices (custom numbered grid — phone-free, diet-page idiom)
+const longevityPractices = [
+  { t: "Feed for the long haul", b: "A pellet base with fresh vegetables, plus calcium and UV-B support, is the single biggest lever on lifespan. Seed-only diets shave years off a Grey through vitamin-A deficiency and fatty liver." },
+  { t: "Annual avian vet care", b: "See a bird-certified vet every year for a proactive exam and bloodwork. Greys hide illness as prey animals, so a yearly panel catches kidney, liver, and calcium problems before they turn fatal." },
+  { t: "Guard the air", b: "Retire non-stick (PTFE) cookware and keep the home smoke-free. Overheated Teflon and cigarette smoke are airborne killers that end an otherwise healthy Grey's life in minutes or erode it over years." },
+  { t: "Daily exercise & flight", b: "Out-of-cage time, climbing, and supervised flapping keep heart, muscles, and weight healthy. A sedentary, cage-bound Grey is prone to obesity and the disease that follows it." },
+  { t: "Protect mental health", b: "Foraging, training, novelty, and real social time prevent the chronic stress and feather-plucking that quietly shorten a Grey's life. A bored Grey is rarely a long-lived one." },
+  { t: "Weigh weekly, act early", b: "A gram scale is your earliest warning system: a 10–15 gram drop can flag illness in a bird that still looks normal. Catching trouble a week sooner is often the difference that adds years." },
+];
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta
+  extraHeadHtml={'<link rel="preload" as="image" href="/african-grey-parrot-free-exploration.webp" fetchpriority="high" type="image/webp" />'}>
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <!-- HERO -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
-  </div>
+  <div class="life-d cag-article">
 
-  <section class="life-hero">
-    <div class="page-container">
-      <h1 class="life-h1">African Grey Parrot Lifespan</h1>
-      <p class="life-sub">
-        40 to 60 years. Possibly longer than your mortgage. Understanding what that means —
-        and planning for it — is part of responsible African Grey ownership.
-      </p>
-      <a class="btn-primary" href="/african-grey-parrot-care-guide/">Full Care Guide</a>
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
+      <Breadcrumb items={breadcrumbs} />
     </div>
-  </section>
 
-  <!-- HOW LONG -->
-  <section class="life-section">
-    <div class="page-container text-wrap">
-      <h2 class="life-h2">How Long Do African Greys Live?</h2>
-      <p>
-        In captivity, with proper nutrition, veterinary care, and enrichment, African Grey parrots
-        commonly live <strong>40 to 60 years</strong>. This is not an upper bound — it is the
-        standard range for a well-kept bird. Some documented individuals have reached 70 to 80
-        years. These are legitimate records, not apocryphal stories.
-      </p>
-      <p>
-        Wild African Greys have a shorter average lifespan. Predation by raptors, disease, habitat
-        fragmentation, and food scarcity all reduce life expectancy significantly below captive
-        averages. A wild African Grey reaching 20 years is doing well; a captive bird at 20 years
-        is a young adult with 30–40 more years ahead.
-      </p>
-      <p>
-        The comparison between Congo and Timneh is essentially equal. Both subspecies have the
-        same 40–60 year captive lifespan when cared for properly. Choosing between them should not
-        be based on lifespan expectations.
-      </p>
-    </div>
-  </section>
-
-  <!-- LIFE STAGES -->
-  <section class="life-section life-alt">
-    <div class="page-container text-wrap">
-      <h2 class="life-h2">Life Stages: What to Expect at Each Age</h2>
-
-      <div class="life-stages">
-        <div class="life-stage-card">
-          <h3 class="life-h3">Baby (0–1 year)</h3>
-          <p>Weaning period (12–16 weeks), rapid feather development, first vocalizations.
-          Highly impressionable — socialization during this window shapes temperament for life.
-          Annual first vet exam should occur by 6 months.</p>
-        </div>
-        <div class="life-stage-card">
-          <h3 class="life-h3">Juvenile (1–5 years)</h3>
-          <p>Vocabulary acquisition begins in earnest, sexual maturity onset at 3–5 years.
-          Hormonal periods may begin (seasonal behavior changes, mild aggression). Birds
-          develop strong individual personality during this stage.</p>
-        </div>
-        <div class="life-stage-card">
-          <h3 class="life-h3">Young Adult (5–15 years)</h3>
-          <p>Peak cognitive and vocal ability. Behavioral maturity around age 10–12. Birds
-          become deeply bonded to their primary person. Routine and stability are especially
-          important during this phase.</p>
-        </div>
-        <div class="life-stage-card">
-          <h3 class="life-h3">Mature Adult (15–30 years)</h3>
-          <p>Stable, predictable personality. Some birds become calmer and more tolerant.
-          Annual bloodwork becomes increasingly important for early detection of age-related
-          organ changes. Dietary quality continues to matter enormously.</p>
-        </div>
-        <div class="life-stage-card">
-          <h3 class="life-h3">Senior (30+ years)</h3>
-          <p>Arthritis may affect foot grip — provide lower perches and easier cage navigation.
-          More frequent veterinary monitoring (twice yearly recommended). Vision may decline.
-          Senior birds often remain highly vocal and engaged well into their 40s and 50s.</p>
+    <!-- 1. HERO (cag-hero-v3 idiom · Authority Green · data-forward) -->
+    <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
+      <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
+      <div class="container relative z-10 mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-12">
+        <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
+          <!-- COPY -->
+          <div class="order-2 text-center md:order-1 md:text-left">
+            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Owner's Longevity Guide · Updated {updated}</p>
+            <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
+              African Grey Parrot Lifespan
+            </h1>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
+              A Congo African Grey commonly lives <strong>50 to 60 years or more</strong> in captivity, and a Timneh just as long — decades beyond most dogs and longer than many marriages. Here at C.A.Gs in Midland, Texas, Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and Timneh Greys since 2014, and this guide lays out exactly how long an African Grey lives, what makes that number rise or fall, and why a Grey is a 40-to-60-year commitment worth planning for before you ever bring one home.
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+              <a href="#how-long" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">How Long Do They Live? →</a>
+              <a href="#commitment" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">The 40–60 Year Reality →</a>
+            </div>
+          </div>
+          <!-- CIRCULAR IMAGE STAGE -->
+          <div class="order-1 flex justify-center md:order-2 md:justify-end">
+            <div class="relative">
+              <div class="absolute inset-0 -m-3 rounded-full border border-white/25 md:-m-5" aria-hidden="true"></div>
+              <div class="relative flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#0f3d2c] ring-4 ring-white/15 sm:h-[260px] sm:w-[260px] md:h-[300px] md:w-[300px]" style="box-shadow: 0 24px 60px rgba(60,30,10,0.35);">
+                <img src="/african-grey-parrot-free-exploration.webp"
+                  alt="Healthy hand-raised Congo African Grey parrot at the C.A.Gs aviary in Midland, Texas — the kind of well-fed, exercised bird that reaches the top of the 50-to-60-year African Grey lifespan."
+                  title="African Grey parrot lifespan — a healthy Grey at C.A.Gs, Midland, TX"
+                  width="400" height="400" loading="eager" fetchpriority="high" decoding="async"
+                  class="h-full w-full object-cover object-top" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TOP CAUSES OF EARLY DEATH -->
-  <section class="life-section">
-    <div class="page-container text-wrap">
-      <h2 class="life-h2">Top Causes of Early Death in Captive African Greys</h2>
-      <p>
-        Understanding what kills African Greys prematurely is as important as understanding
-        what keeps them healthy. The most common causes of death before age 20 in captive birds:
-      </p>
-      <ul class="life-list">
-        <li>
-          <strong>Seed-heavy diet → Hypovitaminosis A:</strong> Chronic vitamin A deficiency
-          suppresses the immune system, causes chronic sinus infections, and leads to secondary
-          bacterial pneumonia. This is the single most preventable cause of early death.
-        </li>
-        <li>
-          <strong>PTFE/Teflon fume exposure:</strong> Overheated non-stick cookware releases
-          aerosolized particles lethal to birds within minutes. This is not a risk that can be
-          managed by opening windows — it is an instant, catastrophic event.
-        </li>
-        <li>
-          <strong>Delayed veterinary care:</strong> African Greys instinctively hide illness (a
-          prey-animal survival mechanism). By the time visible symptoms appear, the disease is
-          often advanced. Annual proactive exams catch problems before they become fatal.
-        </li>
-        <li>
-          <strong>Feather destructive behavior → Self-mutilation:</strong> What begins as
-          feather plucking from boredom or stress can progress to self-mutilation of the skin.
-          Severe cases lead to infection and sepsis if not addressed.
-        </li>
-        <li>
-          <strong>Chronic psychological stress:</strong> Understimulation, inconsistent routine,
-          frequent rehoming, and social isolation all cause chronic cortisol elevation that
-          suppresses immunity and shortens lifespan.
-        </li>
-      </ul>
-    </div>
-  </section>
+    <!-- 2. COUNTER SNIPPET -->
+    <CounterSnippet />
 
-  <!-- VET CARE BY STAGE -->
-  <section class="life-section life-alt">
-    <div class="page-container text-wrap">
-      <h2 class="life-h2">Veterinary Care by Life Stage</h2>
-      <p>
-        African Greys require veterinary attention with an <strong>avian-certified veterinarian</strong>,
-        not a general practice vet. Avian medicine is a specialized field; a vet without specific
-        bird training may miss early disease markers or administer incorrect drug doses.
-      </p>
-      <p>
-        From age 0–10 years, annual wellness exams with a CBC, gram stain, and weight check are
-        the standard of care. From age 10–25 years, annual exams with the addition of a basic
-        chemistry panel to monitor kidney and liver function. From age 25+, twice-yearly exams
-        are recommended. Watch blood calcium levels at every stage — African Greys are uniquely
-        prone to hypocalcemia throughout their lives.
-      </p>
-      <p>
-        Establish your avian vet relationship before you need it urgently. Know where your
-        nearest avian emergency clinic is. In an avian emergency — toxin exposure, seizure,
-        respiratory distress — response time matters. Do this research before you bring your
-        bird home.
-      </p>
-    </div>
-  </section>
+    <!-- 3. KEY TAKEAWAY / BLUF -->
+    <KeyTakeawayV2
+      eyebrow="The short version"
+      heading="How Long Do African Grey Parrots Live?"
+      badge="8 facts · 90-sec read"
+      items={[
+        { stat: "50–60+", label: "Years (Congo)", body: "A captive Congo African Grey commonly lives 50 to 60 years or more on a good diet, with documented birds reaching 70-plus." },
+        { stat: "50+", label: "Years (Timneh)", body: "Timneh Greys live just as long as Congos — lifespan is essentially identical between the two subspecies." },
+        { stat: "20–30", label: "Years (Wild)", body: "Wild African Greys average far less than captive birds, cut short by predation, disease, and habitat loss." },
+        { stat: "70+", label: "Record Ages", body: "The longevity literature credibly records African Greys past 70 years — these are real records, not folklore." },
+        { stat: "Diet", label: "#1 Lever", body: "A pellet-and-vegetable diet with calcium and UV-B is the single biggest factor in whether a Grey reaches its full lifespan." },
+        { stat: "Annual", label: "Avian Vet", body: "Yearly bird-vet exams catch hidden illness early — prey animals mask disease until it is advanced." },
+        { stat: "0", label: "PTFE / Smoke", body: "Overheated non-stick fumes and smoke are airborne killers; clean air is a non-negotiable for a long life." },
+        { stat: "40–60 yr", label: "Commitment", body: "Plan for it: a Grey can outlive you, so estate planning is part of responsible ownership." },
+      ]}
+    />
 
-  <!-- ESTATE PLANNING -->
-  <section class="life-section">
-    <div class="page-container text-wrap">
-      <h2 class="life-h2">Planning for a Bird That Will Outlive You</h2>
-      <p>
-        A 40–60 year lifespan means that statistically, many African Greys will outlive their
-        first owners. This is not a morbid consideration — it is responsible ownership. Every
-        African Grey owner should have a plan.
-      </p>
-      <p>
-        At minimum, include the following in your estate planning: designate a guardian for the
-        bird in your will; give that person the bird's complete medical history including
-        vaccination records, vet contacts, and blood panel results; provide the diet log and
-        behavioral notes; and transfer all CITES documentation to the new guardian. CITES papers
-        stay with the bird for its entire life and must be passed on with any change of ownership.
-      </p>
-      <p>
-        Organizations including the <strong>African Parrot Society</strong> and the
-        <strong>World Parrot Trust</strong> maintain rehoming networks for parrots that outlive
-        their owners or must be re-homed for other reasons. Connect with these organizations
-        early — not in a crisis — so your bird has a qualified safety net.
-      </p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="life-section life-alt">
-    <div class="page-container text-wrap">
-      <h2 class="life-h2">African Grey Lifespan: Frequently Asked Questions</h2>
-      <div class="life-faq">
-        {faqs.map((f) => (
-          <details class="life-faq-item">
-            <summary class="life-faq-q">{f.q}</summary>
-            <p class="life-faq-a">{f.a}</p>
-          </details>
-        ))}
+    <!-- 4. TOC -->
+    <nav class="toc-life py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
+      <div class="container mx-auto max-w-[1100px]">
+        <div class="rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-12 md:py-10" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+          <div class="flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end">
+            <div>
+              <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">Inside this guide</p>
+              <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark md:text-3xl">On This Page</h2>
+            </div>
+            <p class="font-sora text-[13px] text-stone-500">9 sections · the complete longevity picture</p>
+          </div>
+          <div class="mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part One</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">The numbers</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 1, t: "How Long Do African Greys Live — Captive vs Wild?", href: "#how-long" },
+                  { n: 2, t: "What Is the Oldest African Grey on Record?", href: "#records" },
+                  { n: 3, t: "Do Congo & Timneh Greys Live the Same Length?", href: "#congo-vs-timneh" },
+                  { n: 4, t: "What Affects an African Grey's Lifespan?", href: "#what-affects" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part Two</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">Living it well</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 5, t: "How Do You Maximize a Grey's Lifespan?", href: "#maximize" },
+                  { n: 6, t: "Why Is a Grey a 40–60 Year Commitment?", href: "#commitment" },
+                  { n: 7, t: "How Do You Care for a Senior African Grey?", href: "#senior" },
+                  { n: 8, t: "Which Long-Lived C.A.Gs Greys Are Available?", href: "#available-birds" },
+                  { n: 9, t: "African Grey Lifespan Questions, Answered", href: "#faq" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </nav>
 
-  <div style="text-align:center;padding:8px 0 32px;font-family:Sora,sans-serif;font-size:0.88rem;color:#6b6560;">
-    This guide is part of the <a href="/african-grey-care/" style="color:#2D6A4F;font-weight:600;text-decoration:none;">African Grey Care Hub</a> →
+    <!-- 5. HOW LONG — CAPTIVE vs WILD -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="how-long" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Lifespan · Captive vs Wild</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Long Do African Grey Parrots Live in Captivity vs the Wild?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>A well-cared-for captive African Grey commonly lives 50 to 60 years or more, while wild Greys average roughly 20 to 30.</strong> This is not an upper bound for a pampered exception — it is the standard range for a Grey on a proper diet with annual avian veterinary care, and the species' famous intelligence (documented for decades by <a href="https://alexfoundation.org/the-birds/alex/" target="_blank" rel="noopener noreferrer">the Alex Foundation's research</a>) comes bundled with one of the longest lifespans of any companion bird. <em>Psittacus erithacus</em>, the Congo African Grey, is a large parrot native to West and Central Africa, and large parrots simply live a long time. When buyers ask us "how long will my Grey live," the honest answer is: probably longer than you expect, which is exactly why we ask them to plan ahead.</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-3">
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Captive: 50–60+ Years</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A Grey fed a balanced pellet-and-vegetable diet, exercised, and seen by an avian vet each year routinely lives 50 to 60 years, and many push beyond. A bird that reaches age 20 in good health is still a young adult with three or four decades ahead — barely a quarter of the way through its life.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Wild: 20–30 Years</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Wild African Greys live far shorter lives. Raptor predation, disease, food scarcity, and the pressure of trapping and habitat loss — the reasons the species is <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">listed as Endangered by the IUCN</a> — all drag the wild average well below captive figures. A wild Grey reaching 20 is doing well.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">The Gap Is Husbandry</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">The whole difference between a Grey that dies young and one that lives six decades is care, not genetics. Diet, clean air, veterinary attention, and mental stimulation decide the outcome. The same intelligence that makes a Grey a remarkable companion also makes it vulnerable to the stress and boredom of poor husbandry.</p>
+          </article>
+        </div>
+
+        <div class="max-w-3xl mt-10">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">Why Do Captive African Greys Outlive Wild Ones by So Much?</h3>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Because nearly everything that kills a wild Grey is removed from a well-run home. There are no hawks, no droughts, no trappers, and there is consistent food and clean water. What replaces those wild threats are <em>man-made</em> ones — an all-seed diet, Teflon fumes, a missed illness, years of cage-bound boredom — and every one of them is preventable. That is the quiet promise of captive care done right: a Grey hatched here at C.A.Gs and raised on the routine in our <a href="/african-grey-parrot-care-guide/">African Grey care guide</a> has a genuine shot at a life measured in decades, not years.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. RECORD AGES -->
+    <section id="records" class="py-16 px-4 bg-warm-white scroll-mt-20">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Record Ages · The Oldest Greys</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Is the Oldest African Grey Parrot on Record?</h2>
+        </div>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Credibly documented African Greys have lived past 70 years, and the longevity record databases place the species' maximum around six decades and beyond.</strong> The animal-ageing database <a href="https://genomics.senescence.info/species/entry.php?species=Psittacus_erithacus" target="_blank" rel="noopener noreferrer">AnAge records a maximum longevity for <em>Psittacus erithacus</em> in the range of 60-plus years</a>, and individual aviary and pet reports stretch into the high 70s. These are not apocryphal "my grandmother's parrot" stories — they are tracked, verifiable ages, and they reset the expectation a first-time owner should walk in with.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">The most famous African Grey of all, Alex — the subject of thirty years of cognition research by Dr. Irene Pepperberg — lived to about 31, which sits below the upper records because research life and pet life are different things. The takeaway for a buyer is simple: a Grey is not a five-or-ten-year pet like a hamster or even a dog. It is, realistically, a lifelong animal, and a young one bought today may still be talking long after the children who grew up with it have children of their own.</p>
+        <div class="rounded-2xl border border-line bg-white p-6" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">Why Do Reported "Oldest African Grey" Ages Vary So Much?</h3>
+          <p class="text-stone-600 leading-relaxed text-[14.5px] mb-3" style="max-width:70ch;">Reported maximums vary because record-keeping for individual birds is inconsistent and because husbandry has improved dramatically over the decades. A Grey kept on a modern pellet diet with avian-vet care simply has a better shot at the high end than one kept on the seed-and-neglect standard of the past, so the "oldest" figures keep climbing as care improves. Two things in particular muddy the numbers.</p>
+          <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mb-1.5">How Is a Bird's Age Actually Verified?</h4>
+          <p class="text-stone-600 leading-relaxed text-[14px] mb-3" style="max-width:70ch;">A closed leg band stamped with the hatch year is the cleanest proof of age, which is exactly why every Grey we raise leaves with a hatch certificate and a closed band. Without that paperwork, an "age" is really an estimate, and undocumented birds change hands enough times that years get rounded, guessed, or inflated.</p>
+          <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mb-1">Does an Anecdote Count as a Record?</h5>
+          <p class="text-stone-600 leading-relaxed text-[14px] mb-3" style="max-width:70ch;">Not really. A claim of an 80-year-old parrot makes a great story, but a record worth quoting needs documentation — a band, vet history, or a registry entry. We cite the tracked figures from longevity databases rather than family legend, and we encourage owners to keep records that would stand up the same way.</p>
+          <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mb-1">Why It Matters to a Buyer</h6>
+          <p class="text-stone-600 leading-relaxed text-[14px] m-0" style="max-width:70ch;">Because documented provenance is also what proves your Grey is captive-bred and CITES-legal — the same paperwork that fixes its age protects its legality. Buying from a breeder who bands and documents every chick is the difference between a verifiable bird and a question mark.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CONGO vs TIMNEH LIFESPAN -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="congo-vs-timneh" class="scroll-mt-20">
+      <div class="bg-cream pt-14 px-4 md:pt-16">
+        <div class="max-w-3xl mx-auto mb-2">
+          <h2 class="font-lora font-bold text-logo-dark mb-3 text-center">Do Congo and Timneh African Greys Live the Same Length of Time?</h2>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;"><strong>Yes — lifespan is essentially identical; the differences are size, color, and temperament, not longevity.</strong> Both our <a href="/congo-african-grey-for-sale/">Congo African Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh African Greys</a> live 50 to 60-plus years in captivity on the same diet and care, so if you are choosing between them, decide on personality and not on how long the bird will live. The larger Congo (400–600 g) is the bolder, more dramatic talker; the smaller Timneh (275–375 g) is calmer and tends to start talking earlier — but both are decades-long companions. Here is how our two Greys compare across every trait that actually differs.</p>
+        </div>
+      </div>
+      <CompareTableE
+        eyebrow="Compare Lifespan · Congo vs Timneh"
+        heading="Congo vs Timneh — Same Long Life, Different Bird"
+        sub="Here at C.A.Gs we hand-raise both, and on lifespan there is nothing to choose between them — each lives 40 to 60-plus years with proper care. What differs is size, tail color, talking onset, and temperament. Use the row-by-row comparison to pick the Grey that fits your home, not the one you think will live longer, because on that score they are equals."
+      />
+    </section>
+
+    <!-- 8. WHAT AFFECTS LIFESPAN -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="what-affects" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Lifespan Factors · What Helps & Harms</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Affects How Long an African Grey Parrot Lives?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Diet, veterinary care, calcium status, exercise, mental health, and air quality are the factors that decide whether a Grey lives twenty years or sixty.</strong> Genetics set the ceiling, but husbandry decides where in that 40-to-60-year range a particular bird lands — and the gap between a thriving Grey and a short-lived one almost always traces back to one of the factors below. Understanding what shortens a Grey's life is the first step to extending it.</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-3">
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Diet & Nutrition</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">The single biggest lever. An all-seed diet causes vitamin-A deficiency, chronic infection, and fatty liver disease, quietly shaving years off a Grey, while a pellet-and-vegetable diet sustains a full lifespan. The complete plan we feed lives in our <a href="/african-grey-parrot-diet/">African Grey diet guide</a>.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Calcium & Vitamin A/D3</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">African Greys are uniquely prone to hypocalcemia — low blood calcium that can cause seizures and sudden death. Calcium-rich greens, a cuttlebone, UV-B light for vitamin D3, and the vitamin A from orange veg are not optional extras for this species; they are lifespan insurance.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Veterinary Care</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">As prey animals, Greys hide illness until it is advanced, so an annual exam with an avian-certified vet — bloodwork included — is what catches kidney, liver, and calcium trouble while it is still treatable. The <a href="https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/" target="_blank" rel="noopener noreferrer">LafeberVet African Grey information sheet</a> reinforces the same proactive standard we follow.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">04</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Exercise & Weight</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A cage-bound Grey grows obese, and obesity brings fatty liver, joint strain, and heart disease. Daily out-of-cage time, climbing, and supervised wing-flapping keep a bird lean and strong — and a stable weekly weight on a gram scale is the best evidence the bird is on track.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+            <div class="font-lora text-clay-ink font-bold text-2xl">05</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Mental Health</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A Grey's intelligence is a double edge: starved of stimulation it develops chronic stress and feather-destructive behavior that can progress to self-mutilation and infection. Foraging, training, novelty, and genuine social time are not luxuries for this species — they are part of keeping it alive and whole.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-clay/40 p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.08);background:#fff8f6;">
+            <div class="font-lora text-clay-ink font-bold text-2xl">06</div>
+            <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Air Quality & Accidents</h3>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">The fastest killers are airborne and accidental. Overheated PTFE/Teflon cookware releases fumes that kill a parrot in minutes; cigarette smoke, aerosols, and self-cleaning ovens are chronic hazards; and open water, ceiling fans, and other pets cause sudden tragedies. A Grey-safe home prevents the deaths that diet and vet care never could.</p>
+          </article>
+        </div>
+
+        <div class="max-w-3xl mt-10">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">Is Hypocalcemia Really a Common Cause of Early Death in Greys?</h3>
+          <p class="text-stone-600 leading-relaxed text-[15px] mb-3" style="max-width:70ch;">Yes — among parrots, African Greys are unusually prone to it, and untreated it is genuinely dangerous. Low blood calcium causes muscle tremors, weakness, falling off the perch, and seizure-like episodes, and the <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7128777/" target="_blank" rel="noopener noreferrer">veterinary literature on African Grey hypocalcemic syndrome</a> documents birds that crash without warning when calcium and vitamin D3 fall short. The protection is straightforward: calcium-rich greens daily, a cuttlebone free-choice, UV-B lighting so the bird can make D3, and a blood-calcium check at the annual wellness exam — together they take one of the species' most preventable killers off the table.</p>
+          <div class="rounded-xl border border-clay/25 bg-clay/[0.05] p-5">
+            <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-clay-ink mb-1.5">The Honest Part Nobody Sells You</h4>
+            <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">A long lifespan is a promise <em>and</em> a bill. Six decades of pellets, vegetables, toys, and annual vet visits add up, and a Grey is far more demanding than the price tag suggests. We would rather you know that now than discover it in year three — because the birds that reach 50 and 60 are, almost without exception, the ones whose owners signed up for the whole thing with eyes open.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. MAXIMIZE LIFESPAN -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="maximize" class="py-16 px-4 bg-warm-white scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Longevity · How to Maximize It</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Do You Maximize Your African Grey's Lifespan?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Feed right, see an avian vet yearly, keep the air clean, provide daily exercise and mental enrichment, and weigh your bird weekly — those five habits are what push a Grey to the top of its 50-to-60-year range.</strong> None of them is exotic or expensive on its own; the magic is in doing all of them, consistently, for decades. Here are the longevity practices we build into every C.A.Gs Grey before it goes home, and that we coach every family to continue.</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {longevityPractices.map((p, i) => (
+            <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+              <div class="font-lora text-clay-ink font-bold text-2xl">{String(i + 1).padStart(2, "0")}</div>
+              <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">{p.t}</h3>
+              <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">{p.b}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="max-w-3xl mt-10">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">What Is the Single Most Important Thing for a Long Grey Life?</h3>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">If we had to pick one, it would be diet — because more Greys are lost to the slow damage of an all-seed diet than to any dramatic accident. A bird eating a balanced <a href="/african-grey-parrot-diet/">pellet-and-vegetable diet</a> with calcium and vitamin-A support, weighed weekly and seen by a vet each year, has already cleared the biggest hurdles to a six-decade life. Every C.A.Gs Grey leaves us already weaned onto that diet and backed by a written <a href="/african-grey-parrot-health-guarantee/">health guarantee</a>, so your bird starts its long life on the right footing rather than spending year one being un-taught bad habits.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. THE 40–60 YEAR COMMITMENT -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="commitment" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Commitment · Plan Before You Buy</p>
+          <h2 class="font-lora font-bold text-logo-dark">Why Is an African Grey a 40-to-60-Year Commitment You Must Plan For?</h2>
+        </div>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Because a Congo or Timneh African Grey can easily outlive the person who buys it, a long lifespan is a planning obligation, not just a happy fact.</strong> A Grey bought by a 40-year-old may still be alive when that owner is in their 90s — or after they are gone. That reality reshapes the decision: you are not adopting a pet for a season of life, you are accepting decades of daily attention, diet, vet bills, and emotional bonding, and a genuine duty to provide for the bird beyond your own lifetime. This is the conversation reputable breeders have <em>before</em> a sale, and the one scam sellers never raise.</p>
+        <div class="rounded-2xl border border-line bg-white p-6 mb-4" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
+          <h3 class="font-lora font-bold text-logo-dark mb-3">How Do You Plan for a Bird That May Outlive You?</h3>
+          <ul class="space-y-2.5 list-none pl-0 text-stone-600 text-[15px]" style="max-width:70ch;">
+            <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Name a guardian in your will</strong> — designate who inherits the bird, and confirm they understand the multi-decade commitment they are accepting.</span></li>
+            <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Leave a full care file</strong> — medical history, diet notes, weekly weight log, vet contacts, and behavioral quirks so the next owner can step in seamlessly.</span></li>
+            <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Pass on the CITES documentation</strong> — Appendix I captive-bred papers must travel with the bird for its entire life and transfer with any change of ownership.</span></li>
+            <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Consider a pet trust</strong> — a modest fund earmarked for the bird's lifetime care removes the financial burden from whoever takes the Grey on.</span></li>
+            <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Know the rehoming networks</strong> — reputable parrot organizations and breeders, including us, help place Greys that outlive their owners; connect early, not in a crisis.</span></li>
+          </ul>
+        </div>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">We say this plainly because we mean it: if a 40-to-60-year horizon feels like too much, that is a perfectly responsible conclusion to reach <em>before</em> buying rather than after. The buyers we most want to sell to are the ones who read this section and lean in — and for them, our <a href="/african-grey-parrot-care-guide/">care guide</a> and our team are a lifelong resource, not a one-time transaction. A Grey is the best company in the world for the person ready for the commitment; the planning is simply the price of admission.</p>
+      </div>
+    </section>
+
+    <!-- 11. SENIOR GREY CARE -->
+    <section id="senior" class="py-16 px-4 bg-warm-white scroll-mt-20">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Senior Greys · Signs of Aging</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Do You Care for a Senior African Grey, and What Are the Signs of Aging?</h2>
+        </div>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>A senior African Grey — generally one past 30 — needs more frequent vet monitoring, easier cage navigation, and a close eye on weight and mobility, but it can stay vocal and engaged well into its 40s and 50s.</strong> Aging in a Grey is gradual and undramatic: a bird does not suddenly become "old," it slowly shifts. Knowing the signs lets you adjust care before a problem becomes an emergency, and a senior Grey that is well managed often remains every bit the companion it was at 15.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">Watch for the quiet markers of age: stiffer footing or reluctance to climb (arthritis is common, so lower perches and place food and water within easy reach), gradual vision changes, slower feather regrowth after a molt, and any shift in appetite or weight. Step the avian-vet schedule up to twice yearly for a senior bird, since bloodwork that catches a kidney or liver change early is the difference between managing a condition and being blindsided by it. Keep the diet exactly as disciplined as in youth — an older Grey has even less margin for the deficiencies a poor diet creates.</p>
+        <div class="rounded-xl border border-green/20 bg-green/[0.04] p-5">
+          <h3 class="font-sora font-bold text-sm uppercase tracking-wide text-green mb-1.5">Aging Doesn't Mean Fading</h3>
+          <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">The thing that surprises new owners most is how active a well-kept senior Grey stays. Many are talking, foraging, and bonding enthusiastically at 45 or 50 — the species ages slowly across its long life rather than declining sharply. Small accommodations and closer vet care keep that quality of life high right through a Grey's senior decades.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. AVAILABLE C.A.Gs GREYS -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="available-birds" class="py-16 px-4 scroll-mt-20">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-8 gap-4 flex-wrap">
+          <div class="border-l-4 border-green pl-4">
+            <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">This Week's Aviary</p>
+            <h2 class="font-lora font-bold text-logo-dark">Which Long-Lived C.A.Gs African Greys Are Ready to Begin Their Decades at Home?</h2>
+            <p class="text-stone-500 mt-2 max-w-2xl text-sm leading-relaxed">Every Congo and Timneh African Grey we hand-raise here at C.A.Gs starts life on the diet and care that supports a full 50-to-60-year span — PCR DNA-sexed, examined by a board-certified avian vet, PBFD and polyomavirus screened, and CITES Appendix I-documented. Each one goes home backed by lifetime feeding and care support from Mark &amp; Teri, because a long life deserves a long relationship.</p>
+          </div>
+          <a href="/african-grey-parrot-for-sale/" class="inline-block bg-clay hover:bg-clay-dk text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors whitespace-nowrap">View All Birds →</a>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {birds.map(bird => <BirdCard {...bird} />)}
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-2 mt-8">
+          {['CITES Captive-Bred Cert', 'PCR DNA Sex Certificate', 'Avian Vet Health Cert', 'Hatch Certificate', 'Fully Weaned'].map(badge => (
+            <span class="text-xs font-sora text-green bg-green/8 border border-green/20 px-3 py-1 rounded-full">✓ {badge}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. FAQ -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="faq" class="scroll-mt-20 py-16 px-4 bg-warm-white">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-10">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Lifespan Questions</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Do Owners Ask Most About African Grey Lifespan?</h2>
+        </div>
+        <div class="cag-faq-acc max-w-3xl mx-auto space-y-3">
+          {faqs.map((item, i) => (
+            <div class:list={["cag-faq-item bg-white rounded-2xl border border-line overflow-hidden", i === 0 && "open"]} style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
+              <button type="button" class="cag-faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4" aria-expanded={i === 0 ? "true" : "false"}>
+                <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
+                <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0">{item.a}</p></div></div>
+            </div>
+          ))}
+        </div>
+        <style is:global>
+          .cag-faq-q { cursor: pointer; background: transparent; transition: background .2s ease; }
+          .cag-faq-q:hover { background: rgba(45,106,79,.04); }
+          .cag-faq-chevron { transition: transform .2s ease; }
+          .cag-faq-item.open .cag-faq-chevron { transform: rotate(180deg); }
+          .cag-faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .2s ease; }
+          .cag-faq-item.open .cag-faq-panel { grid-template-rows: 1fr; }
+          .cag-faq-panel-inner { overflow: hidden; }
+        </style>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mx-auto text-center mt-8" style="max-width:70ch;">Lifespan is the headline, but the day-to-day is where a long life is won — our <a href="/african-grey-parrot-care-guide/">full African Grey care guide</a> covers housing, enrichment, and lighting, our <a href="/african-grey-parrot-diet/">diet guide</a> details the feeding that adds years, and our <a href="/african-grey-parrot-guide/">complete African Grey guide</a> walks first-time owners through what to expect across a Grey's decades.</p>
+        <div class="text-center mt-6">
+          <a href="/african-grey-parrot-faq/" class="inline-block bg-clay hover:bg-clay-dk text-white font-sora font-semibold px-7 py-3 rounded-full text-sm transition-colors">See All African Grey FAQs →</a>
+        </div>
+      </div>
+    </section>
+
+    <div style="text-align:center;padding:8px 0 4px;font-family:'IBM Plex Sans',sans-serif;font-size:0.88rem;color:#6b6560;">
+      This guide is part of the <a href="/african-grey-care/" style="color:#2D6A4F;font-weight:600;text-decoration:none;">African Grey Care Hub</a> →
+    </div>
+
+    <!-- 14. FINAL CTA + CONTACT -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section class="pt-14 px-4 md:pt-16 text-center">
+      <div class="max-w-3xl mx-auto">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Ready When You Are</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-4">Ready for a 40-to-60-Year Companion? Let's Talk About Your Captive-Bred African Grey</h2>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised, fully weaned, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation — never wild-caught — and started on the diet and care that supports a six-decade life. Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Still weighing the two species? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> live equally long lives and are both ready to meet you.</p>
+      </div>
+    </section>
+
+    <div id="contact" class="scroll-mt-20">
+      <InquiryForm />
+    </div>
+
   </div>
 
-  <CTA
-    headline="Ready to Make a 40-Year Commitment?"
-    sub="Every bird from CongoAfricanGreys.com is captive-bred, hand-raised, CITES-documented, and vet-certified. We are here to support you for the full lifespan of your bird."
-  />
+  <script is:inline>
+    // FAQ accordion (smooth open/close) — mirrors homepage/care-hub/diet pattern
+    (function () {
+      const qs = document.querySelectorAll('.cag-faq-q');
+      if (!qs.length) return;
+      qs.forEach(btn => btn.addEventListener('click', () => {
+        const item = btn.closest('.cag-faq-item');
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }));
+    })();
+  </script>
 </BaseLayout>
 
-<style>
-  .page-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 48px;
+<style is:global>
+  /* ============================================================
+     LIFESPAN PAGE — Direction-D-aware interior wrapper (.life-d)
+     Mirrors the homepage .home-d + diet .diet-d seam + lead-spacing
+     scope so the global theme applies and the seam-logo divider renders.
+     body.theme-d already supplies Newsreader/IBM Plex, lead paragraphs,
+     eyebrow ticks, card + button motion — NOT re-done here.
+     ============================================================ */
+  .life-d { --rule: rgba(45,106,79,.16); }
+
+  /* AA: clay as small readable text on this page's LIGHT sections → #b04228 (4.5:1).
+     Mirrors the homepage .home-d rule. Clay on the green hero stays bright. */
+  .life-d a.text-clay, .life-d .text-clay { color:#b04228; }
+  .life-d .hero-v3-b .text-clay, .life-d .bg-clay { color:inherit; }
+
+  /* Woven in-content links: clay, underlined, AA-safe — applies to all the
+     mid-sentence internal/external links in body copy. */
+  .life-d p a:not(.rounded-full):not(.bg-clay),
+  .life-d li a:not(.rounded-full):not(.bg-clay) {
+    color:#b04228; font-weight:500; text-decoration:underline;
+    text-decoration-color:rgba(176,66,40,.35); text-underline-offset:2px;
+    transition:text-decoration-color .2s ease;
   }
-  .text-wrap { max-width: 760px; }
-  .life-h1 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #faf7f4;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.2;
-    margin: 0 0 1rem;
-  }
-  .life-h2 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
-    line-height: 1.25;
-    margin: 0 0 1.25rem;
-  }
-  .life-h3 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: 1.15rem;
-    margin: 0 0 0.5rem;
-  }
-  .life-hero {
-    background: #2D6A4F;
-    padding: 3.5rem 0 3rem;
-    text-align: center;
-  }
-  .life-sub {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.65;
-    color: rgba(250,247,244,0.88);
-    max-width: 70ch;
-    margin: 0 auto 1.75rem;
-  }
-  .btn-primary {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.85rem 1.9rem;
-    border-radius: 50px;
-    text-decoration: none;
-    display: inline-block;
-    background: #e8604c;
-    color: #fff;
-    transition: background 0.2s ease;
-  }
-  .btn-primary:hover { background: #d44e3b; }
-  .life-section { padding: 3rem 0; }
-  .life-alt { background: #faf7f4; }
-  .life-section p {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 0 1.2rem;
-  }
-  .life-list {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    padding-left: 1.5rem;
-    margin: 0.5rem 0 1.2rem;
-  }
-  .life-list li { margin-bottom: 0.75rem; max-width: 70ch; }
-  .life-stages {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .life-stage-card {
-    background: #fff;
-    border: 1px solid #e7e5e4;
-    border-radius: 16px;
-    padding: 1.25rem 1.5rem;
-    box-shadow: 0 1px 4px rgba(60,30,10,0.06);
-  }
-  .life-stage-card p {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.98rem;
-    line-height: 1.65;
-    color: #44403c;
-    margin: 0;
-    max-width: 70ch;
-  }
-  .life-faq { display: flex; flex-direction: column; gap: 0.75rem; }
-  .life-faq-item {
-    border: 1px solid #e7e5e4;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    background: #fff;
-  }
-  .life-faq-q {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #2D6A4F;
-    cursor: pointer;
-    list-style: none;
-  }
-  .life-faq-q::-webkit-details-marker { display: none; }
-  .life-faq-a {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.98rem;
-    line-height: 1.65;
-    color: #44403c;
-    margin: 0.75rem 0 0;
-    max-width: 70ch;
-  }
-  @media (max-width: 767px) { .page-container { padding: 0 16px; } }
-  @media (min-width: 768px) and (max-width: 1024px) { .page-container { padding: 0 32px; } }
+  .life-d p a:not(.rounded-full):not(.bg-clay):hover,
+  .life-d li a:not(.rounded-full):not(.bg-clay):hover { text-decoration-color:#b04228; }
+
+  /* Section seam — centered wordmark divider (verbatim scope from index.astro) */
+  .life-d > .cag-seam{ display:flex; align-items:center; gap:26px; max-width:1100px; margin:0 auto; padding:.6rem 24px !important; }
+  .cag-seam__line{ flex:1; height:1px; background:var(--rule); }
+  .life-d .cag-seam img{ height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+  @media (max-width:600px){ .life-d > .cag-seam{ gap:16px; } .life-d .cag-seam img{ height:24px; } }
 </style>
+</content>
