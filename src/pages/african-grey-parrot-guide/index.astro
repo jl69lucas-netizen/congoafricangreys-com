@@ -127,17 +127,6 @@ const articleSchema = {
   mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
 };
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: breadcrumbs.map((b, i) => ({
-    "@type": "ListItem",
-    position: i + 1,
-    name: b.name,
-    item: `https://congoafricangreys.com${b.url}`,
-  })),
-};
-
 // ─── Care-overview entity cards (routes to spokes) ───
 const careCards = [
   { n: 1, t: "Diet & nutrition",
@@ -164,7 +153,6 @@ const careCards = [
 <BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta>
 
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <div class="guide-d cag-article">

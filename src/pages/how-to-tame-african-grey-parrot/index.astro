@@ -1,337 +1,506 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
+import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
+import InquiryForm from '../../components/cag-inquiry-form.astro';
 
-const title = "How to Tame an African Grey Parrot: 7-Step Breeder Method | CongoAfricanGreys.com";
-const description = "How to tame an African Grey parrot in 7 steps — first-day handling, step-up command, bite prevention, and building a lifelong bond. Method from USDA-licensed breeders with 10+ years experience.";
+const title = "How to Tame an African Grey Parrot | Our 7-Step Breeder Method — Settle-In Period, Trust Through the Bars, Hand-Feeding, Step-Up Command & Timelines for Hand-Raised vs Rescue Greys | C.A.Gs – Midland, TX";
+const description = "How to tame an African Grey parrot, step by step, from USDA-licensed breeders C.A.Gs in Midland, TX — the 7-step method we use with every hand-raised chick: settle-in, trust through the bars, hand-feeding, the step-up command, handling, and honest timelines (1–4 wk hand-raised · 3–12 mo rescue).";
 const canonical = "https://congoafricangreys.com/how-to-tame-african-grey-parrot/";
-const ogType = "article";
+const updated = "June 2026";
 
-const schemaJson = JSON.stringify({
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Grey Care", url: "/african-grey-care/" },
+  { name: "How to Tame an African Grey", url: "/how-to-tame-african-grey-parrot/" },
+];
+
+// ─── THE 7 STEPS — single source of truth: rendered cards AND HowTo schema both read this array ───
+const steps = [
+  {
+    t: "Let the Bird Settle — the 24–48 Hour Quiet Period",
+    body: `When your Grey arrives, resist every urge to interact — honestly, this first step is harder on the humans than the bird. Place the cage in a room where the family already spends time, the living room rather than a spare bedroom, but do not reach in, open the door, or hover. Talk normally nearby, move calmly, and change food and water with slow, predictable motions. A weaned, hand-raised C.A.Gs baby usually settles within a day or two because human hands already mean breakfast; an adult or rehomed Grey may need a full week of simply watching you exist before anything else happens.`,
+    ready: "The bird eats, preens, and vocalizes normally without freezing or flattening its feathers when you walk past the cage.",
+  },
+  {
+    t: "Build Trust Through the Cage Bars with Hand-Feeding",
+    body: `Sit beside the cage at the bird's eye level or slightly below and offer a small, high-value treat through the bars — a pine nut, a sliver of walnut, or a few pomegranate seeds. Hold it still; do not wave or chase. If the Grey approaches and takes it, mark the moment with a calm "good bird." If it does not, clip the treat to the bars and walk away — the bird still learns that your hand delivers good things and asks for nothing. Repeat two to three short visits a day. The bars matter psychologically: the bird controls the distance, so courage costs it nothing.`,
+    ready: "The bird walks toward your hand to take a treat without backing away first, two days in a row.",
+  },
+  {
+    t: "Open the Cage Door — and Let the Grey Decide",
+    body: `Open the door, set a treat on the door ledge or cage top, and step back two or three feet. Do not reach in; coming out must be the bird's own decision, because leaving the cage's safety is the single biggest trust threshold in the whole process. Some Greys are out in five minutes; cautious birds take days of door-open sessions before a foot touches the ledge. Either pace is normal. Keep sessions supervised, with ceiling fans off, windows covered or screened, and other pets out of the room — one bad fright here can undo two weeks of bar-side work.`,
+    ready: "The bird exits on its own, takes treats from the cage top, and spends time outside the cage without constant alarm posture.",
+  },
+  {
+    t: "Offer Your Forearm as a Perch — No Agenda, Just Standing",
+    body: `With the bird out and calm, rest your forearm on the cage top or a chair back at the Grey's level and hold a treat near your wrist. The only goal is for the bird to stand on your arm while you stay still — not petting, not carrying, just perching. Keep sessions to five minutes, twice a day, and always end before the bird shows stress signals. Bare hands and bare arms only: gloves teach a Grey that uncovered skin is the thing that was hidden from it, and that lesson is miserable to undo later.`,
+    ready: "The bird steps onto your stationary forearm and perches calmly for 3–5 minutes without trying to fly off.",
+  },
+  {
+    t: "Teach the Step-Up Command",
+    body: `Press your index finger or the edge of your hand gently but firmly against the bird's lower chest, just above the feet, and say "step up" in a clear, calm voice. The light pressure triggers a natural forward-stepping reflex; the instant a foot lands on your hand, praise and deliver a treat. Five to eight repetitions per session is plenty — Greys rehearse mentally between sessions and often return sharper the next day. Practice from a perch first, then from the cage top, and only later from inside the cage, which a Grey defends as its territory.`,
+    ready: "The bird steps up on the first or second cue, without hesitation or beak-testing, eight times out of ten.",
+  },
+  {
+    t: "Extend Handling — Movement, Rooms, and the First Scritches",
+    body: `Stretch sessions from five minutes toward fifteen or twenty over a week or two, but only if each one ends calmly. Add motion gradually: stand up with the bird on your arm, then walk slowly, then cross into the next room. Watch for the invitation to touch — a Grey that fluffs its head feathers and bows is asking for head scratches (scritches). Stroke the head and neck only, against the feather direction, and stop the moment the bird straightens up. Petting down the back or under the wings triggers hormonal behavior, which works against everything you have built.`,
+    ready: "The bird rides your arm room to room, accepts head scratches, and stays relaxed through a 15–20 minute session.",
+  },
+  {
+    t: "Generalize the Bond — New People, New Places",
+    body: `A Grey tamed to one person is half-tamed. Once step-up is reliable for you, have each family member start at Step 4 — from the bird's perspective every new human begins as a stranger with promising hands. Keep the cue word, the treat, and the praise identical across the household. Then widen the world: a different room, a window perch, a travel carrier left open with treats inside. This is the same socialization we run with our whole family — Mark, Teri, James and Allyson — before any chick leaves us, and it is why a well-generalized Grey takes new situations in stride for decades.`,
+    ready: "The bird steps up reliably for three or more people and stays calm in at least three different rooms or settings.",
+  },
+];
+
+// ─── Common mistakes (rendered cards) ───
+const mistakes = [
+  { t: "Rushing the quiet period",
+    d: "Reaching into the cage on day one tells a prey animal it has no safe territory. The two days you 'save' get repaid as weeks of rebuilt trust. Settle-in time is taming — it just doesn't look like it." },
+  { t: "Sessions that run too long",
+    d: "Past about 20 minutes a Grey tires and overstimulates, and tired birds bite. A 10-minute session that ends with a treat outranks a 30-minute session that ends with stress. Always quit while you're ahead." },
+  { t: "Wearing gloves",
+    d: "Gloves teach the bird that bare hands are the real threat being hidden from it — so when the gloves come off, the biting starts. Bare hands from the first treat. (Yes, you may get nipped once or twice. That's the tuition.)" },
+  { t: "Punishing or yelling after a bite",
+    d: "Yelling is attention, and attention rewards the bite; grabbing or 'beak tapping' creates fear that sets you back months. End the session quietly and shorten the next one — the bird told you that you moved too fast." },
+  { t: "Skipping the step-up foundation",
+    d: "Carrying, petting, or shoulder time before step-up is reliable builds a bird that controls you, not a bond. Step-up is the keystone — every later behavior, from vet visits to nail trims, stands on it." },
+  { t: "Inconsistent rules between family members",
+    d: "Three people using three cue words, three treat timings, and three sets of rules produce one confused, nippy bird. Agree on a single protocol and have everyone run it identically through the taming phase." },
+];
+
+// ─── FAQ — mirrored exactly into FAQPage schema (HTML stripped for schema) ───
+const faqs = [
+  { q: "How long does it take to tame an African Grey parrot?",
+    a: `A weaned, hand-raised African Grey that was socialized as a chick typically tames in 1–4 weeks of short daily sessions — our C.A.Gs babies usually step up within the first week because human hands already mean safety and food. An adult, parent-raised, or rehomed Grey takes 3–12 months of the same steps at a slower pace. Forcing the pace backfires: fear learned in one bad session can take months to undo.` },
+  { q: "Why does my African Grey bite me, and what should I do?",
+    a: `Biting during taming is almost always fear or overstimulation, not aggression — the bird is telling you that you moved too fast. Never yell, jerk away dramatically, or punish; end the session calmly, shorten the next one, and step back one stage in the protocol. Watch for the pre-bite warnings — flattened feathers, pinning eyes, fanned tail — and end sessions before they appear. A sudden biting change in an already-tame bird can signal pain or illness, so have an avian vet rule that out.` },
+  { q: "What is the step-up command, and why does it matter so much?",
+    a: `Step-up is a verbal cue ("step up") paired with gentle pressure against the bird's lower chest just above the feet, which triggers a natural stepping reflex onto your hand. It matters because it is the foundation behavior every other interaction stands on — moving the bird, vet visits, returning to the cage, meeting new people. Teach it with a treat and praise on every success, practice 5–8 repetitions per session, and our <a href="/african-grey-parrot-care-guide/">complete care guide</a> covers folding it into daily routine.` },
+  { q: "What treats work best for taming an African Grey?",
+    a: `Small, high-value foods the bird never gets in its bowl: pine nuts, slivers of walnut or almond, pomegranate seeds, or a sunflower seed or two. Keep pieces tiny so a session holds 8–10 rewards without filling the bird up, and reserve the favorite exclusively for training so it keeps its power. Treats stay treats — the daily foundation is a formulated pellet base with fresh vegetables, which our <a href="/african-grey-parrot-diet/">African Grey diet guide</a> lays out in full.` },
+  { q: "Can you tame an older or rescue African Grey?",
+    a: `Yes — age does not close the window, history just lengthens the road. The same 7 steps apply with nothing compressed: the settle-in period may take weeks, and the bars-to-step-up arc may take months, because a rehomed Grey may be unlearning grabbing, shouting, or neglect before it can learn you. Schedule an avian vet exam before you start (sick birds bite from pain, not fear), keep sessions short, and let the bird set the calendar. The bond on the far side is every bit as deep.` },
+  { q: "Do African Greys bond to only one person?",
+    a: `They can — a Grey allowed to bond exclusively becomes a "one-person bird" that is loving with its favorite and nippy with everyone else. It is preventable: once step-up is reliable, have every family member run the same hand-feeding and step-up protocol so the bird generalizes trust to hands, not to a single human. We raise every chick with our whole family for exactly this reason, and it is part of why a <a href="/hand-raised-african-grey-parrot-for-sale/">hand-raised Grey</a> adapts so well to a new household.` },
+];
+
+const stripHtml = (s: string) => s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+
+const howToSchema = {
   "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Article",
-      "headline": "How to Tame an African Grey Parrot: 7-Step Breeder Method",
-      "url": "https://congoafricangreys.com/how-to-tame-african-grey-parrot/",
-      "author": { "@type": "Organization", "name": "C.A.Gs – Midland, TX" },
-      "publisher": {
-        "@type": "Organization",
-        "name": "C.A.Gs – Midland, TX",
-        "url": "https://congoafricangreys.com/"
-      },
-      "description": "Step-by-step taming guide for African Grey parrots — from first-day handling to step-up command and bite prevention."
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://congoafricangreys.com/" },
-        { "@type": "ListItem", "position": 2, "name": "African Grey Care", "item": "https://congoafricangreys.com/african-grey-care/" },
-        { "@type": "ListItem", "position": 3, "name": "How to Tame an African Grey", "item": "https://congoafricangreys.com/how-to-tame-african-grey-parrot/" }
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "How long does it take to tame an African Grey parrot?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "A captive-bred hand-raised African Grey parrot that was well-socialized as a chick typically tames within 1–4 weeks with consistent daily handling. Rescue or parent-raised Greys can take 3–12 months of patient, positive-reinforcement work. Never rush taming — forcing interaction causes fear that takes months to undo."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Why does my African Grey bite me?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "African Grey parrots bite because of fear, overstimulation, territorial defense, or hormonal behavior during mating season. Most biting during taming is fear-based. The solution is to slow down, reduce handling sessions to 5–10 minutes, and end every session before the bird shows stress signals (feather flattening, eye pinning, tail fanning)."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is the step-up command for parrots?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The step-up command is a verbal cue ('step up') paired with pressing your finger or forearm gently against the bird's lower chest, just above the feet, prompting it to step onto your hand. Start by practicing on a perch before attempting from inside the cage. Reward every successful step-up with a small treat and praise."
-          }
-        }
-      ]
-    }
-  ]
-});
+  "@type": "HowTo",
+  name: "How to Tame an African Grey Parrot — the 7-Step Breeder Method",
+  description: "The step-by-step taming and bonding method used by C.A.Gs, USDA-licensed African Grey breeders in Midland, Texas: a settle-in quiet period, trust-building through the cage bars, hand-feeding, the step-up command, extended handling, and generalizing the bond to the whole family.",
+  totalTime: "P28D",
+  supply: [
+    { "@type": "HowToSupply", name: "Small high-value treats (pine nuts, walnut slivers, pomegranate seeds)" },
+    { "@type": "HowToSupply", name: "A cage placed in a calm family room" },
+    { "@type": "HowToSupply", name: "A training perch or stand" },
+  ],
+  step: steps.map((s, i) => ({
+    "@type": "HowToStep",
+    position: i + 1,
+    name: `Step ${i + 1}: ${s.t}`,
+    text: `${stripHtml(s.body)} You are ready for the next step when: ${s.ready}`,
+    url: `${canonical}#step-${i + 1}`,
+  })),
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: stripHtml(f.a) },
+  })),
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "How to Tame an African Grey Parrot — the 7-Step Breeder Method",
+  description: "A focused, step-by-step African Grey taming and bonding guide: the settle-in quiet period, trust through the cage bars, hand-feeding, the step-up command, handling and scritches, generalizing to the family, realistic timelines for hand-raised vs rescue birds, bite prevention, and the mistakes that set progress back.",
+  inLanguage: "en-US",
+  about: {
+    "@type": "Thing",
+    name: "African Grey Parrot",
+    alternateName: "Psittacus erithacus",
+    sameAs: "https://parrots.org/encyclopedia/grey-parrot/",
+  },
+  author: {
+    "@type": "Organization",
+    name: "C.A.Gs – Midland, TX",
+    url: "https://congoafricangreys.com/trusted-african-grey-parrot-breeders/",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Congo African Greys",
+    logo: { "@type": "ImageObject", url: "https://congoafricangreys.com/cag-footer-logo.png" },
+  },
+  datePublished: "2024-09-01",
+  dateModified: "2026-06-10",
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+};
+
+// BreadcrumbList JSON-LD is emitted by the <Breadcrumb> component — do not duplicate here.
+
+// ─── TOC (grouped jump links) ───
+const tocParts = [
+  {
+    label: "Part One",
+    sub: "The method itself",
+    rows: [
+      { n: 1, t: "Why Is Taming an African Grey Different from Other Parrots?", href: "#why" },
+      { n: 2, t: "How Do You Tame an African Grey? The 7-Step Method", href: "#steps" },
+      { n: 3, t: "How Long Does Taming Take — Hand-Raised Baby vs Rescue?", href: "#timeline" },
+    ],
+  },
+  {
+    label: "Part Two",
+    sub: "When it goes sideways",
+    rows: [
+      { n: 4, t: "What Should You Do When Your African Grey Bites?", href: "#biting" },
+      { n: 5, t: "Which Taming Mistakes Set Progress Back the Most?", href: "#mistakes" },
+      { n: 6, t: "Taming an African Grey — Your Questions, Answered", href: "#faq" },
+    ],
+  },
+];
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} ogType={ogType} schemaJson={schemaJson}>
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta>
 
-<style>
-  :root {
-    --green: #2D6A4F;
-    --clay: #e8604c;
-    --cream: #faf7f4;
-    --dark: #1c1a18;
-    --muted: #6b6560;
-    --border: #ede5dc;
-    --green-lt: #eaf4ef;
-  }
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-  .container-text { max-width: 760px; margin: 0 auto; }
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  .breadcrumb a { color: var(--green); text-decoration: none; }
-  .breadcrumb a:hover { text-decoration: underline; }
+  <div class="tame-d cag-article">
 
-  /* Hero */
-  .page-hero { background: var(--green); color: #fff; padding: 52px 0 44px; }
-  .page-hero h1 { font-family: Lora, serif; font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 700; margin: 0 0 14px; line-height: 1.2; max-width: 720px; }
-  .page-hero .lead { font-family: Sora, sans-serif; font-size: 1.02rem; opacity: 0.9; max-width: 620px; margin: 0 0 24px; line-height: 1.65; }
-  .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); color: #fff; font-family: Sora, sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 14px; border-radius: 50px; margin-bottom: 16px; }
-  .stat-callout { display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; padding: 14px 20px; margin-top: 8px; font-family: Sora, sans-serif; font-size: 0.88rem; color: rgba(255,255,255,0.92); line-height: 1.5; max-width: 540px; }
-  .stat-callout strong { color: #fff; }
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
 
-  /* Body */
-  .content-section { padding: 56px 0; }
-  .content-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 16px; }
-  .content-section p { font-family: Sora, sans-serif; font-size: 0.97rem; color: var(--dark); line-height: 1.75; max-width: 70ch; margin: 0 0 16px; }
-  .content-section ul, .content-section ol { font-family: Sora, sans-serif; font-size: 0.97rem; color: var(--dark); line-height: 1.75; max-width: 68ch; padding-left: 20px; margin: 0 0 20px; }
-  .content-section li { margin-bottom: 6px; }
-  .internal-link { color: var(--green); font-weight: 600; text-decoration: none; }
-  .internal-link:hover { text-decoration: underline; }
+    <!-- 1. HERO (cag-hero-v3 idiom · Authority Green) -->
+    <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
+      <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
+      <div class="container relative z-10 mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-12">
+        <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
+          <!-- COPY -->
+          <div class="order-2 text-center md:order-1 md:text-left">
+            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Training Guide · 7 Steps · Updated {updated}</p>
+            <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
+              How to Tame an African Grey Parrot — Our 7-Step Breeder Method
+            </h1>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
+              Tame an African Grey too fast and you build a fearful bird that bites for years; tame it right and you build a bond that lasts 40 to 60 years. Here at C.A.Gs in Midland, Texas, we hand-raise CITES Appendix I documented, captive-bred Congo and Timneh Greys under a USDA AWA license — and this is the exact step-by-step method we use before any bird leaves us, from the settle-in quiet period through the step-up command to a Grey the whole family can handle.
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+              <a href="#steps" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Start at Step 1 →</a>
+              <a href="#timeline" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">How Long Does It Take? →</a>
+            </div>
+          </div>
+          <!-- CIRCULAR IMAGE STAGE -->
+          <div class="order-1 flex justify-center md:order-2 md:justify-end">
+            <div class="relative">
+              <div class="absolute inset-0 -m-3 rounded-full border border-white/25 md:-m-5" aria-hidden="true"></div>
+              <div class="relative flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#0f3d2c] ring-4 ring-white/15 sm:h-[260px] sm:w-[260px] md:h-[300px] md:w-[300px]" style="box-shadow: 0 24px 60px rgba(60,30,10,0.35);">
+                <img src="/hand-fed-african-grey-baby-breeder.webp"
+                  alt="A baby African Grey parrot being hand-fed at the C.A.Gs family aviary in Midland, Texas — the early hand-raising that makes taming a captive-bred Grey a matter of weeks instead of months."
+                  title="Hand-feeding a baby African Grey — C.A.Gs taming guide, Midland TX"
+                  width="400" height="400" loading="eager" fetchpriority="high" decoding="async"
+                  class="h-full w-full object-cover object-center" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  /* Steps */
-  .steps-list { list-style: none; padding: 0; margin: 0 0 24px; }
-  .step-item { display: flex; gap: 20px; margin-bottom: 32px; align-items: flex-start; }
-  .step-num { flex-shrink: 0; width: 44px; height: 44px; background: var(--green); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: Lora, serif; font-weight: 700; font-size: 1.1rem; margin-top: 4px; }
-  .step-content h3 { font-family: Lora, serif; font-size: 1.15rem; color: var(--dark); margin: 0 0 8px; }
-  .step-content p { font-family: Sora, sans-serif; font-size: 0.95rem; color: var(--dark); line-height: 1.7; margin: 0 0 8px; }
-  .step-ready { background: var(--green-lt); border-left: 3px solid var(--green); padding: 10px 14px; border-radius: 0 8px 8px 0; font-family: Sora, sans-serif; font-size: 0.87rem; color: #1c5c40; margin-top: 8px; }
-  .step-ready strong { font-weight: 600; }
+    <!-- 2. COUNTER SNIPPET -->
+    <CounterSnippet />
 
-  /* Warning / callout */
-  .warn-box { background: #fff5f4; border: 1px solid #f4c4be; border-left: 4px solid var(--clay); border-radius: 8px; padding: 16px 20px; margin: 24px 0; }
-  .warn-box p { font-family: Sora, sans-serif; font-size: 0.93rem; color: var(--dark); line-height: 1.65; margin: 0; }
+    <!-- 3. KEY TAKEAWAY / BLUF -->
+    <KeyTakeawayV2
+      eyebrow="The method in 30 seconds"
+      heading="How Do You Tame an African Grey Parrot? (The Short Answer)"
+      badge="6 facts · 30-sec read"
+      items={[
+        { stat: "7 Steps",  label: "One Sequence",        body: "Settle-in → trust through the bars → open door → forearm perch → step-up → longer handling → the whole family. Each step is earned, never forced." },
+        { stat: "1–4 wk",   label: "Hand-Raised Baby",    body: "A weaned, hand-raised Grey already trusts human hands — most C.A.Gs babies step up within the first week home." },
+        { stat: "3–12 mo",  label: "Adult / Rescue Grey", body: "Same steps, slower calendar. A rehomed bird unlearns its history first — patience is the protocol, not a delay of it." },
+        { stat: "5–10 min", label: "Session Length",      body: "Short sessions that end on a win beat marathons every time. Always stop before the stress signals, not after." },
+        { stat: "0",        label: "Gloves, Ever",        body: "Gloves teach a Grey that bare hands are the hidden threat. Bare hands from the first treat — that's the rule." },
+        { stat: "40–60 yr", label: "The Payoff",          body: "African Greys live 40–60 years. The trust you build in the first month is the foundation of a multi-decade bond." },
+      ]}
+    />
 
-  /* Mistakes grid */
-  .mistakes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 20px 0; }
-  .mistake-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
-  .mistake-card h4 { font-family: Lora, serif; font-size: 0.95rem; color: var(--clay); margin: 0 0 6px; }
-  .mistake-card p { font-family: Sora, sans-serif; font-size: 0.87rem; color: var(--muted); line-height: 1.6; margin: 0; }
+    <!-- 4. TOC (jump links, grouped) -->
+    <nav class="toc-tame py-10 px-4 bg-cream md:py-12" aria-label="On this page">
+      <div class="container mx-auto max-w-[1100px]">
+        <div class="rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-12 md:py-10" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+          <div class="flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end">
+            <div>
+              <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">Inside this guide</p>
+              <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark md:text-3xl">On This Page</h2>
+            </div>
+            <p class="font-sora text-[13px] text-stone-500">6 sections · 7 steps · jump anywhere</p>
+          </div>
+          <div class="mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+            {tocParts.map((part) => (
+              <div>
+                <div class="mb-2.5 flex items-baseline gap-2.5">
+                  <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">{part.label}</span>
+                  <span class="h-px flex-1 bg-black/[0.08]"></span>
+                </div>
+                <p class="font-lora mb-3 text-lg font-semibold italic text-green">{part.sub}</p>
+                <ol class="space-y-0">
+                  {part.rows.map((it) => (
+                    <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </nav>
 
-  /* Divider */
-  .section-divider { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+    <!-- 5. WHY GREYS ARE DIFFERENT -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
-  /* FAQ */
-  .faq-section { padding: 48px 0; background: var(--cream); }
-  .faq-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 28px; }
-  details { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; background: #fff; }
-  summary { font-family: Sora, sans-serif; font-weight: 600; font-size: 0.97rem; padding: 18px 20px; cursor: pointer; list-style: none; color: var(--dark); }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: '+'; float: right; color: var(--clay); font-size: 1.2rem; font-weight: 400; }
-  details[open] summary::after { content: '−'; }
-  .faq-body { padding: 0 20px 18px; font-family: Sora, sans-serif; font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
+    <section id="why" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Know Your Student</p>
+          <h2 class="font-lora font-bold text-logo-dark">Why Is Taming an African Grey Different from Other Parrots?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">African Greys remember handling mistakes with the same clarity they remember kindness, so taming a Grey is trust-building with a bird that analyzes you — one forced grab can set the process back weeks, while one earned step forward holds for life.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>The African Grey (<em>Psittacus erithacus</em>) is, as <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust species profile</a> documents, the most cognitively advanced companion parrot there is — research with the famous Congo Grey Alex showed reasoning abilities comparable to a young child. That intelligence cuts both ways during taming. A budgie or cockatiel shrugs off a clumsy handling session by the weekend; a Grey files it, generalizes it ("hands grab"), and adjusts its behavior accordingly. The same memory that lets a Grey learn hundreds of words in context also lets it hold a grudge with footnotes.</p>
+          <p>Greys are also prey animals and flock animals at once. Everything in the method below works <em>with</em> those two instincts instead of against them: the bird keeps control of distance early (prey logic), and trust is transferred from one person to the whole household late (flock logic). Push against either instinct — cornering the bird, or letting it bond to a single human — and you manufacture the two classic problem Greys: the fearful biter and the one-person bird.</p>
+          <p>One honest advantage we can offer: the starting line is not the same for every bird. Here at C.A.Gs we hand-feed and socialize every chick with our whole family from the first weeks, so a weaned baby goes home already people-bonded — you are maintaining trust, not creating it. An adult, parent-raised, or rescue Grey starts further back, and this guide covers that road too. Before you begin either way, have the basics from our <a href="/african-grey-parrot-care-guide/">complete African Grey care guide</a> in place — a settled cage, a good diet, and a predictable routine are the floor taming stands on.</p>
+        </div>
+      </div>
+    </section>
 
-  /* Hub back + CTA */
-  .cta-section { padding: 56px 0; text-align: center; }
-  .cta-section h2 { font-family: Lora, serif; font-size: 1.55rem; color: var(--dark); margin: 0 0 12px; }
-  .cta-section p { font-family: Sora, sans-serif; color: var(--muted); max-width: 500px; margin: 0 auto 24px; font-size: 0.97rem; line-height: 1.65; }
-  .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--clay); color: #fff; font-family: Sora, sans-serif; font-weight: 600; font-size: 0.95rem; padding: 13px 28px; border-radius: 50px; text-decoration: none; transition: background 0.2s; }
-  .btn-primary:hover { background: #c94d3a; }
-  .hub-back { text-align: center; font-family: Sora, sans-serif; font-size: 0.88rem; color: var(--muted); margin-top: 20px; }
-  .hub-back a { color: var(--green); font-weight: 600; text-decoration: none; }
-  .hub-back a:hover { text-decoration: underline; }
+    <!-- 6. THE 7-STEP METHOD (page spine · care-grid style · mirrors HowTo schema) -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
-  @media (max-width: 767px) {
-    .page-hero { padding: 38px 0 32px; }
-    .content-section { padding: 40px 0; }
-    .mistakes-grid { grid-template-columns: 1fr; }
-    .step-item { flex-direction: column; gap: 10px; }
-    .step-num { width: 36px; height: 36px; font-size: 1rem; }
-  }
-</style>
+    <section id="steps" class="scroll-mt-20 bg-cream py-14 px-4 md:py-16">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Method</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Do You Tame an African Grey, Step by Step?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-4" style="max-width:70ch;">Tame an African Grey in seven earned stages: a 24–48 hour settle-in period, hand-feeding through the cage bars, an open door the bird chooses to use, forearm perching, the step-up command, gradually longer handling, and finally generalizing the bond to every family member.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-8" style="max-width:70ch;">This is the sequence we run in our own Midland aviary before any bird leaves us. Two rules govern every step: the bird sets the pace, and every session ends on a success — even a small one. Each stage below tells you exactly when the bird is ready for the next, so you never have to guess.</p>
+        <ol class="tame-steps grid gap-5 md:grid-cols-2 list-none p-0 m-0">
+          {steps.map((s, i) => (
+            <li id={`step-${i + 1}`} class="scroll-mt-24">
+              <article class="flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-6" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+                <div class="flex items-center gap-3">
+                  <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-green font-lora text-lg font-bold text-white">{i + 1}</span>
+                  <h3 class="font-lora font-bold text-logo-dark text-lg leading-snug m-0">{s.t}</h3>
+                </div>
+                <p class="font-sora text-stone-600 text-[14.5px] leading-relaxed mt-4 mb-0" set:html={s.body}></p>
+                <p class="font-sora mt-4 mb-0 rounded-r-lg border-l-[3px] border-green bg-green-lt px-4 py-2.5 text-[13.5px] leading-relaxed text-[#1c5c40]">
+                  <strong class="font-semibold">{i < 6 ? `Ready for Step ${i + 2} when:` : `Taming complete when:`}</strong> {s.ready}
+                </p>
+              </article>
+            </li>
+          ))}
+        </ol>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-7" style="max-width:70ch;">Where do treats fit a healthy diet? Sparingly — training rewards sit on top of a pellet-and-vegetables foundation, which our <a href="/african-grey-parrot-diet/">African Grey diet guide</a> covers in detail, and a well-fed Grey actually works harder for a genuinely rare treat.</p>
+      </div>
+    </section>
 
-<div>
+    <!-- 7. TIMELINE — HAND-RAISED vs RESCUE -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={[
-        { name: "Home", url: "/" },
-        { name: "African Grey Care", url: "/african-grey-care/" },
-        { name: "How to Tame an African Grey", url: "/how-to-tame-african-grey-parrot/" }
-      ]} />
+    <section id="timeline" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Honest Timelines</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Long Does It Take to Tame an African Grey — Baby vs Rescue?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">A weaned, hand-raised African Grey typically completes all seven steps in 1–4 weeks; an adult, parent-raised, or rescue Grey runs the identical sequence over 3–12 months. The steps never change — only the calendar does.</p>
+
+        <div class="space-y-7">
+          <div>
+            <h3 class="font-lora font-bold text-logo-dark text-xl mb-3">The hand-raised, weaned baby: maintaining a bond that already exists</h3>
+            <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+              <p>A chick that was hand-fed and family-socialized — the way we raise every Congo and Timneh here, weaned at 12–16 weeks before it ever travels — arrives already convinced that human hands mean food, warmth, and company. Most C.A.Gs babies compress Steps 1–3 into the first few days and are stepping up inside a week; what remains is keeping promises the breeder made on your behalf. Run the steps anyway, in order, even when the bird seems ready to skip ahead: the structure is what transfers its trust from our family to yours.</p>
+              <p>Expect a wobble around weeks two to three — a baby that was instantly cuddly may briefly test boundaries or act shy as the novelty fades and real personality emerges. That regression is normal adolescence-in-miniature, not a failed bond. Hold the routine, keep sessions short and positive, and it passes. If you are still choosing your bird, this head start is the practical argument for a <a href="/hand-raised-african-grey-parrot-for-sale/">hand-raised African Grey</a> from a documented breeder — with a <a href="/congo-african-grey-for-sale/">Congo</a> or a <a href="/timneh-african-grey-for-sale/">Timneh</a>, the taming work has largely been done before you say hello.</p>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-lora font-bold text-logo-dark text-xl mb-3">The adult, parent-raised, or rescue Grey: the full patience protocol</h3>
+            <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+              <p>An older Grey runs the same seven steps with nothing compressed and nothing skipped. Step 1 may take a week or three; Steps 2–3 can take a month each; step-up may not appear until month four or later. None of that is failure — a rehomed bird may first need to unlearn grabbing, yelling, or simple neglect from a previous home, and unlearning is slower than learning. The single most useful mindset shift: measure progress in weeks, celebrate it in seconds ("she took the treat without backing up"), and let the bird own the calendar.</p>
+              <p>Two ground rules before the first session. First, book an avian vet exam — a directory of qualified vets is maintained by the <a href="https://www.aav.org/" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians</a> — because pain makes birds bite, and no behavior plan works on an untreated medical problem. Second, learn the bird's history as well as you can; knowing what it endured tells you which steps will be slow. The species' 40-to-60-year lifespan, covered in our <a href="/african-grey-parrot-lifespan/">African Grey lifespan guide</a>, is the honest consolation here: even a full year of patient taming is a rounding error against the decades of companionship on the other side.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. BITING -->
+    <section id="biting" class="scroll-mt-20 bg-cream py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">When It Goes Wrong</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Should You Do When Your African Grey Bites?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">A taming-phase bite is fear, not aggression — the bird is reporting that you moved too fast. End the session calmly without yelling or jerking away, shorten the next session, and step back one stage in the protocol.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>The correct response is counter-intuitive, which is why so many new owners get it wrong. Yelling is attention, and attention rewards the bite. Pulling away sharply teaches the bird that biting reliably ends interaction it didn't want — the most useful lesson a fearful bird could hope to learn. Punishment of any kind converts fear into distrust, which takes far longer to repair. So: a quiet "okay, all done," bird onto a perch, session over. Tomorrow, run a shorter session one step earlier in the sequence, and rebuild.</p>
+          <p>Better still is never collecting the bite at all, and Greys are courteous enough to warn you. Learn the pre-bite signals and end every session before two of them appear:</p>
+          <ul class="tame-signal-list space-y-2 pl-0 list-none">
+            <li>Feathers flattened tight against the body (alarm), not relaxed or fluffed</li>
+            <li>Eyes "pinning" — pupils rapidly contracting and dilating</li>
+            <li>Tail fanning open and closed</li>
+            <li>Neck feathers raised into a ruff</li>
+            <li>Shifting weight foot to foot, or leaning away with a half-open beak</li>
+          </ul>
+          <p>One boundary matters here: this section is behavior advice for a healthy bird in the taming phase. A <em>sudden</em> change — an already-tame Grey that begins biting, or biting paired with fluffed lethargy, appetite loss, or feather plucking — can signal pain or illness rather than fear, and that is a job for a board-certified avian veterinarian, not a training plan. When in doubt, the vet visit comes first; our <a href="/african-grey-parrot-faq/">African Grey FAQ</a> covers how to find one and what a wellness exam involves.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. COMMON MISTAKES -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="mistakes" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Don't Do These</p>
+          <h2 class="font-lora font-bold text-logo-dark">Which Taming Mistakes Set an African Grey Back the Most?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-8" style="max-width:70ch;">The six mistakes that cost the most ground: rushing the settle-in period, overlong sessions, gloves, punishing bites, skipping the step-up foundation, and inconsistent rules between family members — every one of them trades minutes saved for weeks lost.</p>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {mistakes.map((m) => (
+            <article class="flex flex-col rounded-2xl border border-black/[0.07] bg-white p-6" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+              <h3 class="font-lora font-bold text-clay-ink text-[17px] leading-snug m-0 flex items-start gap-2">
+                <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="mt-[3px] flex-shrink-0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                {m.t}
+              </h3>
+              <p class="font-sora text-stone-600 text-[14px] leading-relaxed mt-3 m-0">{m.d}</p>
+            </article>
+          ))}
+        </div>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-7" style="max-width:70ch;">Most of these mistakes share one root: treating taming as something done <em>to</em> the bird instead of <em>with</em> it. If a session went badly, nothing is broken — step back one stage, shorten the next session, and the method absorbs the error. For the bigger picture a Grey's behavior sits inside, our <a href="/african-grey-parrot-guide/">complete African Grey species guide</a> explains the intelligence and temperament behind all of it.</p>
+      </div>
+    </section>
+
+    <!-- 10. FAQ -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="faq" class="scroll-mt-20 bg-cream py-14 px-4 md:py-16">
+      <div class="max-w-4xl mx-auto">
+        <div class="mb-5 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Taming FAQ</p>
+          <h2 class="font-lora font-bold text-logo-dark">Taming an African Grey — Your Questions, Answered</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-6" style="max-width:70ch;">The questions new Grey owners actually ask us about taming — timelines, biting, step-up, treats, older birds, and the one-person-bird problem — answered the same way we answer them on the phone.</p>
+        <div class="cag-faq-acc max-w-3xl space-y-3">
+          {faqs.map((item, i) => (
+            <div class:list={["cag-faq-item bg-white rounded-2xl border border-line overflow-hidden", i === 0 && "open"]} style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
+              <button type="button" class="cag-faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4" aria-expanded={i === 0 ? "true" : "false"}>
+                <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
+                <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0" set:html={item.a}></p></div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. GO DEEPER (cluster routing) -->
+    <section class="py-12 px-4 md:py-14">
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Go Deeper</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-4">What Should You Read After the Taming Guide?</h2>
+        <p class="font-sora text-stone-600 text-[15px] leading-relaxed mx-auto" style="max-width:70ch;">Taming is one chapter of a long book. For everything around it, our <a href="/african-grey-care/">African Grey care hub</a> routes to every resource we publish, the <a href="/african-grey-parrot-care-guide/">complete care guide</a> covers housing, enrichment and daily routine, and the <a href="/african-grey-parrot-diet/">diet guide</a> keeps the treat economy honest. Still deciding on a bird? The <a href="/african-grey-parrot-guide/">species guide</a> and our <a href="/african-grey-parrot-faq/">buyer FAQ</a> answer the rest — and every Grey we place arrives with the taming head start already built in.</p>
+      </div>
+    </section>
+
+    <!-- 12. FINAL CTA + CONTACT -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section class="pt-12 px-4 md:pt-14 text-center">
+      <div class="max-w-3xl mx-auto">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Skip to the Bond</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-4">Want a Grey That's Already People-Bonded on Day One?</h2>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every African Grey from C.A.Gs is hand-raised and family-socialized in our Midland, Texas home before it travels — captive-bred, PCR DNA-sexed, vet-certified, and placed with complete CITES Appendix I documentation, shipped nationwide ($185 airport / $350 home). Tell us about your household and whether a Congo or Timneh fits, and we will reply within 24 hours — including honest advice on the taming road ahead for the bird you choose.</p>
+      </div>
+    </section>
+
+    <div id="contact" class="scroll-mt-20">
+      <InquiryForm />
+    </div>
+
   </div>
 
-  <section class="page-hero">
-    <div class="container">
-      <div class="hero-badge">Care Guide</div>
-      <h1>How to Tame an African Grey Parrot (7-Step Breeder Method)</h1>
-      <p class="lead">African Greys are the most emotionally complex parrots on the planet. Get taming wrong and you create a fearful bird that bites for years. Get it right and you build a bond that lasts four decades.</p>
-      <div class="stat-callout">
-        <strong>Breeder insight:</strong> Hand-raised Greys from reputable breeders typically respond to this method within 7–14 days. Rescue or parent-raised birds may take 3–6 months — same steps, more patience required.
-      </div>
-    </div>
-  </section>
-
-  <section class="content-section">
-    <div class="container container-text">
-
-      <h2>Why African Greys Are Different to Tame</h2>
-      <p>African Grey parrots have emotional intelligence comparable to a five-year-old child — which means they remember trauma with the same clarity they remember kindness. A single bad handling session can set taming back weeks. A forced grab can create a bite-reflex that persists for years.</p>
-      <p>Unlike cockatiels or budgies that recover quickly from handling mistakes, a Grey will analyze your intentions, remember your inconsistencies, and adjust its behavior accordingly. This is what makes them the most rewarding parrot to tame — and the most unforgiving when the process is rushed.</p>
-      <p>See our <a href="/african-grey-parrot-care-guide/" class="internal-link">complete African Grey care guide</a> for housing, diet, and health basics before starting taming work.</p>
-
-      <hr class="section-divider" />
-
-      <h2>The 7-Step Taming Method</h2>
-      <p>This method is what we use at CongoAfricanGreys.com before every bird leaves our care. It builds trust systematically so that each step is earned, not forced.</p>
-
-      <ol class="steps-list">
-        <li class="step-item">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h3>Let the Bird Settle (24–48 Hours)</h3>
-            <p>When your Grey arrives, resist every urge to interact. Place the cage in a room where the family spends time — living room, kitchen — but do not reach in, open the cage, or hover. Talk normally nearby. Let the bird observe that humans are calm and non-threatening. Food and water only.</p>
-            <div class="step-ready"><strong>Ready for Step 2 when:</strong> The bird eats, preens, and vocalizes normally without freezing when you walk past.</div>
-          </div>
-        </li>
-
-        <li class="step-item">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h3>Hand-Feed Through the Cage Bars</h3>
-            <p>Sit beside the cage and offer small, high-value treats through the bars — pomegranate seeds, pine nuts, or small pieces of walnut. Hold the treat still. Do not wave your hand. If the bird approaches and takes the treat, immediately say "good bird" in a calm voice. If it doesn't approach, leave the treat clipped to the bar and walk away. Repeat 2–3 times daily for 3–5 days.</p>
-            <div class="step-ready"><strong>Ready for Step 3 when:</strong> The bird consistently walks toward your hand to take a treat without backing away first.</div>
-          </div>
-        </li>
-
-        <li class="step-item">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h3>Open the Cage Door and Wait</h3>
-            <p>Open the cage door and step back 2–3 feet. Do not reach in. Place a treat on top of the cage or on the door ledge. The bird decides if and when to come out. Some birds emerge within minutes; others take days. Do not rush this step — the goal is the bird choosing to leave the safety of its cage, which is a major trust threshold.</p>
-            <div class="step-ready"><strong>Ready for Step 4 when:</strong> The bird exits the cage on its own and spends time outside without constant alarm behavior.</div>
-          </div>
-        </li>
-
-        <li class="step-item">
-          <div class="step-num">4</div>
-          <div class="step-content">
-            <h3>The Hand Perch Exercise</h3>
-            <p>Offer your forearm as a perch while the bird is outside the cage. Start with your arm resting on a table or chair arm so your hand is at the bird's level. Hold a treat near your wrist. The first goal is simply for the bird to stand on your arm while you remain still — not to interact, not to talk, just to perch. 5-minute sessions, twice daily. End every session before the bird shows stress signals.</p>
-            <div class="step-ready"><strong>Ready for Step 5 when:</strong> The bird will stand on your arm for 3–5 minutes without attempting to escape.</div>
-          </div>
-        </li>
-
-        <li class="step-item">
-          <div class="step-num">5</div>
-          <div class="step-content">
-            <h3>Introduce the Step-Up Command</h3>
-            <p>Press your index finger gently but firmly against the bird's lower chest — just above the feet — while saying "step up" in a clear, calm voice. The pressure causes a natural forward-stepping reflex. The moment the bird steps up, say "good bird" and offer a treat. Practice 5–8 repetitions per session. Never use gloves — they teach the bird that bare hands are the threat.</p>
-            <div class="step-ready"><strong>Ready for Step 6 when:</strong> The bird steps up on the first or second "step up" command without hesitation 8 out of 10 times.</div>
-          </div>
-        </li>
-
-        <li class="step-item">
-          <div class="step-num">6</div>
-          <div class="step-content">
-            <h3>Extend Handling Duration Gradually</h3>
-            <p>Increase session length from 5 minutes to 10, then 15, then 20 minutes over 1–2 weeks — only if the bird remains calm throughout. Introduce movement: walk slowly from room to room with the bird on your arm. Offer head scratches if the bird lowers its head (it's asking for contact). Never increase duration if the previous session ended with stress signals or biting.</p>
-            <div class="step-ready"><strong>Ready for Step 7 when:</strong> The bird tolerates 20-minute sessions calmly and accepts head scratches from you.</div>
-          </div>
-        </li>
-
-        <li class="step-item">
-          <div class="step-num">7</div>
-          <div class="step-content">
-            <h3>Introduce New People and Environments</h3>
-            <p>Once the bird is comfortable with you, introduce other family members using the same step-up protocol from Step 5 — each person is essentially starting at Step 4 from the bird's perspective. Then expand environments: take the bird to another room, near a window, eventually for short outings. Socialized birds adapt to new people and places without fear, which is what makes them exceptional companions.</p>
-            <div class="step-ready"><strong>Taming complete when:</strong> The bird steps up reliably for 3+ different family members and remains calm in at least 3 different environments.</div>
-          </div>
-        </li>
-      </ol>
-
-      <hr class="section-divider" />
-
-      <h2>What to Do When Your African Grey Bites</h2>
-      <p>Biting during taming is almost always fear-based, not aggression. The bird is communicating that you've moved too fast. The correct response is counter-intuitive.</p>
-
-      <div class="warn-box">
-        <p><strong>Never yell, pull away sharply, or punish a bite.</strong> Yelling reinforces the behavior (attention reward). Pulling away sharply teaches the bird that biting ends unwanted interaction — which is exactly what a fearful bird wants to learn. Punishment creates distrust that takes months to rebuild.</p>
-      </div>
-
-      <p><strong>Pre-bite warning signs to watch for:</strong></p>
-      <ul>
-        <li>Feathers flattened tightly against the body (not relaxed/puffy)</li>
-        <li>Eyes pinning rapidly (pupils dilating and contracting)</li>
-        <li>Tail fanning open and closed</li>
-        <li>Neck feathers raised in a ruff</li>
-        <li>Shifting weight from foot to foot</li>
-      </ul>
-
-      <p>When you see any two of these signals, calmly say "okay, all done" and set the bird on a perch. End the session. You went too long or asked too much. Tomorrow, take one step back in the protocol and rebuild from there.</p>
-
-      <hr class="section-divider" />
-
-      <h2>Common Taming Mistakes That Set Progress Back</h2>
-
-      <div class="mistakes-grid">
-        <div class="mistake-card">
-          <h4>Handling Too Long</h4>
-          <p>Sessions over 20 minutes cause fatigue and overstimulation, almost always ending in a bite. A 10-minute session that ends positively is worth more than a 30-minute session that ends with stress.</p>
-        </div>
-        <div class="mistake-card">
-          <h4>Using Gloves</h4>
-          <p>Gloves teach the bird that bare hands are the threat it feared all along. When gloves come off, the bird bites bare hands. Always use bare hands from the first session.</p>
-        </div>
-        <div class="mistake-card">
-          <h4>Skipping the Step-Up Foundation</h4>
-          <p>Trying to carry, pet, or play with a bird that hasn't mastered step-up is premature. Step-up is the foundation — every other behavior is built on top of it.</p>
-        </div>
-        <div class="mistake-card">
-          <h4>Inconsistent Handling</h4>
-          <p>Three family members using different words, different reward timing, and different rules creates a confused bird. Pick one protocol and have everyone follow it during the initial taming phase.</p>
-        </div>
-      </div>
-
-      <hr class="section-divider" />
-
-      <h2>Taming a Rescue or Previously Untamed Grey</h2>
-      <p>The same 7 steps apply, but compress nothing. A rescue Grey may have been grabbed, screamed at, or punished in a previous home. Steps 1–3 may take weeks, not days. Steps 4–5 may take months. This is not a failure — it's the bird's history.</p>
-      <p>Before starting taming on a rescue bird, schedule an avian vet exam to rule out illness (sick birds bite out of pain, not fear). Learn <a href="/how-to-avoid-african-grey-parrot-scams/" class="internal-link">how to verify a bird's history</a> so you know what you're working with before you begin.</p>
-
-    </div>
-  </section>
-
-  <section class="faq-section">
-    <div class="container container-text">
-      <h2>Taming FAQs</h2>
-
-      <details>
-        <summary>How long does it take to tame an African Grey parrot?</summary>
-        <div class="faq-body">A captive-bred hand-raised African Grey parrot that was well-socialized as a chick typically tames within 1–4 weeks with consistent daily handling. Rescue or parent-raised Greys can take 3–12 months of patient, positive-reinforcement work. Never rush taming — forcing interaction causes fear that takes months to undo.</div>
-      </details>
-
-      <details>
-        <summary>Why does my African Grey bite me?</summary>
-        <div class="faq-body">African Grey parrots bite because of fear, overstimulation, territorial defense, or hormonal behavior during mating season. Most biting during taming is fear-based. The solution is to slow down, reduce handling sessions to 5–10 minutes, and end every session before the bird shows stress signals (feather flattening, eye pinning, tail fanning).</div>
-      </details>
-
-      <details>
-        <summary>What is the step-up command for parrots?</summary>
-        <div class="faq-body">The step-up command is a verbal cue ("step up") paired with pressing your finger or forearm gently against the bird's lower chest, just above the feet, prompting it to step onto your hand. Start by practicing on a perch before attempting from inside the cage. Reward every successful step-up with a small treat and praise.</div>
-      </details>
-    </div>
-  </section>
-
-  <section class="cta-section">
-    <div class="container">
-      <h2>Start with a Bird Already Socialized</h2>
-      <p>Our hand-raised Congos and Timnehs leave our care already responding to step-up commands — so you're building on a foundation, not starting from zero.</p>
-      <a href="/contact-us/" class="btn-primary">Inquire About Availability</a>
-      <div class="hub-back">
-        This guide is part of the <a href="/african-grey-care/">African Grey Care Hub</a>
-      </div>
-    </div>
-  </section>
-
-</div>
-
+  <script is:inline>
+    // FAQ accordion (smooth open/close) — mirrors homepage / guide / faq pattern
+    (function () {
+      const qs = document.querySelectorAll('.cag-faq-q');
+      if (!qs.length) return;
+      qs.forEach(btn => btn.addEventListener('click', () => {
+        const item = btn.closest('.cag-faq-item');
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }));
+    })();
+  </script>
 </BaseLayout>
+
+<style is:global>
+  /* ============================================================
+     TAMING GUIDE — Direction-D-aware interior wrapper (.tame-d)
+     body.theme-d supplies Newsreader/IBM Plex, lead paragraphs,
+     eyebrow ticks, card + button motion. This scopes seam + links + accordion.
+     ============================================================ */
+  .tame-d { --rule: rgba(45,106,79,.16); }
+
+  /* AA: clay as small readable text on LIGHT sections → #b04228 (4.5:1). */
+  .tame-d a.text-clay, .tame-d .text-clay { color:#b04228; }
+  .tame-d .hero-v3-b .text-clay, .tame-d .bg-clay { color:inherit; }
+
+  /* Woven in-content links: clay, underlined, AA-safe. */
+  .tame-d p a:not(.rounded-full):not(.bg-clay),
+  .tame-d li a:not(.rounded-full):not(.bg-clay) {
+    color:#b04228; font-weight:500; text-decoration:underline;
+    text-decoration-color:rgba(176,66,40,.35); text-underline-offset:2px;
+    transition:text-decoration-color .2s ease;
+  }
+  .tame-d p a:not(.rounded-full):not(.bg-clay):hover,
+  .tame-d li a:not(.rounded-full):not(.bg-clay):hover { text-decoration-color:#b04228; }
+
+  /* External links open in a new tab — subtle outward arrow affordance. */
+  .tame-d p a[target="_blank"]::after { content:"\2197"; font-size:.7em; line-height:0; vertical-align:super; opacity:.5; margin-left:.12em; }
+
+  /* Pre-bite signal list: line-icon check bullets in green (markup-free via ::before text glyph). */
+  .tame-signal-list li { position:relative; padding-left:1.5em; }
+  .tame-signal-list li::before { content:"\2713"; position:absolute; left:0; top:0; color:#2D6A4F; font-weight:700; }
+
+  /* FAQ accordion mechanics (shared cag-faq-acc pattern) */
+  .cag-faq-q { cursor: pointer; background: transparent; transition: background .2s ease; }
+  .cag-faq-q:hover { background: rgba(45,106,79,.04); }
+  .cag-faq-chevron { transition: transform .2s ease; }
+  .cag-faq-item.open .cag-faq-chevron { transform: rotate(180deg); }
+  .cag-faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .2s ease; }
+  .cag-faq-item.open .cag-faq-panel { grid-template-rows: 1fr; }
+  .cag-faq-panel-inner { overflow: hidden; }
+
+  /* Section seam — centered wordmark divider (verbatim scope). */
+  .tame-d > .cag-seam{ display:flex; align-items:center; gap:26px; max-width:1100px; margin:0 auto; padding:.6rem 24px !important; }
+  .cag-seam__line{ flex:1; height:1px; background:var(--rule); }
+  .tame-d .cag-seam img{ height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+  @media (max-width:600px){ .tame-d > .cag-seam{ gap:16px; } .tame-d .cag-seam img{ height:24px; } }
+</style>
