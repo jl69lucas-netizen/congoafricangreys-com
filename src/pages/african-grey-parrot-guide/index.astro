@@ -1,70 +1,92 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
+import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
+import CompareTableE from '../../components/cag-library/CompareTableE.astro';
+import BirdCard from '../../components/BirdCard.astro';
+import InquiryForm from '../../components/cag-inquiry-form.astro';
 
-const title = "African Grey Parrot Guide: Complete Species Overview | CongoAfricanGreys.com";
-const description = "Complete African Grey parrot guide: Congo vs Timneh variants, intelligence, 40–60 year lifespan, size, diet, cage needs, CITES status and a buyer's checklist.";
+const title = "African Grey Parrot Guide | Complete Species Profile — Psittacus erithacus, Congo vs Timneh, Intelligence, Lifespan, Diet & CITES Status + How to Buy Captive-Bred | C.A.Gs – Midland, TX";
+const description = "Complete African Grey parrot guide from USDA-licensed breeders C.A.Gs — Congo vs Timneh, talking ability (the Alex/Pepperberg legacy), 40–60 year lifespan, diet, housing, CITES Appendix I, and how to buy a documented captive-bred Grey. Congo $1,700–$2,500 · Timneh $1,500–$1,600 · ships $185/$350.";
 const canonical = "https://congoafricangreys.com/african-grey-parrot-guide/";
+const updated = "June 2026";
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "African Grey Parrot Guide", url: "/african-grey-parrot-guide/" },
 ];
 
-const toc = [
-  { id: "overview", label: "Species Overview" },
-  { id: "variants", label: "Congo vs Timneh Variants" },
-  { id: "intelligence", label: "Intelligence & Talking" },
-  { id: "lifespan", label: "Lifespan" },
-  { id: "size", label: "Size & Appearance" },
-  { id: "diet", label: "Diet & Nutrition" },
-  { id: "environment", label: "Cage & Environment" },
-  { id: "cites", label: "CITES Status" },
-  { id: "buying", label: "Buying Guide" },
-  { id: "faq", label: "FAQ" },
+// ─── Available birds (cross-sell grid) — verified against price-matrix.json + clutch-inventory.json ───
+// Shipping line + trust badges are hardwired inside BirdCard.astro (Ships nationwide · $185 airport · $350 home).
+const birds = [
+  { id: 'roys',  name: 'Roys',  sex: 'Male',   age: '4 mo',  price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Hand-raised in our home from day one.',
+    notes: "Hand-raised male Congo, 4 months old — captive-bred, PCR DNA-sexed, vet-checked, and CITES Appendix I documented before he ever ships." },
+  { id: 'amie',  name: 'Amie',  sex: 'Female', age: '3 mo',  price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'Socialized by our whole family.',
+    notes: 'Premium hand-raised female Congo, 3 months old. Closed-banded, hatch-certified, CITES Appendix I documented.' },
+  { id: 'bery',  name: 'Bery',  sex: 'Female', age: '1 yr',  price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp',
+    hook: 'Gentle, settled, paperwork in hand.',
+    notes: 'Soft temperament, easy to handle. 1-year-old captive-bred female Congo with full health and CITES documentation.' },
+  { id: 'elad',  name: 'Elad',  sex: 'Male',   age: '5 mo',  price: '$1,600',
+    tag: 'Timneh', tagType: 'new' as const, variant: 'Timneh African Grey',
+    image: '/elad-timneh-african-grey-male-5-months.webp',
+    hook: 'Smaller bird, same documentation standard.',
+    notes: 'Hand-raised male Timneh, 5 months old. PCR DNA-sexed, avian-vet certified, captive-bred and never wild-caught.' },
+  { id: 'evie',  name: 'Evie',  sex: 'Female', age: '6 mo',  price: '$1,500',
+    tag: 'Timneh', tagType: 'value' as const, variant: 'Timneh African Grey',
+    image: '/evie-timneh-african-grey-female-6-months.webp', objectPos: 'object-top',
+    hook: 'Calm, clever, ready to come home.',
+    notes: 'Hand-raised female Timneh, 6 months old. Closed band, hatch certificate, and CITES Appendix I paperwork included.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Must-Go Pair', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair.webp',
+    hook: 'Two bonded birds, one documented package.',
+    notes: 'Unrelated captive-bred pair, must be adopted together. Jins (male, 6mo) + Jeni (female, 4mo). Both hand-raised and fully documented.' },
 ];
 
+// ─── Taxonomy entity table (encyclopedic, neutral) ───
+const taxonomy = [
+  { k: "Common name", v: "African Grey Parrot" },
+  { k: "Scientific name", v: "<em>Psittacus erithacus</em>" },
+  { k: "Family", v: "Psittacidae (true parrots)" },
+  { k: "Order", v: "Psittaciformes" },
+  { k: "Native range", v: "Rainforest belt of West &amp; Central Africa" },
+  { k: "Variants", v: "Congo (<em>P. erithacus</em>), Timneh (<em>P. timneh</em>)" },
+  { k: "Adult size", v: "9–14 in (28–36 cm), 275–600 g" },
+  { k: "Lifespan", v: "40–50 yr wild · up to 60 yr in human care" },
+  { k: "Conservation listing", v: "CITES Appendix I · IUCN Endangered (wild)" },
+];
+
+// ─── FAQ (PAA-sourced: current page + competitor union + Google PAA) — mirrored into FAQPage schema ───
 const faqs = [
-  {
-    q: "What is an African Grey parrot?",
-    a: "The African Grey parrot (Psittacus erithacus) is a medium-sized parrot native to the rainforests of equatorial Africa. It is widely regarded as the most intelligent companion parrot, capable of learning hundreds of words and using them in context. There are two recognized variants: the Congo African Grey and the Timneh African Grey. Both are CITES Appendix I species and must be captive-bred with documentation to be sold legally in the United States.",
-  },
-  {
-    q: "What is the difference between a Congo and a Timneh African Grey?",
-    a: "The Congo African Grey is the larger variant, roughly 12–14 inches long and 400–600 grams, with light silver-grey plumage, a bright red tail and a solid black beak. The Timneh African Grey is smaller at 9–11 inches and 275–375 grams, with darker charcoal plumage, a maroon tail and a horn-colored upper beak. Both are equally intelligent; Timnehs often talk earlier and tend to be calmer.",
-  },
-  {
-    q: "How long do African Grey parrots live?",
-    a: "African Grey parrots live 40–50 years in the wild and up to 60 years in captivity with proper nutrition, veterinary care and enrichment. Owning an African Grey is a multi-decade commitment that should be planned as a lifelong responsibility, including arrangements for the bird's care should it outlive its owner.",
-  },
-  {
-    q: "Can African Grey parrots really talk?",
-    a: "Yes. African Grey parrots are the most accomplished talking birds in the world. They can learn hundreds of words and, as demonstrated by Dr. Irene Pepperberg's decades of research with the African Grey named Alex, they can use words in correct context, count, identify colors and shapes, and grasp simple abstract concepts comparable to a young child.",
-  },
-  {
-    q: "How big does an African Grey parrot get?",
-    a: "A Congo African Grey grows to about 12–14 inches (33 cm) long and weighs 400–600 grams. A Timneh African Grey is smaller, reaching 9–11 inches and 275–375 grams. Both have a wingspan of roughly 18–20 inches and reach full adult size by about one year of age.",
-  },
-  {
-    q: "What do African Grey parrots eat?",
-    a: "A healthy African Grey diet is built on a high-quality formulated pellet making up 60–70% of intake, supplemented with fresh vegetables, leafy greens and limited fruit. Calcium-rich foods are especially important because African Greys are prone to calcium deficiency. Avocado, chocolate, caffeine and salty or sugary human foods are toxic and must never be fed.",
-  },
-  {
-    q: "Are African Grey parrots legal to own?",
-    a: "Yes, captive-bred African Greys are legal to own in the United States. African Greys are listed under CITES Appendix I, which regulates international trade to protect wild populations. Wild-caught birds cannot be legally sold; every African Grey from CongoAfricanGreys.com is captive-bred and supplied with CITES captive-bred documentation, a hatch certificate, DNA sexing results and an avian veterinary health certificate.",
-  },
-  {
-    q: "How much does an African Grey parrot cost?",
-    a: "At CongoAfricanGreys.com a captive-bred Congo African Grey ranges from $1,700 to $3,500 depending on age and training, and a Timneh African Grey ranges from $1,500 to $1,600. First-year setup — cage, perches, toys and an initial vet visit — typically adds $475 to $1,300. See our African Grey parrot price guide for a full breakdown.",
-  },
-  {
-    q: "Are African Grey parrots good pets for beginners?",
-    a: "African Greys are intelligent, sensitive birds that need daily interaction, mental enrichment and a consistent routine, so they suit committed owners more than casual first-time bird keepers. Beginners who are ready for the commitment often do well starting with a calm, fully weaned, hand-raised Timneh from a reputable breeder.",
-  },
-  {
-    q: "How much space and attention does an African Grey need?",
-    a: "An African Grey needs a cage at least 24 x 24 x 36 inches with horizontal bars, plenty of out-of-cage time, and 2–4 hours of daily social interaction and enrichment. They are flock animals that bond closely with their family and can develop feather-destructive behavior or stress if left isolated for long periods.",
-  },
+  { q: "What is an African Grey parrot?",
+    a: "An African Grey parrot (Psittacus erithacus) is a medium-sized parrot native to the rainforests of West and Central Africa, widely regarded as the most intelligent companion bird in the world. There are two recognized variants — the larger, red-tailed Congo and the smaller, maroon-tailed Timneh — and both are CITES Appendix I species, so a Grey sold in the USA must be captive-bred and documented. Here at C.A.Gs we hand-raise both Congos and Timnehs in our Midland, Texas home, and every bird ships with full CITES, hatch, DNA and avian-vet paperwork." },
+  { q: "What is the difference between a Congo and a Timneh African Grey?",
+    a: "The Congo African Grey is the larger variant — roughly 12–14 inches and 400–600 grams — with light silver-grey plumage, a bright cherry-red tail and an all-black beak. The Timneh African Grey is smaller at 9–11 inches and 275–375 grams, with darker charcoal plumage, a maroon tail and a horn-colored upper beak. Both are equally intelligent and equally long-lived; Timnehs tend to talk earlier and stay a touch calmer. We place both here at C.A.Gs — Congos from $1,700 and Timnehs from $1,500 — under the exact same captive-bred documentation standard." },
+  { q: "Can African Grey parrots really talk?",
+    a: "Yes — African Greys are the most accomplished talking birds of any species. A well-socialized Grey can learn hundreds of words and short phrases and use them in the correct context rather than simply mimicking. The species' cognition is documented through Dr. Irene Pepperberg's three decades of work with a Congo Grey named Alex, who could identify colors, shapes and materials, count small quantities, and grasp concepts such as 'same' and 'different.' Our own talking Congo, Maxy, greets visitors by name — proof of what a hand-raised Grey becomes when it is socialized from a chick." },
+  { q: "How long do African Grey parrots live?",
+    a: "African Grey parrots live 40–50 years in the wild and up to 60 years in human care with proper nutrition, annual avian-vet wellness exams and daily enrichment. That makes a Grey one of the longest-lived companion parrots and a genuine multi-decade commitment — many owners name a future caretaker for the bird. Read our dedicated African Grey lifespan guide for the full picture of what shortens and what extends those years." },
+  { q: "How big does an African Grey parrot get?",
+    a: "A Congo African Grey grows to about 12–14 inches (33–36 cm) from head to tail and weighs 400–600 grams. A Timneh African Grey is smaller, reaching 9–11 inches and 275–375 grams. Both reach full adult size by roughly one year of age and have a wingspan of around 18–20 inches. Males and females look nearly identical, which is why every Grey we place is PCR DNA-sexed with a certificate included." },
+  { q: "What do African Grey parrots eat?",
+    a: "A healthy African Grey diet is built on a formulated, dye-free pellet making up roughly 60–70% of daily intake, supplemented with fresh vegetables, leafy greens and a smaller portion of fruit. African Greys are especially prone to calcium deficiency, so calcium-rich greens and safe access to UV-B light (which lets the body make vitamin D3) matter. Avocado, chocolate, caffeine, alcohol and salty or sugary human foods are toxic and must never be fed. See our African Grey diet guide and best-food guide for full feeding plans." },
+  { q: "Are African Grey parrots legal to own in the USA?",
+    a: "Yes — a captive-bred African Grey is legal to own and transfer domestically within the United States with proper documentation. African Greys were uplisted to CITES Appendix I at CoP17, effective January 2017, which bans commercial trade in wild-caught birds; captive-bred birds are unaffected. Every Grey from C.A.Gs is U.S. captive-bred and ships with a CITES Appendix I captive-bred certificate, hatch certificate, closed band, PCR DNA sexing certificate and a board-certified avian-vet health certificate. See our CITES documentation page for the full breakdown." },
+  { q: "How much does an African Grey parrot cost?",
+    a: "Here at C.A.Gs a captive-bred Congo African Grey ranges from $1,700 to $2,500 depending on age, and a Timneh ranges from $1,500 to $1,600; a bonded pair is $3,500. Shipping is $185 to your nearest major airport or $350 for home delivery, IATA-compliant via Delta, United or American. First-year setup — cage, perches, toys and an initial vet visit — typically adds several hundred dollars. Our African Grey price guide has the complete cost breakdown." },
+  { q: "Are African Grey parrots good pets for beginners?",
+    a: "African Greys are sensitive, highly intelligent birds that need daily interaction, mental enrichment and a consistent routine, so they reward committed owners more than casual first-time keepers. That said, a beginner ready for the commitment often does very well starting with a calm, fully weaned, hand-raised Timneh from a documented breeder. We talk through your home and experience before placing any bird, so the match is right for both you and the Grey." },
+  { q: "How much space and attention does an African Grey need?",
+    a: "An African Grey needs a cage at least 24 x 24 x 36 inches with horizontal bars, several hours of supervised out-of-cage time, and 2–4 hours of daily social interaction and enrichment. They are flock animals that bond closely with their family and can develop feather-destructive behavior or stress if isolated for long stretches. A predictable 10–12 hour dark sleep schedule and a quiet location away from kitchen fumes keep a Grey calm and confident." },
 ];
 
 const faqSchema = {
@@ -80,839 +102,490 @@ const faqSchema = {
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "African Grey Parrot Guide: Complete Species Overview",
-  description: description,
+  headline: "African Grey Parrot Guide — The Complete Species Profile",
+  description: "A complete African Grey species guide: Psittacus erithacus taxonomy and wild origin, the Congo vs Timneh variants, intelligence and talking ability, size, temperament, the 40–60 year lifespan, diet, housing, CITES Appendix I status, and how to buy a documented captive-bred Grey.",
+  inLanguage: "en-US",
   about: {
     "@type": "Thing",
     name: "African Grey Parrot",
     alternateName: "Psittacus erithacus",
-    description:
-      "The African Grey parrot (Psittacus erithacus) is a medium-sized Old World parrot native to equatorial Africa, recognized as the most intelligent companion parrot and listed under CITES Appendix I.",
+    description: "The African Grey parrot (Psittacus erithacus) is a medium-sized Old World parrot native to equatorial Africa, recognized as the most intelligent companion parrot and listed under CITES Appendix I.",
+    sameAs: "https://parrots.org/encyclopedia/grey-parrot/",
   },
   author: {
     "@type": "Organization",
-    name: "Congo African Greys",
-    url: "https://congoafricangreys.com",
+    name: "C.A.Gs – Midland, TX",
+    url: "https://congoafricangreys.com/trusted-african-grey-parrot-breeders/",
   },
   publisher: {
     "@type": "Organization",
     name: "Congo African Greys",
-    url: "https://congoafricangreys.com",
+    logo: { "@type": "ImageObject", url: "https://congoafricangreys.com/cag-footer-logo.png" },
   },
-  mainEntityOfPage: canonical,
+  datePublished: "2024-09-01",
+  dateModified: "2026-06-10",
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
 };
 
-const variantRows = [
-  { attr: "Scientific name", congo: "Psittacus erithacus erithacus", timneh: "Psittacus erithacus timneh" },
-  { attr: "Body length", congo: "12–14 in (33–36 cm)", timneh: "9–11 in (28–33 cm)" },
-  { attr: "Weight", congo: "400–600 grams", timneh: "275–375 grams" },
-  { attr: "Plumage", congo: "Light silver-grey", timneh: "Darker charcoal-grey" },
-  { attr: "Tail color", congo: "Bright cherry-red", timneh: "Dark maroon" },
-  { attr: "Upper beak", congo: "Solid black", timneh: "Horn / bone-colored tip" },
-  { attr: "Temperament", congo: "Affectionate, sensitive, can be reserved", timneh: "Calm, confident, easygoing" },
-  { attr: "Talking", congo: "Exceptional clarity, large vocabulary", timneh: "Often talks earlier, slightly softer" },
-  { attr: "Price range", congo: "$1,700 – $3,500", timneh: "$1,500 – $1,600" },
-  { attr: "Lifespan", congo: "40–60 years", timneh: "40–60 years" },
-  { attr: "CITES status", congo: "Appendix I — fully documented", timneh: "Appendix I — fully documented" },
-];
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((b, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: b.name,
+    item: `https://congoafricangreys.com${b.url}`,
+  })),
+};
 
-const taxonomy = [
-  { k: "Common name", v: "African Grey Parrot" },
-  { k: "Scientific name", v: "Psittacus erithacus" },
-  { k: "Family", v: "Psittacidae (true parrots)" },
-  { k: "Order", v: "Psittaciformes" },
-  { k: "Native range", v: "Equatorial Africa — rainforest belt" },
-  { k: "Variants", v: "Congo (P. e. erithacus), Timneh (P. e. timneh)" },
-  { k: "Conservation listing", v: "CITES Appendix I" },
-  { k: "Lifespan", v: "40–50 years wild, up to 60 in captivity" },
+// ─── Care-overview entity cards (routes to spokes) ───
+const careCards = [
+  { n: 1, t: "Diet & nutrition",
+    d: "A dye-free formulated pellet is the foundation (60–70%), rounded out with fresh greens and limited fruit. Greys are prone to calcium deficiency, so calcium-rich foods and UV-B exposure for vitamin D3 are key.",
+    href: "/african-grey-parrot-diet/", link: "Full diet guide" },
+  { n: 2, t: "Housing & cage",
+    d: "A cage of at least 24 x 24 x 36 inches with horizontal bars and 3/4–1 inch bar spacing, plus varied natural-wood perches and a quiet spot away from kitchen fumes and drafts.",
+    href: "/african-grey-parrot-care-guide/", link: "Complete care guide" },
+  { n: 3, t: "Enrichment & training",
+    d: "Foraging toys, rotating puzzles and short daily training sessions keep that powerful mind busy. A bored Grey is a feather-plucking Grey, so enrichment is care, not a luxury.",
+    href: "/how-to-tame-african-grey-parrot/", link: "How to tame a Grey" },
+  { n: 4, t: "Health & vet care",
+    d: "An annual avian-vet wellness exam, a calcium-adequate diet and 10–12 hours of dark sleep add healthy years. Every Grey we place is PBFD and Polyomavirus screened before it leaves.",
+    href: "/african-grey-parrot-health-guarantee/", link: "Our health guarantee" },
+  { n: 5, t: "Lifespan planning",
+    d: "At 40–60 years, an African Grey may outlive arrangements you make today, so responsible owners plan for the bird's whole life, including a named future caretaker.",
+    href: "/african-grey-parrot-lifespan/", link: "Lifespan guide" },
+  { n: 6, t: "Cost of ownership",
+    d: "Purchase price is only the start: cage, perches, toys, food and vet care add up over decades. We lay out first-year setup and lifetime cost honestly.",
+    href: "/african-grey-parrot-price/", link: "Price & cost guide" },
 ];
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical}>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta>
 
-  <!-- HERO -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="guide-d cag-article">
+
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
+
+    <!-- 1. HERO (cag-hero-v3 idiom · Authority Green) -->
+    <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
+      <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
+      <div class="container relative z-10 mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-12">
+        <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
+          <!-- COPY -->
+          <div class="order-2 text-center md:order-1 md:text-left">
+            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Species Pillar · <em>Psittacus erithacus</em> · Updated {updated}</p>
+            <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
+              The Complete African Grey Parrot Guide
+            </h1>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
+              The African Grey (<em>Psittacus erithacus</em>) is the most intelligent companion parrot on Earth — and choosing one is a 40-to-60-year decision. Here at C.A.Gs in Midland, Texas, we hand-raise both Congo and Timneh Greys, so this guide is written from the aviary floor: taxonomy and wild origin, the two variants, talking ability, size, temperament, lifespan, diet, housing, CITES Appendix I status, and how to bring home a documented, captive-bred Grey.
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+              <a href="#variants" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Congo or Timneh? →</a>
+              <a href="#available-birds" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">See Available Greys →</a>
+            </div>
+          </div>
+          <!-- CIRCULAR IMAGE STAGE -->
+          <div class="order-1 flex justify-center md:order-2 md:justify-end">
+            <div class="relative">
+              <div class="absolute inset-0 -m-3 rounded-full border border-white/25 md:-m-5" aria-hidden="true"></div>
+              <div class="relative flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#0f3d2c] ring-4 ring-white/15 sm:h-[260px] sm:w-[260px] md:h-[300px] md:w-[300px]" style="box-shadow: 0 24px 60px rgba(60,30,10,0.35);">
+                <img src="/congo-african-grey-variant.webp"
+                  alt="A captive-bred Congo African Grey (Psittacus erithacus) with silver-grey plumage and a bright red tail, hand-raised at the C.A.Gs aviary in Midland, Texas — the classic African Grey species the world recognizes."
+                  title="Congo African Grey — Psittacus erithacus — C.A.Gs, Midland TX"
+                  width="400" height="400" loading="eager" fetchpriority="high" decoding="async"
+                  class="h-full w-full object-cover object-center" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. COUNTER SNIPPET -->
+    <CounterSnippet />
+
+    <!-- 3. KEY TAKEAWAY / BLUF -->
+    <KeyTakeawayV2
+      eyebrow="The species in 60 seconds"
+      heading="What Is an African Grey Parrot? (The Facts That Matter)"
+      badge="8 facts · 60-sec read"
+      items={[
+        { stat: "Most",      label: "Intelligent Parrot",  body: "The African Grey (Psittacus erithacus) is widely ranked the most intelligent companion bird, with the talking ability to match." },
+        { stat: "2",         label: "Variants",             body: "The larger red-tailed Congo and the smaller maroon-tailed Timneh — equally clever, equally long-lived, different in size and pace." },
+        { stat: "40–60 yr",  label: "Lifespan",             body: "Greys live up to 60 years in human care, making one a genuine multi-decade, plan-for-life commitment." },
+        { stat: "100s",      label: "Words in Context",     body: "A socialized Grey learns hundreds of words and uses them meaningfully — the Alex/Pepperberg research proved real comprehension." },
+        { stat: "Appx I",    label: "CITES Status",         body: "African Greys are CITES Appendix I (since Jan 2017); only documented captive-bred birds are legal to own and transfer in the USA." },
+        { stat: "$1,500+",   label: "From C.A.Gs",          body: "Timneh Greys from $1,500 and Congos from $1,700 — captive-bred, hand-raised, never a bait listing." },
+        { stat: "9–14 in",   label: "Adult Size",           body: "Medium parrot: 9–11 in for a Timneh, 12–14 in for a Congo, 275–600 g — fully grown by about one year." },
+        { stat: "USDA",      label: "Family-Bred Since '14",body: "Mark & Teri Benjamin hand-raise every Grey in their USDA-licensed Midland, TX home — documented from the first day." },
+      ]}
+    />
+
+    <!-- 4. TOC (jump links) -->
+    <nav class="toc-guide py-10 px-4 bg-cream md:py-12" aria-label="On this page">
+      <div class="container mx-auto max-w-[1100px]">
+        <div class="rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-12 md:py-10" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+          <div class="flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end">
+            <div>
+              <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">Inside this guide</p>
+              <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark md:text-3xl">On This Page</h2>
+            </div>
+            <p class="font-sora text-[13px] text-stone-500">9 sections · the whole species, plainly</p>
+          </div>
+          <div class="mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part One</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">The species &amp; its two variants</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 1, t: "What Is an African Grey Parrot — Taxonomy & Origin?", href: "#overview" },
+                  { n: 2, t: "Congo vs Timneh — Which African Grey Variant?", href: "#variants" },
+                  { n: 3, t: "How Intelligent Are African Greys, and Can They Talk?", href: "#intelligence" },
+                  { n: 4, t: "How Big Do African Greys Get — Size & Appearance?", href: "#size" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part Two</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">Living with &amp; buying a Grey</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 5, t: "What Is an African Grey's Temperament Like?", href: "#temperament" },
+                  { n: 6, t: "How Long Do African Greys Live, and Stay Healthy?", href: "#lifespan" },
+                  { n: 7, t: "How Do You Care for an African Grey Day to Day?", href: "#care" },
+                  { n: 8, t: "Are African Greys Legal — CITES Status Explained?", href: "#cites" },
+                  { n: 9, t: "African Grey Parrot Guide — Your Questions", href: "#faq" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 5a. OVERVIEW / TAXONOMY -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="overview" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Species</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Is an African Grey Parrot — Taxonomy &amp; Wild Origin?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">The African Grey parrot (<em>Psittacus erithacus</em>) is a medium-sized Old World parrot native to the lowland rainforests of West and Central Africa, and it is widely regarded as the most intelligent companion bird in the world.</p>
+        <div class="grid gap-8 md:grid-cols-[1fr_minmax(280px,360px)] md:items-start">
+          <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+            <p>Taxonomically the African Grey belongs to the order Psittaciformes and the family Psittacidae — the true parrots — and the genus <em>Psittacus</em>. As <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust species encyclopedia</a> records, the bird ranges across the equatorial forest belt from Côte d'Ivoire and Ghana eastward through the Congo Basin, where it nests in tree cavities and forages on fruit, seeds and palm nuts in large, vocal flocks.</p>
+            <p>Two forms are recognized — once treated as subspecies and now often as separate species — the larger Congo (<em>P. erithacus</em>) and the smaller Timneh (<em>P. timneh</em>). Both share the understated silver-grey plumage, the pale bare facial patch and the famously expressive eyes that lighten from dark to pale yellow as the bird matures. Unlike a macaw or cockatoo, the Grey's appeal is behavioral rather than ornamental: this is a bird that watches, listens, reasons and engages.</p>
+            <p>That same intelligence is why the species needs protection. Decades of trapping for the pet trade thinned wild flocks so severely that the bird is now listed as Endangered on the <a href="https://www.iucnredlist.org/species/22724813/154068728" target="_blank" rel="noopener noreferrer">IUCN Red List</a> and was uplisted to CITES Appendix I in 2017. Every Grey we place at C.A.Gs is U.S. captive-bred, hand-raised and fully documented — we never touch a wild bird.</p>
+          </div>
+          <div class="agg-tax-card rounded-2xl border border-black/[0.07] bg-white p-5" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+            <p class="font-sora text-[11px] font-bold uppercase tracking-[0.14em] text-clay mb-3">African Grey at a glance</p>
+            <table class="agg-tax-table w-full">
+              <tbody>
+                {taxonomy.map((row) => (
+                  <tr>
+                    <th scope="row" set:html={row.k} />
+                    <td set:html={row.v} />
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5b. VARIANTS — Congo vs Timneh -->
+    <CompareTableE
+      eyebrow="The Two Variants"
+      heading="Congo vs Timneh — Which African Grey Is Right for You?"
+      sub="Both of our Greys carry the exact same captive-bred guarantee — CITES Appendix I documentation, a closed band, PCR DNA sexing and an avian-vet health certificate. The difference is size, pace and personality, not paperwork. Here is our Congo and our Timneh side by side, so you can see which one we would help you bring home."
+    />
+
+    <section id="variants" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Congo &amp; Timneh</p>
+          <h2 class="font-lora font-bold text-logo-dark">The Two African Grey Variants, in Plain Terms</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">The Congo African Grey is the larger, classic silver-grey bird with a bright red tail; the Timneh African Grey is smaller and darker with a maroon tail, often calmer and an earlier talker.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>The <a href="/congo-african-grey-for-sale/">Congo African Grey</a> is what most people picture when they hear "African Grey" — a 400-to-600-gram bird with light silver plumage, a vivid cherry-red tail and a solid black beak. Congos are confident, sometimes dramatic, and famous for crystal-clear speech; they tend to begin talking around their first birthday and suit owners who want the bolder personality.</p>
+          <p>The <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a> is the smaller form at 275–375 grams, with darker charcoal plumage, a deep maroon tail and a horn-colored tip on the upper beak. Timnehs are every bit as intelligent but generally steadier in temperament, and they frequently start talking earlier — around four to six months — which is part of why we often recommend a hand-raised Timneh to a committed first-time owner.</p>
+          <p>Neither variant is "better." For a deeper side-by-side, read our full <a href="/congo-vs-timneh-african-grey/">Congo vs Timneh African Grey comparison</a>, and if sex matters for your home, our <a href="/male-vs-female-african-grey-parrots-for-sale/">male vs female African Grey guide</a> covers what DNA sexing does and does not predict. Whichever you choose, the documentation standard is identical.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5c. INTELLIGENCE & TALKING -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="intelligence" class="scroll-mt-20 bg-cream py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Famous Mind</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Intelligent Are African Greys, and Can They Really Talk?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">African Greys are the most accomplished talking birds of any species and can learn hundreds of words and use them in the correct context — not merely mimic them.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>The species' cognition is the most thoroughly documented of any parrot, thanks to roughly three decades of research by Dr. Irene Pepperberg with a Congo African Grey named <strong>Alex</strong>. As her work at <a href="https://alexfoundation.org/" target="_blank" rel="noopener noreferrer">The Alex Foundation</a> demonstrated, Alex could identify colors, shapes and materials, count small quantities, and grasp abstract concepts such as "same," "different" and even a zero-like idea of "none" — abilities researchers compare to those of a young human child.</p>
+          <p>We see that intelligence every day in our own aviary. <strong>Maxy</strong>, our talking Congo, greets visitors by name and announces when the kettle boils — a small, true example of what a hand-raised Grey becomes when it is socialized by people from a few weeks old. That early window is exactly why a captive-bred, <a href="/hand-raised-african-grey-parrot-for-sale/">hand-raised Grey</a> bonds and talks the way it does, while a wild-caught bird, having missed it in the forest canopy, rarely can.</p>
+          <p>That brilliance is also a responsibility. A bored or under-stimulated African Grey will turn its problem-solving mind on itself, developing feather-destructive behavior, screaming or anxiety. Daily mental enrichment — foraging toys, rotating puzzles, training sessions and genuine social interaction — is not optional; it is the core of the bird's wellbeing, which is why we walk every new owner through it. Our <a href="/how-to-tame-african-grey-parrot/">guide to taming and bonding with a Grey</a> is the place to start.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5d. SIZE & APPEARANCE -->
+    <section id="size" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Size &amp; Looks</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Big Do African Greys Get — Size &amp; Appearance?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">A Congo African Grey reaches about 12–14 inches and 400–600 grams; a Timneh is smaller at 9–11 inches and 275–375 grams — both medium-sized parrots, fully grown by roughly one year of age.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>Both variants share a wingspan of around 18–20 inches and the same general silhouette: a compact, upright body, a short squared tail and a heavy curved beak built for cracking palm nuts. Plumage is the clearest visual difference — the Congo wears light silver-grey feathers scalloped with a fine pale edging, a vivid cherry-red tail and an all-black beak, while the Timneh is a darker charcoal-grey with a deep maroon tail and a bone-colored tip on the upper beak.</p>
+          <p>The eyes are a useful age cue. A young Grey's iris is dark grey to black; it lightens to pale straw-yellow as the bird matures, so a bright yellow eye signals an adult bird. Both variants also have a distinctive bare, pale-skinned face that flushes slightly when the bird is excited — one of the small "tells" experienced owners learn to read.</p>
+          <p>Crucially, males and females look essentially identical. African Greys are <strong>not</strong> reliably sexed by appearance, which is why every bird we place is laboratory <a href="/dna-tested-african-grey-for-sale/">PCR DNA-sexed</a> with a certificate included — a sexing "guess" by eye is never reliable in this species.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5e. TEMPERAMENT -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="temperament" class="scroll-mt-20 bg-cream py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Personality</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Is an African Grey's Temperament Like?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">African Greys are sensitive, deeply social flock animals that bond closely with their family, thrive on routine, and need daily interaction — they reward committed owners and struggle in chaotic or neglectful homes.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>A well-raised Grey is affectionate, observant and almost unnervingly perceptive about its people's moods. It is also famously sensitive: harsh corrections, sudden household upheaval or long stretches of isolation can trigger stress behaviors, so the species responds best to calm, consistent, positive handling. Congos can be a touch more reserved with strangers and dramatic in their reactions, while Timnehs tend to take change in stride — but both want to be part of the daily life of the home, not parked in a corner.</p>
+          <p>Because Greys are flock animals, they form a primary bond yet do best when several family members handle them, which prevents the "one-person bird" pattern that can make a Grey nippy with everyone else. We hand-raise every chick with our whole family — Mark, Teri and our kids, James and Allyson — precisely so a Grey arrives already comfortable with different voices, hands and routines.</p>
+          <p>This is the honest reason an African Grey is not a casual first pet. A Grey that gets the attention, structure and enrichment it needs is a gentle, hilarious, lifelong companion; one that does not can become loud, anxious or feather-destructive. If you are weighing whether the species fits your life, our <a href="/african-grey-pros-and-cons/">African Grey pros and cons</a> page lays it out plainly before you commit.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5f. LIFESPAN -->
+    <section id="lifespan" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">A Lifetime Bird</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Long Do African Greys Live, and How Do You Keep One Healthy?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">African Grey parrots live 40–50 years in the wild and up to 60 years in human care with good nutrition, annual avian-vet exams and daily enrichment — making a Grey one of the longest-lived companion parrots.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>That longevity reframes the whole decision: bringing home a Grey is a multi-decade commitment, and a young owner may well share their entire adult life with the bird. Responsible ownership means planning for the realistic possibility that an African Grey outlives the arrangements you make today — many owners name a future caretaker or write the bird into their long-term plans from the start.</p>
+          <p>Longevity is largely earned through prevention. A calcium-adequate diet (Greys are prone to calcium deficiency), safe UV-B exposure so the body can make vitamin D3, an annual avian-vet wellness exam, and a clean, enriched, low-stress environment all add healthy years. Screening matters too — every Grey we place is checked for PBFD (Psittacine Beak and Feather Disease) and Polyomavirus by a board-certified avian veterinarian before it leaves us, and arrives psittacosis-aware and health-certified.</p>
+          <p>For the full picture of what shortens and what extends those decades — common health conditions, signs to watch, and a realistic year-by-year view — read our dedicated <a href="/african-grey-parrot-lifespan/">African Grey lifespan guide</a>, and see exactly what we stand behind on our <a href="/african-grey-parrot-health-guarantee/">written health guarantee</a> page.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5g. CARE OVERVIEW (routes to spokes) -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="care" class="scroll-mt-20 bg-warm-white py-14 px-4 md:py-16">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Caring for a Grey</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Do You Care for an African Grey Day to Day?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Good African Grey care rests on six pillars — diet, housing, enrichment, health, lifespan planning and honest budgeting. Here is the overview, with a route to the in-depth guide for each. This page is the hub of our care library; follow whichever pillar matters most to you right now.</p>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {careCards.map((c) => (
+            <article class="care-card flex flex-col rounded-2xl border border-black/[0.07] bg-white p-6" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+              <div class="font-lora text-clay-ink font-bold text-2xl">{String(c.n).padStart(2, "0")}</div>
+              <h3 class="font-lora font-bold text-logo-dark text-lg leading-snug mt-2 mb-2">{c.t}</h3>
+              <p class="font-sora text-stone-600 text-[14px] leading-relaxed m-0">{c.d}</p>
+              <a href={c.href} class="font-sora text-[14px] font-semibold mt-4 inline-block">{c.link} →</a>
+            </article>
+          ))}
+        </div>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-7" style="max-width:70ch;">Want the single, complete walkthrough? Our <a href="/african-grey-parrot-care-guide/">African Grey parrot care guide</a> pulls housing, diet, health and enrichment into one reference, and the <a href="/best-african-grey-parrot-food/">best African Grey food guide</a> names the pellet types we feed and the fresh foods that round out the bowl.</p>
+      </div>
+    </section>
+
+    <!-- 5h. CITES STATUS -->
+    <section id="cites" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Legal &amp; Documented</p>
+          <h2 class="font-lora font-bold text-logo-dark">Are African Greys Legal to Own? CITES Appendix I Explained</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">A captive-bred African Grey is legal to own and transfer within the United States with proper documentation; African Greys are CITES Appendix I, which bans trade in wild-caught birds, not responsible captive-bred ownership.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>African Greys were uplisted from CITES Appendix II to <a href="/cites-african-grey-documentation/">Appendix I</a> at CoP17, effective 2 January 2017 — the strictest tier, which ended all legal commercial trade in wild-caught birds. The practical takeaway for a buyer is simple: a wild-caught Grey cannot be lawfully sold, so a legitimate breeder will always be able to prove a bird is captive-bred. If a seller cannot produce paperwork, that is a serious red flag and the subject of our <a href="/how-to-avoid-african-grey-parrot-scams/">scam-avoidance guide</a>.</p>
+          <p>Every African Grey placed by C.A.Gs ships with a complete documentation packet, in your hands <strong>before</strong> any deposit:</p>
+          <ul class="agg-doc-list">
+            <li>A CITES Appendix I captive-bred certificate confirming U.S. captive birth</li>
+            <li>A hatch certificate recording the hatch date and closed-band number</li>
+            <li>A seamless closed leg-band, tamper-evident proof a chick was aviary-raised</li>
+            <li>A PCR DNA sexing certificate from an avian laboratory</li>
+            <li>A board-certified avian-vet health certificate, PBFD &amp; Polyomavirus screened</li>
+          </ul>
+          <p>We hold a verifiable USDA Animal Welfare Act license you can check before paying anything, and the same packet underpins our promise on the <a href="/trusted-african-grey-parrot-breeders/">trusted breeders</a> page. For the deep dive on what each document proves, and the difference between a domestic sale and an international export, read our full <a href="/cites-african-grey-documentation/">CITES African Grey documentation</a> guide.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. AVAILABLE C.A.Gs GREYS -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="available-birds" class="py-14 px-4 md:py-16 bg-cream scroll-mt-20">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-8 gap-4 flex-wrap">
+          <div class="border-l-4 border-green pl-4">
+            <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">This Week's Aviary</p>
+            <h2 class="font-lora font-bold text-logo-dark">Which African Greys Are Available Now?</h2>
+            <p class="text-stone-500 mt-2 max-w-md text-sm leading-relaxed">Every Congo and Timneh below is a real bird we are hand-raising right now — captive-bred, PCR DNA-sexed, avian-vet checked, CITES Appendix I documented and fully weaned. No bait listings.</p>
+          </div>
+          <a href="/african-grey-parrot-for-sale/" class="inline-block bg-clay hover:bg-clay-dk text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors whitespace-nowrap">View All Birds →</a>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {birds.map(bird => (
+            <BirdCard {...bird} />
+          ))}
+        </div>
+        <div class="flex flex-wrap justify-center gap-2 mt-8">
+          {['CITES Captive-Bred Cert', 'Closed Band + Hatch Cert', 'PCR DNA Sex Certificate', 'Avian Vet Health Cert'].map(badge => (
+            <span class="text-xs font-sora text-green bg-green/8 border border-green/20 px-3 py-1 rounded-full">✓ {badge}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. FAQ -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="faq" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-10">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">African Grey · Questions</p>
+          <h2 class="font-lora font-bold text-logo-dark">African Grey Parrot Guide — Your Questions, Answered</h2>
+        </div>
+        <div class="cag-faq-acc max-w-3xl mx-auto space-y-3">
+          {faqs.map((item, i) => (
+            <div class:list={["cag-faq-item bg-white rounded-2xl border border-line overflow-hidden", i === 0 && "open"]} style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
+              <button type="button" class="cag-faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4" aria-expanded={i === 0 ? "true" : "false"}>
+                <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
+                <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0">{item.a}</p></div></div>
+            </div>
+          ))}
+        </div>
+        <style is:global>
+          .cag-faq-q { cursor: pointer; background: transparent; transition: background .2s ease; }
+          .cag-faq-q:hover { background: rgba(45,106,79,.04); }
+          .cag-faq-chevron { transition: transform .2s ease; }
+          .cag-faq-item.open .cag-faq-chevron { transform: rotate(180deg); }
+          .cag-faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .2s ease; }
+          .cag-faq-item.open .cag-faq-panel { grid-template-rows: 1fr; }
+          .cag-faq-panel-inner { overflow: hidden; }
+        </style>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mx-auto text-center mt-8" style="max-width:70ch;">Still researching? Compare our <a href="/congo-african-grey-for-sale/">Congo</a> and <a href="/timneh-african-grey-for-sale/">Timneh</a> Greys, read the full <a href="/african-grey-parrot-care-guide/">care guide</a>, or see the <a href="/cites-african-grey-documentation/">CITES documentation</a> that travels with every bird we place.</p>
+      </div>
+    </section>
+
+    <!-- 8. FINAL CTA + CONTACT -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section class="pt-14 px-4 md:pt-16 text-center">
+      <div class="max-w-3xl mx-auto">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Start Your Grey Journey</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-4">Ready to Bring Home a Documented, Captive-Bred African Grey?</h2>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every African Grey from C.A.Gs is hatched and hand-raised in our Midland, Texas home, PCR DNA-sexed, avian-vet certified, and placed with a complete CITES Appendix I documentation packet — never wild-caught, paperwork in your hands before any deposit, and shipped nationwide ($185 airport / $350 home). Tell us about your home and whether a Congo or Timneh fits in the form below, and Mark or Teri will reply within 24 hours.</p>
+      </div>
+    </section>
+
+    <div id="contact" class="scroll-mt-20">
+      <InquiryForm />
+    </div>
+
   </div>
 
-  <section class="agg-hero">
-    <div class="container">
-      <h1 class="cag-h1">African Grey Parrot Guide: Complete Species Overview</h1>
-      <p class="agg-sub">
-        Everything you need to know about the African Grey parrot
-        (<em>Psittacus erithacus</em>) — the world's most intelligent
-        companion bird. This guide covers the Congo and Timneh variants,
-        talking ability, lifespan, diet, housing, CITES documentation and how
-        to buy a healthy, captive-bred African Grey with confidence.
-      </p>
-      <div class="agg-hero-cta">
-        <a class="btn-primary" href="/contact-us/">Talk to Our Breeder Team</a>
-        <a class="btn-secondary" href="/congo-african-grey-for-sale/">See Available Birds</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- TABLE OF CONTENTS -->
-  <section class="agg-section">
-    <div class="container container-text">
-      <nav class="agg-toc" aria-label="Guide contents">
-        <h2 class="agg-toc-title">In This Guide</h2>
-        <ol class="agg-toc-list">
-          {toc.map((t) => (
-            <li><a href={`#${t.id}`}>{t.label}</a></li>
-          ))}
-        </ol>
-      </nav>
-    </div>
-  </section>
-
-  <!-- OVERVIEW -->
-  <section id="overview" class="agg-section">
-    <div class="container container-text">
-      <h2 class="cag-h2">What Makes the African Grey Parrot Special</h2>
-      <p>
-        The African Grey parrot is a medium-sized parrot native to the lowland
-        rainforests of equatorial Africa. It is the most intelligent companion
-        parrot kept by humans and one of the most studied birds in cognitive
-        science. African Greys are prized for their near-human speech clarity,
-        problem-solving ability and the deep, lasting bonds they form with
-        their families.
-      </p>
-      <p>
-        Unlike the brightly colored macaws and cockatoos, the African Grey
-        wears understated silver-grey plumage offset by a striking red or
-        maroon tail. Its appeal is behavioral rather than ornamental: this is a
-        bird that watches, listens, learns and engages. With a 40–60 year
-        lifespan, an African Grey is genuinely a lifelong companion.
-      </p>
-
-      <h3 class="cag-h3">African Grey Parrot at a Glance</h3>
-      <div class="agg-tax-wrap">
-        <table class="agg-tax-table">
-          <tbody>
-            {taxonomy.map((row) => (
-              <tr>
-                <th scope="row">{row.k}</th>
-                <td>{row.v}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p class="agg-note">
-        Every African Grey placed by CongoAfricanGreys.com is captive-bred,
-        hand-raised and fully weaned, supplied with complete CITES and health
-        documentation. We never sell wild-caught birds.
-      </p>
-    </div>
-  </section>
-
-  <!-- VARIANTS -->
-  <section id="variants" class="agg-section agg-alt">
-    <div class="container">
-      <h2 class="cag-h2">The Two Variants: Congo vs Timneh African Grey</h2>
-      <div class="container-text agg-inset">
-        <p>
-          The African Grey parrot has two recognized variants — often treated
-          as subspecies — the <strong>Congo African Grey</strong>
-          (<em>Psittacus erithacus erithacus</em>) and the
-          <strong>Timneh African Grey</strong>
-          (<em>Psittacus erithacus timneh</em>). They share the same
-          intelligence, lifespan and CITES status, but differ in size, color
-          and temperament.
-        </p>
-        <p>
-          The Congo is the larger, classic silver-grey bird with a bright red
-          tail that most people picture when they hear "African Grey." The
-          Timneh is smaller and darker with a maroon tail, often calmer in
-          temperament, and frequently begins talking at a younger age.
-        </p>
-      </div>
-      <div class="agg-table-wrap">
-        <table class="agg-table">
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Congo African Grey</th>
-              <th>Timneh African Grey</th>
-            </tr>
-          </thead>
-          <tbody>
-            {variantRows.map((row) => (
-              <tr>
-                <th scope="row">{row.attr}</th>
-                <td>{row.congo}</td>
-                <td>{row.timneh}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div class="container-text agg-inset">
-        <p class="agg-note">
-          For a full side-by-side breakdown, read our
-          <a href="/congo-vs-timneh-african-grey/">Congo vs Timneh African Grey comparison</a>.
-          Browse current availability on the
-          <a href="/congo-african-grey-for-sale/">Congo African Grey for sale</a> and
-          <a href="/timneh-african-grey-for-sale/">Timneh African Grey for sale</a> pages.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- INTELLIGENCE -->
-  <section id="intelligence" class="agg-section">
-    <div class="container container-text">
-      <h2 class="cag-h2">Intelligence and Talking Ability</h2>
-      <p>
-        African Grey parrots are ranked among the most intelligent animals on
-        Earth and are the most accomplished talking birds of any species. A
-        well-socialized African Grey can learn hundreds of words and short
-        phrases and — crucially — use them in the correct context rather than
-        simply mimicking sounds.
-      </p>
-      <p>
-        The species' cognitive ability is best documented through the decades
-        of research conducted by Dr. Irene Pepperberg with an African Grey
-        named Alex. Alex demonstrated the ability to identify colors, shapes
-        and materials, count small quantities, and understand concepts such as
-        "same" and "different" — abilities researchers compare to those of a
-        young human child.
-      </p>
-      <p>
-        That intelligence is also a responsibility. A bored or under-stimulated
-        African Grey can develop feather-destructive behavior, screaming or
-        anxiety. Daily mental enrichment — foraging toys, training sessions,
-        rotating puzzles and genuine social interaction — is not optional; it
-        is essential to the bird's wellbeing.
-      </p>
-    </div>
-  </section>
-
-  <!-- LIFESPAN -->
-  <section id="lifespan" class="agg-section agg-alt">
-    <div class="container container-text">
-      <h2 class="cag-h2">Lifespan: A 40–60 Year Commitment</h2>
-      <p>
-        African Grey parrots live <strong>40–50 years in the wild and up to
-        60 years in captivity</strong> with proper nutrition, veterinary care
-        and enrichment. They are among the longest-lived companion parrots, and
-        bringing one home is a decades-long commitment.
-      </p>
-      <p>
-        Responsible ownership means planning for the bird's entire life,
-        including the realistic possibility that an African Grey will outlive
-        its owner. Many owners name a caretaker or include the bird in their
-        long-term plans. Longevity also depends on prevention: an annual avian
-        veterinary wellness exam, a calcium-adequate diet and a clean,
-        enriched environment all add healthy years.
-      </p>
-      <p class="agg-note">
-        Learn more in our dedicated
-        <a href="/african-grey-parrot-guide/">African Grey parrot lifespan</a> guide.
-      </p>
-    </div>
-  </section>
-
-  <!-- SIZE -->
-  <section id="size" class="agg-section">
-    <div class="container container-text">
-      <h2 class="cag-h2">Size, Weight and Appearance</h2>
-      <p>
-        The African Grey is a medium-sized parrot. A
-        <strong>Congo African Grey measures about 12–14 inches (33 cm)</strong>
-        from head to tail and weighs <strong>400–600 grams</strong>. The
-        <strong>Timneh African Grey is smaller</strong>, at 9–11 inches and
-        <strong>275–375 grams</strong>. Both reach full adult size by roughly
-        one year of age and have a wingspan of around 18–20 inches.
-      </p>
-      <p>
-        Plumage is the clearest visual difference between the variants. The
-        Congo wears light silver-grey feathers with a vivid cherry-red tail and
-        an all-black beak. The Timneh is a darker charcoal-grey with a deep
-        maroon tail and a horn-colored tip on the upper beak. Both have pale,
-        bare facial skin and intelligent, expressive eyes that lighten from
-        dark to pale yellow as the bird matures.
-      </p>
-      <p>
-        Males and females look nearly identical — African Greys are not
-        reliably sexed by appearance, which is why every bird we place is DNA
-        sexed with a certificate included.
-      </p>
-    </div>
-  </section>
-
-  <!-- DIET -->
-  <section id="diet" class="agg-section agg-alt">
-    <div class="container container-text">
-      <h2 class="cag-h2">Diet and Nutrition Requirements</h2>
-      <p>
-        A healthy African Grey diet is built on a
-        <strong>high-quality formulated pellet</strong>, which should make up
-        roughly 60–70% of daily intake. Pellets provide consistent, balanced
-        nutrition that an all-seed diet cannot. The remainder should be fresh
-        vegetables, leafy greens and a smaller portion of fruit.
-      </p>
-      <p>
-        African Greys are particularly prone to
-        <strong>calcium deficiency</strong>, so calcium-rich foods such as
-        leafy greens, and access to safe sunlight or full-spectrum lighting to
-        support vitamin D, are important. Foods that are
-        <strong>toxic and must never be fed</strong> include avocado,
-        chocolate, caffeine, alcohol, and salty or sugary human foods.
-      </p>
-      <p class="agg-note">
-        For a complete feeding plan, portion guidance and a safe-foods list,
-        read our
-        <a href="/african-grey-parrot-guide/">African Grey parrot diet and nutrition</a> guide.
-      </p>
-    </div>
-  </section>
-
-  <!-- ENVIRONMENT -->
-  <section id="environment" class="agg-section">
-    <div class="container container-text">
-      <h2 class="cag-h2">Cage and Environment Needs</h2>
-      <p>
-        An African Grey needs a cage measuring <strong>at least 24 x 24 x 36
-        inches</strong>, with horizontal bars that allow climbing and a bar
-        spacing of about 3/4 to 1 inch. Bigger is always better — the cage is
-        the bird's home base, not its whole world.
-      </p>
-      <p>
-        Equally important is daily out-of-cage time. African Greys are
-        intelligent flock animals that need <strong>2–4 hours of social
-        interaction and enrichment</strong> every day. Provide a variety of
-        natural-wood perches at different diameters, foraging and chewing toys,
-        and a quiet location away from kitchen fumes, drafts and round-the-clock
-        noise.
-      </p>
-      <p>
-        A consistent routine, a predictable sleep schedule of 10–12 hours of
-        dark, quiet rest, and a stable household help an African Grey stay
-        calm and confident. Isolation and chaos are the leading causes of
-        stress-related feather damage in the species.
-      </p>
-      <p class="agg-note">
-        For housing, training and daily-care detail, see our full
-        <a href="/african-grey-parrot-guide/">African Grey parrot care guide</a>.
-      </p>
-    </div>
-  </section>
-
-  <!-- CITES -->
-  <section id="cites" class="agg-section agg-alt">
-    <div class="container container-text">
-      <h2 class="cag-h2">CITES Appendix I Status — Why Documentation Matters</h2>
-      <p>
-        The African Grey parrot is listed under <strong>CITES Appendix I</strong>,
-        the international agreement that regulates trade in species that could
-        become threatened without controls. This listing protects wild
-        populations — it does not restrict responsible ownership of
-        captive-bred birds within the United States.
-      </p>
-      <p>
-        The practical takeaway for buyers is simple: <strong>wild-caught
-        African Greys cannot be legally sold</strong>, and a legitimate breeder
-        will always supply documentation proving a bird is captive-bred. If a
-        seller cannot produce paperwork, that is a serious red flag.
-      </p>
-      <p>Every African Grey placed by CongoAfricanGreys.com ships with:</p>
-      <ul class="agg-doc-list">
-        <li>CITES captive-bred documentation</li>
-        <li>Hatch certificate with leg-band number</li>
-        <li>DNA sexing certificate</li>
-        <li>Avian veterinary health certificate</li>
-        <li>USDA Animal Welfare Act compliance under our licensed facility</li>
-      </ul>
-      <p class="agg-note">
-        Read more about paperwork and compliance on our
-        <a href="/cites-african-grey-documentation/">CITES African Grey documentation</a> page.
-      </p>
-    </div>
-  </section>
-
-  <!-- BUYING GUIDE -->
-  <section id="buying" class="agg-section">
-    <div class="container">
-      <h2 class="cag-h2">African Grey Buying Guide: What to Look For</h2>
-      <div class="container-text agg-inset">
-        <p>
-          Buying an African Grey is a significant, decades-long decision. The
-          single biggest predictor of a healthy, well-adjusted bird is choosing
-          a fully weaned, hand-raised parrot from a reputable, documented
-          breeder. Use the checklist below before you commit.
-        </p>
-      </div>
-      <div class="agg-buy-grid">
-        <div class="agg-buy-card agg-buy-good">
-          <h3>Signs of a Trustworthy Breeder</h3>
-          <ul>
-            <li>Provides CITES captive-bred documentation in writing</li>
-            <li>Includes a hatch certificate with a leg-band number</li>
-            <li>Supplies DNA sexing and an avian vet health certificate</li>
-            <li>Sells only fully weaned, hand-raised birds</li>
-            <li>Holds a USDA Animal Welfare Act license</li>
-            <li>Welcomes questions and offers post-sale support</li>
-            <li>Offers a written health guarantee</li>
-          </ul>
-        </div>
-        <div class="agg-buy-card agg-buy-bad">
-          <h3>Red Flags to Walk Away From</h3>
-          <ul>
-            <li>No paperwork, or refuses to discuss CITES documentation</li>
-            <li>Prices far below market — a lure used in scams</li>
-            <li>Pressure to pay by gift card or wire transfer only</li>
-            <li>Will not provide recent photos or a video call</li>
-            <li>Claims a bird is "wild-caught" or imported</li>
-            <li>Pushes unweaned chicks on inexperienced buyers</li>
-            <li>No verifiable address, reviews or breeder history</li>
-          </ul>
-        </div>
-      </div>
-      <div class="container-text agg-inset">
-        <p class="agg-note">
-          Learn how to protect yourself in our
-          <a href="/how-to-avoid-african-grey-parrot-scams/">African Grey scam-avoidance guide</a>,
-          and review full pricing in the
-          <a href="/african-grey-parrot-price/">African Grey parrot price guide</a>.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- HUB LINKS -->
-  <section class="agg-section agg-alt">
-    <div class="container">
-      <h2 class="cag-h2">Explore the Full African Grey Resource Library</h2>
-      <div class="agg-hub-grid">
-        <a class="agg-hub-card" href="/african-grey-parrot-guide/">
-          <h3>African Grey Parrot Care Guide</h3>
-          <p>Day-to-day care, housing, training and health basics.</p>
-        </a>
-        <a class="agg-hub-card" href="/african-grey-parrot-guide/">
-          <h3>African Grey Parrot Diet &amp; Nutrition</h3>
-          <p>Pellets, fresh foods, calcium needs and toxic foods to avoid.</p>
-        </a>
-        <a class="agg-hub-card" href="/african-grey-parrot-guide/">
-          <h3>African Grey Parrot Lifespan</h3>
-          <p>How long African Greys live and how to maximize healthy years.</p>
-        </a>
-        <a class="agg-hub-card" href="/congo-vs-timneh-african-grey/">
-          <h3>Congo vs Timneh Comparison</h3>
-          <p>Full side-by-side breakdown of both African Grey variants.</p>
-        </a>
-        <a class="agg-hub-card" href="/congo-african-grey-for-sale/">
-          <h3>Congo African Grey for Sale</h3>
-          <p>Captive-bred, hand-raised Congo African Greys available now.</p>
-        </a>
-        <a class="agg-hub-card" href="/timneh-african-grey-for-sale/">
-          <h3>Timneh African Grey for Sale</h3>
-          <p>Smaller, calmer captive-bred Timneh African Greys available now.</p>
-        </a>
-        <a class="agg-hub-card" href="/hand-raised-african-grey-parrot-for-sale/">
-          <h3>Hand-Raised African Greys</h3>
-          <p>What hand-raising means, our 12–16 week process, and why it produces better companion birds.</p>
-        </a>
-        <a class="agg-hub-card" href="/dna-tested-african-grey-for-sale/">
-          <h3>DNA-Tested African Greys</h3>
-          <p>Every bird laboratory DNA-sexed before placement — sex certificate included at no extra charge.</p>
-        </a>
-        <a class="agg-hub-card" href="/african-grey-parrot-price/">
-          <h3>African Grey Parrot Price Guide</h3>
-          <p>What African Greys cost and what affects the price.</p>
-        </a>
-        <a class="agg-hub-card" href="/cites-african-grey-documentation/">
-          <h3>CITES Documentation Explained</h3>
-          <p>Why captive-bred paperwork protects you as a buyer.</p>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- MID-PAGE CTA -->
-  <section class="agg-cta">
-    <div class="container">
-      <h2 class="cag-h2">Ready to Bring Home an African Grey?</h2>
-      <p>
-        Tell our breeder team about your home and experience level — we will
-        help you choose the right Congo or Timneh African Grey and walk you
-        through every document.
-      </p>
-      <a class="btn-primary" href="/contact-us/">Contact Our Breeder Team</a>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq" class="agg-section">
-    <div class="container container-text">
-      <h2 class="cag-h2">African Grey Parrot Guide: FAQ</h2>
-      <div class="agg-faq">
-        {faqs.map((f) => (
-          <details class="agg-faq-item">
-            <summary>{f.q}</summary>
-            <p>{f.a}</p>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- FINAL CTA -->
-  <section class="agg-cta">
-    <div class="container">
-      <h2 class="cag-h2">Start Your African Grey Journey</h2>
-      <p>
-        Every African Grey we place is captive-bred, hand-raised and supplied
-        with complete CITES and health documentation. Reach out today.
-      </p>
-      <div class="agg-hero-cta">
-        <a class="btn-primary" href="/congo-african-grey-for-sale/">See Congo African Greys</a>
-        <a class="btn-secondary" href="/timneh-african-grey-for-sale/">See Timneh African Greys</a>
-      </div>
-    </div>
-  </section>
+  <script is:inline>
+    // FAQ accordion (smooth open/close) — mirrors homepage / cites / captive-bred pattern
+    (function () {
+      const qs = document.querySelectorAll('.cag-faq-q');
+      if (!qs.length) return;
+      qs.forEach(btn => btn.addEventListener('click', () => {
+        const item = btn.closest('.cag-faq-item');
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }));
+    })();
+  </script>
 </BaseLayout>
 
-<style>
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 48px;
+<style is:global>
+  /* ============================================================
+     SPECIES GUIDE PAGE — Direction-D-aware interior wrapper (.guide-d)
+     body.theme-d already supplies Newsreader/IBM Plex, lead paragraphs,
+     eyebrow ticks, card + button motion. This only scopes seam + links + table.
+     ============================================================ */
+  .guide-d { --rule: rgba(45,106,79,.16); }
+
+  /* AA: clay as small readable text on LIGHT sections → #b04228 (4.5:1). */
+  .guide-d a.text-clay, .guide-d .text-clay { color:#b04228; }
+  .guide-d .hero-v3-b .text-clay, .guide-d .bg-clay { color:inherit; }
+
+  /* Woven in-content links: clay, underlined, AA-safe. */
+  .guide-d p a:not(.rounded-full):not(.bg-clay),
+  .guide-d li a:not(.rounded-full):not(.bg-clay),
+  .guide-d .care-card a {
+    color:#b04228; font-weight:500; text-decoration:underline;
+    text-decoration-color:rgba(176,66,40,.35); text-underline-offset:2px;
+    transition:text-decoration-color .2s ease;
   }
-  .container-text {
-    max-width: 760px;
-  }
-  .agg-inset {
-    margin: 0 auto;
-  }
-  .cag-h1 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.2;
-    margin: 0 0 1rem;
-  }
-  .cag-h2 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(1.5rem, 3vw, 2.1rem);
-    line-height: 1.25;
-    margin: 0 0 1.25rem;
-  }
-  .cag-h3 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 600;
-    color: #2D6A4F;
-    font-size: clamp(1.2rem, 2vw, 1.4rem);
-    line-height: 1.3;
-    margin: 2rem 0 1rem;
-  }
-  .agg-hero {
-    background: #faf7f4;
-    padding: 3.5rem 0 3rem;
-    text-align: center;
-  }
-  .agg-sub {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.65;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 auto 1.75rem;
-  }
-  .agg-hero-cta {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .btn-primary,
-  .btn-secondary {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.85rem 1.9rem;
-    border-radius: 50px;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.2s ease;
-  }
-  .btn-primary {
-    background: #e8604c;
-    color: #fff;
-  }
-  .btn-primary:hover {
-    background: #d44e3b;
-  }
-  .btn-secondary {
-    background: #fff;
-    color: #2D6A4F;
-    border: 2px solid #2D6A4F;
-  }
-  .btn-secondary:hover {
-    background: #2D6A4F;
-    color: #fff;
-  }
-  .agg-section {
-    padding: 2.75rem 0;
-  }
-  .agg-alt {
-    background: #faf7f4;
-  }
-  .agg-section p {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 0 1.1rem;
-  }
-  .agg-note {
-    font-size: 0.95rem !important;
-    color: #57534e !important;
-    border-left: 3px solid #e8604c;
-    padding-left: 1rem;
-  }
-  .agg-note a,
-  .agg-section a {
-    color: #2D6A4F;
-    font-weight: 600;
-  }
-  .agg-note a:hover,
-  .agg-section a:hover {
-    color: #e8604c;
-  }
-  /* Table of contents */
-  .agg-toc {
-    background: #fff;
-    border: 1px solid #e7e2dc;
-    border-radius: 20px;
-    padding: 1.5rem 1.75rem;
-    box-shadow: 0 4px 14px rgba(60, 30, 10, 0.06);
-  }
-  .agg-toc-title {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: 1.15rem;
-    margin: 0 0 0.75rem;
-  }
-  .agg-toc-list {
-    font-family: 'Sora', system-ui, sans-serif;
-    columns: 2;
-    gap: 1.5rem;
-    margin: 0;
-    padding-left: 1.2rem;
-    font-size: 0.97rem;
-    line-height: 1.9;
-  }
-  .agg-toc-list a {
-    color: #2D6A4F;
-    text-decoration: none;
-  }
-  .agg-toc-list a:hover {
-    color: #e8604c;
-    text-decoration: underline;
-  }
-  /* Tables */
-  .agg-tax-wrap,
-  .agg-table-wrap {
-    overflow-x: auto;
-    margin: 1.25rem 0;
-  }
-  .agg-tax-table,
-  .agg-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.97rem;
-    background: #fff;
-    border-radius: 14px;
-    overflow: hidden;
-  }
-  .agg-tax-table th,
-  .agg-tax-table td,
-  .agg-table th,
-  .agg-table td {
-    text-align: left;
-    padding: 0.8rem 1rem;
-    border-bottom: 1px solid #ece7e1;
-    color: #44403c;
-    line-height: 1.5;
-  }
-  .agg-tax-table th[scope="row"] {
-    color: #2D6A4F;
-    font-weight: 600;
-    width: 38%;
-  }
-  .agg-table thead th {
-    background: #2D6A4F;
-    color: #fff;
-    font-weight: 600;
-  }
-  .agg-table th[scope="row"] {
-    color: #2D6A4F;
-    font-weight: 600;
-  }
-  .agg-table tbody tr:nth-child(even) {
-    background: #faf7f4;
-  }
-  /* Doc list */
-  .agg-doc-list {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.8;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 0 1.1rem;
-    padding-left: 1.3rem;
-  }
-  /* Buying guide cards */
-  .agg-buy-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-  }
-  .agg-buy-card {
-    background: #fff;
-    border: 1px solid #e7e2dc;
-    border-radius: 20px;
-    padding: 1.5rem 1.75rem;
-    box-shadow: 0 4px 14px rgba(60, 30, 10, 0.06);
-  }
-  .agg-buy-card h3 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    font-size: 1.2rem;
-    margin: 0 0 0.9rem;
-  }
-  .agg-buy-good {
-    border-top: 4px solid #2D6A4F;
-  }
-  .agg-buy-good h3 {
-    color: #2D6A4F;
-  }
-  .agg-buy-bad {
-    border-top: 4px solid #e8604c;
-  }
-  .agg-buy-bad h3 {
-    color: #e8604c;
-  }
-  .agg-buy-card ul {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.97rem;
-    line-height: 1.7;
-    color: #44403c;
-    margin: 0;
-    padding-left: 1.2rem;
-  }
-  .agg-buy-card li {
-    margin-bottom: 0.4rem;
-  }
-  /* Hub link cards */
-  .agg-hub-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.25rem;
-    margin-top: 1.5rem;
-  }
-  .agg-hub-card {
-    display: block;
-    background: #fff;
-    border: 1px solid #e7e2dc;
-    border-radius: 20px;
-    padding: 1.4rem 1.5rem;
-    text-decoration: none;
-    box-shadow: 0 4px 14px rgba(60, 30, 10, 0.06);
-    transition: all 0.2s ease;
-  }
-  .agg-hub-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(60, 30, 10, 0.1);
-  }
-  .agg-hub-card h3 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: 1.08rem;
-    margin: 0 0 0.4rem;
-  }
-  .agg-hub-card p {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.92rem;
-    line-height: 1.55;
-    color: #57534e;
-    margin: 0;
-  }
-  /* CTA */
-  .agg-cta {
-    background: #2D6A4F;
-    padding: 3rem 0;
-    text-align: center;
-  }
-  .agg-cta .cag-h2 {
-    color: #fff;
-  }
-  .agg-cta p {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.05rem;
-    line-height: 1.65;
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 60ch;
-    margin: 0 auto 1.6rem;
-  }
-  /* FAQ */
-  .agg-faq {
-    margin-top: 1rem;
-  }
-  .agg-faq-item {
-    background: #fff;
-    border: 1px solid #e7e2dc;
-    border-radius: 14px;
-    margin-bottom: 0.85rem;
-    padding: 0 1.25rem;
-  }
-  .agg-faq-item summary {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    color: #2D6A4F;
-    font-size: 1rem;
-    padding: 1rem 0;
-    cursor: pointer;
-    list-style: none;
-  }
-  .agg-faq-item summary::-webkit-details-marker {
-    display: none;
-  }
-  .agg-faq-item summary::after {
-    content: "+";
-    float: right;
-    color: #e8604c;
-    font-size: 1.3rem;
-    line-height: 1;
-  }
-  .agg-faq-item[open] summary::after {
-    content: "\2212";
-  }
-  .agg-faq-item p {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.97rem;
-    line-height: 1.7;
-    color: #44403c;
-    margin: 0 0 1rem;
-  }
-  @media (max-width: 767px) {
-    .container {
-      padding: 0 16px;
-    }
-    .agg-toc-list {
-      columns: 1;
-    }
-  }
+  .guide-d p a:not(.rounded-full):not(.bg-clay):hover,
+  .guide-d li a:not(.rounded-full):not(.bg-clay):hover,
+  .guide-d .care-card a:hover { text-decoration-color:#b04228; }
+
+  /* External links open in a new tab — subtle outward arrow affordance. */
+  .guide-d p a[target="_blank"]::after { content:"\2197"; font-size:.7em; line-height:0; vertical-align:super; opacity:.5; margin-left:.12em; }
+
+  /* Care-overview cards */
+  .guide-d .care-card { transition:transform .2s ease, box-shadow .2s ease; }
+  .guide-d .care-card:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(60,30,10,0.10); }
+
+  /* Taxonomy "at a glance" table */
+  .agg-tax-table { font-family:'IBM Plex Sans',sans-serif; font-size:.9rem; border-collapse:collapse; }
+  .agg-tax-table th, .agg-tax-table td { text-align:left; padding:.5rem .25rem; border-bottom:1px solid #ede5dc; line-height:1.45; vertical-align:top; }
+  .agg-tax-table tr:last-child th, .agg-tax-table tr:last-child td { border-bottom:none; }
+  .agg-tax-table th[scope="row"] { color:#2D6A4F; font-weight:600; width:46%; padding-right:.75rem; }
+  .agg-tax-table td { color:#57534e; }
+
+  /* Document list */
+  .guide-d .agg-doc-list { font-family:'IBM Plex Sans',sans-serif; font-size:.95rem; line-height:1.7; color:#57534e; max-width:70ch; margin:.25rem 0 .5rem; padding-left:1.2rem; list-style:disc; }
+  .guide-d .agg-doc-list li { margin-bottom:.3rem; }
+
+  /* Section seam — centered wordmark divider (verbatim scope). */
+  .guide-d > .cag-seam{ display:flex; align-items:center; gap:26px; max-width:1100px; margin:0 auto; padding:.6rem 24px !important; }
+  .cag-seam__line{ flex:1; height:1px; background:var(--rule); }
+  .guide-d .cag-seam img{ height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+  @media (max-width:600px){ .guide-d > .cag-seam{ gap:16px; } .guide-d .cag-seam img{ height:24px; } }
 </style>
