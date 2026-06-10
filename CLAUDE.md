@@ -354,4 +354,3 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 - Homepage `.mov` clip not browser-usable (ffmpeg/cwebp not installed to convert → mp4).
 - GSC not connected → `docs/reference/top-pages.md` has no live clicks/impressions/LLM Visibility yet.
 - MFS deploy may be broken — the shared "MFS Dashboard" GitHub PAT was deleted during CAG token rotation (2026-06-01). Run `git push --dry-run` in the MFS repo before next MFS work; it needs its own token. (CAG uses the new "CAGs-Website Workflow" PAT in keychain; remote is tokenless.)
-- `/how-to-avoid-african-grey-parrot-scams/` throws `ReferenceError: yr is not defined` in an inline script (~built line 99; likely the cost/WHOIS calculator widget). Pre-existing — predates the 2026-06-03 icon sweep, **not** caused by it (proven: no `<script>` contains injected SVG; same minified `yr` exists on the pre-sweep live page). Fix next session.
