@@ -25,6 +25,8 @@ All URLs verified live before insertion. Anchors are sentence-middle/beginning p
 |-----|----------|-----------------|-----------------|-----------------|--------|
 | `https://en.wikipedia.org/wiki/Grey_parrot` | Authority | African Grey parrot natural history | Grey parrot (Psittacus erithacus) research | African Grey species taxonomy | ✅ 200 |
 | `https://parrots.org/encyclopedia/grey-parrot/` | Authority | World Parrot Trust grey parrot encyclopedia | Grey parrot wild diet & range | World Parrot Trust species profile | ✅ 200 (www→non-www 301) |
+| `https://phoenixlanding.org/` | Authority | Phoenix Landing parrot adoption nonprofit | Phoenix Landing adopter education program | parrot rescue & rehoming (Phoenix Landing) | ✅ 200 (verified 2026-06-10) |
+| `https://www.avianwelfare.org/` | Authority | Avian Welfare Coalition resources | avian rescue directory (Avian Welfare Coalition) | parrot welfare & adoption education | ✅ 200 (verified 2026-06-10) |
 
 ---
 
