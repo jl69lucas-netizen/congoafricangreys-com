@@ -1,301 +1,487 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import TrustBar from '../../components/TrustBar.astro';
-import CTA from '../../components/CTA.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
+import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
+import InquiryForm from '../../components/cag-inquiry-form.astro';
 
-const title = "African Grey Parrot CITES Documentation: What Every Buyer Needs to Know";
-const description = "Is it legal to own an African Grey parrot? Yes — if it's captive-bred and CITES documented. Learn what documents your bird must have, why CITES matters, and how to verify compliance.";
+const title = "African Grey Parrot CITES Documentation | CITES Appendix I Papers, Certificate & Closed Band Explained — Is It Legal to Own One in the USA & What Paperwork Comes With Every Bird? | C.A.Gs – Midland, TX";
+const description = "African Grey parrot CITES documentation explained by USDA-licensed breeders C.A.Gs. African Greys are CITES Appendix I (uplisted at CoP17, effective January 2017) and captive-bred birds are legal to own and transfer domestically in the USA with proper papers. Learn what a CITES captive-bred certificate, hatch certificate and closed band prove, how domestic transfer differs from international export, and the exact documentation packet that travels with every Grey we place — before any deposit.";
 const canonical = "https://congoafricangreys.com/cites-african-grey-documentation/";
+const updated = "June 2026";
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "Resources & Trust", url: "/trusted-african-grey-parrot-breeders/" },
+  { name: "CITES Documentation", url: "/cites-african-grey-documentation/" },
+];
+
+// ─── FAQ (PAA-sourced: current page + competitor union + Google PAA) — mirrored into FAQPage schema ───
+const faqs = [
+  { q: "Is it legal to own an African Grey parrot in the United States?",
+    a: "Yes. It is legal to own a captive-bred African Grey in the United States, provided the bird comes with documentation proving its captive-bred origin. African Greys (Psittacus erithacus) sit on CITES Appendix I, so importing or commercially trading wild-caught specimens is banned — but a captive-bred bird is legal to own and transfer domestically with proper paperwork. Every Grey we place here at C.A.Gs is U.S. captive-bred, closed-banded, and CITES Appendix I documented, so your ownership rests on solid legal ground." },
+  { q: "What is CITES Appendix I for African Grey parrots?",
+    a: "CITES — the Convention on International Trade in Endangered Species — lists species in three appendices by extinction risk. Appendix I is the strictest tier: commercial international trade in wild-caught specimens is prohibited and all cross-border movement is tightly permit-controlled. African Greys were uplisted from Appendix II to Appendix I at CoP17, effective 2 January 2017, which ended legal trade in wild-caught birds. For a captive-bred Grey sold inside the USA, Appendix I means the breeder must keep documentation proving the bird was bred in captivity rather than taken from the wild." },
+  { q: "What documents come with a CITES-compliant African Grey from C.A.Gs?",
+    a: "Every Grey we place ships with a complete packet: (1) a CITES Appendix I captive-bred certificate confirming U.S. captive birth; (2) a hatch certificate recording the closed-band number and hatch date; (3) a PCR DNA sexing certificate from an avian lab; (4) a board-certified avian-veterinarian health certificate, with PBFD and Polyomavirus screening, plus the USDA health certificate required for interstate transport. The seamless closed band on the bird's leg ties the physical bird to that paperwork." },
+  { q: "Do I need CITES paperwork to buy an African Grey within my own state?",
+    a: "A federal CITES export or import permit is only required when a bird crosses an international border — it is not needed for an intrastate or interstate sale of a captive-bred bird inside the United States. That said, some states have their own permit or record rules, and your Grey will travel for vet visits, moves and shipping over a 40-to-60-year life. That is why we provide the full captive-bred certificate, hatch certificate and closed-band record with every bird regardless of where you live — the documentation protects you in every scenario." },
+  { q: "Can I travel internationally with my African Grey parrot?",
+    a: "Taking an African Grey across a national border requires a CITES export permit from the United States and an import permit from the destination country, because Appendix I covers personal as well as commercial movement. Contact USDA APHIS Wildlife Services and the U.S. Fish & Wildlife Service for current export requirements well before you travel, and confirm the destination's own rules — some countries restrict or ban parrot import outright. This is separate from the domestic ownership paperwork that travels with every Grey we sell." },
+  { q: "How do I verify a breeder is selling legitimately CITES-documented African Greys?",
+    a: "Ask for three things before any money changes hands: a verifiable USDA Animal Welfare Act license number you can check at aphis.usda.gov; a CITES captive-bred certificate for the exact bird you are reserving, not a generic letter; and the name of the avian veterinarian who issued its health certificate. A legitimate breeder produces all three willingly. If a seller says documentation 'comes after payment,' cannot name their vet, or offers a price far below the market floor, treat it as a red flag and read our guide to avoiding African Grey scams first." },
+  { q: "What happens if I buy an African Grey without CITES documentation?",
+    a: "An undocumented African Grey leaves you legally exposed. Wildlife enforcement agencies such as the U.S. Fish & Wildlife Service can seize a bird whose captive-bred origin cannot be proven, and if the bird turns out to be wild-caught you could face penalties under the Lacey Act. Even an honest buyer struggles to prove good faith without papers. The fix is simple: demand the CITES captive-bred certificate, hatch certificate and closed-band record before you pay, every time." },
+  { q: "Are African Grey parrots endangered, and does buying one harm wild flocks?",
+    a: "Wild African Grey populations are listed as Endangered on the IUCN Red List, driven by habitat loss and decades of trapping for the pet trade — which is exactly why the species was uplisted to CITES Appendix I. A documented captive-bred bird does the opposite of harm: every captive-bred sale removes a unit of demand that might otherwise fund poaching. Choosing a closed-banded, CITES-documented Grey from a USDA-licensed aviary touches no wild bird and supports the conservation intent behind the Appendix I listing." },
+];
 
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Is it legal to own an African Grey parrot in the United States?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes — it is legal to own an African Grey parrot in the United States if the bird is captive-bred and comes with proper CITES Appendix I documentation. Wild-caught African Grey parrots cannot be legally imported or sold in the US. All legally sold African Greys in the US today are captive-bred, and must be accompanied by documentation confirming that captive-bred status."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is CITES Appendix I for African Grey parrots?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "CITES (the Convention on International Trade in Endangered Species) Appendix I lists African Grey parrots (Psittacus erithacus) as a species whose international commercial trade in wild-caught specimens is prohibited and tightly controlled — the highest level of CITES protection. For captive-bred birds sold within the US, this means the breeder must maintain documentation proving the bird was bred in captivity — not taken from the wild. African Greys were uplisted to CITES Appendix I in 2016, ending all legal trade in wild-caught birds."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What documents does a CITES-compliant African Grey come with?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A properly documented captive-bred African Grey parrot should include: (1) CITES captive-bred certificate from the breeder/aviary confirming US captive birth; (2) DNA sexing certificate from a certified avian lab; (3) USDA health certificate, required for interstate transport; (4) Avian veterinarian health records. Some breeders also provide a leg band or microchip registration matching the documentation."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do I need CITES documentation if I buy an African Grey parrot within my state?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "For intrastate (within your state) purchases, documentation requirements vary by state. However, we provide full CITES documentation with every bird regardless of location — because your bird will likely travel (vet visits, relocations, state moves) and the documentation protects you in every scenario. More importantly, documentation proves your bird is legally obtained, protecting you from wildlife enforcement issues."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I travel with my African Grey parrot to another country?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "International travel with an African Grey parrot requires a CITES export permit from the US and an import permit from the destination country. African Greys are CITES Appendix I, meaning all international trade — including personal travel — requires formal permits from both countries. Contact USDA APHIS Wildlife Services for current US export permit requirements. Some countries have additional restrictions or outright bans on parrot import."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I verify a breeder is selling legitimate CITES-documented African Greys?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Ask for: (1) USDA AWA license number — verify at aphis.usda.gov; (2) A copy of the CITES captive-bred documentation before any payment; (3) The avian vet health certificate showing the bird was examined. Legitimate breeders will provide all documents willingly. If a seller hesitates, says documentation 'comes later,' or cannot name their avian vet, these are red flags of illegal or fraudulent operation."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens if I buy an African Grey parrot without CITES documentation?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Purchasing an African Grey without proper CITES documentation puts you at legal risk. Wildlife enforcement agencies (USFWS, USDA) can seize an undocumented bird. You may face fines under the Lacey Act if the bird was wild-caught or illegally obtained. The bird would likely be transferred to a wildlife facility. Even if you purchased in good faith, proving that without documentation is difficult. Always demand full documentation before purchase."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Are African Grey parrots endangered?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Wild African Grey parrot populations are listed as Endangered on the IUCN Red List, primarily due to habitat loss and historical wild capture for the pet trade. However, captive breeding programs have created robust legal populations in the US and Europe. Every bird from a USDA-licensed aviary like Congo African Greys contributes to the captive-bred population and does not impact wild populations in any way."
-      }
-    }
-  ]
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
 };
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "African Grey Parrot CITES Documentation: Complete Buyer's Guide",
-  "about": {
+  headline: "African Grey Parrot CITES Documentation — Appendix I, the Papers & Legal Ownership Explained",
+  description: "What African Grey CITES documentation means: Appendix I status (uplisted at CoP17, effective January 2017), the captive-bred certificate, hatch certificate and closed band, domestic transfer vs international export, and the documentation packet C.A.Gs provides with every Grey.",
+  inLanguage: "en-US",
+  about: {
     "@type": "Thing",
-    "name": "CITES Appendix I",
-    "description": "Convention on International Trade in Endangered Species — Appendix I listing for African Grey parrots",
-    "sameAs": "https://cites.org/eng/app/appendices.php"
+    name: "CITES Appendix I",
+    description: "Convention on International Trade in Endangered Species — Appendix I listing for African Grey parrots (Psittacus erithacus)",
+    sameAs: "https://cites.org/eng/app/appendices.php",
   },
-  "author": {
-    "@type": "Person",
-    "name": "Mark Benjamin",
-    "jobTitle": "USDA AWA Licensed Bird Breeder"
-  },
-  "publisher": {
+  author: {
     "@type": "Organization",
-    "name": "C.A.Gs – Midland, TX",
-    "url": "https://congoafricangreys.com"
+    name: "C.A.Gs – Midland, TX",
+    url: "https://congoafricangreys.com/trusted-african-grey-parrot-breeders/",
   },
-  "datePublished": "2026-05-15",
-  "dateModified": "2026-05-15",
-  "mainEntityOfPage": "https://congoafricangreys.com/cites-african-grey-documentation/"
+  publisher: {
+    "@type": "Organization",
+    name: "Congo African Greys",
+    logo: { "@type": "ImageObject", url: "https://congoafricangreys.com/cag-footer-logo.png" },
+  },
+  datePublished: "2024-09-01",
+  dateModified: "2026-06-10",
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
 };
+
+// NOTE: BreadcrumbList JSON-LD is emitted by <Breadcrumb /> itself (verified in dist) —
+// we do NOT add a second copy here (interior standard: extend, never duplicate schema).
+
+// ─── The 4-document packet (verified-claim ledger only) ───
+const docs = [
+  { tag: "DOC 1", title: "CITES Appendix I Captive-Bred Certificate",
+    body: "Issued from our USDA-registered aviary, this confirms your bird was hatched in captivity in the United States from captive parents — not imported from Africa. It is the primary proof that your Grey is the legal, captive-bred kind.",
+    foot: "Protects you from: seizure and any liability for wild-caught trafficking." },
+  { tag: "DOC 2", title: "Hatch Certificate + Closed-Band Number",
+    body: "Records the hatch date and the seamless closed leg-band number we slip onto each chick in its first weeks. Because that band cannot be fitted to an adult, it is tamper-evident, lifelong proof of where and when the bird was hatched.",
+    foot: "Why it matters: physically ties the specific bird to its paperwork." },
+  { tag: "DOC 3", title: "PCR DNA Sexing Certificate",
+    body: "Laboratory-confirmed sex from an avian DNA lab — necessary because African Greys are not visually sexable. The certificate names the lab, the submission date, the confirmed sex and a sample reference number.",
+    foot: "Why it matters: a DNA result is definitive; a sex 'guess' is not." },
+  { tag: "DOC 4", title: "Avian-Vet Health Certificate",
+    body: "A board-certified avian veterinarian examines every Grey before it leaves, with PBFD and Polyomavirus screening, plus the USDA health certificate required by federal law for any bird crossing state lines.",
+    foot: "Required for: interstate transport, airline shipping and your new bird's lifelong health file." },
+];
+
+// ─── Verify-the-breeder steps ───
+const verifySteps = [
+  { n: 1, t: "Ask for the USDA AWA license number",
+    d: "Go to aphis.usda.gov and use the Animal Care search to confirm the license is valid and active, and that it matches the breeder's name and facility. Ours is available on request before you pay anything." },
+  { n: 2, t: "Request the CITES certificate before payment",
+    d: "Ask to see the captive-bred certificate for the exact bird you are reserving — not a generic aviary letter. A legitimate breeder can show you the documentation practice before a single dollar moves." },
+  { n: 3, t: "Verify the avian veterinarian",
+    d: "Ask for the name and practice of the vet who issues the health certificates, then call to confirm they work with that breeder. It takes two minutes and tells you a great deal." },
+  { n: 4, t: "Never accept 'papers come after payment'",
+    d: "CITES documentation and health certificates are issued before a sale, never after. 'I'll send the papers once you pay' almost always means the papers do not exist. Documentation readiness at the time of sale is non-negotiable." },
+];
 ---
 
-<BaseLayout {title} {description} {canonical} hideGlobalCta>
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta>
 
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={[
-      { name: "Home", url: "/" },
-      { name: "Resources & Trust", url: "/trusted-african-grey-parrot-breeders/" },
-      { name: "CITES Documentation", url: "/cites-african-grey-documentation/" }
-      ]} />
+  <div class="cites-d cag-article">
+
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
+
+    <!-- 1. HERO (cag-hero-v3 idiom · Authority Green · trust-first) -->
+    <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
+      <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
+      <div class="container relative z-10 mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-12">
+        <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
+          <!-- COPY -->
+          <div class="order-2 text-center md:order-1 md:text-left">
+            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">CITES Appendix I · USA Captive-Bred · Updated {updated}</p>
+            <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
+              African Grey Parrot CITES Documentation
+            </h1>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
+              African Greys are a CITES Appendix I species — and that frightens a lot of first-time buyers into thinking ownership is illegal. It is not. Here at C.A.Gs in Midland, Texas, we place only U.S. captive-bred Greys, each one closed-banded and fully documented. This page explains what CITES Appendix I actually means, why captive-bred birds are legal to own and transfer at home, and exactly which papers travel with every Grey we sell — before any deposit.
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
+              <a href="#documents" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">See the Documentation Packet →</a>
+              <a href="#contact" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">Ask About Documentation →</a>
+            </div>
+          </div>
+          <!-- CIRCULAR IMAGE STAGE -->
+          <div class="order-1 flex justify-center md:order-2 md:justify-end">
+            <div class="relative">
+              <div class="absolute inset-0 -m-3 rounded-full border border-white/25 md:-m-5" aria-hidden="true"></div>
+              <div class="relative flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#0f3d2c] ring-4 ring-white/15 sm:h-[260px] sm:w-[260px] md:h-[300px] md:w-[300px]" style="box-shadow: 0 24px 60px rgba(60,30,10,0.35);">
+                <img src="/amie-congo-african-grey-female-3-months.webp"
+                  alt="Amie, a CITES Appendix I documented, U.S. captive-bred Congo African Grey hand-raised at the C.A.Gs aviary in Midland, Texas — closed-banded and hatch-certified, never wild-caught."
+                  title="CITES-documented captive-bred Congo African Grey — C.A.Gs, Midland TX"
+                  width="400" height="400" loading="eager" fetchpriority="high" decoding="async"
+                  class="h-full w-full object-cover object-center" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. COUNTER SNIPPET -->
+    <CounterSnippet />
+
+    <!-- 3. KEY TAKEAWAY / BLUF -->
+    <KeyTakeawayV2
+      eyebrow="The short version"
+      heading="Is It Legal to Own an African Grey? (Yes — With Documentation)"
+      badge="8 facts · 60-sec read"
+      items={[
+        { stat: "Legal",    label: "To Own in the USA",   body: "A captive-bred African Grey is legal to own and transfer domestically in the United States with proper documentation." },
+        { stat: "Appx I",   label: "Since Jan 2017",      body: "African Greys were uplisted from Appendix II to CITES Appendix I at CoP17, effective 2 January 2017." },
+        { stat: "Banned",   label: "Wild-Caught Trade",   body: "Appendix I bans commercial international trade in wild-caught African Greys — captive-bred birds are the only legal option." },
+        { stat: "4 Docs",   label: "Travel With Each Bird", body: "CITES captive-bred certificate, hatch certificate, PCR DNA sexing certificate, and an avian-vet health certificate." },
+        { stat: "Closed",   label: "Tamper-Evident Band", body: "A seamless closed leg-band, slipped on as a chick, is the physical proof a bird was aviary-hatched, not poached." },
+        { stat: "USDA",     label: "AWA Licensed",        body: "We hold a verifiable USDA Animal Welfare Act license you can check before you pay anything." },
+        { stat: "No Permit", label: "For Domestic Sale",  body: "No federal CITES permit is needed for an intrastate or interstate sale of a captive-bred bird — only for crossing a border." },
+        { stat: "Endang.",  label: "In the Wild (IUCN)",  body: "Wild African Greys are Endangered, so buying documented captive-bred protects both you and the species." },
+      ]}
+    />
+
+    <!-- 4. TOC (jump links — required >1,500 words) -->
+    <nav class="toc-cites py-10 px-4 bg-cream md:py-12" aria-label="On this page">
+      <div class="container mx-auto max-w-[1100px]">
+        <div class="rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-12 md:py-10" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+          <div class="flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end">
+            <div>
+              <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">Inside this page</p>
+              <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark md:text-3xl">On This Page</h2>
+            </div>
+            <p class="font-sora text-[13px] text-stone-500">7 sections · CITES & your paperwork in plain language</p>
+          </div>
+          <div class="mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part One</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">What CITES is &amp; why it matters</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 1, t: "What Is CITES and Why Does It Govern African Greys?", href: "#what-is-cites" },
+                  { n: 2, t: "Why Are African Greys on Appendix I — What Changed in 2017?", href: "#appendix-i" },
+                  { n: 3, t: "Is It Legal to Own a Captive-Bred Grey in the USA?", href: "#is-it-legal" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">Part Two</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-3 text-lg font-semibold italic text-green">Your papers &amp; how to verify</p>
+              <ol class="space-y-0">
+                {[
+                  { n: 4, t: "Which Documents Come With Every C.A.Gs Grey?", href: "#documents" },
+                  { n: 5, t: "Domestic Transfer vs International Export — What's Needed?", href: "#domestic-vs-international" },
+                  { n: 6, t: "How Do You Verify a Breeder Is CITES Compliant?", href: "#verify" },
+                  { n: 7, t: "CITES & African Grey Ownership — Your Questions", href: "#faq" },
+                ].map((it) => (
+                  <li><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 5a. WHAT IS CITES -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="what-is-cites" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Framework</p>
+          <h2 class="font-lora font-bold text-logo-dark">What Is CITES and Why Does It Govern African Greys?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">CITES is the international treaty that regulates trade in endangered wildlife across borders. It sorts species into three appendices by extinction risk, and the African Grey sits in the strictest one — Appendix I.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>CITES — the Convention on International Trade in Endangered Species of Wild Fauna and Flora — has regulated the African Grey since the treaty first covered the species in 1981. Across <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener noreferrer">the official CITES appendices</a>, more than 180 member countries agree to a single set of rules so that no nation can quietly become a loophole for trafficking. The point is conservation through paperwork: if every legal bird is documented, the illegal ones have nowhere to hide.</p>
+          <p>The African Grey (<em>Psittacus erithacus</em>) is native to the rainforests of West and Central Africa, and, as <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust species encyclopedia</a> records, decades of trapping for the pet trade pushed wild flocks into steep decline. CITES is the mechanism that responded to that decline — and the reason every Grey sold today must be able to prove it was bred in captivity rather than taken from the forest.</p>
+          <p>For a buyer, the practical takeaway is simple. CITES does not make owning an African Grey illegal; it makes <strong>undocumented</strong> ownership risky. The treaty draws a hard line between captive-bred birds, which are legal to keep with proper papers, and wild-caught birds, which cannot be lawfully imported or sold — and documentation is the only thing that tells the two apart.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5b. WHY APPENDIX I -->
+    <section id="appendix-i" class="scroll-mt-20 bg-cream py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The 2017 Uplisting</p>
+          <h2 class="font-lora font-bold text-logo-dark">Why Are African Greys on Appendix I — and What Changed in 2017?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">African Greys were moved from CITES Appendix II up to Appendix I at the 17th Conference of the Parties (CoP17), effective 2 January 2017 — a change that ended all legal trade in wild-caught birds.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>For years the African Grey was listed on Appendix II, which permitted regulated trade in wild specimens under quota. By 2016 the evidence of collapse was overwhelming, so the CoP17 conference in Johannesburg voted to uplist the species to Appendix I — the highest level of protection. As the <a href="https://www.fws.gov/" target="_blank" rel="noopener noreferrer">U.S. Fish &amp; Wildlife Service</a> and other CITES authorities implemented the change, the wild-caught African Grey trade that had thinned the forests for decades was, in legal terms, shut off at the source.</p>
+          <p>Both subspecies are covered: the larger red-tailed <a href="/congo-african-grey-for-sale/">Congo African Grey</a> and the smaller maroon-tailed <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a> both carry Appendix I status. That matters because some older care sheets still quote the outdated "Appendix II" classification — if you read that anywhere, it predates January 2017 and is simply wrong.</p>
+          <p>Here is the part that reassures honest buyers: Appendix I is aimed squarely at wild capture, not at responsible captive breeding. Captive-bred birds, hatched from parents already in legal captivity and documented as such, remain legal to own and transfer domestically. In other words, the uplisting raised the bar for paperwork — it did not close the door on owning a Grey. Choosing a <a href="/captive-bred-african-grey-parrot/">documented captive-bred bird</a> is exactly how the system is meant to work.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5c. IS IT LEGAL -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="is-it-legal" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-6 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Plain-Language Answer</p>
+          <h2 class="font-lora font-bold text-logo-dark">Is It Legal to Own a Captive-Bred African Grey in the USA?</h2>
+        </div>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Yes — a captive-bred African Grey is legal to own and transfer within the United States as long as it comes with documentation proving its captive-bred origin.</p>
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>The single most important distinction on this whole page is this one: <strong>captive-bred means legal to own and trade with documentation; wild-caught means illegal to import or sell.</strong> Appendix I bans the commercial international movement of wild-caught Greys, but it was never intended to criminalize a family keeping a documented, aviary-hatched companion bird. Every African Grey lawfully available in the USA today is captive-bred, and its paperwork is what proves which category it belongs to.</p>
+          <p>That is why, honestly, the documentation is the product as much as the bird is. Here at C.A.Gs, every Congo and Timneh Grey is hatched in our Midland, Texas home, closed-banded as a chick, and matched to an individual CITES Appendix I captive-bred certificate before it goes anywhere. A bird without that paper trail is a legal liability no matter how healthy it looks — which is also why a price far below our $1,500 floor almost always signals a wild-caught bird, a sick bird, or no bird at all.</p>
+          <p>If you ever face a wildlife inspection, a state move, or a future sale, the captive-bred certificate, hatch certificate and closed-band record are what let you prove, in seconds, that your Grey is the lawful kind. That protection is the reason we never treat documentation as an upsell — it travels with every bird, and you receive it before any money changes hands. You can see exactly what the verification process looks like on our <a href="/trusted-african-grey-parrot-breeders/">trusted breeders page</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5d. THE 4 DOCUMENTS -->
+    <section id="documents" class="scroll-mt-20 bg-warm-white py-14 px-4 md:py-16">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-8 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Proof, Not Promises</p>
+          <h2 class="font-lora font-bold text-logo-dark">Which Documents Come With Every C.A.Gs African Grey?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Every Grey we place ships with a complete documentation packet, and you receive all of it <strong>before</strong> any deposit — the opposite of how a scam operates. Here is what each document does and why it matters.</p>
+        </div>
+        <div class="space-y-4">
+          {docs.map(d => (
+            <div class="rounded-2xl border border-black/[0.07] bg-white p-5" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+              <div class="flex items-start gap-4">
+                <div class="bg-green text-white font-sora font-bold text-xs px-3 py-1.5 rounded-lg flex-shrink-0 mt-0.5">{d.tag}</div>
+                <div>
+                  <h3 class="font-lora font-bold text-logo-dark text-lg leading-snug m-0 mb-1.5">{d.title}</h3>
+                  <p class="font-sora text-stone-600 text-[14px] leading-relaxed m-0 mb-2" style="max-width:70ch;">{d.body}</p>
+                  <p class="font-sora text-stone-500 text-[13px] m-0"><strong class="text-green">{d.foot.split(":")[0]}:</strong>{d.foot.substring(d.foot.indexOf(":") + 1)}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-6" style="max-width:70ch;">Read the full story behind these papers — what captive-bred actually means and how the closed band proves it — on our <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey page</a>, and see how the same packet underpins our <a href="/african-grey-parrot-health-guarantee/">written health guarantee</a>.</p>
+      </div>
+    </section>
+
+    <!-- 5e. DOMESTIC VS INTERNATIONAL -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="domestic-vs-international" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-7 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Where Permits Apply</p>
+          <h2 class="font-lora font-bold text-logo-dark">Domestic Transfer vs International Export — What Paperwork Do You Actually Need?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">CITES permits attach to borders, not to ownership. Buying a captive-bred Grey within the USA is a very different paperwork picture from taking one out of the country — and confusing the two is what makes the topic feel scarier than it is.</p>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
+          <div class="overflow-x-auto">
+            <table class="cites-table w-full border-collapse" style="min-width:640px;">
+              <thead>
+                <tr>
+                  <th scope="col">The Situation</th>
+                  <th scope="col" class="cites-good-h">Buying / Moving Inside the USA</th>
+                  <th scope="col" class="cites-cross-h">Taking a Bird Across a Border</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cites-feat">Federal CITES permit</td>
+                  <td class="cites-good"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Not required for captive-bred birds</td>
+                  <td class="cites-cross">CITES export + destination import permit required</td>
+                </tr>
+                <tr>
+                  <td class="cites-feat">What proves the bird is legal</td>
+                  <td class="cites-good"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Captive-bred cert, hatch cert, closed band</td>
+                  <td class="cites-cross">All of that plus government-issued CITES permits</td>
+                </tr>
+                <tr>
+                  <td class="cites-feat">USDA health certificate</td>
+                  <td class="cites-good"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Required to cross state lines (we provide it)</td>
+                  <td class="cites-cross">Required, plus destination-country veterinary rules</td>
+                </tr>
+                <tr>
+                  <td class="cites-feat">Who issues it</td>
+                  <td class="cites-good"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Your breeder + an accredited avian vet</td>
+                  <td class="cites-cross">USDA APHIS / U.S. Fish &amp; Wildlife Service</td>
+                </tr>
+                <tr>
+                  <td class="cites-feat">Best first step</td>
+                  <td class="cites-good"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Confirm the documentation packet before you pay</td>
+                  <td class="cites-cross">Contact USFWS / APHIS months before you travel</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-6" style="max-width:70ch;">A practical note: some states layer their own permit or record-keeping rules on top of the federal picture, so the safe habit is to keep your full documentation packet together for the life of the bird. We deliberately keep the state-specific detail general here because rules vary — when in doubt, your state wildlife agency and the <a href="https://www.fws.gov/" target="_blank" rel="noopener noreferrer">U.S. Fish &amp; Wildlife Service</a> are the authorities to confirm with, not a breeder's webpage.</p>
+      </div>
+    </section>
+
+    <!-- 5f. VERIFY THE BREEDER -->
+    <section id="verify" class="scroll-mt-20 bg-cream py-14 px-4 md:py-16">
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-7 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Before You Pay</p>
+          <h2 class="font-lora font-bold text-logo-dark">How Do You Verify a Breeder Is CITES Compliant?</h2>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">You should never have to take a breeder's word for any of this. Real documentation is something a scammer cannot fake on demand, so a few minutes of verification separates a legitimate aviary from a fraudulent listing.</p>
+        </div>
+        <ol class="space-y-4">
+          {verifySteps.map(s => (
+            <li class="flex gap-4">
+              <span class="bg-green text-white font-sora font-bold rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-sm mt-0.5">{s.n}</span>
+              <div>
+                <h3 class="font-lora font-bold text-logo-dark text-[17px] leading-snug m-0 mb-1">{s.t}</h3>
+                <p class="font-sora text-stone-600 text-[14px] leading-relaxed m-0" style="max-width:66ch;">{s.d}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-7" style="max-width:70ch;">These four checks are the spine of every safe purchase. For the full playbook on spotting fake listings, cloned aviary websites and documentation that does not hold up, read our detailed <a href="/how-to-avoid-african-grey-parrot-scams/">guide to avoiding African Grey scams</a> before you send a deposit anywhere.</p>
+      </div>
+    </section>
+
+    <!-- 6. FAQ -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="faq" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-10">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">CITES · Questions</p>
+          <h2 class="font-lora font-bold text-logo-dark">CITES &amp; African Grey Ownership — Your Questions, Answered</h2>
+        </div>
+        <div class="cag-faq-acc max-w-3xl mx-auto space-y-3">
+          {faqs.map((item, i) => (
+            <div class:list={["cag-faq-item bg-white rounded-2xl border border-line overflow-hidden", i === 0 && "open"]} style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
+              <button type="button" class="cag-faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4" aria-expanded={i === 0 ? "true" : "false"}>
+                <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
+                <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0">{item.a}</p></div></div>
+            </div>
+          ))}
+        </div>
+        <style is:global>
+          .cag-faq-q { cursor: pointer; background: transparent; transition: background .2s ease; }
+          .cag-faq-q:hover { background: rgba(45,106,79,.04); }
+          .cag-faq-chevron { transition: transform .2s ease; }
+          .cag-faq-item.open .cag-faq-chevron { transform: rotate(180deg); }
+          .cag-faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .2s ease; }
+          .cag-faq-item.open .cag-faq-panel { grid-template-rows: 1fr; }
+          .cag-faq-panel-inner { overflow: hidden; }
+        </style>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mx-auto text-center mt-8" style="max-width:70ch;">Still doing your homework? See what <a href="/captive-bred-african-grey-parrot/">captive-bred</a> really guarantees, how our <a href="/african-grey-parrot-health-guarantee/">health guarantee</a> works, and why families choose us on our <a href="/trusted-african-grey-parrot-breeders/">trusted breeders page</a>.</p>
+      </div>
+    </section>
+
+    <!-- 7. FINAL CTA + CONTACT -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section class="pt-14 px-4 md:pt-16 text-center">
+      <div class="max-w-3xl mx-auto">
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Documented &amp; Legal</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-4">Every Grey We Place Is Fully CITES Documented — Ready to Ask Us About Yours?</h2>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every African Grey from C.A.Gs is U.S. captive-bred, closed-banded, PCR DNA-sexed, avian-vet certified, and placed with a complete CITES Appendix I documentation packet — never wild-caught, paperwork in your hands before any deposit. Tell us about your home in the form below and Mark or Teri will reply within 24 hours. Still deciding? Compare our <a href="/congo-african-grey-for-sale/">Congo</a> and <a href="/timneh-african-grey-for-sale/">Timneh</a> Greys — both carry the exact same documentation standard.</p>
+      </div>
+    </section>
+
+    <div id="contact" class="scroll-mt-20">
+      <InquiryForm />
+    </div>
+
   </div>
 
-  <section class="bg-logo-dark text-cream py-16 px-4">
-    <div class="max-w-3xl mx-auto text-center">
-      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-3">Legal Ownership Guide · CITES Appendix I</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">African Grey Parrot CITES Documentation</h1>
-      <p class="text-cream/80 text-lg max-w-2xl mx-auto">Everything you need to know about legal African Grey parrot ownership in the United States — what documents your bird must have and why they matter.</p>
-    </div>
-  </section>
-
-  <TrustBar />
-
-  <!-- Is It Legal -->
-  <section class="py-12 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">Is It Legal to Own an African Grey Parrot?</h2>
-      <div class="bg-green-50 border border-green-200 rounded-xl p-5 mb-6">
-        <p class="text-green-800 font-semibold text-lg mb-2">Yes — with proper documentation.</p>
-        <p class="text-green-700 text-sm">African Grey parrots are legal to own in the United States when they are captive-bred and come with CITES Appendix I documentation confirming that captive status. Wild-caught African Greys cannot be legally imported or sold. Every bird from a legitimate US aviary is captive-bred and fully documented.</p>
-      </div>
-      <p class="text-stone-700 mb-4">
-        According to the <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener" class="text-logo-dark underline hover:text-clay">CITES appendices</a>, African Grey parrots (Psittacus erithacus) have been internationally regulated since 1975. They were uplisted to Appendix I — the strictest level of protection — in 2016. Captive-bred birds remain legal to own and transfer within the US with proper documentation, even under Appendix I.
-      </p>
-      <p class="text-stone-700">
-        The distinction matters: <strong>captive-bred = legal to own and trade with documentation. Wild-caught = illegal to import or sell in the US.</strong> Documentation is the only proof of which category your bird belongs to.
-      </p>
-    </div>
-  </section>
-
-  <!-- What CITES Means -->
-  <section class="bg-stone-50 py-12 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">What CITES Appendix I Means for Parrot Buyers</h2>
-      <div class="grid sm:grid-cols-2 gap-6 mb-6">
-        <div>
-          <h3 class="font-lora font-semibold text-lg text-logo-dark mb-3">Appendix I in Plain Language</h3>
-          <p class="text-stone-600 text-sm mb-3">CITES Appendix I means international commercial trade in wild-caught specimens is prohibited and all trade is tightly controlled — the strictest level of protection. For African Greys, this means:</p>
-          <ul class="space-y-2 text-stone-600 text-sm">
-            <li class="flex gap-2"><span class="text-green-600">✓</span> Captive-bred birds: fully legal to own and sell</li>
-            <li class="flex gap-2"><span class="text-green-600">✓</span> Documentation required to prove captive-bred status</li>
-            <li class="flex gap-2"><span class="text-red-500">✗</span> Wild-caught birds: illegal to import or sell</li>
-            <li class="flex gap-2"><span class="text-red-500">✗</span> Undocumented birds: legally ambiguous, risk of seizure</li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="font-lora font-semibold text-lg text-logo-dark mb-3">Why African Greys Need Protection</h3>
-          <p class="text-stone-600 text-sm mb-3">Wild African Grey populations have declined by over 50% in parts of their range. Key drivers:</p>
-          <ul class="space-y-2 text-stone-600 text-sm">
-            <li class="flex gap-2"><span class="text-stone-400">•</span> Deforestation across Central/West Africa</li>
-            <li class="flex gap-2"><span class="text-stone-400">•</span> Historical wild capture for pet trade (pre-2016)</li>
-            <li class="flex gap-2"><span class="text-stone-400">•</span> Slow reproduction (2–4 eggs per clutch, once/year)</li>
-            <li class="flex gap-2"><span class="text-stone-400">•</span> High intelligence = high demand</li>
-          </ul>
-          <p class="text-stone-500 text-xs mt-3">Buying from a USDA-licensed captive breeder contributes nothing to wild population decline and everything to sustainable captive breeding.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Document Package -->
-  <section class="py-12 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">The 4 Documents Your African Grey Must Have</h2>
-      <p class="text-stone-700 mb-6">Every bird from Congo African Greys ships with a complete documentation package. Here's what each document does and why it matters.</p>
-      <div class="space-y-4">
-        <div class="bg-white border border-stone-200 rounded-xl p-5">
-          <div class="flex items-start gap-4">
-            <div class="bg-logo-dark text-gold font-bold text-sm px-3 py-1.5 rounded-lg flex-shrink-0">DOC 1</div>
-            <div>
-              <h3 class="font-semibold text-logo-dark mb-1">CITES Captive-Bred Certificate</h3>
-              <p class="text-stone-600 text-sm mb-2">Issued by the breeder's USDA-registered aviary. Confirms the bird was born in captivity in the United States from captive-bred parent birds — not imported from Africa. This is the primary legal ownership document.</p>
-              <p class="text-stone-500 text-xs"><strong>Protects you from:</strong> Wildlife enforcement action, seizure, and being held liable for wild-caught trafficking.</p>
-            </div>
-          </div>
-        </div>
-        <div class="bg-white border border-stone-200 rounded-xl p-5">
-          <div class="flex items-start gap-4">
-            <div class="bg-logo-dark text-gold font-bold text-sm px-3 py-1.5 rounded-lg flex-shrink-0">DOC 2</div>
-            <div>
-              <h3 class="font-semibold text-logo-dark mb-1">DNA Sexing Certificate</h3>
-              <p class="text-stone-600 text-sm mb-2">Laboratory-confirmed sex from a certified avian DNA lab. Required because African Grey parrots are not visually sexable by sight alone (unlike some bird species). The certificate includes the lab name, submission date, and confirmed sex — with a sample reference number.</p>
-              <p class="text-stone-500 text-xs"><strong>Why it matters:</strong> Undocumented sex claims are guesses. DNA sexing is definitive.</p>
-            </div>
-          </div>
-        </div>
-        <div class="bg-white border border-stone-200 rounded-xl p-5">
-          <div class="flex items-start gap-4">
-            <div class="bg-logo-dark text-gold font-bold text-sm px-3 py-1.5 rounded-lg flex-shrink-0">DOC 3</div>
-            <div>
-              <h3 class="font-semibold text-logo-dark mb-1">USDA Health Certificate</h3>
-              <p class="text-stone-600 text-sm mb-2">Required by federal law for any bird transported across state lines. Issued by an accredited avian veterinarian within 10 days of the shipping or pickup date. Confirms the bird is healthy and free from infectious disease at time of transfer.</p>
-              <p class="text-stone-500 text-xs"><strong>Required for:</strong> Interstate transport, airline shipping, crossing state borders.</p>
-            </div>
-          </div>
-        </div>
-        <div class="bg-white border border-stone-200 rounded-xl p-5">
-          <div class="flex items-start gap-4">
-            <div class="bg-logo-dark text-gold font-bold text-sm px-3 py-1.5 rounded-lg flex-shrink-0">DOC 4</div>
-            <div>
-              <h3 class="font-semibold text-logo-dark mb-1">Avian Veterinarian Health Records</h3>
-              <p class="text-stone-600 text-sm mb-2">Complete health history from our aviary vet, including all exams during weaning, any treatments administered, weight history, and the pre-sale comprehensive examination results. This file starts your bird's lifelong health record.</p>
-              <p class="text-stone-500 text-xs"><strong>Important for:</strong> Your new avian vet appointment, insurance claims, and the bird's 40–60 year health history.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Verification Guide -->
-  <section class="bg-stone-50 py-12 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">How to Verify a Breeder Is CITES Compliant</h2>
-      <ol class="space-y-4">
-        <li class="flex gap-4">
-          <span class="bg-logo-dark text-gold font-bold rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-sm">1</span>
-          <div>
-            <h3 class="font-semibold text-logo-dark mb-1">Ask for the USDA AWA License Number</h3>
-            <p class="text-stone-600 text-sm">Go to <strong>aphis.usda.gov</strong> and use the Animal Care USDA search to verify the license number is valid and active. The license should match the breeder's name and facility address.</p>
-          </div>
-        </li>
-        <li class="flex gap-4">
-          <span class="bg-logo-dark text-gold font-bold rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-sm">2</span>
-          <div>
-            <h3 class="font-semibold text-logo-dark mb-1">Request Documentation Before Payment</h3>
-            <p class="text-stone-600 text-sm">Ask to see sample documentation from a previous bird placement, or confirmation of what documentation you will receive. Legitimate breeders can show you their documentation practices before you commit any funds.</p>
-          </div>
-        </li>
-        <li class="flex gap-4">
-          <span class="bg-logo-dark text-gold font-bold rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-sm">3</span>
-          <div>
-            <h3 class="font-semibold text-logo-dark mb-1">Verify the Avian Veterinarian</h3>
-            <p class="text-stone-600 text-sm">Ask for the name and practice of the avian vet who issues health certificates. You can call the vet to confirm they work with that breeder — a simple verification that takes 2 minutes and tells you a lot.</p>
-          </div>
-        </li>
-        <li class="flex gap-4">
-          <span class="bg-logo-dark text-gold font-bold rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-sm">4</span>
-          <div>
-            <h3 class="font-semibold text-logo-dark mb-1">Never Accept "Documentation Follows" Promises</h3>
-            <p class="text-stone-600 text-sm">CITES documentation and health certificates are issued before sale — not after. If a seller says "I'll send the papers once you pay," the papers likely don't exist. Documentation readiness at the time of sale is non-negotiable.</p>
-          </div>
-        </li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="py-12 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8">CITES & African Grey Ownership: FAQs</h2>
-      <div class="space-y-4">
-        {faqSchema.mainEntity.map((item: any) => (
-          <details class="bg-stone-50 border border-stone-200 rounded-lg">
-            <summary class="p-4 font-semibold text-logo-dark cursor-pointer hover:text-clay transition-colors list-none flex justify-between items-center">
-              {item.name}
-              <span class="text-stone-400 text-lg">+</span>
-            </summary>
-            <div class="px-4 pb-4 text-stone-600 text-sm leading-relaxed border-t border-stone-100 pt-3">
-              {item.acceptedAnswer.text}
-            </div>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="py-12 px-4">
-    <div class="max-w-3xl mx-auto">
-      <div class="bg-logo-dark text-cream rounded-2xl p-8 text-center">
-        <h2 class="font-lora font-bold text-2xl mb-3">Every Bird We Place Is Fully CITES Documented</h2>
-        <p class="text-cream/80 mb-6">USDA AWA licensed. CITES captive-bred certificate. DNA sexing. Avian vet health records. You receive every document before your bird ships.</p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/trusted-african-grey-parrot-breeders/" class="bg-gold text-logo-dark font-semibold px-6 py-3 rounded-full hover:bg-cream transition-colors">Meet Our Breeders</a>
-          <a href="/contact-us/" class="border-2 border-gold text-gold font-semibold px-6 py-3 rounded-full hover:bg-gold hover:text-logo-dark transition-colors">Ask About Documentation</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <CTA />
+  <script is:inline>
+    // FAQ accordion (smooth open/close) — mirrors homepage / captive-bred pattern
+    (function () {
+      const qs = document.querySelectorAll('.cag-faq-q');
+      if (!qs.length) return;
+      qs.forEach(btn => btn.addEventListener('click', () => {
+        const item = btn.closest('.cag-faq-item');
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }));
+    })();
+  </script>
 </BaseLayout>
+
+<style is:global>
+  /* ============================================================
+     CITES DOCUMENTATION PAGE — Direction-D-aware interior wrapper (.cites-d)
+     body.theme-d already supplies Newsreader/IBM Plex, lead paragraphs,
+     eyebrow ticks, card + button motion. This only scopes seam + links + table.
+     ============================================================ */
+  .cites-d { --rule: rgba(45,106,79,.16); }
+
+  /* AA: clay as small readable text on LIGHT sections → #b04228 (4.5:1). */
+  .cites-d a.text-clay, .cites-d .text-clay { color:#b04228; }
+  .cites-d .hero-v3-b .text-clay, .cites-d .bg-clay { color:inherit; }
+
+  /* Woven in-content links: clay, underlined, AA-safe. */
+  .cites-d p a:not(.rounded-full):not(.bg-clay),
+  .cites-d li a:not(.rounded-full):not(.bg-clay) {
+    color:#b04228; font-weight:500; text-decoration:underline;
+    text-decoration-color:rgba(176,66,40,.35); text-underline-offset:2px;
+    transition:text-decoration-color .2s ease;
+  }
+  .cites-d p a:not(.rounded-full):not(.bg-clay):hover,
+  .cites-d li a:not(.rounded-full):not(.bg-clay):hover { text-decoration-color:#b04228; }
+
+  /* External links open in a new tab — subtle outward arrow affordance. */
+  .cites-d p a[target="_blank"]::after { content:"\2197"; font-size:.7em; line-height:0; vertical-align:super; opacity:.5; margin-left:.12em; }
+
+  /* Domestic vs international comparison table */
+  .cites-table { font-family:'IBM Plex Sans',sans-serif; font-size:.92rem; }
+  .cites-table thead th { padding:13px 16px; text-align:left; font-weight:600; color:#fff; font-size:.85rem; }
+  .cites-table thead th:first-child { background:#2D6A4F; }
+  .cites-table thead .cites-good-h { background:#1e5238; }
+  .cites-table thead .cites-cross-h { background:#5a5248; }
+  .cites-table tbody tr:nth-child(even) { background:#faf7f4; }
+  .cites-table tbody td { padding:12px 16px; border-bottom:1px solid #ede5dc; line-height:1.5; vertical-align:top; }
+  .cites-table tbody tr:last-child td { border-bottom:none; }
+  .cites-feat { font-weight:600; color:#6b6560; width:24%; }
+  .cites-good { color:#1c5c40; font-weight:500; }
+  .cites-cross { color:#5a5248; }
+
+  /* Section seam — centered wordmark divider (verbatim scope). */
+  .cites-d > .cag-seam{ display:flex; align-items:center; gap:26px; max-width:1100px; margin:0 auto; padding:.6rem 24px !important; }
+  .cag-seam__line{ flex:1; height:1px; background:var(--rule); }
+  .cites-d .cag-seam img{ height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+  @media (max-width:600px){ .cites-d > .cag-seam{ gap:16px; } .cites-d .cag-seam img{ height:24px; } }
+</style>
