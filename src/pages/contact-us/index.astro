@@ -5,12 +5,24 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import InquiryForm from '../../components/cag-inquiry-form.astro';
 import MapPin from '../../components/MapPin.astro';
 
-const title = "Contact Congo African Greys | Inquire About Available Birds";
-const description = "Reach out to Mark and Teri Benjamin about African Grey parrots for sale. We respond within 24 hours. Located in Midland, Texas. USDA AWA licensed breeder.";
+const title = "Contact Us — Inquire About Our Available African Grey Parrots, Pricing & Nationwide Shipping (We Reply Within 24 Hours) | C.A.Gs – Midland, TX";
+const description = "Reach us — Mark & Teri Benjamin, USDA AWA licensed African Grey breeders in Midland, Texas. Send your inquiry through our adoption application and we reply within 24 hours. We ship nationwide ($185 airport pickup · $350 home delivery) with free local pickup here in Midland, TX.";
 const canonical = "https://congoafricangreys.com/contact-us/";
+
+const contactPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "@id": "https://congoafricangreys.com/contact-us/#webpage",
+  "url": "https://congoafricangreys.com/contact-us/",
+  "name": "Contact C.A.Gs – Midland, TX",
+  "description": "Inquiry and adoption application page for C.A.Gs, captive-bred African Grey parrot breeders in Midland, Texas.",
+  "inLanguage": "en-US",
+  "about": { "@id": "https://congoafricangreys.com/#organization" },
+  "isPartOf": { "@type": "WebSite", "url": "https://congoafricangreys.com/", "name": "C.A.Gs – Midland, TX" }
+};
 ---
 
-<BaseLayout {title} {description} {canonical}>
+<BaseLayout {title} {description} {canonical} hideGlobalCta>
 
   <div style="max-width:1200px;margin:0 auto;">
     <Breadcrumb items={[
@@ -22,7 +34,7 @@ const canonical = "https://congoafricangreys.com/contact-us/";
   <section class="bg-logo-dark text-cream py-16 px-4">
     <div class="max-w-3xl mx-auto text-center">
       <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">Contact Us</h1>
-      <p class="text-cream/80 text-lg">We reply to all inquiries within 24–48 hours. Please include which bird or variant you're interested in.</p>
+      <p class="text-cream/80 text-lg">We reply to every inquiry within 24 hours. Please tell us which bird or variant you're interested in.</p>
     </div>
   </section>
 
@@ -49,8 +61,9 @@ const canonical = "https://congoafricangreys.com/contact-us/";
   </section>
 
   <Schema type="local-business" />
+  <script type="application/ld+json" set:html={JSON.stringify(contactPageSchema)} />
 
-  <script>
+  <script is:inline>
     if (window.location.search.includes('success=true')) {
       if (typeof gtag !== 'undefined') {
         gtag('event', 'generate_lead', {
