@@ -2,12 +2,25 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 
-const title = "Privacy Policy | C.A.Gs — Congo African Greys, Midland TX | Your Data Is Secure";
-const description = "CongoAfricanGreys.com privacy policy. We protect your personal data with 7 clear rules. USDA-licensed, CITES-compliant African Grey parrot breeders. Midland, TX.";
+const title = "Privacy Policy — How We Collect, Use & Protect Your Data | C.A.Gs – Midland, TX";
+const description = "Our privacy policy: how we at C.A.Gs collect, use, and protect your personal information when you inquire about or purchase an African Grey parrot — covering cookies, data retention, third-party sharing, and your GDPR & CCPA rights. Questions? Contact us in Midland, TX.";
 const canonical = "https://congoafricangreys.com/privacy-policy/";
+
+const webPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://congoafricangreys.com/privacy-policy/#webpage",
+  "url": "https://congoafricangreys.com/privacy-policy/",
+  "name": "Privacy Policy — C.A.Gs – Midland, TX",
+  "description": "Privacy policy for CongoAfricanGreys.com, covering data collection, use, protection, cookies, and GDPR & CCPA rights.",
+  "inLanguage": "en-US",
+  "dateModified": "2025-02-21",
+  "about": { "@id": "https://congoafricangreys.com/#organization" },
+  "isPartOf": { "@type": "WebSite", "url": "https://congoafricangreys.com/", "name": "C.A.Gs – Midland, TX" }
+};
 ---
 
-<BaseLayout {title} {description} {canonical}>
+<BaseLayout {title} {description} {canonical} hideGlobalCta>
 
   <div style="max-width:1200px;margin:0 auto;">
     <Breadcrumb items={[
@@ -16,10 +29,14 @@ const canonical = "https://congoafricangreys.com/privacy-policy/";
     ]} />
   </div>
 
-  <section class="max-w-4xl mx-auto px-4 py-16">
+  <section class="bg-logo-dark text-cream py-16 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">Privacy Policy</h1>
+      <p class="text-cream/80 text-lg">How we collect, use, and protect your information. Last updated: February 21, 2025.</p>
+    </div>
+  </section>
 
-    <h1 class="font-lora text-3xl font-bold text-green mb-2">Privacy Policy</h1>
-    <p class="text-sm text-gray-500 mb-8">Last updated: February 21, 2025</p>
+  <section class="mx-auto px-4 py-16" style="max-width:760px;">
 
     <div class="prose prose-lg max-w-none">
 
@@ -116,5 +133,7 @@ const canonical = "https://congoafricangreys.com/privacy-policy/";
     </div>
 
   </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(webPageSchema)} />
 
 </BaseLayout>
