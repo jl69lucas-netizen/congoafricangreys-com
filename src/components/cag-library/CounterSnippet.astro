@@ -3,14 +3,18 @@
  * cag-counter-snippet — 4-stat trust strip (Rule 31: 4 counter snippets after H1)
  * Source design: CongoAfricanGreys Mobile Components.html (clay Lora numerals + muted labels).
  * Ported to site Tailwind tokens. Light strip for contrast under the green hero.
- * Values from data/price-matrix.json + breeder facts. Featured-snippet / AIO bait.
+ * Accepts a `stats` prop (4 items) so each page shows page-relevant numbers;
+ * default = homepage strip (data/price-matrix.json + breeder facts). Every value
+ * must already exist in the page's own copy (Verified-Claim Ledger).
  */
-const stats = [
+export interface Stat { num: string; label: string }
+const defaultStats: Stat[] = [
   { num: "12+",    label: "Years Aviary" },
   { num: "100%",   label: "CITES Documented" },
   { num: "$1,500", label: "Floor Price" },
   { num: "24h",    label: "Reply Guarantee" },
 ];
+const { stats = defaultStats } = Astro.props as { stats?: Stat[] };
 
 const borderByIndex = [
   "",
