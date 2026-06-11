@@ -357,7 +357,7 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
   - **Cluster D (1):** african-grey-parrot-price (AggregateOffer + 6 per-bird Offers; every figure traced to price-matrix/financial-entities)
   - **Cluster E (2):** contact-us (ContactPage schema + GA4 `generate_lead` inline) · privacy-policy (shell only, legal text verbatim)
 - Finalize done: sitemaps regenerated (100 URLs, 0 phantoms), health sweep PASS, all 18 slugs live-verified 200, IndexNow submission accepted (200).
-- **Open Flags awaiting the breeder** (in the brief): ① which pellet brand we actually feed (best-food endorsement) · ② is the site-wide "4.9 / 127 reviews" AggregateRating count real (else correct site-wide) · ③ privacy-policy legal text names "Zelle or Cash App" vs the `[PAYMENT_METHOD_TBD]` rule (left verbatim per "same content").
+- **Open Flags RESOLVED by breeder (2026-06-11):** ① pellet endorsement = the 3–5 reviewed brands (Harrison's / Roudybush / TOP's / Zupreem Natural), no single house brand · ② AggregateRating **reviewCount = 52 (real)** — corrected from 127 site-wide (homepage ×3, reviews, trusted-breeders); rating 4.9 unchanged · ③ privacy-policy "Zelle or Cash App" removed → neutral "payment method confirmed during reservation" wording.
 
 ## Known Issues
 - Homepage Video section: using a YouTube **placeholder** (embed + VideoObject schema scaffold) — breeder to supply the real URL later.
