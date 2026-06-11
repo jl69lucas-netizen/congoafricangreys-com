@@ -349,6 +349,16 @@ Full spec: `docs/reference/page-width.md §Infographic Width Rules`
 - Session brief: `sessions/2026-05-29-session-brief.md` (see "REBUILD v2" section).
 - **2026-06-05 addendum (a11y + non-commodity pass):** homepage a11y back to **100/100** (fixed the Direction-D lead-paragraph dark-on-dark trap + MobileTabBar contrast — see `cag-accessibility-fixer` A11y-7 + MEMORY `reference_contrast_lead_paragraph_trap`). Ran the **non-commodity pass** (audit-all → rewrite-only-weak; homepage was ~90% already strong) — added Teri's First-30-Days voice, **Maxy** (talking Congo in the video), per-bird **ItemList Product/Offer schema**, and newly-confirmed **psittacosis + UV-B/D3** entities. **Verified-Claim Ledger expanded** (psittacosis, UV-B/D3, Maxy → ✅) in `cag-entity-incorporation-agent.md` + `sessions/2026-06-03-homepage-entity-map.md`. External-link skill+agent now warn that **cites.org 403s to curl = bot-block, not dead**. Details: `sessions/2026-06-05-homepage-noncommodity-pass.md`.
 
+## Active Session — Interior-Pages Batch (2026-06-06 → 2026-06-11) — COMPLETE ✓
+- **All 18 interior pages rebuilt to the Interior-Page Standard and LIVE** (plan: `docs/superpowers/plans/2026-06-06-interior-pages-full-seo.md`; brief: `sessions/2026-06-06-interior-batch-brief.md`).
+  - **Cluster A (Care/Health, 6):** care-guide pillar · african-grey-care hub · diet · best-food · lifespan · african-grey-parrot-health-guarantee
+  - **Cluster B (Trust/Authority, 5):** trusted-african-grey-parrot-breeders (= the About Us page, AboutPage schema) · african-grey-reviews (5 fabricated testimonials + fake reviewCount:47 removed) · captive-bred · cites-african-grey-documentation · scams (`yr is not defined` bug fixed)
+  - **Cluster C (Guides, 4):** african-grey-parrot-guide (species pillar) · african-grey-parrot-faq (25-Q QAB pillar) · how-to-tame (HowTo schema, 7 steps) · african-grey-adoption (honest breeder-not-rescue frame; legacy `/african-grey-for-adoption/` 301 live)
+  - **Cluster D (1):** african-grey-parrot-price (AggregateOffer + 6 per-bird Offers; every figure traced to price-matrix/financial-entities)
+  - **Cluster E (2):** contact-us (ContactPage schema + GA4 `generate_lead` inline) · privacy-policy (shell only, legal text verbatim)
+- Finalize done: sitemaps regenerated (100 URLs, 0 phantoms), health sweep PASS, all 18 slugs live-verified 200, IndexNow submission accepted (200).
+- **Open Flags awaiting the breeder** (in the brief): ① which pellet brand we actually feed (best-food endorsement) · ② is the site-wide "4.9 / 127 reviews" AggregateRating count real (else correct site-wide) · ③ privacy-policy legal text names "Zelle or Cash App" vs the `[PAYMENT_METHOD_TBD]` rule (left verbatim per "same content").
+
 ## Known Issues
 - Homepage Video section: using a YouTube **placeholder** (embed + VideoObject schema scaffold) — breeder to supply the real URL later.
 - Homepage `.mov` clip not browser-usable (ffmpeg/cwebp not installed to convert → mp4).
