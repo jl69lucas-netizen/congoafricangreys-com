@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
 import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import OwnerCard from '../../components/cag-library/OwnerCard.astro';
@@ -17,6 +18,23 @@ const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "Trusted Breeders / About C.A.Gs", url: "/trusted-african-grey-parrot-breeders/" },
 ];
+
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system
+// as the homepage + scam page; ids live on each section. Document order required.
+const jumpSections = [
+  { id: 'breeder-story',   label: 'Our Story',     part: 1 },
+  { id: 'why-trust-us',    label: 'Credentials',   part: 2 },
+  { id: 'trustworthy',     label: 'vs Scams',      part: 2 },
+  { id: 'reviews',         label: 'Reviews',       part: 3 },
+  { id: 'available-birds', label: 'Available',     part: 3 },
+  { id: 'faq',             label: 'FAQ',           part: 3 },
+  { id: 'contact',         label: 'Ask Us',        part: 3 },
+];
+const jumpPartNames = {
+  1: 'Our Story',
+  2: 'Verify Us',
+  3: 'Birds & Proof',
+};
 
 // ─── Available birds (cross-sell grid) — verified against price-matrix.json + clutch-inventory.json ───
 // Shipping line + trust badges are hardwired inside BirdCard.astro (Ships nationwide · $185 airport · $350 home).
@@ -72,17 +90,17 @@ const reviews = [
 // ─── FAQ (PAA + branded-search sourced; mirrored into FAQPage schema) ───
 const faqs = [
   { q: "Who are the breeders behind C.A.Gs?",
-    a: "C.A.Gs is a small, family African Grey parrot breeder run by Mark and Teri Benjamin, with our family, in Midland, Texas. We have hand-raised captive-bred Congo and Timneh African Greys in our home since 2014 — over a decade of breeding the same two species, not a flipping operation reselling birds we have never met. Every Grey is hand-fed inside our home and socialized by our family before it goes anywhere." },
+    a: "C.A.Gs is a small, family African Grey parrot breeder run by Mark and Teri Benjamin, with our family, in Midland, Texas.\n\nWe have hand-raised captive-bred Congo and Timneh African Greys in our home since 2014 — over a decade of breeding the same two species, not a flipping operation reselling birds we have never met.\n\nEvery Grey is hand-fed inside our home and socialized by our family before it goes anywhere." },
   { q: "Is congoafricangreys.com legit?",
-    a: "Yes. C.A.Gs holds a verifiable USDA Animal Welfare Act license, places only U.S. captive-bred birds with CITES Appendix I documentation, video-calls you to show your specific bird on demand, and hands you the paperwork before any money moves. You can read real C.A.Gs reviews from verified buyers on this page and on our reviews page, and we accept reversible payment methods — none of which a scam storefront can offer." },
+    a: "Yes. C.A.Gs holds a verifiable USDA Animal Welfare Act license, places only U.S. captive-bred birds with CITES Appendix I documentation, video-calls you to show your specific bird on demand, and hands you the paperwork before any money moves.\n\nYou can read real C.A.Gs reviews from verified buyers on this page and on our reviews page, and we accept reversible payment methods — none of which a scam storefront can offer." },
   { q: "What documents come with every African Grey from C.A.Gs?",
-    a: "Each Grey leaves us with a CITES Appendix I captive-bred certificate, a PCR DNA sexing certificate, a board-certified avian-veterinarian health certificate dated within 10 days of travel, a hatch certificate, and a closed band number — all backed by our USDA Animal Welfare Act license and a written health guarantee. You receive the documents before the deposit, not after." },
+    a: "Each Grey leaves us with a CITES Appendix I captive-bred certificate, a PCR DNA sexing certificate, a board-certified avian-veterinarian health certificate dated within 10 days of travel, a hatch certificate, and a closed band number — all backed by our USDA Animal Welfare Act license and a written health guarantee.\n\nYou receive the documents before the deposit, not after." },
   { q: "How can I verify a C.A.Gs African Grey before I pay?",
-    a: "Ask for our USDA AWA license number and check it against the public USDA APHIS Animal Welfare records, request a live video call showing the exact bird you are reserving, and confirm we will send the CITES Appendix I and DNA paperwork before payment. A legitimate breeder passes all three tests; a scammer fails at least one. We hand you everything upfront precisely so you never have to guess." },
+    a: "Ask for our USDA AWA license number and check it against the public USDA APHIS Animal Welfare records, request a live video call showing the exact bird you are reserving, and confirm we will send the CITES Appendix I and DNA paperwork before payment.\n\nA legitimate breeder passes all three tests; a scammer fails at least one. We hand you everything upfront precisely so you never have to guess." },
   { q: "How is a trusted breeder different from a Facebook or Marketplace seller?",
-    a: "A trusted African Grey breeder has a verifiable USDA license, a findable physical aviary, captive-bred CITES documentation, and accepts reversible payment. The classic scam is a Facebook or Marketplace listing far below our $1,500 floor, payment demanded by CashApp, Zelle, or gift card, stolen photos, and a seller who vanishes after the deposit. We built C.A.Gs as the opposite of that — read our guide to avoiding African Grey scams to see every red flag side by side." },
+    a: "A trusted African Grey breeder has a verifiable USDA license, a findable physical aviary, captive-bred CITES documentation, and accepts reversible payment.\n\nThe classic scam is a Facebook or Marketplace listing far below our $1,500 floor, payment demanded by CashApp, Zelle, or gift card, stolen photos, and a seller who vanishes after the deposit.\n\nWe built C.A.Gs as the opposite of that — read our guide to avoiding African Grey scams to see every red flag side by side." },
   { q: "Are C.A.Gs African Greys really captive-bred and legal to own?",
-    a: "Yes. African Greys are listed on CITES Appendix I, which bans commercial trade in wild-caught birds, but captive-bred African Greys are legal to own and transfer domestically in the United States with proper documentation. Every Grey we place is U.S. captive-bred — never wild-caught — with a closed band and a hatch certificate that prove it was raised in our aviary, so your ownership rests on solid legal ground." },
+    a: "Yes. African Greys are listed on CITES Appendix I, which bans commercial trade in wild-caught birds, but captive-bred African Greys are legal to own and transfer domestically in the United States with proper documentation.\n\nEvery Grey we place is U.S. captive-bred — never wild-caught — with a closed band and a hatch certificate that prove it was raised in our aviary, so your ownership rests on solid legal ground." },
 ];
 
 const faqSchema = {
@@ -91,7 +109,7 @@ const faqSchema = {
   mainEntity: faqs.map((f) => ({
     "@type": "Question",
     name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
+    acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\n\n/g, " ") },
   })),
 };
 
@@ -173,12 +191,15 @@ const reviewSchema = reviews.map((r) => ({
         <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
           <!-- COPY -->
           <div class="order-2 text-center md:order-1 md:text-left">
-            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Who We Are · Family Aviary Since 2014 · Updated {updated}</p>
+            <p class="hero-eyebrow font-sora">Who We Are · Family Aviary Since 2014 · Updated {updated}</p>
             <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
               Trusted African Grey Parrot Breeders — Meet the Family Behind C.A.Gs
             </h1>
             <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
-              We are Mark &amp; Teri Benjamin, and we have hand-raised captive-bred Congo and Timneh African Greys in our Midland, Texas home since 2014. Most online sellers disappear after the deposit; we built C.A.Gs to be the opposite — a USDA-licensed, CITES-documented breeder who hands you the paperwork before you pay and answers the phone long after your bird comes home.
+              We are Mark &amp; Teri Benjamin, and we have hand-raised captive-bred Congo and Timneh African Greys in our Midland, Texas home since 2014.
+            </p>
+            <p class="font-sora mx-auto mt-2.5 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
+              Most online sellers disappear after the deposit; we built C.A.Gs to be the opposite — a USDA-licensed, CITES-documented breeder who hands you the paperwork before you pay and answers the phone long after your bird comes home.
             </p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
               <a href="#breeder-story" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Read Our Breeder Story →</a>
@@ -201,6 +222,8 @@ const reviewSchema = reviews.map((r) => ({
         </div>
       </div>
     </section>
+
+    <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Ask Mark & Teri →" ctaTarget="contact" />
 
     <!-- 2. COUNTER SNIPPET -->
     <CounterSnippet stats={[
@@ -258,8 +281,12 @@ const reviewSchema = reviews.map((r) => ({
           <h2 class="font-lora font-bold text-logo-dark">Why We Started Breeding African Greys</h2>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;margin:0 auto;">
-          <p>We could not stand how many African Greys were being sold sick, undocumented, or shipped by people the buyer would never actually meet. Families were wiring thousands of dollars to a Facebook listing and getting back either nothing at all or a frightened, paperwork-less bird that landed in an avian clinic within the week. That is the problem we set out to fix when we began raising Greys in our Midland, Texas home in 2014.</p>
-          <p>So we built C.A.Gs as the deliberate opposite of that. Every chick is hand-fed inside our home — by us and by our family — never warehoused in a back-room commercial facility. We chose to raise just two species, the <a href="/congo-african-grey-for-sale/">Congo African Grey</a> and the <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a>, and to raise fewer of them well rather than churn out volume. We made mistakes early on, learned from our avian vet, and tightened our health protocol every year since.</p>
+          <p>We could not stand how many African Greys were being sold sick, undocumented, or shipped by people the buyer would never actually meet.</p>
+          <p>Families were wiring thousands of dollars to a Facebook listing and getting back either nothing at all or a frightened, paperwork-less bird that landed in an avian clinic within the week.</p>
+          <p>That is the problem we set out to fix when we began raising Greys in our Midland, Texas home in 2014.</p>
+          <p>So we built C.A.Gs as the deliberate opposite of that. Every chick is hand-fed inside our home — by us and by our family — never warehoused in a back-room commercial facility.</p>
+          <p>We chose to raise just two species, the <a href="/congo-african-grey-for-sale/">Congo African Grey</a> and the <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a>, and to raise fewer of them well rather than churn out volume.</p>
+          <p>We made mistakes early on, learned from our avian vet, and tightened our health protocol every year since.</p>
           <figure class="my-6 max-w-[420px] mx-auto">
             <img src="/hand-fed-african-grey-chick.webp"
               alt="A hand-fed Congo African Grey chick raised inside our Midland, Texas home at C.A.Gs — every clutch is fed by Mark, Teri, and the family, never warehoused, which is the hand-rearing this breeder story describes."
@@ -268,13 +295,18 @@ const reviewSchema = reviews.map((r) => ({
               class="w-full h-auto max-h-[440px] object-cover rounded-2xl border border-line" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);" />
             <figcaption class="font-sora text-[13px] text-stone-500 mt-2.5 text-center">One of our hand-fed chicks, mid-weaning — this is what "raised in our home" actually looks like. <a href="/hand-raised-african-grey-parrot-for-sale/" class="text-green underline decoration-1 underline-offset-2">See our hand-raised Greys →</a></figcaption>
           </figure>
-          <p>A decade on, the principle has not changed: hand-feed every clutch, document every bird, and stay reachable long after pickup. We are a real family — not a brand, not a reseller — and the birds you see here are the ones we are actually raising right now. That is what we mean when we call ourselves trusted African Grey breeders: you can verify every claim on this page before you ever send a deposit.</p>
-          <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">How Do You Verify Us Before You Pay?</h4>
-          <p>Don't take our word for any of it — check us the same way you should check every breeder. Ask for our USDA Animal Welfare Act license number and run it through the federal APHIS search yourself; a legitimate breeder hands it over without hesitation, and a scammer changes the subject.</p>
-          <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">Which Document Do You Ask For First?</h5>
+          <p>A decade on, the principle has not changed: hand-feed every clutch, document every bird, and stay reachable long after pickup.</p>
+          <p>We are a real family — not a brand, not a reseller — and the birds you see here are the ones we are actually raising right now.</p>
+          <p>That is what we mean when we call ourselves trusted African Grey breeders: you can verify every claim on this page before you ever send a deposit.</p>
+          <h3 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">How Do You Verify Us Before You Pay?</h3>
+          <p>Don't take our word for any of it — check us the same way you should check every breeder.</p>
+          <p>Ask for our USDA Animal Welfare Act license number and run it through the federal APHIS search yourself; a legitimate breeder hands it over without hesitation, and a scammer changes the subject.</p>
+          <h4 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">Which Document Do You Ask For First?</h4>
           <p>Start with the CITES Appendix I captive-bred certificate for your specific bird. It anchors everything else — the closed band, the hatch certificate, and the PCR DNA sexing result all have to agree with it, detail for detail.</p>
-          <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">Then Ask for the Live Video Call</h6>
-          <p>We put your exact Grey on camera before any deposit, band in frame. Paperwork can be forged; a live bird answering to its own band number cannot.</p>
+          <h5 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">Then Ask for the Live Video Call</h5>
+          <p>We put your exact Grey on camera before any deposit, band in frame.</p>
+          <h6 class="font-sora font-bold text-[11px] uppercase tracking-wide text-clay-ink mt-2.5 mb-1">Why a Live Call Beats Paperwork</h6>
+          <p>Paperwork can be forged; a live bird answering to its own band number cannot.</p>
         </div>
       </div>
     </section>
@@ -290,7 +322,9 @@ const reviewSchema = reviews.map((r) => ({
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Credentials You Can Verify</p>
           <h2 class="font-lora font-bold text-logo-dark">Why Should You Trust C.A.Gs With a 40-to-60-Year Companion?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Because trust on a bird this long-lived has to be <strong>verifiable, not promised.</strong> Our Animal Welfare Act license is the first thing we hand a buyer — checkable against <a href="https://www.aphis.usda.gov/aphis/ourfocus/animalwelfare" target="_blank" rel="noopener noreferrer">the USDA APHIS Animal Welfare portal</a> — and every one of the documents below comes with your bird before any money moves. If a seller cannot produce these, walk away.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Because trust on a bird this long-lived has to be <strong>verifiable, not promised.</strong></p>
+          <p class="text-stone-600 leading-relaxed mt-2.5 text-[15px]" style="max-width:70ch;">Our Animal Welfare Act license is the first thing we hand a buyer — checkable against <a href="https://www.aphis.usda.gov/aphis/ourfocus/animalwelfare" target="_blank" rel="noopener noreferrer">the USDA APHIS Animal Welfare portal</a> — and every one of the documents below comes with your bird before any money moves.</p>
+          <p class="text-stone-600 leading-relaxed mt-2.5 text-[15px]" style="max-width:70ch;">If a seller cannot produce these, walk away.</p>
         </div>
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {[
@@ -328,7 +362,8 @@ const reviewSchema = reviews.map((r) => ({
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Red Flags vs Green Flags</p>
           <h2 class="font-lora font-bold text-logo-dark">How Do You Tell a Trustworthy Breeder From a Scam?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">The single fastest way to vet any seller is to run them against a short checklist before you send money — and to read <a href="/how-to-avoid-african-grey-parrot-scams/">our full guide to avoiding African Grey scams</a> first. Here is the side-by-side we wish every buyer had seen before getting burned.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">The single fastest way to vet any seller is to run them against a short checklist before you send money — and to read <a href="/how-to-avoid-african-grey-parrot-scams/">our full guide to avoiding African Grey scams</a> first.</p>
+          <p class="text-stone-600 leading-relaxed mt-2.5 text-[15px]" style="max-width:70ch;">Here is the side-by-side we wish every buyer had seen before getting burned.</p>
         </div>
         <div class="grid gap-5 md:grid-cols-2">
           <div class="rounded-2xl border border-red-200 bg-red-50/60 p-6">
@@ -352,7 +387,8 @@ const reviewSchema = reviews.map((r) => ({
             </ul>
           </div>
         </div>
-        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-7" style="max-width:70ch;">Conservation groups such as <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener noreferrer">the World Parrot Trust</a> are clear that since the African Grey was uplisted to CITES Appendix I, the only ethical bird is a documented, captive-bred one — which is exactly why a closed band, a hatch certificate, and the Appendix I paperwork detailed at <a href="https://cites.org/eng" target="_blank" rel="noopener noreferrer">CITES</a> matter so much. If a deal feels too cheap or too rushed, it almost always is.</p>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-7" style="max-width:70ch;">Conservation groups such as <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener noreferrer">the World Parrot Trust</a> are clear that since the African Grey was uplisted to CITES Appendix I, the only ethical bird is a documented, captive-bred one — which is exactly why a closed band, a hatch certificate, and the Appendix I paperwork detailed at <a href="https://cites.org/eng" target="_blank" rel="noopener noreferrer">CITES</a> matter so much.</p>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-2.5" style="max-width:70ch;">If a deal feels too cheap or too rushed, it almost always is.</p>
       </div>
     </section>
 
@@ -412,7 +448,7 @@ const reviewSchema = reviews.map((r) => ({
                 <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
                 <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
-              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0">{item.a}</p></div></div>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><div class="px-5 pb-5">{item.a.split("\n\n").map((t) => <p class="font-sora text-stone-600 text-sm leading-relaxed m-0 mb-2 last:mb-0">{t}</p>)}</div></div></div>
             </div>
           ))}
         </div>
@@ -436,7 +472,8 @@ const reviewSchema = reviews.map((r) => ({
       <div class="max-w-3xl mx-auto">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Start Your Journey With Us</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">Now You Know Who We Are — Ready to Reserve a Documented African Grey?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised by our family, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation — never wild-caught, paperwork in your hands before any deposit. Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Still comparing the two species? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised by our family, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation — never wild-caught, paperwork in your hands before any deposit.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto mt-2.5" style="max-width:70ch;">Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Still comparing the two species? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
       </div>
     </section>
 
@@ -457,6 +494,27 @@ const reviewSchema = reviews.map((r) => ({
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       }));
     })();
+
+    // Section jump-nav auto-injector — "↓ Continue: <next section>"
+    (function () {
+      var ids = ['breeder-story', 'why-trust-us', 'trustworthy', 'reviews', 'available-birds', 'faq', 'contact'];
+      var labels = {
+        'why-trust-us': 'Verifiable Credentials',
+        'trustworthy': 'Breeder vs Scam Checklist',
+        'reviews': 'Verified Buyer Reviews',
+        'available-birds': 'Available C.A.Gs Greys',
+        'faq': 'Buyer Questions',
+        'contact': 'Ask Mark & Teri'
+      };
+      for (var i = 0; i < ids.length - 1; i++) {
+        var cur = document.getElementById(ids[i]);
+        if (!cur) continue;
+        var nav = document.createElement('div');
+        nav.className = 'section-next-nav';
+        nav.innerHTML = '<a href="#' + ids[i + 1] + '" class="section-next-link">&#8595; Continue: ' + (labels[ids[i + 1]] || ids[i + 1]) + '</a>';
+        cur.appendChild(nav);
+      }
+    })();
   </script>
 </BaseLayout>
 
@@ -469,10 +527,29 @@ const reviewSchema = reviews.map((r) => ({
      ============================================================ */
   .trust-d { --rule: rgba(45,106,79,.16); }
 
+  /* Smooth in-page jumps (JumpRail + TOC + next-nav) with reduced-motion guard. */
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  /* Sticky header is ~96px tall — keep jumped-to headings visible below it. */
+  .trust-d [id] { scroll-margin-top: 110px; }
+
+  /* Hero eyebrow — homepage HeroV3 pattern: no pill, no uppercase. */
+  .trust-d .hero-eyebrow { font-size:10px; font-weight:500; letter-spacing:.12em; color:rgba(255,255,255,.75); text-transform:none; }
+  @media (min-width:768px) { .trust-d .hero-eyebrow { font-size:11px; } }
+
   /* AA: clay as small readable text on LIGHT sections → #b04228 (4.5:1).
      Clay on the green hero stays bright. */
   .trust-d a.text-clay, .trust-d .text-clay { color:#b04228; }
-  .trust-d .hero-v3-b .text-clay, .trust-d .bg-clay { color:inherit; }
+  .trust-d .hero-v3-b .text-clay { color:inherit; }
+  /* Clay FILLS keep white text (global .bg-clay renders --clay-ink #c8472f, 4.78:1).
+     (Was color:inherit — leaked dark stone text onto clay buttons/tags.) */
+  .trust-d .bg-clay { color:#fff; }
+
+  /* Section jump-nav ("↓ Continue:") — JS-injected, so rules MUST be global. */
+  .trust-d .section-next-nav { text-align:right; padding-top:18px; margin-top:14px; border-top:1px solid #ede5dc; max-width:1100px; margin-left:auto; margin-right:auto; }
+  .trust-d .section-next-link { font-family:'IBM Plex Sans','Sora',sans-serif; font-size:.85rem; font-weight:600; color:#b04228; text-decoration:none; display:inline-block; padding:10px 0 10px 12px; margin:-10px 0; }
+  .trust-d .section-next-link:hover { text-decoration:underline; }
 
   /* Woven in-content links: clay, underlined, AA-safe. */
   .trust-d p a:not(.rounded-full):not(.bg-clay),
