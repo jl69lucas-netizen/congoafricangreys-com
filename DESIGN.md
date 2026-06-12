@@ -49,7 +49,7 @@ The locked `--clay #e8604c` gives white text only **3.38:1** — it passes AA on
 
 | Token | Value | Use |
 |---|---|---|
-| `--clay-ink` 🆕 | `#c8472f` (≈4.6:1 reverse / ~4.7:1 on white) | white CTA text <18px; clay link/label text <18px; replaces `text-clay/70` |
+| `--clay-ink` 🆕 | `#bd4129` (≈4.6:1 reverse / ~4.7:1 on white) | white CTA text <18px; clay link/label text <18px; replaces `text-clay/70` |
 | `--green-ink` 🆕 | `#1f5a41` or existing `#b04228` clay | eyebrows on cream (replaces muted `#6b9480` 3.18:1) |
 
 Rules going forward: **never** use opacity-tinted text (`clay/70`, `white/65`, `text-stone-400` on
