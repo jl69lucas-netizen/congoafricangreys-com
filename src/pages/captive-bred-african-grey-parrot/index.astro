@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
 import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import CompareTableE from '../../components/cag-library/CompareTableE.astro';
@@ -16,6 +17,24 @@ const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "Captive-Bred African Grey Parrot", url: "/captive-bred-african-grey-parrot/" },
 ];
+
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system
+// as the homepage + scam page; ids live on each section. Document order required.
+const jumpSections = [
+  { id: 'what-it-means',     label: 'What It Means',  part: 1 },
+  { id: 'vs-wild-caught',    label: 'vs Wild-Caught', part: 1 },
+  { id: 'how-we-raise',      label: 'Our Process',    part: 2 },
+  { id: 'why-it-matters',    label: 'Why It Matters', part: 2 },
+  { id: 'attribute-cluster', label: 'Three Promises', part: 3 },
+  { id: 'available-birds',   label: 'Available',      part: 3 },
+  { id: 'faq',               label: 'FAQ',            part: 3 },
+  { id: 'contact',           label: 'Ask Us',         part: 3 },
+];
+const jumpPartNames = {
+  1: 'Understand It',
+  2: 'How We Do It',
+  3: 'The Birds',
+};
 
 // ─── Available birds (cross-sell grid) — verified against price-matrix.json + clutch-inventory.json ───
 // Shipping line + trust badges are hardwired inside BirdCard.astro (Ships nationwide · $185 airport · $350 home).
@@ -55,17 +74,17 @@ const birds = [
 // ─── FAQ (PAA-sourced; mirrored into FAQPage schema) ───
 const faqs = [
   { q: "What does captive-bred mean for African Grey parrots?",
-    a: "Captive-bred means the bird was hatched from parents already living in legal captivity and raised entirely in an aviary — never taken from the wild. Here at C.A.Gs, every Congo and Timneh Grey is hatched in our USDA-licensed Midland, Texas home and hand-fed by our family from a few weeks old. Because the African Grey (Psittacus erithacus) is listed on CITES Appendix I, a captive-bred bird carries Appendix I documentation, a closed band, and a hatch certificate proving it was aviary-raised, not wild-caught." },
+    a: "Captive-bred means the bird was hatched from parents already living in legal captivity and raised entirely in an aviary — never taken from the wild. Here at C.A.Gs, every Congo and Timneh Grey is hatched in our USDA-licensed Midland, Texas home and hand-fed by our family from a few weeks old.\n\nBecause the African Grey (Psittacus erithacus) is listed on CITES Appendix I, a captive-bred bird carries Appendix I documentation, a closed band, and a hatch certificate proving it was aviary-raised, not wild-caught." },
   { q: "Are C.A.Gs African Greys captive-bred?",
-    a: "Yes — 100%. Every Grey we place is U.S. captive-bred and hand-raised in our home, never wild-caught and never imported. We can prove it for the specific bird you reserve with a CITES Appendix I captive-bred certificate, a closed band number, a hatch certificate, a PCR DNA sexing certificate, and a board-certified avian-vet health certificate. You receive that paperwork before any deposit changes hands." },
+    a: "Yes — 100%. Every Grey we place is U.S. captive-bred and hand-raised in our home, never wild-caught and never imported.\n\nWe can prove it for the specific bird you reserve with a CITES Appendix I captive-bred certificate, a closed band number, a hatch certificate, a PCR DNA sexing certificate, and a board-certified avian-vet health certificate. You receive that paperwork before any deposit changes hands." },
   { q: "Is it legal to own a captive-bred African Grey in the USA?",
-    a: "Yes. African Greys were uplisted to CITES Appendix I at CoP17 (effective January 2017), which bans commercial trade in wild-caught birds — but captive-bred African Greys are legal to own and transfer domestically within the United States with proper documentation. The closed band and hatch certificate that travel with every C.A.Gs Grey establish its captive-bred origin, so your ownership rests on solid legal ground." },
+    a: "Yes. African Greys were uplisted to CITES Appendix I at CoP17 (effective January 2017), which bans commercial trade in wild-caught birds — but captive-bred African Greys are legal to own and transfer domestically within the United States with proper documentation.\n\nThe closed band and hatch certificate that travel with every C.A.Gs Grey establish its captive-bred origin, so your ownership rests on solid legal ground." },
   { q: "Are captive-bred African Greys better pets than wild-caught birds?",
-    a: "Significantly. A hand-raised captive-bred Grey is socialized to people during the critical first 12–16 weeks of life, so it is calmer, more trainable, and far more likely to talk. Wild-caught birds are traumatized by capture and transport, often never fully tame, and frequently carry diseases such as psittacosis that can infect other birds in the home. Beyond the welfare difference, importing a wild-caught African Grey into the USA is illegal — so a captive-bred bird is the only ethical and lawful choice." },
+    a: "Significantly. A hand-raised captive-bred Grey is socialized to people during the critical first 12–16 weeks of life, so it is calmer, more trainable, and far more likely to talk.\n\nWild-caught birds are traumatized by capture and transport, often never fully tame, and frequently carry diseases such as psittacosis that can infect other birds in the home.\n\nBeyond the welfare difference, importing a wild-caught African Grey into the USA is illegal — so a captive-bred bird is the only ethical and lawful choice." },
   { q: "How can I tell if an African Grey is really captive-bred and not wild-caught?",
-    a: "Ask for the documents and check the band. A genuinely captive-bred Grey has a seamless closed band (slipped on as a chick and impossible to fit on an adult), an individual CITES Appendix I captive-bred certificate, and a hatch certificate naming the breeder. A verifiable USDA Animal Welfare Act license is the final tell. If a seller cannot produce a CITES certificate for that exact bird — not a generic letter — treat it as a red flag and read our guide to avoiding African Grey scams before paying." },
+    a: "Ask for the documents and check the band. A genuinely captive-bred Grey has a seamless closed band (slipped on as a chick and impossible to fit on an adult), an individual CITES Appendix I captive-bred certificate, and a hatch certificate naming the breeder.\n\nA verifiable USDA Animal Welfare Act license is the final tell. If a seller cannot produce a CITES certificate for that exact bird — not a generic letter — treat it as a red flag and read our guide to avoiding African Grey scams before paying." },
   { q: "Why does buying captive-bred help wild African Grey populations?",
-    a: "Wild African Grey numbers have fallen sharply across West and Central Africa, which is exactly why the species was moved to CITES Appendix I and is now listed as Endangered. Choosing a documented captive-bred bird removes any incentive to poach from the wild — every dollar that goes to a licensed captive breeder is a dollar that does not fund trapping. Buying captive-bred protects both your future companion and the wild flocks it descends from." },
+    a: "Wild African Grey numbers have fallen sharply across West and Central Africa, which is exactly why the species was moved to CITES Appendix I and is now listed as Endangered.\n\nChoosing a documented captive-bred bird removes any incentive to poach from the wild — every dollar that goes to a licensed captive breeder is a dollar that does not fund trapping.\n\nBuying captive-bred protects both your future companion and the wild flocks it descends from." },
 ];
 
 const articleSchema = {
@@ -94,7 +113,7 @@ const faqSchema = {
   mainEntity: faqs.map((f) => ({
     "@type": "Question",
     name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
+    acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\n\n/g, " ") },
   })),
 };
 ---
@@ -117,12 +136,15 @@ const faqSchema = {
         <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
           <!-- COPY -->
           <div class="order-2 text-center md:order-1 md:text-left">
-            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">CITES Appendix I · USA-Hatched · Updated {updated}</p>
+            <p class="hero-eyebrow font-sora">CITES Appendix I · USA-Hatched · Updated {updated}</p>
             <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
               Captive-Bred African Grey Parrots — What It Means &amp; Why It Matters
             </h1>
             <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
-              Every African Grey we place is hatched and hand-raised in our USDA-licensed Midland, Texas aviary — never wild-caught. Here we explain exactly what captive-bred means, why it produces a healthier, tamer, fully legal companion, and how our CITES Appendix I paperwork proves it for the specific bird you bring home.
+              Every African Grey we place is hatched and hand-raised in our USDA-licensed Midland, Texas aviary — never wild-caught.
+            </p>
+            <p class="font-sora mx-auto mt-2.5 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
+              Here we explain exactly what captive-bred means, why it produces a healthier, tamer, fully legal companion, and how our CITES Appendix I paperwork proves it for the specific bird you bring home.
             </p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
               <a href="#available-birds" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">See Our Captive-Bred Greys →</a>
@@ -145,6 +167,8 @@ const faqSchema = {
         </div>
       </div>
     </section>
+
+    <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Ask C.A.Gs →" ctaTarget="contact" />
 
     <!-- 2. COUNTER SNIPPET -->
     <CounterSnippet stats={[
@@ -228,15 +252,23 @@ const faqSchema = {
           <h2 class="font-lora font-bold text-logo-dark">What Does "Captive-Bred" Actually Mean?</h2>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-          <p>A captive-bred African Grey is a bird that was hatched from parents already living in legal captivity and raised entirely inside an aviary — it has never been taken from the wild, never been illegally trapped, and never crossed a border in a smuggler's crate. The African Grey (<em>Psittacus erithacus</em>) is native to the rainforests of West and Central Africa, and as <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust species encyclopedia</a> documents, decades of trapping for the pet trade pushed wild populations into steep decline. Captive breeding exists precisely so that families can keep this remarkable parrot without touching a single wild bird.</p>
-          <p>Here at C.A.Gs, captive-bred is not a marketing word — it is our entire operation. Every Congo and Timneh Grey we place is hatched in our Midland, Texas home, hand-fed by our family from a few weeks old, and weaned under our roof. Because we slip a seamless <strong>closed band</strong> onto each chick's leg in its first weeks, that band physically cannot be added to a wild adult later — it is permanent, tamper-evident proof of where and when the bird was hatched. Pair that band with a hatch certificate and an individual CITES Appendix I certificate, and the bird's captive-bred origin is documented from the first day of its life.</p>
-          <p>This matters legally as much as it matters ethically. African Greys were uplisted to <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener noreferrer">CITES Appendix I</a> at CoP17, effective January 2017, which bans commercial trade in wild-caught birds worldwide. A captive-bred Grey, by contrast, is legal to own and transfer domestically in the United States with proper documentation — which is exactly why the paperwork detailed on our <a href="/cites-african-grey-documentation/">CITES documentation guide</a> travels with every Grey we sell.</p>
-          <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">How Can You Verify a Closed Band Yourself?</h4>
-          <p>Run a finger around the band before you pay anything. A genuine closed band is one seamless ring with no gap, hinge, or solder line — it slid over a chick's foot in its first weeks and physically cannot be fitted to an adult bird. If you feel a split or see a clamp mark, you are looking at an open band, which proves nothing about origin.</p>
-          <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">What Should the Band Tell You?</h5>
+          <p>A captive-bred African Grey is a bird that was hatched from parents already living in legal captivity and raised entirely inside an aviary — it has never been taken from the wild, never been illegally trapped, and never crossed a border in a smuggler's crate.</p>
+          <p>The African Grey (<em>Psittacus erithacus</em>) is native to the rainforests of West and Central Africa, and as <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust species encyclopedia</a> documents, decades of trapping for the pet trade pushed wild populations into steep decline.</p>
+          <p>Captive breeding exists precisely so that families can keep this remarkable parrot without touching a single wild bird.</p>
+          <p>Here at C.A.Gs, captive-bred is not a marketing word — it is our entire operation. Every Congo and Timneh Grey we place is hatched in our Midland, Texas home, hand-fed by our family from a few weeks old, and weaned under our roof.</p>
+          <p>Because we slip a seamless <strong>closed band</strong> onto each chick's leg in its first weeks, that band physically cannot be added to a wild adult later — it is permanent, tamper-evident proof of where and when the bird was hatched.</p>
+          <p>Pair that band with a hatch certificate and an individual CITES Appendix I certificate, and the bird's captive-bred origin is documented from the first day of its life.</p>
+          <p>This matters legally as much as it matters ethically. African Greys were uplisted to <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener noreferrer">CITES Appendix I</a> at CoP17, effective January 2017, which bans commercial trade in wild-caught birds worldwide.</p>
+          <p>A captive-bred Grey, by contrast, is legal to own and transfer domestically in the United States with proper documentation — which is exactly why the paperwork detailed on our <a href="/cites-african-grey-documentation/">CITES documentation guide</a> travels with every Grey we sell.</p>
+          <h3 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">How Can You Verify a Closed Band Yourself?</h3>
+          <p>Run a finger around the band before you pay anything. A genuine closed band is one seamless ring with no gap, hinge, or solder line — it slid over a chick's foot in its first weeks and physically cannot be fitted to an adult bird.</p>
+          <p>If you feel a split or see a clamp mark, you are looking at an open band, which proves nothing about origin.</p>
+          <h4 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">What Should the Band Tell You?</h4>
           <p>Ours carry an identifier we record at banding, and we read it back to you on a live video call with the bird in frame — so the band you inspect on arrival is the band you saw before your deposit.</p>
-          <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">Match the Band to the Hatch Certificate</h6>
-          <p>The band number must match the hatch certificate and the CITES paperwork word for word. One mismatch is one too many — walk away, and read our <a href="/how-to-avoid-african-grey-parrot-scams/">scam-prevention guide</a> before you contact another seller.</p>
+          <h5 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">Match the Band to the Hatch Certificate</h5>
+          <p>The band number must match the hatch certificate and the CITES paperwork word for word.</p>
+          <h6 class="font-sora font-bold text-[11px] uppercase tracking-wide text-clay-ink mt-2.5 mb-1">One Mismatch Is One Too Many</h6>
+          <p>Walk away, and read our <a href="/how-to-avoid-african-grey-parrot-scams/">scam-prevention guide</a> before you contact another seller.</p>
         </div>
       </div>
     </section>
@@ -247,7 +279,8 @@ const faqSchema = {
         <div class="mb-7 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Side by Side</p>
           <h2 class="font-lora font-bold text-logo-dark">Captive-Bred vs Wild-Caught — Why Is the Difference So Profound?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">This is not an academic distinction — it shapes the legality, health, and temperament of a bird you may live with for 40 to 60 years. Importing a wild-caught African Grey into the USA is a federal crime, and the welfare gap is just as stark.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">This is not an academic distinction — it shapes the legality, health, and temperament of a bird you may live with for 40 to 60 years.</p>
+          <p class="text-stone-600 leading-relaxed mt-2.5 text-[15px]" style="max-width:70ch;">Importing a wild-caught African Grey into the USA is a federal crime, and the welfare gap is just as stark.</p>
         </div>
         <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
           <div class="overflow-x-auto">
@@ -294,7 +327,8 @@ const faqSchema = {
             </table>
           </div>
         </div>
-        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-6" style="max-width:70ch;">Because wild African Greys are now listed as Endangered, the only ethical bird is a documented captive-bred one — and verifying that status is the single best way to protect yourself from fraud. If a deal sits far below our $1,500 floor or a seller dodges the paperwork question, read our <a href="/how-to-avoid-african-grey-parrot-scams/">guide to avoiding African Grey scams</a> before you send a cent.</p>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-6" style="max-width:70ch;">Because wild African Greys are now listed as Endangered, the only ethical bird is a documented captive-bred one — and verifying that status is the single best way to protect yourself from fraud.</p>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed mt-2.5" style="max-width:70ch;">If a deal sits far below our $1,500 floor or a seller dodges the paperwork question, read our <a href="/how-to-avoid-african-grey-parrot-scams/">guide to avoiding African Grey scams</a> before you send a cent.</p>
       </div>
     </section>
 
@@ -308,9 +342,12 @@ const faqSchema = {
           <h2 class="font-lora font-bold text-logo-dark">How We Captive-Breed &amp; Hand-Raise Our Greys</h2>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-          <p>Mark and Teri Benjamin have captive-bred African Greys in Midland, Texas since 2014, under a USDA Animal Welfare Act license. Our breeding pairs — both <a href="/congo-african-grey-for-sale/">Congo</a> and <a href="/timneh-african-grey-for-sale/">Timneh</a> — descend from established USA captive bloodlines with full CITES traceability, so the captive-bred chain runs unbroken from grandparent to chick. We deliberately raise just these two species, and fewer of them well, rather than churning out volume.</p>
-          <p>Every chick is pulled for hand-feeding at a few weeks old and handled daily by multiple family members through the full 12–16 week weaning period. This window is everything: it is when a young Grey's brain decides what counts as "safe" and "family." A bird raised by human hands during this period treats people as its flock — which is the entire reason a <a href="/hand-raised-african-grey-parrot-for-sale/">hand-raised captive-bred Grey</a> bonds and talks the way it does, and a wild-caught bird, having missed that window in the forest canopy, never quite can.</p>
-          <p>Before any Grey leaves us, it is closed-banded, hatch-certified, PCR DNA-sexed, examined by a board-certified avian veterinarian — with PBFD and Polyomavirus screening — and matched to its individual CITES Appendix I certificate. You can read more about that genetic step on our <a href="/dna-tested-african-grey-for-sale/">DNA-tested African Grey page</a>, and you can verify our credentials any time on our <a href="/trusted-african-grey-parrot-breeders/">trusted breeders page</a> before you ever send a deposit.</p>
+          <p>Mark and Teri Benjamin have captive-bred African Greys in Midland, Texas since 2014, under a USDA Animal Welfare Act license.</p>
+          <p>Our breeding pairs — both <a href="/congo-african-grey-for-sale/">Congo</a> and <a href="/timneh-african-grey-for-sale/">Timneh</a> — descend from established USA captive bloodlines with full CITES traceability, so the captive-bred chain runs unbroken from grandparent to chick. We deliberately raise just these two species, and fewer of them well, rather than churning out volume.</p>
+          <p>Every chick is pulled for hand-feeding at a few weeks old and handled daily by multiple family members through the full 12–16 week weaning period. This window is everything: it is when a young Grey's brain decides what counts as "safe" and "family."</p>
+          <p>A bird raised by human hands during this period treats people as its flock — which is the entire reason a <a href="/hand-raised-african-grey-parrot-for-sale/">hand-raised captive-bred Grey</a> bonds and talks the way it does, and a wild-caught bird, having missed that window in the forest canopy, never quite can.</p>
+          <p>Before any Grey leaves us, it is closed-banded, hatch-certified, PCR DNA-sexed, examined by a board-certified avian veterinarian — with PBFD and Polyomavirus screening — and matched to its individual CITES Appendix I certificate.</p>
+          <p>You can read more about that genetic step on our <a href="/dna-tested-african-grey-for-sale/">DNA-tested African Grey page</a>, and you can verify our credentials any time on our <a href="/trusted-african-grey-parrot-breeders/">trusted breeders page</a> before you ever send a deposit.</p>
         </div>
 
         <figure class="mt-6">
@@ -434,7 +471,7 @@ const faqSchema = {
                 <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
                 <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
-              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0">{item.a}</p></div></div>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><div class="px-5 pb-5">{item.a.split("\n\n").map((t) => <p class="font-sora text-stone-600 text-sm leading-relaxed m-0 mb-2 last:mb-0">{t}</p>)}</div></div></div>
             </div>
           ))}
         </div>
@@ -459,7 +496,8 @@ const faqSchema = {
       <div class="max-w-3xl mx-auto">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Bring One Home</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">Ready to Reserve a Documented, Captive-Bred African Grey?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hatched and hand-raised in our family home, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I captive-bred documentation — never wild-caught, paperwork in your hands before any deposit. Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Still deciding? Compare our <a href="/congo-african-grey-for-sale/">Congo</a> and <a href="/timneh-african-grey-for-sale/">Timneh</a> Greys — both meet the same captive-bred standard.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hatched and hand-raised in our family home, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I captive-bred documentation — never wild-caught, paperwork in your hands before any deposit.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto mt-2.5" style="max-width:70ch;">Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Still deciding? Compare our <a href="/congo-african-grey-for-sale/">Congo</a> and <a href="/timneh-african-grey-for-sale/">Timneh</a> Greys — both meet the same captive-bred standard.</p>
       </div>
     </section>
 
@@ -480,6 +518,28 @@ const faqSchema = {
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       }));
     })();
+
+    // Section jump-nav auto-injector — "↓ Continue: <next section>"
+    (function () {
+      var ids = ['what-it-means', 'vs-wild-caught', 'how-we-raise', 'why-it-matters', 'attribute-cluster', 'available-birds', 'faq', 'contact'];
+      var labels = {
+        'vs-wild-caught': 'Captive-Bred vs Wild-Caught',
+        'how-we-raise': 'How We Hand-Raise',
+        'why-it-matters': 'Why It Matters',
+        'attribute-cluster': 'The Three Promises',
+        'available-birds': 'Available C.A.Gs Greys',
+        'faq': 'Captive-Bred Questions',
+        'contact': 'Ask C.A.Gs'
+      };
+      for (var i = 0; i < ids.length - 1; i++) {
+        var cur = document.getElementById(ids[i]);
+        if (!cur) continue;
+        var nav = document.createElement('div');
+        nav.className = 'section-next-nav';
+        nav.innerHTML = '<a href="#' + ids[i + 1] + '" class="section-next-link">&#8595; Continue: ' + (labels[ids[i + 1]] || ids[i + 1]) + '</a>';
+        cur.appendChild(nav);
+      }
+    })();
   </script>
 </BaseLayout>
 
@@ -491,9 +551,32 @@ const faqSchema = {
      ============================================================ */
   .captive-d { --rule: rgba(45,106,79,.16); }
 
+  /* Smooth in-page jumps (JumpRail + TOC + next-nav) with reduced-motion guard. */
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  /* Sticky header is ~96px tall — keep jumped-to headings visible below it. */
+  .captive-d [id] { scroll-margin-top: 110px; }
+
+  /* Hero eyebrow — homepage HeroV3 pattern: no pill, no uppercase. */
+  .captive-d .hero-eyebrow { font-size:10px; font-weight:500; letter-spacing:.12em; color:rgba(255,255,255,.75); text-transform:none; }
+  @media (min-width:768px) { .captive-d .hero-eyebrow { font-size:11px; } }
+
+  /* H2 must stay below the 30px mobile H1 — CompareTableE ships text-3xl (30px).
+     Clamp keeps desktop at 36px, drops mobile to ~22px. */
+  .captive-d h2.text-3xl { font-size: clamp(1.375rem, 3.8vw, 2.25rem); }
+
   /* AA: clay as small readable text on LIGHT sections → #b04228 (4.5:1). */
   .captive-d a.text-clay, .captive-d .text-clay { color:#b04228; }
-  .captive-d .hero-v3-b .text-clay, .captive-d .bg-clay { color:inherit; }
+  .captive-d .hero-v3-b .text-clay { color:inherit; }
+  /* Clay FILLS keep white text (global .bg-clay renders --clay-ink #c8472f, 4.78:1).
+     (Was color:inherit — leaked dark stone text onto clay buttons/tags.) */
+  .captive-d .bg-clay { color:#fff; }
+
+  /* Section jump-nav ("↓ Continue:") — JS-injected, so rules MUST be global. */
+  .captive-d .section-next-nav { text-align:right; padding-top:18px; margin-top:14px; border-top:1px solid #ede5dc; max-width:1100px; margin-left:auto; margin-right:auto; }
+  .captive-d .section-next-link { font-family:'IBM Plex Sans','Sora',sans-serif; font-size:.85rem; font-weight:600; color:#b04228; text-decoration:none; display:inline-block; padding:10px 0 10px 12px; margin:-10px 0; }
+  .captive-d .section-next-link:hover { text-decoration:underline; }
 
   /* Woven in-content links: clay, underlined, AA-safe. */
   .captive-d p a:not(.rounded-full):not(.bg-clay),
