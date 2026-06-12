@@ -19,9 +19,9 @@ Threshold: every remaining content page is ≥30K chars → gets the **full reci
 | **1 ✅ DONE 2026-06-12** | `trusted-african-grey-parrot-breeders` (About Us) — commit `3f74861` | 43.5K | ✅ |
 | | `captive-bred-african-grey-parrot` — commit `163c24c` | 48.2K | ✅ |
 | | `cites-african-grey-documentation` — commit `fec2d5a` | 49.6K | ✅ |
-| **2** | `african-grey-reviews` | 31.9K | ✅ |
-| | `african-grey-parrot-faq` (only 1 id — add section ids first) | 34.6K | ✅ |
-| | `african-grey-adoption` | 48.0K | ✅ |
+| **2 ✅ DONE 2026-06-12** | `african-grey-reviews` — commit `e3e7aa1` (hero re-shot: Catherine buyer photo, cropped 72%/38%) | 31.9K | ✅ |
+| | `african-grey-parrot-faq` — commit `e3e7aa1` (ids already existed from interior batch — "only 1 id" note was stale) | 34.6K | ✅ |
+| | `african-grey-adoption` — commit `e3e7aa1` (+ long-section breakup: channel cards, green-band verify cards, 3-phase strip, 2 figures) | 48.0K | ✅ |
 | **3** | `african-grey-parrot-care-guide` (pillar) | 57.8K | ✅ |
 | | `african-grey-care` (hub) | 42.6K | ✅ |
 | | `african-grey-parrot-diet` | 66.0K | ✅ |
@@ -264,6 +264,15 @@ These came out of executing batch 1 and are now part of the recipe:
 6. **Paragraph ceiling residuals**: single long sentences (numbered-list sentences, semicolon lists), verbatim testimonial quotes, and shared-component copy (OwnerCard) stay as-is. Target: nothing splittable left over ~270.
 7. **Hero images on this template are already 640×480 WebP ≤62KB** displayed in a ≤300px circle — no srcset work needed (R7 is usually a no-op; check size before generating variants).
 8. **`astro preview` serves dist statically and picks up rebuilds** — start it once, rebuild freely, just re-navigate.
+
+## Session 2 findings — fold into every later session (IMPORTANT)
+
+1. **Long-section breakup is now part of the recipe (user directive 2026-06-12).** Any section with 3+ consecutive prose paragraphs and no visual variation gets a component treatment that RETAINS all copy: numbered channel cards (`.adopt-chip` pattern), green-header-band info cards (design-system idiom), a compact green process-flow strip (`.adopt-phases` pattern, labels drawn from existing copy only), and/or a `<figure>` with a real aviary photo + figcaption link (max-w-[420px], compressed ≤16KB WebP, explicit `object-position` crop). Reference: african-grey-adoption sections #where / #verify / #rehomed / #better-fit.
+2. **"Updated June 2026" eyebrows are gone site-wide** — replaced with page-LSI phrases (commit `7ac6d37`). Do NOT reintroduce "Updated {date}" in any hero eyebrow. R5b example text is superseded.
+3. **`--color-clay-ink` is now `#bd4129`** (was `#c8472f`, which failed 4.47:1 as small text on the `#faf7f4` page background). White-on 5.31:1, on-cream 4.98:1. New pages reference #bd4129.
+4. **stone-400 is banned as text on light surfaces** — shared components (BirdCard, cag-bird-card-v2, CompareTableE, NewsletterV2) now use stone-500; figcaptions on the cream page bg use stone-600 (stone-500 is 4.49:1 there — just under).
+5. **Hero photos must show the bird's face/interaction** — african-grey-review-top.webp (sleeping chick, head tucked) reads as a headless bird in the hero circle; swapped for the Catherine Kempf buyer photo. Check every hero image candidate at the circle crop before shipping.
+6. **Rocket Loader `/70de/` unused-JS + missing-source-map Lighthouse flags are dashboard-only** (playbook §10) — Cloudflare → Speed → Optimization → toggle OFF. API tokens are dead; manual toggle required.
 
 ## Carryover rules (every session)
 
