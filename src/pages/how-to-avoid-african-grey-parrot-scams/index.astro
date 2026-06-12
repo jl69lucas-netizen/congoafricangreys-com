@@ -1,6 +1,40 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
+
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system
+// as the homepage; ids live on each .section-block. Document order required.
+const jumpSections = [
+  // Part 1 — Spot the Scams
+  { id: 'why-rampant',    label: 'Why Scams Surge',  part: 1 },
+  { id: 'five-types',     label: '5 Scam Types',     part: 1 },
+  { id: 'red-flags',      label: '12 Red Flags',     part: 1 },
+  // Part 2 — Verify the Breeder
+  { id: 'verify-usda',    label: 'USDA Check',       part: 2 },
+  { id: 'verify-cites',   label: 'CITES Check',      part: 2 },
+  { id: 'reverse-image',  label: 'Photo Check',      part: 2 },
+  { id: 'whois',          label: 'Domain Age',       part: 2 },
+  { id: 'questions',      label: '10 Questions',     part: 2 },
+  // Part 3 — How Scams Unfold
+  { id: 'advance-fee',    label: 'Fraud Script',     part: 3 },
+  { id: 'shipping-scams', label: 'Shipping Scam',    part: 3 },
+  { id: 'victim-stories', label: 'Victim Stories',   part: 3 },
+  { id: 'known-scams',    label: 'Listing Signals',  part: 3 },
+  // Part 4 — Buy Safely
+  { id: 'safe-payments',  label: 'Safe Payments',    part: 4 },
+  { id: 'documentation',  label: 'CITES Docs',       part: 4 },
+  { id: 'why-cags',       label: 'Why C.A.Gs',       part: 4 },
+  { id: 'report-scam',    label: 'Report a Scam',    part: 4 },
+  { id: 'faq',            label: 'FAQ',              part: 4 },
+  { id: 'form-bottom',    label: 'Ask C.A.Gs',       part: 4 },
+];
+const jumpPartNames = {
+  1: 'Spot the Scams',
+  2: 'Verify the Breeder',
+  3: 'How Scams Unfold',
+  4: 'Buy Safely',
+};
 
 const title = "How to Avoid African Grey Parrot Scams: 12 Red Flags + CITES Verification Guide | C.A.Gs - Midland, TX";
 const description = "African Grey parrot scams are rampant in 2025–2026. Learn the 12 red flags, how to verify a USDA AWA license, check CITES documentation, and buy safely. C.A.Gs — USDA-licensed, CITES-certified breeders in Midland, TX.";
@@ -475,6 +509,9 @@ li{margin-bottom:.4rem;line-height:1.7}
 <div>
 
 
+  <!-- Jump Rail — fixed right-side progress nav (desktop) + bottom sheet (mobile) -->
+  <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Verify a Listing →" ctaTarget="form-bottom" />
+
   <!-- ===== SECTION 1: HERO ===== -->
   <div style="max-width:1200px;margin:0 auto;">
     <Breadcrumb items={[
@@ -596,7 +633,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 4: WHY SCAMS ARE RAMPANT ===== -->
         <a name="why-rampant"></a>
-        <div class="section-block">
+        <div class="section-block" id="why-rampant">
           <h2>Why African Grey Parrot Scams Are Rampant in 2025–2026</h2>
 
           <div class="snippet-answer">
@@ -710,7 +747,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 5: 5 TYPES OF SCAMS ===== -->
         <a name="five-types"></a>
-        <div class="section-block">
+        <div class="section-block" id="five-types">
           <h2>The 5 Types of African Grey Parrot Scams You Need to Know</h2>
 
           <p>African Grey parrot fraud is not one-size-fits-all. Scammers use multiple tactics depending on the platform, the buyer, and how much they think they can extract. Here are the five most common fraud patterns to recognize before you send a single dollar.</p>
@@ -784,7 +821,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 6: 12 RED FLAGS ===== -->
         <a name="red-flags"></a>
-        <div class="section-block">
+        <div class="section-block" id="red-flags">
           <h2>12 Red Flags That Identify an African Grey Parrot Scam</h2>
 
           <p>These 12 red flags are drawn from real scam reports, documented fraud cases on petscams.com, parrotalert.com, scamwarners.com, and victim accounts analyzed by the FBI's Internet Crime Complaint Center (IC3). If a listing or seller exhibits <strong>any two of these signs</strong>, walk away immediately.</p>
@@ -949,7 +986,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 7: VERIFY USDA AWA ===== -->
         <a name="verify-usda"></a>
-        <div class="section-block">
+        <div class="section-block" id="verify-usda">
           <h2>How to Verify a USDA AWA License in 3 Steps</h2>
 
           <p>C.A.Gs (Mark and Teri Benjamin) holds an active USDA AWA Class A license. Here is exactly how to verify any breeder's license before sending money — takes less than 2 minutes.</p>
@@ -1021,7 +1058,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 8: VERIFY CITES ===== -->
         <a name="verify-cites"></a>
-        <div class="section-block">
+        <div class="section-block" id="verify-cites">
           <h2>How to Verify CITES Documentation for an African Grey Parrot</h2>
 
           <p>CITES (Convention on International Trade in Endangered Species) Appendix I documentation is the legal proof that your African Grey parrot was captive-bred — not wild-caught. African Greys were uplisted from Appendix II to <strong>Appendix I at CoP17, effective January 2017</strong>, which is exactly why scammers now wave fake "CITES certificates" at buyers who know the term but not the paperwork. Here at C.A.Gs we hand every buyer the real thing, and <a href="/cites-african-grey-documentation/">our complete CITES documentation guide</a> walks through each form line by line. Below is what real CITES documentation looks like and how to verify it.</p>
@@ -1087,7 +1124,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 9: REVERSE IMAGE SEARCH ===== -->
         <a name="reverse-image"></a>
-        <div class="section-block">
+        <div class="section-block" id="reverse-image">
           <h2>How to Reverse Image Search a Bird Photo (30-Second Scam Check)</h2>
 
           <p>The fastest scam detection tool available to any buyer is a reverse image search. It takes 30 seconds and has exposed more African Grey parrot scams than any other single technique.</p>
@@ -1150,7 +1187,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 10: WHOIS CHECK ===== -->
         <a name="whois"></a>
-        <div class="section-block">
+        <div class="section-block" id="whois">
           <h2>How to Check if a Breeder Website Is New (WHOIS Domain Age Check)</h2>
 
           <p>Scammers build websites fast. A site claiming 10 years of experience might have been created 6 weeks ago. A WHOIS lookup reveals the truth in under 60 seconds.</p>
@@ -1193,7 +1230,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 11: 10 QUESTIONS TO ASK ===== -->
         <a name="questions"></a>
-        <div class="section-block">
+        <div class="section-block" id="questions">
           <h2>10 Questions to Ask Every African Grey Breeder Before You Send a Dollar</h2>
 
           <p>A legitimate USDA-licensed captive-bred African Grey breeder — like <a href="/trusted-african-grey-parrot-breeders/">Mark &amp; Teri Benjamin at C.A.Gs in Midland, TX</a> — will answer every one of these questions without hesitation, with documentation to back it up. A scammer will dodge, deflect, or fabricate.</p>
@@ -1360,7 +1397,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 13: ADVANCE-FEE FRAUD SCRIPT ===== -->
         <a name="advance-fee"></a>
-        <div class="section-block">
+        <div class="section-block" id="advance-fee">
           <h2>Inside the Advance-Fee Fraud Script: How Scammers Escalate the Take</h2>
 
           <p>The advance-fee fraud — also called the "419 scam" or "Nigerian prince" pattern adapted for pet sales — follows a predictable escalation script. Recognizing each stage can stop you before you lose anything beyond your first payment.</p>
@@ -1432,7 +1469,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 14: FAKE SHIPPING RED FLAGS ===== -->
         <a name="shipping-scams"></a>
-        <div class="section-block">
+        <div class="section-block" id="shipping-scams">
           <h2>Fake Shipping Company Red Flags: How the "Transport" Scam Works</h2>
 
           <p>A subset of advance-fee fraud uses a fake shipping company as a second layer of extraction. After the initial deposit, the scammer refers you to a "licensed bird transport company" that charges escalating fees. Here is how to identify the fake immediately.</p>
@@ -1488,7 +1525,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 15: REAL VICTIM STORIES ===== -->
         <a name="victim-stories"></a>
-        <div class="section-block">
+        <div class="section-block" id="victim-stories">
           <h2>Real African Grey Parrot Scam Stories: What Victims Describe</h2>
 
           <p>These accounts are composites drawn from public reports filed with the BBB Scam Tracker, FTC, IC3, and parrot owner forums. Names are changed to protect victims. The details — the scripts, the fee amounts, the ghost — are consistent across hundreds of documented reports.</p>
@@ -1542,7 +1579,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 16: KNOWN SCAM PATTERNS ===== -->
         <a name="known-scams"></a>
-        <div class="section-block">
+        <div class="section-block" id="known-scams">
           <h2>How to Spot a Scam Listing Before You Ever Contact the Seller</h2>
 
           <p>Most African Grey parrot scam listings share a fingerprint — a cluster of signals that appear together. No single signal is definitive, but three or more in the same listing means exit immediately.</p>
@@ -1614,7 +1651,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 17: SAFE PAYMENT METHODS ===== -->
         <a name="safe-payments"></a>
-        <div class="section-block">
+        <div class="section-block" id="safe-payments">
           <h2>Safe vs Unsafe Payment Methods for Buying an African Grey Parrot</h2>
 
           <p>Payment method is the single most important decision in the entire transaction. Choose wrong and there is no recovery — not from your bank, not from law enforcement, not from the platform. The rule is simple: <strong>never pay via a method you cannot reverse.</strong></p>
@@ -1720,7 +1757,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 18: DOCUMENTATION GUIDE ===== -->
         <a name="documentation"></a>
-        <div class="section-block">
+        <div class="section-block" id="documentation">
           <h2>What Legitimate CITES Documentation Looks Like: A Complete Checklist</h2>
 
           <p>The single most effective scam prevention tool is knowing what real documentation looks like before you ask for it. Scammers send fabricated PDFs that look official — <a href="/congo-african-grey-for-sale/">a legitimate captive-bred Congo African Grey</a> from a licensed breeder arrives with a specific, verifiable set of documents. For the deep dive on each form, <a href="/cites-african-grey-documentation/">our CITES documentation guide</a> shows real examples; here is the checklist version.</p>
@@ -1789,7 +1826,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 19: WHY C.A.Gs IS VERIFIED ===== -->
         <a name="why-cags"></a>
-        <div class="section-block">
+        <div class="section-block" id="why-cags">
           <h2>Why C.A.Gs Is a Verified, Legitimate African Grey Parrot Breeder</h2>
 
           <p>Every claim on this page — every verification step, every red flag — applies equally to us. <a href="/trusted-african-grey-parrot-breeders/">Mark &amp; Teri Benjamin at C.A.Gs</a> welcome all of the scrutiny we've described here. Here is exactly how we satisfy each verification test.</p>
@@ -1848,7 +1885,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 20: HOW TO REPORT ===== -->
         <a name="report-scam"></a>
-        <div class="section-block">
+        <div class="section-block" id="report-scam">
           <h2>How to Report an African Grey Parrot Scam: 5 Agencies That Take Action</h2>
 
           <p>If you have been defrauded — or if you identify an active scam before losing money — report it immediately. Each agency below handles a different jurisdiction. Filing all five maximizes the chance of a takedown and helps protect the next buyer.</p>
@@ -1909,7 +1946,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 21: FAQ ===== -->
         <a name="faq"></a>
-        <div class="section-block">
+        <div class="section-block" id="faq">
           <h2>Frequently Asked Questions: African Grey Parrot Scams</h2>
 
           <p>Every question below came from real buyers — people who searched for African Grey parrots and encountered suspicious listings, confusing pricing, or documentation gaps. If your question isn't here, our <a href="/contact-us/">inquiry form</a> reaches C.A.Gs directly.</p>

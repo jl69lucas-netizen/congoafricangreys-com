@@ -14,7 +14,18 @@ interface Section {
   part: number;
 }
 
-const sections: Section[] = [
+interface Props {
+  /** Section list in document order. Defaults to the homepage map. */
+  sections?: Section[];
+  /** Part number → group heading. Defaults to the homepage parts. */
+  partNames?: Record<number, string>;
+  /** Bottom-sheet CTA label. */
+  ctaLabel?: string;
+  /** id of the CTA scroll target (no leading #). */
+  ctaTarget?: string;
+}
+
+const homepageSections: Section[] = [
   // Part 1 — Meet C.A.Gs
   { id: 'about',           label: 'Our Breeders',   part: 1 },
   { id: 'available-birds', label: 'Available',       part: 1 },
@@ -39,13 +50,21 @@ const sections: Section[] = [
   { id: 'contact',         label: 'Contact',         part: 4 },
 ];
 
-const partNames: Record<number, string> = {
+const homepagePartNames: Record<number, string> = {
   1: 'Meet C.A.Gs',
   2: 'Choose Your Grey',
   3: 'Why Families Trust Us',
   4: 'Pricing, Tools & Buying',
 };
-const parts = [1, 2, 3, 4];
+
+const {
+  sections = homepageSections,
+  partNames = homepagePartNames,
+  ctaLabel = 'Reserve a Bird →',
+  ctaTarget = 'contact',
+} = Astro.props;
+
+const parts = [...new Set(sections.map(s => s.part))];
 ---
 
 <!-- Desktop (≥1024px): fixed dot rail -->
@@ -98,7 +117,7 @@ const parts = [1, 2, 3, 4];
       ))}
     </div>
     <div class="cag-sheet-foot">
-      <a href="#contact" class="cag-sheet-cta" data-sheet-target="contact">Reserve a Bird &rarr;</a>
+      <a href={`#${ctaTarget}`} class="cag-sheet-cta" data-sheet-target={ctaTarget}>{ctaLabel}</a>
     </div>
   </div>
 </div>
