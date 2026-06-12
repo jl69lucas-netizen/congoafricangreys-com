@@ -84,3 +84,18 @@ gtag.js loads on first interaction OR a **12s plain setTimeout** — NOT `reques
 ## Verify loop (every page)
 
 `npx astro build` → `npx astro preview` → Playwright probes at 375 + 1280 (colors, heading sizes, overflow, scroll-margin, currentSrc of hero image) → screenshots of recolored infographics → commit + push → poll live asset 200 → IndexNow POST (key `f8071f0dbdb94257934a690f4a18fa59`, api.indexnow.org, host congoafricangreys.com).
+
+---
+
+## Addendum — Interior-template traps found in rollout Session 1 (2026-06-12 PM)
+
+Applying this playbook to the interior-batch pages (trusted-breeders / captive-bred / cites-docs) surfaced template-wide traps the scam page didn't have:
+
+- **`.bg-clay { color:inherit }` AA bug in every interior page's scoped CSS** — overrides `text-white`, dark stone text lands on clay buttons/tags (~2.5:1). Fix: `.X-d .bg-clay { color:#fff; }` (hero `.text-clay` keeps inherit). Grep first on every page.
+- **Systemic H2→H4 skip** — each interior page has an h4/h5/h6 mini-trio under an h2. Re-level to h3/h4/h5 + derive an h6 from the final paragraph's second sentence (split it; heading summarizes existing copy).
+- **`CompareTableE` H2 = `text-3xl` (30px) ties the mobile H1** — page-scoped `h2.text-3xl { font-size: clamp(1.375rem, 3.8vw, 2.25rem); }`.
+- **FAQ answers live in a data array** → split with `\n\n` + `.split("\n\n").map()` renderer + `f.a.replace(/\n\n/g, " ")` in FAQPage schema (verify dist JSON has no `\n`).
+- Interior `<style>` blocks are already `is:global` — next-nav CSS scopes under the page wrapper class, no `:global()` needed.
+- JumpRail drops in cleanly: import + `<JumpRail sections partNames ctaLabel ctaTarget>` right after the hero `</section>`; the pages' existing section ids are the map.
+
+Full rollout schedule + per-page recipe: `docs/superpowers/plans/2026-06-12-interior-polish-rollout.md`.

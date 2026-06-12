@@ -16,9 +16,9 @@ Threshold: every remaining content page is ≥30K chars → gets the **full reci
 
 | Session | Pages (slug under `src/pages/<slug>/index.astro`) | Chars | Dial+JumpNav? |
 |---|---|---|---|
-| **1 (this one)** | `trusted-african-grey-parrot-breeders` (About Us) | 43.5K | ✅ |
-| | `captive-bred-african-grey-parrot` | 48.2K | ✅ |
-| | `cites-african-grey-documentation` | 49.6K | ✅ |
+| **1 ✅ DONE 2026-06-12** | `trusted-african-grey-parrot-breeders` (About Us) — commit `3f74861` | 43.5K | ✅ |
+| | `captive-bred-african-grey-parrot` — commit `163c24c` | 48.2K | ✅ |
+| | `cites-african-grey-documentation` — commit `fec2d5a` | 49.6K | ✅ |
 | **2** | `african-grey-reviews` | 31.9K | ✅ |
 | | `african-grey-parrot-faq` (only 1 id — add section ids first) | 34.6K | ✅ |
 | | `african-grey-adoption` | 48.0K | ✅ |
@@ -251,6 +251,19 @@ Repeat Tasks 1–4 with that session's pages from the schedule table. Session-sp
 - **Session 6, contact-us:** add H2s to its natural sections (form, contact details, what-happens-next) — currently H1-only; no JumpRail (4.4K chars).
 - **Session 6, privacy-policy:** legal text verbatim (shell-only rule from the interior batch); sizing + contrast only.
 - **Session 6 close:** `bash scripts/health-sweep.sh`, confirm sitemap unchanged (no new URLs), final 18/18 live check.
+
+## Session 1 findings — fold into every later session (IMPORTANT)
+
+These came out of executing batch 1 and are now part of the recipe:
+
+1. **The `.bg-clay { color:inherit }` bug is in EVERY interior page's scoped CSS** (`.trust-d`/`.captive-d`/`.cites-d` pattern, the line `.X-d .hero-v3-b .text-clay, .X-d .bg-clay { color:inherit; }`). It leaks dark stone text onto clay buttons/tags in light sections (~2.5:1 FAIL). Fix: split the rule — hero `.text-clay` keeps `color:inherit`, and `.X-d .bg-clay { color:#fff; }`. **Grep each page for `\.bg-clay { color:inherit`** first thing.
+2. **The H2→H4 skip is systemic**: every interior page has an h4/h5/h6 mini-heading trio directly under an h2 (the interior-batch "full ladder" pattern). Fix: re-level trio to h3/h4/h5 and derive an h6 from the final paragraph's second sentence (split the paragraph; heading text summarizes existing copy — no new claims). Verify in dist: no level jumps +2, all 6 levels present.
+3. **`CompareTableE` ships `text-3xl` on its H2** (30px mobile = H1 tie). Page-scoped fix: `.X-d h2.text-3xl { font-size: clamp(1.375rem, 3.8vw, 2.25rem); }`. Any page importing CompareTableE needs this (captive-bred had it; check variant pages later).
+4. **FAQ answers are data-array strings rendered as one `<p>`** — split with literal `\n\n` in the string, change renderer to `{item.a.split("\n\n").map((t) => <p …>{t}</p>)}`, and join in schema with `text: f.a.replace(/\n\n/g, " ")`. Verify dist FAQPage JSON has no `\n`.
+5. **Interior pages' `<style>` is already `is:global`** — next-nav rules don't need `:global()` wrappers here, just scope under the page wrapper class (which exists in DOM).
+6. **Paragraph ceiling residuals**: single long sentences (numbered-list sentences, semicolon lists), verbatim testimonial quotes, and shared-component copy (OwnerCard) stay as-is. Target: nothing splittable left over ~270.
+7. **Hero images on this template are already 640×480 WebP ≤62KB** displayed in a ≤300px circle — no srcset work needed (R7 is usually a no-op; check size before generating variants).
+8. **`astro preview` serves dist statically and picks up rebuilds** — start it once, rebuild freely, just re-navigate.
 
 ## Carryover rules (every session)
 
