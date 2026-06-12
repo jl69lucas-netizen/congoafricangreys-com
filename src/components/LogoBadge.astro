@@ -4,12 +4,14 @@ interface Props {
   class?: string;
 }
 const { size = 64, class: className = '' } = Astro.props;
+// Real pixel heights of the badge files (non-square art) — explicit ints for CLS
+const heights: Record<number, number> = { 64: 21, 96: 32, 200: 66 };
 ---
 <img
   src={`/cag-logo-badge-${size}.webp`}
   alt="C.A.Gs — Certified African Grey Breeders"
   width={size}
-  height="auto"
+  height={heights[size] ?? Math.round(size / 3)}
   loading="lazy"
   class={className}
 />
