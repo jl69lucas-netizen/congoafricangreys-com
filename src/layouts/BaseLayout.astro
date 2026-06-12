@@ -43,9 +43,11 @@ const { title, description, canonical, ogType = 'website', schemaJson, extraHead
       evts.forEach(function (e) {
         window.addEventListener(e, loadGA, { once: true, passive: true });
       });
-      // Fallback so no-interaction sessions are still measured promptly.
-      if ('requestIdleCallback' in window) { requestIdleCallback(loadGA, { timeout: 3500 }); }
-      else { setTimeout(loadGA, 3000); }
+      // Fallback so no-interaction sessions are still measured. Plain 12s timer, NOT
+      // requestIdleCallback — idle fires ~1-2s after load, which pulls gtag.js back into
+      // the Lighthouse trace ("reduce unused JavaScript", ~156 KiB). Real users interact
+      // (scroll/touch) within the first seconds, so this only delays truly idle sessions.
+      setTimeout(loadGA, 12000);
     })();
   </script>
 
