@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
 import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import Testimonials from '../../components/cag-library/Testimonials.astro';
@@ -15,6 +16,22 @@ const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "African Grey Reviews", url: "/african-grey-reviews/" },
 ];
+
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system
+// as the homepage + scam page; ids live on each section. Document order required.
+const jumpSections = [
+  { id: 'featured-reviews', label: 'Buyer Stories', part: 1 },
+  { id: 'more-reviews',     label: 'More Reviews',  part: 1 },
+  { id: 'why-trust',        label: 'Why Trust Us',  part: 2 },
+  { id: 'available-birds',  label: 'Available',     part: 2 },
+  { id: 'faq',              label: 'FAQ',           part: 3 },
+  { id: 'contact',          label: 'Ask Us',        part: 3 },
+];
+const jumpPartNames = {
+  1: 'The Reviews',
+  2: 'Behind Them',
+  3: 'Next Steps',
+};
 
 // ─── REAL aggregate rating — the ONLY review number used site-wide (homepage orgSchema).
 //     Do NOT invent a different count. (Prior page used a fabricated "47" — removed.) ───
@@ -78,13 +95,13 @@ const birds = [
 // ─── FAQ (branded-search + PAA sourced; mirrored into FAQPage schema) ───
 const faqs = [
   { q: "Are C.A.Gs reviews real?",
-    a: "Yes. The reviews on this page are from real families who bought a Congo or Timneh African Grey from us — the same verified buyers and photos we feature on our homepage, not anonymous star ratings or invented testimonials. Buyers like Richard in Winter Haven, Florida, Catherine in Schaumburg, Illinois, and Archie in Farmingdale, New York describe their own birds in their own words. We never publish a review we did not actually receive." },
+    a: "Yes. The reviews on this page are from real families who bought a Congo or Timneh African Grey from us — the same verified buyers and photos we feature on our homepage, not anonymous star ratings or invented testimonials.\n\nBuyers like Richard in Winter Haven, Florida, Catherine in Schaumburg, Illinois, and Archie in Farmingdale, New York describe their own birds in their own words. We never publish a review we did not actually receive." },
   { q: "Is congoafricangreys.com legit?",
-    a: "Yes. C.A.Gs is run by Mark and Teri Benjamin, a USDA-licensed family African Grey breeder in Midland, Texas since 2014. We hold a verifiable USDA Animal Welfare Act license, place only U.S. captive-bred birds with CITES Appendix I documentation, video-call you to show your specific bird on demand, and hand you the paperwork before any money moves. Read the verified reviews here, then verify our license before you pay — exactly how a real breeder should be vetted." },
+    a: "Yes.\n\nC.A.Gs is run by Mark and Teri Benjamin, a USDA-licensed family African Grey breeder in Midland, Texas since 2014. We hold a verifiable USDA Animal Welfare Act license, place only U.S. captive-bred birds with CITES Appendix I documentation, video-call you to show your specific bird on demand, and hand you the paperwork before any money moves.\n\nRead the verified reviews here, then verify our license before you pay — exactly how a real breeder should be vetted." },
   { q: "What rating do African Grey buyers give C.A.Gs?",
-    a: "Across our verified buyers we hold a 4.9 out of 5 average. Families consistently mention three things: the bird arrived healthy, the CITES and DNA paperwork was in order before they paid, and Mark or Teri stayed reachable long after pickup. A healthy, documented bird plus real support is what earns the rating." },
+    a: "Across our verified buyers we hold a 4.9 out of 5 average. Families consistently mention three things: the bird arrived healthy, the CITES and DNA paperwork was in order before they paid, and Mark or Teri stayed reachable long after pickup.\n\nA healthy, documented bird plus real support is what earns the rating." },
   { q: "Can I trust a breeder I have never met in person?",
-    a: "You can, if the breeder lets you verify everything before paying. Buyers worry because of the wave of online bird scams — rightly so. We welcome the checks: confirm our USDA license number against the public USDA APHIS records, request a live video call of the exact bird you are reserving, and confirm the CITES Appendix I and PCR DNA paperwork comes before payment. Our buyers were nervous too, until they ran those checks." },
+    a: "You can, if the breeder lets you verify everything before paying. Buyers worry because of the wave of online bird scams — rightly so.\n\nWe welcome the checks: confirm our USDA license number against the public USDA APHIS records, request a live video call of the exact bird you are reserving, and confirm the CITES Appendix I and PCR DNA paperwork comes before payment.\n\nOur buyers were nervous too, until they ran those checks." },
 ];
 
 const faqSchema = {
@@ -93,7 +110,7 @@ const faqSchema = {
   mainEntity: faqs.map((f) => ({
     "@type": "Question",
     name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
+    acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\n\n/g, " ") },
   })),
 };
 
@@ -149,7 +166,7 @@ const reviewSchema = allReviews.map((r) => ({
 ---
 
 <BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta
-  extraHeadHtml={'<link rel="preload" as="image" href="/african-grey-review-top.webp" fetchpriority="high" type="image/webp" />'}>
+  extraHeadHtml={'<link rel="preload" as="image" href="/catherine-kempf-cags-buyer-with-congo-grey-640.webp" fetchpriority="high" type="image/webp" />'}>
 
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(orgRatingSchema)} />
@@ -169,13 +186,12 @@ const reviewSchema = allReviews.map((r) => ({
         <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
           <!-- COPY -->
           <div class="order-2 text-center md:order-1 md:text-left">
-            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Real Families · Real Birds · Verified Buyer Stories</p>
+            <p class="hero-eyebrow font-sora">Real Families · Real Birds · Verified Buyer Stories</p>
             <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
               African Grey Parrot Reviews — What Families Say About C.A.Gs
             </h1>
-            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
-              Here is what families across the country tell us after bringing home a Congo or Timneh African Grey from our Midland, Texas aviary. Searching whether congoafricangreys.com is legit? These are real C.A.Gs reviews — each describing the bird Mark &amp; Teri Benjamin raised, documented, and shipped.
-            </p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Here is what families across the country tell us after bringing home a Congo or Timneh African Grey from our Midland, Texas aviary.</p>
+          <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Searching whether congoafricangreys.com is legit? These are real C.A.Gs reviews — each describing the bird Mark &amp; Teri Benjamin raised, documented, and shipped.</p>
             <div class="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 md:justify-start">
               <span class="font-lora text-2xl font-bold text-white">{AGG_RATING} / 5</span>
               <span class="text-clay text-xl tracking-wide" aria-hidden="true">★★★★★</span>
@@ -191,17 +207,19 @@ const reviewSchema = allReviews.map((r) => ({
             <div class="relative">
               <div class="absolute inset-0 -m-3 rounded-full border border-white/25 md:-m-5" aria-hidden="true"></div>
               <div class="relative flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#0f3d2c] ring-4 ring-white/15 sm:h-[260px] sm:w-[260px] md:h-[300px] md:w-[300px]" style="box-shadow: 0 24px 60px rgba(60,30,10,0.35);">
-                <img src="/african-grey-review-top.webp"
-                  alt="A verified C.A.Gs buyer with the hand-raised, DNA-sexed Congo African Grey they reserved from Mark & Teri Benjamin's USDA-licensed aviary in Midland, Texas — one of the real families behind our reviews."
+                <img src="/catherine-kempf-cags-buyer-with-congo-grey-640.webp"
+                  alt="A verified C.A.Gs buyer face-to-face with the curious, hand-raised Congo African Grey she reserved from Mark & Teri Benjamin's USDA-licensed aviary in Midland, Texas — one of the real families behind our reviews."
                   title="Verified C.A.Gs African Grey buyer review — Midland, TX"
-                  width="400" height="400" loading="eager" fetchpriority="high" decoding="async"
-                  class="h-full w-full object-cover" />
+                  width="600" height="400" loading="eager" fetchpriority="high" decoding="async"
+                  class="h-full w-full object-cover" style="object-position:72% 38%;" />
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Ask C.A.Gs →" ctaTarget="contact" />
 
     <!-- 2. COUNTER SNIPPET -->
     <CounterSnippet stats={[
@@ -288,14 +306,19 @@ const reviewSchema = allReviews.map((r) => ({
           <h2 class="font-lora font-bold text-logo-dark">Why Do C.A.Gs Reviews Read the Way They Do?</h2>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;margin:0 auto;">
-          <p>Good reviews are not luck. Families describe a calm, healthy, talking bird because every Grey leaves us the same way: hand-raised in our home by Mark and Teri Benjamin, PCR DNA-sexed, examined by a board-certified avian veterinarian, and placed with full CITES Appendix I captive-bred documentation — never wild-caught. Our <a href="/trusted-african-grey-parrot-breeders/">trusted African Grey breeders page</a> shows who we are and how to verify us before you send a deposit.</p>
-          <p>The other thread is trust earned upfront: we hand you the paperwork, backed by the written promise on our <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>, before any money moves. Still vetting sellers? Our <a href="/how-to-avoid-african-grey-parrot-scams/">guide to avoiding African Grey scams</a> lays out every red flag, and our <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey page</a> shows how a closed band proves a bird was aviary-raised. That is why the buyers above recommend us.</p>
-          <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">How Do We Count a Review as Verified?</h4>
+          <p>Good reviews are not luck.</p>
+          <p>Families describe a calm, healthy, talking bird because every Grey leaves us the same way: hand-raised in our home by Mark and Teri Benjamin, PCR DNA-sexed, examined by a board-certified avian veterinarian, and placed with full CITES Appendix I captive-bred documentation — never wild-caught.</p>
+          <p>Our <a href="/trusted-african-grey-parrot-breeders/">trusted African Grey breeders page</a> shows who we are and how to verify us before you send a deposit.</p>
+          <p>The other thread is trust earned upfront: we hand you the paperwork, backed by the written promise on our <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>, before any money moves. Still vetting sellers?</p>
+          <p>Our <a href="/how-to-avoid-african-grey-parrot-scams/">guide to avoiding African Grey scams</a> lays out every red flag, and our <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey page</a> shows how a closed band proves a bird was aviary-raised. That is why the buyers above recommend us.</p>
+          <h3 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">How Do We Count a Review as Verified?</h3>
           <p>Every review on this page traces to a family who actually completed a purchase with us — a named buyer, a specific bird, and a delivery we arranged. We do not buy reviews, seed them, or publish anything we cannot match to a real placement.</p>
-          <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">Why Is Our Count 52 and Not Higher?</h5>
+          <h4 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">Why Is Our Count 52 and Not Higher?</h4>
           <p>Because 52 is the real number of verified buyers behind our 4.9 average. We would rather publish a smaller honest count than pad it — inflated review totals are one of the scam red flags we teach buyers to spot.</p>
-          <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">Check Us Outside This Site Too</h6>
-          <p>Don't stop at our own page: search our name, ask us for buyer references, and run our USDA license through the federal APHIS search. A breeder worth a 40–60 year bird holds up under outside scrutiny.</p>
+          <h5 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">Check Us Outside This Site Too</h5>
+          <p>Don't stop at our own page: search our name, ask us for buyer references, and run our USDA license through the federal APHIS search.</p>
+          <h6 class="font-sora font-bold text-[11px] uppercase tracking-wide text-clay-ink mt-2.5 mb-1">Holding Up Under Outside Scrutiny</h6>
+          <p>A breeder worth a 40–60 year bird holds up under outside scrutiny.</p>
         </div>
       </div>
     </section>
@@ -342,7 +365,7 @@ const reviewSchema = allReviews.map((r) => ({
                 <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
                 <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
-              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0">{item.a}</p></div></div>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><div class="px-5 pb-5">{item.a.split("\n\n").map((t) => <p class="font-sora text-stone-600 text-sm leading-relaxed m-0 mb-2 last:mb-0">{t}</p>)}</div></div></div>
             </div>
           ))}
         </div>
@@ -367,7 +390,8 @@ const reviewSchema = allReviews.map((r) => ({
       <div class="max-w-3xl mx-auto">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Become the Next Review</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">Ready to Join These Families With Your Own African Grey?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised by Mark &amp; Teri Benjamin, DNA-sexed, avian-vet certified, and CITES Appendix I documented — paperwork in your hands before any deposit. Tell us about your home in the form below and we will reply within 24 hours. Still choosing? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised by Mark &amp; Teri Benjamin, DNA-sexed, avian-vet certified, and CITES Appendix I documented — paperwork in your hands before any deposit.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Tell us about your home in the form below and we will reply within 24 hours. Still choosing? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
       </div>
     </section>
 
@@ -388,6 +412,26 @@ const reviewSchema = allReviews.map((r) => ({
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       }));
     })();
+
+    // Section jump-nav auto-injector — "↓ Continue: <next section>"
+    (function () {
+      var ids = ['featured-reviews','more-reviews','why-trust','available-birds','faq','contact'];
+      var labels = {
+        'more-reviews':    'More C.A.Gs Reviews',
+        'why-trust':       'Why the Reviews Read This Way',
+        'available-birds': 'Birds You Can Reserve Now',
+        'faq':             'Reviews FAQ',
+        'contact':         'Ask C.A.Gs',
+      };
+      for (var i = 0; i < ids.length - 1; i++) {
+        var cur = document.getElementById(ids[i]);
+        if (!cur) continue;
+        var nav = document.createElement('div');
+        nav.className = 'section-next-nav';
+        nav.innerHTML = '<a href="#' + ids[i + 1] + '" class="section-next-link">&#8595; Continue: ' + (labels[ids[i + 1]] || ids[i + 1]) + '</a>';
+        cur.appendChild(nav);
+      }
+    })();
   </script>
 </BaseLayout>
 
@@ -403,7 +447,23 @@ const reviewSchema = allReviews.map((r) => ({
   /* AA: clay as small readable text on LIGHT sections → #b04228 (4.5:1).
      Clay on the green hero / dark testimonial panels stays bright. */
   .reviews-d a.text-clay, .reviews-d .text-clay { color:#b04228; }
-  .reviews-d .hero-v3-b .text-clay, .reviews-d .bg-clay, .reviews-d .bg-panel .text-clay { color:inherit; }
+  .reviews-d .hero-v3-b .text-clay, .reviews-d .bg-panel .text-clay { color:inherit; }
+  /* Clay FILLS keep white text (global .bg-clay renders --clay-ink #bd4129, 5.3:1). */
+  .reviews-d .bg-clay { color:#fff; }
+
+  /* Hero eyebrow — HeroV3 pattern (no pill, no uppercase). */
+  .reviews-d .hero-eyebrow { font-size:10px; font-weight:500; letter-spacing:.12em; color:rgba(255,255,255,.75); text-transform:none; }
+  @media (min-width:768px) { .reviews-d .hero-eyebrow { font-size:11px; } }
+
+  /* "↓ Continue:" section next-nav (JS-injected; is:global so page-class scope works). */
+  .reviews-d .section-next-nav { text-align:right; padding-top:18px; margin-top:14px; border-top:1px solid #ede5dc; }
+  .reviews-d .section-next-link { font-family:'IBM Plex Sans',sans-serif; font-size:.85rem; font-weight:600;
+    color:#b04228; text-decoration:none; display:inline-block; padding:10px 0 10px 12px; margin:-10px 0; }
+  .reviews-d .section-next-link:hover { text-decoration:underline; }
+
+  /* Jump targets clear the 96px sticky header. */
+  .reviews-d section[id], .reviews-d div[id] { scroll-margin-top:110px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
 
   /* Woven in-content links: clay, underlined, AA-safe. */
   .reviews-d p a:not(.rounded-full):not(.bg-clay),

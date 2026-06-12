@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
 import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import InquiryForm from '../../components/cag-inquiry-form.astro';
@@ -15,22 +16,40 @@ const breadcrumbs = [
   { name: "African Grey Adoption", url: "/african-grey-adoption/" },
 ];
 
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system
+// as the homepage + scam page; ids live on each section. Document order required.
+const jumpSections = [
+  { id: 'commitment',   label: 'The Commitment', part: 1 },
+  { id: 'adopt-vs-buy', label: 'Adopt vs Buy',   part: 1 },
+  { id: 'where',        label: 'Where to Adopt', part: 2 },
+  { id: 'verify',       label: 'Verify First',   part: 2 },
+  { id: 'rehomed',      label: 'Rehomed Life',   part: 2 },
+  { id: 'better-fit',   label: 'Better Fit?',    part: 3 },
+  { id: 'faq',          label: 'FAQ',            part: 3 },
+  { id: 'contact',      label: 'Ask Us',         part: 3 },
+];
+const jumpPartNames = {
+  1: 'The Decision',
+  2: 'Doing It Safely',
+  3: 'Next Steps',
+};
+
 // ─── FAQ — mirrored exactly into FAQPage schema (HTML stripped for schema) ───
 const faqs = [
   { q: "Can you adopt an African Grey parrot instead of buying one?",
-    a: `Yes — genuinely. Avian rescues and private rehoming place surrendered African Greys with new families every year, and we say that as a breeder with no adoption program of our own: rescue is real, legal for captive-bred birds with proper paperwork, and deserves honest treatment rather than a sales pitch. The trade-off is history — an adopted Grey arrives with an unknown past and a 3–12 month re-taming road, while a hand-raised baby arrives people-bonded from day one.` },
+    a: `Yes — genuinely.\n\nAvian rescues and private rehoming place surrendered African Greys with new families every year, and we say that as a breeder with no adoption program of our own: rescue is real, legal for captive-bred birds with proper paperwork, and deserves honest treatment rather than a sales pitch.\n\nThe trade-off is history — an adopted Grey arrives with an unknown past and a 3–12 month re-taming road, while a hand-raised baby arrives people-bonded from day one.` },
   { q: "How much does it cost to adopt an African Grey parrot?",
-    a: `Legitimate avian rescues typically charge an adoption fee in the hundreds of dollars — enough to cover vetting and to screen out impulse adopters, and far below breeder pricing. Anyone advertising a "free African Grey, just pay shipping" is running a scam, not a rescue. For full numbers — typical rescue fees, surrender-situation rehoming, and how both compare to breeder pricing — our <a href="/african-grey-parrot-adoption-cost/">African Grey adoption cost breakdown</a> covers it line by line. For reference, our own captive-bred birds run $1,700 (adult) to $2,500 (baby) for Congos and $1,500–$1,600 for Timnehs.` },
+    a: `Legitimate avian rescues typically charge an adoption fee in the hundreds of dollars — enough to cover vetting and to screen out impulse adopters, and far below breeder pricing.\n\nAnyone advertising a "free African Grey, just pay shipping" is running a scam, not a rescue.\n\nFor full numbers — typical rescue fees, surrender-situation rehoming, and how both compare to breeder pricing — our <a href="/african-grey-parrot-adoption-cost/">African Grey adoption cost breakdown</a> covers it line by line.\n\nFor reference, our own captive-bred birds run $1,700 (adult) to $2,500 (baby) for Congos and $1,500–$1,600 for Timnehs.` },
   { q: "Why are so many African Greys given up for adoption?",
-    a: `Almost never because of the bird. African Greys live 40–60 years and outlast marriages, careers, houses, and sometimes their owners — so Greys are surrendered after deaths, divorces, moves, new babies, and the honest discovery that a parrot with the cognition of a young child is more work than a YouTube video suggested. That is exactly why we interview buyers before placing a bird: every Grey we talk someone out of is one that never needs a rescue.` },
+    a: `Almost never because of the bird.\n\nAfrican Greys live 40–60 years and outlast marriages, careers, houses, and sometimes their owners — so Greys are surrendered after deaths, divorces, moves, new babies, and the honest discovery that a parrot with the cognition of a young child is more work than a YouTube video suggested.\n\nThat is exactly why we interview buyers before placing a bird: every Grey we talk someone out of is one that never needs a rescue.` },
   { q: "Will a rehomed African Grey bond with a new owner?",
-    a: `Yes — age does not close the bonding window, history just lengthens the road. A rehomed Grey may grieve its previous person, test you for weeks, or arrive with habits like fear-biting or feather plucking that need patient unwinding. Most settle into a real, deep bond over 3–12 months of consistent, pressure-free work. Our <a href="/how-to-tame-african-grey-parrot/">7-step taming method</a> is the same sequence rescues recommend: the steps never change, only the calendar does.` },
+    a: `Yes — age does not close the bonding window, history just lengthens the road. A rehomed Grey may grieve its previous person, test you for weeks, or arrive with habits like fear-biting or feather plucking that need patient unwinding.\n\nMost settle into a real, deep bond over 3–12 months of consistent, pressure-free work. Our <a href="/how-to-tame-african-grey-parrot/">7-step taming method</a> is the same sequence rescues recommend: the steps never change, only the calendar does.` },
   { q: "What paperwork should come with an adopted African Grey?",
-    a: `As much provenance as the surrendering party can produce: a closed leg band or microchip, any hatch certificate or original purchase record showing captive-bred origin, and vet records. African Greys are CITES Appendix I, so documentation matters in adoption exactly as it does in a purchase — a paper trail protects you legally and tells you the bird's real age and history. A legitimate rescue will also hand over its own vet exam results. If nobody can produce anything at all, slow down and ask why.` },
+    a: `As much provenance as the surrendering party can produce: a closed leg band or microchip, any hatch certificate or original purchase record showing captive-bred origin, and vet records.\n\nAfrican Greys are CITES Appendix I, so documentation matters in adoption exactly as it does in a purchase — a paper trail protects you legally and tells you the bird's real age and history.\n\nA legitimate rescue will also hand over its own vet exam results. If nobody can produce anything at all, slow down and ask why.` },
   { q: "Are 'free African Grey for adoption' ads legitimate?",
-    a: `Treat every one as a scam until proven otherwise. The "free bird — just pay shipping/insurance/crate fees" structure is the most common African Grey fraud online: there is no bird, and the fees never end. Real rescues charge real fees, show you the bird (video call at minimum), and never route payment through gift cards or wire transfers. Our guide to <a href="/how-to-avoid-african-grey-parrot-scams/">avoiding African Grey scams</a> unmasks these listings in minutes.` },
+    a: `Treat every one as a scam until proven otherwise. The "free bird — just pay shipping/insurance/crate fees" structure is the most common African Grey fraud online: there is no bird, and the fees never end.\n\nReal rescues charge real fees, show you the bird (video call at minimum), and never route payment through gift cards or wire transfers. Our guide to <a href="/how-to-avoid-african-grey-parrot-scams/">avoiding African Grey scams</a> unmasks these listings in minutes.` },
   { q: "Is it better to adopt an older African Grey or buy a baby from a breeder?",
-    a: `Honestly: it depends on you, and anyone who gives a one-word answer is selling something. Adoption suits experienced, patient bird people who can absorb an unknown history and give a displaced Grey its second chapter. A hand-raised, documented baby suits first-time Grey owners who want a known start — hatch date, parentage, health screening, and a bird already bonded to human hands. We breed babies and we will still tell you when adoption is your better road; that conversation costs nothing.` },
+    a: `Honestly: it depends on you, and anyone who gives a one-word answer is selling something. Adoption suits experienced, patient bird people who can absorb an unknown history and give a displaced Grey its second chapter.\n\nA hand-raised, documented baby suits first-time Grey owners who want a known start — hatch date, parentage, health screening, and a bird already bonded to human hands.\n\nWe breed babies and we will still tell you when adoption is your better road; that conversation costs nothing.` },
 ];
 
 const stripHtml = (s: string) => s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
@@ -132,13 +151,12 @@ const breederWins = [
         <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
           <!-- COPY -->
           <div class="order-2 text-center md:order-1 md:text-left">
-            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Adoption Guide · Honest Edition · Rescue vs Breeder</p>
+            <p class="hero-eyebrow font-sora">Adoption Guide · Honest Edition · Rescue vs Breeder</p>
             <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
               African Grey Adoption — the Honest Guide from a Breeder Who Isn't a Rescue
             </h1>
-            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
-              Let's start with full disclosure: here at C.A.Gs in Midland, Texas, we are a USDA AWA-licensed family aviary that breeds captive-bred, CITES Appendix I documented Congo and Timneh Greys — we are not a rescue, and we won't pretend to be one. But you searched "African Grey adoption," and you deserve a straight answer: what adopting a rehomed Grey really involves, where to genuinely do it, how to avoid the adoption scams, and — for some of you — why a documented, hand-raised baby is the better road for a 40–60 year companion.
-            </p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Let's start with full disclosure: here at C.A.Gs in Midland, Texas, we are a USDA AWA-licensed family aviary that breeds captive-bred, CITES Appendix I documented Congo and Timneh Greys — we are not a rescue, and we won't pretend to be one.</p>
+          <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">But you searched "African Grey adoption," and you deserve a straight answer: what adopting a rehomed Grey really involves, where to genuinely do it, how to avoid the adoption scams, and — for some of you — why a documented, hand-raised baby is the better road for a 40–60 year companion.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
               <a href="#where" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Where to Genuinely Adopt →</a>
               <a href="#better-fit" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">Is a Baby the Better Fit? →</a>
@@ -160,6 +178,8 @@ const breederWins = [
         </div>
       </div>
     </section>
+
+    <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Ask C.A.Gs →" ctaTarget="contact" />
 
     <!-- 2. COUNTER SNIPPET -->
     <CounterSnippet stats={[
@@ -226,11 +246,27 @@ const breederWins = [
         </div>
         <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Adopting an African Grey means taking over a 40–60 year commitment that someone else started — inheriting the bird's bond, its habits, its history, and sometimes its heartbreak, usually somewhere in the middle of its very long story.</p>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-          <p>The African Grey (<em>Psittacus erithacus</em>) is, as <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust species profile</a> documents, among the longest-lived and most cognitively complex companion parrots in the world. That combination — a four-to-six-decade lifespan attached to the reasoning ability of a young child — is the single fact that explains the entire adoption landscape. Greys don't end up in rescues because they are bad birds. They end up in rescues because they outlast the circumstances they were bought into: a marriage ends, a family moves overseas, a new baby arrives, an owner passes away, or someone simply discovers that the clever, talkative bird from the videos also screams at 6 a.m. and holds opinions about strangers.</p>
-          <p>So when you adopt, you are not getting a blank slate — you are stepping into chapter three or four of a book someone else started, and a Grey remembers its earlier chapters with unsettling clarity. The bird may grieve a person it loved; it may have learned that hands grab, that yelling works, or that the cage is the only safe place on earth. None of that is permanent or the bird's fault. It just means adoption is patience first and affection second, in that order, for a while.</p>
-          <p>We want to be plain about our own position before we go further. Here at C.A.Gs, we are breeders — Mark and Teri Benjamin, a USDA AWA-licensed family aviary, hand-raising captive-bred Congos and Timnehs in Midland, Texas since 2014. We do not run an adoption program, we do not take surrenders, and a page that pretended otherwise to catch your search would be exactly the kind of bait-and-switch we tell buyers to run from. What we can offer is what we actually have: an honest map of the adoption road, drawn by people who spend their lives with these birds, and — covered later in our <a href="/trusted-african-grey-parrot-breeders/">family aviary story</a> — a documented alternative for the people adoption doesn't fit.</p>
+          <p>The African Grey (<em>Psittacus erithacus</em>) is, as <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust species profile</a> documents, among the longest-lived and most cognitively complex companion parrots in the world.</p>
+          <p>That combination — a four-to-six-decade lifespan attached to the reasoning ability of a young child — is the single fact that explains the entire adoption landscape.</p>
+          <p>Greys don't end up in rescues because they are bad birds.</p>
+          <p>They end up in rescues because they outlast the circumstances they were bought into: a marriage ends, a family moves overseas, a new baby arrives, an owner passes away, or someone simply discovers that the clever, talkative bird from the videos also screams at 6 a.m. and holds opinions about strangers.</p>
+          <p>So when you adopt, you are not getting a blank slate — you are stepping into chapter three or four of a book someone else started, and a Grey remembers its earlier chapters with unsettling clarity.</p>
+          <p>The bird may grieve a person it loved; it may have learned that hands grab, that yelling works, or that the cage is the only safe place on earth.</p>
+          <p>None of that is permanent or the bird's fault. It just means adoption is patience first and affection second, in that order, for a while.</p>
+          <p>We want to be plain about our own position before we go further.</p>
+          <p>Here at C.A.Gs, we are breeders — Mark and Teri Benjamin, a USDA AWA-licensed family aviary, hand-raising captive-bred Congos and Timnehs in Midland, Texas since 2014. We do not run an adoption program, we do not take surrenders, and a page that pretended otherwise to catch your search would be exactly the kind of bait-and-switch we tell buyers to run from.</p>
+          <p>What we can offer is what we actually have: an honest map of the adoption road, drawn by people who spend their lives with these birds, and — covered later in our <a href="/trusted-african-grey-parrot-breeders/">family aviary story</a> — a documented alternative for the people adoption doesn't fit.</p>
           <p>One more honest note: we vet buyers carefully precisely because every well-matched placement is a Grey that never needs rehoming.</p>
         </div>
+
+        <figure class="mt-6 max-w-[420px] mx-auto">
+          <img src="/african-grey-head-scratch-cags-breeder.webp"
+            alt="An African Grey leaning into a head scratch at the C.A.Gs aviary in Midland, Texas — the decades-long companionship at the heart of every adoption or purchase decision."
+            title="The 40–60 year bond — what African Grey adoption is really about"
+            width="465" height="500" loading="lazy" decoding="async"
+            class="w-full h-auto max-h-[440px] object-cover rounded-2xl border border-black/[0.07]" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);object-position:50% 25%;" />
+          <figcaption class="font-sora text-[13px] text-stone-600 mt-2.5">The bond both roads lead to — a Grey that trusts its person for decades. <a href="/african-grey-care/" class="text-green underline decoration-1 underline-offset-2">What daily life involves →</a></figcaption>
+        </figure>
       </div>
     </section>
 
@@ -243,9 +279,11 @@ const breederWins = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Both Roads, Honestly</p>
           <h2 class="font-lora font-bold text-logo-dark">Adopting vs Buying from a Breeder — Where Does Each Honestly Win?</h2>
         </div>
-        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Adoption wins on cost, on skipping the baby phase, and on giving a displaced Grey a second chance; a documented breeder wins on known history, verified health screening, and a hand-raised bird that arrives already bonded to human hands. Neither road is wrong — they fit different homes.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Adoption wins on cost, on skipping the baby phase, and on giving a displaced Grey a second chance; a documented breeder wins on known history, verified health screening, and a hand-raised bird that arrives already bonded to human hands.</p>
+          <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Neither road is wrong — they fit different homes.</p>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mb-8" style="max-width:70ch;">
-          <p>You will find pages online where a breeder quietly rubbishes rescue birds, and others where adoption advocates paint every breeder as a mill. Both are selling a simplified world. Each road genuinely wins on some things and costs you others — our <a href="/african-grey-parrot-price/">African Grey price guide</a> covers the financial side of buying in depth; here is the whole comparison, with our thumb deliberately off the scale.</p>
+          <p>You will find pages online where a breeder quietly rubbishes rescue birds, and others where adoption advocates paint every breeder as a mill. Both are selling a simplified world.</p>
+          <p>Each road genuinely wins on some things and costs you others — our <a href="/african-grey-parrot-price/">African Grey price guide</a> covers the financial side of buying in depth; here is the whole comparison, with our thumb deliberately off the scale.</p>
         </div>
         <div class="grid gap-6 md:grid-cols-2">
           <article class="flex flex-col rounded-2xl border border-black/[0.07] bg-white p-7" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
@@ -262,7 +300,8 @@ const breederWins = [
           </article>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mt-8" style="max-width:70ch;">
-          <p>Notice what is <em>not</em> on either list: love. A rehomed Grey and a hand-raised baby are equally capable of a profound, decades-long bond — the difference is how much un-learning stands between you and it. The honest sorting question is not "which bird is better?" but "which start can my household actually deliver?" An experienced bird person with a quiet home can give a rescue Grey something priceless; a first-time owner with kids and a full calendar usually does better starting with a known quantity, the case our <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey guide</a> makes in full.</p>
+          <p>Notice what is <em>not</em> on either list: love. A rehomed Grey and a hand-raised baby are equally capable of a profound, decades-long bond — the difference is how much un-learning stands between you and it.</p>
+          <p>The honest sorting question is not "which bird is better?" but "which start can my household actually deliver?" An experienced bird person with a quiet home can give a rescue Grey something priceless; a first-time owner with kids and a full calendar usually does better starting with a known quantity, the case our <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey guide</a> makes in full.</p>
         </div>
       </div>
     </section>
@@ -276,28 +315,47 @@ const breederWins = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Genuine Avenues</p>
           <h2 class="font-lora font-bold text-logo-dark">Where Can You Genuinely Adopt an African Grey?</h2>
         </div>
-        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Genuine African Grey adoption runs through three channels: dedicated avian rescue organizations, private rehoming from an owner whose circumstances changed, and occasionally a general shelter with an avian intake. All three charge real fees, show you the real bird, and ask you hard questions.</p>
-        <div class="space-y-7">
-          <div>
-            <h3 class="font-lora font-bold text-logo-dark text-xl mb-3">Dedicated avian rescues — the gold standard</h3>
-            <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-              <p>Parrot-specific rescues are the best-run corner of the adoption world. Organizations like <a href="https://phoenixlanding.org/" target="_blank" rel="noopener noreferrer">Phoenix Landing</a>, a nonprofit that has placed thousands of parrots and requires adopter education classes before placement, show what the process should look like: the bird is vetted, its known history is disclosed, you are interviewed and sometimes home-checked, and the rescue stays reachable after the bird goes home. Regional avian rescues operate on the same model across most of the country, and the <a href="https://www.avianwelfare.org/" target="_blank" rel="noopener noreferrer">Avian Welfare Coalition</a> maintains education resources and a directory of member organizations that take parrot placement seriously.</p>
-              <p>Expect the good ones to be slow and a little demanding — application forms, references, a waiting period, a fee in the hundreds of dollars. Every hurdle exists because the rescue has already met the bird once and does not want to meet it a third time. A "rescue" that will hand you a Grey today for a wire transfer and no questions is not a rescue; it is a listing.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Genuine African Grey adoption runs through three channels: dedicated avian rescue organizations, private rehoming from an owner whose circumstances changed, and occasionally a general shelter with an avian intake.</p>
+          <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">All three charge real fees, show you the real bird, and ask you hard questions.</p>
+        <div class="space-y-6">
+          <article class="rounded-2xl border border-black/[0.07] bg-white p-6 md:p-7" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+            <div class="mb-3 flex items-center gap-3">
+              <span class="adopt-chip" aria-hidden="true">1</span>
+              <h3 class="font-lora font-bold text-logo-dark text-xl m-0">Dedicated avian rescues — the gold standard</h3>
             </div>
-          </div>
-          <div>
-            <h3 class="font-lora font-bold text-logo-dark text-xl mb-3">Private rehoming — real, but verify everything</h3>
             <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-              <p>The second genuine channel is an owner rehoming directly — the estate sale, the military move, the family that admits the bird deserves more time than they have. These placements can be wonderful, because you get the one thing rescues can't always supply: a complete, first-hand history. Ask for the bird's vet records, band or purchase paperwork, diet, words, and fears. A sincere rehomer will talk your ear off; that's the tell.</p>
-              <p>The danger is that scammers dress up as exactly this person. The grieving widow, the deploying soldier, the missionary leaving for Cameroon — these are stock characters in parrot fraud, and we walk through their scripts line by line in our guide to <a href="/how-to-avoid-african-grey-parrot-scams/">avoiding African Grey scams</a>. The short version: meet the bird on video at minimum, never pay by gift card or wire, and treat any "free bird, just pay shipping" offer as the fiction it is.</p>
+              <p>Parrot-specific rescues are the best-run corner of the adoption world.</p>
+          <p>Organizations like <a href="https://phoenixlanding.org/" target="_blank" rel="noopener noreferrer">Phoenix Landing</a>, a nonprofit that has placed thousands of parrots and requires adopter education classes before placement, show what the process should look like: the bird is vetted, its known history is disclosed, you are interviewed and sometimes home-checked, and the rescue stays reachable after the bird goes home.</p>
+          <p>Regional avian rescues operate on the same model across most of the country, and the <a href="https://www.avianwelfare.org/" target="_blank" rel="noopener noreferrer">Avian Welfare Coalition</a> maintains education resources and a directory of member organizations that take parrot placement seriously.</p>
+              <p>Expect the good ones to be slow and a little demanding — application forms, references, a waiting period, a fee in the hundreds of dollars.</p>
+          <p>Every hurdle exists because the rescue has already met the bird once and does not want to meet it a third time. A "rescue" that will hand you a Grey today for a wire transfer and no questions is not a rescue; it is a listing.</p>
             </div>
-          </div>
-          <div>
-            <h3 class="font-lora font-bold text-logo-dark text-xl mb-3">General shelters and sanctuaries — the occasional surprise</h3>
+          </article>
+          <article class="rounded-2xl border border-black/[0.07] bg-white p-6 md:p-7" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+            <div class="mb-3 flex items-center gap-3">
+              <span class="adopt-chip" aria-hidden="true">2</span>
+              <h3 class="font-lora font-bold text-logo-dark text-xl m-0">Private rehoming — real, but verify everything</h3>
+            </div>
             <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-              <p>Greys occasionally surface at general animal shelters and exotic-animal sanctuaries, usually after an owner's death. Staff there are rarely parrot specialists, so the verification checklist in the next section becomes your responsibility rather than theirs: budget for an immediate avian vet exam and assume nothing about the bird's history. Honestly, "assume nothing and verify everything" is good advice on every channel, including ours.</p>
+              <p>The second genuine channel is an owner rehoming directly — the estate sale, the military move, the family that admits the bird deserves more time than they have.</p>
+          <p>These placements can be wonderful, because you get the one thing rescues can't always supply: a complete, first-hand history.</p>
+          <p>Ask for the bird's vet records, band or purchase paperwork, diet, words, and fears. A sincere rehomer will talk your ear off; that's the tell.</p>
+              <p>The danger is that scammers dress up as exactly this person.</p>
+          <p>The grieving widow, the deploying soldier, the missionary leaving for Cameroon — these are stock characters in parrot fraud, and we walk through their scripts line by line in our guide to <a href="/how-to-avoid-african-grey-parrot-scams/">avoiding African Grey scams</a>.</p>
+          <p>The short version: meet the bird on video at minimum, never pay by gift card or wire, and treat any "free bird, just pay shipping" offer as the fiction it is.</p>
             </div>
-          </div>
+          </article>
+          <article class="rounded-2xl border border-black/[0.07] bg-white p-6 md:p-7" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+            <div class="mb-3 flex items-center gap-3">
+              <span class="adopt-chip" aria-hidden="true">3</span>
+              <h3 class="font-lora font-bold text-logo-dark text-xl m-0">General shelters and sanctuaries — the occasional surprise</h3>
+            </div>
+            <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+              <p>Greys occasionally surface at general animal shelters and exotic-animal sanctuaries, usually after an owner's death.</p>
+          <p>Staff there are rarely parrot specialists, so the verification checklist in the next section becomes your responsibility rather than theirs: budget for an immediate avian vet exam and assume nothing about the bird's history.</p>
+              <p>Honestly, "assume nothing and verify everything" is good advice on every channel, including ours.</p>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -312,27 +370,46 @@ const breederWins = [
           <h2 class="font-lora font-bold text-logo-dark">What Should You Verify Before Adopting Any African Grey?</h2>
         </div>
         <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Before adopting any African Grey, verify three things: paperwork proving captive-bred origin (closed band, hatch or purchase record), health status through an independent avian vet exam, and the bird's behavioral history — its bonds, fears, diet, and the real reason it is being rehomed.</p>
-        <div class="space-y-7">
-          <div>
-            <h3 class="font-lora font-bold text-logo-dark text-xl mb-3">The paperwork — yes, adoption needs it too</h3>
-            <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-              <p>African Greys have been listed under CITES Appendix I since January 2017 (the CoP17 uplisting), which means legal ownership in the United States rests on the bird being captive-bred — and on being able to show it. That does not lapse because a bird changes hands for an adoption fee instead of a purchase price. Ask for whatever provenance exists: a closed leg band (slipped onto the chick's leg in the first weeks of life, impossible to add to an adult), a hatch certificate, the original breeder receipt, or prior vet records that establish the bird's documented history. Our <a href="/cites-african-grey-documentation/">CITES documentation guide</a> explains what each paper means and why a complete trail protects you, not just the bird.</p>
-              <p>Be realistic: a twenty-year-old rehomed Grey may have a thinner file than a baby leaving our aviary, and an incomplete history is not automatically a crime scene. But "thin" and "absent" are different. A bird with no band, no papers, and a seller who gets vague when you ask is a bird you walk away from — adopting an undocumented Grey can fund the very trade that put the species on Appendix I.</p>
+        <div class="space-y-6">
+          <article class="overflow-hidden rounded-[20px] border border-black/[0.07] bg-white" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+            <div class="flex items-center gap-2.5 bg-green px-6 py-3.5 md:px-7">
+              <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-white" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <h3 class="font-lora m-0 text-lg font-bold text-white">The paperwork — yes, adoption needs it too</h3>
             </div>
-          </div>
-          <div>
-            <h3 class="font-lora font-bold text-logo-dark text-xl mb-3">The health screen — an independent avian vet, before money moves</h3>
-            <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-              <p>Every adopted Grey should see a qualified avian veterinarian — found through the <a href="https://www.aav.org/" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians directory</a> — either before the adoption is final or within the first days after. A proper new-bird workup screens for the diseases that matter in Greys: PBFD (Psittacine Beak and Feather Disease), Avian Polyomavirus, and psittacosis, plus bloodwork that catches the nutritional deficiencies common in birds fed seed-only diets for years. Rescues usually arrange this screening themselves and hand you the results; in a private rehoming, you arrange it, and a seller who resists an independent vet check has answered your question for you.</p>
-              <p>This is the same standard we hold ourselves to — every C.A.Gs bird leaves with PCR DNA sexing, PBFD and Polyomavirus screening, and a board-certified avian veterinarian's exam on paper, backed by a 72-hour written guarantee detailed on our <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>. We mention it not as a sales line but as a benchmark: that is what "health-verified" looks like, and an adopted bird deserves the same diligence even when you have to supply it yourself.</p>
+            <div class="space-y-4 p-6 text-[15px] leading-relaxed text-stone-600 md:p-7" style="max-width:none;">
+              <p>African Greys have been listed under CITES Appendix I since January 2017 (the CoP17 uplisting), which means legal ownership in the United States rests on the bird being captive-bred — and on being able to show it.</p>
+          <p>That does not lapse because a bird changes hands for an adoption fee instead of a purchase price.</p>
+          <p>Ask for whatever provenance exists: a closed leg band (slipped onto the chick's leg in the first weeks of life, impossible to add to an adult), a hatch certificate, the original breeder receipt, or prior vet records that establish the bird's documented history.</p>
+          <p>Our <a href="/cites-african-grey-documentation/">CITES documentation guide</a> explains what each paper means and why a complete trail protects you, not just the bird.</p>
+              <p>Be realistic: a twenty-year-old rehomed Grey may have a thinner file than a baby leaving our aviary, and an incomplete history is not automatically a crime scene. But "thin" and "absent" are different.</p>
+          <p>A bird with no band, no papers, and a seller who gets vague when you ask is a bird you walk away from — adopting an undocumented Grey can fund the very trade that put the species on Appendix I.</p>
             </div>
-          </div>
-          <div>
-            <h3 class="font-lora font-bold text-logo-dark text-xl mb-3">The behavioral history — the file nobody prints</h3>
-            <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-              <p>The third verification has no certificate: who is this bird? Ask what the Grey eats and whether it converted to pellets. Ask who it bonded to — and who it bit. Ask about plucking, screaming patterns, night frights, words it knows, sounds it hates. Ask, gently, for the real reason it is being given up; the first answer is often the polite one. None of these answers should disqualify a bird — a plucker in a chaotic home often re-feathers in a calm one — but every answer calibrates the road ahead and tells you whether <em>your</em> household is the right next chapter. A good rescue volunteers all of this. A good rehomer cries through it. A scammer changes the subject to shipping fees.</p>
+          </article>
+          <article class="overflow-hidden rounded-[20px] border border-black/[0.07] bg-white" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+            <div class="flex items-center gap-2.5 bg-green px-6 py-3.5 md:px-7">
+              <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-white" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <h3 class="font-lora m-0 text-lg font-bold text-white">The health screen — an independent avian vet, before money moves</h3>
             </div>
-          </div>
+            <div class="space-y-4 p-6 text-[15px] leading-relaxed text-stone-600 md:p-7" style="max-width:none;">
+              <p>Every adopted Grey should see a qualified avian veterinarian — found through the <a href="https://www.aav.org/" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians directory</a> — either before the adoption is final or within the first days after.</p>
+          <p>A proper new-bird workup screens for the diseases that matter in Greys: PBFD (Psittacine Beak and Feather Disease), Avian Polyomavirus, and psittacosis, plus bloodwork that catches the nutritional deficiencies common in birds fed seed-only diets for years.</p>
+          <p>Rescues usually arrange this screening themselves and hand you the results; in a private rehoming, you arrange it, and a seller who resists an independent vet check has answered your question for you.</p>
+              <p>This is the same standard we hold ourselves to — every C.A.Gs bird leaves with PCR DNA sexing, PBFD and Polyomavirus screening, and a board-certified avian veterinarian's exam on paper, backed by a 72-hour written guarantee detailed on our <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>.</p>
+          <p>We mention it not as a sales line but as a benchmark: that is what "health-verified" looks like, and an adopted bird deserves the same diligence even when you have to supply it yourself.</p>
+            </div>
+          </article>
+          <article class="overflow-hidden rounded-[20px] border border-black/[0.07] bg-white" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+            <div class="flex items-center gap-2.5 bg-green px-6 py-3.5 md:px-7">
+              <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-white" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+              <h3 class="font-lora m-0 text-lg font-bold text-white">The behavioral history — the file nobody prints</h3>
+            </div>
+            <div class="space-y-4 p-6 text-[15px] leading-relaxed text-stone-600 md:p-7" style="max-width:none;">
+              <p>The third verification has no certificate: who is this bird? Ask what the Grey eats and whether it converted to pellets. Ask who it bonded to — and who it bit.</p>
+          <p>Ask about plucking, screaming patterns, night frights, words it knows, sounds it hates. Ask, gently, for the real reason it is being given up; the first answer is often the polite one.</p>
+          <p>None of these answers should disqualify a bird — a plucker in a chaotic home often re-feathers in a calm one — but every answer calibrates the road ahead and tells you whether <em>your</em> household is the right next chapter.</p>
+          <p>A good rescue volunteers all of this. A good rehomer cries through it. A scammer changes the subject to shipping fees.</p>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -346,18 +423,61 @@ const breederWins = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">After the Paperwork</p>
           <h2 class="font-lora font-bold text-logo-dark">What Is Life with a Rehomed African Grey Actually Like?</h2>
         </div>
-        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Expect three phases with a rehomed Grey: a quiet honeymoon while the bird observes you, a testing period when its real history surfaces, and — over 3 to 12 months of consistent, pressure-free work — the genuine bond. The timeline belongs to the bird; your job is to be predictable.</p>
-        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-          <p>The first weeks are deceptively easy. A displaced Grey goes into observation mode — quiet, compliant, watchful — and new adopters often report that the "difficult" bird they were warned about seems perfectly fine. Then, somewhere between week two and month two, the real bird shows up: the opinions, the boundaries, the habits learned in previous homes. A bird that was grabbed may bite hands on principle; a bird that lost its person may scream for someone who isn't coming back, or pick one new favorite and defend them against the family. This phase is not failure — it is the bird finally feeling safe enough to be honest with you, which is progress wearing a disguise.</p>
-          <p>The way through is the same trust-building sequence used with any Grey, run at the bird's pace rather than yours: a genuine settle-in period, treats through the cage bars, an open door the bird chooses to use, then the step-up command — the full seven stages are laid out in our <a href="/how-to-tame-african-grey-parrot/">African Grey taming guide</a>, including the honest 3–12 month timeline for adult and rescue birds. The steps never change between a baby and a twenty-year-old; only the calendar does. Short sessions, identical routines, and ending every interaction on a small win will out-perform every shortcut ever invented, mostly because there are no shortcuts and never were.</p>
-          <p>Two practical notes from the aviary side. First, diet conversion is often the real first project: many surrendered Greys arrive on all-seed diets, and moving them toward the pellet-and-vegetables foundation in our <a href="/african-grey-parrot-diet/">African Grey diet guide</a> does as much for behavior as any training plan. Second, watch for grief — Greys mourn lost people recognizably: quieter, clingier or pricklier, sometimes calling a missing name. Time and routine metabolize it, and the capacity for that grief is the same capacity that will eventually attach to you. It is the feature, not the bug, of a bird that can love someone for forty years.</p>
-          <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">What Should the First Vet Visit Cover for a Rehomed Grey?</h4>
-          <p>Book a board-certified avian vet within the first week, even if the bird looks fine. A baseline exam, a weight on record, and screening appropriate to the bird's unknown history turn "we think she's healthy" into something you actually know.</p>
-          <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">What If the Paperwork Is Thin?</h5>
-          <p>Many genuine rehomes arrive with little more than a name and a cage. Document what you can at that first visit — the vet's exam record plus the band number, if the bird wears one, becomes the start of the paper trail going forward.</p>
-          <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">Start the Weight Log on Day One</h6>
-          <p>A daily gram-scale weight is the cheapest health monitor a rehomed Grey can have. Stress hides in behavior; it shows up on the scale first.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Expect three phases with a rehomed Grey: a quiet honeymoon while the bird observes you, a testing period when its real history surfaces, and — over 3 to 12 months of consistent, pressure-free work — the genuine bond.</p>
+          <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">The timeline belongs to the bird; your job is to be predictable.</p>
+
+        <!-- 3-phase strip (process-flow infographic, 760px idiom) -->
+        <div class="adopt-phases mb-7" role="img" aria-label="The three phases of settling a rehomed African Grey: quiet honeymoon in the first weeks, testing period from week two to month two, then the genuine bond over three to twelve months.">
+          <div class="adopt-phase">
+            <span class="adopt-phase__when">First weeks</span>
+            <span class="adopt-phase__name">Quiet honeymoon</span>
+            <span class="adopt-phase__note">Observation mode — watchful, compliant</span>
+          </div>
+          <span class="adopt-phase__arrow" aria-hidden="true">→</span>
+          <div class="adopt-phase">
+            <span class="adopt-phase__when">Week 2 – month 2</span>
+            <span class="adopt-phase__name">Testing period</span>
+            <span class="adopt-phase__note">The real history surfaces — progress in disguise</span>
+          </div>
+          <span class="adopt-phase__arrow" aria-hidden="true">→</span>
+          <div class="adopt-phase">
+            <span class="adopt-phase__when">3–12 months</span>
+            <span class="adopt-phase__name">The genuine bond</span>
+            <span class="adopt-phase__note">Consistent, pressure-free trust work</span>
+          </div>
         </div>
+
+        <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
+          <p>The first weeks are deceptively easy. A displaced Grey goes into observation mode — quiet, compliant, watchful — and new adopters often report that the "difficult" bird they were warned about seems perfectly fine.</p>
+          <p>Then, somewhere between week two and month two, the real bird shows up: the opinions, the boundaries, the habits learned in previous homes.</p>
+          <p>A bird that was grabbed may bite hands on principle; a bird that lost its person may scream for someone who isn't coming back, or pick one new favorite and defend them against the family.</p>
+          <p>This phase is not failure — it is the bird finally feeling safe enough to be honest with you, which is progress wearing a disguise.</p>
+          <p>The way through is the same trust-building sequence used with any Grey, run at the bird's pace rather than yours: a genuine settle-in period, treats through the cage bars, an open door the bird chooses to use, then the step-up command — the full seven stages are laid out in our <a href="/how-to-tame-african-grey-parrot/">African Grey taming guide</a>, including the honest 3–12 month timeline for adult and rescue birds.</p>
+          <p>The steps never change between a baby and a twenty-year-old; only the calendar does.</p>
+          <p>Short sessions, identical routines, and ending every interaction on a small win will out-perform every shortcut ever invented, mostly because there are no shortcuts and never were.</p>
+          <p>Two practical notes from the aviary side.</p>
+          <p>First, diet conversion is often the real first project: many surrendered Greys arrive on all-seed diets, and moving them toward the pellet-and-vegetables foundation in our <a href="/african-grey-parrot-diet/">African Grey diet guide</a> does as much for behavior as any training plan.</p>
+          <p>Second, watch for grief — Greys mourn lost people recognizably: quieter, clingier or pricklier, sometimes calling a missing name.</p>
+          <p>Time and routine metabolize it, and the capacity for that grief is the same capacity that will eventually attach to you. It is the feature, not the bug, of a bird that can love someone for forty years.</p>
+          <h3 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">What Should the First Vet Visit Cover for a Rehomed Grey?</h3>
+          <p>Book a board-certified avian vet within the first week, even if the bird looks fine.</p>
+          <p>A baseline exam, a weight on record, and screening appropriate to the bird's unknown history turn "we think she's healthy" into something you actually know.</p>
+          <h4 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">What If the Paperwork Is Thin?</h4>
+          <p>Many genuine rehomes arrive with little more than a name and a cage. Document what you can at that first visit — the vet's exam record plus the band number, if the bird wears one, becomes the start of the paper trail going forward.</p>
+          <h5 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">Start the Weight Log on Day One</h5>
+          <p>A daily gram-scale weight is the cheapest health monitor a rehomed Grey can have.</p>
+          <h6 class="font-sora font-bold text-[11px] uppercase tracking-wide text-clay-ink mt-2.5 mb-1">Stress Shows on the Scale First</h6>
+          <p>Stress hides in behavior; it shows up on the scale first.</p>
+        </div>
+
+        <figure class="mt-7 max-w-[420px] mx-auto">
+          <img src="/cags-tame-african-grey-parrot-with-owner-480.webp"
+            alt="A tame African Grey perched calmly with its owner at C.A.Gs in Midland, Texas — the genuine bond a rehomed Grey reaches after months of consistent, pressure-free trust-building."
+            title="The bond after the testing period — trust-building with an African Grey"
+            width="480" height="475" loading="lazy" decoding="async"
+            class="w-full h-auto max-h-[440px] object-cover rounded-2xl border border-black/[0.07]" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);object-position:50% 30%;" />
+          <figcaption class="font-sora text-[13px] text-stone-600 mt-2.5">Where the 3–12 month road ends — a settled, trusting Grey. <a href="/how-to-tame-african-grey-parrot/" class="text-green underline decoration-1 underline-offset-2">The 7-step taming method →</a></figcaption>
+        </figure>
       </div>
     </section>
 
@@ -372,10 +492,23 @@ const breederWins = [
         </div>
         <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">A hand-raised, documented baby is usually the better fit for first-time Grey owners, busy family households, and anyone who wants a known history — a bird with verified health screening, complete CITES paperwork, and human trust already built in before it ever comes home.</p>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-          <p>If you read the rehomed-Grey sections and your honest answer was "I admire that, and it isn't me" — that is a good outcome, not a failure of compassion. A placement that exceeds the adopter's patience becomes the bird's <em>next</em> surrender. For those homes the captive-bred road exists, and this is where we stop being neutral and start being us.</p>
-          <p>Here at C.A.Gs, every Congo and Timneh is hatched in our Midland, Texas home, hand-fed by our whole family — Mark, Teri, James and Allyson — and weaned naturally at 12 to 16 weeks before it travels anywhere. Each bird leaves with the full file this page has been telling you to demand from everyone else: CITES Appendix I captive-bred documentation, a hatch certificate and closed band, PCR DNA sexing, PBFD and Polyomavirus screening, a board-certified avian veterinarian's exam, and our 72-hour written health guarantee. Pricing is published and honest — adults from $1,700 and hand-raised babies to $2,500 on our <a href="/congo-african-grey-for-sale/">Congo African Grey page</a>, and $1,500–$1,600 on our <a href="/timneh-african-grey-for-sale/">Timneh African Grey page</a> — with nationwide shipping at $185 to your major airport or $350 to your door, flown IATA-compliant on Delta, United, or American.</p>
-          <p>The process is conversational, not transactional: tell us about your household through the inquiry form below, we reply within 24 hours, and we match on temperament rather than first-come-first-served — the same screening instinct the good rescues use. And because we would rather lose a sale than place a bird wrong, we will tell you plainly if what you describe sounds like an adoption home. Some of the best placements we have ever influenced were birds we never sold.</p>
+          <p>If you read the rehomed-Grey sections and your honest answer was "I admire that, and it isn't me" — that is a good outcome, not a failure of compassion.</p>
+          <p>A placement that exceeds the adopter's patience becomes the bird's <em>next</em> surrender. For those homes the captive-bred road exists, and this is where we stop being neutral and start being us.</p>
+          <p>Here at C.A.Gs, every Congo and Timneh is hatched in our Midland, Texas home, hand-fed by our whole family — Mark, Teri, James and Allyson — and weaned naturally at 12 to 16 weeks before it travels anywhere.</p>
+          <p>Each bird leaves with the full file this page has been telling you to demand from everyone else: CITES Appendix I captive-bred documentation, a hatch certificate and closed band, PCR DNA sexing, PBFD and Polyomavirus screening, a board-certified avian veterinarian's exam, and our 72-hour written health guarantee.</p>
+          <p>Pricing is published and honest — adults from $1,700 and hand-raised babies to $2,500 on our <a href="/congo-african-grey-for-sale/">Congo African Grey page</a>, and $1,500–$1,600 on our <a href="/timneh-african-grey-for-sale/">Timneh African Grey page</a> — with nationwide shipping at $185 to your major airport or $350 to your door, flown IATA-compliant on Delta, United, or American.</p>
+          <p>The process is conversational, not transactional: tell us about your household through the inquiry form below, we reply within 24 hours, and we match on temperament rather than first-come-first-served — the same screening instinct the good rescues use.</p>
+          <p>And because we would rather lose a sale than place a bird wrong, we will tell you plainly if what you describe sounds like an adoption home. Some of the best placements we have ever influenced were birds we never sold.</p>
         </div>
+
+        <figure class="mt-7 max-w-[420px] mx-auto">
+          <img src="/hand-fed-african-grey-baby-breeder-480.webp"
+            alt="A hand-fed African Grey baby being raised at the C.A.Gs family aviary in Midland, Texas — the known-history, people-bonded start that makes a captive-bred baby the better fit for many first-time owners."
+            title="Hand-fed C.A.Gs baby — the known-history alternative to adoption"
+            width="480" height="360" loading="lazy" decoding="async"
+            class="w-full h-auto max-h-[440px] object-cover rounded-2xl border border-black/[0.07]" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);object-position:50% 40%;" />
+          <figcaption class="font-sora text-[13px] text-stone-600 mt-2.5">Hand-feeding in our Midland home — where the known history starts. <a href="/captive-bred-african-grey-parrot/" class="text-green underline decoration-1 underline-offset-2">What captive-bred really means →</a></figcaption>
+        </figure>
       </div>
     </section>
 
@@ -396,7 +529,7 @@ const breederWins = [
                 <h3 class="font-lora font-bold text-[16px] text-logo-dark leading-snug m-0">{item.q}</h3>
                 <svg class="cag-faq-chevron flex-shrink-0" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e8604c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
-              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><p class="font-sora text-stone-600 text-sm leading-relaxed px-5 pb-5 m-0" set:html={item.a}></p></div></div>
+              <div class="cag-faq-panel"><div class="cag-faq-panel-inner"><div class="px-5 pb-5">{item.a.split("\n\n").map((t) => <p class="font-sora text-stone-600 text-sm leading-relaxed m-0 mb-2 last:mb-0" set:html={t}></p>)}</div></div></div>
             </div>
           ))}
         </div>
@@ -408,7 +541,8 @@ const breederWins = [
       <div class="max-w-3xl mx-auto text-center">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Go Deeper</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">What Should You Read Next — Whichever Road You Choose?</h2>
-        <p class="font-sora text-stone-600 text-[15px] leading-relaxed mx-auto" style="max-width:70ch;">For the numbers, our <a href="/african-grey-parrot-adoption-cost/">adoption cost breakdown</a> handles rescue fees and rehoming math while the <a href="/african-grey-parrot-price/">price guide</a> covers the breeder side. Bringing home a rehomed bird? The <a href="/how-to-tame-african-grey-parrot/">taming guide</a> is your roadmap. Leaning toward a baby? Start with the <a href="/captive-bred-african-grey-parrot/">captive-bred guide</a> and our <a href="/african-grey-parrot-faq/">buyer FAQ</a> — and either way, verify everything against the <a href="/how-to-avoid-african-grey-parrot-scams/">scam-prevention guide</a> before any money moves.</p>
+        <p class="font-sora text-stone-600 text-[15px] leading-relaxed mx-auto" style="max-width:70ch;">For the numbers, our <a href="/african-grey-parrot-adoption-cost/">adoption cost breakdown</a> handles rescue fees and rehoming math while the <a href="/african-grey-parrot-price/">price guide</a> covers the breeder side. Bringing home a rehomed bird? The <a href="/how-to-tame-african-grey-parrot/">taming guide</a> is your roadmap.</p>
+          <p class="font-sora text-stone-600 text-[15px] leading-relaxed mx-auto" style="max-width:70ch;">Leaning toward a baby? Start with the <a href="/captive-bred-african-grey-parrot/">captive-bred guide</a> and our <a href="/african-grey-parrot-faq/">buyer FAQ</a> — and either way, verify everything against the <a href="/how-to-avoid-african-grey-parrot-scams/">scam-prevention guide</a> before any money moves.</p>
       </div>
     </section>
 
@@ -419,7 +553,8 @@ const breederWins = [
       <div class="max-w-3xl mx-auto">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Talk It Through</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">Not Sure Which Road Fits Your Home? Ask Us — We'll Answer Honestly</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Tell us about your household and what drew you to African Grey adoption, and we will reply within 24 hours with a straight answer — including "an avian rescue sounds like your better fit" when that is the truth. And if a hand-raised, captive-bred baby is the right road, every C.A.Gs Grey comes PCR DNA-sexed, health-screened, vet-certified, and placed with complete CITES Appendix I documentation, shipped nationwide ($185 airport / $350 home).</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Tell us about your household and what drew you to African Grey adoption, and we will reply within 24 hours with a straight answer — including "an avian rescue sounds like your better fit" when that is the truth.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">And if a hand-raised, captive-bred baby is the right road, every C.A.Gs Grey comes PCR DNA-sexed, health-screened, vet-certified, and placed with complete CITES Appendix I documentation, shipped nationwide ($185 airport / $350 home).</p>
       </div>
     </section>
 
@@ -440,6 +575,28 @@ const breederWins = [
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       }));
     })();
+
+    // Section jump-nav auto-injector — "↓ Continue: <next section>"
+    (function () {
+      var ids = ['commitment','adopt-vs-buy','where','verify','rehomed','better-fit','faq','contact'];
+      var labels = {
+        'adopt-vs-buy': 'Adopting vs Buying — Where Each Wins',
+        'where':        'Where to Genuinely Adopt',
+        'verify':       'What to Verify First',
+        'rehomed':      'Life with a Rehomed Grey',
+        'better-fit':   'When a Baby Is the Better Fit',
+        'faq':          'Adoption FAQ',
+        'contact':      'Ask C.A.Gs',
+      };
+      for (var i = 0; i < ids.length - 1; i++) {
+        var cur = document.getElementById(ids[i]);
+        if (!cur) continue;
+        var nav = document.createElement('div');
+        nav.className = 'section-next-nav';
+        nav.innerHTML = '<a href="#' + ids[i + 1] + '" class="section-next-link">&#8595; Continue: ' + (labels[ids[i + 1]] || ids[i + 1]) + '</a>';
+        cur.appendChild(nav);
+      }
+    })();
   </script>
 </BaseLayout>
 
@@ -453,7 +610,44 @@ const breederWins = [
 
   /* AA: clay as small readable text on LIGHT sections → #b04228 (4.5:1). */
   .adopt-d a.text-clay, .adopt-d .text-clay { color:#b04228; }
-  .adopt-d .hero-v3-b .text-clay, .adopt-d .bg-clay { color:inherit; }
+  .adopt-d .hero-v3-b .text-clay { color:inherit; }
+  /* Clay FILLS keep white text (global .bg-clay renders --clay-ink #bd4129, 5.3:1). */
+  .adopt-d .bg-clay { color:#fff; }
+
+  /* Hero eyebrow — HeroV3 pattern (no pill, no uppercase). */
+  .adopt-d .hero-eyebrow { font-size:10px; font-weight:500; letter-spacing:.12em; color:rgba(255,255,255,.75); text-transform:none; }
+  @media (min-width:768px) { .adopt-d .hero-eyebrow { font-size:11px; } }
+
+  /* Numbered channel chips (#where cards). White on clay-ink = 5.3:1. */
+  .adopt-chip { display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    width:30px; height:30px; border-radius:50%; background:var(--color-clay-ink,#bd4129);
+    color:#fff; font-family:'IBM Plex Sans',sans-serif; font-size:14px; font-weight:700; }
+
+  /* 3-phase strip (#rehomed) — process-flow infographic idiom on green. */
+  .adopt-phases { display:flex; align-items:stretch; gap:10px; max-width:760px;
+    background:#2D6A4F; border-radius:20px; padding:18px 20px; }
+  .adopt-phase { flex:1; display:flex; flex-direction:column; gap:3px;
+    background:rgba(0,0,0,.14); border:1px solid rgba(255,255,255,.18);
+    border-radius:14px; padding:12px 14px; }
+  .adopt-phase__when { font-family:'IBM Plex Sans',sans-serif; font-size:10.5px; font-weight:700;
+    letter-spacing:.1em; text-transform:uppercase; color:#ffd6cf; }
+  .adopt-phase__name { font-family:'Newsreader',serif; font-size:17px; font-weight:600; color:#fff; line-height:1.2; }
+  .adopt-phase__note { font-family:'IBM Plex Sans',sans-serif; font-size:12.5px; line-height:1.45; color:rgba(255,255,255,.92); }
+  .adopt-phase__arrow { align-self:center; color:rgba(255,255,255,.85); font-size:18px; flex-shrink:0; }
+  @media (max-width:640px) {
+    .adopt-phases { flex-direction:column; gap:8px; }
+    .adopt-phase__arrow { transform:rotate(90deg); }
+  }
+
+  /* "↓ Continue:" section next-nav (JS-injected; style is:global so page-class scope works). */
+  .adopt-d .section-next-nav { text-align:right; padding-top:18px; margin-top:14px; border-top:1px solid #ede5dc; }
+  .adopt-d .section-next-link { font-family:'IBM Plex Sans',sans-serif; font-size:.85rem; font-weight:600;
+    color:#b04228; text-decoration:none; display:inline-block; padding:10px 0 10px 12px; margin:-10px 0; }
+  .adopt-d .section-next-link:hover { text-decoration:underline; }
+
+  /* Jump targets clear the 96px sticky header. */
+  .adopt-d section[id], .adopt-d div[id] { scroll-margin-top:110px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
 
   /* Woven in-content links: clay, underlined, AA-safe. */
   .adopt-d p a:not(.rounded-full):not(.bg-clay),
