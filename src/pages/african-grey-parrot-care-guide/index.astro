@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
 import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import TocV3 from '../../components/cag-library/TocV3.astro';
@@ -16,6 +17,27 @@ const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "African Grey Care Guide", url: "/african-grey-parrot-care-guide/" },
 ];
+
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system as
+// the homepage + scam/adoption pages; ids live on each section. Document order.
+const jumpSections = [
+  { id: 'diet',            label: 'Diet',            part: 1 },
+  { id: 'housing',         label: 'Housing',         part: 1 },
+  { id: 'enrichment',      label: 'Enrichment',      part: 1 },
+  { id: 'grooming',        label: 'Grooming',        part: 1 },
+  { id: 'lighting',        label: 'UV-B Light',      part: 2 },
+  { id: 'health',          label: 'Health',          part: 2 },
+  { id: 'vet',             label: 'Avian Vet',       part: 2 },
+  { id: 'congo-vs-timneh', label: 'Congo v Timneh',  part: 3 },
+  { id: 'available-birds', label: 'Available',       part: 3 },
+  { id: 'faq',             label: 'FAQ',             part: 3 },
+  { id: 'contact',         label: 'Ask C.A.Gs',      part: 3 },
+];
+const jumpPartNames = {
+  1: 'Daily Care',
+  2: 'Health & Light',
+  3: 'Choose & Reserve',
+};
 
 // ─── Available birds (cross-sell grid) — verified against data/clutch-inventory.json + price-matrix.json ───
 const birds = [
@@ -119,6 +141,8 @@ const articleSchema = {
       <Breadcrumb items={breadcrumbs} />
     </div>
 
+    <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Ask C.A.Gs →" ctaTarget="contact" />
+
     <!-- 1. HERO (cag-hero-v3 idiom · Authority Green · photo-led) -->
     <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
       <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
@@ -126,13 +150,12 @@ const articleSchema = {
         <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
           <!-- COPY -->
           <div class="order-2 text-center md:order-1 md:text-left">
-            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Owner's Care Guide · Diet, Housing &amp; Enrichment</p>
+            <p class="font-sora text-[11px] font-medium tracking-[0.12em] text-white/80">Owner's Care Guide · Diet, Housing &amp; Enrichment</p>
             <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
               African Grey Parrot Care Guide
             </h1>
-            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
-              Here at C.A.Gs in Midland, Texas, Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and Timneh African Greys since 2014 — and this is the same diet, housing, enrichment, lighting, and health routine we hand every family. Feed it right, house it well, and an African Grey is a talking companion for 40 to 60 years.
-            </p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Here at C.A.Gs in Midland, Texas, Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and Timneh African Greys since 2014 — and this is the same diet, housing, enrichment, lighting, and health routine we hand every family.</p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Feed it right, house it well, and an African Grey is a talking companion for 40 to 60 years.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
               <a href="#diet" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Start With Diet →</a>
               <a href="#available-birds" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">See Available Greys →</a>
@@ -241,30 +264,35 @@ const articleSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">African Grey Diet · Nutrition</p>
           <h2 class="font-lora font-bold text-logo-dark">What Do African Grey Parrots Eat — and What Will Make Them Sick?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>An African Grey thrives on a base of 60–80% formulated pellets, around 20% fresh vegetables, and only limited fruit</strong> — our <a href="/best-african-grey-parrot-food/">African Grey pellet food and diet guide</a> covers this calcium- and vitamin-A-supported plan in depth. Diet is the single biggest factor in whether a Grey reaches its full <a href="/african-grey-parrot-lifespan/">40–60 year lifespan</a> in good health, so here at C.A.Gs we send every bird home on the exact diet it is already eating.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>An African Grey thrives on a base of 60–80% formulated pellets, around 20% fresh vegetables, and only limited fruit</strong> — our <a href="/best-african-grey-parrot-food/">African Grey pellet food and diet guide</a> covers this calcium- and vitamin-A-supported plan in depth.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Diet is the single biggest factor in whether a Grey reaches its full <a href="/african-grey-parrot-lifespan/">40–60 year lifespan</a> in good health, so here at C.A.Gs we send every bird home on the exact diet it is already eating.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Pellets Are the Foundation</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A formulated pellet such as Harrison's Adult Lifetime Fine or Zupreem Natural should make up 60–80% of the diet. Pellets deliver a nutritionally complete base that a seed mix simply cannot match, and they prevent the selective "seed-junkie" feeding that drives most diet-related disease.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A formulated pellet such as Harrison's Adult Lifetime Fine or Zupreem Natural should make up 60–80% of the diet.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Pellets deliver a nutritionally complete base that a seed mix simply cannot match, and they prevent the selective "seed-junkie" feeding that drives most diet-related disease.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Vegetables for Vitamin A</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Build the fresh portion around dark leafy greens (kale, Swiss chard, collards) and orange-pigmented veg (sweet potato, carrot, butternut squash, bell pepper). These are rich in beta-carotene, which a Grey converts to vitamin A — the nutrient most often deficient in poorly fed birds.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Build the fresh portion around dark leafy greens (kale, Swiss chard, collards) and orange-pigmented veg (sweet potato, carrot, butternut squash, bell pepper).</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">These are rich in beta-carotene, which a Grey converts to vitamin A — the nutrient most often deficient in poorly fed birds.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Calcium, Treats &amp; Fruit</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Because Greys are prone to calcium deficiency, our full <a href="/african-grey-parrot-diet/">African Grey diet and feeding schedule</a> leans on cuttlebone or a calcium block free-choice plus regular greens. A few nuts or a slice of apple make great training treats, but keep fruit and nuts occasional — they are sugar and fat, not the main meal.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Because Greys are prone to calcium deficiency, our full <a href="/african-grey-parrot-diet/">African Grey diet and feeding schedule</a> leans on cuttlebone or a calcium block free-choice plus regular greens.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A few nuts or a slice of apple make great training treats, but keep fruit and nuts occasional — they are sugar and fat, not the main meal.</p>
           </article>
         </div>
 
         <div class="max-w-3xl mt-10">
           <h3 class="font-lora font-bold text-logo-dark mb-3">Which Foods Are Toxic to African Grey Parrots?</h3>
-          <p class="text-stone-600 leading-relaxed text-[15px] mb-3" style="max-width:70ch;">Some everyday foods are genuinely dangerous, and a Grey is small enough that a single exposure can be fatal. Independent avian-medicine resources such as the <a href="https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/" target="_blank" rel="noopener noreferrer">LafeberVet African Grey information sheet</a> reinforce the same toxic list we hand every buyer. <strong>Never feed any of the following:</strong></p>
+          <p class="text-stone-600 leading-relaxed text-[15px] mb-3" style="max-width:70ch;">Some everyday foods are genuinely dangerous, and a Grey is small enough that a single exposure can be fatal.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px] mb-3" style="max-width:70ch;">Independent avian-medicine resources such as the <a href="https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/" target="_blank" rel="noopener noreferrer">LafeberVet African Grey information sheet</a> reinforce the same toxic list we hand every buyer. <strong>Never feed any of the following:</strong></p>
           <ul class="space-y-2 list-none pl-0 text-stone-600 text-[15px]" style="max-width:70ch;">
             <li class="flex items-start gap-2"><span class="text-clay-ink font-bold flex-shrink-0">✗</span><span><strong>Avocado</strong> — every part (skin, flesh, pit) contains persin; cardiotoxic to birds.</span></li>
             <li class="flex items-start gap-2"><span class="text-clay-ink font-bold flex-shrink-0">✗</span><span><strong>Chocolate, caffeine, alcohol, and xylitol</strong> — all toxic, even in small amounts.</span></li>
@@ -273,7 +301,8 @@ const articleSchema = {
           </ul>
           <div class="mt-5 rounded-xl border border-clay/25 bg-clay/[0.05] p-5">
             <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-clay-ink mb-1.5">The Kitchen Danger Nobody Warns You About</h4>
-            <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">It is not a food at all: <strong>PTFE (Teflon) fumes</strong> from overheated non-stick cookware are airborne, odorless, and can kill a parrot within minutes. Keep your Grey well away from the kitchen, and retire non-stick pans, self-cleaning ovens, and aerosol cooking sprays from any room a bird breathes in.</p>
+            <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">It is not a food at all: <strong>PTFE (Teflon) fumes</strong> from overheated non-stick cookware are airborne, odorless, and can kill a parrot within minutes.</p>
+            <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">Keep your Grey well away from the kitchen, and retire non-stick pans, self-cleaning ovens, and aerosol cooking sprays from any room a bird breathes in.</p>
           </div>
         </div>
       </div>
@@ -285,7 +314,8 @@ const articleSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Cage Size · Housing Setup</p>
           <h2 class="font-lora font-bold text-logo-dark">How Big a Cage Does an African Grey Parrot Need, and Where Should It Go?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>A single Congo African Grey needs a cage of at least 36" W × 24" D × 48" H, with ¾"–1" bar spacing in stainless steel</strong> — wider bars can trap the head, narrower bars can trap toes. A <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a> can live comfortably in a slightly smaller footprint, but for a species that forages up to twelve hours a day in the wild, bigger is always better.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>A single Congo African Grey needs a cage of at least 36" W × 24" D × 48" H, with ¾"–1" bar spacing in stainless steel</strong> — wider bars can trap the head, narrower bars can trap toes.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">A <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a> can live comfortably in a slightly smaller footprint, but for a species that forages up to twelve hours a day in the wild, bigger is always better.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
@@ -302,13 +332,16 @@ const articleSchema = {
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">The Right Perches</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Offer at least three perch types of varying diameter (around an inch is ideal): natural wood such as manzanita or java for foot health, a rope perch for grip, and a flat platform for rest. Skip uniform plastic dowels — they cause pressure sores.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Offer at least three perch types of varying diameter (around an inch is ideal): natural wood such as manzanita or java for foot health, a rope perch for grip, and a flat platform for rest.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Skip uniform plastic dowels — they cause pressure sores.</p>
           </article>
         </div>
 
         <div class="max-w-3xl mt-10">
           <h3 class="font-lora font-bold text-logo-dark mb-3">Where in the Home Should an African Grey's Cage Sit?</h3>
-          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Position the cage against a wall rather than marooned in the centre of a room, at roughly human eye level, away from windows with harsh afternoon sun, and far from the kitchen and its <strong>PTFE fumes, aerosols, and gas-stove carbon monoxide</strong>. A high-traffic living area where your Grey can watch the household come and go tends to produce a far more confident, socialised bird than a quiet back room. Give the cage a calm corner for sleep, too: Greys need 10–12 hours of dark, undisturbed rest, and a sleep-deprived Grey is a cranky, nippy, plucking-prone Grey.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Position the cage against a wall rather than marooned in the centre of a room, at roughly human eye level, away from windows with harsh afternoon sun, and far from the kitchen and its <strong>PTFE fumes, aerosols, and gas-stove carbon monoxide</strong>.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">A high-traffic living area where your Grey can watch the household come and go tends to produce a far more confident, socialised bird than a quiet back room.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Give the cage a calm corner for sleep, too: Greys need 10–12 hours of dark, undisturbed rest, and a sleep-deprived Grey is a cranky, nippy, plucking-prone Grey.</p>
         </div>
       </div>
     </section>
@@ -319,7 +352,8 @@ const articleSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Enrichment · Out-of-Cage Time</p>
           <h2 class="font-lora font-bold text-logo-dark">How Much Enrichment and Out-of-Cage Time Does an African Grey Need?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>An African Grey needs 3–4 hours of direct interaction and supervised out-of-cage time every single day</strong> — for a bird with the cognitive ability of a four- to six-year-old child, mental stimulation is not a luxury, it is essential healthcare. The intelligence that makes a Grey the world's <a href="/african-grey-parrot-guide/">best talking companion parrot</a> is exactly what makes a bored, under-stimulated Grey scream, plucked, and miserable.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>An African Grey needs 3–4 hours of direct interaction and supervised out-of-cage time every single day</strong> — for a bird with the cognitive ability of a four- to six-year-old child, mental stimulation is not a luxury, it is essential healthcare.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">The intelligence that makes a Grey the world's <a href="/african-grey-parrot-guide/">best talking companion parrot</a> is exactly what makes a bored, under-stimulated Grey scream, plucked, and miserable.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
@@ -331,18 +365,22 @@ const articleSchema = {
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Daily Out-of-Cage Time</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Three to four hours a day in a bird-proofed room is non-negotiable. Windows and mirrors covered, ceiling fans off, other pets secured, no open water or toxic plants — supervised freedom is where a Grey burns energy and bonds with its family.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Three to four hours a day in a bird-proofed room is non-negotiable.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Windows and mirrors covered, ceiling fans off, other pets secured, no open water or toxic plants — supervised freedom is where a Grey burns energy and bonds with its family.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Talk &amp; Train Gently</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Most Greys begin attempting words between 12 and 18 months. Our <a href="/how-to-tame-african-grey-parrot/">7-step African Grey taming guide</a> walks the same gentle method: short, positive 10–15 minute sessions a few times a day with a target stick and a favorite reward. Never punish a Grey for not performing — fear permanently damages trust.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Most Greys begin attempting words between 12 and 18 months. Our <a href="/how-to-tame-african-grey-parrot/">7-step African Grey taming guide</a> walks the same gentle method: short, positive 10–15 minute sessions a few times a day with a target stick and a favorite reward.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Never punish a Grey for not performing — fear permanently damages trust.</p>
           </article>
         </div>
 
         <div class="max-w-3xl mt-10">
           <h3 class="font-lora font-bold text-logo-dark mb-3">Why Do Bored African Greys Pluck and Scream?</h3>
-          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">A Grey does not act out to be difficult — conservation references such as the <a href="https://www.parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">World Parrot Trust's grey parrot encyclopedia</a> describe a profoundly social, intelligent animal, and feather-destructive behavior and constant screaming are simply how that bird tells you its needs are not being met. The single most common mistake we see is treating a Grey like a cage ornament. Teri puts it plainly to every C.A.Gs family: <em>"A Grey will fill whatever you give it — give it puzzles and conversation, or it will give you problems."</em> Build a predictable daily rhythm of feeding, foraging, interaction, and sleep, and most behavioral issues never start in the first place.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">A Grey does not act out to be difficult — conservation references such as the <a href="https://www.parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">World Parrot Trust's grey parrot encyclopedia</a> describe a profoundly social, intelligent animal, and feather-destructive behavior and constant screaming are simply how that bird tells you its needs are not being met.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">The single most common mistake we see is treating a Grey like a cage ornament.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Teri puts it plainly to every C.A.Gs family: <em>"A Grey will fill whatever you give it — give it puzzles and conversation, or it will give you problems."</em> Build a predictable daily rhythm of feeding, foraging, interaction, and sleep, and most behavioral issues never start in the first place.</p>
         </div>
       </div>
     </section>
@@ -355,19 +393,22 @@ const articleSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Grooming · Bathing · Hygiene</p>
           <h2 class="font-lora font-bold text-logo-dark">How Do You Groom and Bathe an African Grey Parrot?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Bathe an African Grey two to three times a week with plain lukewarm water, and keep nails, wings, and beak in check with an avian vet's help.</strong> Greys are a powder-down species — they produce a fine white feather dust that keeps plumage waterproof but also coats the room — so regular bathing is as much about your Grey's skin and feather health as it is about the dander.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Bathe an African Grey two to three times a week with plain lukewarm water, and keep nails, wings, and beak in check with an avian vet's help.</strong></p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Greys are a powder-down species — they produce a fine white feather dust that keeps plumage waterproof but also coats the room — so regular bathing is as much about your Grey's skin and feather health as it is about the dander.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Bathing &amp; Powder Down</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Offer a shallow dish, a gentle mist, or a shower perch 2–3 times weekly — plain water only, no soaps. Bathing controls powder-down dust, keeps feathers conditioned, and discourages the over-preening that can tip into plucking. An air purifier helps dander-sensitive households.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Offer a shallow dish, a gentle mist, or a shower perch 2–3 times weekly — plain water only, no soaps.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Bathing controls powder-down dust, keeps feathers conditioned, and discourages the over-preening that can tip into plucking. An air purifier helps dander-sensitive households.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Nails, Wings &amp; Beak</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A Grey with proper perches and chew toys usually keeps its own beak and nails in shape. When a nail trim or wing clip is needed, have an avian vet or experienced groomer do it — a clipped quick bleeds fast, and a badly cut wing leaves a bird unable to land safely.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A Grey with proper perches and chew toys usually keeps its own beak and nails in shape.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">When a nail trim or wing clip is needed, have an avian vet or experienced groomer do it — a clipped quick bleeds fast, and a badly cut wing leaves a bird unable to land safely.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
@@ -385,7 +426,9 @@ const articleSchema = {
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">UV-B Lighting · Vitamin D3</p>
           <h2 class="font-lora font-bold text-logo-dark">Does an African Grey Parrot Need a UV-B Light?</h2>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Yes — we strongly recommend a full-spectrum UV-B light, because African Greys are uniquely prone to hypocalcemia and need vitamin D3 to absorb the calcium they eat.</strong> A Grey can have plenty of calcium in its bowl and still crash if it cannot make D3, and indoors, behind window glass that filters out UV-B, it usually cannot. This is exactly why, here at C.A.Gs, we raise our Greys with UV-B lighting and vitamin D3 support from the start — so the routine is already second nature by the time a bird goes home.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Yes — we strongly recommend a full-spectrum UV-B light, because African Greys are uniquely prone to hypocalcemia and need vitamin D3 to absorb the calcium they eat.</strong></p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">A Grey can have plenty of calcium in its bowl and still crash if it cannot make D3, and indoors, behind window glass that filters out UV-B, it usually cannot.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">This is exactly why, here at C.A.Gs, we raise our Greys with UV-B lighting and vitamin D3 support from the start — so the routine is already second nature by the time a bird goes home.</p>
         <div class="rounded-2xl border border-line bg-white p-6 mb-4" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
           <h3 class="font-lora font-bold text-logo-dark mb-3">How to Set Up a UV-B Lamp for Your Grey</h3>
           <ul class="space-y-2.5 list-none pl-0 text-stone-600 text-[15px]" style="max-width:70ch;">
@@ -395,13 +438,15 @@ const articleSchema = {
             <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span>Pair the light with a calcium source and ask your avian vet before adding any oral D3 supplement — too much is harmful.</span></li>
           </ul>
           <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">Can an African Grey Get Vitamin D From a Sunny Window Instead?</h4>
-          <p class="text-stone-600 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">No — ordinary window glass blocks almost all of the UV-B wavelength a Grey needs to make vitamin D3, so a bird sunning behind a closed window gets the warmth but not the benefit. Unfiltered outdoor time in a secure, shaded harness or an outdoor aviary works, but a dedicated indoor UV-B lamp is the reliable, year-round answer.</p>
+          <p class="text-stone-600 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">No — ordinary window glass blocks almost all of the UV-B wavelength a Grey needs to make vitamin D3, so a bird sunning behind a closed window gets the warmth but not the benefit.</p>
+          <p class="text-stone-600 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">Unfiltered outdoor time in a secure, shaded harness or an outdoor aviary works, but a dedicated indoor UV-B lamp is the reliable, year-round answer.</p>
           <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">Is It Safe to Leave a UV-B Light On All Day?</h5>
           <p class="text-stone-600 leading-relaxed text-[14px] m-0" style="max-width:70ch;">Match the lamp to a natural 10–12 hour day and switch it off at night — Greys need genuine darkness to rest, and round-the-clock light disrupts the sleep that keeps a bird calm and healthy.</p>
           <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">A Timer Makes This Effortless</h6>
           <p class="text-stone-600 leading-relaxed text-[14px] m-0" style="max-width:70ch;">Put the UV-B lamp on a simple plug-in timer set to your Grey's wake-and-sleep hours, and the light cycle takes care of itself even on the days life gets busy.</p>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Watch for the warning signs that calcium metabolism has gone wrong: muscle tremors, weakness, falling off the perch, or seizure-like episodes are a veterinary emergency in a Grey. Get the lighting and diet right together and you remove one of the most common — and most preventable — threats to an African Grey's health.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Watch for the warning signs that calcium metabolism has gone wrong: muscle tremors, weakness, falling off the perch, or seizure-like episodes are a veterinary emergency in a Grey.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Get the lighting and diet right together and you remove one of the most common — and most preventable — threats to an African Grey's health.</p>
       </div>
     </section>
 
@@ -413,25 +458,30 @@ const articleSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">African Grey Health · Common Issues</p>
           <h2 class="font-lora font-bold text-logo-dark">What Health Problems Are African Grey Parrots Prone To?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>The conditions we coach owners to watch for most are hypocalcemia, feather plucking, and vitamin-A deficiency, with PBFD as a serious species disease to screen against.</strong> Because a Grey is a prey animal that hides illness until it is advanced, prevention and early detection matter more than treatment — and every C.A.Gs Grey starts life with an avian-vet exam and the <a href="/african-grey-parrot-health-guarantee/">written health guarantee</a> behind it.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>The conditions we coach owners to watch for most are hypocalcemia, feather plucking, and vitamin-A deficiency, with PBFD as a serious species disease to screen against.</strong></p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Because a Grey is a prey animal that hides illness until it is advanced, prevention and early detection matter more than treatment — and every C.A.Gs Grey starts life with an avian-vet exam and the <a href="/african-grey-parrot-health-guarantee/">written health guarantee</a> behind it.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-2">
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <h3 class="font-lora font-bold text-xl text-logo-dark">Hypocalcemia (Low Blood Calcium)</h3>
-            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">African Greys are <em>specifically</em> prone to low blood calcium more than most parrots. Signs include muscle tremors, weakness, seizure-like episodes, and falling off the perch — treat any of these as an emergency. Prevent it with a calcium source, a vitamin-A-rich diet, and <a href="#lighting">UV-B light plus vitamin D3</a> so the bird can actually use the calcium it eats.</p>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">African Greys are <em>specifically</em> prone to low blood calcium more than most parrots. Signs include muscle tremors, weakness, seizure-like episodes, and falling off the perch — treat any of these as an emergency.</p>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Prevent it with a calcium source, a vitamin-A-rich diet, and <a href="#lighting">UV-B light plus vitamin D3</a> so the bird can actually use the calcium it eats.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <h3 class="font-lora font-bold text-xl text-logo-dark">Feather Plucking</h3>
-            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">The most common behavioral complaint in the breed. It is usually rooted in boredom, loneliness, stress, or a change in routine — but it can be medical too, so rule out infection, low calcium, and disease first. The fix is rarely a quick one: more enrichment, more out-of-cage time, predictable sleep, and patience, guided by an avian vet.</p>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">The most common behavioral complaint in the breed. It is usually rooted in boredom, loneliness, stress, or a change in routine — but it can be medical too, so rule out infection, low calcium, and disease first.</p>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">The fix is rarely a quick one: more enrichment, more out-of-cage time, predictable sleep, and patience, guided by an avian vet.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <h3 class="font-lora font-bold text-xl text-logo-dark">Vitamin A Deficiency</h3>
-            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">The classic consequence of a seed-heavy diet. Too little vitamin A causes chronic upper-respiratory infections, blunted choanal papillae, and a shortened life. Prevent it the easy way — our <a href="/best-african-grey-parrot-food/">African Grey diet guide</a> covers the fix exactly: a pellet base plus beta-carotene-rich greens and orange veg.</p>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">The classic consequence of a seed-heavy diet. Too little vitamin A causes chronic upper-respiratory infections, blunted choanal papillae, and a shortened life.</p>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Prevent it the easy way — our <a href="/best-african-grey-parrot-food/">African Grey diet guide</a> covers the fix exactly: a pellet base plus beta-carotene-rich greens and orange veg.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <h3 class="font-lora font-bold text-xl text-logo-dark">PBFD &amp; Other Diseases We Screen Against</h3>
-            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Psittacine Beak and Feather Disease (PBFD) is a recognised viral disease of parrots that damages feathers and the immune system, and is one of the conditions a responsible aviary takes seriously. Every C.A.Gs Grey is examined by a board-certified avian vet as part of our health protocol before placement, and you receive that health certificate with your bird.</p>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Psittacine Beak and Feather Disease (PBFD) is a recognised viral disease of parrots that damages feathers and the immune system, and is one of the conditions a responsible aviary takes seriously.</p>
+            <p class="text-stone-600 mt-2 text-[14.5px] leading-relaxed">Every C.A.Gs Grey is examined by a board-certified avian vet as part of our health protocol before placement, and you receive that health certificate with your bird.</p>
           </article>
         </div>
       </div>
@@ -444,12 +494,17 @@ const articleSchema = {
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Veterinary Care · Annual Wellness</p>
           <h2 class="font-lora font-bold text-logo-dark">How Often Does an African Grey Need to See an Avian Vet?</h2>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Every African Grey should have an annual wellness exam with an avian-certified veterinarian — and a baseline visit within the first few weeks of coming home.</strong> Greys are prey animals; they instinctively mask illness until it becomes critical, so by the time you notice an obviously sick bird, it may already be seriously compromised. That single instinct is why proactive vet care is essential rather than optional for this species.</p>
-        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">A good annual exam includes a <strong>complete blood count (CBC)</strong> to catch anemia, infection, or organ trouble; a <strong>gram stain</strong> to screen for bacterial or yeast overgrowth; and a careful weight check. Weight is your best home early-warning system: a loss of even 10–15 grams (2–4% of body weight) can signal disease in a Grey that still looks normal, so keep a weekly weight log on a kitchen gram scale and call your vet if the number drifts down.</p>
-        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">When you bring home a C.A.Gs Grey, that head start is already built in: each bird leaves with a board-certified avian-veterinarian health certificate dated within 10 days of travel, and Mark &amp; Teri stay reachable for diet, behavior, and health questions long after pickup. Finding your own avian vet before the bird arrives — many general-practice vets do not treat birds — means you are never scrambling in an emergency.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Every African Grey should have an annual wellness exam with an avian-certified veterinarian — and a baseline visit within the first few weeks of coming home.</strong></p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">Greys are prey animals; they instinctively mask illness until it becomes critical, so by the time you notice an obviously sick bird, it may already be seriously compromised.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">That single instinct is why proactive vet care is essential rather than optional for this species.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">A good annual exam includes a <strong>complete blood count (CBC)</strong> to catch anemia, infection, or organ trouble; a <strong>gram stain</strong> to screen for bacterial or yeast overgrowth; and a careful weight check.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">Weight is your best home early-warning system: a loss of even 10–15 grams (2–4% of body weight) can signal disease in a Grey that still looks normal, so keep a weekly weight log on a kitchen gram scale and call your vet if the number drifts down.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">When you bring home a C.A.Gs Grey, that head start is already built in: each bird leaves with a board-certified avian-veterinarian health certificate dated within 10 days of travel, and Mark &amp; Teri stay reachable for diet, behavior, and health questions long after pickup.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Finding your own avian vet before the bird arrives — many general-practice vets do not treat birds — means you are never scrambling in an emergency.</p>
 
         <h3 class="font-lora font-bold text-logo-dark mt-7 mb-2">How Do You Find a Good Avian Vet for an African Grey?</h3>
-        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Look specifically for an avian or exotics veterinarian — ideally one board-certified in avian practice — rather than a general small-animal clinic, because diagnosing and treating a parrot is a distinct specialty. Searching a professional directory of avian vets, or simply asking us and other Grey owners for a local referral, is the fastest way to have a name and number on the fridge before you ever need it.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Look specifically for an avian or exotics veterinarian — ideally one board-certified in avian practice — rather than a general small-animal clinic, because diagnosing and treating a parrot is a distinct specialty.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Searching a professional directory of avian vets, or simply asking us and other Grey owners for a local referral, is the fastest way to have a name and number on the fridge before you ever need it.</p>
         <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-4 mb-1.5">What Are the Warning Signs an African Grey Needs a Vet Now?</h4>
         <p class="text-stone-600 leading-relaxed text-[14.5px]" style="max-width:70ch;">Fluffed-up posture for hours, tail-bobbing while breathing, sitting on the cage floor, sudden quietness, a drop in appetite or droppings, or any weight loss are red flags in a species built to hide illness — when in doubt, call the vet rather than wait and watch.</p>
         <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">How Much Should I Budget for African Grey Vet Care?</h5>
@@ -464,7 +519,8 @@ const articleSchema = {
       <div class="bg-cream pt-14 px-4 md:pt-16">
         <div class="max-w-3xl mx-auto mb-2">
           <h2 class="font-lora font-bold text-logo-dark mb-3 text-center">Do Congo and Timneh African Greys Need Different Care?</h2>
-          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;"><strong>The husbandry is the same — diet, lighting, enrichment, and vet care don't change between the two species</strong> — but the size and temperament differences do shape the day-to-day. A <a href="/congo-african-grey-for-sale/">Congo African Grey</a> is larger, needs the bigger end of every cage and perch spec, and tends to be more sensitive to change, while a Timneh is smaller, calmer, and often a more forgiving first bird. Here is how our two Greys line up side by side.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;"><strong>The husbandry is the same — diet, lighting, enrichment, and vet care don't change between the two species</strong> — but the size and temperament differences do shape the day-to-day.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;">A <a href="/congo-african-grey-for-sale/">Congo African Grey</a> is larger, needs the bigger end of every cage and perch spec, and tends to be more sensitive to change, while a Timneh is smaller, calmer, and often a more forgiving first bird. Here is how our two Greys line up side by side.</p>
         </div>
       </div>
       <CompareTableE
@@ -547,7 +603,8 @@ const articleSchema = {
       <div class="max-w-3xl mx-auto">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Ready When You Are</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">Now You Know the Care — Ready to Bring Home a Captive-Bred African Grey?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised on this exact routine, fully weaned, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation — never wild-caught. Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Already comparing the two species? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised on this exact routine, fully weaned, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation — never wild-caught.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Already comparing the two species? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
       </div>
     </section>
 
@@ -568,6 +625,31 @@ const articleSchema = {
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       }));
     })();
+
+    // Section jump-nav auto-injector — "↓ Continue: <next section>"
+    (function () {
+      var ids = ['diet','housing','enrichment','grooming','lighting','health','vet','congo-vs-timneh','available-birds','faq','contact'];
+      var labels = {
+        'housing':         'Housing & Cage Setup',
+        'enrichment':      'Enrichment & Out-of-Cage Time',
+        'grooming':        'Grooming & Bathing',
+        'lighting':        'UV-B Light & Vitamin D3',
+        'health':          'Common Health Problems',
+        'vet':             'Avian Vet Care',
+        'congo-vs-timneh': 'Congo vs Timneh Care',
+        'available-birds': 'Available Greys',
+        'faq':             'Care FAQ',
+        'contact':         'Ask C.A.Gs',
+      };
+      for (var i = 0; i < ids.length - 1; i++) {
+        var cur = document.getElementById(ids[i]);
+        if (!cur) continue;
+        var nav = document.createElement('div');
+        nav.className = 'section-next-nav';
+        nav.innerHTML = '<a href="#' + ids[i + 1] + '" class="section-next-link">&#8595; Continue: ' + (labels[ids[i + 1]] || ids[i + 1]) + '</a>';
+        cur.appendChild(nav);
+      }
+    })();
   </script>
 </BaseLayout>
 
@@ -584,7 +666,29 @@ const articleSchema = {
   /* AA: clay as small readable text on this page's LIGHT sections → #b04228 (4.5:1).
      Mirrors the homepage .home-d rule. Clay on the green hero stays bright. */
   .care-d a.text-clay, .care-d .text-clay { color:#b04228; }
-  .care-d .hero-v3-b .text-clay, .care-d .bg-clay { color:inherit; }
+  /* Hero clay accent stays bright on the green hero; clay FILLS keep white text
+     (global .bg-clay renders --clay-ink #bd4129, 5.3:1 — the old shared rule leaked
+     dark stone via color:inherit onto every clay button/tag = ~2.5:1 FAIL). */
+  .care-d .hero-v3-b .text-clay { color:inherit; }
+  .care-d .bg-clay { color:#fff; }
+
+  /* CompareTableE ships text-3xl (30px) on its H2 — ties mobile H1. Cap on small
+     screens, desktop unchanged at 30px. */
+  .care-d h2.text-3xl { font-size:clamp(1.375rem, 3.8vw, 1.875rem); }
+
+  /* Jump targets clear the 96px sticky header; respect reduced motion. */
+  .care-d section[id], .care-d div[id] { scroll-margin-top:110px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+
+  /* "↓ Continue:" section next-nav (JS-injected; this block is is:global so the
+     page-class scope reaches the injected DOM). */
+  .care-d .section-next-nav { text-align:right; padding-top:18px; margin-top:14px; border-top:1px solid #ede5dc; }
+  .care-d .section-next-link { font-family:'IBM Plex Sans',sans-serif; font-size:.85rem; font-weight:600;
+    color:#b04228; text-decoration:none; display:inline-block; padding:10px 0 10px 12px; margin:-10px 0; }
+  .care-d .section-next-link:hover { text-decoration:underline; }
+
+  /* External links open in a new tab — subtle outward arrow affordance. */
+  .care-d p a[target="_blank"]::after { content:"\2197"; font-size:.7em; line-height:0; vertical-align:super; opacity:.5; margin-left:.12em; }
 
   /* Woven in-content links: clay, underlined, AA-safe — applies to all the
      mid-sentence internal/external links in body copy. */
