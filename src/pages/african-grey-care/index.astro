@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
 import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import CompareTableE from '../../components/cag-library/CompareTableE.astro';
@@ -15,6 +16,22 @@ const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "African Grey Care", url: "/african-grey-care/" },
 ];
+
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system as
+// the homepage + scam/adoption pages; ids live on each section. Document order.
+const jumpSections = [
+  { id: 'care-resources',  label: 'All Guides',      part: 1 },
+  { id: 'care-basics',     label: 'The Basics',      part: 1 },
+  { id: 'congo-vs-timneh', label: 'Congo v Timneh',  part: 2 },
+  { id: 'available-birds', label: 'Available',       part: 2 },
+  { id: 'faq',             label: 'FAQ',             part: 3 },
+  { id: 'contact',         label: 'Ask C.A.Gs',      part: 3 },
+];
+const jumpPartNames = {
+  1: 'Care Guides',
+  2: 'Compare & Choose',
+  3: 'Next Steps',
+};
 
 // ─── Available birds (cross-sell grid) — verified against data/clutch-inventory.json + price-matrix.json ───
 const birds = [
@@ -175,6 +192,8 @@ const articleSchema = {
       <Breadcrumb items={breadcrumbs} />
     </div>
 
+    <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Ask C.A.Gs →" ctaTarget="contact" />
+
     <!-- 1. HERO (cag-hero-v3 idiom · Authority Green · photo-led) -->
     <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
       <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
@@ -182,13 +201,12 @@ const articleSchema = {
         <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
           <!-- COPY -->
           <div class="order-2 text-center md:order-1 md:text-left">
-            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Care Resource Hub · Guides for Every Stage</p>
+            <p class="font-sora text-[11px] font-medium tracking-[0.12em] text-white/80">Care Resource Hub · Guides for Every Stage</p>
             <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
               African Grey Care
             </h1>
-            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
-              This is our hub for every African Grey parrot care resource we publish here at C.A.Gs — a quick overview of what owning a Grey involves, with a clear link out to the deep-dive guide for each topic. Mark &amp; Teri Benjamin have hand-raised <a href="/captive-bred-african-grey-parrot/">captive-bred Congo and Timneh African Greys</a> in Midland, Texas since 2014, and this is where we point families to the answer they need next.
-            </p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">This is our hub for every African Grey parrot care resource we publish here at C.A.Gs — a quick overview of what owning a Grey involves, with a clear link out to the deep-dive guide for each topic.</p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Mark &amp; Teri Benjamin have hand-raised <a href="/captive-bred-african-grey-parrot/">captive-bred Congo and Timneh African Greys</a> in Midland, Texas since 2014, and this is where we point families to the answer they need next.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
               <a href="#care-resources" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Browse Care Guides →</a>
               <a href="#available-birds" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">See Available Greys →</a>
@@ -291,7 +309,8 @@ const articleSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Care Resource Library</p>
           <h2 class="font-lora font-bold text-logo-dark">What's Inside Our African Grey Care Library?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Rather than cram every detail onto one page, here at C.A.Gs we keep a focused guide for each part of African Grey ownership — and this hub is the index that points you to the right one. New to Greys? Begin with our <a href="/african-grey-parrot-care-guide/">complete African Grey care guide</a>, then branch into the specific topics below. Each card links straight to a guide written from the same routine we use to hand-raise our own birds.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Rather than cram every detail onto one page, here at C.A.Gs we keep a focused guide for each part of African Grey ownership — and this hub is the index that points you to the right one. New to Greys?</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Begin with our <a href="/african-grey-parrot-care-guide/">complete African Grey care guide</a>, then branch into the specific topics below. Each card links straight to a guide written from the same routine we use to hand-raise our own birds.</p>
         </div>
 
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -314,34 +333,40 @@ const articleSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Quick-Start Basics</p>
           <h2 class="font-lora font-bold text-logo-dark">What Are the 5 Pillars of African Grey Care?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>African Grey care comes down to five things done well — diet, housing, enrichment, veterinary care, and social time.</strong> Here is the overview of each, with a link down to the full guide whenever you want the detail behind it. Get these five right and the <a href="/african-grey-parrot-lifespan/">40-to-60-year lifespan</a> a captive-bred Grey is capable of becomes a realistic plan, not a hope.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>African Grey care comes down to five things done well — diet, housing, enrichment, veterinary care, and social time.</strong> Here is the overview of each, with a link down to the full guide whenever you want the detail behind it.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Get these five right and the <a href="/african-grey-parrot-lifespan/">40-to-60-year lifespan</a> a captive-bred Grey is capable of becomes a realistic plan, not a hope.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Diet</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Feed a base of 60–80% formulated pellets plus fresh, vitamin-A-rich vegetables and only limited fruit, and skip toxic foods like avocado and chocolate entirely. Diet is the single biggest driver of a Grey's health — our <a href="/african-grey-parrot-diet/">African Grey diet guide</a> and <a href="/best-african-grey-parrot-food/">best-food guide</a> cover the brands, ratios, and full toxic list.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Feed a base of 60–80% formulated pellets plus fresh, vitamin-A-rich vegetables and only limited fruit, and skip toxic foods like avocado and chocolate entirely.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Diet is the single biggest driver of a Grey's health — our <a href="/african-grey-parrot-diet/">African Grey diet guide</a> and <a href="/best-african-grey-parrot-food/">best-food guide</a> cover the brands, ratios, and full toxic list.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Housing</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A single Congo needs a stainless-steel cage of at least 36" W × 24" D × 48" H with ¾"–1" bar spacing, placed against a wall in a busy room and far from kitchen fumes. Our <a href="/african-grey-parrot-care-guide/">complete care guide</a> carries the exact cage, perch, and placement specs.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A single Congo needs a stainless-steel cage of at least 36" W × 24" D × 48" H with ¾"–1" bar spacing, placed against a wall in a busy room and far from kitchen fumes.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Our <a href="/african-grey-parrot-care-guide/">complete care guide</a> carries the exact cage, perch, and placement specs.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Enrichment</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Rotate foraging and puzzle toys, hide food to make a clever bird work for it, and give 3–4 hours of supervised out-of-cage time daily. A bored Grey plucks and screams — the same intelligence that makes our birds <a href="/how-to-tame-african-grey-parrot/">trainable and tameable</a> is what demands real mental stimulation.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Rotate foraging and puzzle toys, hide food to make a clever bird work for it, and give 3–4 hours of supervised out-of-cage time daily.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A bored Grey plucks and screams — the same intelligence that makes our birds <a href="/how-to-tame-african-grey-parrot/">trainable and tameable</a> is what demands real mental stimulation.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">04</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Veterinary Care</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Line up a board-certified avian vet before your bird arrives, and book an annual wellness exam — <a href="https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/" target="_blank" rel="noopener noreferrer">Lafeber's avian-vet information sheet</a> explains why Greys hide illness until it is advanced. Every C.A.Gs Grey ships with an avian-vet health certificate and the <a href="/african-grey-parrot-health-guarantee/">written health guarantee</a> behind it.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Line up a board-certified avian vet before your bird arrives, and book an annual wellness exam — <a href="https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/" target="_blank" rel="noopener noreferrer">Lafeber's avian-vet information sheet</a> explains why Greys hide illness until it is advanced.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Every C.A.Gs Grey ships with an avian-vet health certificate and the <a href="/african-grey-parrot-health-guarantee/">written health guarantee</a> behind it.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">05</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Social Time</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A Grey bonds deeply with its family and needs daily one-on-one attention, conversation, and routine. It does not need a second bird, but it does need <em>you</em> — chronic loneliness is the leading cause of behavioral problems, which is why we match each Grey to a home ready to engage with it.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A Grey bonds deeply with its family and needs daily one-on-one attention, conversation, and routine.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">It does not need a second bird, but it does need <em>you</em> — chronic loneliness is the leading cause of behavioral problems, which is why we match each Grey to a home ready to engage with it.</p>
           </article>
           <article class="bg-green text-white rounded-2xl border border-green p-7 flex flex-col justify-center" style="box-shadow:0 4px 24px rgba(60,30,10,0.10);">
             <h3 class="font-lora font-bold text-xl text-white">Want the whole picture?</h3>
@@ -367,7 +392,9 @@ const articleSchema = {
       <div class="bg-cream pt-14 px-4 md:pt-16">
         <div class="max-w-3xl mx-auto mb-2">
           <h2 class="font-lora font-bold text-logo-dark mb-3 text-center">Do Congo and Timneh African Greys Need Different Care?</h2>
-          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;"><strong>The day-to-day care is the same for both — diet, lighting, enrichment, and vet care don't change between the species.</strong> What differs is size and temperament: a <a href="/congo-african-grey-for-sale/">Congo African Grey</a> is larger and a little more sensitive, while a <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a> is smaller, calmer, and often the easier first bird. The well-documented split between the two — recognized as separate species by conservation references such as the <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">World Parrot Trust grey parrot encyclopedia</a> — is summarized side by side below.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;"><strong>The day-to-day care is the same for both — diet, lighting, enrichment, and vet care don't change between the species.</strong></p>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;">What differs is size and temperament: a <a href="/congo-african-grey-for-sale/">Congo African Grey</a> is larger and a little more sensitive, while a <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a> is smaller, calmer, and often the easier first bird.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px] mx-auto text-center" style="max-width:70ch;">The well-documented split between the two — recognized as separate species by conservation references such as the <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">World Parrot Trust grey parrot encyclopedia</a> — is summarized side by side below.</p>
         </div>
       </div>
       <CompareTableE
@@ -446,7 +473,8 @@ const articleSchema = {
       <div class="max-w-3xl mx-auto">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Ready When You Are</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">Ready to Bring Home a Captive-Bred African Grey?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised on the same routine these guides describe — fully weaned, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation, never wild-caught. Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Still comparing the two species? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised on the same routine these guides describe — fully weaned, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation, never wild-caught.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours. Still comparing the two species? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are both ready to meet you.</p>
       </div>
     </section>
 
@@ -467,6 +495,26 @@ const articleSchema = {
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       }));
     })();
+
+    // Section jump-nav auto-injector — "↓ Continue: <next section>"
+    (function () {
+      var ids = ['care-resources','care-basics','congo-vs-timneh','available-birds','faq','contact'];
+      var labels = {
+        'care-basics':     'The Five Care Basics',
+        'congo-vs-timneh': 'Congo vs Timneh Care',
+        'available-birds': 'Available Greys',
+        'faq':             'Care FAQ',
+        'contact':         'Ask C.A.Gs',
+      };
+      for (var i = 0; i < ids.length - 1; i++) {
+        var cur = document.getElementById(ids[i]);
+        if (!cur) continue;
+        var nav = document.createElement('div');
+        nav.className = 'section-next-nav';
+        nav.innerHTML = '<a href="#' + ids[i + 1] + '" class="section-next-link">&#8595; Continue: ' + (labels[ids[i + 1]] || ids[i + 1]) + '</a>';
+        cur.appendChild(nav);
+      }
+    })();
   </script>
 </BaseLayout>
 
@@ -483,7 +531,24 @@ const articleSchema = {
   /* AA: clay as small readable text on this page's LIGHT sections → #b04228 (4.5:1).
      Mirrors the homepage .home-d rule. Clay on the green hero/CTA stays bright. */
   .care-d a.text-clay, .care-d .text-clay { color:#b04228; }
-  .care-d .hero-v3-b .text-clay, .care-d .bg-clay { color:inherit; }
+  /* Hero clay accent stays bright; clay FILLS keep white text (global .bg-clay =
+     --clay-ink #bd4129, 5.3:1 — the old color:inherit leaked dark stone = FAIL). */
+  .care-d .hero-v3-b .text-clay { color:inherit; }
+  .care-d .bg-clay { color:#fff; }
+
+  /* CompareTableE ships text-3xl (30px) on its H2 — ties mobile H1. Cap on small
+     screens, desktop unchanged at 30px. */
+  .care-d h2.text-3xl { font-size:clamp(1.375rem, 3.8vw, 1.875rem); }
+
+  /* Jump targets clear the 96px sticky header; respect reduced motion. */
+  .care-d section[id], .care-d div[id] { scroll-margin-top:110px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+
+  /* "↓ Continue:" section next-nav (JS-injected; this block is is:global). */
+  .care-d .section-next-nav { text-align:right; padding-top:18px; margin-top:14px; border-top:1px solid #ede5dc; }
+  .care-d .section-next-link { font-family:'IBM Plex Sans',sans-serif; font-size:.85rem; font-weight:600;
+    color:#b04228; text-decoration:none; display:inline-block; padding:10px 0 10px 12px; margin:-10px 0; }
+  .care-d .section-next-link:hover { text-decoration:underline; }
 
   /* Woven in-content links: clay, underlined, AA-safe — applies to the
      mid-sentence internal/external links in body copy (not buttons/spoke cards). */
