@@ -5,6 +5,7 @@ import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import BirdCard from '../../components/BirdCard.astro';
 import InquiryForm from '../../components/cag-inquiry-form.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
 
 const title = "African Grey Parrot Health Guarantee | What Our Written Guarantee Covers, the 72-Hour Window & the Documentation With Every Bird | Vet-Certified, DNA-Sexed & CITES Appendix I | C.A.Gs – Midland, TX";
 const description = "Our written African Grey parrot health guarantee: a 72-hour guarantee on congenital and infectious conditions, an avian-vet exam before every bird leaves, PCR DNA sexing, CITES Appendix I captive-bred documentation, hatch certificate and closed band, plus IATA shipping $185 airport / $350 home.";
@@ -15,6 +16,24 @@ const breadcrumbs = [
   { name: "Resources & Trust", url: "/trusted-african-grey-parrot-breeders/" },
   { name: "Health Guarantee", url: "/african-grey-parrot-health-guarantee/" },
 ];
+
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system as
+// the homepage + diet/care pages; ids live on each section. Document order.
+const jumpSections = [
+  { id: 'whats-covered',   label: "What's Covered", part: 1 },
+  { id: 'pre-sale',        label: 'Pre-Sale Vetting', part: 1 },
+  { id: 'your-part',       label: 'Your Part',     part: 1 },
+  { id: 'documentation',   label: 'Documentation', part: 2 },
+  { id: 'shipping-health', label: 'Shipping',      part: 2 },
+  { id: 'available-birds', label: 'Available',     part: 3 },
+  { id: 'faq',             label: 'FAQ',           part: 3 },
+  { id: 'contact',         label: 'Ask C.A.Gs',    part: 3 },
+];
+const jumpPartNames = {
+  1: 'The Guarantee',
+  2: 'Docs & Shipping',
+  3: 'Choose & Reserve',
+};
 
 // ─── Available birds (cross-sell grid) — verified against data/clutch-inventory.json + financial-entities.json ───
 // Shipping line + trust badges are hardwired inside BirdCard.astro (Ships nationwide · $185 airport · $350 home).
@@ -141,6 +160,8 @@ const credentials = [
       <Breadcrumb items={breadcrumbs} />
     </div>
 
+    <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Ask C.A.Gs →" ctaTarget="contact" />
+
     <!-- 1. HERO (cag-hero-v3 idiom · Authority Green · trust-first) -->
     <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
       <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
@@ -148,13 +169,12 @@ const credentials = [
         <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
           <!-- COPY -->
           <div class="order-2 text-center md:order-1 md:text-left">
-            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">USDA AWA Licensed · CITES Documented · Vet-Certified</p>
+            <p class="font-sora text-[11px] font-medium tracking-[0.12em] text-white/80">USDA AWA Licensed · CITES Documented · Vet-Certified</p>
             <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
               Our African Grey Parrot Health Guarantee
             </h1>
-            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
-              Here at C.A.Gs in Midland, Texas, Mark &amp; Teri Benjamin back every captive-bred Congo and Timneh African Grey with a written health guarantee — you are bringing home a 40 to 60 year companion, not a product. Every bird is examined by a board-certified avian vet, PCR DNA-sexed, and placed with full CITES Appendix I documentation. This page lays out exactly what the guarantee covers, the window, and what you do.
-            </p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Here at C.A.Gs in Midland, Texas, Mark &amp; Teri Benjamin back every captive-bred Congo and Timneh African Grey with a written health guarantee — you are bringing home a 40 to 60 year companion, not a product.</p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Every bird is examined by a board-certified avian vet, PCR DNA-sexed, and placed with full CITES Appendix I documentation. This page lays out exactly what the guarantee covers, the window, and what you do.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
               <a href="#whats-covered" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">See What's Covered →</a>
               <a href="#contact" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">Ask Us About a Bird →</a>
@@ -281,7 +301,9 @@ const credentials = [
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Guarantee · What's Covered</p>
           <h2 class="font-lora font-bold text-logo-dark">What Does Our African Grey Health Guarantee Actually Cover?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Our written health guarantee covers pre-existing congenital conditions and infectious disease for 72 hours after pickup or delivery, plus shipping-related health issues reported within 24 hours of arrival.</strong> The promise is deliberately specific so you and your vet both know where you stand. If a certified avian veterinarian diagnoses a covered condition inside the window, we resolve it with you directly — including full replacement or refund at our discretion.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Our written health guarantee covers pre-existing congenital conditions and infectious disease for 72 hours after pickup or delivery, plus shipping-related health issues reported within 24 hours of arrival.</strong></p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">The promise is deliberately specific so you and your vet both know where you stand.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">If a certified avian veterinarian diagnoses a covered condition inside the window, we resolve it with you directly — including full replacement or refund at our discretion.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
@@ -302,7 +324,8 @@ const credentials = [
         <div class="max-w-3xl mt-10">
           <div class="rounded-xl border border-clay/25 bg-clay/[0.05] p-5">
             <h3 class="font-sora font-bold text-sm uppercase tracking-wide text-clay-ink mb-1.5">What Our Guarantee Does Not Cover</h3>
-            <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">In plain terms: accidents, injuries after delivery, conditions from improper care or diet, behavioral issues, and changes in your circumstances are not covered. Because African Greys need specific husbandry, we send every family our complete <a href="/african-grey-parrot-care-guide/">African Grey care guide</a> to prevent the avoidable issues a guarantee was never meant to absorb.</p>
+            <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">In plain terms: accidents, injuries after delivery, conditions from improper care or diet, behavioral issues, and changes in your circumstances are not covered.</p>
+            <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">Because African Greys need specific husbandry, we send every family our complete <a href="/african-grey-parrot-care-guide/">African Grey care guide</a> to prevent the avoidable issues a guarantee was never meant to absorb.</p>
           </div>
         </div>
       </div>
@@ -314,7 +337,8 @@ const credentials = [
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Pre-Sale · Health Protocol</p>
           <h2 class="font-lora font-bold text-logo-dark">How Do We Prepare Every African Grey Before It's Guaranteed?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>A guarantee starts long before a bird is listed: every C.A.Gs Grey is examined by a board-certified avian vet, PCR DNA-sexed, fully weaned, and documented before transfer.</strong> The strongest health guarantee is the one you rarely need to use — here is exactly what happens to a bird before it is ever offered to you.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>A guarantee starts long before a bird is listed: every C.A.Gs Grey is examined by a board-certified avian vet, PCR DNA-sexed, fully weaned, and documented before transfer.</strong></p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">The strongest health guarantee is the one you rarely need to use — here is exactly what happens to a bird before it is ever offered to you.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-2">
@@ -331,8 +355,10 @@ const credentials = [
           </div>
           <div class="rounded-2xl border border-line bg-white p-6" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <h3 class="font-lora font-bold text-logo-dark mb-3">DNA Sexing, Screening &amp; Weaning</h3>
-            <p class="text-stone-600 leading-relaxed text-[14.5px] mb-3" style="max-width:70ch;">Every Grey is PCR DNA-sexed by a certified avian lab, so the sex on your certificate is laboratory-confirmed — the only honest way to do it in a monomorphic species. As part of routine veterinary care our birds are screened for PBFD (Psittacine Beak and Feather Disease) and avian Polyomavirus — the two viral conditions that matter most in psittacines — and we keep that work on file.</p>
-            <p class="text-stone-600 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">No chick leaves us until it is <strong>fully weaned</strong> and eating a complete diet on its own — an unweaned baby is a serious health risk in inexperienced hands, and we will not transfer one. Our care routine lines up with the independent <a href="https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/" target="_blank" rel="noopener noreferrer">LafeberVet African Grey information sheet</a> we hand new owners.</p>
+            <p class="text-stone-600 leading-relaxed text-[14.5px] mb-3" style="max-width:70ch;">Every Grey is PCR DNA-sexed by a certified avian lab, so the sex on your certificate is laboratory-confirmed — the only honest way to do it in a monomorphic species.</p>
+            <p class="text-stone-600 leading-relaxed text-[14.5px] mb-3" style="max-width:70ch;">As part of routine veterinary care our birds are screened for PBFD (Psittacine Beak and Feather Disease) and avian Polyomavirus — the two viral conditions that matter most in psittacines — and we keep that work on file.</p>
+            <p class="text-stone-600 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">No chick leaves us until it is <strong>fully weaned</strong> and eating a complete diet on its own — an unweaned baby is a serious health risk in inexperienced hands, and we will not transfer one.</p>
+            <p class="text-stone-600 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">Our care routine lines up with the independent <a href="https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/" target="_blank" rel="noopener noreferrer">LafeberVet African Grey information sheet</a> we hand new owners.</p>
           </div>
         </div>
       </div>
@@ -347,7 +373,8 @@ const credentials = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Your Part · The Vet Visit</p>
           <h2 class="font-lora font-bold text-logo-dark">What Do You Need to Do Inside the Guarantee Window?</h2>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Book an independent avian-vet exam right away — within 5 to 7 days of bringing your bird home, and a same-day or next-day visit is what activates the guarantee.</strong> That single appointment establishes a baseline health record, confirms our pre-purchase clearance, and starts your Grey's lifelong health file — which matters for a bird that may live 40 to 60 years with you.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Book an independent avian-vet exam right away — within 5 to 7 days of bringing your bird home, and a same-day or next-day visit is what activates the guarantee.</strong></p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">That single appointment establishes a baseline health record, confirms our pre-purchase clearance, and starts your Grey's lifelong health file — which matters for a bird that may live 40 to 60 years with you.</p>
         <div class="rounded-2xl border border-line bg-white p-6 mb-4" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
           <h3 class="font-lora font-bold text-logo-dark mb-3">Your Three Steps</h3>
           <ol class="space-y-3 list-none pl-0 text-stone-600 text-[15px]" style="max-width:70ch;">
@@ -367,7 +394,8 @@ const credentials = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Documentation · CITES &amp; USDA</p>
           <h2 class="font-lora font-bold text-logo-dark">Which Documentation Comes With Your African Grey?</h2>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Every bird ships with a complete documentation packet — a CITES Appendix I captive-bred certificate, a PCR DNA sexing certificate, a board-certified avian-vet health certificate, a hatch certificate with the closed leg-band number, and our USDA inspection records.</strong> African Greys (<em>Psittacus erithacus</em>) are listed on <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener noreferrer">CITES Appendix I</a>, so even captive-bred birds require specific paperwork to be legally owned in the United States. We hand you that paperwork — never the other way around.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Every bird ships with a complete documentation packet — a CITES Appendix I captive-bred certificate, a PCR DNA sexing certificate, a board-certified avian-vet health certificate, a hatch certificate with the closed leg-band number, and our USDA inspection records.</strong></p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">African Greys (<em>Psittacus erithacus</em>) are listed on <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener noreferrer">CITES Appendix I</a>, so even captive-bred birds require specific paperwork to be legally owned in the United States. We hand you that paperwork — never the other way around.</p>
         <div class="rounded-2xl border border-line bg-white p-6 mb-4" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
           <ul class="space-y-3 list-none pl-0">
             <li class="flex gap-3 text-stone-700 text-[14.5px]"><span class="bg-green text-white text-[11px] font-bold px-2 py-0.5 rounded h-fit mt-0.5 whitespace-nowrap font-sora">DOC 1</span><span><strong>CITES Appendix I captive-bred certificate</strong> — confirms your bird was bred in captivity in the United States, not imported from the wild. Our <a href="/cites-african-grey-documentation/">CITES documentation guide</a> walks through the full picture.</span></li>
@@ -376,14 +404,18 @@ const credentials = [
             <li class="flex gap-3 text-stone-700 text-[14.5px]"><span class="bg-green text-white text-[11px] font-bold px-2 py-0.5 rounded h-fit mt-0.5 whitespace-nowrap font-sora">DOC 4</span><span><strong>Hatch certificate + closed band</strong> — your bird's hatch record and traceable closed leg-band number, plus complete avian-vet records from our aviary.</span></li>
           </ul>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Because we operate under a <a href="https://www.aphis.usda.gov/awa/public-search" target="_blank" rel="noopener noreferrer">USDA Animal Welfare Act license</a> you can look up yourself, our records are kept to federal standards and our facility is subject to inspection — so our being <a href="/captive-bred-african-grey-parrot/">a captive-bred African Grey breeder</a> is something you can verify, not take on faith. Keep these documents safe; you'll want them if you ever move or travel. Our <a href="/trusted-african-grey-parrot-breeders/">trusted breeders page</a> tells you more about who we are.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Because we operate under a <a href="https://www.aphis.usda.gov/awa/public-search" target="_blank" rel="noopener noreferrer">USDA Animal Welfare Act license</a> you can look up yourself, our records are kept to federal standards and our facility is subject to inspection — so our being <a href="/captive-bred-african-grey-parrot/">a captive-bred African Grey breeder</a> is something you can verify, not take on faith.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Keep these documents safe; you'll want them if you ever move or travel. Our <a href="/trusted-african-grey-parrot-breeders/">trusted breeders page</a> tells you more about who we are.</p>
         <div class="text-stone-600 leading-relaxed text-[15px] mt-5" style="max-width:70ch;">
-          <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mb-1.5">What Should You Do With the Packet When It Arrives?</h4>
-          <p class="mb-3">Check it against the bird before anything else: the closed-band number on the leg must match the hatch certificate, the CITES certificate, and the DNA sexing result word for word. That five-minute cross-check is the whole point of the packet.</p>
-          <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mb-1">Which Copies Should You Make?</h5>
+          <h3 class="font-sora font-bold text-sm uppercase tracking-wide text-green mb-1.5">What Should You Do With the Packet When It Arrives?</h3>
+          <p class="mb-3">Check it against the bird before anything else: the closed-band number on the leg must match the hatch certificate, the CITES certificate, and the DNA sexing result word for word.</p>
+          <p class="mb-3">That five-minute cross-check is the whole point of the packet.</p>
+          <h4 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mb-1">Which Copies Should You Make?</h4>
           <p class="mb-3">Photograph every page the day your Grey arrives and store the originals somewhere fireproof. Your avian vet will want the health certificate at the first wellness exam, and the CITES paperwork follows the bird for life.</p>
-          <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mb-1">When Will the Band Be Read Again?</h6>
-          <p class="m-0">Any time the bird changes hands, travels, or sees a new vet. A documented Grey is re-verified by that band for the next 40–60 years — which is exactly why we band in the first weeks of life.</p>
+          <h5 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mb-1">When Will the Band Be Read Again?</h5>
+          <p class="mb-3">Any time the bird changes hands, travels, or sees a new vet.</p>
+          <h6 class="font-sora font-bold text-[11px] uppercase tracking-wide text-clay-ink mb-1">Why We Band a Grey So Early</h6>
+          <p class="m-0">A documented Grey is re-verified by that band for the next 40–60 years — which is exactly why we band in the first weeks of life.</p>
         </div>
       </div>
     </section>
@@ -397,7 +429,8 @@ const credentials = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Shipping · Arrival Health</p>
           <h2 class="font-lora font-bold text-logo-dark">How Do We Protect an African Grey's Health in Transit?</h2>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Birds are vet-checked within 48 hours before any shipping date, travel in IATA-compliant live-animal containers, and fly direct routes kept under 8 hours when possible.</strong> If your bird shows any distress on arrival, contact us the same day and within 24 hours to stay inside the guarantee — we keep standing protocols with our avian vet for remote consultation, so help is never more than a call away.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Birds are vet-checked within 48 hours before any shipping date, travel in IATA-compliant live-animal containers, and fly direct routes kept under 8 hours when possible.</strong></p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">If your bird shows any distress on arrival, contact us the same day and within 24 hours to stay inside the guarantee — we keep standing protocols with our avian vet for remote consultation, so help is never more than a call away.</p>
         <div class="rounded-2xl border border-line bg-white p-6 mb-4" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
           <h3 class="font-lora font-bold text-logo-dark mb-3">Two Delivery Options</h3>
           <div class="grid sm:grid-cols-2 gap-4">
@@ -411,7 +444,8 @@ const credentials = [
             </div>
           </div>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Live-animal air transport follows the <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener noreferrer">IATA Live Animals Regulations</a> the airlines use, and we book travel to minimize time aloft. The step-by-step is in our guide to <a href="/buy-african-grey-parrot-near-me/">buying an African Grey near you</a>, and our <a href="/african-grey-reviews/">African Grey reviews</a> describe what arrival day was like for other families.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Live-animal air transport follows the <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener noreferrer">IATA Live Animals Regulations</a> the airlines use, and we book travel to minimize time aloft.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">The step-by-step is in our guide to <a href="/buy-african-grey-parrot-near-me/">buying an African Grey near you</a>, and our <a href="/african-grey-reviews/">African Grey reviews</a> describe what arrival day was like for other families.</p>
       </div>
     </section>
 
@@ -487,7 +521,8 @@ const credentials = [
       <div class="max-w-3xl mx-auto">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Ready When You Are</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">Now You Know the Guarantee — Ready to Bring Home a Documented African Grey?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised, vet-examined, PCR DNA-sexed, and placed with full CITES Appendix I documentation and our written 72-hour health guarantee — never wild-caught. Tell us about your home and which Grey caught your eye below, and Mark or Teri will reply within 24 hours.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised, vet-examined, PCR DNA-sexed, and placed with full CITES Appendix I documentation and our written 72-hour health guarantee — never wild-caught.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Tell us about your home and which Grey caught your eye below, and Mark or Teri will reply within 24 hours.</p>
       </div>
     </section>
 
@@ -508,6 +543,28 @@ const credentials = [
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       }));
     })();
+
+    // Section jump-nav auto-injector — "↓ Continue: <next section>"
+    (function () {
+      var ids = ['whats-covered','pre-sale','your-part','documentation','shipping-health','available-birds','faq','contact'];
+      var labels = {
+        'pre-sale':        'Pre-Sale Health Vetting',
+        'your-part':       'Your Part of the Deal',
+        'documentation':   'Documentation Included',
+        'shipping-health': 'Shipping & Arrival Health',
+        'available-birds': 'Available Greys',
+        'faq':             'Guarantee FAQ',
+        'contact':         'Ask C.A.Gs',
+      };
+      for (var i = 0; i < ids.length - 1; i++) {
+        var cur = document.getElementById(ids[i]);
+        if (!cur) continue;
+        var nav = document.createElement('div');
+        nav.className = 'section-next-nav';
+        nav.innerHTML = '<a href="#' + ids[i + 1] + '" class="section-next-link">&#8595; Continue: ' + (labels[ids[i + 1]] || ids[i + 1]) + '</a>';
+        cur.appendChild(nav);
+      }
+    })();
   </script>
 </BaseLayout>
 
@@ -524,7 +581,10 @@ const credentials = [
   /* AA: clay as small readable text on this page's LIGHT sections → #b04228 (4.5:1).
      Mirrors the homepage .home-d rule. Clay on the green hero stays bright. */
   .guarantee-d a.text-clay, .guarantee-d .text-clay { color:#b04228; }
-  .guarantee-d .hero-v3-b .text-clay, .guarantee-d .bg-clay { color:inherit; }
+  /* Hero clay accent stays bright; clay FILLS keep white text (global .bg-clay =
+     --clay-ink #bd4129, 5.3:1 — the old color:inherit leaked dark stone = FAIL). */
+  .guarantee-d .hero-v3-b .text-clay { color:inherit; }
+  .guarantee-d .bg-clay { color:#fff; }
 
   /* Woven in-content links: clay, underlined, AA-safe — applies to all the
      mid-sentence internal/external links in body copy. */
@@ -542,4 +602,14 @@ const credentials = [
   .cag-seam__line{ flex:1; height:1px; background:var(--rule); }
   .guarantee-d .cag-seam img{ height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
   @media (max-width:600px){ .guarantee-d > .cag-seam{ gap:16px; } .guarantee-d .cag-seam img{ height:24px; } }
+
+  /* Jump targets clear the 96px sticky header; respect reduced motion. */
+  .guarantee-d section[id], .guarantee-d div[id] { scroll-margin-top:110px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+
+  /* "↓ Continue:" section next-nav (JS-injected; this block is is:global). */
+  .guarantee-d .section-next-nav { text-align:right; padding-top:18px; margin-top:14px; border-top:1px solid #ede5dc; }
+  .guarantee-d .section-next-link { font-family:'IBM Plex Sans',sans-serif; font-size:.85rem; font-weight:600;
+    color:#b04228; text-decoration:none; display:inline-block; padding:10px 0 10px 12px; margin:-10px 0; }
+  .guarantee-d .section-next-link:hover { text-decoration:underline; }
 </style>

@@ -5,6 +5,7 @@ import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import BirdCard from '../../components/BirdCard.astro';
 import InquiryForm from '../../components/cag-inquiry-form.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
 
 const title = "Best Food for African Grey Parrots | Which Pellet Brands Are Best — Harrison's, Zupreem, Roudybush or TOP's? | Pellets vs Seed, Treats & Foraging Reviewed | C.A.Gs – Midland, TX";
 const description = "Our breeder review of the best African Grey parrot food: which dye-free pellet brands are best (Harrison's, Zupreem Natural, Roudybush, TOP's), where seed mixes fit, the best treats, nuts and foraging products, and how to switch a Grey to a new food | USDA-licensed Congo & Timneh breeders.";
@@ -15,6 +16,25 @@ const breadcrumbs = [
   { name: "Care Guides", url: "/african-grey-care/" },
   { name: "Best African Grey Parrot Food", url: "/best-african-grey-parrot-food/" },
 ];
+
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system as
+// the homepage + diet/care pages; ids live on each section. Document order.
+const jumpSections = [
+  { id: 'criteria',        label: 'How to Choose', part: 1 },
+  { id: 'pellet-brands',   label: 'Pellet Brands', part: 1 },
+  { id: 'seed-mixes',      label: 'Seed Mixes',    part: 1 },
+  { id: 'treats',          label: 'Treats & Nuts', part: 2 },
+  { id: 'what-we-feed',    label: 'Our Routine',   part: 2 },
+  { id: 'transition',      label: 'Switching',     part: 2 },
+  { id: 'available-birds', label: 'Available',     part: 3 },
+  { id: 'faq',             label: 'FAQ',           part: 3 },
+  { id: 'contact',         label: 'Ask C.A.Gs',    part: 3 },
+];
+const jumpPartNames = {
+  1: 'Best Foods',
+  2: 'Feeding & Switching',
+  3: 'Choose & Reserve',
+};
 
 // ─── Available birds (cross-sell grid) — verified against data/clutch-inventory.json + price-matrix.json ───
 // Shipping line + trust badges are hardwired inside BirdCard.astro (Ships nationwide · $185 airport · $350 home).
@@ -170,6 +190,8 @@ const itemListSchema = {
       <Breadcrumb items={breadcrumbs} />
     </div>
 
+    <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Ask C.A.Gs →" ctaTarget="contact" />
+
     <!-- 1. HERO (cag-hero-v3 idiom · Authority Green · photo-led) -->
     <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
       <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
@@ -177,13 +199,12 @@ const itemListSchema = {
         <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
           <!-- COPY -->
           <div class="order-2 text-center md:order-1 md:text-left">
-            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">Breeder Product Review · Pellet Brands Compared</p>
+            <p class="font-sora text-[11px] font-medium tracking-[0.12em] text-white/80">Breeder Product Review · Pellet Brands Compared</p>
             <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
               Best Food for African Grey Parrots
             </h1>
-            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
-              Here at C.A.Gs in Midland, Texas, Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and Timneh African Greys since 2014 — and the question we field most is simply <em>which food do I buy?</em> This is our honest review of the best African Grey pellet brands, where seed mixes and treats actually belong, the foraging products worth owning, and how to switch a Grey to a new food without a fight.
-            </p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Here at C.A.Gs in Midland, Texas, Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and Timneh African Greys since 2014 — and the question we field most is simply <em>which food do I buy?</em></p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">This is our honest review of the best African Grey pellet brands, where seed mixes and treats actually belong, the foraging products worth owning, and how to switch a Grey to a new food without a fight.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
               <a href="#pellet-brands" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Jump to the Pellet Brands →</a>
               <a href="#contact" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">Ask About a Grey →</a>
@@ -290,30 +311,36 @@ const itemListSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Selection · What to Look For</p>
           <h2 class="font-lora font-bold text-logo-dark">What Makes a Good African Grey Parrot Food?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>A good African Grey food is a formulated, color-free pellet with clean ingredients — not the loose seed mix most pet stores push.</strong> The marketing on the bag rarely matches what a Grey's body needs, so here is what we actually judge a food on. The veterinary fundamentals behind these criteria are laid out in the <a href="https://lafeber.com/vet/avian-nutrition-basics/" target="_blank" rel="noopener noreferrer">LafeberVet avian nutrition basics</a> we hand new owners; this page turns that science into a shopping list. For ratios, calcium and toxic foods, our <a href="/african-grey-parrot-diet/">African Grey diet and nutrition guide</a> is the companion to this one.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>A good African Grey food is a formulated, color-free pellet with clean ingredients — not the loose seed mix most pet stores push.</strong> The marketing on the bag rarely matches what a Grey's body needs, so here is what we actually judge a food on.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">The veterinary fundamentals behind these criteria are laid out in the <a href="https://lafeber.com/vet/avian-nutrition-basics/" target="_blank" rel="noopener noreferrer">LafeberVet avian nutrition basics</a> we hand new owners; this page turns that science into a shopping list.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">For ratios, calcium and toxic foods, our <a href="/african-grey-parrot-diet/">African Grey diet and nutrition guide</a> is the companion to this one.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Formulated, Not Loose Seed</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">The single most important criterion is that the food is a complete, formulated pellet rather than a seed mix. A pellet bakes balanced vitamins, minerals and amino acids into every bite, so a clever Grey can't cherry-pick the fatty bits and leave the nutrition behind — the habit that drives most diet-related disease.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">The single most important criterion is that the food is a complete, formulated pellet rather than a seed mix.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A pellet bakes balanced vitamins, minerals and amino acids into every bite, so a clever Grey can't cherry-pick the fatty bits and leave the nutrition behind — the habit that drives most diet-related disease.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">No Artificial Dyes or Sugar</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">We only recommend dye-free pellets. The bright red, blue and yellow pieces are tinted with artificial colours that add nothing nutritionally and stain droppings, which makes spotting a health change harder. Skip added sugar too — a Grey doesn't need it, and it just trains a sweet tooth.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">We only recommend dye-free pellets. The bright red, blue and yellow pieces are tinted with artificial colours that add nothing nutritionally and stain droppings, which makes spotting a health change harder.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Skip added sugar too — a Grey doesn't need it, and it just trains a sweet tooth.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Clean Label & Right Size</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Look for a recognisable ingredient list — whole grains, vegetables, named vitamins — and ideally organic or non-GMO sourcing. Then match the kibble size to your bird: most Greys take a coarse pellet happily, but some prefer a smaller crumble, and the right size is the one your bird will actually eat.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Look for a recognisable ingredient list — whole grains, vegetables, named vitamins — and ideally organic or non-GMO sourcing.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Then match the kibble size to your bird: most Greys take a coarse pellet happily, but some prefer a smaller crumble, and the right size is the one your bird will actually eat.</p>
           </article>
         </div>
 
         <div class="max-w-3xl mt-10">
           <h3 class="font-lora font-bold text-logo-dark mb-3">Should the Food Be Vet-Endorsed or Organic?</h3>
-          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Both are strong signals. A vet-recommended brand has usually been fed to thousands of birds under clinical eyes — the major animal-hospital networks like <a href="https://vcahospitals.com/know-your-pet/birds-feeding" target="_blank" rel="noopener noreferrer">VCA's feeding guidance for pet birds</a> are explicit that pellets, not seed, form the base of the diet — and organic, non-GMO sourcing limits pesticide exposure over a 40-to-60-year life. But the deciding factor comes last: a dye-free pellet your individual Grey eats consistently beats a "perfect" one it refuses.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Both are strong signals. A vet-recommended brand has usually been fed to thousands of birds under clinical eyes — the major animal-hospital networks like <a href="https://vcahospitals.com/know-your-pet/birds-feeding" target="_blank" rel="noopener noreferrer">VCA's feeding guidance for pet birds</a> are explicit that pellets, not seed, form the base of the diet — and organic, non-GMO sourcing limits pesticide exposure over a 40-to-60-year life.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">But the deciding factor comes last: a dye-free pellet your individual Grey eats consistently beats a "perfect" one it refuses.</p>
         </div>
       </div>
     </section>
@@ -326,7 +353,8 @@ const itemListSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Pellet Brands · Reviewed</p>
           <h2 class="font-lora font-bold text-logo-dark">Which Are the Best Pellet Brands for an African Grey?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>For an African Grey we recommend four dye-free, formulated pellets — Harrison's, Zupreem Natural, Roudybush and TOP's — with Harrison's as our all-round top pick.</strong> Each is a complete diet without artificial colours, and each suits a slightly different owner and bird, so here is the honest case for and against all four. Formulas and prices change, so check each brand's current line-up before you buy.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>For an African Grey we recommend four dye-free, formulated pellets — Harrison's, Zupreem Natural, Roudybush and TOP's — with Harrison's as our all-round top pick.</strong></p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Each is a complete diet without artificial colours, and each suits a slightly different owner and bird, so here is the honest case for and against all four. Formulas and prices change, so check each brand's current line-up before you buy.</p>
         </div>
 
         <!-- Brand review cards -->
@@ -397,7 +425,8 @@ const itemListSchema = {
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Seed Mixes · Where They Fit</p>
           <h2 class="font-lora font-bold text-logo-dark">Where Do Seed Mixes Fit — and When Are They Worth Buying?</h2>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>A seed mix is a treat and a foraging tool, never the base of an African Grey's diet.</strong> The bagged "African Grey seed blends" look wholesome, but loose seed is high in fat and short on vitamin A, calcium and balanced amino acids — and a Grey left to free-feed on it picks out the sunflower and safflower seeds and skips the rest, the exact path to vitamin-A deficiency and fatty liver disease. The fix isn't to ban seed; it's to demote it.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>A seed mix is a treat and a foraging tool, never the base of an African Grey's diet.</strong></p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">The bagged "African Grey seed blends" look wholesome, but loose seed is high in fat and short on vitamin A, calcium and balanced amino acids — and a Grey left to free-feed on it picks out the sunflower and safflower seeds and skips the rest, the exact path to vitamin-A deficiency and fatty liver disease. The fix isn't to ban seed; it's to demote it.</p>
         <div class="rounded-2xl border border-line bg-white p-6 mb-4" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
           <h3 class="font-lora font-bold text-logo-dark mb-3">How to Use Seed the Right Way</h3>
           <ul class="space-y-2.5 list-none pl-0 text-stone-600 text-[15px]" style="max-width:70ch;">
@@ -419,30 +448,37 @@ const itemListSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Treats · Nuts · Foraging</p>
           <h2 class="font-lora font-bold text-logo-dark">What Are the Best Treats, Nuts, and Foraging Products for an African Grey?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>The best treats are whole unsalted nuts, small amounts of nutrient-dense fruit, and foraging products that make your Grey work for the reward.</strong> A Grey spends much of its day in the wild searching for and processing food — the World Parrot Trust's <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">grey parrot profile</a> describes that natural foraging life — so the products worth buying are the ones that give that instinct somewhere to go in your living room. Used well, a treat isn't junk; it's training and enrichment.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>The best treats are whole unsalted nuts, small amounts of nutrient-dense fruit, and foraging products that make your Grey work for the reward.</strong></p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">A Grey spends much of its day in the wild searching for and processing food — the World Parrot Trust's <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">grey parrot profile</a> describes that natural foraging life — so the products worth buying are the ones that give that instinct somewhere to go in your living room.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Used well, a treat isn't junk; it's training and enrichment.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Nuts (The Best Reward)</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Unsalted almonds, walnuts, pecans and a prized whole in-shell nut are the single best training reward you own — when one cracked walnut means "well done," a Grey learns faster than with any amount of repetition. Keep it to a few a day; nuts are healthy fat, but fat all the same.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Unsalted almonds, walnuts, pecans and a prized whole in-shell nut are the single best training reward you own — when one cracked walnut means "well done," a Grey learns faster than with any amount of repetition.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Keep it to a few a day; nuts are healthy fat, but fat all the same.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Fruit & Veg Treats</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Mango, papaya, pomegranate, berries and melon are nutrient-dense, much-loved treats in small amounts, and a leaf of kale clipped to the bars doubles as foraging. Always remove cherry, peach, plum and apricot pits and apple and pear seeds, which release cyanide compounds when chewed.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Mango, papaya, pomegranate, berries and melon are nutrient-dense, much-loved treats in small amounts, and a leaf of kale clipped to the bars doubles as foraging.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Always remove cherry, peach, plum and apricot pits and apple and pear seeds, which release cyanide compounds when chewed.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Foraging Products</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Foraging wheels, treat-stuffed wooden toys, paper-wrap puzzles, shreddable boxes and stainless kabob skewers turn feeding into the mental exercise a Grey is built for. Start easy so the bird doesn't quit, then make the puzzles harder — a foraging Grey screams and plucks far less.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Foraging wheels, treat-stuffed wooden toys, paper-wrap puzzles, shreddable boxes and stainless kabob skewers turn feeding into the mental exercise a Grey is built for.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Start easy so the bird doesn't quit, then make the puzzles harder — a foraging Grey screams and plucks far less.</p>
           </article>
         </div>
 
         <div class="max-w-3xl mt-10">
           <h3 class="font-lora font-bold text-logo-dark mb-3">Which "Bird Treats" Should You Skip?</h3>
-          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Leave the colourful packaged "parrot treats" on the shelf — honey sticks, yoghurt-coated bits and sugary seed-and-fruit bars train a sweet tooth and add empty calories. Anything salted, sweetened or artificially coloured is off our list, and chocolate, avocado and onion are outright toxic, not treats at all. Our <a href="/african-grey-parrot-diet/">diet and nutrition guide</a> carries the full never-feed list, and a Grey's <a href="/african-grey-parrot-lifespan/">40-to-60-year lifespan</a> reaches its upper end when the feeding is right.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Leave the colourful packaged "parrot treats" on the shelf — honey sticks, yoghurt-coated bits and sugary seed-and-fruit bars train a sweet tooth and add empty calories.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Anything salted, sweetened or artificially coloured is off our list, and chocolate, avocado and onion are outright toxic, not treats at all.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Our <a href="/african-grey-parrot-diet/">diet and nutrition guide</a> carries the full never-feed list, and a Grey's <a href="/african-grey-parrot-lifespan/">40-to-60-year lifespan</a> reaches its upper end when the feeding is right.</p>
         </div>
       </div>
     </section>
@@ -456,7 +492,9 @@ const itemListSchema = {
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Our Aviary · What We Feed</p>
           <h2 class="font-lora font-bold text-logo-dark">What Do We Feed Our African Greys Here at C.A.Gs?</h2>
         </div>
-        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Every Grey we raise is weaned onto a formulated pellet base — never an all-seed diet — with a daily rotation of fresh vegetables and whole nuts kept back for training.</strong> Our priority isn't loyalty to one logo on a bag; it's the same things this whole page argues for: a complete, dye-free pellet as the foundation, real produce for vitamin A and calcium, and treats demoted to rewards. That routine is in place long before a chick is old enough to leave us, so good eating habits arrive already built.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;"><strong>Every Grey we raise is weaned onto a formulated pellet base — never an all-seed diet — with a daily rotation of fresh vegetables and whole nuts kept back for training.</strong></p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">Our priority isn't loyalty to one logo on a bag; it's the same things this whole page argues for: a complete, dye-free pellet as the foundation, real produce for vitamin A and calcium, and treats demoted to rewards.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-4" style="max-width:70ch;">That routine is in place long before a chick is old enough to leave us, so good eating habits arrive already built.</p>
 
         <figure class="mb-5">
           <img src="/spoonfed-african-grey-parrot-baby.webp"
@@ -478,7 +516,8 @@ const itemListSchema = {
         </div>
         <div class="rounded-xl border border-green/20 bg-green/[0.04] p-5 mb-4">
           <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mb-1.5">The Safest Move on Arrival: Don't Change a Thing Yet</h4>
-          <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">A new home is already a big change, so we send each bird home eating the exact food it is used to and tell every family the same thing — continue that diet for the first few weeks, then switch brands gradually if you prefer one of the others reviewed here. Paired with the gram scale and patience in the next section, a food change becomes a non-event.</p>
+          <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">A new home is already a big change, so we send each bird home eating the exact food it is used to and tell every family the same thing — continue that diet for the first few weeks, then switch brands gradually if you prefer one of the others reviewed here.</p>
+          <p class="text-stone-700 leading-relaxed text-[14.5px] m-0" style="max-width:70ch;">Paired with the gram scale and patience in the next section, a food change becomes a non-event.</p>
           <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-4 mb-1">What Exactly Do We Send Home With the Bird?</h5>
           <p class="text-stone-700 leading-relaxed text-[14.5px] mb-3" style="max-width:70ch;">We tell you, before pickup, the exact pellet and chop routine your Grey is eating — so you can have the identical food waiting at home on day one rather than improvising from a pet-store aisle.</p>
           <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mb-1">Weigh Before You Worry</h6>
@@ -503,30 +542,37 @@ const itemListSchema = {
         <div class="mb-8 border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Switching Food · Step by Step</p>
           <h2 class="font-lora font-bold text-logo-dark">How Do You Transition an African Grey to a New Food or Brand?</h2>
-          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Switch slowly over 4–8 weeks, mixing the new food into the familiar one and never starving a Grey onto a new diet.</strong> Whether you're converting a seed-addicted rescue or moving between two good pellets, the method is the same — patience plus a gram scale. A Grey's food-stubbornness is a survival trait, not defiance, so the owners who win are the ones who out-wait the bird.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><strong>Switch slowly over 4–8 weeks, mixing the new food into the familiar one and never starving a Grey onto a new diet.</strong></p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Whether you're converting a seed-addicted rescue or moving between two good pellets, the method is the same — patience plus a gram scale.</p>
+          <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">A Grey's food-stubbornness is a survival trait, not defiance, so the owners who win are the ones who out-wait the bird.</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">01</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Mix, Then Shift</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Start by mixing a small amount of the new food into the food your Grey already eats, then raise the new-food ratio a little every few days across 4–8 weeks. Offer warm mashed pellets in a separate dish, and let your bird watch you pretend to nibble one — Greys are social eaters and copy the flock.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Start by mixing a small amount of the new food into the food your Grey already eats, then raise the new-food ratio a little every few days across 4–8 weeks.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Offer warm mashed pellets in a separate dish, and let your bird watch you pretend to nibble one — Greys are social eaters and copy the flock.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">02</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Weigh Every Day</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A cheap kitchen gram scale with a perch is the most important tool during any food change. Weigh at the same time each day and watch the trend — a steady weight means the switch is safe; a loss of even 10–15 grams is your early warning to slow down and call your avian vet.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">A cheap kitchen gram scale with a perch is the most important tool during any food change.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Weigh at the same time each day and watch the trend — a steady weight means the switch is safe; a loss of even 10–15 grams is your early warning to slow down and call your avian vet.</p>
           </article>
           <article class="bg-white rounded-2xl border border-line p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
             <div class="font-lora text-clay-ink font-bold text-2xl">03</div>
             <h3 class="font-lora font-bold text-xl mt-2 text-logo-dark">Never Starve the Switch</h3>
-            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Never withhold all familiar food to force acceptance — a parrot's fast metabolism means it can crash dangerously within a day. Always keep a known food available until the bird is reliably eating the new one, and loop in your avian vet if progress stalls. Pressure endangers a Grey; patience converts it.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Never withhold all familiar food to force acceptance — a parrot's fast metabolism means it can crash dangerously within a day.</p>
+            <p class="text-stone-600 mt-2 text-[14px] leading-relaxed">Always keep a known food available until the bird is reliably eating the new one, and loop in your avian vet if progress stalls. Pressure endangers a Grey; patience converts it.</p>
           </article>
         </div>
 
         <div class="max-w-3xl mt-10">
           <h3 class="font-lora font-bold text-logo-dark mb-3">What If My African Grey Just Won't Eat the New Food?</h3>
-          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">The answer is almost always presentation plus persistence. Try the new pellet warm, crushed over a favourite vegetable, or served when appetite is highest, and remember a Grey may reject a new food ten to twenty times before tasting it — so keep offering. Teri's rule with every C.A.Gs family is to <em>"never give up on a food after one no."</em> If your bird genuinely stops eating or loses weight, treat it as a veterinary matter, not a willpower contest — our <a href="/african-grey-parrot-diet/">diet guide</a> covers the full seed-to-pellet conversion.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">The answer is almost always presentation plus persistence.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Try the new pellet warm, crushed over a favourite vegetable, or served when appetite is highest, and remember a Grey may reject a new food ten to twenty times before tasting it — so keep offering.</p>
+          <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">Teri's rule with every C.A.Gs family is to <em>"never give up on a food after one no."</em> If your bird genuinely stops eating or loses weight, treat it as a veterinary matter, not a willpower contest — our <a href="/african-grey-parrot-diet/">diet guide</a> covers the full seed-to-pellet conversion.</p>
         </div>
       </div>
     </section>
@@ -619,7 +665,8 @@ const itemListSchema = {
       <div class="max-w-3xl mx-auto">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Ready When You Are</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">Now You Know What to Feed One — Ready to Bring Home a Captive-Bred African Grey?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised and fully weaned onto a complete pellet-and-vegetable diet, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation — never wild-caught. Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours, food questions and all. Browsing first? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are waiting to be met.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every Grey from C.A.Gs is hand-raised and fully weaned onto a complete pellet-and-vegetable diet, PCR DNA-sexed, avian-vet certified, and placed with full CITES Appendix I documentation — never wild-caught.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Tell us about your home and which Grey caught your eye in the form below, and Mark or Teri will reply within 24 hours, food questions and all. Browsing first? Our <a href="/congo-african-grey-for-sale/">Congo Greys</a> and <a href="/timneh-african-grey-for-sale/">Timneh Greys</a> are waiting to be met.</p>
       </div>
     </section>
 
@@ -628,6 +675,31 @@ const itemListSchema = {
     </div>
 
   </div>
+
+  <script>
+    // Section jump-nav auto-injector — "↓ Continue: <next section>"
+    (function () {
+      var ids = ['criteria','pellet-brands','seed-mixes','treats','what-we-feed','transition','available-birds','faq','contact'];
+      var labels = {
+        'pellet-brands':   'Best Pellet Brands',
+        'seed-mixes':      'Where Seed Fits',
+        'treats':          'Treats, Nuts & Foraging',
+        'what-we-feed':    'What We Feed Our Greys',
+        'transition':      'Switching to a New Food',
+        'available-birds': 'Available Greys',
+        'faq':             'Food FAQ',
+        'contact':         'Ask C.A.Gs',
+      };
+      for (var i = 0; i < ids.length - 1; i++) {
+        var cur = document.getElementById(ids[i]);
+        if (!cur) continue;
+        var nav = document.createElement('div');
+        nav.className = 'section-next-nav';
+        nav.innerHTML = '<a href="#' + ids[i + 1] + '" class="section-next-link">&#8595; Continue: ' + (labels[ids[i + 1]] || ids[i + 1]) + '</a>';
+        cur.appendChild(nav);
+      }
+    })();
+  </script>
 </BaseLayout>
 
 <style is:global>
@@ -643,7 +715,10 @@ const itemListSchema = {
   /* AA: clay as small readable text on this page's LIGHT sections → #b04228 (4.5:1).
      Mirrors the homepage .home-d rule. Clay on the green hero stays bright. */
   .food-d a.text-clay, .food-d .text-clay { color:#b04228; }
-  .food-d .hero-v3-b .text-clay, .food-d .bg-clay { color:inherit; }
+  /* Hero clay accent stays bright; clay FILLS keep white text (global .bg-clay =
+     --clay-ink #bd4129, 5.3:1 — the old color:inherit leaked dark stone = FAIL). */
+  .food-d .hero-v3-b .text-clay { color:inherit; }
+  .food-d .bg-clay { color:#fff; }
 
   /* Woven in-content links: clay, underlined, AA-safe — applies to all the
      mid-sentence internal/external links in body copy + the brand table. */
@@ -663,4 +738,14 @@ const itemListSchema = {
   .cag-seam__line{ flex:1; height:1px; background:var(--rule); }
   .food-d .cag-seam img{ height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
   @media (max-width:600px){ .food-d > .cag-seam{ gap:16px; } .food-d .cag-seam img{ height:24px; } }
+
+  /* Jump targets clear the 96px sticky header; respect reduced motion. */
+  .food-d section[id], .food-d div[id] { scroll-margin-top:110px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+
+  /* "↓ Continue:" section next-nav (JS-injected; this block is is:global). */
+  .food-d .section-next-nav { text-align:right; padding-top:18px; margin-top:14px; border-top:1px solid #ede5dc; }
+  .food-d .section-next-link { font-family:'IBM Plex Sans',sans-serif; font-size:.85rem; font-weight:600;
+    color:#b04228; text-decoration:none; display:inline-block; padding:10px 0 10px 12px; margin:-10px 0; }
+  .food-d .section-next-link:hover { text-decoration:underline; }
 </style>
