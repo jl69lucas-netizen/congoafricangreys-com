@@ -11,6 +11,23 @@
 
 const formAction = import.meta.env.FORMSPREE_URL ?? 'https://formspree.io/f/xrejpnvn';
 
+interface Props {
+  /** Optional heading override (defaults to the adoption-inquiry heading used site-wide). */
+  heading?: string;
+  /** Optional sub-heading line under the heading. */
+  subtext?: string;
+  /** Optional Formspree _subject value (lets a page label its own submissions). */
+  subject?: string;
+  /** Optional id prefix so multiple instances on one page keep unique field ids/labels. */
+  idPrefix?: string;
+}
+const {
+  heading = 'Adopt an African Grey — Inquiry Form',
+  subtext = 'We review every application. Expect a response within 24 hours.',
+  subject = 'African Grey Adoption Inquiry',
+  idPrefix = '',
+} = Astro.props;
+
 const birds = [
   { id: 'roys',   label: 'ROYS — Congo African Grey, Male, 4 months',          price: '$2,300' },
   { id: 'amie',   label: 'AMIE — Congo African Grey, Female, 3 months',         price: '$2,500' },
@@ -39,19 +56,19 @@ const pricingRows = [
 
     <!-- ── FORM COLUMN ── -->
     <div class="inq-form-col">
-      <h2 class="font-lora inq-heading">Adopt an African Grey — Inquiry Form</h2>
-      <p class="font-sora inq-subtext">We review every application. Expect a response within 24 hours.</p>
+      <h2 class="font-lora inq-heading">{heading}</h2>
+      <p class="font-sora inq-subtext">{subtext}</p>
 
       <form class="inq-form" action={formAction} method="POST">
-        <input type="hidden" name="_subject" value="African Grey Adoption Inquiry" />
+        <input type="hidden" name="_subject" value={subject} />
         <input type="hidden" name="_next" value="https://congoafricangreys.com/contact-us/?success=true" />
 
         <!-- Field 1: Full Name -->
         <div class="inq-field">
-          <label class="inq-label font-sora" for="full-name">Full Name <span class="inq-required">*</span></label>
+          <label class="inq-label font-sora" for={idPrefix + "full-name"}>Full Name <span class="inq-required">*</span></label>
           <input
             type="text"
-            id="full-name"
+            id={idPrefix + "full-name"}
             name="full_name"
             required
             placeholder="Your legal full name"
@@ -63,10 +80,10 @@ const pricingRows = [
         <!-- Field 2: Mobile + Confirm Mobile (2-col) -->
         <div class="inq-field-2col">
           <div class="inq-field">
-            <label class="inq-label font-sora" for="phone">Mobile Number <span class="inq-required">*</span></label>
+            <label class="inq-label font-sora" for={idPrefix + "phone"}>Mobile Number <span class="inq-required">*</span></label>
             <input
               type="tel"
-              id="phone"
+              id={idPrefix + "phone"}
               name="phone"
               required
               placeholder="+1 (555) 000-0000"
@@ -75,10 +92,10 @@ const pricingRows = [
             />
           </div>
           <div class="inq-field">
-            <label class="inq-label font-sora" for="phone-confirm">Confirm Number <span class="inq-required">*</span></label>
+            <label class="inq-label font-sora" for={idPrefix + "phone-confirm"}>Confirm Number <span class="inq-required">*</span></label>
             <input
               type="tel"
-              id="phone-confirm"
+              id={idPrefix + "phone-confirm"}
               name="phone_confirm"
               required
               placeholder="Repeat your number"
@@ -90,10 +107,10 @@ const pricingRows = [
         <!-- Field 3: Email + Confirm Email (2-col) -->
         <div class="inq-field-2col">
           <div class="inq-field">
-            <label class="inq-label font-sora" for="email">E-mail <span class="inq-required">*</span></label>
+            <label class="inq-label font-sora" for={idPrefix + "email"}>E-mail <span class="inq-required">*</span></label>
             <input
               type="email"
-              id="email"
+              id={idPrefix + "email"}
               name="email"
               required
               placeholder="you@example.com"
@@ -102,10 +119,10 @@ const pricingRows = [
             />
           </div>
           <div class="inq-field">
-            <label class="inq-label font-sora" for="email-confirm">Confirm Email <span class="inq-required">*</span></label>
+            <label class="inq-label font-sora" for={idPrefix + "email-confirm"}>Confirm Email <span class="inq-required">*</span></label>
             <input
               type="email"
-              id="email-confirm"
+              id={idPrefix + "email-confirm"}
               name="email_confirm"
               required
               placeholder="Repeat your email"
@@ -116,11 +133,11 @@ const pricingRows = [
 
         <!-- Field 4: Surrender history -->
         <div class="inq-field">
-          <label class="inq-label font-sora" for="surrender">
+          <label class="inq-label font-sora" for={idPrefix + "surrender"}>
             Have you ever surrendered a pet to a shelter or given one away? <span class="inq-required">*</span>
           </label>
           <textarea
-            id="surrender"
+            id={idPrefix + "surrender"}
             name="surrender_history"
             required
             rows="4"
@@ -149,10 +166,10 @@ const pricingRows = [
 
         <!-- Field 6: Address -->
         <div class="inq-field">
-          <label class="inq-label font-sora" for="address">Address <span class="inq-required">*</span></label>
+          <label class="inq-label font-sora" for={idPrefix + "address"}>Address <span class="inq-required">*</span></label>
           <input
             type="text"
-            id="address"
+            id={idPrefix + "address"}
             name="address"
             required
             placeholder="Street, City, State, ZIP"
@@ -232,9 +249,9 @@ const pricingRows = [
 
         <!-- Field 10: Message -->
         <div class="inq-field">
-          <label class="inq-label font-sora" for="message">Message or Questions?</label>
+          <label class="inq-label font-sora" for={idPrefix + "message"}>Message or Questions?</label>
           <textarea
-            id="message"
+            id={idPrefix + "message"}
             name="message"
             rows="6"
             placeholder="Questions, timeline, anything else we should know?"
