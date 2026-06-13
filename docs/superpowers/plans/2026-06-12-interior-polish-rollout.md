@@ -25,9 +25,9 @@ Threshold: every remaining content page is ≥30K chars → gets the **full reci
 | **3 ✅ DONE 2026-06-13** | `african-grey-parrot-care-guide` (pillar) — commit `9185e8a` | 57.8K | ✅ |
 | | `african-grey-care` (hub) — commit `9185e8a` | 42.6K | ✅ |
 | | `african-grey-parrot-diet` — commit `9185e8a` | 66.0K | ✅ |
-| **4** | `best-african-grey-parrot-food` | 60.6K | ✅ |
-| | `african-grey-parrot-lifespan` | 60.0K | ✅ |
-| | `african-grey-parrot-health-guarantee` | 49.9K | ✅ |
+| **4 ✅ DONE 2026-06-13** | `best-african-grey-parrot-food` — commit `a5b7d80` | 60.6K | ✅ |
+| | `african-grey-parrot-lifespan` — commit `a5b7d80` (CompareTableE h2 clamp) | 60.0K | ✅ |
+| | `african-grey-parrot-health-guarantee` — commit `a5b7d80` (H2→H4 skip fixed in #documentation) | 49.9K | ✅ |
 | **5** | `african-grey-parrot-guide` (species pillar) | 54.4K | ✅ |
 | | `how-to-tame-african-grey-parrot` | 51.9K | ✅ |
 | | `african-grey-parrot-price` | 62.2K | ✅ |
@@ -281,6 +281,14 @@ These came out of executing batch 1 and are now part of the recipe:
 3. **Diet-style proportion-bar infographics** (`.ig-diet-seg`): white labels on the olive veg segment `#52796f` only clear AA at full opacity (white = 4.86:1; the shipped `opacity:.92` dropped it to ~4.0 = FAIL). Fix is `opacity:1` on the seg `span`, not a color change (the bar colors are semantic). Check any page with a colored-segment bar.
 4. **HeroV3 eyebrow recolor**: these template heroes ship `uppercase tracking-[0.16em] text-white/70`. Restyle to `tracking-[0.12em] text-white/80` + drop `uppercase` (text-white/80 on green ≈4.3:1 beats the old /70 ≈3.7:1; no `.hero-eyebrow` class on this template — edit the Tailwind classes inline).
 5. **Two care pages share the `.care-d` scope class** (care-guide + care-hub) — fine, Astro bundles CSS per-page so the scoped blocks never collide across documents.
+
+## Session 4 findings — fold into every later session (IMPORTANT)
+
+1. **The H2→H4 skip (finding #2) is NOT pre-resolved on every page — verify the rendered dist ladder per page.** Of the 3 Session-4 pages, `best-african-grey-parrot-food` and `african-grey-parrot-lifespan` already had clean `h2→h3→h4→h5→h6` chains, but `african-grey-parrot-health-guarantee` still carried the trap: its `#documentation` section had an `h4/h5/h6` trio directly under the section `h2` with no intervening `h3`. Fix shipped = re-level trio `h4→h3, h5→h4, h6→h5` and derive a new `h6` ("Why We Band a Grey So Early") by splitting the final paragraph at its sentence boundary (heading summarizes existing copy, no new claim, no em dash) — matches captive-bred's shipped `h3→h4→h5→h6` chain. Always run the dist-ladder check (`re.findall(r'<h([1-6])', dist/<slug>/index.html)`, flag any `+2` jump) before assuming a page is clean.
+2. **Re-leveling keeps visual px identical** — the three existing trio headings kept their exact sizes (14/13/12px); only the tag changed. The new h6 is 11px clay-ink. No visual regression, correct semantic ladder.
+3. **Pages NOT importing CompareTableE don't need the `h2.text-3xl` clamp** (food + health-guarantee have no `text-3xl` section H2 — their section H2s inherit the global clamp). Only add the `.X-d h2.text-3xl{clamp…}` rule where CompareTableE is imported (lifespan). Grep the imports first.
+4. **FAQ accordion answers stay as a single `{item.a}` `<p>`** (confirmed against the Session-3 diet page) — the `split_long_paragraphs.py` script only touches markup `<p>`s, not data-array strings, and collapsed accordion answers are exempt from the 240-char ceiling. Don't manually `\n\n`-split FAQ data on these interior pages.
+5. **`split_long_paragraphs.py` residual profile holds** (food 21 split / 8 left max 353; lifespan 30/10 max 316; health 13/4 max 267) — all residuals are quotes / sub-55 lead-tails / semicolon lists / marginal single sentences. Tag balance (`<p>`/`<a>`/`<strong>` open==close) stayed intact on all three.
 
 ## Carryover rules (every session)
 
