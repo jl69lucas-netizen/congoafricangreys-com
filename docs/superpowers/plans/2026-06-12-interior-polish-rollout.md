@@ -22,9 +22,9 @@ Threshold: every remaining content page is ≥30K chars → gets the **full reci
 | **2 ✅ DONE 2026-06-12** | `african-grey-reviews` — commit `e3e7aa1` (hero re-shot: Catherine buyer photo, cropped 72%/38%) | 31.9K | ✅ |
 | | `african-grey-parrot-faq` — commit `e3e7aa1` (ids already existed from interior batch — "only 1 id" note was stale) | 34.6K | ✅ |
 | | `african-grey-adoption` — commit `e3e7aa1` (+ long-section breakup: channel cards, green-band verify cards, 3-phase strip, 2 figures) | 48.0K | ✅ |
-| **3** | `african-grey-parrot-care-guide` (pillar) | 57.8K | ✅ |
-| | `african-grey-care` (hub) | 42.6K | ✅ |
-| | `african-grey-parrot-diet` | 66.0K | ✅ |
+| **3 ✅ DONE 2026-06-13** | `african-grey-parrot-care-guide` (pillar) — commit `9185e8a` | 57.8K | ✅ |
+| | `african-grey-care` (hub) — commit `9185e8a` | 42.6K | ✅ |
+| | `african-grey-parrot-diet` — commit `9185e8a` | 66.0K | ✅ |
 | **4** | `best-african-grey-parrot-food` | 60.6K | ✅ |
 | | `african-grey-parrot-lifespan` | 60.0K | ✅ |
 | | `african-grey-parrot-health-guarantee` | 49.9K | ✅ |
@@ -273,6 +273,14 @@ These came out of executing batch 1 and are now part of the recipe:
 4. **stone-400 is banned as text on light surfaces** — shared components (BirdCard, cag-bird-card-v2, CompareTableE, NewsletterV2) now use stone-500; figcaptions on the cream page bg use stone-600 (stone-500 is 4.49:1 there — just under).
 5. **Hero photos must show the bird's face/interaction** — african-grey-review-top.webp (sleeping chick, head tucked) reads as a headless bird in the hero circle; swapped for the Catherine Kempf buyer photo. Check every hero image candidate at the circle crop before shipping.
 6. **Rocket Loader `/70de/` unused-JS + missing-source-map Lighthouse flags are dashboard-only** (playbook §10) — Cloudflare → Speed → Optimization → toggle OFF. API tokens are dead; manual toggle required.
+
+## Session 3 findings — fold into every later session (IMPORTANT)
+
+1. **The paragraph-split step is now scripted** — `scripts/split_long_paragraphs.py <slug> --apply`. It splits any `<p>` >240 plain-text chars at the sentence boundary nearest the midpoint, recursively, preserving the `<p>` attrs + indentation. Tag-safe (never splits inside `<a>`/`<strong>`), abbreviation-guarded, `MIN_SEG=55`. **Critical fix baked in:** sentences that end inside an emphasis tag (`…seeds.</strong> A pellet`) — the period is followed by `<`, not a space — so the boundary scanner skips trailing `</…>` close tags + whitespace before checking for the next capital/opening-tag. Re-running is idempotent (only touches paras still >240). Verify after with the tag-balance check (`<a>`/`<strong>`/`<p>` open==close) + `astro build`.
+2. **Accepted residuals after the script** (do NOT hand-split): verbatim quotes, sub-55-char punchy lead/tail sentences, semicolon-list single sentences, and marginal 242–340 single sentences with no interior boundary. care-guide left 9, care-hub 1, diet 15 — all of this profile. Matches Session-1 finding #6.
+3. **Diet-style proportion-bar infographics** (`.ig-diet-seg`): white labels on the olive veg segment `#52796f` only clear AA at full opacity (white = 4.86:1; the shipped `opacity:.92` dropped it to ~4.0 = FAIL). Fix is `opacity:1` on the seg `span`, not a color change (the bar colors are semantic). Check any page with a colored-segment bar.
+4. **HeroV3 eyebrow recolor**: these template heroes ship `uppercase tracking-[0.16em] text-white/70`. Restyle to `tracking-[0.12em] text-white/80` + drop `uppercase` (text-white/80 on green ≈4.3:1 beats the old /70 ≈3.7:1; no `.hero-eyebrow` class on this template — edit the Tailwind classes inline).
+5. **Two care pages share the `.care-d` scope class** (care-guide + care-hub) — fine, Astro bundles CSS per-page so the scoped blocks never collide across documents.
 
 ## Carryover rules (every session)
 
