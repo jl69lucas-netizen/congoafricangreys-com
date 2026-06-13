@@ -36,6 +36,21 @@ duplicate content). Skills: /impeccable (brand context loaded), /frontend-design
   adoption-style form on a "vet a listing" page; mitigated by keeping scam copy + message field.
   Alt = surgical fix-in-place (override the h2+p color, fix badges, enrich variant options).
 
+## SHIPPED & DEPLOYED (2 commits on origin/main)
+- `fdac645` — endpoints→xrejpnvn; footer-logo WebP (×18 files); InquiryForm parameterized
+  (heading/subtext/subject/idPrefix); scam page: 2 forms→InquiryForm (vet-/buy- ids, AA-safe),
+  toc-box→TocV3 grouped card, newsletter mobile-stack, 92%-callout stack, Type-5 full-width.
+- `831809f` — how-to-tame image object-top (head no longer cut); diet figure capped to native
+  500px (no upscale/blur); best-food pellet-table AA contrast (stone-400/500→600).
+- TOC finding: 16 interior TOCs already match homepage (live-measured) — no change needed.
+- Duplicate-content audit: body prose is unique; only shared-component boilerplate repeats.
+
+## DEFERRED / FLAGGED FOR NEXT
+- #11 button + AI/infographic opportunities — proposal presented, awaiting approval (Component Gate).
+- Pre-existing impeccable bans noticed (not in scope, flag): scam-page hero key-takeaway uses a
+  side-stripe `border-left:4px` (ban); `.scam-card` uses a top accent border (allowed).
+- Optional: vary the ~5 repeated CTA intro lines across 4-6 pages (low priority).
+
 ## REMAINING (tracked in TaskList #3–#11)
 - #3 scam TOC → TocV3 pattern (other 16 already done)
 - #4 scam form (blocked on Q1) · #5 newsletter stack · #6 "92%"+"Type 5" infographics mobile
