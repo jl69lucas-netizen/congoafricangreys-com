@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import JumpRail from '../../components/cag-library/JumpRail.astro';
+import InquiryForm from '../../components/cag-inquiry-form.astro';
 
 // In-page section nav (desktop dot rail + mobile bottom sheet) — same system
 // as the homepage; ids live on each .section-block. Document order required.
@@ -291,15 +292,11 @@ li{margin-bottom:.4rem;line-height:1.7}
 .takeaways-box li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
 @media(max-width:580px){.takeaways-box ul{grid-template-columns:1fr}}
 
-/* TOC */
-.toc-box{background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-bottom:40px}
-.toc-box h2{font-size:1rem;margin-top:0;margin-bottom:14px;color:var(--dark);font-family:'IBM Plex Sans',system-ui,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.toc-list{list-style:none;padding:0;columns:2;column-gap:28px}
-.toc-list li{break-inside:avoid;margin-bottom:7px;font-size:13.5px}
-.toc-list a{color:var(--green);display:flex;align-items:flex-start;gap:7px}
-.toc-list a span.num{color:#b83c26;font-weight:700;font-size:12px;flex-shrink:0;margin-top:2px;min-width:18px}
-.toc-list a:hover{color:var(--clay)}
-@media(max-width:600px){.toc-list{columns:1}}
+/* TOC — now uses the shared homepage TocV3 grouped-card pattern (Tailwind utilities, nav.toc-scam).
+   The page's element-level h2 rule otherwise overrides the Tailwind size, so pin the heading to the
+   homepage TocV3 scale (24px mobile / 30px desktop) to match exactly. */
+.toc-scam h2{font-size:1.5rem!important;line-height:1.15}
+@media(min-width:768px){.toc-scam h2{font-size:1.875rem!important}}
 
 /* Section content */
 .section-block{padding:40px 0;border-bottom:1px solid var(--border)}
@@ -318,15 +315,19 @@ li{margin-bottom:.4rem;line-height:1.7}
 
 /* Stat callout */
 .stat-callout{background:var(--green);color:#fff;border-radius:12px;padding:22px 26px;margin:24px 0;display:flex;align-items:center;gap:18px}
-.stat-callout .stat-num{font-family:'Newsreader',Georgia,serif;font-size:2.4rem;font-weight:700;color:#7ce8a6;flex-shrink:0}
+.stat-callout .stat-num{font-family:'Newsreader',Georgia,serif;font-size:2.4rem;font-weight:700;color:#7ce8a6;flex-shrink:0;line-height:1}
 .stat-callout p{margin:0;font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.88)}
+.stat-callout p + p{margin-top:8px}
+@media(max-width:600px){.stat-callout{flex-direction:column;align-items:flex-start;gap:10px;padding:20px 20px}.stat-callout .stat-num{font-size:2.6rem}}
 
 /* Scam type cards */
 .scam-types-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
 .scam-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;border-top:3px solid var(--clay);box-shadow:0 2px 8px rgba(60,30,10,.04)}
 .scam-card h3{margin-top:0;font-size:.95rem;color:var(--dark)}
 .scam-card p{font-size:13.5px;color:var(--muted);margin-bottom:0;line-height:1.55}
-@media(max-width:580px){.scam-types-grid{grid-template-columns:1fr}}
+/* lone 5th card: half-width left-aligned on desktop, full-width on mobile (was inline max-width:48% which squished it to the left on phones) */
+.scam-card--last{grid-column:1/-1;max-width:calc(50% - 8px);margin:0}
+@media(max-width:580px){.scam-types-grid{grid-template-columns:1fr}.scam-card--last{max-width:none}}
 
 /* Image placeholder */
 .img-placeholder{background:linear-gradient(135deg,#f0f4f2,#e8ede9);border:2px dashed #a8c9b8;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;color:var(--muted);font-size:13px;font-family:'IBM Plex Sans',system-ui,sans-serif;margin:24px 0;gap:8px}
@@ -380,35 +381,24 @@ li{margin-bottom:.4rem;line-height:1.7}
 .nl-mid-text .nl-eyebrow{font-size:12px;font-weight:700;color:#ffb3a6;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;font-family:'IBM Plex Sans',system-ui,sans-serif}
 .nl-mid-text h4{font-family:'Newsreader',Georgia,serif;font-size:1.1rem;font-weight:700;color:#fff;margin:0 0 4px}
 .nl-mid-text p{font-size:13px;color:rgba(255,255,255,.65);margin:0}
-.nl-mid-form{display:flex;gap:8px;flex-wrap:wrap;min-width:260px}
-.nl-mid-form input[type="email"]{flex:1;min-width:180px;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:13.5px;font-family:'IBM Plex Sans',system-ui,sans-serif;outline:none}
-.nl-mid-form input[type="email"]::placeholder{color:rgba(255,255,255,.35)}
+.nl-mid-form{display:flex;gap:10px;flex-wrap:wrap;min-width:0;flex:1 1 320px;max-width:480px}
+.nl-mid-form input[type="email"]{flex:1 1 200px;min-width:0;padding:11px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:14px;font-family:'IBM Plex Sans',system-ui,sans-serif;outline:none}
+.nl-mid-form input[type="email"]::placeholder{color:rgba(255,255,255,.55)}
 .nl-mid-form input[type="email"]:focus{border-color:var(--clay)}
-.nl-mid-form button{background:var(--clay-ink);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;font-family:'IBM Plex Sans',system-ui,sans-serif;cursor:pointer;white-space:nowrap;transition:background .2s}
+.nl-mid-form button{background:var(--clay-ink);color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:13.5px;font-weight:700;font-family:'IBM Plex Sans',system-ui,sans-serif;cursor:pointer;white-space:nowrap;transition:background .2s}
 .nl-mid-form button:hover{background:#b03c26}
+@media(max-width:600px){
+  .nl-mid{flex-direction:column;align-items:stretch;padding:22px 20px}
+  .nl-mid-form{flex-direction:column;max-width:none;flex:none}
+  .nl-mid-form input[type="email"],.nl-mid-form button{width:100%;flex:none}
+}
 .btn-primary-pill{background:var(--clay-ink);color:#fff;padding:11px 22px;border-radius:50px;font-weight:700;font-size:13.5px;text-decoration:none;box-shadow:0 4px 16px rgba(232,96,76,.35);transition:background .2s,transform .15s;white-space:nowrap;display:inline-block}
 .btn-primary-pill:hover{background:#b03c26;transform:translateY(-1px);color:#fff}
 
-/* ===== FULL FORM SECTION (Section 12) ===== */
+/* ===== FULL FORM SECTION (Section 12) — markup now uses the shared <InquiryForm/>; only the
+   anchor/scroll wrapper class remains. The bespoke form CSS was removed when the two bespoke
+   forms were replaced by InquiryForm (AA-safe, formspree xrejpnvn, full products/services). ===== */
 .form-section{margin:40px 0}
-.form-inner{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(60,30,10,.07)}
-.form-header-green{background:linear-gradient(135deg,#162f23,var(--green));padding:30px 36px;text-align:center}
-.form-header-green h2{color:#fff;margin:0 0 8px;font-size:1.45rem}
-.form-header-green p{color:rgba(255,255,255,.75);margin:0;font-size:14px;line-height:1.6}
-.form-icon{font-size:28px;display:block;margin-bottom:10px}
-.cag-form{padding:28px 36px}
-.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
-.form-group label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--dark)}
-.req{color:var(--clay)}
-.form-group input,.form-group select,.form-group textarea{padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'IBM Plex Sans',system-ui,sans-serif;color:var(--dark);background:#fff9f6;outline:none;transition:border-color .2s,box-shadow .2s}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.1);background:#fff}
-.form-group textarea{resize:vertical;min-height:100px}
-.btn-submit-full{width:100%;background:var(--clay-ink);color:#fff;border:none;padding:14px;border-radius:50px;font-size:15px;font-weight:700;font-family:'IBM Plex Sans',system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(232,96,76,.38);transition:background .2s,transform .15s}
-.btn-submit-full:hover{background:#b03c26;transform:translateY(-1px)}
-.form-trust-pills{display:flex;flex-wrap:wrap;gap:8px;padding:16px 36px 24px;justify-content:center}
-.form-trust-pills span{background:#eaf4ef;color:var(--green);border:1px solid rgba(45,106,79,.2);border-radius:50px;padding:5px 14px;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-@media(max-width:600px){.form-row-2{grid-template-columns:1fr}.cag-form{padding:20px 20px}.form-header-green{padding:24px 20px}.form-trust-pills{padding:14px 20px 18px}}
 
 /* ===== STORY BLOCK + CASE STUDIES (Sections 13–15) ===== */
 .story-block h3{color:var(--green);font-size:1.05rem;margin:1.75rem 0 .5rem}
@@ -621,28 +611,59 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         <!-- ===== SECTION 3: TABLE OF CONTENTS ===== -->
         <a name="toc"></a>
-        <div class="toc-box" aria-label="Table of contents">
-          <h2>Table of Contents</h2>
-          <ol class="toc-list">
-            <li><a href="#why-rampant"><span class="num">1.</span> Why African Grey Scams Are Rampant in 2025–2026</a></li>
-            <li><a href="#five-types"><span class="num">2.</span> The 5 Types of African Grey Parrot Scams</a></li>
-            <li><a href="#red-flags"><span class="num">3.</span> 12 Red Flags — Full Checklist</a></li>
-            <li><a href="#verify-usda"><span class="num">4.</span> How to Verify a USDA AWA License (3 Steps)</a></li>
-            <li><a href="#verify-cites"><span class="num">5.</span> How to Verify CITES Documentation</a></li>
-            <li><a href="#reverse-image"><span class="num">6.</span> How to Reverse Image Search a Bird Photo</a></li>
-            <li><a href="#whois"><span class="num">7.</span> How to Check a Breeder Website's Age</a></li>
-            <li><a href="#questions"><span class="num">8.</span> 10 Questions to Ask Before Buying</a></li>
-            <li><a href="#advance-fee"><span class="num">9.</span> The Advance-Fee Fraud Script Explained</a></li>
-            <li><a href="#shipping-scams"><span class="num">10.</span> Fake Shipping Company Red Flags</a></li>
-            <li><a href="#victim-stories"><span class="num">11.</span> Real Victim Stories — Case Studies</a></li>
-            <li><a href="#known-scams"><span class="num">12.</span> Known Scam Websites (Documented)</a></li>
-            <li><a href="#safe-payments"><span class="num">13.</span> Safe vs Unsafe Payment Methods</a></li>
-            <li><a href="#documentation"><span class="num">14.</span> What Legitimate Documentation Looks Like</a></li>
-            <li><a href="#why-cags"><span class="num">15.</span> Why C.A.Gs Is USDA AWA + CITES Verified</a></li>
-            <li><a href="#report-scam"><span class="num">16.</span> How to Report a Parrot Scam</a></li>
-            <li><a href="#faq"><span class="num">17.</span> Frequently Asked Questions</a></li>
-          </ol>
-        </div>
+        <nav class="toc-scam" aria-label="On this page" style="margin-bottom:40px;">
+          <div class="rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-10 md:py-9" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+            <div class="flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end">
+              <div>
+                <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay" style="margin:0;">Inside this page</p>
+                <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark md:text-3xl" style="text-transform:none;letter-spacing:normal;margin:6px 0 0;">On This Page</h2>
+              </div>
+              <p class="font-sora text-[13px] text-stone-500" style="margin:0;">17 sections · spot, verify, and buy safely</p>
+            </div>
+            <div class="mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+              {[
+                { tag:'Part One', title:'Spot the scams', items:[
+                  {n:1,t:'Why African Grey Scams Are Rampant in 2025–2026',href:'#why-rampant'},
+                  {n:2,t:'The 5 Types of African Grey Parrot Scams',href:'#five-types'},
+                  {n:3,t:'12 Red Flags — Full Checklist',href:'#red-flags'},
+                ]},
+                { tag:'Part Two', title:'Verify the breeder', items:[
+                  {n:4,t:'How to Verify a USDA AWA License (3 Steps)',href:'#verify-usda'},
+                  {n:5,t:'How to Verify CITES Documentation',href:'#verify-cites'},
+                  {n:6,t:'How to Reverse Image Search a Bird Photo',href:'#reverse-image'},
+                  {n:7,t:"How to Check a Breeder Website's Age",href:'#whois'},
+                  {n:8,t:'10 Questions to Ask Before Buying',href:'#questions'},
+                ]},
+                { tag:'Part Three', title:'How scams unfold', items:[
+                  {n:9,t:'The Advance-Fee Fraud Script Explained',href:'#advance-fee'},
+                  {n:10,t:'Fake Shipping Company Red Flags',href:'#shipping-scams'},
+                  {n:11,t:'Real Victim Stories — Case Studies',href:'#victim-stories'},
+                  {n:12,t:'Known Scam Websites (Documented)',href:'#known-scams'},
+                ]},
+                { tag:'Part Four', title:'Buy safely', items:[
+                  {n:13,t:'Safe vs Unsafe Payment Methods',href:'#safe-payments'},
+                  {n:14,t:'What Legitimate Documentation Looks Like',href:'#documentation'},
+                  {n:15,t:'Why C.A.Gs Is USDA AWA + CITES Verified',href:'#why-cags'},
+                  {n:16,t:'How to Report a Parrot Scam',href:'#report-scam'},
+                  {n:17,t:'Frequently Asked Questions',href:'#faq'},
+                ]},
+              ].map((g) => (
+                <div>
+                  <div class="mb-2.5 flex items-baseline gap-2.5">
+                    <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">{g.tag}</span>
+                    <span class="h-px flex-1 bg-black/[0.08]"></span>
+                  </div>
+                  <p class="font-lora mb-3 text-lg font-semibold italic text-green" style="margin:0 0 12px;">{g.title}</p>
+                  <ol class="space-y-0" style="list-style:none;margin:0;padding:0;">
+                    {g.items.map((it) => (
+                      <li style="margin:0;"><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2,'0')}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                    ))}
+                  </ol>
+                </div>
+              ))}
+            </div>
+          </div>
+        </nav>
 
         <!-- ===== SECTION 4: WHY SCAMS ARE RAMPANT ===== -->
         <a name="why-rampant"></a>
@@ -827,7 +848,7 @@ li{margin-bottom:.4rem;line-height:1.7}
               <h3><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Type 4: Fake Shipping Company</h3>
               <p>The scammer confirms the sale, "ships" the bird, then a fake "International Animal Transport Agency" demands additional payment — "pet insurance," "customs clearance," "temperature-controlled container upgrade." The fake shipping company is run by the same scammer. The bird never ships.</p>
             </div>
-            <div class="scam-card" style="grid-column:1/-1;max-width:48%;margin:0">
+            <div class="scam-card scam-card--last">
               <h3><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Type 5: Free Bird / Rehome Scam</h3>
               <p>The scammer posts an African Grey "needing a good home" for free or near-free due to a "life change." They ask only for "shipping costs." Once money is sent, they vanish.</p>
               <p>This scam bypasses price-based skepticism — victims aren't looking for a deal, they're "rescuing" a bird. Especially common on Facebook groups.</p>
@@ -1028,7 +1049,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         </div><!-- .section-block #red-flags -->
 
-        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
         <!-- ===== SECTION 7: VERIFY USDA AWA ===== -->
         <a name="verify-usda"></a>
@@ -1280,7 +1301,7 @@ li{margin-bottom:.4rem;line-height:1.7}
         </div>
 
 
-        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
         <!-- ===== SECTION 11: 10 QUESTIONS TO ASK ===== -->
         <a name="questions"></a>
@@ -1390,7 +1411,7 @@ li{margin-bottom:.4rem;line-height:1.7}
               <h4>Get Clutch Alerts + Scam Warnings</h4>
               <p>New birds available + fraud alerts when scams target African Grey buyers. No spam, unsubscribe any time.</p>
             </div>
-            <form class="nl-mid-form" action="https://formspree.io/f/xpqoeazq" method="POST">
+            <form class="nl-mid-form" action="https://formspree.io/f/xrejpnvn" method="POST">
               <input type="hidden" name="_subject" value="Newsletter Signup — Scam Page Mid">
               <input type="email" name="email" placeholder="Your email address" required aria-label="Email address for newsletter">
               <button type="submit">Subscribe Free</button>
@@ -1399,60 +1420,18 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         </div>
 
-        <!-- ===== SECTION 12: INQUIRY FORM (TOP) ===== -->
+                <!-- ===== SECTION 12: INQUIRY FORM (TOP) ===== -->
         <a name="inquiry"></a>
         <div class="form-section" id="form-top">
-          <div class="form-inner">
-            <div class="form-header-green">
-              <span class="form-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
-              <h2>Is This Listing Legitimate? Ask a Verified Breeder.</h2>
-              <p>Unsure about a listing you've found? Send it to Mark &amp; Teri Benjamin at C.A.Gs — USDA-licensed, CITES-documented captive-bred African Grey breeders since 2014. We'll tell you what we see, for free.</p>
-            </div>
-            <form action="https://formspree.io/f/xpqoeazq" method="POST" class="cag-form">
-              <div class="form-row-2">
-                <div class="form-group">
-                  <label for="f1-name">Your Name <span class="req">*</span></label>
-                  <input type="text" id="f1-name" name="name" placeholder="First &amp; Last Name" required autocomplete="name">
-                </div>
-                <div class="form-group">
-                  <label for="f1-email">Email Address <span class="req">*</span></label>
-                  <input type="email" id="f1-email" name="email" placeholder="you@email.com" required autocomplete="email">
-                </div>
-              </div>
-              <div class="form-row-2">
-                <div class="form-group">
-                  <label for="f1-phone">Phone Number</label>
-                  <input type="tel" id="f1-phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel">
-                </div>
-                <div class="form-group">
-                  <label for="f1-variant">Interested In</label>
-                  <select id="f1-variant" name="variant">
-                    <option value="">Select variant</option>
-                    <option>Congo African Grey ($1,500–$3,500)</option>
-                    <option>Timneh African Grey ($1,200–$2,500)</option>
-                    <option>Just vetting a listing (not buying yet)</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="f1-msg">Your Message or Listing Link</label>
-                <textarea id="f1-msg" name="message" rows="4" placeholder="Paste the suspicious listing URL or describe your situation. We'll give you an honest assessment."></textarea>
-              </div>
-              <input type="hidden" name="_subject" value="CAG Scam Inquiry — Website Contact">
-              <input type="hidden" name="page" value="/how-to-avoid-african-grey-parrot-scams/">
-              <button type="submit" class="btn-submit-full">Send to C.A.Gs — No Cost, No Commitment &#10003;</button>
-            </form>
-            <div class="form-trust-pills">
-              <span>&#10003; USDA AWA Licensed</span>
-              <span>&#10003; CITES Appendix I</span>
-              <span>&#10003; DNA Sexed</span>
-              <span>&#10003; Avian Vet Certified</span>
-              <span>&#10003; Ships Nationwide</span>
-            </div>
-          </div>
+          <InquiryForm
+            idPrefix="vet-"
+            heading="Is This Listing Legitimate? Ask a Verified Breeder."
+            subtext="Unsure about a listing you've found? Send it to Mark & Teri Benjamin at C.A.Gs, USDA-licensed, CITES-documented captive-bred African Grey breeders since 2014. We'll tell you what we see, for free."
+            subject="CAG Scam Inquiry — Website Contact"
+          />
         </div>
 
-        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
         <!-- ===== SECTION 13: ADVANCE-FEE FRAUD SCRIPT ===== -->
         <a name="advance-fee"></a>
@@ -1838,7 +1817,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         </div>
 
-        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
         <!-- ===== SECTION 18: DOCUMENTATION GUIDE ===== -->
         <a name="documentation"></a>
@@ -2059,7 +2038,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
         </div>
 
-        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.png" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
         <!-- ===== SECTION 21: FAQ ===== -->
         <a name="faq"></a>
@@ -2208,60 +2187,15 @@ li{margin-bottom:.4rem;line-height:1.7}
           </p>
         </div>
 
-        <!-- ===== SECTION 22: FINAL CTA + RELATED PAGES ===== -->
+                <!-- ===== SECTION 22: FINAL CTA + RELATED PAGES ===== -->
         <a name="final-cta"></a>
         <div class="form-section" id="form-bottom">
-          <div class="form-inner">
-            <div class="form-header-green">
-              <span class="form-icon"><img src="/emoji/cag-congo.png" alt="" loading="lazy" width="32" height="32" style="width:32px;height:32px;object-fit:contain;display:inline-block;"></span>
-              <h2>Ready to Buy from a Verified, USDA-Licensed Breeder?</h2>
-              <p>Mark &amp; Teri Benjamin at C.A.Gs have been breeding captive-born, CITES Appendix I documented African Grey parrots in Midland, TX since 2014. Every bird comes with full documentation.</p>
-              <p>Every question gets answered on a live video call — before you commit to anything.</p>
-            </div>
-            <form action="https://formspree.io/f/xpqoeazq" method="POST" class="cag-form">
-              <div class="form-row-2">
-                <div class="form-group">
-                  <label for="f3-name">Your Name <span class="req">*</span></label>
-                  <input type="text" id="f3-name" name="name" placeholder="First &amp; Last Name" required autocomplete="name">
-                </div>
-                <div class="form-group">
-                  <label for="f3-email">Email Address <span class="req">*</span></label>
-                  <input type="email" id="f3-email" name="email" placeholder="you@email.com" required autocomplete="email">
-                </div>
-              </div>
-              <div class="form-row-2">
-                <div class="form-group">
-                  <label for="f3-phone">Phone Number</label>
-                  <input type="tel" id="f3-phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel">
-                </div>
-                <div class="form-group">
-                  <label for="f3-variant">I'm Interested In</label>
-                  <select id="f3-variant" name="variant">
-                    <option value="">Select variant</option>
-                    <option>Congo African Grey ($1,500–$3,500)</option>
-                    <option>Timneh African Grey ($1,200–$2,500)</option>
-                    <option>Breeding Pair</option>
-                    <option>Just have a question</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="f3-msg">Your Message</label>
-                <textarea id="f3-msg" name="message" rows="3" placeholder="Tell us about yourself and what you're looking for. We respond within 24–48 hours."></textarea>
-              </div>
-              <input type="hidden" name="_subject" value="CAG Bird Inquiry — Scam Guide Page">
-              <input type="hidden" name="page" value="/how-to-avoid-african-grey-parrot-scams/">
-              <button type="submit" class="btn-submit-full">Contact C.A.Gs — USDA Licensed &amp; CITES Certified &#10003;</button>
-            </form>
-            <div class="form-trust-pills">
-              <span>&#10003; Breeding Since 2014</span>
-              <span>&#10003; USDA AWA Licensed</span>
-              <span>&#10003; CITES Appendix I</span>
-              <span>&#10003; DNA Sexed</span>
-              <span>&#10003; Avian Vet Certified</span>
-              <span>&#10003; Ships Nationwide &middot; $185 Airport &middot; $350 Home</span>
-            </div>
-          </div>
+          <InquiryForm
+            idPrefix="buy-"
+            heading="Ready to Buy from a Verified, USDA-Licensed Breeder?"
+            subtext="Mark & Teri Benjamin at C.A.Gs have bred captive-born, CITES Appendix I documented African Greys in Midland, TX since 2014. Every bird comes with full documentation, and every question gets answered on a live video call before you commit."
+            subject="CAG Bird Inquiry — Scam Guide Page"
+          />
         </div>
 
         <!-- ===== RELATED PAGES ===== -->
