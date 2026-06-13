@@ -31,9 +31,11 @@ Threshold: every remaining content page is ≥30K chars → gets the **full reci
 | **5 ✅ DONE 2026-06-13** | `african-grey-parrot-guide` (species pillar) — commit `37e37a4` (H2→H4 fixed; CompareTableE clamp) | 54.4K | ✅ |
 | | `how-to-tame-african-grey-parrot` — commit `37e37a4` (H2→H4 fixed; HowTo schema untouched) | 51.9K | ✅ |
 | | `african-grey-parrot-price` — commit `37e37a4` (H2→H4 fixed; CompareTableE clamp; AggregateOffer untouched) | 62.2K | ✅ |
-| **6** | `contact-us` (add H2s — currently H1-only) | 4.4K | ❌ polish only |
-| | `privacy-policy` (H1+H2 ladder is valid; sizing/contrast only) | 9.0K | ❌ polish only |
-| | + site-wide final verify (all 18 live, sitemap, IndexNow batch) | — | — |
+| **6 ✅ DONE 2026-06-13** | `contact-us` — commit `dc6e89f` (added H2 to the heading-less map/pickup section; stone-500→600 note) | 4.4K | ❌ polish only |
+| | `privacy-policy` — commit `dc6e89f` (ToC links full green, was green/80 ~3.7:1 FAIL; py-1 tap targets 19→28px; legal text verbatim) | 9.0K | ❌ polish only |
+| | + site-wide close — health-sweep PASS, sitemaps regenerated (100 URLs, 0 phantom, lastmod-only), **18/18 live 200** | — | ✅ |
+
+**🎉 ROLLOUT COMPLETE 2026-06-13.** All 17 remaining interior pages (+ the scam reference page = 18 total) polished to the scam-page playbook standard across 6 sessions. Plus one shared-component fix shipped in S5 (Breadcrumb long-trail overflow). Final state: every interior page passes the mobile probe (no overflow, valid H1–H6 ladder, AA contrast, dot-rail desktop / FAB mobile on the 15 content pages, scroll-margin 110px), health-sweep PASS, 18/18 live.
 
 Session 1 grouping rationale: all three are Cluster B (trust/authority), share the same green-panel infographic style and similar length, and the user named the first two.
 
