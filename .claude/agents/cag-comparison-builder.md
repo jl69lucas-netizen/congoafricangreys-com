@@ -1,6 +1,6 @@
 ---
 name: cag-comparison-builder
-description: Builds any [X] vs [Y] comparison page using /male-vs-female-african-grey-parrots-for-sale/ as the reference design (cag-h1/cag-h2 CSS classes, CAG design system). Existing comparison pages include male-vs-female-african-grey-parrots-for-sale. Priority builds: congo-vs-timneh, african-grey-vs-macaw, african-grey-vs-cockatoo.
+description: Builds any [X] vs [Y] comparison page using /male-vs-female-african-grey-parrots-for-sale/ as the reference design (cag-h1/cag-h2 CSS classes, CAG design system). Existing comparison pages (all LIVE): african-grey-comparison (hub), congo-vs-timneh-african-grey, male-vs-female-african-grey-parrots-for-sale, african-grey-vs-macaw, african-grey-vs-cockatoo, african-grey-vs-amazon-parrot, african-grey-parrot-breeders-comparison. Default mode is REBUILD/POLISH an existing page — confirm the on-disk slug before writing; never assume a comparison page is unbuilt.
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__firecrawl-mcp__firecrawl_search, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot]
 model: claude-opus-4-8
 effort: high
@@ -61,7 +61,19 @@ The reference page uses custom CSS classes (`cag-h1`, `cag-h2`) and the CAG desi
 ls src/pages/ | grep "vs\|comparison"
 ```
 
-Currently live: `male-vs-female-african-grey-parrots-for-sale` (at `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro`)
+**All 7 are LIVE (verified 2026-06-13)** — default mode is REBUILD/POLISH, never assume one is unbuilt:
+
+| Slug | Lines | H1 |
+|------|-------|----|
+| `african-grey-comparison` (HUB) | 215 | Which Parrot Is Right for You? |
+| `congo-vs-timneh-african-grey` | 576 | Congo vs Timneh African Grey: Key Differences |
+| `male-vs-female-african-grey-parrots-for-sale` | 313 | Male vs. Female African Grey Parrots for Sale |
+| `african-grey-vs-macaw` | 361 | African Grey vs Macaw: Which Parrot Is Right for You? |
+| `african-grey-vs-cockatoo` | 390 | African Grey vs Cockatoo: Which Parrot Fits Your Life? |
+| `african-grey-vs-amazon-parrot` | 135 | African Grey vs Amazon Parrot: Which Talker Is Right for You? |
+| `african-grey-parrot-breeders-comparison` | 506 | African Grey Parrot Breeders: An Honest Comparison |
+
+Reference design = `male-vs-female` (313 lines). Thinnest spoke = `african-grey-vs-amazon-parrot` (135 lines) — first polish target.
 
 ---
 
@@ -91,13 +103,14 @@ Section structure to replicate:
 
 ## CAG Comparison Page Types
 
-| Comparison | URL | Priority |
-|------------|-----|----------|
-| Congo vs Timneh | /congo-vs-timneh-african-grey/ | High |
-| Male vs Female | /male-vs-female-african-grey-parrots-for-sale/ | ✅ Exists |
-| African Grey vs Macaw | /african-grey-vs-macaw-parrot/ | Medium |
-| African Grey vs Cockatoo | /african-grey-vs-cockatoo/ | Medium |
-| African Grey vs Cockatiel | /african-grey-vs-cockatiel/ | Low |
+| Comparison | URL | Status |
+|------------|-----|--------|
+| Congo vs Timneh | /congo-vs-timneh-african-grey/ | ✅ Exists — rebuild/polish only |
+| Male vs Female | /male-vs-female-african-grey-parrots-for-sale/ | ✅ Exists — reference design |
+| African Grey vs Macaw | /african-grey-vs-macaw/ | ✅ Exists — rebuild/polish only |
+| African Grey vs Cockatoo | /african-grey-vs-cockatoo/ | ✅ Exists — rebuild/polish only |
+| African Grey vs Amazon Parrot | /african-grey-vs-amazon-parrot/ | ✅ Exists — THIN (135 lines), expand |
+| African Grey vs Cockatiel | /african-grey-vs-cockatiel/ | Not built (low priority) |
 
 ---
 
@@ -154,7 +167,7 @@ Never change either. When building a **new** page, set:
 4. **Prices from data/price-matrix.json** — never hardcode
 5. **Mid-page CTA required** — every comparison page needs a conversion point at the halfway mark
 6. **CITES note required** — every comparison involving African Greys must note CITES Appendix I status and that all documentation is included
-7. **Congo vs Timneh is highest priority** — build this first; it addresses the most common buyer decision point
+7. **Congo vs Timneh already exists (576 lines) — do NOT rebuild from scratch.** The polish priority is the THIN page first: `african-grey-vs-amazon-parrot` (135 lines) → then bring all spokes to the post-2026-06-12 standard (Direction-D, AA contrast, two-keyword headers).
 
 ---
 
