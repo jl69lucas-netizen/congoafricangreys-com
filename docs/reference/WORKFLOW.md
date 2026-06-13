@@ -145,7 +145,7 @@ Step 5: cag-content-architect
     |-----------|-----------|
     | Location pages | AIDA + Entity-Tree |
     | Species guides | Entity-Tree + QAB |
-    | Comparison pages | BAB + QAB |
+    | Comparison pages | QAB (head-to-head + FAQ) + BAB (owner story) |
     | Scam/trust pages | H-S-S + EBP |
     | Pricing pages | QAB + EBP |
     | Blog posts | AIDA or BAB |
@@ -266,7 +266,9 @@ cag-timneh-specialist
 **Comparison Pages:**
 ```
 cag-comparison-builder
-  → Priority order: congo-vs-timneh → african-grey-vs-macaw → african-grey-vs-cockatoo
+  → All 6 spokes + hub are LIVE (see agent file for the verified slug list). Default = REBUILD/POLISH, not net-new.
+  → Polish priority: african-grey-vs-amazon-parrot (thinnest, 135 lines) → then bring every spoke to the post-2026-06-12 interior-polish standard.
+  → Comparison pages are EXCLUDED from seo-master-checklist + Interior-Page Standard — they own their structure.
   → Reference: /male-vs-female-african-grey-parrots-for-sale/
 ```
 
