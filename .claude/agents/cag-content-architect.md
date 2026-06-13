@@ -73,7 +73,7 @@ Your job: given a page, a goal, and a reader profile, you select the right frame
 |-----------|------------------|--------------------|----|
 | Homepage | AIDA + Inverse Pyramid | EBD | Trust + conversion |
 | Location page | Entity-Tree + QAB | BAB | Local SEO + fear resolution |
-| Comparison page | QAB + FAB | Entity-Tree | Decision-driving |
+| Comparison page | QAB + BAB | FAB / Entity-Tree | Decision-driving (head-to-head table + FAQ = QAB; owner story = BAB) |
 | Species guide | Entity-Tree + Inverse Pyramid | EBD | AIO citation + authority |
 | Adoption page | H-S-S + BAB | QAB | Reframe + trust |
 | Price/cost page | QAB + Transparency | FAB | Sticker-shock prevention |
