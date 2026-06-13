@@ -39,7 +39,16 @@ const schema = {
   font-family: 'Sora', sans-serif;
   font-size: 0.8rem;
   background: transparent;
+  /* Long 3-level trails (e.g. "Home › African Grey Care › How to Tame an
+     African Grey") exceed a 375px viewport. Let the strip scroll horizontally
+     within its own width instead of pushing document width (13px overflow fix).
+     No visual change when the trail already fits. */
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.bc-pill-wrap::-webkit-scrollbar { display: none; }
 @media (max-width: 1024px) {
   .bc-pill-wrap {
     font-size: 0.75rem; /* 12px */

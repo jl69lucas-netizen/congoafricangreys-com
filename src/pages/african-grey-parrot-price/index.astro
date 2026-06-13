@@ -6,6 +6,7 @@ import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import CompareTableE from '../../components/cag-library/CompareTableE.astro';
 import BirdCard from '../../components/BirdCard.astro';
 import InquiryForm from '../../components/cag-inquiry-form.astro';
+import JumpRail from '../../components/cag-library/JumpRail.astro';
 
 const title = "African Grey Parrot Price 2026 — Complete Cost of Ownership: Congo $1,700–$2,500 · Timneh $1,500–$1,600 · Shipping $185/$350, First-Year Setup, Annual & 40–60 Yr Lifetime Costs | C.A.Gs – Midland, TX";
 const description = "African Grey parrot price, published in full by C.A.Gs — USDA-licensed breeders in Midland, TX. Congo babies $2,300–$2,500, adults $1,700, Timnehs $1,500–$1,600, pairs $3,500. Documentation included, shipping $185 airport / $350 home, plus first-year, annual, and 40–60 yr lifetime costs.";
@@ -15,6 +16,25 @@ const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "African Grey Parrot Price", url: "/african-grey-parrot-price/" },
 ];
+
+// In-page section nav (desktop dot rail + mobile bottom sheet) — same system as
+// the homepage + diet/care pages; ids live on each section. Document order.
+const jumpSections = [
+  { id: 'prices',          label: 'Prices',       part: 1 },
+  { id: 'why-vary',        label: 'Why They Vary', part: 1 },
+  { id: 'included',        label: "What's Included", part: 1 },
+  { id: 'shipping',        label: 'Shipping',     part: 2 },
+  { id: 'first-year',      label: 'First Year',   part: 2 },
+  { id: 'ongoing',         label: 'Ongoing',      part: 2 },
+  { id: 'available-birds', label: 'Available',    part: 3 },
+  { id: 'faq',             label: 'FAQ',          part: 3 },
+  { id: 'contact',         label: 'Ask C.A.Gs',   part: 3 },
+];
+const jumpPartNames = {
+  1: 'The Price',
+  2: 'Total Cost',
+  3: 'Choose & Reserve',
+};
 
 // ─── EVERY figure below traces to data/price-matrix.json + data/financial-entities.json ───
 // Purchase (price-matrix.json): baby $2,300–$2,500 · adult $1,700 · Timneh $1,500–$1,600 ·
@@ -237,6 +257,8 @@ const tocParts = [
       <Breadcrumb items={breadcrumbs} />
     </div>
 
+    <JumpRail sections={jumpSections} partNames={jumpPartNames} ctaLabel="Ask C.A.Gs →" ctaTarget="contact" />
+
     <!-- 1. HERO (cag-hero-v3 idiom · Authority Green) -->
     <section class="hero-v3-b relative overflow-hidden bg-green text-white scroll-mt-20">
       <div class="pointer-events-none absolute inset-0 opacity-60" style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"></div>
@@ -244,13 +266,13 @@ const tocParts = [
         <div class="grid items-center gap-10 py-10 md:grid-cols-2 md:gap-8 md:py-14">
           <!-- COPY -->
           <div class="order-2 text-center md:order-1 md:text-left">
-            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">The Honest Cost Guide · Published Pricing · No Hidden Fees</p>
+            <p class="font-sora text-[11px] font-medium tracking-[0.12em] text-white/80">The Honest Cost Guide · Published Pricing · No Hidden Fees</p>
             <h1 class="font-lora mt-3 text-3xl font-bold leading-[1.1] sm:text-4xl md:text-[2.5rem]">
               African Grey Parrot Price — Every Dollar, Published and Explained
             </h1>
-            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">
-              Here at C.A.Gs in Midland, Texas, we publish our African Grey prices the way we wish every breeder did: in full, on the page, before you ever email us. A documented captive-bred Grey runs $1,500–$3,500 from our aviary depending on variant and age — and that purchase price is only chapter one of a 40-to-60-year financial story. This guide covers all of it: what each bird costs, why, what's included, what shipping runs, and what the first year and every year after will honestly ask of your budget.
-            </p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">Here at C.A.Gs in Midland, Texas, we publish our African Grey prices the way we wish every breeder did: in full, on the page, before you ever email us.</p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">A documented captive-bred Grey runs $1,500–$3,500 from our aviary depending on variant and age — and that purchase price is only chapter one of a 40-to-60-year financial story.</p>
+            <p class="font-sora mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 md:mx-0 md:text-base">This guide covers all of it: what each bird costs, why, what's included, what shipping runs, and what the first year and every year after will honestly ask of your budget.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
               <a href="#prices" class="font-sora rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk">See the Full Price List →</a>
               <a href="#first-year" class="font-sora rounded-full border-2 border-white/60 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green">First-Year Budget →</a>
@@ -338,7 +360,9 @@ const tocParts = [
         </div>
         <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">A captive-bred African Grey from our aviary costs $1,500 to $3,500: Congo babies are $2,300–$2,500, settled Congo adults $1,700, Timnehs $1,500–$1,600, and a bonded pair $3,500 — every price including the complete documentation packet, with a $200 deposit that applies in full to the balance.</p>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mb-8" style="max-width:70ch;">
-          <p>We put the table first because that is what you came for, and because a breeder who makes you email twice to learn a price is telling you something about how the rest of the transaction will go. These are our real, current numbers — the same ones in our inquiry replies, verified against our price records and updated whenever a clutch changes. The African Grey (<em>Psittacus erithacus</em>), as <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust species profile</a> documents, is among the most sought-after companion parrots in the world, and demand keeps the legitimate market tight: small clutches, slow 12–16 week weaning, and CITES Appendix I paperwork on every legal bird.</p>
+          <p>We put the table first because that is what you came for, and because a breeder who makes you email twice to learn a price is telling you something about how the rest of the transaction will go.</p>
+          <p>These are our real, current numbers — the same ones in our inquiry replies, verified against our price records and updated whenever a clutch changes.</p>
+          <p>The African Grey (<em>Psittacus erithacus</em>), as <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust species profile</a> documents, is among the most sought-after companion parrots in the world, and demand keeps the legitimate market tight: small clutches, slow 12–16 week weaning, and CITES Appendix I paperwork on every legal bird.</p>
         </div>
         <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
           <div class="overflow-x-auto">
@@ -363,7 +387,8 @@ const tocParts = [
           </div>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mt-8" style="max-width:70ch;">
-          <p>Two structural notes on the table. First, age moves the price more than anything else: a baby carries months of our hand-feeding labor in it, while an adult like Bery at $1,700 is the genuine value pick — settled temperament, full paperwork, lower price. Second, the fertile-egg line exists for established breeders only; we list it for transparency, but if you are reading a price guide to choose your first companion bird, an egg is not your road and we will say so plainly if you ask.</p>
+          <p>Two structural notes on the table. First, age moves the price more than anything else: a baby carries months of our hand-feeding labor in it, while an adult like Bery at $1,700 is the genuine value pick — settled temperament, full paperwork, lower price.</p>
+          <p>Second, the fertile-egg line exists for established breeders only; we list it for transparency, but if you are reading a price guide to choose your first companion bird, an egg is not your road and we will say so plainly if you ask.</p>
           <p>If your budget research started with the word "adoption" rather than "price," that is a different and legitimate road — our honest <a href="/african-grey-adoption/">African Grey adoption guide</a> covers where to genuinely adopt, and the companion <a href="/african-grey-parrot-adoption-cost/">adoption cost breakdown</a> handles rescue-fee math line by line. This page covers the breeder side of the ledger.</p>
         </div>
       </div>
@@ -378,11 +403,20 @@ const tocParts = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Reading the Market</p>
           <h2 class="font-lora font-bold text-logo-dark">Why Do African Grey Prices Vary So Much — and Where Is the Scam Floor?</h2>
         </div>
-        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">African Grey prices vary with age, variant, hand-raising labor, and documentation — and they bottom out around $1,500, because that is what a legally documented, health-screened captive-bred bird actually costs to produce. A Grey advertised far below that floor is almost always a scam or an undocumented bird.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">African Grey prices vary with age, variant, hand-raising labor, and documentation — and they bottom out around $1,500, because that is what a legally documented, health-screened captive-bred bird actually costs to produce.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">A Grey advertised far below that floor is almost always a scam or an undocumented bird.</p>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-          <p>When you compare listings, four honest variables explain nearly every legitimate price difference. <strong>Age:</strong> babies cost more than adults because hand-feeding a chick every few hours for 12–16 weeks is real labor, and a weaned, socialized baby is the finished product of it. <strong>Variant:</strong> Congos out-price Timnehs on recognition and demand, not quality — the smaller Timneh is every bit the companion. <strong>What's behind the bird:</strong> a USDA Animal Welfare Act-licensed facility, PCR DNA sexing, PBFD and Polyomavirus screening, and an avian veterinarian's exam all cost the breeder money before the bird ever earns a dollar. <strong>What travels with the bird:</strong> the CITES Appendix I captive-bred paperwork that makes ownership legal — our <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey guide</a> explains why that single word, documented, carries most of the value.</p>
-          <p>Now the floor. African Greys were uplisted to CITES Appendix I at CoP17, effective January 2017, which ended commercial trade in wild-caught birds; every legal Grey in the U.S. market today is captive-bred and papered. Producing that bird — the months of feeding, the lab work, the vet certificate, the licensing — sets a real cost basis, which is why you will not find a legitimate documented Grey selling for a fraction of it. So when a listing offers an African Grey at a few hundred dollars, you are looking at one of two things: a bird that does not exist (the deposit-and-vanish scam, often dressed up with "free bird, just pay shipping" fees that never end), or a bird without the paperwork that makes it legal to own. Both cost you far more than the $1,500 you thought you were saving.</p>
-          <p>We keep our pricing published precisely because scammers can't. A fraudster quoting from a stolen photo has to keep numbers vague and urgency high; a licensed aviary can put the whole table on the page and let it sit there all year. Before any money moves anywhere — with us or anyone else — read our guide on <a href="/how-to-avoid-african-grey-parrot-scams/">how to avoid African Grey parrot scams</a>; it unmasks the grieving-widow, deploying-soldier, and free-bird scripts in minutes, and it is the cheapest scam insurance that exists.</p>
+          <p>When you compare listings, four honest variables explain nearly every legitimate price difference.</p>
+          <p><strong>Age:</strong> babies cost more than adults because hand-feeding a chick every few hours for 12–16 weeks is real labor, and a weaned, socialized baby is the finished product of it.</p>
+          <p><strong>Variant:</strong> Congos out-price Timnehs on recognition and demand, not quality — the smaller Timneh is every bit the companion.</p>
+          <p><strong>What's behind the bird:</strong> a USDA Animal Welfare Act-licensed facility, PCR DNA sexing, PBFD and Polyomavirus screening, and an avian veterinarian's exam all cost the breeder money before the bird ever earns a dollar.</p>
+          <p><strong>What travels with the bird:</strong> the CITES Appendix I captive-bred paperwork that makes ownership legal — our <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey guide</a> explains why that single word, documented, carries most of the value.</p>
+          <p>Now the floor. African Greys were uplisted to CITES Appendix I at CoP17, effective January 2017, which ended commercial trade in wild-caught birds; every legal Grey in the U.S. market today is captive-bred and papered.</p>
+          <p>Producing that bird — the months of feeding, the lab work, the vet certificate, the licensing — sets a real cost basis, which is why you will not find a legitimate documented Grey selling for a fraction of it.</p>
+          <p>So when a listing offers an African Grey at a few hundred dollars, you are looking at one of two things: a bird that does not exist (the deposit-and-vanish scam, often dressed up with "free bird, just pay shipping" fees that never end), or a bird without the paperwork that makes it legal to own.</p>
+          <p>Both cost you far more than the $1,500 you thought you were saving.</p>
+          <p>We keep our pricing published precisely because scammers can't. A fraudster quoting from a stolen photo has to keep numbers vague and urgency high; a licensed aviary can put the whole table on the page and let it sit there all year.</p>
+          <p>Before any money moves anywhere — with us or anyone else — read our guide on <a href="/how-to-avoid-african-grey-parrot-scams/">how to avoid African Grey parrot scams</a>; it unmasks the grieving-widow, deploying-soldier, and free-bird scripts in minutes, and it is the cheapest scam insurance that exists.</p>
         </div>
       </div>
     </section>
@@ -398,7 +432,8 @@ const tocParts = [
         </div>
         <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Every price on this page includes the bird's complete documentation packet — CITES Appendix I captive-bred paperwork, hatch certificate, closed band, PCR DNA sexing, PBFD and Polyomavirus screening, an avian veterinarian's health certificate, and our 72-hour written guarantee — at no extra charge.</p>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mb-8" style="max-width:70ch;">
-          <p>The fastest way to understand an African Grey's price is to look at what arrives with the bird. Here at C.A.Gs, the price you see is the file you get — we hand-raise every chick in our Midland home, and by the time a Grey leaves us, it carries paperwork most cheap listings have never heard of:</p>
+          <p>The fastest way to understand an African Grey's price is to look at what arrives with the bird.</p>
+          <p>Here at C.A.Gs, the price you see is the file you get — we hand-raise every chick in our Midland home, and by the time a Grey leaves us, it carries paperwork most cheap listings have never heard of:</p>
         </div>
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="rounded-2xl border border-black/[0.07] bg-white p-6" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
@@ -427,7 +462,8 @@ const tocParts = [
           </div>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mt-8" style="max-width:70ch;">
-          <p>None of these carry a separate fee — there is no "documentation surcharge" waiting at deposit time, and there never will be. We also hold a verifiable USDA Animal Welfare Act license you can check before paying anything. When you compare our price against a listing that includes none of this, you are not comparing two prices for the same product; you are comparing a documented companion bird against a photograph and a promise.</p>
+          <p>None of these carry a separate fee — there is no "documentation surcharge" waiting at deposit time, and there never will be. We also hold a verifiable USDA Animal Welfare Act license you can check before paying anything.</p>
+          <p>When you compare our price against a listing that includes none of this, you are not comparing two prices for the same product; you are comparing a documented companion bird against a photograph and a promise.</p>
         </div>
       </div>
     </section>
@@ -443,7 +479,8 @@ const tocParts = [
         </div>
         <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">We ship nationwide under IATA Live Animals Regulations on Delta, United, or American: airport pickup is a flat $185, home delivery to your door is $350, and an in-cabin flight nanny is quoted per route from $750.</p>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mb-8" style="max-width:70ch;">
-          <p>Shipping is the one cost most buyers forget to budget — and the one scammers inflate endlessly, because "one more shipping fee" is the engine of the free-bird fraud. Ours are flat, published, and final. Every bird travels in a climate-controlled crate that meets the <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener noreferrer">IATA Live Animals Regulations (LAR)</a> — the same international welfare standard zoos use — on a major carrier, with its full documentation packet riding along.</p>
+          <p>Shipping is the one cost most buyers forget to budget — and the one scammers inflate endlessly, because "one more shipping fee" is the engine of the free-bird fraud. Ours are flat, published, and final.</p>
+          <p>Every bird travels in a climate-controlled crate that meets the <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener noreferrer">IATA Live Animals Regulations (LAR)</a> — the same international welfare standard zoos use — on a major carrier, with its full documentation packet riding along.</p>
         </div>
         <div class="grid gap-5 sm:grid-cols-3">
           <div class="rounded-2xl border border-black/[0.07] bg-white p-6 text-center" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
@@ -463,7 +500,8 @@ const tocParts = [
           </div>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mt-8" style="max-width:70ch;">
-          <p>Which tier should you pick? Airport pickup at $185 is the value answer and perfectly safe — live-animal cargo is climate-controlled and priority-handled. Home delivery at $350 buys convenience. The flight nanny exists for buyers who want a human hand on the carrier the whole way; it costs more because the quote covers the chaperone's round-trip airfare, which is also why it is the one tier we quote per route instead of publishing flat.</p>
+          <p>Which tier should you pick? Airport pickup at $185 is the value answer and perfectly safe — live-animal cargo is climate-controlled and priority-handled. Home delivery at $350 buys convenience.</p>
+          <p>The flight nanny exists for buyers who want a human hand on the carrier the whole way; it costs more because the quote covers the chaperone's round-trip airfare, which is also why it is the one tier we quote per route instead of publishing flat.</p>
         </div>
       </div>
     </section>
@@ -477,9 +515,12 @@ const tocParts = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Beyond the Purchase Price</p>
           <h2 class="font-lora font-bold text-logo-dark">What Does the First Year Cost, Beyond the Purchase Price?</h2>
         </div>
-        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Plan on $825–$2,000 in first-year costs on top of the purchase price: a large cage, perches and toys, an initial avian vet visit, a year of food, and enrichment. The cage and vet figures are typical industry ranges — these are things you buy locally, not from us.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Plan on $825–$2,000 in first-year costs on top of the purchase price: a large cage, perches and toys, an initial avian vet visit, a year of food, and enrichment.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">The cage and vet figures are typical industry ranges — these are things you buy locally, not from us.</p>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mb-8" style="max-width:70ch;">
-          <p>Honesty about the first year is where most sales pages go quiet, so here is ours at full volume. The single most expensive mistake new Grey owners make is the too-small cage: buy a cage built for a cockatiel, and you will buy the right one six months later anyway — paying twice for the privilege. A Grey needs a wide cage with horizontal bars for climbing and room to fully extend its wings; spend once, at the top of your budget, and the line item never returns.</p>
+          <p>Honesty about the first year is where most sales pages go quiet, so here is ours at full volume.</p>
+          <p>The single most expensive mistake new Grey owners make is the too-small cage: buy a cage built for a cockatiel, and you will buy the right one six months later anyway — paying twice for the privilege.</p>
+          <p>A Grey needs a wide cage with horizontal bars for climbing and room to fully extend its wings; spend once, at the top of your budget, and the line item never returns.</p>
         </div>
         <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
           <div class="overflow-x-auto">
@@ -509,14 +550,18 @@ const tocParts = [
           </div>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mt-8" style="max-width:70ch;">
-          <p>Two notes on the recurring lines. Food matters more in a Grey than in almost any other parrot — the species is prone to calcium deficiency, and a dye-free formulated pellet base with fresh greens is the foundation; our <a href="/best-african-grey-parrot-food/">best African Grey food guide</a> walks through exactly what to buy and what that $200–$400 actually purchases. The initial vet visit deserves its own appointment even though your bird arrives with our veterinarian's certificate: establishing a relationship with a local avian vet — findable through the <a href="https://www.aav.org/" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians directory</a> — before you need one urgently is the cheapest insurance in bird ownership.</p>
-          <p>Worked example, all-in: a $2,500 baby Congo + $185 airport shipping + a realistic mid-range $1,400 of first-year setup lands a fully equipped first year at roughly $4,085. Budget that number and nothing about year one will surprise you except the bird's vocabulary.</p>
-          <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">Where Can You Safely Trim the First-Year Budget?</h4>
+          <p>Two notes on the recurring lines. Food matters more in a Grey than in almost any other parrot — the species is prone to calcium deficiency, and a dye-free formulated pellet base with fresh greens is the foundation; our <a href="/best-african-grey-parrot-food/">best African Grey food guide</a> walks through exactly what to buy and what that $200–$400 actually purchases.</p>
+          <p>The initial vet visit deserves its own appointment even though your bird arrives with our veterinarian's certificate: establishing a relationship with a local avian vet — findable through the <a href="https://www.aav.org/" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians directory</a> — before you need one urgently is the cheapest insurance in bird ownership.</p>
+          <p>Worked example, all-in: a $2,500 baby Congo + $185 airport shipping + a realistic mid-range $1,400 of first-year setup lands a fully equipped first year at roughly $4,085.</p>
+          <p>Budget that number and nothing about year one will surprise you except the bird's vocabulary.</p>
+          <h3 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-5 mb-1.5">Where Can You Safely Trim the First-Year Budget?</h3>
           <p>Toys and perches — not because they matter less, but because Greys destroy them on schedule anyway. Untreated bird-safe wood, stainless hardware, and a rotation of a few toys at a time deliver the same enrichment as a $400 toy haul.</p>
-          <h5 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">Where Should You Never Trim It?</h5>
+          <h4 class="font-sora font-bold text-[13px] uppercase tracking-wide text-clay-ink mt-3 mb-1">Where Should You Never Trim It?</h4>
           <p>The cage, the avian vet, and the food. Each one bought cheap gets re-bought expensive — the undersized cage twice, the skipped wellness exam as an emergency bill, the seed-only diet as a calcium problem in year five.</p>
-          <h6 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">One Number to Keep in Reserve</h6>
-          <p>Keep an avian-vet emergency fund from day one. A reserve of a few hundred dollars turns the scariest week of bird ownership into a logistics problem instead of a financial one.</p>
+          <h5 class="font-sora font-bold text-[12px] uppercase tracking-wide text-green mt-2.5 mb-1">One Number to Keep in Reserve</h5>
+          <p>Keep an avian-vet emergency fund from day one.</p>
+          <h6 class="font-sora font-bold text-[11px] uppercase tracking-wide text-clay-ink mt-2.5 mb-1">What the Reserve Buys You</h6>
+          <p>A reserve of a few hundred dollars turns the scariest week of bird ownership into a logistics problem instead of a financial one.</p>
         </div>
       </div>
     </section>
@@ -530,7 +575,8 @@ const tocParts = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Long Ledger</p>
           <h2 class="font-lora font-bold text-logo-dark">What Are the Annual and 40–60 Year Lifetime Costs?</h2>
         </div>
-        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">After year one, ownership settles into $375–$1,350 per year in typical ongoing costs — food, an annual wellness exam, replaced toys, and a vet buffer. Across a 40–60 year lifespan, that compounds to roughly $15,000–$81,000 of care on top of the purchase price.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">After year one, ownership settles into $375–$1,350 per year in typical ongoing costs — food, an annual wellness exam, replaced toys, and a vet buffer.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Across a 40–60 year lifespan, that compounds to roughly $15,000–$81,000 of care on top of the purchase price.</p>
         <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
           <div class="overflow-x-auto">
             <table class="w-full border-collapse text-[14.5px]" style="min-width:420px;">
@@ -556,8 +602,11 @@ const tocParts = [
           </div>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mt-8 mb-8" style="max-width:70ch;">
-          <p>A word on the toy line, because it confuses people: African Greys destroy toys, and that is the toys working. Chewing, shredding, and dismantling are how one of the smartest minds in the bird world stays occupied — a Grey whose toys survive the year is a Grey that is bored, and bored Greys invent hobbies like feather-plucking that cost far more than $250 to undo. Budget the destruction; it is the cheapest mental-health plan your bird will ever have.</p>
-          <p>The vet buffer is the other line worth respecting. Routine wellness runs $75–$200 a year as a typical range, but avian emergencies can reach $500 or beyond in a single visit. Setting aside a small monthly amount converts a 2 a.m. crisis from a financial emergency into a logistical one.</p>
+          <p>A word on the toy line, because it confuses people: African Greys destroy toys, and that is the toys working.</p>
+          <p>Chewing, shredding, and dismantling are how one of the smartest minds in the bird world stays occupied — a Grey whose toys survive the year is a Grey that is bored, and bored Greys invent hobbies like feather-plucking that cost far more than $250 to undo.</p>
+          <p>Budget the destruction; it is the cheapest mental-health plan your bird will ever have.</p>
+          <p>The vet buffer is the other line worth respecting. Routine wellness runs $75–$200 a year as a typical range, but avian emergencies can reach $500 or beyond in a single visit.</p>
+          <p>Setting aside a small monthly amount converts a 2 a.m. crisis from a financial emergency into a logistical one.</p>
         </div>
         <div class="rounded-2xl border-l-4 border-clay bg-white p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
           <p class="font-lora text-xl font-bold text-logo-dark mb-2">An African Grey purchased today may still be alive in 2086.</p>
@@ -572,7 +621,8 @@ const tocParts = [
               <p class="font-lora font-bold text-2xl m-0" style="color:#b04228;">~$22,500–$81,000</p>
             </div>
           </div>
-          <p class="text-stone-500 text-sm leading-relaxed mt-5 mb-0" style="max-width:70ch;">Greys regularly outlive arrangements made for them, so responsible ownership includes naming a future caretaker — closer to estate planning than pet shopping. We would rather show you this number and lose an impulse sale than hide it and place a bird wrong. That trade has never once felt like a loss.</p>
+          <p class="text-stone-500 text-sm leading-relaxed mt-5 mb-0" style="max-width:70ch;">Greys regularly outlive arrangements made for them, so responsible ownership includes naming a future caretaker — closer to estate planning than pet shopping.</p>
+          <p class="text-stone-500 text-sm leading-relaxed mt-5 mb-0" style="max-width:70ch;">We would rather show you this number and lose an impulse sale than hide it and place a bird wrong. That trade has never once felt like a loss.</p>
         </div>
       </div>
     </section>
@@ -640,7 +690,8 @@ const tocParts = [
       <div class="max-w-3xl mx-auto text-center">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Go Deeper</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">What Should You Read Next, Now That You Know the Numbers?</h2>
-        <p class="font-sora text-stone-600 text-[15px] leading-relaxed mx-auto" style="max-width:70ch;">Comparing roads? The <a href="/african-grey-parrot-adoption-cost/">adoption cost breakdown</a> handles rescue-fee math and our <a href="/african-grey-adoption/">adoption guide</a> the whole decision. Verifying value? The <a href="/captive-bred-african-grey-parrot/">captive-bred guide</a> and our <a href="/african-grey-parrot-health-guarantee/">health guarantee</a> show what the price buys, and the <a href="/how-to-avoid-african-grey-parrot-scams/">scam-prevention guide</a> protects every dollar of it. Budgeting the years ahead? Our <a href="/best-african-grey-parrot-food/">food guide</a> is the place to start.</p>
+        <p class="font-sora text-stone-600 text-[15px] leading-relaxed mx-auto" style="max-width:70ch;">Comparing roads? The <a href="/african-grey-parrot-adoption-cost/">adoption cost breakdown</a> handles rescue-fee math and our <a href="/african-grey-adoption/">adoption guide</a> the whole decision. Verifying value?</p>
+        <p class="font-sora text-stone-600 text-[15px] leading-relaxed mx-auto" style="max-width:70ch;">The <a href="/captive-bred-african-grey-parrot/">captive-bred guide</a> and our <a href="/african-grey-parrot-health-guarantee/">health guarantee</a> show what the price buys, and the <a href="/how-to-avoid-african-grey-parrot-scams/">scam-prevention guide</a> protects every dollar of it. Budgeting the years ahead? Our <a href="/best-african-grey-parrot-food/">food guide</a> is the place to start.</p>
       </div>
     </section>
 
@@ -651,7 +702,8 @@ const tocParts = [
       <div class="max-w-3xl mx-auto">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Get Your Exact Number</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">Want the All-In Price for a Specific Bird? Ask Us — We'll Itemize It</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Tell us which Grey caught your eye — or just your budget and your household — and Mark or Teri will reply within 24 hours with the exact all-in figure: bird, shipping tier, and the complete documentation packet, itemized with nothing hiding behind the total. Every C.A.Gs Grey is captive-bred, PCR DNA-sexed, health-screened, vet-certified, CITES Appendix I documented, and shipped nationwide ($185 airport / $350 home).</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Tell us which Grey caught your eye — or just your budget and your household — and Mark or Teri will reply within 24 hours with the exact all-in figure: bird, shipping tier, and the complete documentation packet, itemized with nothing hiding behind the total.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;">Every C.A.Gs Grey is captive-bred, PCR DNA-sexed, health-screened, vet-certified, CITES Appendix I documented, and shipped nationwide ($185 airport / $350 home).</p>
       </div>
     </section>
 
@@ -672,6 +724,29 @@ const tocParts = [
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       }));
     })();
+
+    // Section jump-nav auto-injector — "↓ Continue: <next section>"
+    (function () {
+      var ids = ['prices','why-vary','included','shipping','first-year','ongoing','available-birds','faq','contact'];
+      var labels = {
+        'why-vary':        'Why Prices Vary',
+        'included':        "What's Included",
+        'shipping':        'Shipping Cost',
+        'first-year':      'First-Year Cost',
+        'ongoing':         'Ongoing Cost',
+        'available-birds': 'Available Greys',
+        'faq':             'Pricing FAQ',
+        'contact':         'Ask C.A.Gs',
+      };
+      for (var i = 0; i < ids.length - 1; i++) {
+        var cur = document.getElementById(ids[i]);
+        if (!cur) continue;
+        var nav = document.createElement('div');
+        nav.className = 'section-next-nav';
+        nav.innerHTML = '<a href="#' + ids[i + 1] + '" class="section-next-link">&#8595; Continue: ' + (labels[ids[i + 1]] || ids[i + 1]) + '</a>';
+        cur.appendChild(nav);
+      }
+    })();
   </script>
 </BaseLayout>
 
@@ -685,7 +760,10 @@ const tocParts = [
 
   /* AA: clay as small readable text on LIGHT sections → #b04228 (4.5:1). */
   .price-d a.text-clay, .price-d .text-clay { color:#b04228; }
-  .price-d .hero-v3-b .text-clay, .price-d .bg-clay { color:inherit; }
+  /* Hero clay accent stays bright; clay FILLS keep white text (global .bg-clay =
+     --clay-ink #bd4129, 5.3:1 — the old color:inherit leaked dark stone = FAIL). */
+  .price-d .hero-v3-b .text-clay { color:inherit; }
+  .price-d .bg-clay { color:#fff; }
 
   /* Woven in-content links: clay, underlined, AA-safe. */
   .price-d p a:not(.rounded-full):not(.bg-clay),
@@ -714,4 +792,18 @@ const tocParts = [
   .cag-seam__line{ flex:1; height:1px; background:var(--rule); }
   .price-d .cag-seam img{ height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
   @media (max-width:600px){ .price-d > .cag-seam{ gap:16px; } .price-d .cag-seam img{ height:24px; } }
+
+  /* CompareTableE ships text-3xl (30px) on its H2 — ties mobile H1. Cap on small
+     screens, desktop unchanged. */
+  .price-d h2.text-3xl { font-size:clamp(1.375rem, 3.8vw, 1.875rem); }
+
+  /* Jump targets clear the 96px sticky header; respect reduced motion. */
+  .price-d section[id], .price-d div[id] { scroll-margin-top:110px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+
+  /* "↓ Continue:" section next-nav (JS-injected; this block is is:global). */
+  .price-d .section-next-nav { text-align:right; padding-top:18px; margin-top:14px; border-top:1px solid #ede5dc; }
+  .price-d .section-next-link { font-family:'IBM Plex Sans',sans-serif; font-size:.85rem; font-weight:600;
+    color:#b04228; text-decoration:none; display:inline-block; padding:10px 0 10px 12px; margin:-10px 0; }
+  .price-d .section-next-link:hover { text-decoration:underline; }
 </style>
