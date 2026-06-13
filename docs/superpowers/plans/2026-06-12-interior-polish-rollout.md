@@ -28,9 +28,9 @@ Threshold: every remaining content page is ≥30K chars → gets the **full reci
 | **4 ✅ DONE 2026-06-13** | `best-african-grey-parrot-food` — commit `a5b7d80` | 60.6K | ✅ |
 | | `african-grey-parrot-lifespan` — commit `a5b7d80` (CompareTableE h2 clamp) | 60.0K | ✅ |
 | | `african-grey-parrot-health-guarantee` — commit `a5b7d80` (H2→H4 skip fixed in #documentation) | 49.9K | ✅ |
-| **5** | `african-grey-parrot-guide` (species pillar) | 54.4K | ✅ |
-| | `how-to-tame-african-grey-parrot` | 51.9K | ✅ |
-| | `african-grey-parrot-price` | 62.2K | ✅ |
+| **5 ✅ DONE 2026-06-13** | `african-grey-parrot-guide` (species pillar) — commit `37e37a4` (H2→H4 fixed; CompareTableE clamp) | 54.4K | ✅ |
+| | `how-to-tame-african-grey-parrot` — commit `37e37a4` (H2→H4 fixed; HowTo schema untouched) | 51.9K | ✅ |
+| | `african-grey-parrot-price` — commit `37e37a4` (H2→H4 fixed; CompareTableE clamp; AggregateOffer untouched) | 62.2K | ✅ |
 | **6** | `contact-us` (add H2s — currently H1-only) | 4.4K | ❌ polish only |
 | | `privacy-policy` (H1+H2 ladder is valid; sizing/contrast only) | 9.0K | ❌ polish only |
 | | + site-wide final verify (all 18 live, sitemap, IndexNow batch) | — | — |
@@ -289,6 +289,12 @@ These came out of executing batch 1 and are now part of the recipe:
 3. **Pages NOT importing CompareTableE don't need the `h2.text-3xl` clamp** (food + health-guarantee have no `text-3xl` section H2 — their section H2s inherit the global clamp). Only add the `.X-d h2.text-3xl{clamp…}` rule where CompareTableE is imported (lifespan). Grep the imports first.
 4. **FAQ accordion answers stay as a single `{item.a}` `<p>`** (confirmed against the Session-3 diet page) — the `split_long_paragraphs.py` script only touches markup `<p>`s, not data-array strings, and collapsed accordion answers are exempt from the 240-char ceiling. Don't manually `\n\n`-split FAQ data on these interior pages.
 5. **`split_long_paragraphs.py` residual profile holds** (food 21 split / 8 left max 353; lifespan 30/10 max 316; health 13/4 max 267) — all residuals are quotes / sub-55 lead-tails / semicolon lists / marginal single sentences. Tag balance (`<p>`/`<a>`/`<strong>` open==close) stayed intact on all three.
+
+## Session 5 findings — fold into every later session (IMPORTANT)
+
+1. **The H2→H4 skip was on ALL THREE Session-5 pages** (unlike Session 4 where only 1 of 3 had it). Same fix each time — re-level the `h4/h5/h6` trio to `h3/h4/h5` + derive a new `h6` by splitting the trio's final 2-sentence paragraph (heading frames the second sentence, grounded in existing copy, no new claim, no em dash). Confirms: never assume a page is clean — run the dist-ladder check per page, every page.
+2. **NEW shared-component fix — Breadcrumb horizontal overflow (`src/components/Breadcrumb.astro`).** Long 3-level trails overflow a 375px viewport (tame = "Home › African Grey Care › How to Tame an African Grey" = 13px doc overflow; the pill is `flex-wrap:nowrap` + `bc-item white-space:nowrap`). Fix shipped to the component (affects all 100 pages): `.bc-pill-wrap { max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none }` + `::-webkit-scrollbar{display:none}`. The strip scrolls within its own width instead of pushing document width; **no visual change when the trail already fits** (verified desktop: `scrollWidth==clientWidth`, not scrollable). Check `docOverflow` at 375 on every page with a 3-level breadcrumb — 2-level trails ("Home › X") never overflow.
+3. **HowTo + AggregateOffer schemas are data-array-driven and were untouched** — the trio re-level and paragraph splits only touch visible markup; tame's `steps[]` (HowTo) and price's `birdListSchema` (AggregateOffer + 6 Offers) render from frontmatter arrays and are unaffected. Don't hand-edit those arrays during polish.
 
 ## Carryover rules (every session)
 
