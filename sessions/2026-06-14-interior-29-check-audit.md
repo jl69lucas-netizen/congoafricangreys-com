@@ -74,3 +74,14 @@
 ## 6. Decisions
 - **Meta length (#13 vs manual):** RESOLVED — **keep long format (≤275 title / ≤300 desc)**; auditor + manual updated to match. Rationale: deliberate long-tail strategy, all 18 already ship it, switching to 155 = full rewrite + lost tail terms.
 - **Newsletter 3-placement (#18):** OPEN — do we want a newsletter signup (Top/Middle/Bottom) on interior informational pages, or keep it to the homepage/money pages? (Recommend: one mid + one footer-area placement on the long content pillars only — care-guide, guide, faq, price — not on contact/privacy; avoids clutter on thin pages.)
+
+---
+## 7. FIXES APPLIED (2026-06-14, same session)
+- **11 image alts >190 → ≤190** (7 pages) + the shared `OwnerCard.astro` default alt (343→187) → `img_alt_le190` clean.
+- **Visible "Updated June 2026" stamp on all 18** (hero eyebrow via `.cag-updated`; privacy refreshed from stale "Feb 2025") → `updated_visible` 18→0.
+- **Compliance front-load** (USDA-licensed + CITES Appendix I added to hero lead) on the 6 content pages → `cites_captive_usda_early` clean on all content pages (contact/privacy exempt by design).
+- **Newsletter top/middle/bottom** on the 5 long pillars (care-guide, care hub, guide, faq, price); component `<img>` given explicit `width/height` (fixed a CLS regression the insert introduced).
+- **"The C.A.Gs Grey Method"** — breeder-confirmed brand-method name added to the Verified-Claim Ledger + manual E.3, and woven into the captive-bred page's 12–16-week hand-rearing paragraph.
+- **Verified:** fresh build clean (101 pages), auditor re-run, preview screenshot confirms stamp + compliance + newsletter render correctly, no console errors.
+
+**Remaining (accepted / out-of-scope, documented):** `all_h1_h4` + `has_org` + `cites` on contact-us/privacy-policy = utility-page deviations (accepted). `lifespan_40_60` on best-food/trusted-breeders/cites-doc = minor Rule-46 gap, NOT in the approved fix batch — left for a future pass. `newsletter_present` on the 11 non-pillars = pillars-only scope by design.

@@ -59,6 +59,7 @@ Confirmed by breeder 2026-06-03. **Never assert beyond this without re-confirmat
 - ✅ Congo = *Psittacus erithacus* · Timneh = *Psittacus timneh* (a **full species**, not a subspecies)
 - ✅ **Chlamydiosis / psittacosis (Chlamydia psittaci) screening** · **UV-B lighting + vitamin D3 supplementation** (both confirmed by breeder 2026-06-05)
 - ✅ **Maxy** = the talking Congo in the homepage video (named bird, confirmed 2026-06-05)
+- ✅ **"The C.A.Gs Grey Method"** = our named in-home hand-rearing / quiet-wean protocol (socialization through the 12–16-week hand-feeding window). Ownable brand-method term, **confirmed by breeder 2026-06-14**. Use the exact name consistently for topical authority; it describes what we actually do — never stretch it into claims beyond hand-rearing/weaning.
 - ❌ NOT confirmed (do NOT use): egg incubation temperatures.
 > When a new claim is needed, ASK the breeder and append it here before using it.
 
