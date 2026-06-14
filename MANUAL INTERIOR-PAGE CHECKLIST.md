@@ -176,8 +176,8 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 - ⬜ The ledger of record is `.claude/agents/cag-entity-incorporation-agent.md` + `sessions/2026-06-03-homepage-entity-map.md` — update THERE when the breeder confirms a new claim, then mirror here.
 
 **E.3 — [v2] Brand-specific concept naming (#11) — topical-authority lever:**
-- ⬜ Coin ONE ownable house term for a real C.A.Gs method (e.g. a *"C.A.Gs Quiet-Wean method"* for hand-feeding/weaning) so AI engines attribute the concept to us. Reuse the SAME name across pages for entity consistency.
-- ⬜ **Gate:** the named method must describe something we actually do and be **breeder-confirmed** before it ships — until then it's a GAP-FLAG (Part G), never invented copy.
+- ⬜ **CONFIRMED 2026-06-14:** the house method is **"the C.A.Gs Grey Method"** — our in-home hand-rearing / quiet-wean protocol (socialization through the 12–16-week hand-feeding window). Use this **exact name**, consistently, on hand-rearing/credibility pages (captive-bred, hand-raised, trusted-breeders, care-guide) so AI engines attribute the concept to us.
+- ⬜ **Gate:** it describes only what we actually do — hand-rearing/weaning. Never stretch the name into health/credential claims beyond the ledger. Any *future* coined term stays a GAP-FLAG (Part G) until breeder-confirmed.
 
 ---
 
