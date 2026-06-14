@@ -427,6 +427,13 @@ cag-llm-keyword-intel [for target keyword]
 6. cag-google-map-agent [location pages only]
    → Adds state-level map embed
    → Fixes CSP object-src blocker (embed → iframe)
+
+7. manual-auditor-check skill  ← FINAL GATE — run LAST, after the build
+   → npx astro build → python3 scripts/interior_29_audit.py (mechanical, over dist/)
+   → headings · schema · meta · image SEO · a11y traps · links · phone · compliance
+   → + copy-paste manual checklist for the 6 subjective items
+   → TRIAGE every ✗: REAL / ACCEPTED / FALSE POSITIVE / NET-NEW (never report blind)
+   → [interior/informational pages; excludes comparison/location/for-sale/blog]
 ```
 
 ### Sprint 4 Gate
@@ -435,6 +442,7 @@ cag-llm-keyword-intel [for target keyword]
 - [ ] All canonicals are absolute URLs
 - [ ] Footer is cag-footer-v1 on all new pages
 - [ ] Inquiry form passes ARIA check
+- [ ] manual-auditor-check clean (every ✗ triaged to REAL-fixed / ACCEPTED / FALSE-POSITIVE / BY-DESIGN)
 
 ---
 
