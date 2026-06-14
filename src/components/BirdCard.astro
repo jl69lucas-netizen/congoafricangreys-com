@@ -12,11 +12,17 @@ interface Props {
   image?: string;
   variant?: string;
   objectPos?: string;
+  /** Where the Inquire CTA points. Defaults to the standalone contact page.
+   *  Pass an on-page anchor (e.g. "#contact") on pages that render the inquiry
+   *  form so the CTA jumps straight to it instead of redirecting. */
+  inquireHref?: string;
 }
 
 const { id, name, sex, age, price, tag, tagType, notes, hook,
   image = '/african-grey-hero.webp', variant = 'Congo African Grey',
-  objectPos = 'object-center' } = Astro.props;
+  objectPos = 'object-center', inquireHref } = Astro.props;
+
+const ctaHref = inquireHref ?? `/contact-us/?bird=${id}`;
 
 const tagColors: Record<string, string> = {
   new:    'bg-clay text-white',
@@ -83,7 +89,7 @@ const tagClass = tagColors[tagType] ?? tagColors.new;
         <span class="text-stone-500 text-xs font-sora ml-1">+ $200 deposit</span>
       </div>
       <a
-        href={`/contact-us/?bird=${id}`}
+        href={ctaHref}
         class="bg-clay text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-clay-dk transition-colors"
       >
         Inquire →
