@@ -282,8 +282,8 @@ li{margin-bottom:.4rem;line-height:1.7}
 /* ===== CONTENT BODY ===== */
 .main-section{padding:36px 0}
 .content-body{max-width:820px;margin:0 auto}
-.content-body a:not(.btn-primary):not(.btn-outline):not(.btn-primary-pill):not(.section-next-link){text-decoration:underline;text-underline-offset:2px}
-.content-body a:not(.btn-primary):not(.btn-outline):not(.btn-primary-pill):not(.section-next-link):hover{text-decoration:none}
+.content-body a:not(.btn-primary):not(.btn-outline):not(.btn-primary-pill):not(.section-next-link):not(.ep-card){text-decoration:underline;text-underline-offset:2px}
+.content-body a:not(.btn-primary):not(.btn-outline):not(.btn-primary-pill):not(.section-next-link):not(.ep-card):hover{text-decoration:none}
 
 /* Key takeaways */
 .takeaways-box{background:linear-gradient(135deg,#f0f9f4,#e6f5ee);border:1px solid #b7dfc7;border-radius:16px;padding:28px 32px;margin-bottom:32px}
@@ -508,6 +508,32 @@ li{margin-bottom:.4rem;line-height:1.7}
 .scam-card p,.q-body p,.step-content p,.report-step-body p,.callout-green p,.warn-body p{margin:0 0 8px}
 .scam-card p:last-child,.q-body p:last-child,.step-content p:last-child,.report-step-body p:last-child,.callout-green p:last-child,.warn-body p:last-child{margin-bottom:0}
 
+/* ===== TOC CARD — restore spacing the scoped `*{padding:0;margin:0}` reset (line 132)
+   strips from Tailwind px-/py-/mt- utilities on this page. Class selectors beat the
+   `[data-astro-cid]` reset, so padding actually renders. ===== */
+.toc-scam .toc-card{padding:28px 22px}
+@media(min-width:768px){.toc-scam .toc-card{padding:38px 40px}}
+.toc-scam .toc-head{padding-bottom:20px}
+.toc-scam .toc-grid{margin-top:26px}
+.toc-scam .toc-grouplabel{margin-bottom:10px}
+.toc-scam .toc-link{padding-top:7px;padding-bottom:7px;padding-right:6px}
+
+/* ===== EGGS & PAIRS — image-top vertical card (full photo on every breakpoint,
+   stacks 1-up on mobile, 2-up on desktop). Replaces the cropped 112px side-square. ===== */
+.ep-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:1.5rem}
+@media(min-width:768px){.ep-grid{grid-template-columns:1fr 1fr;gap:20px}}
+.ep-card{display:flex;flex-direction:column;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:18px;overflow:hidden;box-shadow:0 4px 18px rgba(60,30,10,.05);text-decoration:none;transition:box-shadow .2s ease,transform .2s ease}
+.ep-card:hover{box-shadow:0 14px 36px rgba(60,30,10,.13);transform:translateY(-2px)}
+.ep-media{display:block;width:100%;aspect-ratio:3/2;overflow:hidden;background:var(--border)}
+.ep-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+.ep-card:hover .ep-media img{transform:scale(1.04)}
+.ep-body{display:flex;flex-direction:column;padding:18px 20px 20px}
+.ep-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--clay-text)}
+.ep-title{font-size:1.2rem;font-weight:700;color:var(--green);margin:6px 0 0;line-height:1.22}
+.ep-desc{font-size:13.5px;line-height:1.6;color:var(--muted);margin:9px 0 0}
+.ep-cta{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:600;color:var(--clay-text);margin-top:14px;transition:gap .2s ease}
+.ep-card:hover .ep-cta{gap:9px}
+
 /* ===== FOOTER ===== */
 </style>
 
@@ -616,15 +642,15 @@ li{margin-bottom:.4rem;line-height:1.7}
         <!-- ===== SECTION 3: TABLE OF CONTENTS ===== -->
         <a name="toc"></a>
         <nav class="toc-scam" aria-label="On this page" style="margin-bottom:40px;">
-          <div class="rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-10 md:py-9" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
-            <div class="flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end">
+          <div class="toc-card rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-10 md:py-9" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+            <div class="toc-head flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end">
               <div>
                 <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay" style="margin:0;">Inside this page</p>
                 <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark md:text-3xl" style="text-transform:none;letter-spacing:normal;margin:6px 0 0;">On This Page</h2>
               </div>
               <p class="font-sora text-[13px] text-stone-500" style="margin:0;">17 sections · spot, verify, and buy safely</p>
             </div>
-            <div class="mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+            <div class="toc-grid mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
               {[
                 { tag:'Part One', title:'Spot the scams', items:[
                   {n:1,t:'Why African Grey Scams Are Rampant in 2025–2026',href:'#why-rampant'},
@@ -653,14 +679,14 @@ li{margin-bottom:.4rem;line-height:1.7}
                 ]},
               ].map((g) => (
                 <div>
-                  <div class="mb-2.5 flex items-baseline gap-2.5">
+                  <div class="toc-grouplabel mb-2.5 flex items-baseline gap-2.5">
                     <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">{g.tag}</span>
                     <span class="h-px flex-1 bg-black/[0.08]"></span>
                   </div>
                   <p class="font-lora mb-3 text-lg font-semibold italic text-green" style="margin:0 0 12px;">{g.title}</p>
                   <ol class="space-y-0" style="list-style:none;margin:0;padding:0;">
                     {g.items.map((it) => (
-                      <li style="margin:0;"><a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2,'0')}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
+                      <li style="margin:0;"><a href={it.href} class="toc-link grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]"><span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2,'0')}</span><span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span></a></li>
                     ))}
                   </ol>
                 </div>
@@ -2051,7 +2077,7 @@ li{margin-bottom:.4rem;line-height:1.7}
 
           <p>Eggs and breeding pairs draw even more fakes than single chicks, because the buyers are often in a hurry and the "product" is easy to fake in a photo. The safe rule is identical to everything above: only buy <strong>verified African Grey eggs</strong> and a <strong>documented breeding pair</strong> from a USDA-licensed, CITES-papered breeder. Here at C.A.Gs we sell both — candled eggs at $95 each (free US shipping on five or more) and a proven, DNA-sexed pair at $3,000 — each with the same closed-band records and CITES Appendix I paperwork that travels with our hand-raised babies. No "papers after payment," no Zelle-only demands.</p>
 
-          <div class="grid gap-5 md:grid-cols-2" style="margin-top:1.25rem;">
+          <div class="ep-grid">
             {[
               { img: '/african-grey-candled-eggs.webp',
                 tag: 'Verified Eggs',
@@ -2066,14 +2092,16 @@ li{margin-bottom:.4rem;line-height:1.7}
                 href: '/african-grey-breeding-pair-for-sale/',
                 cta: 'View documented pairs' },
             ].map(item => (
-              <a href={item.href} class="group flex items-stretch gap-4 rounded-2xl border border-black/[0.07] bg-white p-3 transition-shadow hover:shadow-lg" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);text-decoration:none;">
-                <img src={item.img} alt={`${item.title} — captive-bred at C.A.Gs in Midland, TX, CITES Appendix I documented`} width="160" height="160" loading="lazy" decoding="async" class="h-28 w-28 flex-shrink-0 rounded-xl object-cover sm:h-32 sm:w-32" />
-                <div class="flex flex-col justify-center py-1 pr-2">
-                  <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">{item.tag}</span>
-                  <h3 class="font-lora mt-1 text-xl font-bold text-logo-dark">{item.title}</h3>
-                  <p class="font-sora mt-1.5 text-[13.5px] leading-relaxed text-stone-600">{item.desc}</p>
-                  <span class="font-sora mt-2 inline-flex items-center gap-1 text-sm font-semibold text-clay group-hover:gap-2 transition-all">{item.cta} →</span>
-                </div>
+              <a href={item.href} class="ep-card group">
+                <span class="ep-media">
+                  <img src={item.img} alt={`${item.title} — captive-bred at C.A.Gs in Midland, TX, CITES Appendix I documented`} width="640" height="426" loading="lazy" decoding="async" />
+                </span>
+                <span class="ep-body">
+                  <span class="ep-tag font-sora">{item.tag}</span>
+                  <h3 class="ep-title font-lora">{item.title}</h3>
+                  <span class="ep-desc font-sora">{item.desc}</span>
+                  <span class="ep-cta font-sora">{item.cta} →</span>
+                </span>
               </a>
             ))}
           </div>
