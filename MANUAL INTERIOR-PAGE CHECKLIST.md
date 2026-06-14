@@ -285,6 +285,7 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 ## PART N — FINAL QA GATE (15-point)
 
 > ⛔ The page is not "done" until these pass. (Mirrors `skills/cag-seo-master-checklist.md` Step 15; scale word/entity/FAQ counts down for a focused interior page, but keep every structural + technical item.)
+> **[v2] Run the `manual-auditor-check` skill to gate this automatically** — `npx astro build` → `python3 scripts/interior_29_audit.py` scores the mechanical items over `dist/`; the skill's copy-paste checklist covers the subjective ones. Triage every `✗` (REAL / ACCEPTED / FALSE POSITIVE / BY-DESIGN) before calling it done.
 
 **Content completeness:**
 - ⬜ All outlined sections present; word count meets the page's target (competitor +1,000 for pillar topics; proportionate for narrow ones).
