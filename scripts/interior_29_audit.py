@@ -147,8 +147,12 @@ def audit(slug):
     # --- newsletter (#18) — detect the signup form, not the word "newsletter"
     # (the cag-library/NewsletterV2 component emits no literal "newsletter" string).
     r["newsletter_present"]=("your@email.com" in raw) or ("newsletter" in raw.lower())
-    # --- freshness (#GEO) ---
-    r["updated_visible"]=bool(re.search(r"Updated\s+[A-Z][a-z]+ 20\d\d",bodytext))
+    # --- freshness (#GEO) — RULE: dates live ONLY in schema, never visible on the
+    # page. Pass = NO visible "Updated/Last updated <Month> <Year>" text (scripts
+    # stripped so schema dateModified does not trigger).
+    visible=re.sub(r"<script[\s\S]*?</script>","",raw)
+    visible=re.sub(r"<[^>]+>"," ",visible)
+    r["no_visible_date"]=not re.search(r"(?:updated|last updated|last modified)\b[^0-9]{0,18}\b20\d\d", visible, re.I)
     # --- transactional-only (#5/#6) ---
     if slug in TRANSACTIONAL:
         r["airport_codes"]=bool(re.search(r"\b(DEN|LAX|MIA|ORD|LAR)\b",bodytext))
