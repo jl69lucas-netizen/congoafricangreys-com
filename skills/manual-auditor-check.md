@@ -74,7 +74,7 @@ COMPLIANCE COPY (content pages; contact/privacy exempt)
 
 CONVERSION + FRESHNESS
 [ ] Footer phone present; NO breeder phone in body (authority hotlines OK)
-[ ] Visible "Updated <Month Year>" stamp (not just schema dateModified)
+[ ] NO visible date anywhere (no "Updated <Month Year>" / "Last updated"); freshness lives ONLY in schema dateModified
 [ ] Newsletter top/middle/bottom — long content pillars only (skip thin/utility pages)
 
 A11Y / GOTCHA TRAPS

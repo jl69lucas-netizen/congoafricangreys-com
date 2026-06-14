@@ -206,7 +206,7 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 - ⬜ **Declarative answer block:** every H2 question is followed by a **≤320-char self-contained factual answer** that can be lifted into an AI Overview / featured snippet.
 - ⬜ **Stat-forward liftable facts:** "40–60 year lifespan", "100–1,000 word vocabulary", "Appendix I since Jan 2017", "$185 airport / $350 home".
 - ⬜ **Entity corroboration triangle:** `sameAs` + Person/Organization schema + outbound authority links.
-- ⬜ **Freshness:** a visible "Updated [Month Year]" + `dateModified` in schema. **[v2] The 29-audit found all 18 had `dateModified` in schema but NO visible stamp — show it to humans, not just crawlers.**
+- ⬜ **Freshness:** set `dateModified` in schema. **[v3 · 2026-06-14] NEVER show a visible date on the page** (no "Updated [Month Year]", no "Last updated: …"). Dates live ONLY in JSON-LD — see the CLAUDE.md non-negotiable rule. (Reverses the v2 visible-stamp guidance.)
 - ⬜ **[v2] Readability (#15):** target Flesch **60–70**, with a documented **floor of ~55** for entity-dense pages. Don't gut entity density or first-person specificity to chase the number — the interior batch runs ~53–58 by nature; shorten the longest sentences first.
 - ⬜ **Bing/DuckDuckGo/Yahoo run on Bing's index** → IndexNow covers them (key → `api.indexnow.org`; Bing/Yandex, not Google). Run it on deploy (Part L).
 
