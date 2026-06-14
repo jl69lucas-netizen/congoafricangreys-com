@@ -6,6 +6,9 @@
 > `skills/cag-seo-master-checklist.md` (the machine workflow).
 > **Source:** distilled from the 13 homepage build sessions (2026-05-28 → 2026-06-06). See the
 > plan `sessions/2026-06-06-interior-page-standard-PLAN.md` for the evidence map.
+> **v2 (2026-06-14)** — absorbed the 29-check final-QA pass. Mechanical auditor for all 18 interior
+> pages = `scripts/interior_29_audit.py` (run after `npx astro build`); results +
+> learnings in `sessions/2026-06-14-interior-29-check-audit.md`. New/changed items are tagged **[v2]**.
 
 ## APPLIES TO
 health · shipping · FAQ · privacy policy · care/resource · about · why-choose-cag ·
@@ -112,6 +115,8 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 - ⬜ **KEEP** hero, counter, key-takeaway, TOC (if long), at least one trust element, FAQ, CTA.
 - ⬜ **ADD `BreadcrumbList` schema** — interior pages get it (the homepage intentionally omits it).
 - ⬜ One CTA per page (BaseLayout global band is gated by `hideGlobalCta`; if the page has its own `<CTA>`, pass `hideGlobalCta`).
+- ⬜ **[v2] Newsletter (3 placements):** on **long content pillars only** (care-guide, guide, faq, price, care hub) add a `cag-newsletter` signup at roughly Top / Middle / Bottom. **Skip** thin/utility pages (contact, privacy, short attribute pages) — don't clutter them.
+- ⬜ **[v2] Logistics & local-authority entities (#5/#6) are TRANSACTIONAL-only:** airport codes (DEN/LAX/MIA/ORD, IATA LAR) + Avian Flight Nanny depth belong on price/buyer/location pages — NOT on care/health/diet/lifespan/guide/faq/privacy (there they read as keyword-stuffing). On non-transactional interior pages, the safe local-authority signal is one AAV "find a vet" link + the standard USDA-AWA/CITES line. **Never fabricate a specific vet/hospital name** (ledger) — flag it for the breeder instead.
 
 **C.2 — The Section Seam Divider (the small footer logo between sections):**
 - ⬜ Place at **4–8 editorial seams** (not after every section). Markup (verbatim from `src/pages/index.astro:377`):
@@ -170,6 +175,10 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 - ⬜ ❌ Do **NOT** assert: incubation temps for the egg product, or anything not on this list, **without breeder re-confirmation.**
 - ⬜ The ledger of record is `.claude/agents/cag-entity-incorporation-agent.md` + `sessions/2026-06-03-homepage-entity-map.md` — update THERE when the breeder confirms a new claim, then mirror here.
 
+**E.3 — [v2] Brand-specific concept naming (#11) — topical-authority lever:**
+- ⬜ Coin ONE ownable house term for a real C.A.Gs method (e.g. a *"C.A.Gs Quiet-Wean method"* for hand-feeding/weaning) so AI engines attribute the concept to us. Reuse the SAME name across pages for entity consistency.
+- ⬜ **Gate:** the named method must describe something we actually do and be **breeder-confirmed** before it ships — until then it's a GAP-FLAG (Part G), never invented copy.
+
 ---
 
 ## PART F — INTERNAL + EXTERNAL LINKS (woven mid-sentence)
@@ -197,7 +206,8 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 - ⬜ **Declarative answer block:** every H2 question is followed by a **≤320-char self-contained factual answer** that can be lifted into an AI Overview / featured snippet.
 - ⬜ **Stat-forward liftable facts:** "40–60 year lifespan", "100–1,000 word vocabulary", "Appendix I since Jan 2017", "$185 airport / $350 home".
 - ⬜ **Entity corroboration triangle:** `sameAs` + Person/Organization schema + outbound authority links.
-- ⬜ **Freshness:** a visible "Updated [Month Year]" + `dateModified` in schema.
+- ⬜ **Freshness:** a visible "Updated [Month Year]" + `dateModified` in schema. **[v2] The 29-audit found all 18 had `dateModified` in schema but NO visible stamp — show it to humans, not just crawlers.**
+- ⬜ **[v2] Readability (#15):** target Flesch **60–70**, with a documented **floor of ~55** for entity-dense pages. Don't gut entity density or first-person specificity to chase the number — the interior batch runs ~53–58 by nature; shorten the longest sentences first.
 - ⬜ **Bing/DuckDuckGo/Yahoo run on Bing's index** → IndexNow covers them (key → `api.indexnow.org`; Bing/Yandex, not Google). Run it on deploy (Part L).
 
 ---
@@ -217,13 +227,14 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 
 **J.1 — Meta titles/descriptions (4-tone system):**
 - ⬜ Canonical C.A.Gs long format, choose tone by page: **Urgency · Comparison · Transactional · Trust/Health.**
-- ⬜ Title ≤205 chars · Description ≤185 (F1) or ≤300 (F2). **Never** generic-short. **No duplicates** vs other pages (audit first).
-- ⬜ Pattern: `Primary Keyword | Conversational | Comparison/LSI/NLP | C.A.Gs – Midland, TX | Trust Ending`.
+- ⬜ **[v2]** Title **≤275** chars · Description **≤300** chars. **Never** generic-short. **No duplicates** vs other pages (audit first). (Decided 2026-06-14: the deliberate long-format keeps long-tail terms indexed; we do NOT adopt the 155-char-description variant. Trade-off accepted: SERP truncates the tail, but it still indexes.)
+- ⬜ Pattern (4-part): `Primary Keyword | Conversational | Comparison/LSI/NLP | C.A.Gs – Midland, TX | Trust Ending` — end with brand + an LSI/NLP variation.
 
 **J.2 — Image SEO (5-element — none optional):**
-- ⬜ (1) SEO filename · (2) alt ≤190 chars · (3) `title` · (4) caption + CTA · (5) 250+ word description.
-- ⬜ `loading="lazy"` + explicit `width`/`height` (CLS). LCP/hero image is the exception → `fetchpriority="high"` + preload (Part K).
-- ⬜ WebP via **Python Pillow** (`im.save(p,"WEBP",quality=82,method=6)`) — **`sips` writes fake WebP** (JPEG-in-`.webp`, often larger).
+- ⬜ (1) SEO filename · (2) alt ≤190 chars **([v2] enforce the clamp — the 29-audit caught 7 pages with 200–220-char alt)** · (3) `title` · (4) caption + CTA · (5) 250+ word description.
+- ⬜ `loading="lazy"` + explicit `width`/`height` (CLS). LCP/hero image is the exception → `fetchpriority="high"` + preload (Part K). **[v2] Note for auditing:** the header logo is usually the first `<img>`; the eager LCP hero is the first *non-logo* image — both correctly eager.
+- ⬜ **[v2]** Each delivered image **<100 KB**. WebP via **Python Pillow** (`im.save(p,"WEBP",quality=82,method=6)`) — **`sips` writes fake WebP** (JPEG-in-`.webp`, often larger).
+- ⬜ **[v2]** Alt text is **unique per image** on the page (no two `<img>` share identical alt).
 
 ---
 
@@ -292,9 +303,16 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 - ⬜ 40–60 year lifespan referenced at least once (Rule 46).
 - ⬜ Voice-search questions in H2/H3 (and H6 sub-questions).
 
+**[v2] Final mechanical sweep — run `python3 scripts/interior_29_audit.py` after build:**
+- ⬜ **Cannibalization:** no two interior pages share a near-identical primary `<title>`/`<h1>`.
+- ⬜ **No orphans / reciprocity:** the page is linked *from* a hub or sibling, not just linking out.
+- ⬜ **Exactly ONE `FAQPage`** in `dist/` (the duplicate-FAQPage trap); JSON-LD parses valid.
+- ⬜ **Alt uniqueness** + every alt ≤190; **375px mobile** render checked (no overflow/overlap).
+- ⬜ Schema `Organization` present (top-level OR nested as `Article.publisher`/`author`; `@type` may be a list).
+
 **Conversion + technical:**
 - ⬜ First-person C.A.Gs voice throughout; "Honesty Policy" beat where it fits; no generic AI copy.
-- ⬜ Form CTA present; **NO phone number in body** (Rule 61).
+- ⬜ **[v2] Phone:** footer phone is **REQUIRED** (conversion safety net, #17); **NO breeder phone in the body** (Rule 61). **Exception:** third-party authority hotlines (USDA APHIS, FTC) MAY appear in body where relevant (e.g. the scam page) — they're not the breeder's number.
 - ⬜ Buyer fears addressed (scam, sick bird, CITES gaps, wild-caught suspicion — Rule 47).
 - ⬜ Images = 5-element SEO + explicit dims + lazy (LCP hero excepted).
 - ⬜ Schema present + correct per Part I; canonical absolute; verified in `dist/`.
