@@ -23,8 +23,9 @@ const jumpSections = [
   { id: 'talking',  label: 'Talking',  part: 2 },
   { id: 'care',     label: 'Care',     part: 2 },
   { id: 'health',   label: 'Health',   part: 2 },
-  { id: 'shipping', label: 'Shipping', part: 3 },
-  { id: 'contact',  label: 'Ask Us',   part: 3 },
+  { id: 'shipping',   label: 'Shipping',     part: 3 },
+  { id: 'eggs-pairs', label: 'Eggs & Pairs', part: 3 },
+  { id: 'contact',    label: 'Ask Us',       part: 3 },
 ];
 const jumpPartNames = {
   1: 'Buying',
@@ -47,7 +48,7 @@ const faqGroups = [
       { q: "What is the difference between a Congo and a Timneh African Grey?",
         a: `The <a href="/congo-african-grey-for-sale/">Congo African Grey</a> is the larger variant — 400–600 grams, light silver plumage, a cherry-red tail — while the <a href="/timneh-african-grey-for-sale/">Timneh African Grey</a> is smaller and darker with a maroon tail, a generally steadier temperament, and an earlier start to talking.\n\nBoth are equally intelligent, equally long-lived, and carry identical documentation here at C.A.Gs. If you are deciding, our <a href="/congo-vs-timneh-african-grey/">Congo vs Timneh comparison</a> goes variant by variant.` },
       { q: "How do I reserve a bird — is there a deposit?",
-        a: `A $200 deposit holds your chosen Grey, and we never release a chick before it is fully weaned and vet-cleared — typically 12–16 weeks old.\n\nStart through our <a href="/contact-us/">inquiry form</a> with the variant and sex you are hoping for, and Mark or Teri will reply within 24 hours with what is available now and what is coming from the next clutch.` },
+        a: `A $200 deposit holds your chosen Grey, and we never release a chick before it is fully weaned and vet-cleared — typically 12–16 weeks old.\n\nStart through our <a href="#contact">inquiry form</a> with the variant and sex you are hoping for, and Mark or Teri will reply within 24 hours with what is available now and what is coming from the next clutch.` },
       { q: "Should I choose a male or a female African Grey?",
         a: `Honestly, the “better” sex is the one whose personality fits your home — individual temperament differences between Greys are far larger than sex-based ones.\n\nBecause males and females look identical, every bird we place is PCR DNA-sexed with the laboratory certificate included. Our <a href="/male-vs-female-african-grey-parrots-for-sale/">male vs female African Grey guide</a> explains what sexing does and does not predict.` },
     ],
@@ -192,6 +193,7 @@ const tocParts = [
       { n: 4, t: "What Do African Greys Eat — and What Does Daily Care Involve?", href: "#care" },
       { n: 5, t: "How Long Do African Greys Live — and Stay Healthy?", href: "#health" },
       { n: 6, t: "How Does C.A.Gs Ship African Greys — and Is It Safe?", href: "#shipping" },
+      { n: 7, t: "Do You Sell Only Single Birds — or Eggs and Breeding Pairs Too?", href: "#eggs-pairs" },
     ],
   },
 ];
@@ -352,6 +354,46 @@ const tocParts = [
         <div class="mt-8">
           <a href="/african-grey-parrot-for-sale/" class="inline-block rounded-full bg-clay px-7 py-3.5 font-sora text-sm font-semibold text-white transition-colors hover:bg-clay-dk">Browse Available African Greys &rarr;</a>
         </div>
+      </div>
+    </section>
+
+    <!-- 6.5 Eggs & Breeding Pairs — FAQ cross-sell (fresh keyword variations) -->
+    <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+    <section id="eggs-pairs" class="scroll-mt-20 py-14 px-4 md:py-16">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-7 border-l-4 border-green pl-4">
+          <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">One More Common Question</p>
+          <h2 class="font-lora font-bold text-logo-dark">Do You Sell Only Single Birds — or Eggs and Breeding Pairs Too?</h2>
+          <p class="text-stone-600 leading-relaxed mt-2.5 text-[15px]" style="max-width:70ch;">We get this one a lot, so here's the short answer: alongside our hand-raised chicks, here at C.A.Gs we also sell <strong>fertile African Grey eggs</strong> by the clutch and <strong>established breeding pairs</strong> for experienced keepers. Eggs are $95 each (free US shipping on five or more) and a proven pair is $3,000 — both captive-bred and CITES Appendix I documented.</p>
+        </div>
+        <div class="grid gap-5 md:grid-cols-2">
+          {[
+            { img: '/african-grey-eggs-ready-to-hatch.webp',
+              tag: 'By the Clutch',
+              title: 'Fertile African Grey Eggs',
+              desc: 'Candled, fertility-checked Congo & Timneh eggs sold by the clutch — $95 each, free US shipping on five or more.',
+              href: '/african-grey-parrot-bird-eggs-for-sale-usa/',
+              cta: 'See egg availability' },
+            { img: '/jins-jeni-congo-african-grey-pair.webp',
+              tag: 'Established Pairs',
+              title: 'Established African Grey Breeding Pairs',
+              desc: 'DNA-sexed, proven African Grey pairs for experienced breeders — $3,000, closed-banded and fully CITES-documented.',
+              href: '/african-grey-breeding-pair-for-sale/',
+              cta: 'See breeding pairs' },
+          ].map(item => (
+            <a href={item.href} class="group flex items-stretch gap-4 rounded-2xl border border-black/[0.07] bg-white p-3 transition-shadow hover:shadow-lg" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
+              <img src={item.img} alt={`${item.title} — captive-bred at C.A.Gs in Midland, TX, CITES Appendix I documented`} width="160" height="160" loading="lazy" decoding="async" class="h-28 w-28 flex-shrink-0 rounded-xl object-cover sm:h-32 sm:w-32" />
+              <div class="flex flex-col justify-center py-1 pr-2">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">{item.tag}</span>
+                <h3 class="font-lora mt-1 text-xl font-bold text-logo-dark">{item.title}</h3>
+                <p class="font-sora mt-1.5 text-[13.5px] leading-relaxed text-stone-600">{item.desc}</p>
+                <span class="font-sora mt-2 inline-flex items-center gap-1 text-sm font-semibold text-clay group-hover:gap-2 transition-all">{item.cta} →</span>
+              </div>
+            </a>
+          ))}
+        </div>
+        <p class="font-sora text-stone-500 text-sm leading-relaxed mt-6" style="max-width:70ch;">Have a question about an egg order or a pair? <a href="#contact" class="text-green underline decoration-1 underline-offset-2">Ask us below</a> — same 24-hour reply.</p>
       </div>
     </section>
 
