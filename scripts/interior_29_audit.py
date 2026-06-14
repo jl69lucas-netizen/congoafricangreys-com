@@ -144,8 +144,9 @@ def audit(slug):
     r["cites_captive_usda_early"]=(("appendix i" in w300 or "captive-bred" in w300 or "captive bred" in w300)
                                    and ("usda" in w300 or "awa" in w300))
     r["lifespan_40_60"]=bool(re.search(r"40\s*[–-]\s*60|40 to 60",bodytext))
-    # --- newsletter (#18) ---
-    r["newsletter_present"]=("newsletter" in raw.lower())
+    # --- newsletter (#18) — detect the signup form, not the word "newsletter"
+    # (the cag-library/NewsletterV2 component emits no literal "newsletter" string).
+    r["newsletter_present"]=("your@email.com" in raw) or ("newsletter" in raw.lower())
     # --- freshness (#GEO) ---
     r["updated_visible"]=bool(re.search(r"Updated\s+[A-Z][a-z]+ 20\d\d",bodytext))
     # --- transactional-only (#5/#6) ---
