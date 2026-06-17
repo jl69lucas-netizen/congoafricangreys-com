@@ -13,6 +13,7 @@ dynamic_workflow: false
 
 
 # CAG Infographic Builder Agent
+> **Image art-direction:** Read `IMAGE-DESIGNS.md` (repo root) BEFORE generating, editing, or placing any image — crop ratios, style wrapper, negative list, lighting, focal length, and scene-type-per-page. It is the image source of truth; it wins over any stale value here.
 
 ## Golden Rule
 > **Clarification Checkpoint (ALWAYS):** Below the ≥97% Confidence Gate, do NOT dead-stop the whole job. First write finished work to disk (cleared sections to the page; in-progress notes + the open question to the live session brief's `## Open Flags`), then ask the user ONE narrow question, then keep building every part that isn't blocked. Only the uncertain unit waits for the answer. A stop must never cost more than that one piece, and the question must survive session teardown (it's on disk, not just in chat).

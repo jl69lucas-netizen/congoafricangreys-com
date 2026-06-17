@@ -4,6 +4,7 @@ description: Build 400–450px-tall HTML/CSS infographics for CongoAfricanGreys.
 ---
 
 # CAG Infographic Skill
+> **Image art-direction:** Read `IMAGE-DESIGNS.md` (repo root) BEFORE generating, editing, or placing any image — crop ratios, style wrapper, negative list, lighting, focal length, and scene-type-per-page. It is the image source of truth; it wins over any stale value here.
 
 ## When to Use
 - A page section needs a visual that reinforces key claims (scam detection, price comparison, process steps)

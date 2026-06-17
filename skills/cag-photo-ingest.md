@@ -4,6 +4,7 @@ description: Ingests user-uploaded OG African Grey photos into the CAG content p
 ---
 
 # CAG Photo Ingest Skill
+> **Image art-direction:** Read `IMAGE-DESIGNS.md` (repo root) BEFORE generating, editing, or placing any image — crop ratios, style wrapper, negative list, lighting, focal length, and scene-type-per-page. It is the image source of truth; it wins over any stale value here.
 
 **Announce at start:** "Using cag-photo-ingest skill to process uploaded photo for [page/purpose]."
 
