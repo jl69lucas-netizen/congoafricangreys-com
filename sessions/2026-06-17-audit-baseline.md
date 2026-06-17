@@ -36,3 +36,23 @@ Despite being CAG-safe, the un-guided audit missed the framework's required stru
 9. **No page-type weighting** — didn't map to a CAG page type to weight the sections.
 
 These nine gaps are what `cags-comprehensive-page-audit-system.md` must enforce. (Palette, dates, fabrication, CITES are already handled by CLAUDE.md — keep them as a short guardrail, not the focus.)
+
+## GREEN result (with skill)
+
+A fresh general-purpose subagent re-audited the **same** page (`/best-african-grey-parrot-food/`) with the full skill text as its method. Full report: `sessions/2026-06-17-audit-best-food.md`. Scored against the nine RED gaps:
+
+| # | RED gap | GREEN outcome | Verdict |
+|---|---|---|---|
+| 1 | No 17-section structure | §1 Page-ID → §17 Final Verdict, all 17 in prescribed order | **CLOSED** |
+| 2 | No §3–4 SERP competitor analysis | REAL Firecrawl fetch — VCA (pos 3, scraped), Parrot Essentials (scraped, caught `noindex`), Quora/Reddit/FB UGC cluster (pos 1/2/4); Competitive-Advantage **9/10** | **CLOSED** |
+| 3 | No AEO /10 rubric | 10-item YES/NO checklist table → **10/10** | **CLOSED** |
+| 4 | No Entity-coverage /10 | covered÷expected ≈ 43/48 → **9/10** + Important-Missing-Entities table with why-each-matters-for-AI | **CLOSED** |
+| 5 | No Visual decision table | per-section `| Section | Need Visual? | Type | Why |` with YES(Mandatory)/YES(Recommended)/MAYBE/NO; §12 image prompts for the YES rows only | **CLOSED** |
+| 6 | No Backlink-magnet /10 | **6/10** + magnet spec (comparison infographic + Ledger-safe proprietary stat) | **CLOSED** |
+| 7 | No 8-axis scorecard + tier | SEO 10 · Semantic 8 · AEO 10 · Entity 9 · UX 9 · Visual 8 · CRO 7 · Backlink 6 · Comp-Adv 9 → **STRONG** | **CLOSED** |
+| 8 | No specialist routing | every section header names its owner (§5→keyword-verifier, §7→entity agent, §14→internal-link-agent, §16→conversion-tracker, …) | **CLOSED** |
+| 9 | No page-type weighting | §1 maps to **Care/Health Guide**, **TOFU→MOFU**, and states AEO+entity+semantic are the heaviest axes for this type | **CLOSED** |
+
+**CAG-safety held (the guardrails, not the focus):** palette references are DESIGN.md tokens only (no stale `#1F7A4D`/`#FF6210`); un-fetchable competitor metrics (DA, backlink counts, traffic, CAG's own rank) were flagged **`NOT FETCHED — would require [tool]`** instead of invented; all freshness recs are schema-only; proposed copy is first-person C.A.Gs; the Verified-Claim Ledger guard was honored (no new credential asserted, magnet stat must be real-or-omitted).
+
+**RESULT: PASS on all 9 gaps. No REFACTOR required.** The skill produces the structured brutal verdict the un-guided audit could not, while CLAUDE.md's house rules carried the safety layer exactly as the RED key-finding predicted.
