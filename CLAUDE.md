@@ -34,6 +34,9 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 → `@cag-content-audit-agent` → **Section Map + Component Gate** (approve before writing)
 → `@cag-angle-agent` → `@cag-paa-agent` → `skills/cag-seo-master-checklist` → build
 
+### "Audit a page" (deep strategic audit)
+→ `skills/cags-comprehensive-page-audit-system` (give it a URL) → produces `sessions/YYYY-MM-DD-audit-<slug>.md` → route fixes to the relevant builder. Batch mode → audit backlog → `@cag-strategy-synthesizer`.
+
 ### "I want to build all location pages"
 → `@cag-batch-rebuilder` → reads `data/locations.json` → forks `@cag-location-builder` per state
 
@@ -112,6 +115,7 @@ All 68 agents run on **Opus 4.8** (`claude-opus-4-8`), with three **effort** tie
 
 #### Technical Skills
 - `skills/manual-auditor-check.md` — **FINAL QA GATE before you "give a page a pass"/deploy.** Runs the mechanical 29-check auditor `scripts/interior_29_audit.py` over `dist/` (headings, schema, meta, image SEO, a11y traps, links, phone, compliance copy) + a **copy-paste manual checklist** for the 6 subjective items (voice, humor, Flesch, non-commodity, tone, brand-protocol). Bakes in the 4 false-positive traps (nested/list `@type`, header-logo-not-hero, authority-phone, strip inline JSON-LD) so it never fabricates defects. Runs as the LAST step of Sprint 4. Companion to `MANUAL INTERIOR-PAGE CHECKLIST.md` Part N. Excludes comparison/location/for-sale/blog.
+- `skills/cags-comprehensive-page-audit-system.md` — **brutal 17-section strategic page audit (SEO + Semantic + AEO + Entity + UX + CRO + Visual + Backlink) run as a skill chain** over existing CAG specialists + 5 owned scorers (AEO/entity/visual/backlink/verdict). Any page type, any time. Sources color from DESIGN.md/IMAGE-DESIGNS.md, never fabricates competitor metrics (un-fetchable = `NOT FETCHED`, never invented), keeps date recs schema-only. Distinct from `cag-content-audit-agent` (pre-build) and `manual-auditor-check` (final mechanical gate, interior-only). Has a batch mode → audit backlog → feeds `cag-strategy-synthesizer`. RED→GREEN tested (`sessions/2026-06-17-audit-baseline.md`).
 - `skills/cag-website-health.md` — technical audit: broken images, canonicals, www redirect, Core Web Vitals, Page Speed Audit (LCP <2.5s, CLS <0.1, INP <200ms)
 - `skills/cag-footer-agent.md` — 5-column footer structure spec + audit rules; USDA AWA + CITES notice in bottom bar
 - `skills/sitemap-agent.md` — manages sitemap files after any page change
