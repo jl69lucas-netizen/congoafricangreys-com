@@ -113,6 +113,12 @@ Before proceeding to Sprint 1:
 ### Sequence (in order)
 
 ```
+Step 0: cag-strategy-synthesizer  ← STRATEGY BEFORE STRUCTURE
+  → Reads existing research only (gap matrix, competitor-intel, GSC, LLM-intel) — does NOT re-run Sprint 0
+  → Produces TWO reverse-engineered strategies, recommends ONE with a data-grounded WHY + named trade-off
+  → Derives the concrete artifact for the cluster (e.g. the 9 blog topics + 1 hub)
+  → Output: sessions/[date]-[topic]-strategy.md → hands the chosen strategy to cag-content-architect
+
 Step 1: cag-structure-architect
   → Maps all 52 target pages into Silo or Reverse Silo structure
   → Ensures every page is ≤3 clicks from homepage

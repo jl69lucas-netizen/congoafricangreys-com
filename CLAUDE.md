@@ -211,7 +211,7 @@ See `docs/reference/WORKFLOW.md` for the authoritative sprint-based workflow.
 ### Sprint Order (Quick Reference)
 1. **Sprint 0** — Intelligence: `competitor-registry` → `competitor-intel --all` → `gsc-analytics` → `llm-keyword-intel`
 1.5. **Sprint 0.5** — Session Orientation: `grill-me` skill (after Sprint 0 Gate passes — needs gap matrix + top-pages)
-2. **Sprint 1** — Architecture: `structure-architect` → `competitive-keyword-gap` → `hub-builder` → `content-architect`
+2. **Sprint 1** — Architecture: `strategy-synthesizer` (2 strategies → recommend 1) → `structure-architect` → `competitive-keyword-gap` → `hub-builder` → `content-architect`
 3. **Sprint 2** — Content: `content-audit` → **Section Map + Component Gate** → `angle-agent` → `paa-agent` → writer → `faq-agent` → `section-builder`
 4. **Sprint 3** — AEO/GEO Gate: `keyword-verifier` → `meta-description` → `external-link` → `trust-signals`
 5. **Sprint 4** — Technical: `accessibility-fixer` → `performance-fixer` → `canonical-fixer` → `footer-standardizer`
