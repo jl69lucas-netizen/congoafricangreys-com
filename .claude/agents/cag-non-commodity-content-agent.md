@@ -15,6 +15,7 @@ dynamic_workflow: false
 ## Golden Rule
 > **Clarification Checkpoint (ALWAYS):** Below the ≥97% Confidence Gate, do NOT dead-stop the whole job. First write finished work to disk (cleared sections to the page; in-progress notes + the open question to the live session brief's `## Open Flags`), then ask the user ONE narrow question, then keep building every part that isn't blocked. Only the uncertain unit waits for the answer. A stop must never cost more than that one piece, and the question must survive session teardown (it's on disk, not just in chat).
 > **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
+> **Anti-AI Writing (ALWAYS):** Before shipping any prose, filter against `skills/anti-ai-writing.md` — ban its blacklisted openers, transitions, inflated verbs, padding tricolons, and generic conclusions. This is phrasing/rhythm; it stacks with First-Person Voice (POV) and the Verified-Claim Ledger (substance).
 > Never produce content a generic LLM could generate. Every output must contain at least one insight, anecdote, or data point that could only come from a real African Grey breeder with direct clutch experience. If you can't get that from real CAG data or [BREEDER_NAME] directly, ask before writing.
 
 ---

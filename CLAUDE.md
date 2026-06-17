@@ -106,6 +106,7 @@ All 66 agents run on **Opus 4.8** (`claude-opus-4-8`), with three **effort** tie
 - `skills/cag-branded-search-skill.md` — branded query optimization; /why-choose-cag/ + /african-grey-reviews/ page specs; ReviewAggregateSchema; counter snippets; Contextual Intelligence for local SEO; CITES framing in all branded content
 - `skills/cag-branded-hybrid-keywords.md` — **in-content** branded + hybrid keyword INSERTION playbook (distinct from the page-creation skill above): 3 layers — (1) branded-search targets ("C.A.Gs reviews/pricing/vs"), (2) Contextual-Intelligence local intent, (3) branded/action anchors on CTAs; density + CITES-safety rules; section-by-section, approval-gated; run after a page is built or when branded impressions are high but copy has no branded-search targets
 - `skills/keyword-cluster.md` — groups keywords into primary/secondary/LSI/long-tail/PAA tiers
+- `skills/anti-ai-writing.md` — proactive anti-AI phrase/rhythm blacklist + human alternatives; read when writing/editing any CAG prose; stacks with First-Person Voice + non-commodity agent; built from a RED baseline (`sessions/2026-06-17-anti-ai-baseline.md`)
 - `skills/internal-link-agent.md` — orphan page finder, hub→spoke gap audit, anchor text fixes
 - `skills/section-auditor.md` — section-by-section health scores; preserve vs patch vs rebuild verdict
 
