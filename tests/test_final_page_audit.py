@@ -16,7 +16,7 @@ MINIMAL_BIRD = """
 <html><head><title>Roys — Congo African Grey for Sale | C.A.Gs</title>
 <link rel="canonical" href="https://congoafricangreys.com/available/roys/">
 <meta name="description" content="Roys, our hand-raised Congo African Grey, $2,300.">
-<script type="application/ld+json">{"@type":"Product","offers":{"@type":"Offer","availability":"https://schema.org/InStock"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Product","name":"Roys","offers":{"@type":"Offer","availability":"https://schema.org/InStock"}},{"@type":"Organization","name":"C.A.Gs"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://congoafricangreys.com/"},{"@type":"ListItem","position":2,"name":"Available","item":"https://congoafricangreys.com/available/"},{"@type":"ListItem","position":3,"name":"Roys"}]}]}</script>
 </head><body><main><h1>Roys</h1><h2>About Roys</h2><h3>Health</h3><h4>Shipping</h4>
 <p>Ships nationwide &middot; $185 airport &middot; $350 home. Captive-bred, CITES Appendix I, USDA AWA. Lifespan 40-60 years.</p>
 </main><footer>(844) 820-2234</footer></body></html>
@@ -88,6 +88,14 @@ def test_house_method_named_passes():
     html = MINIMAL_BIRD.replace("hand-raised", "hand-raised via the C.A.Gs Grey Method")
     r = A.audit_html("available/x", html, "bird")
     assert r["house_method"] is True
+
+def test_verdict_fail_when_hard_gate_breaks():
+    r = A.audit_html("available/x", BAD_BIRD, "bird")
+    assert r["_verdict"] == "FAIL", r["_verdict"]
+
+def test_verdict_not_fail_for_clean_bird():
+    r = A.audit_html("available/roys", MINIMAL_BIRD, "bird")
+    assert r["_verdict"] in ("PASS", "PASS-WITH-WARNINGS"), r["_verdict"]
 
 if __name__ == "__main__":
     import traceback, inspect

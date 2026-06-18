@@ -213,6 +213,11 @@ def audit_html(slug, html, page_type="interior"):
     # severity only applies to boolean pass/fail checks — skip info keys (counts/strings)
     r["_severity"] = {k: severity(page_type, k) for k in r
                       if not k.startswith("_") and isinstance(r[k], bool)}
+    hard_fails = [k for k, v in r.items() if v is False and r["_severity"].get(k) == "FAIL"]
+    warns = [k for k, v in r.items() if v is False and r["_severity"].get(k) == "WARN"]
+    r["_verdict"] = "FAIL" if hard_fails else ("PASS-WITH-WARNINGS" if warns else "PASS")
+    r["_hard_fails"] = hard_fails
+    r["_warns"] = warns
     return r
 
 def audit(slug, page_type="interior"):
@@ -221,32 +226,27 @@ def audit(slug, page_type="interior"):
         return {"_MISSING": True}
     return audit_html(slug, f.read_text(encoding="utf-8", errors="ignore"), page_type)
 
+BIRDS = ["available/bery","available/amie","available/roys",
+         "available/jins-jeni","available/elad","available/evie"]
+
 def main():
-    rows={s:audit(s) for s in SLUGS}
-    info={"h_counts","schema_types","title_len","desc_len","img_total","ext_links",
-          "internal_links","faqpage_count","phone_in_footer"}
-    keys=[]
-    for r in rows.values():
-        for k in r:
-            if k not in keys and k not in info and not k.startswith("_"): keys.append(k)
-    print("\n=== INTERIOR 29-CHECK AUDIT ===  (✓ pass / ✗ FAIL)\n")
-    npass=0
-    for s,r in rows.items():
-        if r.get("_MISSING"): print(f"  ✗ {s}: dist/ MISSING — rebuild"); continue
-        fails=[k for k in keys if k in r and r[k] is False]
-        mark="✓" if not fails else "✗"
-        if not fails: npass+=1
-        print(f"{mark} {s}")
-        print(f"    {r['h_counts']} | title:{r['title_len']} desc:{r['desc_len']} | "
-              f"imgs:{r['img_total']} ext:{r['ext_links']} int:{r['internal_links']} | "
-              f"FAQPage×{r['faqpage_count']} | schema:{r['schema_types']}")
-        if fails: print("    FAIL → " + ", ".join(fails))
-    print(f"\n{npass}/18 pages fully clean on mechanical checks.")
-    print("\n=== CHECK ROLL-UP (pages failing each) ===")
-    for k in keys:
-        bad=[s for s,r in rows.items() if r.get(k) is False]
-        if bad: print(f"  ✗ {k}: {len(bad)} → {', '.join(bad)}")
-    print("\nSubjective checks (voice/humor/Flesch/non-commodity/tone/brand-protocol) = manual spot-check.")
+    if "--birds" in sys.argv:
+        targets = [(s, "bird") for s in BIRDS]
+    else:
+        targets = [(s, "interior") for s in SLUGS]
+    rows = {s: audit(s, t) for s, t in targets}
+    print("\n=== C.A.Gs FINAL PAGE PASS ===  (verdict per page)\n")
+    for s, r in rows.items():
+        if r.get("_MISSING"):
+            print(f"  ✗ {s}: dist/ MISSING — run `npx astro build`"); continue
+        print(f"[{r['_verdict']}] {s}   {r['h_counts']} | FAQPage×{r['faqpage_count']} | schema:{r['schema_types']}")
+        if r["_hard_fails"]: print("    FAIL → " + ", ".join(r["_hard_fails"]))
+        if r["_warns"]:      print("    WARN → " + ", ".join(r["_warns"]))
+    npass = sum(1 for r in rows.values() if r.get("_verdict") == "PASS")
+    nwarn = sum(1 for r in rows.values() if r.get("_verdict") == "PASS-WITH-WARNINGS")
+    nfail = sum(1 for r in rows.values() if r.get("_verdict") == "FAIL")
+    print(f"\n{npass} PASS · {nwarn} PASS-WITH-WARNINGS · {nfail} FAIL  (of {len(rows)})")
+    print("\nSubjective (voice/humor/Flesch/non-commodity/tone/brand-protocol) = manual spot-check.")
 
 if __name__=="__main__":
     main()
