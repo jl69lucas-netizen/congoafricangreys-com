@@ -12,6 +12,9 @@ def test_flat_slug_resolves_unchanged():
     p = A.dist_path("african-grey-parrot-price")
     assert str(p).endswith("dist/african-grey-parrot-price/index.html"), p
 
+# Canonical clean-bird fixture: passes ALL bird hard gates (no_aggregateoffer, no_pbfd_claim,
+# shipping_line, sold_not_instock). Tests that depend on a passing bird page use this fixture.
+# Do NOT modify it without checking all tests that reference it.
 MINIMAL_BIRD = """
 <html><head><title>Roys — Congo African Grey for Sale | C.A.Gs</title>
 <link rel="canonical" href="https://congoafricangreys.com/available/roys/">
@@ -96,6 +99,18 @@ def test_verdict_fail_when_hard_gate_breaks():
 def test_verdict_not_fail_for_clean_bird():
     r = A.audit_html("available/roys", MINIMAL_BIRD, "bird")
     assert r["_verdict"] in ("PASS", "PASS-WITH-WARNINGS"), r["_verdict"]
+
+def test_airport_codes_warn_on_interior():
+    # airport_codes is a transactional nicety, not a ship-blocker: must be WARN on interior pages.
+    assert A.severity("interior", "airport_codes") == "WARN", \
+        f"expected WARN, got {A.severity('interior', 'airport_codes')}"
+
+def test_sold_not_instock_explicit_fail_on_bird():
+    # Guards the EXPLICIT declaration, not the DEFAULT_SEVERITY fallback —
+    # this fails if someone deletes the bird-profile entry.
+    assert "sold_not_instock" in A.PROFILES.get("bird", {}), \
+        "sold_not_instock must be explicitly declared in the bird profile"
+    assert A.PROFILES["bird"]["sold_not_instock"] == "FAIL"
 
 if __name__ == "__main__":
     import traceback, inspect

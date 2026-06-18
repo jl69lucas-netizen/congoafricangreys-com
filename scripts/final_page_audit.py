@@ -63,6 +63,7 @@ PROFILES = {
         "no_aggregateoffer": "FAIL",     # single Product+Offer only
         "no_pbfd_claim": "FAIL",         # not in Verified-Claim Ledger
         "shipping_line": "FAIL",
+        "sold_not_instock": "FAIL",      # explicit: sold bird must not remain InStock in schema
         "wordcount_in_band": "WARN",
         "real_hero_image": "WARN",
         "house_method": "WARN",          # GAP-FLAG until breeder confirms a term
@@ -72,6 +73,7 @@ PROFILES = {
         "no_aggregateoffer": "NA", "no_pbfd_claim": "NA",
         "shipping_line": "NA", "wordcount_in_band": "NA", "real_hero_image": "NA",
         "house_method": "WARN",
+        "airport_codes": "WARN",         # transactional nicety on price page, not a ship-blocker
     },
 }
 def severity(page_type, check):
