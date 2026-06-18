@@ -27,11 +27,17 @@ TODAY = datetime.date.today().isoformat()
 # --- enumerate live slugs from the filesystem ---
 top_slugs = sorted(
     p.name for p in PAGES.iterdir()
-    if p.is_dir() and p.name not in {"blog", "search"}
+    if p.is_dir() and p.name not in {"blog", "search", "available"}
 )
 blog_slugs = sorted(
     p.name for p in (PAGES / "blog").iterdir() if p.is_dir()
 ) if (PAGES / "blog").is_dir() else []
+# individual bird listing pages live at src/pages/available/<slug>/index.astro
+# (the bare /available/ parent has no index and must NOT be emitted)
+available_slugs = sorted(
+    p.name for p in (PAGES / "available").iterdir()
+    if p.is_dir() and any((p / f"index.{ext}").exists() for ext in ("astro", "html", "md"))
+) if (PAGES / "available").is_dir() else []
 
 # --- classification ---
 GEO_BUY = {"buy-intelligent-african-grey-for-sale-ca",
@@ -89,6 +95,9 @@ page_blocks.append(url_block(f"{BASE}/blog/", TODAY, "weekly", "0.7"))
 for s in page_slugs:
     cf, pr = page_meta(s)
     page_blocks.append(url_block(f"{BASE}/{s}/", TODAY, cf, pr))
+# individual available-bird listing pages — money pages, refresh weekly
+for s in available_slugs:
+    page_blocks.append(url_block(f"{BASE}/available/{s}/", TODAY, "weekly", "0.9"))
 write_urlset("page-sitemap.xml", page_blocks,
              f"Pages — generated {TODAY} from src/pages/")
 
@@ -116,7 +125,7 @@ write_both("sitemap_index.xml", index_xml)
 write_both("sitemap.xml", index_xml)
 
 # --- validation: every loc maps to a real page dir ---
-total = 1 + 1 + len(page_slugs) + len(location_slugs) + len(blog_slugs)
+total = 1 + 1 + len(page_slugs) + len(available_slugs) + len(location_slugs) + len(blog_slugs)
 print(f"page-sitemap : {len(page_blocks)} urls (incl. / and /blog/)")
 print(f"local-sitemap: {len(loc_blocks)} urls")
 print(f"post-sitemap : {len(post_blocks)} urls")
