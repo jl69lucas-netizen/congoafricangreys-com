@@ -142,7 +142,11 @@ Every individual bird listing page must use this structured card. Pull all data 
 ```html
 <!-- Bird Vitals Card — Required on Every Individual Bird Listing Page -->
 <div class="cag-bird-vitals-card">
-  <div class="star-rating">⭐⭐⭐⭐⭐ 5.0 Rated</div>
+  <!-- NO per-bird star rating by default. A bird page has ONE bird = no aggregate.
+       Only render a rating if a REAL, attributed review for THIS bird exists, and
+       use the ★ text glyph (NEVER the ⭐ emoji — DESIGN.md §Iconography). Example,
+       uncomment ONLY with a verified review backing the schema:
+       <div class="star-rating">★★★★★ 5.0 — [reviewer name], verified buyer</div> -->
 
   <h3>[Bird Name / Available [Variant] African Grey] — [Species] for Sale</h3>
 
