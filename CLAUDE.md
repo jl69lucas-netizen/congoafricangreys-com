@@ -49,8 +49,11 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 ### "Weekly monitoring check"
 → [parallel] `@cag-rank-tracker` + `@cag-branded-search-monitor-agent` + `@cag-competitor-pricing-alert-agent` + `@cag-llm-keyword-intel`
 
+### "I want to list an available bird"
+→ `skills/cag-bird-listing-page` (one page per bird in `data/clutch-inventory.json` → `src/pages/available/<slug>/index.astro`; single Product/Offer, 700–1,000 words, no PBFD claim) → `@cag-clutch-manager` syncs status → `python3 scripts/generate_sitemaps.py`
+
 ### "A bird was sold"
-→ `@cag-clutch-manager` (status: sold) → Day 7: `@cag-review-collection-agent`
+→ `@cag-clutch-manager` (status: sold) → retire/301 the `/available/<slug>/` page per the `cag-bird-listing-page` lifecycle (never leave a sold bird `InStock`) → Day 7: `@cag-review-collection-agent`
 
 ### "Deploy a page"
 → `@cag-canonical-fixer` → `git push` → `@cag-deploy-verifier` → `sitemap-agent` skill
@@ -115,6 +118,7 @@ All 68 agents run on **Opus 4.8** (`claude-opus-4-8`), with three **effort** tie
 
 #### Technical Skills
 - `skills/manual-auditor-check.md` — **FINAL QA GATE before you "give a page a pass"/deploy.** Runs the mechanical 29-check auditor `scripts/interior_29_audit.py` over `dist/` (headings, schema, meta, image SEO, a11y traps, links, phone, compliance copy) + a **copy-paste manual checklist** for the 6 subjective items (voice, humor, Flesch, non-commodity, tone, brand-protocol). Bakes in the 4 false-positive traps (nested/list `@type`, header-logo-not-hero, authority-phone, strip inline JSON-LD) so it never fabricates defects. Runs as the LAST step of Sprint 4. Companion to `MANUAL INTERIOR-PAGE CHECKLIST.md` Part N. Excludes comparison/location/for-sale/blog.
+- `skills/cag-bird-listing-page.md` — **the per-bird LISTING-PAGE builder** for individual available birds at `/available/<slug>/` (one page per real bird in `data/clutch-inventory.json`). Lean profile covering the 6 things a bird page gets wrong that CLAUDE.md doesn't already catch: fixed 9-section order, **single `Product`+`Offer`** (never `AggregateOffer` — that's the variant page), link-out-don't-reteach, sell-and-retire lifecycle (sold→301, never leave `InStock`), real-image requirement, and **no PBFD/Polyomavirus claim** (not in the Verified-Claim Ledger). 700–1,000 words, real photos, first-person. Distinct from `cag-bird-personality` (card + archetype) and `cag-clutch-manager` (status). RED→GREEN tested (`sessions/2026-06-18-bird-listing-baseline.md`); built the 9-slug `/available/` cluster.
 - `skills/cags-comprehensive-page-audit-system.md` — **brutal 17-section strategic page audit (SEO + Semantic + AEO + Entity + UX + CRO + Visual + Backlink) run as a skill chain** over existing CAG specialists + 5 owned scorers (AEO/entity/visual/backlink/verdict). Any page type, any time. Sources color from DESIGN.md/IMAGE-DESIGNS.md, never fabricates competitor metrics (un-fetchable = `NOT FETCHED`, never invented), keeps date recs schema-only. Distinct from `cag-content-audit-agent` (pre-build) and `manual-auditor-check` (final mechanical gate, interior-only). Has a batch mode → audit backlog → feeds `cag-strategy-synthesizer`. RED→GREEN tested (`sessions/2026-06-17-audit-baseline.md`).
 - `skills/cag-website-health.md` — technical audit: broken images, canonicals, www redirect, Core Web Vitals, Page Speed Audit (LCP <2.5s, CLS <0.1, INP <200ms)
 - `skills/cag-footer-agent.md` — 5-column footer structure spec + audit rules; USDA AWA + CITES notice in bottom bar

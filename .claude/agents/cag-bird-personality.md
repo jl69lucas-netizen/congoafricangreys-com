@@ -135,6 +135,8 @@ You are the **Bird Personality Agent** for CongoAfricanGreys.com. You write comp
 
 ## Bird Vitals Card Format
 
+> **Page builder:** The full per-bird PAGE that hosts this card is governed by the `cag-bird-listing-page` skill (fixed 9-section order, single Product/Offer, no PBFD claim, 700–1,000 words). This agent supplies the archetype + vitals card; the skill assembles the page. **Do NOT print a hardcoded per-bird star rating** (e.g. "5.0 Rated") unless a real, attributed review exists — the skill forbids fabricated `aggregateRating`.
+
 Every individual bird listing page must use this structured card. Pull all data from `data/clutch-inventory.json` and `data/price-matrix.json` — never hardcode.
 
 ```html

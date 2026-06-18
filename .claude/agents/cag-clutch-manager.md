@@ -13,6 +13,7 @@ dynamic_workflow: false
 > Use Claude Code to solve problems first.
 > Only call MCPs, external CLIs, or APIs if the specific task genuinely cannot be done with Claude Code alone.
 > **Confidence Gate:** Before writing or modifying any file in site/content/, confidence must be ≥97%. If uncertain: stop, state the uncertainty, ask. Never guess on live files.
+> **Bird listing PAGES (not just JSON):** Each `available`/`reserved`/`pending_weaning` bird gets a page at `src/pages/available/<slug>/index.astro` built via the `cag-bird-listing-page` skill (src/pages is authoritative, not site/content). On status→`sold`: never leave the Offer `InStock` — render a Sold state OR 301 the slug to the variant page via `cag-redirect-manager`, then `python3 scripts/generate_sitemaps.py`.
 
 ---
 
