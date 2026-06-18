@@ -114,6 +114,27 @@ def audit_html(slug, html, page_type="interior"):
     r["faqpage_count"] = flat.count("FAQPage")
     r["faqpage_ok"] = flat.count("FAQPage") <= 1
     r["schema_types"] = ",".join(sorted(set(flat)))
+    # --- bird-listing hard gates (page_type == "bird") ---
+    r["no_aggregateoffer"] = "AggregateOffer" not in flat
+    r["no_pbfd_claim"] = not re.search(r"\b(pbfd|polyoma)", raw, re.I)
+    r["shipping_line"] = bool(re.search(r"\$185.*\$350|185 airport.*350 home", bodytext, re.I)) \
+                         or ("$185" in bodytext and "$350" in bodytext)
+    # InStock is only a failure when the bird is marked sold elsewhere on the page.
+    sold = bool(re.search(r"\b(sold|reserved)\b", bodytext, re.I))
+    instock = "InStock" in raw
+    r["sold_not_instock"] = not (sold and instock)
+    # word count of visible body (scripts stripped)
+    vis = re.sub(r"<script[\s\S]*?</script>", "", raw)
+    nwords = len(re.sub(r"<[^>]+>", " ", vis).split())
+    r["wordcount_in_band"] = 600 <= nwords <= 1200  # 700-1000 target ±buffer for chrome
+    # hero must be a real photo, not a placeholder/logo
+    content_imgs = [i for i in p.imgs if "logo" not in i.get("src", "").lower()]
+    r["real_hero_image"] = bool(content_imgs) and not any(
+        x in (content_imgs[0].get("src", "").lower()) for x in ("placeholder", "coming-soon", "default")
+    ) if content_imgs else False
+    # house-method naming (WARN) — presence of a named protocol where hand-rearing is discussed
+    r["house_method"] = (not re.search(r"hand-rais|hand-fed|hand-rear", raw, re.I)) or \
+                        bool(re.search(r"C\.A\.Gs [A-Z][a-z]+ Method|Grey Method", raw))
     # --- meta (Part J / #13) — long-format standard kept (≤275 title / ≤300 desc) ---
     r["title_len"] = len(p.title.strip())
     r["desc_len"] = len(p.metadesc.strip())

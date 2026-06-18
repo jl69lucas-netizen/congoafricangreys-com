@@ -30,6 +30,28 @@ def test_profile_marks_newsletter_fail_for_interior():
     r = A.audit_html("african-grey-parrot-care-guide", MINIMAL_BIRD, "interior")
     assert r["_severity"]["newsletter_present"] in ("FAIL", "WARN"), r["_severity"]
 
+BAD_BIRD = """
+<html><head><title>Bad — C.A.Gs</title></head><body><main><h1>X</h1>
+<script type="application/ld+json">{"@type":"AggregateOffer"}</script>
+<p>This bird is tested clear of PBFD and polyomavirus.</p>
+</main></body></html>
+"""
+
+def test_bird_aggregateoffer_fails():
+    r = A.audit_html("available/x", BAD_BIRD, "bird")
+    assert r["no_aggregateoffer"] is False
+    assert r["_severity"]["no_aggregateoffer"] == "FAIL"
+
+def test_bird_pbfd_claim_fails():
+    r = A.audit_html("available/x", BAD_BIRD, "bird")
+    assert r["no_pbfd_claim"] is False
+
+def test_good_bird_passes_hard_gates():
+    r = A.audit_html("available/roys", MINIMAL_BIRD, "bird")
+    assert r["no_aggregateoffer"] is True
+    assert r["no_pbfd_claim"] is True
+    assert r["shipping_line"] is True
+
 if __name__ == "__main__":
     import traceback, inspect
     fns = [f for n, f in sorted(globals().items()) if n.startswith("test_") and inspect.isfunction(f)]
