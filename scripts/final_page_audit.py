@@ -53,10 +53,30 @@ class P(HTMLParser):
         if s.cura is not None: s.atext.append(data)
         s.body.append(data)
 
-def audit(slug):
-    f = DIST/slug/"index.html"
-    if not f.exists(): return {"_MISSING": True}
-    html = f.read_text(encoding="utf-8", errors="ignore")
+# Per-page-type check severities. Anything unlisted falls back to DEFAULT_SEVERITY.
+# FAIL = hard ship-blocker · WARN = soft (logged, shippable) · NA = not applicable.
+DEFAULT_SEVERITY = "FAIL"
+PROFILES = {
+    "bird": {
+        "newsletter_present": "NA",      # bird pages exempt (footer newsletter only)
+        "no_aggregateoffer": "FAIL",     # single Product+Offer only
+        "no_pbfd_claim": "FAIL",         # not in Verified-Claim Ledger
+        "shipping_line": "FAIL",
+        "wordcount_in_band": "WARN",
+        "real_hero_image": "WARN",
+        "house_method": "WARN",          # GAP-FLAG until breeder confirms a term
+        "lifespan_40_60": "WARN",
+    },
+    "interior": {                        # back-compat with interior_29_audit behavior
+        "no_aggregateoffer": "NA", "no_pbfd_claim": "NA",
+        "shipping_line": "NA", "wordcount_in_band": "NA", "real_hero_image": "NA",
+        "house_method": "WARN",
+    },
+}
+def severity(page_type, check):
+    return PROFILES.get(page_type, {}).get(check, DEFAULT_SEVERITY)
+
+def audit_html(slug, html, page_type="interior"):
     raw = html
     p = P(); p.feed(html)
     bodytext = " ".join(p.body)
@@ -161,7 +181,14 @@ def audit(slug):
     # --- transactional-only (#5/#6) ---
     if slug in TRANSACTIONAL:
         r["airport_codes"]=bool(re.search(r"\b(DEN|LAX|MIA|ORD|LAR)\b",bodytext))
+    r["_severity"] = {k: severity(page_type, k) for k in r if not k.startswith("_")}
     return r
+
+def audit(slug, page_type="interior"):
+    f = dist_path(slug)
+    if not f.exists():
+        return {"_MISSING": True}
+    return audit_html(slug, f.read_text(encoding="utf-8", errors="ignore"), page_type)
 
 def main():
     rows={s:audit(s) for s in SLUGS}
