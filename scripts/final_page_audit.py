@@ -59,6 +59,7 @@ DEFAULT_SEVERITY = "FAIL"
 PROFILES = {
     "bird": {
         "newsletter_present": "NA",      # bird pages exempt (footer newsletter only)
+        "all_h1_h4": "WARN",             # spec §4: H4 only where depth exists on a lean bird page
         "no_aggregateoffer": "FAIL",     # single Product+Offer only
         "no_pbfd_claim": "FAIL",         # not in Verified-Claim Ledger
         "shipping_line": "FAIL",
@@ -181,7 +182,9 @@ def audit_html(slug, html, page_type="interior"):
     # --- transactional-only (#5/#6) ---
     if slug in TRANSACTIONAL:
         r["airport_codes"]=bool(re.search(r"\b(DEN|LAX|MIA|ORD|LAR)\b",bodytext))
-    r["_severity"] = {k: severity(page_type, k) for k in r if not k.startswith("_")}
+    # severity only applies to boolean pass/fail checks — skip info keys (counts/strings)
+    r["_severity"] = {k: severity(page_type, k) for k in r
+                      if not k.startswith("_") and isinstance(r[k], bool)}
     return r
 
 def audit(slug, page_type="interior"):
