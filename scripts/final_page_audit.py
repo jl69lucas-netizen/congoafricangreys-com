@@ -116,13 +116,20 @@ def audit_html(slug, html, page_type="interior"):
     r["schema_types"] = ",".join(sorted(set(flat)))
     # --- bird-listing hard gates (page_type == "bird") ---
     r["no_aggregateoffer"] = "AggregateOffer" not in flat
-    r["no_pbfd_claim"] = not re.search(r"\b(pbfd|polyoma)", raw, re.I)
+    # Fail only on an actual health CLAIM about PBFD/polyoma (tested clear / negative /
+    # free of), not a mere mention or a denial — those would over-match (review finding).
+    r["no_pbfd_claim"] = not re.search(
+        r"\b(tested clear|tested negative|clear of|negative for|free of|screened for)\b"
+        r"[\sa-z,]{0,25}\b(pbfd|polyoma\w*)", raw, re.I)
     r["shipping_line"] = bool(re.search(r"\$185.*\$350|185 airport.*350 home", bodytext, re.I)) \
                          or ("$185" in bodytext and "$350" in bodytext)
-    # InStock is only a failure when the bird is marked sold elsewhere on the page.
-    sold = bool(re.search(r"\b(sold|reserved)\b", bodytext, re.I))
-    instock = "InStock" in raw
-    r["sold_not_instock"] = not (sold and instock)
+    # InStock fails only when a sold/reserved STATUS signal is present AND the schema
+    # still shows InStock. Avoid commerce phrases like "sold together/separately".
+    sold_signal = bool(re.search(
+        r"\b(sold out|now sold|has been sold|this (?:bird|pair|grey) is sold|marked sold|"
+        r"status:\s*(?:sold|reserved)|is reserved)\b", bodytext, re.I))
+    instock = "InStock" in raw and "OutOfStock" not in raw
+    r["sold_not_instock"] = not (sold_signal and instock)
     # word count of visible body (scripts stripped)
     vis = re.sub(r"<script[\s\S]*?</script>", "", raw)
     nwords = len(re.sub(r"<[^>]+>", " ", vis).split())
