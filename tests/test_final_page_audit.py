@@ -52,6 +52,43 @@ def test_good_bird_passes_hard_gates():
     assert r["no_pbfd_claim"] is True
     assert r["shipping_line"] is True
 
+SOLD_BIRD_STILL_INSTOCK = """
+<html><head><title>Old — C.A.Gs</title></head><body><main><h1>X</h1>
+<script type="application/ld+json">{"@type":"Product","offers":{"@type":"Offer","availability":"https://schema.org/InStock"}}</script>
+<p>This bird is sold. Status: Sold.</p></main></body></html>
+"""
+
+def test_sold_but_instock_fails():
+    r = A.audit_html("available/x", SOLD_BIRD_STILL_INSTOCK, "bird")
+    assert r["sold_not_instock"] is False
+
+def test_sold_together_phrase_does_not_falsely_fail():
+    html = MINIMAL_BIRD.replace("Lifespan 40-60 years.",
+                                "These two are sold together as a bonded pair. Lifespan 40-60 years.")
+    r = A.audit_html("available/jins-jeni", html, "bird")
+    assert r["sold_not_instock"] is True
+
+def test_pbfd_denial_does_not_falsely_fail():
+    html = MINIMAL_BIRD.replace("Lifespan 40-60 years.",
+                                "We do not advertise PBFD testing. Lifespan 40-60 years.")
+    r = A.audit_html("available/x", html, "bird")
+    assert r["no_pbfd_claim"] is True
+
+def test_missing_shipping_line_fails():
+    html = MINIMAL_BIRD.replace("Ships nationwide &middot; $185 airport &middot; $350 home. ", "")
+    r = A.audit_html("available/x", html, "bird")
+    assert r["shipping_line"] is False
+
+def test_placeholder_hero_warns():
+    html = "<html><head><title>x</title></head><body><main><h1>x</h1><img src='/img/placeholder.jpg'></main></body></html>"
+    r = A.audit_html("available/x", html, "bird")
+    assert r["real_hero_image"] is False
+
+def test_house_method_named_passes():
+    html = MINIMAL_BIRD.replace("hand-raised", "hand-raised via the C.A.Gs Grey Method")
+    r = A.audit_html("available/x", html, "bird")
+    assert r["house_method"] is True
+
 if __name__ == "__main__":
     import traceback, inspect
     fns = [f for n, f in sorted(globals().items()) if n.startswith("test_") and inspect.isfunction(f)]
