@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import TrustBar from '../../../components/TrustBar.astro';
-import CTA from '../../../components/CTA.astro';
 import Schema from '../../../components/Schema.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
+import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
+import KeyTakeawayV2 from '../../../components/cag-library/KeyTakeawayV2.astro';
+import InquiryForm from '../../../components/cag-inquiry-form.astro';
 
 const title = "Male Congo African Grey For Sale — Roys | $2,300 | C.A.Gs – Midland, TX";
 const description = "Roys is a hand-raised male Congo African Grey for sale — 4 months old, energetic and great with families, $2,300. DNA sexed, CITES-documented, captive-bred in the USA. Ships nationwide · $185 airport · $350 home.";
@@ -12,7 +14,7 @@ const canonical = "https://congoafricangreys.com/available/roys/";
 const productSchema = {
   "name": "Roys — Male Congo African Grey For Sale",
   "description": "Roys is a hand-raised male Congo African Grey (Psittacus erithacus), 4 months old, with an energetic, family-friendly temperament. Captive-bred in the USA, DNA sexed, CITES Appendix I documented, USDA AWA licensed aviary. Offered by C.A.Gs – Midland, TX.",
-  "image": "https://congoafricangreys.com/roys-congo-african-grey-male-4-months.webp",
+  "image": "https://congoafricangreys.com/birds/roys/roys-hero.webp",
   "category": "Congo African Grey Parrot",
   "sku": "cag-roys",
   "datePublished": "2026-06-01",
@@ -62,54 +64,155 @@ const faqSchema = {
     }
   ]
 };
+
+const roysTocItems = [
+  { n: 1,  label: "Is Roys the right African Grey for me?",               href: "#takeaway" },
+  { n: 2,  label: "What is Roys like to live with?",                      href: "#temperament" },
+  { n: 3,  label: "Does a male Congo African Grey talk well?",             href: "#talking" },
+  { n: 4,  label: "Why does Roys cost $2,300 when I see \"$850\" greys?", href: "#price-counter" },
+  { n: 5,  label: "What documentation comes with Roys?",                  href: "#documentation" },
+  { n: 6,  label: "What's included when you reserve Roys?",               href: "#included" },
+  { n: 7,  label: "How does Roys compare to our other available greys?",  href: "#comparison" },
+  { n: 8,  label: "Is Roys a healthy bird? Our health standard",          href: "#health" },
+  { n: 9,  label: "Who are Roys's parents?",                              href: "#parents" },
+  { n: 10, label: "What should you decide before buying an African Grey?",href: "#decisions" },
+  { n: 11, label: "What's it like to own an African Grey long-term?",     href: "#lifestyle" },
+  { n: 12, label: "Reviews — families who brought home a C.A.Gs grey",   href: "#reviews-mid" },
+  { n: 13, label: "How do you train an African Grey like Roys?",          href: "#training" },
+  { n: 14, label: "What do C.A.Gs recommend feeding African Greys?",      href: "#food" },
+  { n: 15, label: "Roys's photo & video gallery",                         href: "#gallery" },
+  { n: 16, label: "How do you buy Roys? Step-by-step",                   href: "#buy" },
+  { n: 17, label: "Where do C.A.Gs deliver African Greys?",              href: "#shipping" },
+  { n: 18, label: "Our credentials — USDA AWA / CITES / DNA / Avian Vet",href: "#credentials" },
+  { n: 19, label: "Roys — frequently asked questions",                    href: "#faq" },
+  { n: 20, label: "Reviews — more happy C.A.Gs owners",                  href: "#reviews-bottom" },
+  { n: 21, label: "Why buy from C.A.Gs instead of a marketplace?",       href: "#marketplace" },
+  { n: 22, label: "Ready to bring Roys home?",                           href: "#reserve" },
+];
+
+const roysCounterStats = [
+  { num: "4 mo",    label: "Current Age" },
+  { num: "$2,300",  label: "Asking Price" },
+  { num: "100%",    label: "CITES Documented" },
+  { num: "24h",     label: "Reply Guarantee" },
+];
+
+const roysKeyTakeawayItems = [
+  { stat: "Male",       label: "DNA-Sexed",        body: "Lab-confirmed male — no guesswork. His DNA sex certificate travels home with him." },
+  { stat: "4 months",   label: "Age",              body: "Young enough to shape his routine, old enough to show a real personality. He is curious, confident, and busy." },
+  { stat: "$2,300",     label: "Price",            body: "Covers a hand-raised, fully documented Congo. A $200 deposit reserves him immediately." },
+  { stat: "Congo",      label: "Variant",          body: "Psittacus erithacus — the large scarlet-tailed Congo, bred in our Midland, TX family aviary since 2014." },
+  { stat: "CITES I",    label: "Captive-Bred USA", body: "Full Appendix I captive-bred documentation — the paperwork that proves Roys is legal to own and transfer." },
+  { stat: "Full set",   label: "Papers Included",  body: "DNA cert · AAV health cert · hatch cert + band · CITES docs · weaning guidance. No chasing paperwork after." },
+  { stat: "Nationwide", label: "Ships",            body: "Airport Pickup $185 or Home Delivery $350. IATA LAR-coded via Delta, United, and American." },
+  { stat: "Active",     label: "Temperament",      body: "Energetic forager, toy-shredder, problem-solver. Thrives with daily interaction and a full household." },
+];
 ---
 
 <BaseLayout {title} {description} {canonical} hideGlobalCta>
+
+  {/* ── BREADCRUMB ── */}
   <div style="max-width:1200px;margin:0 auto;">
     <Breadcrumb items={[
       { name: "Home", url: "/" },
       { name: "African Greys For Sale", url: "/african-grey-parrots-for-sale/" },
       { name: "Roys — Male Congo African Grey", url: "/available/roys/" }
-      ]} />
+    ]} />
   </div>
 
-  {/* 2 — HERO / BIRD VITALS + inquiry CTA */}
-  <section class="bg-logo-dark text-cream py-16 px-4">
+  {/* ── HERO C: Trust-first + click-to-play video ── */}
+  <section class="bg-logo-dark text-cream py-14 px-4 md:py-20">
     <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+
+      {/* LEFT: Vitals + CTA */}
       <div>
-        <img
-          src="/roys-congo-african-grey-male-4-months.webp"
-          alt="Roys, a hand-raised male Congo African Grey parrot, four months old, perched and looking toward the camera"
-          width="640" height="640"
-          class="w-full rounded-3xl shadow-lg object-cover"
-          loading="eager" fetchpriority="high"
-        />
-      </div>
-      <div>
-        <p class="text-gold text-sm font-semibold uppercase tracking-widest mb-3">Psittacus erithacus &middot; CITES Appendix I Captive-Bred</p>
-        <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-5">Roys — Male Congo African Grey For Sale ($2,300, Hand-Raised &amp; DNA-Sexed)</h1>
-        <p class="text-cream/80 text-lg mb-6 leading-relaxed">Roys is a hand-raised male Congo African Grey for sale at $2,300, four months old, captive-bred here in the USA. He is an energetic, playful boy we raised from the start — the kind of grey who wants toys to shred, problems to solve, and people around to share it all. He is DNA-sexed, CITES Appendix I documented, raised in our USDA AWA licensed family aviary, and ready to reserve with a $200 deposit.</p>
-        <ul class="grid grid-cols-2 gap-3 text-sm text-cream/90 mb-7">
-          <li class="border-l-2 border-gold pl-3"><span class="block text-cream/60 text-xs uppercase tracking-wide">Sex</span>Male (DNA sexed)</li>
-          <li class="border-l-2 border-gold pl-3"><span class="block text-cream/60 text-xs uppercase tracking-wide">Age</span>4 months</li>
-          <li class="border-l-2 border-gold pl-3"><span class="block text-cream/60 text-xs uppercase tracking-wide">Variant</span>Congo African Grey</li>
-          <li class="border-l-2 border-gold pl-3"><span class="block text-cream/60 text-xs uppercase tracking-wide">Price</span>$2,300</li>
-          <li class="border-l-2 border-gold pl-3"><span class="block text-cream/60 text-xs uppercase tracking-wide">Talking</span>Developing</li>
-          <li class="border-l-2 border-gold pl-3"><span class="block text-cream/60 text-xs uppercase tracking-wide">Status</span>Available</li>
+        <p class="font-sora text-gold text-xs font-bold uppercase tracking-widest mb-3">
+          <em>Psittacus erithacus</em> &middot; CITES Appendix&nbsp;I Captive-Bred &middot; Midland, TX
+        </p>
+        <h1 class="font-lora font-bold text-4xl sm:text-5xl leading-tight mb-5">
+          Roys — Male Congo African Grey For Sale ($2,300, Hand-Raised &amp; DNA-Sexed)
+        </h1>
+
+        {/* Snapshot vitals */}
+        <ul class="grid grid-cols-2 gap-3 text-sm text-cream/90 mb-6">
+          <li class="border-l-2 border-gold pl-3">
+            <span class="block text-cream/60 text-xs uppercase tracking-wide font-sora">Sex</span>
+            Male (DNA-sexed)
+          </li>
+          <li class="border-l-2 border-gold pl-3">
+            <span class="block text-cream/60 text-xs uppercase tracking-wide font-sora">Age</span>
+            4 months
+          </li>
+          <li class="border-l-2 border-gold pl-3">
+            <span class="block text-cream/60 text-xs uppercase tracking-wide font-sora">Variant</span>
+            Congo African Grey
+          </li>
+          <li class="border-l-2 border-gold pl-3">
+            <span class="block text-cream/60 text-xs uppercase tracking-wide font-sora">Price</span>
+            $2,300
+          </li>
+          <li class="border-l-2 border-gold pl-3">
+            <span class="block text-cream/60 text-xs uppercase tracking-wide font-sora">Talking</span>
+            Developing
+          </li>
+          <li class="border-l-2 border-gold pl-3">
+            <span class="block text-cream/60 text-xs uppercase tracking-wide font-sora">Status</span>
+            Available
+          </li>
         </ul>
-        <p class="text-cream/70 text-sm mb-6">Ships nationwide &middot; $185 airport &middot; $350 home</p>
-        <a href="/contact-us/?bird=Roys" class="inline-block bg-clay text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-clay-dk transition-colors">Ask About Roys</a>
+
+        {/* Trust badges row */}
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="font-sora text-xs bg-white/10 text-cream/90 rounded-full px-3 py-1">
+            <svg viewBox="0 0 24 24" width="0.85em" height="0.85em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.1em;margin-right:4px" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>CITES Appendix&nbsp;I
+          </span>
+          <span class="font-sora text-xs bg-white/10 text-cream/90 rounded-full px-3 py-1">
+            <svg viewBox="0 0 24 24" width="0.85em" height="0.85em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.1em;margin-right:4px" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6l-4.6 9.2A1.5 1.5 0 0 0 6.7 21h10.6a1.5 1.5 0 0 0 1.3-2.8L14 9V3"/></svg>DNA Sexed
+          </span>
+          <span class="font-sora text-xs bg-white/10 text-cream/90 rounded-full px-3 py-1">
+            <svg viewBox="0 0 24 24" width="0.85em" height="0.85em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.1em;margin-right:4px" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Avian Vet Cert
+          </span>
+          <span class="font-sora text-xs bg-white/10 text-cream/90 rounded-full px-3 py-1">
+            <svg viewBox="0 0 24 24" width="0.85em" height="0.85em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.1em;margin-right:4px" aria-hidden="true"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 21 8 3 8"/></svg>USDA AWA Licensed
+          </span>
+        </div>
+
+        <p class="font-sora text-cream/70 text-sm mb-7">Ships nationwide &middot; $185 airport &middot; $350 home</p>
+
+        <a href="/contact-us/?bird=Roys"
+           class="inline-block bg-clay text-white font-sora font-semibold px-8 py-4 rounded-full text-base hover:bg-clay-dk transition-colors"
+           style="box-shadow:0 6px 20px rgba(232,96,76,0.35);">
+          Ask About Roys
+        </a>
+      </div>
+
+      {/* RIGHT: click-to-play video */}
+      <div>
+        <video
+          poster="/birds/roys/roys-hero.webp"
+          controls
+          preload="none"
+          width="640"
+          height="640"
+          class="w-full rounded-3xl shadow-lg object-cover"
+          aria-label="Roys, our hand-raised male Congo African Grey — click to watch him play"
+          style="max-height:520px;object-fit:cover;"
+        >
+          <source src="/birds/roys/roys-video-playing.mp4" type="video/mp4" />
+          Your browser does not support the video element.
+        </video>
+        <p class="font-sora text-cream/50 text-xs text-center mt-2">Click to watch Roys at play — click again to pause.</p>
       </div>
     </div>
   </section>
 
-  {/* 3 — AEO "BIRD SNAPSHOT" BOX (featured-snippet target) */}
-  <section class="py-12 px-4 bg-cream">
+  {/* ── AEO SNAPSHOT BOX ── */}
+  <section class="py-10 px-4 bg-cream">
     <div class="max-w-3xl mx-auto">
       <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
         <h2 class="font-lora font-bold text-2xl text-logo-dark mb-3">Roys at a glance — Male Congo African Grey for Sale Snapshot</h2>
-        <p class="text-stone-700 leading-relaxed mb-4">Roys is a hand-raised male Congo African Grey (<em>Psittacus erithacus</em>), 4 months old, priced at $2,300. He is DNA-sexed, CITES-documented, captive-bred in the USA at our USDA AWA licensed aviary, and ships nationwide ($185 airport / $350 home).</p>
-        <dl class="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-2 text-sm">
+        <p class="font-sora text-stone-700 leading-relaxed mb-4">Roys is a hand-raised male Congo African Grey (<em>Psittacus erithacus</em>), 4 months old, priced at $2,300. He is DNA-sexed, CITES-documented, captive-bred in the USA at our USDA AWA licensed aviary, and ships nationwide ($185 airport / $350 home).</p>
+        <dl class="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-2 text-sm font-sora">
           <div><dt class="text-stone-500">Variant</dt><dd class="text-logo-dark font-semibold">Congo African Grey</dd></div>
           <div><dt class="text-stone-500">Sex</dt><dd class="text-logo-dark font-semibold">Male (DNA-sexed)</dd></div>
           <div><dt class="text-stone-500">Age</dt><dd class="text-logo-dark font-semibold">4 months</dd></div>
@@ -121,193 +224,662 @@ const faqSchema = {
     </div>
   </section>
 
-  {/* 4 — TRUSTBAR */}
+  {/* ── TRUST BAR ── */}
   <TrustBar />
 
-  {/* 5 — ABOUT ROYS (expansion theme) */}
-  <section class="py-16 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">What is this male Congo African Grey like to live with?</h2>
-      <p class="text-stone-600 leading-relaxed mb-4">Roys is a busy, confident male Congo African Grey who is happiest with a job to do and a household around him. If your home hums with activity, he is built for it. We have watched him grow from a clumsy chick into a young bird who treats an empty afternoon as a problem to solve, and he rewards an engaged family with a big, expressive personality.</p>
-      <p class="text-stone-600 leading-relaxed mb-4">Here at C.A.Gs we hand-raised Roys ourselves, in our Midland, Texas home, so what we tell you about him comes from feeding him every day rather than from a sales sheet. One thing we noticed early: he works a foraging toy methodically, twisting and testing a knot until it gives, then looking up to check whether anyone caught the win. That drive is the whole personality. Give him stimulation and company and he gives it straight back. Leave him with nothing to do and he will invent a project, usually a loud one.</p>
-      <p class="text-stone-600 leading-relaxed mb-4">At 4 months he is curious about everything and still forming his sense of the world, which makes this a good moment for a family to shape his routine. Congo greys are famously bright — the species, <em>Psittacus erithacus</em>, sits among the most studied talking parrots in the world, and <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer">the World Parrot Trust's grey parrot profile ↗</a> covers their cognition in depth. Roys puts that intelligence to work all day. He suits an active owner or household ready to keep an energetic bird busy and involved, not someone hoping for a quiet ornament on a perch.</p>
-      <p class="text-stone-600 leading-relaxed mb-4">His first 30 days at home tend to follow a pattern we have seen across our greys. Week one he watches more than he plays, learning the rhythm of your house. By the second week he starts claiming a favorite perch and testing which sounds get a reaction. By the end of the month, in a home that shows up for him daily, he is asking to come out, leaning into head scratches on his terms, and beginning the soft babble that comes before real words. None of that happens on a schedule you can force — it happens because you are consistent.</p>
-      <p class="text-stone-600 leading-relaxed mb-4">Inside <a href="/african-grey-parrot-guide/" class="text-clay-text underline">our African Grey parrot guide</a> we cover what daily life with a Congo actually looks like, from foraging routines to the 40–60 year lifespan that makes one of these birds a genuine multi-decade commitment. If you are weighing whether a Congo or a Timneh fits your home, <a href="/congo-vs-timneh-african-grey/" class="text-clay-text underline">our Congo vs Timneh comparison</a> walks through the temperament and size differences side by side. Roys is firmly a Congo: bigger, redder-tailed, and in his case, full of beans.</p>
-      <p class="text-stone-600 leading-relaxed">What we will not do is oversell him. He is a strong-willed young male who needs an owner with the time and patience to match his energy. Get that right and he is a remarkable companion. Get it wrong and a bored grey gets loud and frustrated. We would rather tell you that now than have you find out later.</p>
+  {/* ── COUNTER SNIPPET ── */}
+  <CounterSnippet stats={roysCounterStats} />
+
+  {/* ── TABLE OF CONTENTS ── */}
+  <nav class="py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
+    <div class="container mx-auto max-w-5xl">
+      <div class="rounded-2xl border border-black/[0.07] bg-white px-6 py-7 md:px-10 md:py-9" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+        <div class="flex flex-col items-start justify-between gap-2 border-b border-black/[0.07] pb-5 md:flex-row md:items-end">
+          <div>
+            <p class="font-sora text-xs font-bold uppercase tracking-widest text-clay">Inside this page</p>
+            <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark">On This Page</h2>
+          </div>
+          <p class="font-sora text-sm text-stone-500">22 sections · everything about Roys</p>
+        </div>
+        <div class="mt-6 grid grid-cols-1 gap-x-10 gap-y-1 md:grid-cols-2">
+          {roysTocItems.map((item) => (
+            <a href={item.href}
+               class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/5 font-sora">
+              <span class="text-xs font-semibold text-clay-ink">{String(item.n).padStart(2, "0")}</span>
+              <span class="text-sm leading-snug text-stone-700">{item.label}</span>
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
+  </nav>
+
+  {/* ══════════════════════════════════════════════
+      SECTION 1: KEY TAKEAWAY — Is Roys right for me?
+      Framework: AIDA · Cat: A · ~90w
+      ══════════════════════════════════════════════ */}
+  <section id="takeaway">
+    <KeyTakeawayV2
+      eyebrow="The short version"
+      heading="Is Roys the right African Grey for me?"
+      badge="8 facts · 90-sec read"
+      items={roysKeyTakeawayItems}
+    />
   </section>
 
-  {/* 6 — HEALTH & DOCUMENTATION (shared-fact, link-out-brief) */}
-  <section class="py-16 px-4 bg-cream">
+  {/* ══════════════════════════════════════════════
+      SECTION 2: TEMPERAMENT — What is Roys like to live with?
+      Framework: EBP · Cat: A · ~180w
+      Source: BUILD-1 section 5 (lines 128-138) — reused + image added
+      ══════════════════════════════════════════════ */}
+  <section id="temperament" class="py-16 px-4">
     <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">What documentation comes with this male Congo African Grey for sale?</h2>
-      <p class="text-stone-600 leading-relaxed mb-6">Every grey we sell ships with a full documentation set, and Roys is no exception. We never ask a buyer to take our word for it. He is captive-bred here in the USA, raised in a USDA Animal Welfare Act licensed aviary, and he goes home with the same paperwork standard we hold every C.A.Gs bird to:</p>
-      <ul class="space-y-3 text-stone-600">
-        <li class="flex gap-3"><span class="text-green font-bold">✔</span><span><strong>DNA-sexing certificate (♂)</strong> — lab-confirmed that Roys is male, so there is no guesswork.</span></li>
-        <li class="flex gap-3"><span class="text-green font-bold">✔</span><span><strong>AAV health certificate</strong> — issued before he travels by a vet who follows <a href="https://aav.org/" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians standards ↗</a>.</span></li>
-        <li class="flex gap-3"><span class="text-green font-bold">✔</span><span><strong>Hatch certificate + closed leg band</strong> — his traceable identity as a captive-bred bird.</span></li>
-        <li class="flex gap-3"><span class="text-green font-bold">✔</span><span><strong>CITES captive-bred (Appendix I, USA) documentation</strong> — African Greys are CITES Appendix I, and captive-bred birds are legal to own and transfer domestically with the right paperwork, which Roys has.</span></li>
-        <li class="flex gap-3"><span class="text-green font-bold">✔</span><span><strong>Weaning status</strong> — hand-reared and progressing on his own schedule toward independent feeding; he leaves us only once he is eating on his own.</span></li>
-      </ul>
-      <p class="text-stone-600 leading-relaxed mt-6">Because the documents are the same across our nursery, <a href="/cites-african-grey-documentation/" class="text-clay-text underline">our CITES documentation page</a> explains what each one means in full, and <a href="/dna-tested-african-grey-for-sale/" class="text-clay-text underline">our DNA-tested greys</a> page covers why lab sexing matters before you commit. Roys is also covered by <a href="/african-grey-parrot-health-guarantee/" class="text-clay-text underline">our African Grey health guarantee</a>, which travels home with him alongside the documents.</p>
-    </div>
-  </section>
-
-  {/* 7 — WHY ROYS (expansion theme) */}
-  <section class="py-16 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">Why this male Congo African Grey might be right for you</h2>
-      <p class="text-stone-600 leading-relaxed mb-4">Roys suits a busy, engaged home that wants a confident grey in the middle of everything. An energetic young male like him adapts fast to a full house, takes to enrichment readily, and rewards an involved owner with personality in spades. At 4 months, you get decades of that energy ahead of you.</p>
-      <p class="text-stone-600 leading-relaxed mb-4">Picture the right fit. You are home often, or your household is. There are people around through the day — a family with older children who will help keep him stimulated, a couple who work from home, a retiree who wants a real companion rather than a quiet pet. You like the idea of a bird who greets the room, asks for your attention, and slowly builds a vocabulary tied to your daily life. That is the home Roys thrives in. Because we hand-raised him, we can tell you honestly how he responds to handling, to new faces, and to a high-activity household.</p>
-      <p class="text-stone-600 leading-relaxed mb-4">Now the honest other half, the part most listings skip. Roys is not the bird for a household that is empty ten hours a day, or for someone who wants a low-maintenance pet. A Congo grey needs daily interaction, mental work, and a person who treats the relationship as a long-term one. <a href="/african-grey-parrot-guide/" class="text-clay-text underline">What a Congo needs day to day</a> is real labor, joyful labor, but labor. <a href="https://www.avma.org/resources/pet-owners/petcare/selecting-pet-bird" target="_blank" rel="noopener noreferrer">The American Veterinary Medical Association's pet-bird selection guidance ↗</a> is blunt about the lifelong commitment a parrot represents, and we agree with every word of it.</p>
-      <p class="text-stone-600 leading-relaxed mb-4">Then there is the lifespan. A healthy Congo African Grey can live 40 to 60 years. Roys could realistically still be greeting your kitchen decades from now, which means buying him is closer to taking on a family member than acquiring a pet. <a href="/african-grey-parrot-price/" class="text-clay-text underline">The lifetime commitment and true cost</a> deserve a clear look before you decide, and we would rather you sit with that math than rush it.</p>
-      <p class="text-stone-600 leading-relaxed">So we screen, gently. We would rather Roys go to the home that genuinely fits him than to the first one to ask. If reading all this you are nodding along, picturing your living room with a bright, busy grey in it, that is the conversation we want to have with you.</p>
-    </div>
-  </section>
-
-  {/* 8 — COUNTER-POSITIONING ($2,300 vs $850) (expansion theme) */}
-  <section class="py-16 px-4 bg-cream">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">Why a real $2,300 Congo beats an $850 "bargain"</h2>
-      <p class="text-stone-600 leading-relaxed mb-4">A documented, hand-raised Congo African Grey cannot honestly be sold for $850. When you see that number, you are not looking at a cheaper version of Roys — you are looking at a bird missing the things that make Roys worth $2,300, or a listing that does not have a real bird behind it at all. The gap is not markup. It is paperwork, health, and accountability.</p>
-      <p class="text-stone-600 leading-relaxed mb-6">Here is what the $850 price usually leaves out, point for point against what Roys comes with:</p>
-      <ul class="space-y-3 text-stone-600 mb-6">
-        <li class="flex gap-3"><span class="text-clay-text font-bold">✗</span><span><strong>Real:</strong> Roys ships with DNA, CITES, hatch certificate, and a closed leg band. <strong>Cheap:</strong> the $850 bird typically has no verifiable paperwork at all.</span></li>
-        <li class="flex gap-3"><span class="text-clay-text font-bold">✗</span><span><strong>Real:</strong> lab DNA-sexing and an avian-vet (AAV) health check before travel. <strong>Cheap:</strong> no DNA sexing, no documented health exam.</span></li>
-        <li class="flex gap-3"><span class="text-clay-text font-bold">✗</span><span><strong>Real:</strong> a USDA AWA licensed breeder you can verify and hold accountable after the sale. <strong>Cheap:</strong> a seller who vanishes once the deposit clears.</span></li>
-      </ul>
-      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">No verifiable paperwork (no DNA cert, no CITES, no hatch band)</h3>
-      <p class="text-stone-600 leading-relaxed mb-4">Documentation is the first thing a bargain listing drops, because it costs the seller money and traceability they do not want. African Greys are CITES Appendix I, and a captive-bred bird is legal to own and transfer domestically only when the paperwork backs it up. A grey with no CITES record and no closed leg band is a grey you cannot prove anything about. Roys can be proven, on paper, top to bottom.</p>
-      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">No DNA-sexing or avian-vet (AAV) health check</h3>
-      <p class="text-stone-600 leading-relaxed mb-4">An $850 listing almost never includes lab DNA-sexing or a pre-placement avian-vet exam, because both cost the breeder real money. That means you are guessing at the bird's sex and trusting a stranger on its health. With Roys, the DNA certificate settles his sex and the AAV health certificate documents his condition before he ever travels.</p>
-      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">No breeder you can actually verify or hold accountable</h3>
-      <p class="text-stone-600 leading-relaxed mb-4">The most expensive part of a cheap bird is the breeder you cannot find afterward. A real aviary answers the phone in year two. Knowing <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay-text underline">how to avoid bird scams</a> mostly comes down to one habit: insist on documentation and a verifiable breeder, and walk away when either is missing. For the full picture of <a href="/african-grey-parrot-price/" class="text-clay-text underline">what a real grey actually costs</a>, the math behind $2,300 is open for you to read.</p>
-      <p class="text-stone-600 leading-relaxed">None of this implies anything illegal about the cheap bird — only that you cannot verify it, and an unverifiable Appendix-I parrot is a risk you carry for 40 to 60 years. We think that is the worst place to save $1,450.</p>
-    </div>
-  </section>
-
-  {/* 9 — PRICING & WHAT'S INCLUDED */}
-  <section class="py-16 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">How much is this male Congo African Grey for sale, and what's included?</h2>
-      <p class="text-stone-600 leading-relaxed mb-8">Roys is $2,300 with a $200 deposit to reserve him. That price covers a hand-raised, fully documented male Congo African Grey, not a bird plus a list of upsells. Here is the breakdown.</p>
-      <div class="grid sm:grid-cols-2 gap-8">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">What is Roys like to live with?</h2>
+      <div class="grid md:grid-cols-[1fr_280px] gap-8 items-start">
         <div>
-          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Price &amp; reservation</h3>
-          <ul class="space-y-3 text-stone-600 text-sm">
-            <li class="flex justify-between border-b border-stone-200 pb-2"><span>Roys (male, 4 months)</span><strong class="text-logo-dark">$2,300</strong></li>
-            <li class="flex justify-between border-b border-stone-200 pb-2"><span>Deposit to reserve</span><strong class="text-logo-dark">$200</strong></li>
-            <li class="flex justify-between border-b border-stone-200 pb-2"><span>Airport Pickup (IATA, LAR)</span><strong class="text-logo-dark">$185</strong></li>
-            <li class="flex justify-between"><span>Home Delivery (door-to-door)</span><strong class="text-logo-dark">$350</strong></li>
-          </ul>
-          <p class="text-stone-500 text-xs mt-3">Ships nationwide &middot; $185 airport &middot; $350 home &middot; Delta / United / American</p>
-          <p class="text-stone-600 text-sm mt-3">A $200 deposit reserves Roys and pauses his listing for you, so you benefit from knowing no one else can claim him while you arrange the rest. The balance is due before he travels.</p>
+          <p class="font-sora text-stone-600 leading-relaxed mb-4">Roys is a busy, confident male Congo African Grey who is happiest with a job to do and a household around him. If your home hums with activity, he is built for it. We have watched him grow from a clumsy chick into a young bird who treats an empty afternoon as a problem to solve, and he rewards an engaged family with a big, expressive personality.</p>
+          <p class="font-sora text-stone-600 leading-relaxed mb-4">Here at C.A.Gs we hand-raised Roys ourselves, in our Midland, Texas home, so what we tell you about him comes from feeding him every day rather than from a sales sheet. One thing we noticed early: he works a foraging toy methodically, twisting and testing a knot until it gives, then looking up to check whether anyone caught the win. That drive is the whole personality. Give him stimulation and company and he gives it straight back.</p>
+          <p class="font-sora text-stone-600 leading-relaxed mb-4">At 4 months he is curious about everything and still forming his sense of the world. Congo greys are famously bright — the species, <em>Psittacus erithacus</em>, sits among the most studied talking parrots in the world, and <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer" class="text-clay-text underline">the World Parrot Trust's grey parrot profile ↗</a> covers their cognition in depth. He suits an active owner or household ready to keep an energetic bird busy and involved.</p>
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-2 mt-5">How does Roys settle in at first?</h3>
+          <p class="font-sora text-stone-600 leading-relaxed mb-3">His first 30 days at home tend to follow a pattern we have seen across our greys. Week one he watches more than he plays, learning the rhythm of your house. By week two he starts claiming a favourite perch and testing which sounds get a reaction. By the end of the month, in a home that shows up for him daily, he is asking to come out and beginning the soft babble that comes before real words.</p>
+          <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2 mt-4">Is Roys good with children?</h4>
+          <p class="font-sora text-stone-600 leading-relaxed">He does well with older children who understand that a bird is not a toy. He reads energy quickly — a calm, curious kid who offers a finger consistently is exactly the kind of relationship he builds on. Chaotic or grabbing handling is another matter. We are honest about that.</p>
+        </div>
+        <div class="md:sticky md:top-6">
+          <img
+            src="/birds/roys/roys-personality.webp"
+            alt="Roys, a hand-raised male Congo African Grey, showing his alert and curious expression — personality photo"
+            width="280" height="320"
+            class="w-full rounded-2xl shadow-md object-cover"
+            loading="lazy"
+            style="max-height:320px;object-fit:cover;"
+          />
+          <p class="font-sora text-xs text-stone-400 mt-2 text-center">Roys at 4 months — alert, confident, always watching</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ══════════════════════════════════════════════
+      SECTION 3: TALKING — Does a male Congo talk well?
+      Framework: QAB · Cat: B · ~150w
+      ══════════════════════════════════════════════ */}
+  <section id="talking" class="py-16 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">Does a male Congo African Grey talk well?</h2>
+
+      {/* 40-word featured-snippet answer */}
+      <div class="bg-white border-l-4 border-green rounded-xl p-5 mb-6" style="box-shadow:0 2px 12px rgba(60,30,10,0.06);">
+        <p class="font-sora text-stone-700 leading-relaxed">
+          <strong>Short answer:</strong> Congo African Greys of either sex are among the most capable talking parrots alive. Sex is not a reliable predictor — individual motivation and daily interaction shape vocabulary far more than whether the bird is male or female.
+        </p>
+      </div>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Where is Roys right now?</h3>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">At 4 months, Roys is in the developing stage. His vocal learning is just beginning. We hear the soft contact calls and exploratory sounds a young grey makes before real mimicry clicks — that process happens over the coming months. Watch the playing video above to hear him as he is now: active, interactive, and already engaged with whoever holds the camera.</p>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What shapes a Congo's eventual vocabulary?</h3>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">The single biggest factor is daily conversation in his home environment. Greys learn by listening and repeating what gets a real reaction — your name, your kitchen sounds, the things you say at the same time every day. A bird in a quiet house with minimal human contact will talk less than one at the centre of a busy family routine. Sex has almost nothing to do with it.</p>
+
+      <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2">How does Congo talking compare to Timneh?</h4>
+      <p class="font-sora text-stone-600 leading-relaxed">Timnehs tend to start talking earlier — sometimes as young as 4–6 months — while Congos tend to develop larger and more dramatic vocabularies over time. <a href="/congo-vs-timneh-african-grey/" class="text-clay-text underline">Our Congo vs Timneh comparison</a> covers this side-by-side in detail if you are weighing the two.</p>
+
+      <h5 class="font-lora font-semibold text-base text-logo-dark mt-5 mb-1">Can I speed up when Roys starts talking?</h5>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">Not by drilling. Repetition without genuine social context rarely sticks. The greys that develop the fastest are the ones whose owners talk <em>with</em> them, not <em>at</em> them — narrating what they are doing, responding when the bird makes sounds, treating the conversation as two-way.</p>
+    </div>
+  </section>
+
+  {/* ══════════════════════════════════════════════
+      SECTION 4: PRICE COUNTER — Why $2,300 vs $850?
+      Framework: PDB · Cat: C · ~240w
+      Source: BUILD-1 section 8 (lines 168-187) — reused + CounterSnippet-style list
+      ══════════════════════════════════════════════ */}
+  <section id="price-counter" class="py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">Why does Roys cost $2,300 when I see "$850" greys?</h2>
+
+      {/* Counter-positioning block */}
+      <div class="bg-logo-dark text-cream rounded-2xl p-6 mb-7" style="box-shadow:0 6px 24px rgba(28,26,24,0.18);">
+        <p class="font-sora text-cream/80 text-sm uppercase tracking-wider mb-3 font-semibold">What the $850 price cuts, point for point</p>
+        <ul class="space-y-3">
+          <li class="flex gap-3">
+            <span style="color:#e8604c;font-weight:700;flex-shrink:0;">✗</span>
+            <span class="font-sora text-sm text-cream/90"><strong class="text-cream">No DNA certificate.</strong> Roys has a lab-confirmed sex cert. The $850 bird has a guess.</span>
+          </li>
+          <li class="flex gap-3">
+            <span style="color:#e8604c;font-weight:700;flex-shrink:0;">✗</span>
+            <span class="font-sora text-sm text-cream/90"><strong class="text-cream">No CITES documentation.</strong> African Greys are Appendix I. Roys has the full captive-bred paperwork. The cheap bird has none.</span>
+          </li>
+          <li class="flex gap-3">
+            <span style="color:#e8604c;font-weight:700;flex-shrink:0;">✗</span>
+            <span class="font-sora text-sm text-cream/90"><strong class="text-cream">No avian-vet exam.</strong> Roys travels with an AAV health certificate. The $850 seller skips the exam because it costs them money.</span>
+          </li>
+          <li class="flex gap-3">
+            <span style="color:#e8604c;font-weight:700;flex-shrink:0;">✗</span>
+            <span class="font-sora text-sm text-cream/90"><strong class="text-cream">No breeder you can verify.</strong> Roys comes from a USDA AWA licensed aviary you can look up. The $850 seller vanishes when the deposit clears.</span>
+          </li>
+        </ul>
+      </div>
+
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">A documented, hand-raised Congo cannot honestly be produced for $850. When you see that figure, you are looking at a bird missing everything above — or a listing with no real bird behind it at all. The gap is not markup. It is paperwork, health, and accountability.</p>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Why does the paperwork matter 40 years from now?</h3>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">African Greys are CITES Appendix I. A captive-bred bird is legal to own and transfer domestically only when the paperwork backs it up. A grey with no CITES record and no closed leg band is a grey you cannot prove anything about — not its origin, not its sex, not whether it is healthy. Roys can be proven, on paper, top to bottom.</p>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">The most expensive part of a cheap bird</h3>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">It is the breeder you cannot find in year two. A real aviary answers the phone. Knowing <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay-text underline">how to avoid bird scams</a> mostly comes down to one habit: insist on documentation and a verifiable breeder, and walk away when either is missing. For the full picture of <a href="/african-grey-parrot-price/" class="text-clay-text underline">what a real grey actually costs</a>, the math behind $2,300 is open for you to read.</p>
+
+      <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2">Is $2,300 negotiable?</h4>
+      <p class="font-sora text-stone-600 leading-relaxed text-sm">No. Our prices reflect the real cost of raising a documented, hand-reared bird properly. We would rather be transparent about that than discount Roys and cut something you would not see until later.</p>
+
+      <h5 class="font-lora font-semibold text-base text-logo-dark mt-5 mb-1">What does a $200 deposit actually do?</h5>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">It removes Roys from the listing and holds him exclusively for you while you arrange travel and any final questions. The balance is due before he ships. No one else can claim him once your deposit is confirmed.</p>
+    </div>
+  </section>
+
+  {/* ══════════════════════════════════════════════
+      SECTION 5: DOCUMENTATION — What papers come with Roys?
+      Framework: EBP · Cat: B · ~220w
+      Source: BUILD-1 section 6 (lines 140-154) — reused + image + H3 per doc
+      ══════════════════════════════════════════════ */}
+  <section id="documentation" class="py-16 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">What documentation comes with Roys?</h2>
+      <div class="grid md:grid-cols-[1fr_240px] gap-8 items-start mb-6">
+        <p class="font-sora text-stone-600 leading-relaxed">Every grey we sell ships with a full documentation set, and Roys is no exception. We never ask a buyer to take our word for it — he goes home with the same paperwork standard we hold every C.A.Gs bird to. Here is exactly what travels with him.</p>
+        <img
+          src="/birds/roys/roys-trust-panel.webp"
+          alt="Roys's documentation and certification panel — DNA sex cert, CITES papers, avian-vet health certificate"
+          width="240" height="200"
+          class="w-full rounded-xl shadow-sm object-cover"
+          loading="lazy"
+          style="max-height:200px;object-fit:cover;"
+        />
+      </div>
+
+      <div class="space-y-5">
+        <div>
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-1">DNA-sexing certificate (male confirmed)</h3>
+          <p class="font-sora text-stone-600 text-sm leading-relaxed">Lab-confirmed that Roys is male, so there is no guesswork. The certificate names the bird, the collection date, and the confirming lab. <a href="/dna-tested-african-grey-for-sale/" class="text-clay-text underline">Our DNA-tested greys page</a> explains why lab sexing matters before you commit to a 40–60 year bird.</p>
         </div>
         <div>
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-1">AAV avian-vet health certificate</h3>
+          <p class="font-sora text-stone-600 text-sm leading-relaxed">Issued before Roys travels by a vet following <a href="https://aav.org/" target="_blank" rel="noopener noreferrer" class="text-clay-text underline">Association of Avian Veterinarians ↗</a> standards. The certificate documents his physical exam, his condition at time of travel, and the issuing vet's credentials.</p>
+        </div>
+        <div>
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-1">Hatch certificate + closed leg band</h3>
+          <p class="font-sora text-stone-600 text-sm leading-relaxed">His traceable identity as a captive-bred bird. The closed band can only be applied when the chick is a few days old — it is the first and most tamper-resistant proof of captive origin.</p>
+        </div>
+        <div>
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-1">CITES captive-bred (Appendix I, USA) documentation</h3>
+          <p class="font-sora text-stone-600 text-sm leading-relaxed">African Greys are CITES Appendix I. Captive-bred birds are legal to own and transfer domestically with the right paperwork, which Roys has. <a href="/cites-african-grey-documentation/" class="text-clay-text underline">Our CITES documentation page</a> explains what each form covers.</p>
+        </div>
+        <div>
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-1">Weaning status + feeding guidance</h3>
+          <p class="font-sora text-stone-600 text-sm leading-relaxed">Roys leaves us only once he is eating independently on his own schedule — African Greys typically wean between 12 and 16 weeks. We include his current diet, feeding routine, and the transition guidance your vet will want.</p>
+        </div>
+      </div>
+
+      <p class="font-sora text-stone-600 text-sm leading-relaxed mt-6">Roys is also covered by <a href="/african-grey-parrot-health-guarantee/" class="text-clay-text underline">our African Grey health guarantee</a>, which travels home with him alongside the documents.</p>
+    </div>
+  </section>
+
+  {/* ══════════════════════════════════════════════
+      SECTION 6: INCLUDED — What's included when you reserve?
+      Framework: QAB · Cat: A · ~120w
+      Source: BUILD-1 section 9 right column — reused + image
+      ══════════════════════════════════════════════ */}
+  <section id="included" class="py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">What's included when you reserve Roys?</h2>
+      <div class="grid sm:grid-cols-2 gap-8 items-start">
+        <div>
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-4">Price &amp; reservation</h3>
+          <ul class="space-y-3 text-stone-600 text-sm font-sora">
+            <li class="flex justify-between border-b border-stone-200 pb-2">
+              <span>Roys (male, 4 months)</span>
+              <strong class="text-logo-dark">$2,300</strong>
+            </li>
+            <li class="flex justify-between border-b border-stone-200 pb-2">
+              <span>Deposit to reserve</span>
+              <strong class="text-logo-dark">$200</strong>
+            </li>
+            <li class="flex justify-between border-b border-stone-200 pb-2">
+              <span>Airport Pickup (IATA, LAR)</span>
+              <strong class="text-logo-dark">$185</strong>
+            </li>
+            <li class="flex justify-between">
+              <span>Home Delivery (door-to-door)</span>
+              <strong class="text-logo-dark">$350</strong>
+            </li>
+          </ul>
+          <p class="font-sora text-stone-500 text-xs mt-3">Ships nationwide &middot; $185 airport &middot; $350 home &middot; Delta / United / American</p>
+          <p class="font-sora text-stone-600 text-sm mt-3">A $200 deposit reserves Roys and pauses his listing for you. The balance is due before he travels.</p>
+        </div>
+        <div>
+          <img
+            src="/birds/roys/roys-whats-included.webp"
+            alt="What's included with Roys — documentation package, care guide, and support from C.A.Gs"
+            width="320" height="220"
+            class="w-full rounded-2xl shadow-sm object-cover mb-4"
+            loading="lazy"
+            style="max-height:200px;object-fit:cover;"
+          />
           <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What's included</h3>
-          <ul class="space-y-2 text-stone-600 text-sm">
-            <li class="flex gap-2"><span class="text-green font-bold">✔</span> DNA sex certificate</li>
-            <li class="flex gap-2"><span class="text-green font-bold">✔</span> Avian-vet (AAV) health certificate</li>
-            <li class="flex gap-2"><span class="text-green font-bold">✔</span> Hatch certificate + closed leg band</li>
-            <li class="flex gap-2"><span class="text-green font-bold">✔</span> CITES captive-bred documentation</li>
-            <li class="flex gap-2"><span class="text-green font-bold">✔</span> Weaning &amp; feeding guidance</li>
-            <li class="flex gap-2"><span class="text-green font-bold">✔</span> Health guarantee + post-arrival support</li>
+          <ul class="space-y-2 text-stone-600 text-sm font-sora">
+            <li class="flex gap-2">
+              <span style="color:#2D6A4F;font-weight:700;">✔</span>
+              DNA sex certificate
+            </li>
+            <li class="flex gap-2">
+              <span style="color:#2D6A4F;font-weight:700;">✔</span>
+              Avian-vet (AAV) health certificate
+            </li>
+            <li class="flex gap-2">
+              <span style="color:#2D6A4F;font-weight:700;">✔</span>
+              Hatch certificate + closed leg band
+            </li>
+            <li class="flex gap-2">
+              <span style="color:#2D6A4F;font-weight:700;">✔</span>
+              CITES captive-bred documentation
+            </li>
+            <li class="flex gap-2">
+              <span style="color:#2D6A4F;font-weight:700;">✔</span>
+              Weaning &amp; feeding guidance
+            </li>
+            <li class="flex gap-2">
+              <span style="color:#2D6A4F;font-weight:700;">✔</span>
+              Health guarantee + post-arrival support
+            </li>
           </ul>
-          <p class="text-stone-600 text-sm mt-3">Because everything that proves Roys is included, you are not chasing certificates after the fact. You get a settled, documented bird and a breeder who picks up the phone afterward.</p>
         </div>
       </div>
-      <p class="text-stone-600 leading-relaxed mt-6">For how his price sits against the wider range, <a href="/african-grey-parrot-price/" class="text-clay-text underline">our full African Grey price breakdown</a> traces every figure. When you are ready, <a href="/contact-us/?bird=Roys" class="text-clay-text underline">our contact form</a> is the fastest way to reserve him.</p>
     </div>
   </section>
 
-  {/* 10 — SHIPPING & LOGISTICS (expansion theme) */}
-  <section class="py-16 px-4 bg-cream">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">How does this male Congo African Grey for sale get to you safely?</h2>
-      <p class="text-stone-600 leading-relaxed mb-4">Roys ships nationwide two ways, plus a premium third option. Airport Pickup is $185, where you collect him at your nearest major airport. Home Delivery is $350, door to door. An Avian Flight Nanny who carries him in-cabin is also available, quoted per route from about $750. Whatever you choose, he travels healthy, documented, and tracked.</p>
-      <p class="text-stone-600 leading-relaxed mb-4">For the two standard tiers we book IATA-compliant live-animal cargo. Under the IATA Live Animals Regulations the booking carries the code <strong>LAR</strong>, and we fly the airlines with the strongest live-animal programs — <strong>Delta</strong>, <strong>United</strong>, and <strong>American</strong>. These are logistics choices, not locations: Roys can land at whichever major hub is closest to you, whether that is <strong>DEN</strong> in Denver, <strong>LAX</strong> in Los Angeles, <strong>MIA</strong> in Miami, or <strong>ORD</strong> in Chicago. We pick the route with the fewest connections and the kindest weather window.</p>
-      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What cargo day actually looks like</h3>
-      <p class="text-stone-600 leading-relaxed mb-4">On travel day Roys flies in an airline-approved, ventilated travel carrier sized for him, with bedding and a no-spill water source. We feed him before he leaves, label the carrier with his paperwork, and hand him to the airline's live-animal desk. You collect him at the destination cargo facility, usually within a couple of hours of landing, and his documents travel taped to the carrier so nothing gets separated from the bird. We send you the tracking and the flight details before he ever leaves Texas.</p>
-      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">When weather changes the plan</h3>
-      <p class="text-stone-600 leading-relaxed mb-4">Airlines hold live animals to temperature limits, so during a heat wave or a hard freeze a flight can sit under embargo. When that happens we wait. We will reschedule Roys rather than push a bird onto a plane in conditions we would not accept for our own, and we keep you posted the whole time. The <strong>Avian Flight Nanny</strong> option exists for exactly these cases and for buyers who simply want a person holding the carrier the whole way — the nanny carries Roys in-cabin, so he never enters the cargo hold. Because that covers a chaperone's round-trip airfare, we quote it per route.</p>
-      <p class="text-stone-600 leading-relaxed">Tell us your nearest airport and a rough timeframe and we will lay out the cleanest option. <a href="/contact-us/?bird=Roys" class="text-clay-text underline">Reach out through our contact form</a> and we will map the route with you before you commit a dollar to travel.</p>
-    </div>
-  </section>
+  {/* ══════════════════════════════════════════════
+      SECTION 7: COMPARISON — Roys vs siblings
+      Framework: Compare · Cat: C · ~190w
+      Custom sibling table (Roys / Amie / Bery / Evie)
+      ══════════════════════════════════════════════ */}
+  <section id="comparison" class="py-16 px-4 bg-cream">
+    <div class="max-w-5xl mx-auto" style="max-width:1100px;">
+      <div class="mb-7 border-l-4 border-green pl-4">
+        <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">Compare Our Available Greys</p>
+        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">How does Roys compare to our other available greys?</h2>
+        <p class="font-sora text-stone-500 mt-2 text-sm leading-relaxed" style="max-width:70ch;">We have four individually different birds available right now. Roys is not the only option — here is how they stack up, so you can find the one that actually fits your home. For a deeper species comparison, see <a href="/congo-vs-timneh-african-grey/" class="text-clay-text underline">our Congo vs Timneh comparison</a>.</p>
+      </div>
 
-  {/* 11 — PARENT BIRDS / OUR AVIARY (shared-fact, link-out-brief) */}
-  <section class="py-16 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">Who are Roys's parents?</h2>
-      <p class="text-stone-600 leading-relaxed mb-4">Roys was hatched and hand-raised inside our family aviary in Midland, Texas, which we have run since 2014 under a USDA Animal Welfare Act license. His parents are part of our own breeding flock, and he was hand-fed by us from the start rather than parent-pulled late.</p>
-      <p class="text-stone-600 leading-relaxed">We are happy to share his specific parentage and pairing details during the reservation conversation, along with anything else you would like to verify before you commit. We would rather walk you through it directly than post a flock's worth of records on a page. To see <a href="/african-grey-parrots-for-sale/" class="text-clay-text underline">more about our family aviary</a> and the rest of the nursery, the hub gathers every available grey in one place.</p>
-    </div>
-  </section>
+      <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse" style="min-width:640px;">
+            <thead>
+              <tr>
+                <th class="text-left font-sora text-xs font-bold uppercase tracking-widest text-stone-500 bg-white px-5 py-4 border-b border-black/[0.07]" style="width:18%;">Trait</th>
+                <th class="text-left px-5 py-4 text-white" style="width:22%;background:linear-gradient(135deg,#2D6A4F,#1f4d39);">
+                  <div class="flex flex-col gap-0.5">
+                    <span class="font-lora font-bold text-base">Roys</span>
+                    <span class="font-sora text-xs opacity-80">Male Congo · 4 mo</span>
+                  </div>
+                </th>
+                <th class="text-left px-5 py-4 text-white" style="width:22%;background:linear-gradient(135deg,#3d7a60,#2a5441);">
+                  <div class="flex flex-col gap-0.5">
+                    <a href="/available/amie/" class="font-lora font-bold text-base text-white hover:underline">Amie</a>
+                    <span class="font-sora text-xs opacity-80">Female Congo · 3 mo</span>
+                  </div>
+                </th>
+                <th class="text-left px-5 py-4 text-white" style="width:22%;background:linear-gradient(135deg,#4a8a70,#36624e);">
+                  <div class="flex flex-col gap-0.5">
+                    <a href="/available/bery/" class="font-lora font-bold text-base text-white hover:underline">Bery</a>
+                    <span class="font-sora text-xs opacity-80">Female Congo · 1 yr</span>
+                  </div>
+                </th>
+                <th class="text-left px-5 py-4 text-white" style="width:16%;background:linear-gradient(135deg,#e8604c,#c94d3a);">
+                  <div class="flex flex-col gap-0.5">
+                    <a href="/available/evie/" class="font-lora font-bold text-base text-white hover:underline">Evie</a>
+                    <span class="font-sora text-xs opacity-80">Female Timneh · 6 mo</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["Price",        "$2,300", "$2,500", "$1,700", "$1,500"],
+                ["Variant",      "Congo",  "Congo",  "Congo",  "Timneh"],
+                ["Sex",          "Male",   "Female", "Female", "Female"],
+                ["Temperament",  "Energetic, bold",  "Social, curious", "Gentle, settled", "Calm, steady"],
+                ["Talking",      "Developing",       "Developing",      "Starting words",   "Starting words"],
+                ["Ships nation.", "$185 airport / $350 home", "$185 / $350", "$185 / $350", "$185 / $350"],
+                ["CITES status", "Appendix I, captive-bred", "Appendix I, captive-bred", "Appendix I, captive-bred", "Appendix I, captive-bred"],
+                ["Best for",     "Active / busy home", "Family or couple", "First-time owner", "Calmer household"],
+              ].map(([f, r, a, b, e], i) => (
+                <tr class={i % 2 === 0 ? 'bg-cream' : 'bg-white'}>
+                  <td class="px-5 py-3.5 font-sora text-xs font-semibold text-stone-600 border-b border-black/[0.05]">{f}</td>
+                  <td class="px-5 py-3.5 font-sora text-sm text-stone-700 border-l border-black/[0.05] border-b border-black/[0.05] font-semibold">{r}</td>
+                  <td class="px-5 py-3.5 font-sora text-sm text-stone-600 border-l border-black/[0.05] border-b border-black/[0.05]">{a}</td>
+                  <td class="px-5 py-3.5 font-sora text-sm text-stone-600 border-l border-black/[0.05] border-b border-black/[0.05]">{b}</td>
+                  <td class="px-5 py-3.5 font-sora text-sm text-stone-600 border-l border-black/[0.05] border-b border-black/[0.05]">{e}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-  {/* 12 — FAQ */}
-  <section class="py-16 px-4 bg-cream">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8">Roys — frequently asked questions</h2>
-      <div class="space-y-4">
-        <details class="bg-white border border-stone-200 rounded-2xl p-5">
-          <summary class="font-lora font-semibold text-logo-dark cursor-pointer">Is Roys DNA-sexed and documented?</summary>
-          <p class="text-stone-600 text-sm mt-3 leading-relaxed">Yes. Roys goes home with his DNA sex certificate confirming he is male, his avian-vet health certificate, his hatch certificate with closed leg-band number, and his CITES captive-bred documentation. Here at C.A.Gs, every grey is captive-bred in the USA and leaves with the full paperwork set.</p>
-        </details>
-        <details class="bg-white border border-stone-200 rounded-2xl p-5">
-          <summary class="font-lora font-semibold text-logo-dark cursor-pointer">How old is Roys and what is his temperament?</summary>
-          <p class="text-stone-600 text-sm mt-3 leading-relaxed">Roys is 4 months old. We hand-raised him ourselves, and he has grown into an energetic, playful young grey who thrives on activity and does beautifully with a lively household. He is a confident bird who loves toys, foraging, and an engaged family around him.</p>
-        </details>
-        <details class="bg-white border border-stone-200 rounded-2xl p-5">
-          <summary class="font-lora font-semibold text-logo-dark cursor-pointer">How much is Roys and how do I reserve him?</summary>
-          <p class="text-stone-600 text-sm mt-3 leading-relaxed">Roys is $2,300. A $200 deposit reserves him and pauses his listing for you. The balance is due before he travels. Reach out through our contact form and we reply within 24 hours.</p>
-        </details>
-        <details class="bg-white border border-stone-200 rounded-2xl p-5">
-          <summary class="font-lora font-semibold text-logo-dark cursor-pointer">Can Roys be shipped to me?</summary>
-          <p class="text-stone-600 text-sm mt-3 leading-relaxed">Yes — Roys ships nationwide. Airport Pickup is $185, where you collect him at your nearest major airport via IATA-compliant live-animal cargo (IATA code LAR) on Delta, United, or American. Home Delivery is door-to-door for $350. An Avian Flight Nanny who carries him in-cabin is available too, quoted per route from about $750.</p>
-        </details>
-        <details class="bg-white border border-stone-200 rounded-2xl p-5">
-          <summary class="font-lora font-semibold text-logo-dark cursor-pointer">Do male Congo greys talk well?</summary>
-          <p class="text-stone-600 text-sm mt-3 leading-relaxed">Congo African Greys of either sex are among the most capable talking parrots, and sex is not a reliable predictor of how much an individual will say. Roys is at the developing stage at 4 months. What shapes his eventual vocabulary most is daily interaction in the home, not whether he is male. If you are comparing the two greys, <a href="/congo-vs-timneh-african-grey/" class="text-clay-text underline">our Congo vs Timneh comparison</a> covers their talking reputations.</p>
-        </details>
-        <details class="bg-white border border-stone-200 rounded-2xl p-5">
-          <summary class="font-lora font-semibold text-logo-dark cursor-pointer">Why is Roys $2,300 when I've seen greys for $850?</summary>
-          <p class="text-stone-600 text-sm mt-3 leading-relaxed">An $850 "Congo" is the price of a bird with no verifiable paperwork — no DNA certificate, no CITES documentation, no avian-vet health check, and often no breeder you can hold accountable. Roys is $2,300 because that covers hand-rearing, his full documentation set, and a USDA AWA licensed aviary standing behind him. Learning <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay-text underline">how to avoid bird scams</a> mostly means insisting on exactly the documentation Roys already has. A documented hand-raised Congo honestly cannot be produced for $850.</p>
-        </details>
+      <div class="flex flex-wrap gap-3 mt-6">
+        <a href="/contact-us/?bird=Roys" class="inline-flex items-center justify-center rounded-full bg-clay px-6 py-3 font-sora text-sm font-semibold text-white transition-colors hover:bg-clay-dk" style="box-shadow:0 4px 14px rgba(232,96,76,0.25);">Inquire about Roys →</a>
+        <a href="/african-grey-parrots-for-sale/" class="inline-flex items-center justify-center rounded-full border-2 border-green px-6 py-3 font-sora text-sm font-semibold text-green transition-colors hover:bg-green hover:text-white">See all available greys →</a>
       </div>
     </div>
   </section>
 
-  {/* 13 — NEWSLETTER (one placement, after FAQ) */}
-  <section class="py-12 px-4">
-    <div class="max-w-2xl mx-auto bg-cream border border-stone-200 rounded-2xl p-7 text-center">
-      <h2 class="font-lora font-bold text-2xl text-logo-dark mb-2">Get clutch updates</h2>
-      <p class="text-stone-600 text-sm mb-5">Not quite ready? Join our list and we'll let you know when new hand-raised greys are available.</p>
-      <form action="/contact-us/" method="get" class="flex flex-col sm:flex-row gap-3 justify-center">
-        <label for="newsletter-email" class="sr-only">Email address</label>
-        <input id="newsletter-email" name="email" type="email" required placeholder="you@email.com" class="border border-stone-300 rounded-full px-5 py-2.5 text-sm w-full sm:w-auto sm:flex-1 max-w-xs" />
-        <button type="submit" class="bg-clay text-white font-semibold px-6 py-2.5 rounded-full text-sm hover:bg-clay-dk transition-colors whitespace-nowrap">Keep me posted</button>
-      </form>
+  {/* ══════════════════════════════════════════════
+      SECTION 8: HEALTH — Is Roys a healthy bird?
+      Framework: EBP · Cat: B · ~160w
+      NO PBFD/Polyomavirus claim
+      ══════════════════════════════════════════════ */}
+  <section id="health" class="py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">Is Roys a healthy bird? Our health standard</h2>
+      <p class="font-sora text-stone-600 leading-relaxed mb-5">Roys goes through a set of pre-placement health checks that every bird from our aviary clears before he is listed for sale. We are a USDA Animal Welfare Act licensed facility — the federal licensing standard for animal dealers and breeders — which means our health and housing practices are subject to inspection.</p>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What health checks does Roys receive?</h3>
+      <ul class="space-y-3 mb-5">
+        <li class="flex gap-3">
+          <span style="color:#2D6A4F;font-weight:700;flex-shrink:0;">✔</span>
+          <div class="font-sora text-stone-600 text-sm">
+            <strong class="text-logo-dark">Pre-placement avian-vet exam</strong> — a physical exam by a veterinarian following <a href="https://aav.org/" target="_blank" rel="noopener noreferrer" class="text-clay-text underline">Association of Avian Veterinarians ↗</a> standards, with a written health certificate issued before travel.
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span style="color:#2D6A4F;font-weight:700;flex-shrink:0;">✔</span>
+          <div class="font-sora text-stone-600 text-sm">
+            <strong class="text-logo-dark">Weight and condition assessment</strong> — we track his weight from hatch and check it again at pre-placement. A healthy chick gains consistently.
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span style="color:#2D6A4F;font-weight:700;flex-shrink:0;">✔</span>
+          <div class="font-sora text-stone-600 text-sm">
+            <strong class="text-logo-dark">Weaning verification</strong> — Roys does not ship until he is independently feeding on a varied diet. A weaned bird is meaningfully more stable than one rushed off formula.
+          </div>
+        </li>
+      </ul>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What does our health guarantee cover?</h3>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed mb-4">The health guarantee travels with Roys and covers the specific terms and timeframes our aviary stands behind. We lay it all out plainly on <a href="/african-grey-parrot-health-guarantee/" class="text-clay-text underline">our African Grey health guarantee page</a> — read it before you reserve, not after.</p>
+
+      <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2">Why no aviary vet visit for me first?</h4>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">We encourage every new owner to schedule an independent avian vet visit within the first 72 hours of Roys arriving home. That appointment protects you, validates the health certificate, and gives your vet a baseline. We can recommend what to look for and what to bring.</p>
+
+      <h5 class="font-lora font-semibold text-base text-logo-dark mt-5 mb-1">A note on testing claims</h5>
+      <p class="font-sora text-stone-600 text-xs leading-relaxed">We only tell you what we have documented. If your vet recommends additional diagnostic testing beyond the AAV health certificate, that is a conversation between you and your vet — and we support it.</p>
     </div>
   </section>
 
-  {/* 14 — OTHER AVAILABLE BIRDS */}
-  <section class="py-16 px-4">
+  {/* ══════════════════════════════════════════════
+      SECTION 9: PARENTS — Who are Roys's parents?
+      Framework: EBP · Cat: C · ~130w
+      Source: BUILD-1 section 11 (lines 237-244) — reused prose-only
+      NO ParentBirds component (no real parent name data in bird-inventory.json for Roys,
+      and the classic variant has PBFD field we cannot assert — prose is correct here)
+      ══════════════════════════════════════════════ */}
+  <section id="parents" class="py-16 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">Who are Roys's parents?</h2>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">Roys was hatched and hand-raised inside our family aviary in Midland, Texas, which we have run since 2014 under a USDA Animal Welfare Act license. His parents are part of our own breeding flock, and he was hand-fed by us from the start rather than parent-pulled late.</p>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What does "from our own flock" mean, practically?</h3>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">It means we know his parents the same way we know him — by daily observation over years, not from a paper trail supplied by a third party. We manage the pairing, we know the breeding history, and we can tell you what his parents are like because we work with them every day. That is a different level of knowledge than a reseller can offer.</p>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Can I see parent information before I commit?</h3>
+      <p class="font-sora text-stone-600 leading-relaxed">Yes. We are happy to share Roys's specific parentage and pairing details during the reservation conversation — along with anything else you want to verify before you put a deposit down. We would rather walk you through it directly than post a flock's worth of records on a page where they lose context. To see more about our aviary and the rest of the nursery, <a href="/african-grey-parrots-for-sale/" class="text-clay-text underline">our available greys hub</a> gathers every bird in one place.</p>
+
+      <h6 class="font-lora text-sm text-stone-400 mt-6 italic">All parentage details are shared verbally during reservation — we do not post individual breeding records publicly.</h6>
+    </div>
+  </section>
+
+  {/* ══════════════════════════════════════════════
+      SECTION 10: DECISIONS — What to decide before buying?
+      Framework: BAB · Cat: C · ~200w
+      ══════════════════════════════════════════════ */}
+  <section id="decisions" class="py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">What should you decide before buying an African Grey?</h2>
+      <div class="grid md:grid-cols-[1fr_260px] gap-8 items-start">
+        <div>
+          <p class="font-sora text-stone-600 leading-relaxed mb-5">Most bird listings skip this part. We don't. An honest fit-screening question now saves a difficult conversation in year three.</p>
+
+          {/* BAB: Before */}
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Before you decide: the honest checklist</h3>
+          <div class="space-y-3 mb-6">
+            <div class="flex gap-3 p-4 bg-cream rounded-xl border border-stone-200">
+              <svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.15em;flex-shrink:0;margin-top:2px" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <div>
+                <p class="font-sora font-semibold text-sm text-logo-dark">40–60 year lifespan</p>
+                <p class="font-sora text-xs text-stone-500 mt-0.5">A healthy Congo African Grey can outlive a mortgage. Roys could still be greeting your kitchen in 2070. Are you prepared for a companion that may need someone to care for him after you?</p>
+              </div>
+            </div>
+            <div class="flex gap-3 p-4 bg-cream rounded-xl border border-stone-200">
+              <svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.15em;flex-shrink:0;margin-top:2px" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <div>
+                <p class="font-sora font-semibold text-sm text-logo-dark">Daily interaction — not optional</p>
+                <p class="font-sora text-xs text-stone-500 mt-0.5">Roys will need real engagement every day. A grey left alone ten hours consistently will develop stress behaviours. This is not a low-effort pet.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 p-4 bg-cream rounded-xl border border-stone-200">
+              <svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.15em;flex-shrink:0;margin-top:2px" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <div>
+                <p class="font-sora font-semibold text-sm text-logo-dark">Noise and feather dust</p>
+                <p class="font-sora text-xs text-stone-500 mt-0.5">Congos are vocal — not a background presence. The fine powder-down they produce is real and requires good air filtration. People with bird-dander sensitivities should verify tolerance first.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 p-4 bg-cream rounded-xl border border-stone-200">
+              <svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.15em;flex-shrink:0;margin-top:2px" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <div>
+                <p class="font-sora font-semibold text-sm text-logo-dark">The total annual cost</p>
+                <p class="font-sora text-xs text-stone-500 mt-0.5">The purchase price is a fraction of the lifetime spend. Ongoing costs include a varied diet, avian vet visits, enrichment, and cage. <a href="/african-grey-parrot-price/" class="text-clay-text underline">Our full cost breakdown</a> maps it all out.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* BAB: After */}
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">After you work through the list honestly</h3>
+          <p class="font-sora text-stone-600 leading-relaxed mb-4">If you reached this point nodding along — if the commitment is real and the fit is right — that is the conversation we want to have. <a href="https://www.avma.org/resources/pet-owners/petcare/selecting-pet-bird" target="_blank" rel="noopener noreferrer" class="text-clay-text underline">The AVMA's pet-bird selection guidance ↗</a> is blunt about the lifelong nature of parrot ownership, and we agree with every word of it.</p>
+          <p class="font-sora text-stone-600 leading-relaxed">We screen gently. We would rather Roys go to the home that genuinely fits him than to the first one to ask.</p>
+        </div>
+        <div class="md:sticky md:top-6">
+          <img
+            src="/birds/roys/roys-gallery-3.webp"
+            alt="Roys exploring and foraging — a Congo African Grey needs daily enrichment and interaction"
+            width="260" height="300"
+            class="w-full rounded-2xl shadow-md object-cover"
+            loading="lazy"
+            style="max-height:300px;object-fit:cover;"
+          />
+          <p class="font-sora text-xs text-stone-400 mt-2 text-center">Foraging and exploring are daily requirements, not occasional treats</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ══════════════════════════════════════════════
+      SECTION 11: LIFESTYLE — What's it like to own long-term?
+      Framework: BAB · Cat: B · ~170w
+      ══════════════════════════════════════════════ */}
+  <section id="lifestyle" class="py-16 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">What's it like to own an African Grey long-term?</h2>
+      <div class="grid md:grid-cols-[260px_1fr] gap-8 items-start">
+        <div>
+          <img
+            src="/birds/roys/roys-gallery-2.webp"
+            alt="A Congo African Grey perched confidently — representing the long-term bond of grey parrot ownership"
+            width="260" height="300"
+            class="w-full rounded-2xl shadow-md object-cover"
+            loading="lazy"
+            style="max-height:300px;object-fit:cover;"
+          />
+          <p class="font-sora text-xs text-stone-400 mt-2 text-center">A Congo grey at his best — bonded, engaged, confident</p>
+        </div>
+        <div>
+          {/* BAB: Before */}
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">The before picture most listings skip</h3>
+          <p class="font-sora text-stone-600 leading-relaxed mb-4">A lot of bird listings describe what an African Grey is like in year one, maybe two. The honest answer is that a Congo grey changes across decades. The bird Roys is at 4 months is different from who he will be at 5 years, and different again at 15. A Congo's personality deepens, not flattens. He gets more opinionated, more expressive, and if well-handled, more bonded over time.</p>
+
+          {/* BAB: After */}
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What the good years actually look like</h3>
+          <p class="font-sora text-stone-600 leading-relaxed mb-4">A well-integrated Congo in a stable home develops into something that genuinely surprises people who have not owned one. He anticipates your schedule. He marks seasons — Christmas wrapping paper gets a comment, a suitcase gets a worried sound, your morning coffee routine gets narrated. That is what 40–60 years of companionship looks like when it is working.</p>
+
+          {/* BAB: Bridge */}
+          <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">The bridge: what makes the difference</h3>
+          <p class="font-sora text-stone-600 leading-relaxed mb-4">The greys we hear about decades later that are still thriving share one thing: consistent daily engagement with people who committed to the relationship as a long-term one. Not intensive training, not elaborate setups. Consistency. A grey who trusts his household develops a resilience that makes him adaptable even when life changes around him.</p>
+
+          <p class="font-sora text-stone-600 text-sm leading-relaxed">Read <a href="/african-grey-parrot-guide/" class="text-clay-text underline">our full African Grey parrot guide</a> for the practical day-to-day picture — diet, enrichment, sleep, and what to expect decade by decade.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ══════════════════════════════════════════════
+      SECTIONS 12–22 STUBS
+      Pass 2 agent fills content here.
+      Anchors are live so the TOC above resolves.
+      ══════════════════════════════════════════════ */}
+
+  {/* STUB 12 */}
+  <section id="reviews-mid" class="py-10 px-4 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">Reviews — families who brought home a C.A.Gs grey</h2>
+      {/* PASS 2: fill content — Testimonials A · 3-up cards w/ avatar · real buyer photos from public/ */}
+    </div>
+  </section>
+
+  {/* STUB 13 */}
+  <section id="training" class="py-10 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">How do you train an African Grey like Roys?</h2>
+      {/* PASS 2: fill content — HowTo framework, 170w, links to /how-to-tame-an-african-grey-parrot/ */}
+    </div>
+  </section>
+
+  {/* STUB 14 */}
+  <section id="food" class="py-10 px-4 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">What do C.A.Gs recommend feeding African Greys?</h2>
+      {/* PASS 2: fill content — QAB, 150w, Harrison's/Roudybush/TOP's/Zupreem Natural, links to /african-grey-diet/ + /best-food-for-african-grey/ */}
+    </div>
+  </section>
+
+  {/* STUB 15 */}
+  <section id="gallery" class="py-10 px-4 bg-cream">
     <div class="max-w-5xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8">Other African Greys we have available</h2>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <a href="/available/amie/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow"><h3 class="font-lora font-semibold text-logo-dark">Amie</h3><p class="text-stone-500 text-sm">Female Congo &middot; 3 months</p><p class="text-clay-text font-semibold text-sm mt-1">$2,500</p><p class="text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p></a>
-        <a href="/available/bery/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow"><h3 class="font-lora font-semibold text-logo-dark">Bery</h3><p class="text-stone-500 text-sm">Female Congo &middot; 1 year</p><p class="text-clay-text font-semibold text-sm mt-1">$1,700</p><p class="text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p></a>
-        <a href="/available/jins-jeni/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow"><h3 class="font-lora font-semibold text-logo-dark">Jins &amp; Jeni</h3><p class="text-stone-500 text-sm">Congo pair &middot; must go together</p><p class="text-clay-text font-semibold text-sm mt-1">$3,500</p><p class="text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p></a>
-        <a href="/available/elad/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow"><h3 class="font-lora font-semibold text-logo-dark">Elad</h3><p class="text-stone-500 text-sm">Male Timneh &middot; 5 months</p><p class="text-clay-text font-semibold text-sm mt-1">$1,600</p><p class="text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p></a>
-        <a href="/available/evie/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow"><h3 class="font-lora font-semibold text-logo-dark">Evie</h3><p class="text-stone-500 text-sm">Female Timneh &middot; 6 months</p><p class="text-clay-text font-semibold text-sm mt-1">$1,500</p><p class="text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p></a>
-        <a href="/african-grey-parrots-for-sale/" class="block bg-logo-dark text-cream rounded-2xl p-5 hover:opacity-90 transition-opacity"><h3 class="font-lora font-semibold">See every available grey</h3><p class="text-cream/70 text-sm mt-1">Browse the full nursery &rarr;</p></a>
-      </div>
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">Roys's photo &amp; video gallery</h2>
+      {/* PASS 2: fill content — gallery grid roys-gallery-1..5.webp + roys-video-eating.mp4, SEO alt text required */}
     </div>
   </section>
 
+  {/* STUB 16 */}
+  <section id="buy" class="py-10 px-4 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">How do you buy Roys? Step-by-step</h2>
+      {/* PASS 2: fill content — HowTo numbered steps, 150w */}
+    </div>
+  </section>
+
+  {/* STUB 17 */}
+  <section id="shipping" class="py-10 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">Where do C.A.Gs deliver African Greys?</h2>
+      {/* PASS 2: fill content — QAB, 160w, $185/$350 two-tier, IATA LAR, Delta/United/American, links to location pages */}
+    </div>
+  </section>
+
+  {/* STUB 18 */}
+  <section id="credentials" class="py-10 px-4 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">Our credentials — USDA AWA / CITES / DNA / Avian Vet</h2>
+      {/* PASS 2: fill content — EEAT block, 80w, KEPT-VERBATIM trust block + roys-trust-panel.webp */}
+    </div>
+  </section>
+
+  {/* STUB 19 */}
+  <section id="faq" class="py-10 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">Roys — frequently asked questions</h2>
+      {/* PASS 2: fill content — cag-faq-acc JS accordion, 6 PAA questions (already in faqSchema above), visible answers + FAQPage schema */}
+    </div>
+  </section>
+
+  {/* STUB 20 */}
+  <section id="reviews-bottom" class="py-10 px-4 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">Reviews — more happy C.A.Gs owners</h2>
+      {/* PASS 2: fill content — Testimonials A · 3-up cards w/ avatar · review photo #2 from public/ */}
+    </div>
+  </section>
+
+  {/* STUB 21 */}
+  <section id="marketplace" class="py-10 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">Why buy from C.A.Gs instead of a marketplace?</h2>
+      {/* PASS 2: fill content — EBP contrast, 170w, birdbreeders.com $8,500 anonymity, breeder accountability */}
+    </div>
+  </section>
+
+  {/* STUB 22 */}
+  <section id="reserve" class="py-10 px-4 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-2xl text-logo-dark">Ready to bring Roys home?</h2>
+      {/* PASS 2: fill content — cag-inquiry-form.astro idPrefix="roys-reserve-" + newsletter + homepage link */}
+    </div>
+  </section>
+
+  {/* ── SCHEMA ── */}
   <Schema type="product" data={productSchema} />
   <Schema type="faq" data={faqSchema} />
   <Schema type="organization" />
 
-  {/* 15 — INQUIRY CTA */}
-  <CTA headline="Ready to bring Roys home?" sub="Roys is a hand-raised, CITES-documented, DNA-sexed male Congo grey at $2,300. A $200 deposit reserves him — reach out and we reply within 24 hours." />
+  {/* ── PRESERVED: Other available birds (below stubs, Pass 2 reorganizes) ── */}
+  <section class="py-16 px-4 bg-cream">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8">Other African Greys we have available</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <a href="/available/amie/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow">
+          <h3 class="font-lora font-semibold text-logo-dark">Amie</h3>
+          <p class="font-sora text-stone-500 text-sm">Female Congo &middot; 3 months</p>
+          <p class="font-sora text-clay-text font-semibold text-sm mt-1">$2,500</p>
+          <p class="font-sora text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p>
+        </a>
+        <a href="/available/bery/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow">
+          <h3 class="font-lora font-semibold text-logo-dark">Bery</h3>
+          <p class="font-sora text-stone-500 text-sm">Female Congo &middot; 1 year</p>
+          <p class="font-sora text-clay-text font-semibold text-sm mt-1">$1,700</p>
+          <p class="font-sora text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p>
+        </a>
+        <a href="/available/jins-jeni/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow">
+          <h3 class="font-lora font-semibold text-logo-dark">Jins &amp; Jeni</h3>
+          <p class="font-sora text-stone-500 text-sm">Congo pair &middot; must go together</p>
+          <p class="font-sora text-clay-text font-semibold text-sm mt-1">$3,500</p>
+          <p class="font-sora text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p>
+        </a>
+        <a href="/available/elad/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow">
+          <h3 class="font-lora font-semibold text-logo-dark">Elad</h3>
+          <p class="font-sora text-stone-500 text-sm">Male Timneh &middot; 5 months</p>
+          <p class="font-sora text-clay-text font-semibold text-sm mt-1">$1,600</p>
+          <p class="font-sora text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p>
+        </a>
+        <a href="/available/evie/" class="block bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-md transition-shadow">
+          <h3 class="font-lora font-semibold text-logo-dark">Evie</h3>
+          <p class="font-sora text-stone-500 text-sm">Female Timneh &middot; 6 months</p>
+          <p class="font-sora text-clay-text font-semibold text-sm mt-1">$1,500</p>
+          <p class="font-sora text-stone-400 text-xs mt-1">Ships nationwide &middot; $185 airport &middot; $350 home</p>
+        </a>
+        <a href="/african-grey-parrots-for-sale/" class="block bg-logo-dark text-cream rounded-2xl p-5 hover:opacity-90 transition-opacity">
+          <h3 class="font-lora font-semibold">See every available grey</h3>
+          <p class="font-sora text-cream/70 text-sm mt-1">Browse the full nursery &rarr;</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
 </BaseLayout>
