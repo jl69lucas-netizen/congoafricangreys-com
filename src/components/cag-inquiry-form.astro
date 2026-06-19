@@ -20,12 +20,19 @@ interface Props {
   subject?: string;
   /** Optional id prefix so multiple instances on one page keep unique field ids/labels. */
   idPrefix?: string;
+  /** Compact mode for single-bird pages: hides the 8-bird selection grid and the pricing
+   *  sidebar (the bird is already known), so the form reads much shorter. Default false. */
+  compact?: boolean;
+  /** When compact, the bird id to submit silently (must match a birds[].id, e.g. 'roys'). */
+  preselect?: string;
 }
 const {
   heading = 'Adopt an African Grey — Inquiry Form',
   subtext = 'We review every application. Expect a response within 24 hours.',
   subject = 'African Grey Adoption Inquiry',
   idPrefix = '',
+  compact = false,
+  preselect = '',
 } = Astro.props;
 
 const birds = [
@@ -178,26 +185,30 @@ const pricingRows = [
           />
         </div>
 
-        <!-- Field 7: Select bird (checkbox grid) -->
-        <div class="inq-field">
-          <fieldset class="inq-fieldset">
-            <legend class="inq-label font-sora">
-              Select what you want below <span class="inq-required">*</span>
-              <span class="inq-helper-inline"> — Our price is the same for pickup or shipping.</span>
-            </legend>
-            <div class="inq-checkbox-grid">
-              {birds.map(bird => (
-                <label class="inq-checkbox-item font-sora">
-                  <input type="checkbox" name="bird_selection" value={bird.id} class="inq-checkbox" />
-                  <span class="inq-checkbox-text">
-                    <span class="inq-checkbox-label">{bird.label}</span>
-                    <span class="inq-checkbox-price">{bird.price}</span>
-                  </span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-        </div>
+        <!-- Field 7: Select bird (checkbox grid) — hidden in compact single-bird mode -->
+        {compact ? (
+          <input type="hidden" name="bird_selection" value={preselect} />
+        ) : (
+          <div class="inq-field">
+            <fieldset class="inq-fieldset">
+              <legend class="inq-label font-sora">
+                Select what you want below <span class="inq-required">*</span>
+                <span class="inq-helper-inline"> — Our price is the same for pickup or shipping.</span>
+              </legend>
+              <div class="inq-checkbox-grid">
+                {birds.map(bird => (
+                  <label class="inq-checkbox-item font-sora">
+                    <input type="checkbox" name="bird_selection" value={bird.id} class="inq-checkbox" />
+                    <span class="inq-checkbox-text">
+                      <span class="inq-checkbox-label">{bird.label}</span>
+                      <span class="inq-checkbox-price">{bird.price}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </div>
+        )}
 
         <!-- Field 8: Delivery method (radio cards) -->
         <div class="inq-field">
@@ -279,21 +290,23 @@ const pricingRows = [
         </ul>
       </div>
 
-      <!-- Pricing card -->
-      <div class="inq-sidebar-card inq-pricing-card">
-        <h3 class="font-lora inq-sidebar-heading">Current Pricing</h3>
-        <table class="inq-price-table">
-          <tbody>
-            {pricingRows.map((row, i) => (
-              <tr class:list={[{ 'inq-price-row-alt': i % 2 === 0 }]}>
-                <td class="font-sora inq-price-name">{row.name}</td>
-                <td class="font-lora inq-price-val">{row.price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p class="font-sora inq-price-footer">Shipping: $185 · Home delivery: $350</p>
-      </div>
+      <!-- Pricing card — hidden in compact single-bird mode (price already shown on the page) -->
+      {!compact && (
+        <div class="inq-sidebar-card inq-pricing-card">
+          <h3 class="font-lora inq-sidebar-heading">Current Pricing</h3>
+          <table class="inq-price-table">
+            <tbody>
+              {pricingRows.map((row, i) => (
+                <tr class:list={[{ 'inq-price-row-alt': i % 2 === 0 }]}>
+                  <td class="font-sora inq-price-name">{row.name}</td>
+                  <td class="font-lora inq-price-val">{row.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class="font-sora inq-price-footer">Shipping: $185 · Home delivery: $350</p>
+        </div>
+      )}
     </aside>
   </div>
 </section>
