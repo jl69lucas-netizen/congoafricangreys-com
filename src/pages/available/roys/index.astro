@@ -5,10 +5,10 @@ import Schema from '../../../components/Schema.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../../components/cag-library/KeyTakeawayV2.astro';
-import InquiryForm from '../../../components/cag-inquiry-form.astro';
 import NewsletterV2 from '../../../components/cag-library/NewsletterV2.astro';
+import JumpRail from '../../../components/cag-library/JumpRail.astro';
 
-const title = "Male Congo African Grey For Sale — Roys | $2,300 | C.A.Gs – Midland, TX";
+const title = "Male Congo African Grey for Sale | Want a Hand-Raised, DNA-Sexed Boy? Meet Roys — 1 Healthy 4-Month Congo, $2,300 | C.A.Gs – Midland, TX";
 const description = "Roys is a hand-raised male Congo African Grey for sale — 4 months old, energetic and great with families, $2,300. DNA sexed, CITES-documented, captive-bred in the USA. Ships nationwide · $185 airport · $350 home.";
 const canonical = "https://congoafricangreys.com/available/roys/";
 
@@ -108,6 +108,33 @@ const roysKeyTakeawayItems = [
   { stat: "Nationwide", label: "Ships",            body: "Airport Pickup $185 or Home Delivery $350. IATA LAR-coded via Delta, United, and American." },
   { stat: "Active",     label: "Temperament",      body: "Energetic forager, toy-shredder, problem-solver. Thrives with daily interaction and a full household." },
 ];
+
+/* Mobile section-jump dial + desktop dot rail (page is >6,000 words) */
+const roysJumpSections = [
+  { id: "takeaway",     label: "Overview",    part: 1 },
+  { id: "temperament",  label: "Personality", part: 1 },
+  { id: "talking",      label: "Talking",     part: 1 },
+  { id: "parents",      label: "Parents",     part: 1 },
+  { id: "documentation",label: "Documents",   part: 2 },
+  { id: "health",       label: "Health",      part: 2 },
+  { id: "price-counter",label: "Why $2,300",  part: 2 },
+  { id: "credentials",  label: "Credentials", part: 2 },
+  { id: "gallery",      label: "Gallery",     part: 3 },
+  { id: "comparison",   label: "Compare",     part: 3 },
+  { id: "reviews-mid",  label: "Reviews",     part: 3 },
+  { id: "food",         label: "Diet",        part: 3 },
+  { id: "included",     label: "Included",    part: 4 },
+  { id: "buy",          label: "How to Buy",  part: 4 },
+  { id: "shipping",     label: "Shipping",    part: 4 },
+  { id: "faq",          label: "FAQ",         part: 4 },
+  { id: "reserve",      label: "Reserve",     part: 4 },
+];
+const roysJumpParts = {
+  1: "Meet Roys",
+  2: "Proof & Papers",
+  3: "See & Compare",
+  4: "Buying Roys",
+};
 ---
 
 <BaseLayout {title} {description} {canonical} hideGlobalCta>
@@ -148,13 +175,21 @@ const roysKeyTakeawayItems = [
     ]} />
   </div>
 
+  {/* ── SECTION-JUMP DIAL — desktop dot rail + mobile bottom-sheet (page >6,000 words) ── */}
+  <JumpRail
+    sections={roysJumpSections}
+    partNames={roysJumpParts}
+    ctaLabel="Reserve Roys →"
+    ctaTarget="reserve"
+  />
+
   {/* ── HERO C: Trust-first + click-to-play video ── */}
   <section class="roys-hero bg-logo-dark text-cream py-14 px-4 md:py-20">
     <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
 
       {/* LEFT: Vitals + CTA */}
       <div class="order-2 md:order-1">
-        <p class="font-sora text-gold text-[11px] font-semibold uppercase tracking-[0.18em] mb-3">
+        <p class="font-sora text-gold text-xs font-medium tracking-wide mb-3">
           <em>Psittacus erithacus</em> &middot; CITES Appendix&nbsp;I Captive-Bred &middot; Midland, TX
         </p>
         <h1 class="font-lora font-bold text-2xl sm:text-3xl leading-tight mb-5">
@@ -258,6 +293,20 @@ const roysKeyTakeawayItems = [
   {/* ── COUNTER SNIPPET ── */}
   <CounterSnippet stats={roysCounterStats} />
 
+  {/* ══════════════════════════════════════════════
+      SECTION 1: KEY TAKEAWAY — Is Roys right for me?
+      Placed ABOVE the TOC (after the counter snippet) so the "short version"
+      lands before the long table of contents.
+      ══════════════════════════════════════════════ */}
+  <section id="takeaway">
+    <KeyTakeawayV2
+      eyebrow="The short version"
+      heading="Is Roys the right African Grey for me?"
+      badge="8 facts · 90-sec read"
+      items={roysKeyTakeawayItems}
+    />
+  </section>
+
   {/* ── TABLE OF CONTENTS ── */}
   <nav class="py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
     <div class="container mx-auto max-w-5xl">
@@ -281,19 +330,6 @@ const roysKeyTakeawayItems = [
       </div>
     </div>
   </nav>
-
-  {/* ══════════════════════════════════════════════
-      SECTION 1: KEY TAKEAWAY — Is Roys right for me?
-      Framework: AIDA · Cat: A · ~90w
-      ══════════════════════════════════════════════ */}
-  <section id="takeaway">
-    <KeyTakeawayV2
-      eyebrow="The short version"
-      heading="Is Roys the right African Grey for me?"
-      badge="8 facts · 90-sec read"
-      items={roysKeyTakeawayItems}
-    />
-  </section>
 
   {/* ══════════════════════════════════════════════
       SECTION 2: TEMPERAMENT — What is Roys like to live with?
@@ -1464,14 +1500,55 @@ const roysKeyTakeawayItems = [
         <p class="font-sora text-stone-400 text-xs mt-2">Ships nationwide &middot; $185 airport &middot; $350 home</p>
       </div>
 
-      <InquiryForm
-        heading="Reserve Roys — Inquiry Form"
-        subtext="Tell us a little about your home and we will reply within 24 hours. No deposit is taken on the form — we talk first."
-        subject="Reserve Roys — Male Congo African Grey $2,300"
-        idPrefix="reserve-roys-"
-        compact
-        preselect="roys"
-      />
+      {/* Short, single-bird inquiry form — clean white card, not the full screening form */}
+      <form action="https://formspree.io/f/xrejpnvn" method="POST"
+            class="max-w-2xl mx-auto bg-white rounded-2xl border border-stone-200 p-6 sm:p-8"
+            style="box-shadow:0 6px 28px rgba(60,30,10,0.08);">
+        <input type="hidden" name="_subject" value="Reserve Roys — Male Congo African Grey $2,300" />
+        <input type="hidden" name="_next" value="https://congoafricangreys.com/contact-us/?success=true" />
+        <input type="hidden" name="bird" value="ROYS — Congo African Grey, Male, 4 months ($2,300)" />
+
+        <h3 class="font-lora font-bold text-xl text-logo-dark mb-1">Reserve Roys — quick inquiry</h3>
+        <p class="font-sora text-stone-500 text-sm mb-5">Four quick fields. We reply within 24 hours with fresh dated photos — no deposit is taken here, we talk first.</p>
+
+        <div class="space-y-4">
+          <div>
+            <label for="roys-name" class="block font-sora text-xs font-semibold uppercase tracking-wide text-stone-500 mb-1.5">Your name <span class="text-clay-text">*</span></label>
+            <input id="roys-name" name="full_name" type="text" required autocomplete="name" placeholder="Your full name"
+                   class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-sora text-sm text-stone-800 focus:border-green focus:ring-2 focus:ring-green/20 focus:outline-none" />
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="roys-email" class="block font-sora text-xs font-semibold uppercase tracking-wide text-stone-500 mb-1.5">Email <span class="text-clay-text">*</span></label>
+              <input id="roys-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com"
+                     class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-sora text-sm text-stone-800 focus:border-green focus:ring-2 focus:ring-green/20 focus:outline-none" />
+            </div>
+            <div>
+              <label for="roys-phone" class="block font-sora text-xs font-semibold uppercase tracking-wide text-stone-500 mb-1.5">Phone <span class="text-clay-text">*</span></label>
+              <input id="roys-phone" name="phone" type="tel" required autocomplete="tel" placeholder="+1 (555) 000-0000"
+                     class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-sora text-sm text-stone-800 focus:border-green focus:ring-2 focus:ring-green/20 focus:outline-none" />
+            </div>
+          </div>
+          <div>
+            <label for="roys-msg" class="block font-sora text-xs font-semibold uppercase tracking-wide text-stone-500 mb-1.5">Tell us about your home <span class="font-normal normal-case text-stone-400">(optional)</span></label>
+            <textarea id="roys-msg" name="message" rows="3" placeholder="Anything you'd like us to know — your household, questions about Roys, timing…"
+                      class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-sora text-sm text-stone-800 focus:border-green focus:ring-2 focus:ring-green/20 focus:outline-none"></textarea>
+          </div>
+        </div>
+
+        <button type="submit"
+                class="mt-5 w-full sm:w-auto inline-flex items-center justify-center bg-clay text-white font-sora font-semibold px-8 py-3.5 text-base hover:bg-clay-dk transition-colors"
+                style="border-radius:12px;box-shadow:0 4px 14px rgba(232,96,76,0.28);">
+          Ask about Roys →
+        </button>
+
+        <div class="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 text-xs font-sora text-stone-500 border-t border-stone-200 pt-4">
+          <span><span style="color:#2D6A4F;font-weight:700;">✔</span> DNA-sexed + CITES documented</span>
+          <span><span style="color:#2D6A4F;font-weight:700;">✔</span> Avian-vet health certificate</span>
+          <span><span style="color:#2D6A4F;font-weight:700;">✔</span> USDA AWA licensed · family aviary since 2014</span>
+        </div>
+        <h6 class="font-sora text-xs font-normal text-stone-400 mt-3">Your details stay private — we never share or sell your information, and no payment is taken on this form.</h6>
+      </form>
 
       <div class="mt-4 text-center">
         <p class="font-sora text-stone-500 text-sm leading-relaxed">
