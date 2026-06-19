@@ -112,6 +112,33 @@ const roysKeyTakeawayItems = [
 
 <BaseLayout {title} {description} {canonical} hideGlobalCta>
 
+  <style>
+    /* ── Roys page: homepage-parity rhythm (Direction D) ── */
+    /* Compact section padding so the page reads tight, not endless */
+    .roys-d .py-16 { padding-top: 2.4rem !important; padding-bottom: 2.4rem !important; }
+    @media (min-width: 768px) {
+      .roys-d .py-16 { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+    }
+    .roys-d .py-12 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+
+    /* Section-seam divider with the small footer logo (homepage pattern) */
+    .roys-d .cag-seam { display: flex; align-items: center; gap: 26px; max-width: 1100px; margin: 0 auto; padding: 0.5rem 24px; }
+    .roys-d .cag-seam__line { flex: 1; height: 1px; background: rgba(45,106,79,.16); }
+    .roys-d .cag-seam img { height: 30px; width: auto; display: block; opacity: .92; flex-shrink: 0; }
+    @media (max-width: 600px) { .roys-d .cag-seam { gap: 16px; } .roys-d .cag-seam img { height: 24px; } }
+
+    /* Hero H1 — match homepage clamp (was text-4xl/5xl = oversized) */
+    .roys-d .roys-hero h1 { font-size: clamp(1.7rem, 1.1rem + 2.6vw, 2.35rem) !important; line-height: 1.14 !important; }
+
+    /* Standard media height so portrait crops aren't cut at the edges */
+    .roys-d .roys-feature-img { max-height: 420px !important; object-position: center top; }
+    /* Constrained 16/9 video frame for non-hero clips */
+    .roys-d .roys-video-frame { position: relative; max-width: 640px; margin-left: auto; margin-right: auto; aspect-ratio: 16/9; }
+    .roys-d .roys-video-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  </style>
+
+  <div class="roys-d">
+
   {/* ── BREADCRUMB ── */}
   <div style="max-width:1200px;margin:0 auto;">
     <Breadcrumb items={[
@@ -122,15 +149,15 @@ const roysKeyTakeawayItems = [
   </div>
 
   {/* ── HERO C: Trust-first + click-to-play video ── */}
-  <section class="bg-logo-dark text-cream py-14 px-4 md:py-20">
+  <section class="roys-hero bg-logo-dark text-cream py-14 px-4 md:py-20">
     <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
 
       {/* LEFT: Vitals + CTA */}
-      <div>
-        <p class="font-sora text-gold text-xs font-bold uppercase tracking-widest mb-3">
+      <div class="order-2 md:order-1">
+        <p class="font-sora text-gold text-[11px] font-semibold uppercase tracking-[0.18em] mb-3">
           <em>Psittacus erithacus</em> &middot; CITES Appendix&nbsp;I Captive-Bred &middot; Midland, TX
         </p>
-        <h1 class="font-lora font-bold text-4xl sm:text-5xl leading-tight mb-5">
+        <h1 class="font-lora font-bold text-2xl sm:text-3xl leading-tight mb-5">
           Roys — Male Congo African Grey For Sale ($2,300, Hand-Raised &amp; DNA-Sexed)
         </h1>
 
@@ -187,8 +214,8 @@ const roysKeyTakeawayItems = [
         </a>
       </div>
 
-      {/* RIGHT: click-to-play video */}
-      <div>
+      {/* RIGHT: click-to-play video — shows first on mobile so visitors see Roys move */}
+      <div class="order-1 md:order-2">
         <video
           poster="/birds/roys/roys-hero.webp"
           controls
@@ -197,7 +224,7 @@ const roysKeyTakeawayItems = [
           height="640"
           class="w-full rounded-3xl shadow-lg object-cover"
           aria-label="Roys, our hand-raised male Congo African Grey — click to watch him play"
-          style="max-height:520px;object-fit:cover;"
+          style="max-height:440px;object-fit:cover;"
         >
           <source src="/birds/roys/roys-video-playing.mp4" type="video/mp4" />
           Your browser does not support the video element.
@@ -290,10 +317,9 @@ const roysKeyTakeawayItems = [
           <img
             src="/birds/roys/roys-personality.webp"
             alt="Roys, a hand-raised male Congo African Grey, showing his alert and curious expression — personality photo"
-            width="280" height="320"
-            class="w-full rounded-2xl shadow-md object-cover"
+            width="280" height="420"
+            class="roys-feature-img w-full rounded-2xl shadow-md object-cover"
             loading="lazy"
-            style="max-height:320px;object-fit:cover;"
           />
           <p class="font-sora text-xs text-stone-400 mt-2 text-center">Roys at 4 months — alert, confident, always watching</p>
         </div>
@@ -318,6 +344,18 @@ const roysKeyTakeawayItems = [
 
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Where is Roys right now?</h3>
       <p class="font-sora text-stone-600 leading-relaxed mb-4">At 4 months, Roys is in the developing stage. His vocal learning is just beginning. We hear the soft contact calls and exploratory sounds a young grey makes before real mimicry clicks — that process happens over the coming months. Watch the playing video above to hear him as he is now: active, interactive, and already engaged with whoever holds the camera.</p>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Hear a grown C.A.Gs Congo actually talking</h3>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">You do not have to take our word for what Roys is growing toward. This is <strong>Maxy</strong>, an adult hand-raised Congo African Grey from the same flock and the same Midland, TX home, talking on camera — the clearest proof of the vocabulary a well-socialised Congo develops.</p>
+      <figure class="my-6">
+        <div class="roys-video-frame rounded-2xl overflow-hidden border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.07);">
+          <video controls preload="none" playsinline width="640" height="360" poster="/african-grey-breeder-with-bird-midland-tx.webp" aria-label="Maxy, a hand-raised adult Congo African Grey from C.A.Gs, talking on camera">
+            <source src="/talking-african-grey-parrot-video.mp4" type="video/mp4" />
+            Your browser does not support the video element.
+          </video>
+        </div>
+        <figcaption class="font-sora text-xs text-stone-400 text-center mt-2">That's <strong>Maxy</strong>, one of our talking Congo Greys, at our Midland, TX aviary. Meet <a href="/" class="text-clay-text underline">more of our talking greys on the homepage</a>, or read our guide to <a href="/blog/african-grey-parrot-talking-ability/" class="text-clay-text underline">how African Greys learn to talk</a>.</figcaption>
+      </figure>
 
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What shapes a Congo's eventual vocabulary?</h3>
       <p class="font-sora text-stone-600 leading-relaxed mb-4">The single biggest factor is daily conversation in his home environment. Greys learn by listening and repeating what gets a real reaction — your name, your kitchen sounds, the things you say at the same time every day. A bird in a quiet house with minimal human contact will talk less than one at the centre of a busy family routine. Sex has almost nothing to do with it.</p>
@@ -378,6 +416,8 @@ const roysKeyTakeawayItems = [
     </div>
   </section>
 
+  <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
   {/* ══════════════════════════════════════════════
       SECTION 5: DOCUMENTATION — What papers come with Roys?
       Framework: EBP · Cat: B · ~220w
@@ -392,9 +432,9 @@ const roysKeyTakeawayItems = [
           src="/birds/roys/roys-trust-panel.webp"
           alt="Roys's documentation and certification panel — DNA sex cert, CITES papers, avian-vet health certificate"
           width="240" height="200"
-          class="w-full rounded-xl shadow-sm object-cover"
+          class="w-full rounded-xl shadow-sm bg-cream"
           loading="lazy"
-          style="max-height:200px;object-fit:cover;"
+          style="object-fit:contain;"
         />
       </div>
 
@@ -461,10 +501,10 @@ const roysKeyTakeawayItems = [
           <img
             src="/birds/roys/roys-whats-included.webp"
             alt="What's included with Roys — documentation package, care guide, and support from C.A.Gs"
-            width="320" height="220"
-            class="w-full rounded-2xl shadow-sm object-cover mb-4"
+            width="320" height="240"
+            class="w-full rounded-2xl shadow-sm bg-cream mb-4"
             loading="lazy"
-            style="max-height:200px;object-fit:cover;"
+            style="object-fit:contain;"
           />
           <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What's included</h3>
           <ul class="space-y-2 text-stone-600 text-sm font-sora">
@@ -574,6 +614,8 @@ const roysKeyTakeawayItems = [
     </div>
   </section>
 
+  <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
   {/* ══════════════════════════════════════════════
       SECTION 8: HEALTH — Is Roys a healthy bird?
       Framework: EBP · Cat: B · ~160w
@@ -627,15 +669,37 @@ const roysKeyTakeawayItems = [
   <section id="parents" class="py-16 px-4 bg-cream">
     <div class="max-w-3xl mx-auto">
       <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">Who are Roys's parents?</h2>
-      <p class="font-sora text-stone-600 leading-relaxed mb-4">Roys was hatched and hand-raised inside our family aviary in Midland, Texas, which we have run since 2014 under a USDA Animal Welfare Act license. His parents are part of our own breeding flock, and he was hand-fed by us from the start rather than parent-pulled late.</p>
+      <p class="font-sora text-stone-600 leading-relaxed mb-6">Roys's parents are <strong>James and Lois</strong>, a bonded Congo African Grey breeding pair from our own flock in Midland, Texas. We have run this family aviary since 2014 under a USDA Animal Welfare Act license, and Roys was hand-fed by us from the start rather than parent-pulled late. Because James and Lois live with us, we can tell you what Roys's mother and father are actually like — from daily observation over years, not a paper trail handed over by a third party.</p>
+
+      {/* Parents card — real photo + temperament */}
+      <div class="rounded-2xl border border-stone-200 bg-white overflow-hidden mb-7" style="box-shadow:0 4px 20px rgba(60,30,10,0.07);">
+        <img
+          src="/birds/roys/roys-parents.webp"
+          alt="James and Lois — Roys's Congo African Grey parents, a bonded breeding pair at the C.A.Gs aviary in Midland, Texas"
+          width="700" height="438"
+          class="w-full object-cover"
+          loading="lazy"
+          style="max-height:360px;object-fit:cover;object-position:center;"
+        />
+        <div class="grid sm:grid-cols-2 gap-px bg-stone-200">
+          <div class="bg-white p-5">
+            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] text-clay mb-1">Father · 9 years</p>
+            <h3 class="font-lora font-semibold text-xl text-logo-dark mb-1.5">James</h3>
+            <p class="font-sora text-stone-600 text-sm leading-relaxed">Calm and outgoing — a confident, steady male who loves people and steps up readily. James passes Roys his social ease and that signature Congo composure.</p>
+          </div>
+          <div class="bg-white p-5">
+            <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] text-clay mb-1">Mother · 7 years</p>
+            <h3 class="font-lora font-semibold text-xl text-logo-dark mb-1.5">Lois</h3>
+            <p class="font-sora text-stone-600 text-sm leading-relaxed">Tame and playful — a sweet, people-loving hen who steps up happily and stays busy. Lois is where Roys gets his curiosity and that bright, problem-solving drive.</p>
+          </div>
+        </div>
+      </div>
 
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What does "from our own flock" mean, practically?</h3>
-      <p class="font-sora text-stone-600 leading-relaxed mb-4">It means we know his parents the same way we know him — by daily observation over years, not from a paper trail supplied by a third party. We manage the pairing, we know the breeding history, and we can tell you what his parents are like because we work with them every day. That is a different level of knowledge than a reseller can offer.</p>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">It means we manage the pairing, we know the breeding history, and we can describe James and Lois because we work with them every day. Knowing both parents tells you something a reseller never can: the temperament Roys is likely to grow into. A grey raised by a calm, social pair in a hands-on home tends to carry that same even temperament forward — and that is exactly what we see developing in Roys.</p>
 
-      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Can I see parent information before I commit?</h3>
-      <p class="font-sora text-stone-600 leading-relaxed">Yes. We are happy to share Roys's specific parentage and pairing details during the reservation conversation — along with anything else you want to verify before you put a deposit down. We would rather walk you through it directly than post a flock's worth of records on a page where they lose context. To see more about our aviary and the rest of the nursery, <a href="/african-grey-parrots-for-sale/" class="text-clay-text underline">our available greys hub</a> gathers every bird in one place.</p>
-
-      <h6 class="font-lora text-sm text-stone-400 mt-6 italic">All parentage details are shared verbally during reservation — we do not post individual breeding records publicly.</h6>
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Can I learn more about the pairing before I commit?</h3>
+      <p class="font-sora text-stone-600 leading-relaxed">Yes. We are happy to share more about James and Lois, Roys's clutch, and anything else you want to verify before you put a deposit down. To see the rest of the nursery and Roys's available siblings, <a href="/african-grey-parrots-for-sale/" class="text-clay-text underline">our available greys hub</a> gathers every bird in one place.</p>
     </div>
   </section>
 
@@ -692,10 +756,9 @@ const roysKeyTakeawayItems = [
           <img
             src="/birds/roys/roys-gallery-3.webp"
             alt="Roys exploring and foraging — a Congo African Grey needs daily enrichment and interaction"
-            width="260" height="300"
-            class="w-full rounded-2xl shadow-md object-cover"
+            width="260" height="420"
+            class="roys-feature-img w-full rounded-2xl shadow-md object-cover"
             loading="lazy"
-            style="max-height:300px;object-fit:cover;"
           />
           <p class="font-sora text-xs text-stone-400 mt-2 text-center">Foraging and exploring are daily requirements, not occasional treats</p>
         </div>
@@ -715,10 +778,9 @@ const roysKeyTakeawayItems = [
           <img
             src="/birds/roys/roys-gallery-2.webp"
             alt="A Congo African Grey perched confidently — representing the long-term bond of grey parrot ownership"
-            width="260" height="300"
-            class="w-full rounded-2xl shadow-md object-cover"
+            width="260" height="420"
+            class="roys-feature-img w-full rounded-2xl shadow-md object-cover"
             loading="lazy"
-            style="max-height:300px;object-fit:cover;"
           />
           <p class="font-sora text-xs text-stone-400 mt-2 text-center">A Congo grey at his best — bonded, engaged, confident</p>
         </div>
@@ -755,15 +817,19 @@ const roysKeyTakeawayItems = [
       </div>
 
       <div class="grid md:grid-cols-3 gap-6">
-        {/* Review 1 — Clifford Hutter */}
+        {/* Review 1 — Lawrence Brunner */}
         <div class="bg-white rounded-2xl p-6 border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-green/15 flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
+            <img
+              src="/lawrence-brunner-fullerton-ca-review.webp"
+              alt="Lawrence Brunner, verified C.A.Gs Congo African Grey buyer from Fullerton, CA"
+              width="40" height="40"
+              class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+              loading="lazy"
+            />
             <div>
-              <p class="font-sora font-semibold text-sm text-logo-dark">Clifford Hutter</p>
-              <p class="font-sora text-xs text-stone-400">Secaucus, NJ &middot; Congo African Grey</p>
+              <p class="font-sora font-semibold text-sm text-logo-dark">Lawrence Brunner</p>
+              <p class="font-sora text-xs text-stone-400">Fullerton, CA &middot; Congo African Grey</p>
             </div>
           </div>
           <div class="flex gap-0.5 mb-3" aria-label="5 stars">
@@ -773,19 +839,19 @@ const roysKeyTakeawayItems = [
           <p class="font-sora text-xs text-stone-400 mt-3">Verified C.A.Gs buyer</p>
         </div>
 
-        {/* Review 2 — Richard Woodard */}
+        {/* Review 2 — Sandra Soliz */}
         <div class="bg-white rounded-2xl p-6 border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
           <div class="flex items-center gap-3 mb-4">
             <img
-              src="/richard-woodard-winter-haven-fl-review.webp"
-              alt="Richard Woodard, verified C.A.Gs Congo African Grey buyer from Winter Haven, FL"
+              src="/sandra-soliz-rome-ga-review.webp"
+              alt="Sandra Soliz, verified C.A.Gs Congo African Grey buyer from Rome, GA"
               width="40" height="40"
               class="w-10 h-10 rounded-full object-cover flex-shrink-0"
               loading="lazy"
             />
             <div>
-              <p class="font-sora font-semibold text-sm text-logo-dark">Richard Woodard</p>
-              <p class="font-sora text-xs text-stone-400">Winter Haven, FL &middot; Congo African Grey</p>
+              <p class="font-sora font-semibold text-sm text-logo-dark">Sandra Soliz</p>
+              <p class="font-sora text-xs text-stone-400">Rome, GA &middot; Congo African Grey</p>
             </div>
           </div>
           <div class="flex gap-0.5 mb-3" aria-label="5 stars">
@@ -795,15 +861,19 @@ const roysKeyTakeawayItems = [
           <p class="font-sora text-xs text-stone-400 mt-3">Verified C.A.Gs buyer</p>
         </div>
 
-        {/* Review 3 — Albert Schroder */}
+        {/* Review 3 — Ida Brim */}
         <div class="bg-white rounded-2xl p-6 border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-green/15 flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
+            <img
+              src="/ida-brim-nashville-tn-review.webp"
+              alt="Ida Brim, verified C.A.Gs Congo African Grey buyer from Nashville, TN"
+              width="40" height="40"
+              class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+              loading="lazy"
+            />
             <div>
-              <p class="font-sora font-semibold text-sm text-logo-dark">Albert Schroder</p>
-              <p class="font-sora text-xs text-stone-400">Santa Clara, CA &middot; Congo African Grey</p>
+              <p class="font-sora font-semibold text-sm text-logo-dark">Ida Brim</p>
+              <p class="font-sora text-xs text-stone-400">Nashville, TN &middot; Congo African Grey</p>
             </div>
           </div>
           <div class="flex gap-0.5 mb-3" aria-label="5 stars">
@@ -813,6 +883,19 @@ const roysKeyTakeawayItems = [
           <p class="font-sora text-xs text-stone-400 mt-3">Verified C.A.Gs buyer</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  {/* ── NEWSLETTER — placed after social proof: not-ready visitors convert to waitlist ── */}
+  <section class="py-12 px-4 bg-warm-white">
+    <div class="max-w-5xl mx-auto">
+      <NewsletterV2
+        variant="top"
+        action="https://formspree.io/f/xrejpnvn"
+        heading="Not ready to reserve Roys yet?"
+        sub="Every family above started exactly where you are. Join our list and be first to hear when our next hand-raised Congo or Timneh clutch is ready to place — before it's listed publicly."
+        cta="Get first notice"
+      />
     </div>
   </section>
 
@@ -889,6 +972,18 @@ const roysKeyTakeawayItems = [
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">The four pellet brands we stand behind</h3>
       <p class="font-sora text-stone-600 leading-relaxed mb-4">Here at C.A.Gs we have fed and evaluated many formulations across the flock. The four brands we confidently recommend — and have used in our own aviary — are <strong>Harrison's Bird Foods</strong>, <strong>Roudybush Daily Maintenance</strong>, <strong>TOP's Parrot Food</strong>, and <strong>ZuPreem Natural</strong>. All four are nutritionally complete and avoid the artificial dyes that can irritate sensitive greys. For the full comparison of ingredients and conversion tips, see <a href="/african-grey-parrot-diet/" class="text-clay-text underline">our African Grey diet guide</a> and <a href="/best-african-grey-parrot-food/" class="text-clay-text underline">best food for African Greys</a>.</p>
 
+      <figure class="my-6">
+        <img
+          src="/birds/roys/african-grey-parrot-veggies.webp"
+          alt="Fresh vegetables recommended for African Greys — leafy greens, carrot, broccoli, and bell pepper, the fresh half of Roys's daily diet"
+          width="760" height="500"
+          class="w-full rounded-2xl shadow-sm object-cover"
+          loading="lazy"
+          style="max-height:380px;object-fit:cover;"
+        />
+        <figcaption class="font-sora text-xs text-stone-400 text-center mt-2">A daily spread of fresh vegetables and leafy greens — the fresh half of Roys's diet alongside his formulated pellet base.</figcaption>
+      </figure>
+
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">What else does Roys eat?</h3>
       <ul class="space-y-2 mb-5">
         <li class="flex gap-3">
@@ -909,13 +1004,13 @@ const roysKeyTakeawayItems = [
         </li>
       </ul>
 
-      <div class="rounded-2xl overflow-hidden border border-stone-200 mb-4">
+      <div class="roys-video-frame rounded-2xl overflow-hidden border border-stone-200 mb-4">
         <video
           controls
           preload="none"
-          width="760"
-          height="427"
-          class="w-full"
+          playsinline
+          width="640"
+          height="360"
           aria-label="Roys eating — watch how our hand-raised male Congo African Grey approaches his food"
           poster="/birds/roys/roys-personality.webp"
         >
@@ -926,6 +1021,8 @@ const roysKeyTakeawayItems = [
       <p class="font-sora text-xs text-stone-400 text-center">Roys at mealtime — watch how a confident, hand-raised grey interacts with his food</p>
     </div>
   </section>
+
+  <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
   {/* ══════════════════════════════════════════════
       SECTION 15: GALLERY — Roys's photo & video gallery
@@ -996,13 +1093,13 @@ const roysKeyTakeawayItems = [
       </div>
 
       {/* Video — eating — click-to-play, no autoplay */}
-      <div class="rounded-2xl overflow-hidden border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.07);">
+      <div class="roys-video-frame rounded-2xl overflow-hidden border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.07);">
         <video
           controls
           preload="none"
-          width="1100"
-          height="620"
-          class="w-full"
+          playsinline
+          width="640"
+          height="360"
           poster="/birds/roys/roys-gallery-1.webp"
           aria-label="Roys feeding video — hand-raised male Congo African Grey eating in our Midland TX aviary"
         >
@@ -1107,10 +1204,9 @@ const roysKeyTakeawayItems = [
           <img
             src="/birds/roys/roys-shipping.webp"
             alt="IATA-approved live-animal carrier used to ship Roys, a male Congo African Grey, from our Midland TX aviary nationwide"
-            width="260" height="300"
-            class="w-full rounded-2xl shadow-md object-cover"
+            width="260" height="420"
+            class="roys-feature-img w-full rounded-2xl shadow-md object-cover"
             loading="lazy"
-            style="max-height:300px;object-fit:cover;"
           />
           <p class="font-sora text-xs text-stone-400 mt-2 text-center">Roys ships in an IATA LAR-approved carrier &middot; $185 airport &middot; $350 home</p>
         </div>
@@ -1166,6 +1262,8 @@ const roysKeyTakeawayItems = [
       </div>
     </div>
   </section>
+
+  <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
   {/* ══════════════════════════════════════════════
       SECTION 19: FAQ — Roys frequently asked questions
@@ -1302,6 +1400,8 @@ const roysKeyTakeawayItems = [
     </div>
   </section>
 
+  <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
   {/* ══════════════════════════════════════════════
       SECTION 21: MARKETPLACE — Why buy from C.A.Gs vs marketplace?
       Framework: EBP · Cat: C · ~170w
@@ -1369,18 +1469,11 @@ const roysKeyTakeawayItems = [
         subtext="Tell us a little about your home and we will reply within 24 hours. No deposit is taken on the form — we talk first."
         subject="Reserve Roys — Male Congo African Grey $2,300"
         idPrefix="reserve-roys-"
+        compact
+        preselect="roys"
       />
 
-      <div class="mt-14 pt-10 border-t border-stone-200">
-        <NewsletterV2
-          variant="bottom"
-          action="https://formspree.io/f/xrejpnvn"
-          bottomText="Not ready yet? Join our waitlist and hear first when our next Congo or Timneh clutch is ready to place."
-          cta="Get first notice"
-        />
-      </div>
-
-      <div class="mt-10 pt-8 border-t border-stone-200 text-center">
+      <div class="mt-4 text-center">
         <p class="font-sora text-stone-500 text-sm leading-relaxed">
           Roys is one of several hand-raised greys currently available at C.A.Gs.
           <a href="/" class="text-clay-text underline font-semibold ml-1">Visit our homepage to meet all available African Greys →</a>
@@ -1389,6 +1482,8 @@ const roysKeyTakeawayItems = [
       </div>
     </div>
   </section>
+
+  </div>{/* /.roys-d */}
 
   {/* ── SCHEMA ── */}
   <Schema type="product" data={productSchema} />
