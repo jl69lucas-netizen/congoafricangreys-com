@@ -39,6 +39,15 @@ All URLs verified live before insertion. Anchors are sentence-middle/beginning p
 
 ---
 
+## Category: Authority — Veterinary / Pet-Bird Care (added 2026-06-19, bird pages)
+
+| URL | Category | Anchor Variant 1 | Anchor Variant 2 | Anchor Variant 3 | Status |
+|-----|----------|-----------------|-----------------|-----------------|--------|
+| `https://www.avma.org/resources/pet-owners/petcare/selecting-pet-bird` | Authority | the American Veterinary Medical Association's pet-bird selection guidance | AVMA guidance on choosing and caring for a pet bird | veterinary advice on a bird's lifelong care commitment (AVMA) | ✅ 200 (curl 403 = Imperva WAF; verified live via Firecrawl) |
+| `https://lafeber.com/pet-birds/species/african-grey-parrot/` | Authority | Lafeber's African Grey personality and care profile | the African Grey diet and enrichment overview at Lafeber | Lafeber Co. African Grey species care page | ✅ 200 (curl 403 = Cloudflare challenge; verified live via Firecrawl) |
+
+---
+
 ## Category: Authority — Reverse Image / WHOIS
 
 | URL | Category | Anchor Variant 1 | Anchor Variant 2 | Anchor Variant 3 | Status |
