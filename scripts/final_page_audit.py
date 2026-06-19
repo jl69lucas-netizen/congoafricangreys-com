@@ -135,7 +135,12 @@ def audit_html(slug, html, page_type="interior"):
     # word count of visible body (scripts stripped)
     vis = re.sub(r"<script[\s\S]*?</script>", "", raw)
     nwords = len(re.sub(r"<[^>]+>", " ", vis).split())
-    r["wordcount_in_band"] = 600 <= nwords <= 1200  # 700-1000 target ±buffer for chrome
+    # Bird pages use the deep 22-section standard (1,500–4,000 words).
+    # Interior/other pages use the lean target (700–1,000 ±buffer for chrome).
+    if page_type == "bird":
+        r["wordcount_in_band"] = 1500 <= nwords <= 4000
+    else:
+        r["wordcount_in_band"] = 600 <= nwords <= 1200  # 700-1000 target ±buffer for chrome
     # hero must be a real photo, not a placeholder/logo
     content_imgs = [i for i in p.imgs if "logo" not in i.get("src", "").lower()]
     r["real_hero_image"] = bool(content_imgs) and not any(

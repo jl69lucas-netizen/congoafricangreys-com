@@ -5,6 +5,8 @@ description: Use when building, rebuilding, or retiring an individual African Gr
 
 # CAG Individual Bird Listing Page
 
+> **Deep standard (22-section, ~3,150w) → use `skills/cag-bird-page-build.md`. This lean profile remains for minimal one-bird listings.**
+
 ## Overview
 One indexable page per real, available bird. Job = **convert**, not educate. All CLAUDE.md
 Non-Negotiables already apply (first-person voice, shipping line, CITES framing, no visible date,
