@@ -41,7 +41,7 @@ entries to `BIRDS` when a new bird page is built.
 | Check ID | What fails | Rationale |
 |---|---|---|
 | `no_aggregateoffer` | `AggregateOffer` present anywhere in schema | Bird page must be a **single `Product`+`Offer`**; `AggregateOffer` is the variant page (`cag-bird-listing-page`). |
-| `no_pbfd_claim` | Active health CLAIM about PBFD/Polyomavirus in copy or schema (e.g. "tested clear", "negative for", "free of" PBFD) | Not in the Verified-Claim Ledger for bird pages. A mere mention or explicit denial does NOT trigger; the regex targets claim direction only. |
+| `no_pbfd_claim` | **NA (no longer a gate).** PBFD + Avian Polyomavirus PCR screening is in the Verified-Claim Ledger — per-bird testing + records confirmed by breeder 2026-06-20. Asserting "screened for / negative for PBFD" is now permitted on bird pages. (Was FAIL through 2026-06-19.) |
 | `shipping_line` | Missing `$185` and `$350` shipping figures from visible body | Shipping-on-every-card non-negotiable (CLAUDE.md). Canonical line: `Ships nationwide · $185 airport · $350 home`. |
 | `sold_not_instock` | Sold/reserved STATUS signal present AND schema still shows `InStock` | Sell-and-retire lifecycle: sold → 301, never `InStock`. Note: commerce phrases like "sold together" do NOT trigger; only explicit status signals ("now sold", "has been sold", "status: sold", "is reserved", etc.). |
 | `canonical_abs` | Relative canonical (not `https://…`) | Site-wide hard gate — applies to all page types. |
@@ -159,8 +159,8 @@ RUN: python3 scripts/final_page_audit.py --birds
 
 HARD GATES (FAIL — fix before deploy)
 [ ] Schema uses single Product + single Offer — NO AggregateOffer anywhere
-[ ] No PBFD/Polyomavirus health CLAIM in copy or schema ("tested clear / negative for / free of PBFD")
-    — a denial or mere mention is NOT a fail; check claim direction in dist/
+[ ] PBFD/Polyomavirus claim is now ALLOWED (PCR screening in the Verified-Claim Ledger,
+    per-bird testing confirmed by breeder 2026-06-20) — no longer a hard gate
 [ ] Shipping line visible in body: $185 airport pickup · $350 home delivery
 [ ] If bird is sold/reserved: schema shows OutOfStock (not InStock); page has 301 redirect plan
 [ ] Canonical is absolute (https://congoafricangreys.com/available/<slug>/)

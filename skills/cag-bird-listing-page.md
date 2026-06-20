@@ -33,8 +33,9 @@ disk. NOT for variant, location, comparison/for-sale, or blog pages — they hav
    cag-clutch-manager.
 5. **Real image or defined placeholder** under `/<slug>` — never invent a filename that 404s.
 6. **Health claims = ledger only.** Allowed: DNA sex cert, avian-vet health cert, CITES/captive-bred
-   docs, hatch cert + band, weaning status, USDA AWA. **Do NOT assert PBFD or Avian Polyomavirus**
-   (or any test result) — not in the ledger as of 2026-06-18; omit it.
+   docs, hatch cert + band, weaning status, USDA AWA, **PBFD + Avian Polyomavirus PCR screening**
+   (per-bird testing + records confirmed by breeder 2026-06-20 — now in the Verified-Claim Ledger).
+   Still off-limits: any test result or condition NOT in the ledger — omit it.
 
 ## Specs
 700–1,000 visible words, bird-specific. Data: `clutch-inventory.json` (facts + notes→archetype),
@@ -42,5 +43,5 @@ disk. NOT for variant, location, comparison/for-sale, or blog pages — they hav
 deposit), `price-matrix.json` (price). Archetype (CLEO/REX/NOVA/SAGE/IRIS) via cag-bird-personality.
 
 ## Common mistakes
-AggregateOffer on one bird · re-teaching species facts · inventing an image path · asserting
-PBFD/Polyomavirus · leaving a sold bird InStock · adding city/state targeting (cannibalizes location pages).
+AggregateOffer on one bird · re-teaching species facts · inventing an image path ·
+leaving a sold bird InStock · adding city/state targeting (cannibalizes location pages).

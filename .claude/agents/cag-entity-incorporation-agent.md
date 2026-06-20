@@ -53,7 +53,7 @@ The breeder created `skills/cag-entity-agent.md` expecting entity-rich, section-
 
 ## Verified-Claim Ledger (what entities you MAY assert)
 Confirmed by breeder 2026-06-03. **Never assert beyond this without re-confirmation — fabricating a health/credential claim violates the Confidence Gate and is dishonest.**
-- ✅ **PCR-based DNA sexing** · **PBFD (Psittacine Beak & Feather Disease) screening** · **Polyomavirus (APV) screening** · **board-certified avian veterinarian**
+- ✅ **PCR-based DNA sexing** · **PBFD (Psittacine Beak & Feather Disease) screening** · **Polyomavirus (APV) screening** · **board-certified avian veterinarian** — *PBFD/APV: per-bird PCR testing + records re-confirmed by breeder 2026-06-20; assertable on individual bird `/available/` pages too (the "no PBFD on bird pages" caveat is retired).*
 - ✅ 3-day written health guarantee · CITES Appendix I captive-bred (CoP17 2017) · USDA AWA license · hatch certificate + closed band · fully weaned 12–16 wks
 - ✅ Shipping **$185 airport pickup / $350 home delivery** (Delta/United/American; IATA LAR)
 - ✅ Congo = *Psittacus erithacus* · Timneh = *Psittacus timneh* (a **full species**, not a subspecies)
