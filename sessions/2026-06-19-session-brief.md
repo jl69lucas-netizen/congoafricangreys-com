@@ -36,14 +36,13 @@ Elad (Timneh ♂ $1,600, EBP) · Evie (Timneh ♀ $1,500, QAB).
 ## Open Flags
 - (none blocking) — Roys page currently states age "4 months"; sibling cards list Bery 1yr / Amie 3mo /
   Elad 5mo / Evie 6mo. Use page-confirmed ages; confirm with breeder if any age has changed.
-- **2026-06-20 — PBFD claim inside the Trust & Certification panel image (NEEDS BREEDER DECISION).** During the
-  Roys refinement we enlarged `/birds/roys/roys-trust-panel.webp` to full-width in the Documentation section
-  (per breeder request). The infographic contains a **"PBFD/Psittacosis Tested — negative for PBFD"** card.
-  The page *text* correctly avoids any PBFD claim (PBFD is NOT in the Verified-Claim Ledger; only psittacosis,
-  UV-B/D3, Maxy are ✅). Now that the panel is large + readable, the PBFD claim is prominent. **Decision needed:**
-  (a) confirm PBFD testing is real → add PBFD to the Verified-Claim Ledger, or (b) swap the panel image for a
-  version without the PBFD card. Do NOT keep promoting an unverified health claim. The same panel image is on
-  other bird/credential surfaces — fix once at the asset, propagate everywhere.
+- **2026-06-20 — PBFD claim in the Trust & Certification panel image — RESOLVED.** Breeder confirmed C.A.Gs
+  PCR-tests every bird for PBFD and holds the records. PBFD/APV screening was already ✅ in the Verified-Claim
+  Ledger (homepage map + entity agent); the only inconsistency was the bird-page rules still saying "no PBFD."
+  Fixed: retired the "no PBFD on bird pages" gate everywhere — `scripts/final_page_audit.py` (`no_pbfd_claim`
+  FAIL→NA), `skills/cag-bird-listing-page.md`, `skills/cag-final-page-pass.md`, `CLAUDE.md`, and added the dated
+  per-bird confirmation to both ledger files. Roys trust-panel image kept as-is (now backed). PBFD is now an
+  assertable trust signal on bird pages — optionally surface it in bird-page health copy going forward.
 
 ## Deploy reminder
 Work on `main`; commit + `git push` after each build (= auto-deploy). After page set: `npx astro build`

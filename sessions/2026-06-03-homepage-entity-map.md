@@ -6,7 +6,7 @@ This is the reusable "true entity, section-by-section" playbook the breeder aske
 ## Verified-claim ledger (what entities we are ALLOWED to assert)
 Confirmed by breeder 2026-06-03. **Never assert beyond this list without re-confirmation.**
 - ✅ **PCR-based DNA sexing** (upgrade from generic "DNA sexing")
-- ✅ **PBFD (Psittacine Beak & Feather Disease) screening**
+- ✅ **PBFD (Psittacine Beak & Feather Disease) screening** (per-bird PCR testing + records re-confirmed 2026-06-20 — assertable on individual `/available/` bird pages too)
 - ✅ **Polyomavirus (APV) screening**
 - ✅ **Board-certified avian veterinarian**
 - ✅ 3-day written health guarantee · CITES Appendix I captive-bred · USDA AWA license · hatch certificate + closed band

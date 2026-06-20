@@ -61,7 +61,7 @@ PROFILES = {
         "newsletter_present": "NA",      # bird pages exempt (footer newsletter only)
         "all_h1_h4": "WARN",             # spec §4: H4 only where depth exists on a lean bird page
         "no_aggregateoffer": "FAIL",     # single Product+Offer only
-        "no_pbfd_claim": "FAIL",         # not in Verified-Claim Ledger
+        "no_pbfd_claim": "NA",           # PBFD + APV screening IS in the Verified-Claim Ledger (per-bird PCR testing confirmed by breeder 2026-06-20) — claim now permitted
         "shipping_line": "FAIL",
         "sold_not_instock": "FAIL",      # explicit: sold bird must not remain InStock in schema
         "wordcount_in_band": "WARN",
