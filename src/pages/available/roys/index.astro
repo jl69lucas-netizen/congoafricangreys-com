@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import TrustBar from '../../../components/TrustBar.astro';
 import Schema from '../../../components/Schema.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
@@ -84,11 +83,10 @@ const roysTocItems = [
   { n: 15, label: "Roys's photo & video gallery",                         href: "#gallery" },
   { n: 16, label: "How do you buy Roys? Step-by-step",                   href: "#buy" },
   { n: 17, label: "Where do C.A.Gs deliver African Greys?",              href: "#shipping" },
-  { n: 18, label: "Our credentials — USDA AWA / CITES / DNA / Avian Vet",href: "#credentials" },
-  { n: 19, label: "Roys — frequently asked questions",                    href: "#faq" },
-  { n: 20, label: "Reviews — more happy C.A.Gs owners",                  href: "#reviews-bottom" },
-  { n: 21, label: "Why buy from C.A.Gs instead of a marketplace?",       href: "#marketplace" },
-  { n: 22, label: "Ready to bring Roys home?",                           href: "#reserve" },
+  { n: 18, label: "Roys — frequently asked questions",                    href: "#faq" },
+  { n: 19, label: "Reviews — more happy C.A.Gs owners",                  href: "#reviews-bottom" },
+  { n: 20, label: "Why buy from C.A.Gs instead of a marketplace?",       href: "#marketplace" },
+  { n: 21, label: "Ready to bring Roys home?",                           href: "#reserve" },
 ];
 
 const roysCounterStats = [
@@ -118,7 +116,6 @@ const roysJumpSections = [
   { id: "documentation",label: "Documents",   part: 2 },
   { id: "health",       label: "Health",      part: 2 },
   { id: "price-counter",label: "Why $2,300",  part: 2 },
-  { id: "credentials",  label: "Credentials", part: 2 },
   { id: "gallery",      label: "Gallery",     part: 3 },
   { id: "comparison",   label: "Compare",     part: 3 },
   { id: "reviews-mid",  label: "Reviews",     part: 3 },
@@ -269,6 +266,9 @@ const roysJumpParts = {
     </div>
   </section>
 
+  {/* ── COUNTER SNIPPET — moved directly under the hero (above "At a glance") ── */}
+  <CounterSnippet stats={roysCounterStats} />
+
   {/* ── AEO SNAPSHOT — modern info card (green header band + spec tiles) ── */}
   <section class="py-12 px-4 bg-cream">
     <div class="max-w-3xl mx-auto">
@@ -299,12 +299,6 @@ const roysJumpParts = {
     </div>
   </section>
 
-  {/* ── TRUST BAR ── */}
-  <TrustBar />
-
-  {/* ── COUNTER SNIPPET ── */}
-  <CounterSnippet stats={roysCounterStats} />
-
   {/* ══════════════════════════════════════════════
       SECTION 1: KEY TAKEAWAY — Is Roys right for me?
       Placed ABOVE the TOC (after the counter snippet) so the "short version"
@@ -328,7 +322,7 @@ const roysJumpParts = {
             <p class="font-sora text-xs font-bold uppercase tracking-widest text-clay">Inside this page</p>
             <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark">On This Page</h2>
           </div>
-          <p class="font-sora text-sm text-stone-500">22 sections · everything about Roys</p>
+          <p class="font-sora text-sm text-stone-500">21 sections · everything about Roys</p>
         </div>
         <div class="mt-6 grid grid-cols-1 gap-x-10 gap-y-1 md:grid-cols-2">
           {roysTocItems.map((item) => (
@@ -448,6 +442,20 @@ const roysJumpParts = {
         </ul>
       </div>
 
+      {/* Selling-point image — Roys hand-feeding (tameness proof), full-width centered below the $850 breakdown */}
+      <figure class="my-7">
+        <img
+          src="/roys-congo-african-grey-male-4-months.webp"
+          alt="Roys, a hand-fed 4-month male Congo African Grey for sale, gently taking food from an open hand — proof of the tame, hand-raised bird the $2,300 price pays for"
+          title="Buy a tame, hand-fed male Congo African Grey — Roys, DNA-tested 4-month Congo parrot for sale at C.A.Gs, Midland TX"
+          width="760" height="950"
+          class="w-full rounded-2xl border border-stone-200 object-cover"
+          loading="lazy"
+          style="max-height:560px;object-fit:cover;object-position:center;box-shadow:0 6px 24px rgba(60,30,10,0.10);"
+        />
+        <figcaption class="font-sora text-xs text-stone-400 mt-2 text-center">This is what $2,300 buys: a hand-fed Congo that takes food straight from your fingers — gentle, tame, and trusting. That temperament is the whole point of hand-rearing.</figcaption>
+      </figure>
+
       <p class="font-sora text-stone-600 leading-relaxed mb-4">A documented, hand-raised Congo cannot honestly be produced for $850. When you see that figure, you are looking at a bird missing everything above — or a listing with no real bird behind it at all. The gap is not markup. It is paperwork, health, and accountability.</p>
 
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">Why does the paperwork matter 40 years from now?</h3>
@@ -474,17 +482,21 @@ const roysJumpParts = {
   <section id="documentation" class="py-16 px-4 bg-cream">
     <div class="max-w-3xl mx-auto">
       <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">What documentation comes with Roys?</h2>
-      <div class="grid md:grid-cols-[1fr_240px] gap-8 items-start mb-6">
-        <p class="font-sora text-stone-600 leading-relaxed">Every grey we sell ships with a full documentation set, and Roys is no exception. We never ask a buyer to take our word for it — he goes home with the same paperwork standard we hold every C.A.Gs bird to. Here is exactly what travels with him.</p>
+      <p class="font-sora text-stone-600 leading-relaxed mb-6">Every grey we sell ships with a full documentation set, and Roys is no exception. We never ask a buyer to take our word for it — he goes home with the same paperwork standard we hold every C.A.Gs bird to. Here is exactly what travels with him.</p>
+
+      {/* Trust & Certification panel — full-width centered (was a small right-rail thumbnail) */}
+      <figure class="my-7">
         <img
           src="/birds/roys/roys-trust-panel.webp"
-          alt="Roys's documentation and certification panel — DNA sex cert, CITES papers, avian-vet health certificate"
-          width="240" height="200"
-          class="w-full rounded-xl shadow-sm bg-cream"
+          alt="Trust and certification panel for Roys, a DNA-tested male Congo African Grey for sale — USDA AWA license, CITES Appendix I papers, DNA sex certificate, and avian-vet health certificate"
+          title="Roys — male Congo African Grey for sale | full documentation set: USDA AWA, CITES Appendix I, DNA-sexed, avian-vet health certificate"
+          width="760" height="300"
+          class="w-full rounded-2xl border border-stone-200 bg-white"
           loading="lazy"
-          style="object-fit:contain;"
+          style="box-shadow:0 4px 20px rgba(60,30,10,0.07);object-fit:contain;"
         />
-      </div>
+        <figcaption class="font-sora text-xs text-stone-400 mt-2 text-center">Every C.A.Gs grey ships with the same verified documentation set — USDA AWA license, CITES Appendix&nbsp;I papers, DNA sex certificate, and an avian-vet health certificate.</figcaption>
+      </figure>
 
       <div class="space-y-5">
         <div>
@@ -596,7 +608,7 @@ const roysJumpParts = {
       <div class="mb-7 border-l-4 border-green pl-4">
         <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">Compare Our Available Greys</p>
         <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">How does Roys compare to our other available greys?</h2>
-        <p class="font-sora text-stone-500 mt-2 text-sm leading-relaxed" style="max-width:70ch;">We have four individually different birds available right now. Roys is not the only option — here is how they stack up, so you can find the one that actually fits your home. For a deeper species comparison, see <a href="/congo-vs-timneh-african-grey/" class="text-clay-text underline">our Congo vs Timneh comparison</a>.</p>
+        <p class="font-sora text-stone-500 mt-2 text-sm leading-relaxed" style="max-width:70ch;">We have four individually different birds available right now. Roys is not the only option — here is how they stack up, so you can find the one that actually fits your home. <a href="/congo-vs-timneh-african-grey/" class="text-clay-text underline">Our Congo vs Timneh comparison</a> goes deeper on the species differences if you are still weighing the two variants.</p>
       </div>
 
       <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
@@ -957,6 +969,20 @@ const roysJumpParts = {
       <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">How do you train an African Grey like Roys?</h2>
       <p class="font-sora text-stone-600 leading-relaxed mb-6">Training an African Grey is less about commands and more about building trust. Roys is 4 months old — exactly the right stage to start the patient, positive-reinforcement approach that produces a well-adjusted grey for life. Our full <a href="/how-to-tame-african-grey-parrot/" class="text-clay-text underline">guide to taming an African Grey</a> covers every stage, but here is the core method we use with every bird from our aviary.</p>
 
+      {/* Enrichment / foraging illustration */}
+      <figure class="my-6 max-w-md mx-auto">
+        <img
+          src="/birds/roys/roys-gallery-5.webp"
+          alt="A young Congo African Grey working a colourful foraging toy in our Midland, TX nursery — the daily enrichment every hand-raised African Grey parrot for sale needs"
+          title="Enrichment and foraging for a hand-raised Congo African Grey — C.A.Gs, Midland TX"
+          width="600" height="750"
+          class="w-full rounded-2xl border border-stone-200 object-cover"
+          loading="lazy"
+          style="max-height:460px;object-fit:cover;object-position:center;box-shadow:0 4px 20px rgba(60,30,10,0.07);"
+        />
+        <figcaption class="font-sora text-xs text-stone-400 mt-2 text-center">Foraging toys do half the training for you — a busy beak builds a confident, well-adjusted grey.</figcaption>
+      </figure>
+
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-4">Training Roys — the step-up method</h3>
       <ol class="space-y-4 mb-6">
         <li class="flex gap-4">
@@ -1018,7 +1044,7 @@ const roysJumpParts = {
       </div>
 
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">The four pellet brands we stand behind</h3>
-      <p class="font-sora text-stone-600 leading-relaxed mb-4">Here at C.A.Gs we have fed and evaluated many formulations across the flock. The four brands we confidently recommend — and have used in our own aviary — are <strong>Harrison's Bird Foods</strong>, <strong>Roudybush Daily Maintenance</strong>, <strong>TOP's Parrot Food</strong>, and <strong>ZuPreem Natural</strong>. All four are nutritionally complete and avoid the artificial dyes that can irritate sensitive greys. For the full comparison of ingredients and conversion tips, see <a href="/african-grey-parrot-diet/" class="text-clay-text underline">our African Grey diet guide</a> and <a href="/best-african-grey-parrot-food/" class="text-clay-text underline">best food for African Greys</a>.</p>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">Here at C.A.Gs we have fed and evaluated many formulations across the flock. The four brands we confidently recommend — and have used in our own aviary — are <strong>Harrison's Bird Foods</strong>, <strong>Roudybush Daily Maintenance</strong>, <strong>TOP's Parrot Food</strong>, and <strong>ZuPreem Natural</strong>. All four are nutritionally complete and avoid the artificial dyes that can irritate sensitive greys. <a href="/african-grey-parrot-diet/" class="text-clay-text underline">Our African Grey diet guide</a> and <a href="/best-african-grey-parrot-food/" class="text-clay-text underline">best food for African Greys</a> both lay out the full ingredient comparison and conversion tips if you want to go deeper.</p>
 
       <figure class="my-6">
         <img
@@ -1086,56 +1112,66 @@ const roysJumpParts = {
         <p class="font-sora text-stone-500 mt-2 text-sm">Every image below is Roys himself — taken in our Midland, TX aviary. What you see is what ships to you.</p>
       </div>
 
-      {/* Photo grid — 5 images */}
+      {/* Photo grid — uniform portrait tiles, each centered on the bird so nothing is cropped; hand-feeding shot front-loaded as the featured lead */}
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-        <div class="col-span-2 md:col-span-2 row-span-1">
+        {/* Featured — hand-feeding (the most important Roys image) */}
+        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-stone-200 ring-2 ring-clay/30" style="box-shadow:0 4px 20px rgba(60,30,10,0.08);">
           <img
-            src="/birds/roys/roys-gallery-1.webp"
-            alt="Roys, male Congo African Grey for sale at C.A.Gs Midland TX — alert perch pose showing red tail feathers and silver plumage"
-            width="640" height="400"
-            class="w-full rounded-2xl object-cover"
+            src="/roys-congo-african-grey-male-4-months.webp"
+            alt="Buy Roys — a tame, hand-fed male Congo African Grey for sale taking food from an open hand, DNA-tested and CITES-documented at C.A.Gs Midland, TX"
+            title="Hand-fed male Congo African Grey for sale near me — Roys, tame DNA-tested Congo parrot at C.A.Gs"
+            width="400" height="500"
+            class="w-full h-full object-cover"
             loading="lazy"
-            style="max-height:320px;object-fit:cover;"
+            style="object-position:center 44%;"
           />
         </div>
-        <div>
+        {/* gallery-2 — full-body profile */}
+        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-stone-200">
           <img
             src="/birds/roys/roys-gallery-2.webp"
-            alt="Roys the hand-raised male Congo African Grey — close-up showing black beak, white face mask, and bright eye ring"
-            width="320" height="320"
-            class="w-full rounded-2xl object-cover"
+            alt="Roys, hand-raised male Congo African Grey for sale — full-body profile showing scarlet tail, silver plumage, and closed leg band"
+            title="Male Congo African Grey parrot for sale — Roys, captive-bred and DNA-sexed at C.A.Gs"
+            width="400" height="500"
+            class="w-full h-full object-cover"
             loading="lazy"
-            style="max-height:320px;object-fit:cover;"
+            style="object-position:center 18%;"
           />
         </div>
-        <div>
-          <img
-            src="/birds/roys/roys-gallery-3.webp"
-            alt="Roys exploring a foraging toy — demonstrating the problem-solving drive typical of 4-month Congo African Greys"
-            width="320" height="260"
-            class="w-full rounded-2xl object-cover"
-            loading="lazy"
-            style="max-height:260px;object-fit:cover;"
-          />
-        </div>
-        <div>
+        {/* gallery-4 — side profile */}
+        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-stone-200">
           <img
             src="/birds/roys/roys-gallery-4.webp"
-            alt="Roys at rest in our aviary — captive-bred male Congo African Grey showing natural relaxed posture"
-            width="320" height="260"
-            class="w-full rounded-2xl object-cover"
+            alt="Captive-bred male Congo African Grey for sale — Roys at 4 months, side profile with foraging toy and visible closed leg band"
+            title="Buy a DNA-tested Congo African Grey parrot — Roys, hand-raised in Midland, TX"
+            width="400" height="500"
+            class="w-full h-full object-cover"
             loading="lazy"
-            style="max-height:260px;object-fit:cover;"
+            style="object-position:center 28%;"
           />
         </div>
-        <div>
+        {/* gallery-1 — eating (bird sits low in frame) */}
+        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-stone-200">
           <img
-            src="/birds/roys/roys-gallery-5.webp"
-            alt="Roys interacting with enrichment in the C.A.Gs nursery — hand-raised male Congo grey, 4 months old"
-            width="320" height="260"
-            class="w-full rounded-2xl object-cover"
+            src="/birds/roys/roys-gallery-1.webp"
+            alt="Hand-raised baby Congo African Grey for sale — Roys eating fresh fruit, showing the red tail and silver feathers of a young Congo parrot"
+            title="Baby Congo African Grey parrot for sale — Roys at mealtime, C.A.Gs Midland TX"
+            width="400" height="500"
+            class="w-full h-full object-cover"
             loading="lazy"
-            style="max-height:260px;object-fit:cover;"
+            style="object-position:center 74%;"
+          />
+        </div>
+        {/* gallery-3 — exploring a foraging toy */}
+        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-stone-200">
+          <img
+            src="/birds/roys/roys-gallery-3.webp"
+            alt="Tame Congo African Grey parrot for sale — Roys exploring a foraging toy, the problem-solving drive of a 4-month hand-raised Congo"
+            title="Tame hand-raised Congo African Grey for sale — Roys, 4-month male at C.A.Gs"
+            width="400" height="500"
+            class="w-full h-full object-cover"
+            loading="lazy"
+            style="object-position:center 22%;"
           />
         </div>
       </div>
@@ -1262,55 +1298,6 @@ const roysJumpParts = {
     </div>
   </section>
 
-  {/* ══════════════════════════════════════════════
-      SECTION 18: CREDENTIALS — USDA AWA / CITES / DNA / Avian Vet
-      Framework: EEAT · Cat: A · ~80w
-      KEPT-VERBATIM trust block (per breeder instruction)
-      ══════════════════════════════════════════════ */}
-  <section id="credentials" class="py-16 px-4 bg-cream">
-    <div class="max-w-3xl mx-auto">
-      <div class="mb-7 text-center">
-        <p class="font-sora text-xs font-bold uppercase tracking-widest text-clay mb-2">Verified by license and inspection</p>
-        <h2 class="font-lora font-bold text-3xl text-logo-dark">Our credentials — USDA AWA / CITES / DNA / Avian Vet</h2>
-        <p class="font-sora text-stone-500 mt-2 text-sm">Every credential listed below is verifiable. We do not ask you to take our word for it.</p>
-      </div>
-
-      <div class="grid sm:grid-cols-2 gap-4 mb-7">
-        {[
-          { icon: `<svg viewBox="0 0 24 24" width="1.25em" height="1.25em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`, label: "USDA AWA Licensed", body: "Our aviary holds a USDA Animal Welfare Act license — the federal standard for animal dealers and breeders, subject to inspection." },
-          { icon: `<svg viewBox="0 0 24 24" width="1.25em" height="1.25em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>`, label: "Federal Breeder License", body: "We hold a federal breeder license — a separate license layer above the AWA that applies specifically to CITES-listed species." },
-          { icon: `<svg viewBox="0 0 24 24" width="1.25em" height="1.25em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6l-4.6 9.2A1.5 1.5 0 0 0 6.7 21h10.6a1.5 1.5 0 0 0 1.3-2.8L14 9V3"/></svg>`, label: "CITES Appendix I Compliant", body: "African Greys are CITES Appendix I. Every bird we place is captive-bred in the USA with full Appendix I documentation." },
-          { icon: `<svg viewBox="0 0 24 24" width="1.25em" height="1.25em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`, label: "Captive-Bred Documentation", body: "Hatch certificate + closed leg band — tamper-resistant proof of captive origin that travels home with every bird." },
-          { icon: `<svg viewBox="0 0 24 24" width="1.25em" height="1.25em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6l-4.6 9.2A1.5 1.5 0 0 0 6.7 21h10.6a1.5 1.5 0 0 0 1.3-2.8L14 9V3"/></svg>`, label: "DNA Sexed & Certified", body: "Lab-confirmed sex via PCR DNA testing — a certificate naming the bird, the date, and the confirming lab comes with Roys." },
-          { icon: `<svg viewBox="0 0 24 24" width="1.25em" height="1.25em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`, label: "Avian Vet Health Certificate", body: "Issued by a veterinarian following AAV standards within 10 days of travel. Roys cannot ship without it." },
-        ].map(c => (
-          <div class="bg-white rounded-2xl p-5 border border-stone-200 flex gap-4 items-start" style="box-shadow:0 2px 12px rgba(60,30,10,0.05);">
-            <span class="text-green flex-shrink-0 mt-0.5" set:html={c.icon} />
-            <div>
-              <p class="font-lora font-semibold text-logo-dark text-base mb-1">{c.label}</p>
-              <p class="font-sora text-stone-500 text-xs leading-relaxed">{c.body}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div class="bg-white border border-stone-200 rounded-2xl p-5 flex gap-4 items-center" style="box-shadow:0 2px 12px rgba(60,30,10,0.05);">
-        <img
-          src="/birds/roys/roys-trust-panel.webp"
-          alt="Roys's CITES, DNA, and avian-vet certification panel — documentation that travels with every C.A.Gs grey"
-          width="120" height="100"
-          class="w-24 h-20 rounded-xl object-cover flex-shrink-0"
-          loading="lazy"
-          style="object-fit:cover;"
-        />
-        <div>
-          <p class="font-sora font-semibold text-sm text-logo-dark">Certificate with every bird</p>
-          <p class="font-sora text-stone-500 text-xs leading-relaxed mt-1">Roys ships with his complete documentation set. No chasing paperwork after the fact — the whole packet goes home with him on travel day.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
 
   {/* ══════════════════════════════════════════════
@@ -1427,12 +1414,16 @@ const roysJumpParts = {
           <p class="font-sora text-xs text-stone-400 mt-3">Verified C.A.Gs buyer</p>
         </div>
 
-        {/* Review — generic verified buyer #3 (no photo available — use icon) */}
+        {/* Review — Richard Woodard */}
         <div class="bg-white rounded-2xl p-6 border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-green/15 flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
+            <img
+              src="/richard-woodard-winter-haven-fl-review.webp"
+              alt="Richard Woodard, verified C.A.Gs Congo African Grey buyer from Winter Haven, FL"
+              width="40" height="40"
+              class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+              loading="lazy"
+            />
             <div>
               <p class="font-sora font-semibold text-sm text-logo-dark">Richard Woodard</p>
               <p class="font-sora text-xs text-stone-400">Winter Haven, FL &middot; Congo African Grey</p>
