@@ -8,15 +8,30 @@
 Apply the full "Roys treatment" to the 5 remaining **available** birds, building **Amie first** as the worked example, then templating to the rest. Each page = ~5,700 visible words, 23 sections, H1–H6, mixed HTML-card infographics + Gemini-generated graphics + real breeder photos. First-person C.A.Gs voice, CITES Appendix-I/captive-bred-USA safe, no visible dates, single `Product`+`Offer` schema, Verified-Claim Ledger bounded.
 
 ## Scope — the 5 birds (Batch 1)
-| Bird | Sex | Variant | Age | Price | Primary keyword | Note |
-|---|---|---|---|---|---|---|
-| **Amie** | ♀ | Congo | 3 mo | $2,500 | female congo african grey for sale | Worked example; full social training |
-| Bery | ♀ | Congo | 1 yr | $1,700 | hand-raised congo african grey for sale | |
-| Jins & Jeni | pair | Congo | — | $3,500 | african grey breeding pair for sale | **Different structure** (bonded pair, not single bird) |
-| Elad | ♂ | (verify variant) | — | $1,600 | male african grey for sale | Inventory says Congo; polish-program memory says Timneh — **confirm before build** |
-| Evie | ♀ | (verify variant) | — | $1,500 | female african grey for sale | Same variant-discrepancy flag as Elad |
+Facts verified against homepage cards (`src/pages/index.astro`) + `data/clutch-inventory.json`, 2026-06-20.
 
-> **Open flag:** clutch-inventory.json lists Elad/Evie as `congo_african_grey`; the sitewide-polish memory calls them Timneh. Resolve with the breeder before building those two; Amie/Bery/Jins&Jeni are unaffected.
+| Bird | Sex | Variant | Age | Price | Note |
+|---|---|---|---|---|---|
+| **Amie** | ♀ | Congo | 3 mo | $2,500 | Worked example; hand-raised, full social training |
+| Bery | ♀ | Congo | 1 yr | $1,700 | Hand-raised, gentle; past the hand-feeding stage |
+| Jins + Jeni | pair (♂ Jins 6mo + ♀ Jeni 4mo) | Congo | 4–6 mo | $3,500 pair | **Unrelated companion pair — must be adopted together. NOT a breeding pair.** Pair-adapted structure |
+| Elad | ♂ | **Timneh** | 5 mo | $1,600 | Hand-raised, full social training |
+| Evie | ♀ | **Timneh** | 6 mo | $1,500 | Hand-raised, gentle & sociable; lowest price |
+
+> Variant note resolved 2026-06-20: Elad **and** Evie are Timneh per both inventory and the homepage cards (the earlier "inventory says Congo" note was an error and is removed). Jins + Jeni are an **unrelated companion pair sold together**, never framed as a breeding pair.
+
+## The 5 transactional angles (one distinct keyword lane per bird — no cannibalization)
+Every page is **transactional-first**. Roys already owns *male congo african grey for sale* — each new bird takes a **different lane** so they don't compete in the SERP. Each lane spans all tiers: **primary** · **long-tail / long-form phrase** · **LSI / NLP entities** · **compact**.
+
+| Bird | Primary (transactional) | Long-tail / long-form | LSI · NLP entities | Compact |
+|---|---|---|---|---|
+| **Amie** | **baby congo african grey for sale** | "hand-raised baby female congo african grey for sale", "3-month-old congo african grey parrot for sale near me" | weaning, hand-fed chick, fledgling, fully socialised, clutch, DNA-sexed female | baby congo grey, female CAG |
+| **Bery** | **hand-raised congo african grey for sale** (started/older bird) | "1-year-old congo african grey for sale", "started congo african grey parrot past hand-feeding for sale" | weaned, started bird, settled temperament, gentle, easier first transition | started congo grey, young adult grey |
+| **Jins + Jeni** | **pair of african greys for sale** | "two hand-raised african greys for sale together", "bonded congo african grey pair must go together — not a breeding pair" | companion pair, sibling-bond/cohort-bonded (not mated), buy-two, adopt-together, dual cage setup | african grey pair, grey duo |
+| **Elad** | **male timneh african grey for sale** | "hand-raised male timneh african grey parrot for sale", "timneh african grey for sale — calmer, earlier-talking grey" | Psittacus timneh, maroon tail, calmer temperament, earlier talker, first-time-owner friendly | male timneh, timneh grey |
+| **Evie** | **female timneh african grey for sale** | "gentle female timneh african grey for sale", "baby timneh african grey parrot for sale — value priced" | Psittacus timneh, sociable hen, value-priced, gentle, lower body-weight (275–375g) | female timneh, timneh hen |
+
+**Does this redo anything?** **No.** The 23-section template, frameworks, image strategy, mobile-fit rule, and schema shape are bird-agnostic and unchanged. Only the **per-bird keyword/angle layer** — which the spec always defined as bespoke ("never copy Roys's angle") — is now filled in correctly. Zero rework to the approved matrix; this *sharpens* the per-bird customization, it doesn't reopen the design.
 
 ## Approved decisions (this session, 2026-06-20)
 
@@ -71,7 +86,7 @@ Category: **A** = mandatory core · **B** = competitor-match · **C** = our moat
 - Optional §6 trust panel — only if breeder requests.
 
 ## Per-bird customization (what changes vs the template)
-Constant: structure, frameworks, image-source map, voice, schema shape, mobile-fit rule. **Bespoke per bird:** primary keyword + fan-out, personality/archetype copy, price + what's-included figures, parent birds, real photo set, FAQ specifics, the bird's individual angle (never copy Roys's angle — polish-program rule). Jins & Jeni use a **pair-adapted** structure (two birds, bonded-pair framing, pair pricing).
+Constant: structure, frameworks, image-source map, voice, schema shape, mobile-fit rule. **Bespoke per bird:** the transactional lane above (primary + long-tail/long-form + LSI/NLP + compact), personality/archetype copy, price + what's-included figures, parent birds, real photo set, FAQ specifics, the bird's individual angle (never copy Roys's angle — polish-program rule). **Jins + Jeni** use a **pair-adapted** structure: two birds profiled, **unrelated-companion-pair** framing (explicitly "not a breeding pair"), pair pricing ($3,500), and a "why adopt two greys together" section; schema still single `Product` for the pair offer.
 
 ## Constraints (binding)
 - Build on **`main`**, `src/pages/available/<slug>/index.astro`, commit + push after each page (push = deploy).
