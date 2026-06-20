@@ -796,7 +796,7 @@ Under 4 words each, start with a number or percentage:
 
 **Image Placeholders:**
 Leave clearly labeled placeholders for all images/videos:
-- `[INSERT PHOTO: bird-name-profile.webp] Alt: "[250+ char alt text]"`
+- `[INSERT PHOTO: bird-name-profile.webp] Alt: "[≤190-char keyword-rich alt text]" Title: "[transactional-keyword phrase]"`
 - `[INSERT INFOGRAPHIC: feature-type-760px.html]`
 - `[INSERT VIDEO: parrot-culture-demonstration.mp4]`
 - `[INSERT MAP: google-maps-midland-tx-embed]`
@@ -1022,12 +1022,19 @@ Optimized answer (first 50 words): "Adult Congo African Grey parrots typically w
 2. Use the specified `dims`, `source`, and `infographic_type` exactly
 3. Priority: user instruction > image-specs.json > agent defaults
 
-**Every image requires:**
-- **Alt text:** 250+ characters — include keyword, context, entity, location reference
-- **Image description:** 300+ words — detailed SEO-optimized description block
-- **File name:** keyword-rich-seo-filename.webp (lowercase, hyphens, no spaces)
+**Every image is a ranking asset — the 5-Element Image-SEO rule is a MUST (none optional):**
+1. **FILENAME** — keyword-rich, lowercase-with-hyphens, `.webp`, no spaces (e.g. `hand-fed-male-congo-african-grey-for-sale-midland-tx.webp`).
+2. **ALT TEXT** — descriptive, **≤190 characters** (AA / screen-reader cap + the `final_page_audit` alt-length check; an alt >190 is a FAIL). Lead with keyword + entity + context + location.
+3. **TITLE** — the `title=""` attribute: a short transactional-keyword phrase.
+4. **CAPTION** — a visible `<figcaption>` with a soft CTA where natural.
+5. **DESCRIPTION** — a 250+ word SEO-optimized description block (image-metadata pipeline, not the rendered DOM).
+
+**Transactional-keyword variation rule (MUST):** each image's filename / alt / title must use a *different* transactional keyword variation than the visible page copy — e.g. "buy hand-fed male Congo African Grey," "tame DNA-tested baby Congo parrot for sale near me," "captive-bred Congo African Grey for sale Texas" — so one page ranks for many queries. Never repeat the H1 keyword verbatim across images.
+
 - **File size:** Highly compressed (<100KB for page-content images)
 - **Dimensions:** See image-specs.json for page-type-specific specs
+
+> **ALT-length correction (2026-06-20):** alt was previously specced at "250+ chars"; corrected to **≤190** for WCAG-AA + auditor compliance. The long-form 250-char/250-word content now lives in the **TITLE + CAPTION + the 250-word DESCRIPTION**, not in ALT.
 
 **Portrait images:** 1200×2133px native (9:16) — CSS display width: 350px (Rule IMAGE-03)
 **Infographic widths (Rule 54):**
@@ -1178,7 +1185,7 @@ Before final submission, verify all items:
 - ☐ Empathy displayed toward common ownership challenges (40-year commitment, lifespan, care)
 
 **Technical Format:**
-- ☐ All image placeholders with keyword-rich filenames, 250+ char alt text
+- ☐ All image placeholders with keyword-rich filenames, ≤190-char alt text + title + caption (5-element rule)
 - ☐ Video content placeholders present where needed
 - ☐ Map embedding placeholders present for shipping/location sections
 - ☐ Newsletter signup blocks present
