@@ -177,9 +177,9 @@ Word count = top-ranking competitor's word count + 1,000 words minimum. Target f
 - H2: **25–35** throughout (main section headings)
 - H3: **40–50** throughout (subsection headings)
 - H4: **10–20** (deep sub-section headings — LSI keyword territory)
-- H5: **5–10** — MANDATORY, not optional; carries deep LSI / technical authority terms
-- H6: **3–8** — MANDATORY, not optional; carries voice search / natural language queries
-- ALL SIX LEVELS are required on every full-length content page (22+ sections). "H4/H5/H6 as needed" is BANNED. H5 and H6 are not decorative — they are required keyword tiers.
+- H5: **minimum 5** (5–10) — MANDATORY, not optional; carries deep LSI / technical authority terms
+- H6: **minimum 5** (5–10) — MANDATORY, not optional; carries voice search / natural language queries
+- ALL SIX LEVELS are required on every full-length content page (22+ sections). "H4/H5/H6 as needed" is BANNED. H5 and H6 are not decorative — they are required keyword tiers. **Shipping only 1 H6 or only 4 H5 = automatic FAIL (breeder rule, 2026-06-20).**
 
 **Rule 29 — Table of Contents**
 Required on all pages over 1,500 words. Placed after hero + key takeaways section. Uses anchor links to all major sections.
@@ -395,9 +395,17 @@ All keyword variations planned for the page: exact match, phrase match, LSI clus
 - RIGHT: H1 → H2 → H3 → H4 → H5 → H6 → back up to H2 for next section ✓
 - RIGHT: H2 → H3 → H2 (stepping back up to start a new major section) ✓
 - All six levels are REQUIRED on every full-length content page (22+ sections). H5 and H6 are not decorative — they carry deep LSI and voice search keywords respectively.
+- **Semantic level map (every page follows this — breeder rule, 2026-06-20):**
+  - **H1 → Page topic** (one only)
+  - **H2 → Main search intents** (the questions/jobs that bring visitors here)
+  - **H3 → Subtopics / keyword clusters**
+  - **H4 → Micro-intent answers / PAA coverage**
+  - **H5 → Supporting facts / warnings / examples**
+  - **H6 → Ultra-specific details / breeder notes / citations**
 - H5 purpose: deep LSI / technical authority terms ("PBFD Screening Protocol", "USDA AWA License Explained", "DNA Sexing Methodology")
-- H6 purpose: voice search / natural language queries ("Is This Bird Good With Kids?", "What Happens After I Pay a Deposit?", "Can I Visit Before Buying?")
-- Every page outline (Rule 51) must include at least **5 H5 headings** and **3 H6 headings**.
+- H6 purpose: voice search / natural language queries + breeder notes / citations ("Is This Bird Good With Kids?", "What Happens After I Pay a Deposit?", "Source: World Parrot Trust, 2024")
+- Every page outline (Rule 51) must include **a minimum of 5 H5 headings AND 5 H6 headings** — no fewer than 5 of each, per page. 1 H6 or 4 H5 will NOT pass.
+- **OUTLINE-FIRST APPROVAL GATE (mandatory):** Before creating, editing, or updating ANY page, you MUST first show the breeder the page's **complete H1→H6 outline** (every heading, in render order, level-labeled) and get approval. No page code is written or changed until the outline is approved. Enforced mechanically by `scripts/final_page_audit.py` (`all_six_levels`, `min_h5_5`, `min_h6_5` = hard FAIL).
 - Special elements (newsletter, forms, comparison tables, quizzes, calculators, trust badges, video) are REQUIRED on every page. Minimum 3 special elements per page; exact type and placement determined by competitor research per Rule 51 Section E.
 
 ---

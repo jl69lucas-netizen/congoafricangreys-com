@@ -89,6 +89,12 @@ def audit_html(slug, html, page_type="interior"):
     r["all_h1_h4"] = all(p.h[i]>=1 for i in (1,2,3,4))
     r["h_counts"] = "".join(f"H{i}:{p.h[i]} " for i in range(1,7)).strip()
     r["no_skip"] = not any(p.h[i]>0 and p.h[i-1]==0 for i in range(2,7))
+    # --- Heading Outline Gate (seo-rules Rule 52, 2026-06-20) ---
+    # All six levels REQUIRED; H5 >= 5 AND H6 >= 5 on every page. The breeder
+    # will not pass a page that ships only 1 H6 or 4 H5. Hard FAIL by default.
+    r["all_six_levels"] = all(p.h[i]>=1 for i in range(1,7))
+    r["min_h5_5"] = p.h[5] >= 5
+    r["min_h6_5"] = p.h[6] >= 5
     # --- schema (Part I / #12) ---
     blobs=[]; valid=True
     for b in p.jsonld:

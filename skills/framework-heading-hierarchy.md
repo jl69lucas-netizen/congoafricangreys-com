@@ -109,11 +109,11 @@ For every core H2, generate 5 variations for A/B testing:
 
 ---
 
-### H6 — NLP / Natural Language Entities / Voice Search (MANDATORY — Minimum 3 Per Page)
-**Maps to:** Phrases users speak into Siri, Alexa, or type into AI chatbots
-**Format:** Natural language question or statement matching real voice queries
-**Purpose:** Captures voice search and AI Overview citations; answers "what users actually say"
-**Status: MANDATORY — not optional. Every full-length page (22+ sections) must have ≥3 H6 headings.**
+### H6 — NLP / Voice Search / Ultra-Specific Breeder Notes & Citations (MANDATORY — Minimum 5 Per Page)
+**Maps to:** Phrases users speak into Siri, Alexa, or type into AI chatbots; plus ultra-specific details, breeder notes, and source citations
+**Format:** Natural language question or statement matching real voice queries; or a precise breeder note / cited fact
+**Purpose:** Captures voice search and AI Overview citations; answers "what users actually say" and anchors hyper-specific authority detail
+**Status: MANDATORY — not optional. Every full-length page must have ≥5 H6 headings (no fewer than 5 — 1 H6 = automatic FAIL, breeder rule 2026-06-20).**
 
 **Examples:**
 - "Is [Name] Good with Kids and Other Pets?"
@@ -181,8 +181,9 @@ Run this on every page before publishing or after any heading changes:
 - [ ] H2s use conversational or question format where applicable
 - [ ] H3s cover distinct attribute angles (health, size, documentation, temperament — not repeating)
 - [ ] H4 headings present (target 10–20 on full-length pages)
-- [ ] **H5 count ≥ 5** on full-length pages (MANDATORY) — grep: `<h5`
-- [ ] **H6 count ≥ 3** on full-length pages (MANDATORY) — grep: `<h6`
+- [ ] **H5 count ≥ 5** on EVERY page (MANDATORY) — grep: `<h5`
+- [ ] **H6 count ≥ 5** on EVERY page (MANDATORY) — grep: `<h6`
+- [ ] **OUTLINE SHOWN + APPROVED FIRST** — the full H1→H6 outline was presented to the breeder and approved BEFORE any page code was written/edited
 - [ ] **No level skipping** — run skip-detection command below
 - [ ] No two adjacent headings at the same level with the same keyword
 - [ ] No heading text duplicated verbatim in body paragraphs below it
@@ -196,7 +197,7 @@ grep -n "<h[1-6]" site/content/[slug]/index.html | head -80
 
 # Count each level
 grep -c "<h5" site/content/[slug]/index.html   # must be ≥5
-grep -c "<h6" site/content/[slug]/index.html   # must be ≥3
+grep -c "<h6" site/content/[slug]/index.html   # must be ≥5
 
 # Detect skipped levels (prints any H-jump greater than 1)
 grep -oP '(?<=<)[hH][1-6]' site/content/[slug]/index.html | grep -oP '[1-6]' | awk 'NR>1 && $1 > prev+1 {print "SKIP DETECTED: H"prev" → H"$1} {prev=$1}'
@@ -222,8 +223,8 @@ grep -oP '(?<=<)[hH][1-6]' site/content/[slug]/index.html | grep -oP '[1-6]' | a
 2. **5 variations per core H2** — required for all commercial and location pages
 3. **No level skipping** — sequential order only (H1 → H2 → H3 → H4 → H5 → H6); jumping levels is BANNED
 4. **All six levels required** on every full-length page (22+ sections) — H5 and H6 are not optional
-5. **H5 minimum: 5 per page** — deep LSI / technical authority terms
-6. **H6 minimum: 3 per page** — voice search / natural language queries
+5. **H5 minimum: 5 per page** — supporting facts / warnings / examples (deep LSI / technical authority)
+6. **H6 minimum: 5 per page** — ultra-specific details / breeder notes / citations / voice-search queries
 7. **Question format preferred for H2/H3** — conversational, voice-search optimized
 8. **Audit command first** — always grep heading levels and run skip-detection before manual review
-9. **Page Outline includes H1–H6** — the full heading tree must appear in the Rule 51 outline and be approved before writing any section
+9. **OUTLINE-FIRST APPROVAL GATE** — the full H1→H6 heading tree must be presented to the breeder and **approved before any page code is written or edited** (breeder rule 2026-06-20). Semantic map: H1=topic · H2=search intents · H3=subtopics/clusters · H4=micro-intent/PAA · H5=supporting facts/warnings/examples · H6=ultra-specific details/breeder notes/citations.
