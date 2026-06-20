@@ -99,3 +99,8 @@ Constant: structure, frameworks, image-source map, voice, schema shape, mobile-f
 
 ## Out of scope (later batches)
 Money/variant, comparison, location, interior, blog page polish (run after Batch 1 per the sitewide-polish program sequence). Real-photo capture is the breeder's task between sessions.
+
+## Build status
+- **Amie — BUILT + LIVE (2026-06-20):** `src/pages/available/amie/index.astro`, 23 sections, ~6,567 words, full H1–H6, single Product/Offer, FAQPage schema, Care Guides block (Slot B), delivery-coverage map with HTML overlay. Bird audit = PASS-WITH-WARNINGS (only the expected wordcount/house_method WARNs). 14 images processed → `public/birds/amie/` (<100 KB except the two text-dense infographics, capped ~115 KB for legibility). Verified in mobile preview: no page-level horizontal scroll, all images load, no console errors.
+- **OPEN — Amie §10 parents photo:** breeder to send Amie's sire/dam photo (decision 2A). Section is live as honest text-only ("we're happy to share photos… just ask"); when the photo arrives, re-add the parent card (reuse the Roys §10 card markup) at `/birds/amie/amie-parents.webp`.
+- **Next birds (reuse `scripts/scaffold_amie_from_roys.py` pattern):** Bery, Jins+Jeni (pair-adapted), Elad (Timneh), Evie (Timneh) — each with its own transactional lane + bespoke angle + real photos.
