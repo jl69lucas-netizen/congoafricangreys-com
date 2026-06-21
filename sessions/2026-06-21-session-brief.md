@@ -27,8 +27,20 @@ Design decisions:
 - Elad & Evie (Timneh) → the Timneh pair, `assets/brand/Timneh Greys-PAIR.webp`; use a distinct parent-card visual.
 - Give all parents real personalities in copy (breeder-authorized, CITES-safe).
 
-## Bery — BUILT (not yet committed/pushed), 2026-06-21
+## Next builds — decisions locked
+- Timneh parent-card design (elad & evie) = **Split: pair photo left, two parent bios stacked right, warm Timneh accent stripe** — must look distinct from the Congo full-width-photo-over-two-columns card. Parent photo: `assets/brand/Timneh Greys-PAIR.webp`.
+- WAITING ON BREEDER (2026-06-21): Timneh pair's parent NAMES (none recorded) before building elad's §Parents. Also need Jins & Jeni's Macy & Letis photo saved to disk (still a chat attachment) before the jins-jeni build.
+- Build order resumes: elad ($1,600, male, 5mo) → evie ($1,500, female, 6mo) → jins-jeni (pair $3,500, AggregateOffer, unrelated-pair framing).
+
+## Bery — BUILT + LIVE (committed a6780c9, pushed), 2026-06-21
 Full Roys standard via Amie port. Verified: final_page_audit.py --birds → PASS-WITH-WARNINGS, H4:12 H5:5 H6:5, no skips. Age reframed ~1yr, price $1,700, §Parents=Abby (mother, 11). Comparison table + reserve-form AMIE leak fixed. Images: bird-specific = Bery's real photo; generics = shared CAG stock. HOLDING push until Abby photo exists (avoid deploying a 404 parent image).
+
+## Jins & Jeni — BUILT + LIVE, 2026-06-21
+Full Roys standard, PAIR voice (built section-by-section, not sed — pronoun/number agreement). Verified: PASS-WITH-WARNINGS, H4:12 H5:5 H6:5, no skips, build OK, all images resolve in dist, grammar-smell clean. Facts: Jins (male, ~6mo) + Jeni (female, ~4mo), bonded/sold-together pair, $3,500, parents Macy & Letis (2-parent card). Hero = CAG1 video. All 9 provided images used (pair-1..5 ×2, parent, diet, shipping, video ×2); related-guides cards made text-only; 2 redundant figures + duplicate video removed to respect ≤2-uses rule.
+
+### Flags to confirm with breeder (non-blocking)
+- Macy/Letis sexes assumed Macy=mother, Letis=father (names only given). Correct if wrong.
+- Jins & Jeni described as "unrelated pair" yet share parents Macy & Letis — I framed Macy & Letis as the Congo breeding pair behind the clutch and did NOT assert Jins & Jeni are siblings. Confirm framing.
 
 ## Open Flags
 1. **Parent image files** — Abby and Macy & Letis photos were pasted in CHAT (can't be written to disk by the assistant). Need them saved as files:
