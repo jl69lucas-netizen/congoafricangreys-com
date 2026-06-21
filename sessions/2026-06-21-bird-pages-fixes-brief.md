@@ -1,6 +1,7 @@
 # Session Brief — Bird Pages Fixes
 **Date:** 2026-06-21
-**Plan reference:** `docs/superpowers/plans/2026-06-17-cags-comprehensive-page-audit.md`
+**Spec:** `docs/superpowers/specs/2026-06-21-bird-pages-fixes-design.md`
+**Plan:** `docs/superpowers/plans/2026-06-21-bird-pages-fixes.md`
 
 ## Open Flags
 _(none currently — update here if clarification is needed mid-build)_
