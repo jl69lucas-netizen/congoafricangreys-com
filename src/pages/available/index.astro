@@ -134,7 +134,7 @@ const faqSchema = {
     <div class="max-w-5xl mx-auto" style="max-width:1100px;">
       <div class="mb-7 border-l-4 border-green pl-4">
         <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">Available right now</p>
-        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">Which African Greys are available right now?</h2>
+        <h2 class="font-lora font-bold text-logo-dark">Which African Greys are available right now?</h2>
         <p class="font-sora text-stone-600 mt-2 text-sm leading-relaxed" style="max-width:70ch;">Six hand-raised birds are looking for homes. Filter by variant, or tap any bird to see its full page — photos, documentation, and how to reserve.</p>
       </div>
 
@@ -147,25 +147,36 @@ const faqSchema = {
       <h3 class="sr-only">Congo and Timneh African Greys available now</h3>
       <div id="roster-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {birds.map((b) => (
-          <article class={`roster-card flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white variant-${b.variant}`} style="box-shadow:0 4px 20px rgba(60,30,10,0.07);">
-            <a href={b.slug} class="block aspect-[4/5] overflow-hidden bg-cream">
-              <img src={b.img} alt={`${b.name}, a hand-raised ${b.sex.toLowerCase()} ${b.vlabel} African Grey for sale at C.A.Gs, Midland TX`} width="400" height="500" loading="lazy" class="w-full h-full object-cover" style={`object-position:${b.pos};`} />
+          <article class={`roster-card flex flex-col overflow-hidden rounded-2xl border border-stone-100 bg-white variant-${b.variant}`} style="box-shadow:0 4px 20px rgba(60,30,10,0.07);">
+            <a href={b.slug} class="relative block h-72 overflow-hidden bg-green/10">
+              <img src={b.img} alt={`${b.name} — hand-raised ${b.sex.toLowerCase()} ${b.vlabel} African Grey for sale, captive-bred in Midland TX`} width="400" height="288" loading="lazy" class="w-full h-full object-cover" style={`object-position:${b.pos};`} />
+              <span class="absolute top-3 left-3 bg-green text-white text-xs font-semibold px-3 py-1 rounded-full">Available</span>
+              <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-stone-600 text-xs font-sora px-2 py-1 rounded-full">
+                <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Midland, TX
+              </span>
             </a>
-            <div class="flex flex-col flex-1 p-5">
-              <div class="flex items-center justify-between gap-2 mb-1">
-                <h4 class="font-lora font-bold text-xl text-logo-dark">{b.name}</h4>
-                <span class="font-sora text-[10px] font-bold uppercase tracking-wide rounded-full bg-green/10 text-green px-2 py-0.5">Available</span>
+            <div class="p-5 flex flex-col flex-1">
+              <div class="mb-2">
+                <h4 class="font-lora font-bold text-xl text-logo-dark leading-tight">{b.name}</h4>
+                <p class="text-stone-600 text-xs font-sora mt-0.5">{b.sex} &middot; {b.age} &middot; {b.vlabel} African Grey</p>
               </div>
-              <p class="font-sora text-xs text-stone-600 mb-2">{b.vlabel} African Grey &middot; {b.sex} &middot; {b.age}</p>
-              <p class="font-sora text-sm text-stone-600 leading-relaxed mb-3">{b.blurb}</p>
-              <p class="font-sora mb-1">
-                {b.was && <span class="text-stone-500 line-through text-sm mr-2">{b.was}</span>}
-                <span class="font-lora font-bold text-lg text-clay-ink">{b.price}</span>
+              <p class="text-stone-700 text-sm font-semibold leading-snug mb-3 italic">"{b.blurb}"</p>
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">CITES Cert</span>
+                <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">PCR DNA-Sexed</span>
+                <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">Vet Certified</span>
+                <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">Fully Weaned</span>
+              </div>
+              <p class="flex items-center gap-1.5 text-xs font-sora text-stone-600 mb-4 mt-auto">
+                <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+                Ships nationwide &middot; <strong class="text-logo-dark font-semibold">$185</strong> airport &middot; <strong class="text-logo-dark font-semibold">$350</strong> home
               </p>
-              <p class="font-sora text-[11px] text-stone-600 mb-4">Ships nationwide &middot; $185 airport &middot; $350 home</p>
-              <div class="mt-auto flex gap-2">
-                <a href={b.slug} class="flex-1 text-center rounded-full bg-clay px-4 py-2.5 font-sora text-sm font-semibold text-white hover:bg-clay-dk transition-colors">Meet {b.name} →</a>
-                <a href="#reserve" class="rounded-full border-2 border-green px-4 py-2.5 font-sora text-sm font-semibold text-green hover:bg-green hover:text-white transition-colors">Reserve</a>
+              <div class="flex items-center justify-between pt-4 border-t border-stone-100">
+                <div>
+                  {b.was && <span class="text-stone-500 line-through text-sm mr-1.5">{b.was}</span>}
+                  <span class="font-lora font-bold text-2xl text-clay">{b.price}</span>
+                </div>
+                <a href={b.slug} class="bg-clay text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-clay-dk transition-colors whitespace-nowrap">Meet {b.name} →</a>
               </div>
             </div>
           </article>
@@ -183,7 +194,7 @@ const faqSchema = {
   <section id="compare" class="py-16 px-4">
     <div class="max-w-5xl mx-auto" style="max-width:1100px;">
       <div class="mb-7 border-l-4 border-green pl-4">
-        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">How do our available greys compare side by side?</h2>
+        <h2 class="font-lora font-bold text-logo-dark">How do our available greys compare side by side?</h2>
         <p class="font-sora text-stone-600 mt-2 text-sm leading-relaxed" style="max-width:70ch;">Every bird is an individual. Here is the quick side-by-side so you can find the one that fits your home — then read its full page. Still weighing the two variants? See <a href="/congo-vs-timneh-african-grey/" class="text-clay-text underline">Congo vs Timneh</a>.</p>
       </div>
       <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
@@ -213,6 +224,12 @@ const faqSchema = {
           </table>
         </div>
       </div>
+      <figure class="mt-6 mb-1">
+        <a href="/available/elad/" class="block overflow-hidden rounded-2xl border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
+          <img src="/birds/elad/timneh-vs-congo-african-grey-infographic.webp" alt="Congo vs Timneh African Grey infographic comparing size, tail colour, talking age and temperament side by side" title="Congo vs Timneh African Grey comparison" width="1200" height="746" loading="lazy" class="w-full h-auto" />
+        </a>
+        <figcaption class="font-sora text-xs text-stone-600 mt-2 leading-relaxed">How the two greys differ at a glance — our Timneh siblings sit at the smaller, early-talking end. <a href="/available/elad/" class="text-clay-text underline">See Elad's page →</a></figcaption>
+      </figure>
     </div>
   </section>
 
@@ -221,8 +238,15 @@ const faqSchema = {
   {/* ── WHAT COMES WITH EVERY BIRD ── */}
   <section id="documentation" class="py-16 px-4 bg-cream">
     <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">What does every C.A.Gs grey come home with?</h2>
+      <h2 class="font-lora font-bold text-logo-dark mb-4">What does every C.A.Gs grey come home with?</h2>
       <p class="font-sora text-stone-600 leading-relaxed mb-6">Whichever bird you choose, the standard is the same. Every grey leaves us captive-bred, documented, and health-checked — no chasing paperwork after the carrier opens.</p>
+
+      <figure class="mb-7">
+        <a href="/available/amie/" class="block overflow-hidden rounded-2xl border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
+          <img src="/birds/amie/amie-whats-included.webp" alt="The full documentation and starter set that comes home with every C.A.Gs African Grey, including DNA, CITES and hatch certificates" title="What comes home with every C.A.Gs grey" width="1200" height="655" loading="lazy" class="w-full h-auto" />
+        </a>
+        <figcaption class="font-sora text-xs text-stone-600 mt-2 leading-relaxed">Everything that travels with your bird — DNA sex certificate, CITES Appendix I paperwork, hatch certificate and vet health record. <a href="/available/amie/" class="text-clay-text underline">See what comes with Amie →</a></figcaption>
+      </figure>
 
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-2">The documentation set every bird carries</h3>
       <ul class="space-y-2 mb-5">
@@ -255,7 +279,7 @@ const faqSchema = {
   {/* ── PRICING ── */}
   <section id="pricing" class="py-16 px-4">
     <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">How much does an African Grey cost at C.A.Gs?</h2>
+      <h2 class="font-lora font-bold text-logo-dark mb-4">How much does an African Grey cost at C.A.Gs?</h2>
       <p class="font-sora text-stone-600 leading-relaxed mb-5">Our available greys run from <strong>$1,500 to $3,500</strong>. The figure reflects the real cost of hand-rearing a documented bird — not what the market will bear. Our full <a href="/african-grey-parrot-price/" class="text-clay-text underline">African Grey price breakdown</a> shows where every dollar goes.</p>
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-2">Congo African Grey pricing</h3>
       <p class="font-sora text-stone-600 text-sm leading-relaxed mb-4">Single Congos run $1,700–$2,500 (Bery $1,700, Roys $2,300, Amie $2,500). The bonded <a href="/available/jins-jeni/" class="text-clay-text underline">Jins &amp; Jeni</a> pair is $3,500 and is placed together only.</p>
@@ -273,7 +297,7 @@ const faqSchema = {
   {/* ── RESERVE PROCESS ── */}
   <section id="process" class="py-16 px-4 bg-cream">
     <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">How do you reserve and bring a grey home?</h2>
+      <h2 class="font-lora font-bold text-logo-dark mb-4">How do you reserve and bring a grey home?</h2>
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-4">The five-step reservation process</h3>
       <ol class="space-y-4 mb-5">
         {[
@@ -297,7 +321,7 @@ const faqSchema = {
   {/* ── SHIPPING ── */}
   <section id="shipping" class="py-16 px-4">
     <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">Where do C.A.Gs deliver African Greys?</h2>
+      <h2 class="font-lora font-bold text-logo-dark mb-4">Where do C.A.Gs deliver African Greys?</h2>
       <div class="bg-logo-dark text-cream rounded-2xl p-5 mb-5" style="box-shadow:0 4px 16px rgba(28,26,24,0.15);">
         <p class="font-sora text-xs font-semibold uppercase tracking-widest text-gold mb-3">Nationwide shipping — two tiers</p>
         <div class="grid grid-cols-2 gap-4">
@@ -305,6 +329,12 @@ const faqSchema = {
           <div><p class="font-lora font-bold text-2xl">$350</p><p class="font-sora text-cream/70 text-xs mt-0.5 uppercase tracking-wide">Home Delivery</p><p class="font-sora text-cream/60 text-xs mt-1 leading-relaxed">Door-to-door. Your grey arrives at your address, calm and ready to settle in.</p></div>
         </div>
       </div>
+      <figure class="mb-6">
+        <a href="/available/amie/" class="block overflow-hidden rounded-2xl border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
+          <img src="/birds/amie/cag-us-delivery-map-base.webp" alt="Map of the United States showing nationwide African Grey delivery routes from C.A.Gs in Midland, Texas" title="Nationwide African Grey delivery" width="1200" height="800" loading="lazy" class="w-full h-auto" />
+        </a>
+        <figcaption class="font-sora text-xs text-stone-600 mt-2 leading-relaxed">We place greys in all 50 states by IATA airport cargo or door-to-door delivery from Midland, TX. <a href="/available/amie/" class="text-clay-text underline">See Amie's shipping detail →</a></figcaption>
+      </figure>
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-2">Airport pickup vs home delivery</h3>
       <p class="font-sora text-stone-600 text-sm leading-relaxed mb-4">Both travel in an <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener noreferrer" class="text-clay-text underline">IATA Live Animals Regulations (LAR) ↗</a> approved carrier with an avian-vet health certificate dated within 10 days of travel.</p>
       <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2">What is an avian flight nanny?</h4>
@@ -321,9 +351,15 @@ const faqSchema = {
   {/* ── MARKETPLACE ── */}
   <section id="marketplace" class="py-16 px-4 bg-cream">
     <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">Why buy from C.A.Gs instead of a marketplace?</h2>
+      <h2 class="font-lora font-bold text-logo-dark mb-4">Why buy from C.A.Gs instead of a marketplace?</h2>
       <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">The accountability a marketplace can't offer</h3>
       <p class="font-sora text-stone-600 leading-relaxed mb-4">The benefit we offer is not a different product — it is accountability. We are the same breeders, Mark &amp; Teri Benjamin, at the same address in Midland, TX, with the same USDA license number — findable before you pay and reachable after the bird lands. An anonymous listing cannot give you a verifiable license, real CITES paperwork, a named DNA lab, or someone who answers the phone in year two. Knowing <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay-text underline">how to avoid African Grey scams</a> mostly comes down to that one habit: insist on documentation and a breeder you can verify.</p>
+      <figure class="mt-2">
+        <a href="/how-to-avoid-african-grey-parrot-scams/" class="block overflow-hidden rounded-2xl border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
+          <img src="/birds/avoid-african-grey-parrot-scam.webp" alt="Infographic on how to avoid African Grey parrot scams by verifying documentation and breeder identity before paying a deposit" title="How to avoid African Grey parrot scams" width="1024" height="572" loading="lazy" class="w-full h-auto" />
+        </a>
+        <figcaption class="font-sora text-xs text-stone-600 mt-2 leading-relaxed">The checks that separate a real, documented breeder from a bait listing. <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay-text underline">Read the full scam-avoidance guide →</a></figcaption>
+      </figure>
     </div>
   </section>
 
@@ -332,7 +368,7 @@ const faqSchema = {
     <div class="max-w-5xl mx-auto">
       <div class="mb-8 text-center">
         <p class="font-sora text-xs font-bold uppercase tracking-widest text-clay mb-2">What C.A.Gs families say</p>
-        <h2 class="font-lora font-bold text-3xl text-logo-dark">Reviews — families who brought home a C.A.Gs grey</h2>
+        <h2 class="font-lora font-bold text-logo-dark">Reviews — families who brought home a C.A.Gs grey</h2>
       </div>
       <div class="grid md:grid-cols-3 gap-6">
         {[
@@ -366,7 +402,7 @@ const faqSchema = {
     <div class="max-w-3xl mx-auto">
       <div class="mb-7">
         <p class="font-sora text-xs font-bold uppercase tracking-widest text-clay mb-2">Straight answers</p>
-        <h2 class="font-lora font-bold text-3xl text-logo-dark">Available greys — frequently asked questions</h2>
+        <h2 class="font-lora font-bold text-logo-dark">Available greys — frequently asked questions</h2>
       </div>
       <div class="space-y-3">
         <h3 class="sr-only">Common questions about reserving an available African Grey</h3>
@@ -394,7 +430,7 @@ const faqSchema = {
     <div class="max-w-5xl mx-auto" style="max-width:1100px;">
       <div class="mb-7 border-l-4 border-green pl-4">
         <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">Care Guides &amp; Resources</p>
-        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">Care guides for your new African Grey</h2>
+        <h2 class="font-lora font-bold text-logo-dark">Care guides for your new African Grey</h2>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {careGuides.map((c) => (
@@ -417,7 +453,7 @@ const faqSchema = {
     <div class="max-w-5xl mx-auto">
       <div class="mb-8 text-center">
         <p class="font-sora text-xs font-bold uppercase tracking-widest text-clay mb-2">Six available right now</p>
-        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">Ready to reserve your African Grey?</h2>
+        <h2 class="font-lora font-bold text-logo-dark">Ready to reserve your African Grey?</h2>
         <p class="font-sora text-stone-600 mt-3 text-sm leading-relaxed" style="max-width:60ch;margin-left:auto;margin-right:auto;">Tell us which bird caught your eye and we will reply within 24 hours with fresh dated photos and answers to anything you want to know. No pressure — just a conversation.</p>
         <p class="font-sora text-stone-600 text-xs mt-2">Ships nationwide &middot; $185 airport &middot; $350 home</p>
       </div>
