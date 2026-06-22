@@ -1,0 +1,486 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Schema from '../../components/Schema.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
+import NewsletterV2 from '../../components/cag-library/NewsletterV2.astro';
+
+const title = "Available African Greys for Sale | Hand-Raised, DNA-Sexed & CITES-Documented Congo & Timneh — C.A.Gs, Midland TX";
+const description = "See every African Grey we have available right now — hand-raised Congo and Timneh parrots, $1,500–$3,500, each DNA-sexed, CITES Appendix I documented and captive-bred in the USA. Ships nationwide · $185 airport · $350 home.";
+const canonical = "https://congoafricangreys.com/available/";
+
+const birds = [
+  { name: "Roys",        slug: "/available/roys/",      variant: "congo",  vlabel: "Congo",  sex: "Male",   age: "4 months", price: "$2,300", was: null,     img: "/roys-congo-african-grey-male-4-months.webp",                 pos: "center 40%", blurb: "Energetic, bold young male — built for a busy, interactive home." },
+  { name: "Amie",        slug: "/available/amie/",      variant: "congo",  vlabel: "Congo",  sex: "Female", age: "3 months", price: "$2,500", was: null,     img: "/birds/amie/amie-handfed.webp",                                pos: "center 30%", blurb: "Social, curious hen — a lovely fit for a family or couple." },
+  { name: "Bery",        slug: "/available/bery/",      variant: "congo",  vlabel: "Congo",  sex: "Female", age: "1 year",   price: "$1,700", was: null,     img: "/bery-congo-african-grey-female-1-year.webp",                  pos: "center 35%", blurb: "Gentle and already settled — an easy first African Grey." },
+  { name: "Jins & Jeni", slug: "/available/jins-jeni/", variant: "congo",  vlabel: "Congo",  sex: "Bonded pair", age: "Adult", price: "$3,500", was: null,  img: "/jins-jeni-congo-african-grey-pair.webp",                      pos: "center 40%", blurb: "A bonded, talking Congo pair — placed together, never split." },
+  { name: "Elad",        slug: "/available/elad/",      variant: "timneh", vlabel: "Timneh", sex: "Male",   age: "6 months", price: "$1,600", was: "$2,200", img: "/birds/elad/elad-timneh-african-grey-male-hero.webp",          pos: "center 30%", blurb: "Confident, early-talking Timneh boy — sibling to Evie." },
+  { name: "Evie",        slug: "/available/evie/",      variant: "timneh", vlabel: "Timneh", sex: "Female", age: "6 months", price: "$1,500", was: "$2,200", img: "/birds/evie/evie-timneh-african-grey-female-hero.webp",        pos: "center 30%", blurb: "Gentle, affectionate Timneh hen — sibling to Elad." },
+];
+const placed = [
+  { name: "Joys", note: "Female Congo" },
+  { name: "Loti", note: "Male Congo" },
+  { name: "Carl", note: "Male Congo" },
+];
+
+const compareRows = [
+  ["Price",       "$2,300", "$2,500", "$1,700", "$3,500", "$1,600", "$1,500"],
+  ["Variant",     "Congo",  "Congo",  "Congo",  "Congo",  "Timneh", "Timneh"],
+  ["Sex",         "Male",   "Female", "Female", "Pair",   "Male",   "Female"],
+  ["Age",         "4 mo",   "3 mo",   "1 yr",   "Adult",  "6 mo",   "6 mo"],
+  ["Temperament", "Energetic, bold", "Social, curious", "Gentle, settled", "Bonded, talking", "Confident, early talker", "Gentle, affectionate"],
+  ["Best for",    "Active home", "Family / couple", "First-time owner", "One pair home", "Interactive home", "Calm, gentle home"],
+];
+
+const counterStats = [
+  { num: "6",        label: "Available Now" },
+  { num: "$1,500+",  label: "Starting Price" },
+  { num: "100%",     label: "CITES Documented" },
+  { num: "24h",      label: "Reply Guarantee" },
+];
+
+const careGuides = [
+  { label: "Care",   title: "The Complete African Grey Care Guide", desc: "Diet, enrichment, sleep, and what to expect decade by decade.", href: "/african-grey-parrot-care-guide/", img: "/timneh-african-grey-variant.webp", imgAlt: "An African Grey portrait — companion to the complete care guide" },
+  { label: "Pricing",title: "What an African Grey Really Costs",     desc: "The full breakdown behind a documented grey's price and lifetime spend.", href: "/african-grey-parrot-price/", img: "/timneh-african-grey-breeding-pair.webp", imgAlt: "African Grey breeding pair — what a documented grey really costs" },
+  { label: "Compare",title: "Congo vs Timneh African Grey",          desc: "Size, tail colour, talking age and temperament, side by side.", href: "/congo-vs-timneh-african-grey/", img: "/congo-african-grey-variant.webp", imgAlt: "Congo vs Timneh African Grey comparison" },
+  { label: "Buying safely", title: "How to Avoid African Grey Scams", desc: "The documentation and breeder checks that separate real birds from bait listings.", href: "/how-to-avoid-african-grey-parrot-scams/", img: "/birds/avoid-african-grey-parrot-scam.webp", imgAlt: "How to avoid African Grey parrot scams infographic" },
+];
+
+const faqItems = [
+  { q: "Which African Greys do you have available right now?", a: "Right now we have six hand-raised greys available: Roys, Amie, Bery and the bonded Jins & Jeni pair (all Congo African Greys), plus Elad and Evie (Timneh African Greys). Each has its own page with full photos, video where available, and documentation. Availability changes as birds are reserved, so the roster above is always current." },
+  { q: "How much do your African Greys cost?", a: "Our available greys run from $1,500 to $3,500. Timnehs (Elad $1,600, Evie $1,500) sit at the lower end; single Congos run $1,700–$2,500; and the bonded Jins & Jeni pair is $3,500 because they are placed together. Every price includes hand-rearing, the full documentation set, and a USDA AWA licensed aviary standing behind the bird." },
+  { q: "Are all of your African Greys DNA-sexed and documented?", a: "Yes. Every C.A.Gs grey is captive-bred in the USA and goes home with a DNA sex certificate, an AAV avian-vet health certificate, a hatch certificate with closed leg band, and CITES Appendix I captive-bred documentation. We never ask a buyer to take our word for it." },
+  { q: "Can you ship an African Grey to my state?", a: "Yes — we ship to all 50 states. Airport Pickup is $185 (IATA LAR live-animal cargo on Delta, United or American to your nearest hub); Home Delivery is $350 door-to-door. An in-cabin avian flight nanny is available too, quoted per route." },
+  { q: "Can I reserve a grey that isn't listed yet?", a: "Yes. If none of the available birds is quite right, join our waitlist and we will reach out first when our next hand-raised Congo or Timneh clutch is ready to place — before it is listed publicly." },
+  { q: "What does a deposit do, and is it refundable?", a: "A $200 deposit reserves your chosen bird and pauses its listing for you; it comes off the total, it is not an extra fee. It is refundable any time before the bird ships. The balance is due before travel." },
+];
+
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Available African Greys for Sale — C.A.Gs, Midland TX",
+  "description": description,
+  "url": canonical,
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": birds.map((b, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": {
+        "@type": "Product",
+        "name": `${b.name} — ${b.vlabel} African Grey`,
+        "category": `${b.vlabel} African Grey Parrot`,
+        "url": `https://congoafricangreys.com${b.slug}`,
+        "offers": {
+          "@type": "Offer",
+          "price": b.price.replace(/[^0-9]/g, ""),
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "url": `https://congoafricangreys.com${b.slug}`,
+          "seller": { "@type": "Organization", "name": "C.A.Gs – Midland, TX" }
+        }
+      }
+    }))
+  }
+};
+
+const faqSchema = {
+  "mainEntity": faqItems.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+---
+
+<BaseLayout {title} {description} {canonical} hideGlobalCta>
+  <style>
+    .avail-d .py-16 { padding-top: 2.4rem !important; padding-bottom: 2.4rem !important; }
+    @media (min-width: 768px) { .avail-d .py-16 { padding-top: 3rem !important; padding-bottom: 3rem !important; } }
+    .avail-d .py-12 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+    .avail-d .cag-seam { display: flex; align-items: center; gap: 26px; max-width: 1100px; margin: 0 auto; padding: 0.5rem 24px; }
+    .avail-d .cag-seam__line { flex: 1; height: 1px; background: rgba(45,106,79,.16); }
+    .avail-d .cag-seam img { height: 30px; width: auto; display: block; opacity: .92; flex-shrink: 0; }
+    @media (max-width: 600px) { .avail-d .cag-seam { gap: 16px; } .avail-d .cag-seam img { height: 24px; } }
+    .avail-d .roster-card { transition: transform .2s, box-shadow .2s; }
+    .avail-d .roster-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(60,30,10,0.12); }
+    .avail-d .filter-btn[aria-pressed="true"] { background: #2D6A4F; color: #fff; border-color: #2D6A4F; }
+  </style>
+
+  <div class="avail-d">
+
+  <div style="max-width:1200px;margin:0 auto;">
+    <Breadcrumb items={[
+      { name: "Home", url: "/" },
+      { name: "Available African Greys", url: "/available/" }
+    ]} />
+  </div>
+
+  {/* ── HERO ── */}
+  <section class="bg-logo-dark text-cream py-14 px-4 md:py-16">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="font-sora text-gold text-xs font-medium tracking-widest uppercase mb-3">Congo &amp; Timneh &middot; CITES Appendix&nbsp;I Captive-Bred &middot; Midland, TX</p>
+      <h1 class="font-lora font-bold text-cream mb-5" style="font-size:clamp(1.8rem,1.1rem+2.8vw,2.6rem);line-height:1.12;">Available African Greys for Sale — Hand-Raised, DNA-Sexed &amp; CITES-Documented</h1>
+      <p class="font-sora text-cream/85 leading-relaxed mb-6" style="max-width:60ch;margin-left:auto;margin-right:auto;">Here at C.A.Gs, every grey below is one we hand-raised ourselves in our Midland, Texas home — Congo and Timneh African Greys, each DNA-sexed, fully documented, and captive-bred in the USA. This page is always current: when a bird is reserved, it comes off the list.</p>
+      <p class="font-sora text-cream/70 text-sm mb-6">Ships nationwide &middot; $185 airport &middot; $350 home</p>
+      <a href="#reserve" class="inline-block bg-clay text-white font-sora font-semibold px-8 py-4 rounded-full text-base hover:bg-clay-dk transition-colors" style="box-shadow:0 6px 20px rgba(232,96,76,0.35);">Start an inquiry</a>
+    </div>
+  </section>
+
+  <CounterSnippet stats={counterStats} />
+
+  {/* ── ROSTER ── */}
+  <section id="roster" class="py-16 px-4 bg-cream">
+    <div class="max-w-5xl mx-auto" style="max-width:1100px;">
+      <div class="mb-7 border-l-4 border-green pl-4">
+        <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">Available right now</p>
+        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">Which African Greys are available right now?</h2>
+        <p class="font-sora text-stone-600 mt-2 text-sm leading-relaxed" style="max-width:70ch;">Six hand-raised birds are looking for homes. Filter by variant, or tap any bird to see its full page — photos, documentation, and how to reserve.</p>
+      </div>
+
+      <div class="flex flex-wrap gap-2 mb-7" role="group" aria-label="Filter available greys">
+        <button class="filter-btn font-sora text-sm font-semibold rounded-full border border-stone-300 px-5 py-2 text-stone-700 bg-white" data-filter="all" aria-pressed="true">All (6)</button>
+        <button class="filter-btn font-sora text-sm font-semibold rounded-full border border-stone-300 px-5 py-2 text-stone-700 bg-white" data-filter="congo" aria-pressed="false">Congo (4)</button>
+        <button class="filter-btn font-sora text-sm font-semibold rounded-full border border-stone-300 px-5 py-2 text-stone-700 bg-white" data-filter="timneh" aria-pressed="false">Timneh (2)</button>
+      </div>
+
+      <h3 class="sr-only">Congo and Timneh African Greys available now</h3>
+      <div id="roster-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {birds.map((b) => (
+          <article class={`roster-card flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white variant-${b.variant}`} style="box-shadow:0 4px 20px rgba(60,30,10,0.07);">
+            <a href={b.slug} class="block aspect-[4/5] overflow-hidden bg-cream">
+              <img src={b.img} alt={`${b.name}, a hand-raised ${b.sex.toLowerCase()} ${b.vlabel} African Grey for sale at C.A.Gs, Midland TX`} width="400" height="500" loading="lazy" class="w-full h-full object-cover" style={`object-position:${b.pos};`} />
+            </a>
+            <div class="flex flex-col flex-1 p-5">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <h4 class="font-lora font-bold text-xl text-logo-dark">{b.name}</h4>
+                <span class="font-sora text-[10px] font-bold uppercase tracking-wide rounded-full bg-green/10 text-green px-2 py-0.5">Available</span>
+              </div>
+              <p class="font-sora text-xs text-stone-600 mb-2">{b.vlabel} African Grey &middot; {b.sex} &middot; {b.age}</p>
+              <p class="font-sora text-sm text-stone-600 leading-relaxed mb-3">{b.blurb}</p>
+              <p class="font-sora mb-1">
+                {b.was && <span class="text-stone-500 line-through text-sm mr-2">{b.was}</span>}
+                <span class="font-lora font-bold text-lg text-clay-ink">{b.price}</span>
+              </p>
+              <p class="font-sora text-[11px] text-stone-600 mb-4">Ships nationwide &middot; $185 airport &middot; $350 home</p>
+              <div class="mt-auto flex gap-2">
+                <a href={b.slug} class="flex-1 text-center rounded-full bg-clay px-4 py-2.5 font-sora text-sm font-semibold text-white hover:bg-clay-dk transition-colors">Meet {b.name} →</a>
+                <a href="#reserve" class="rounded-full border-2 border-green px-4 py-2.5 font-sora text-sm font-semibold text-green hover:bg-green hover:text-white transition-colors">Reserve</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="mt-9">
+        <h3 class="font-lora font-semibold text-lg text-logo-dark mb-2">Recently placed with their families</h3>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed" style="max-width:70ch;">These greys have already gone to their homes — kept here so you can see the pace at which our birds are placed: {placed.map((p, i) => (<span><strong class="text-logo-dark">{p.name}</strong> ({p.note}){i < placed.length - 1 ? ", " : "."}</span>))} If you would like a bird like one of these, <a href="#reserve" class="text-clay-text underline">join the waitlist</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  {/* ── COMPARISON ── */}
+  <section id="compare" class="py-16 px-4">
+    <div class="max-w-5xl mx-auto" style="max-width:1100px;">
+      <div class="mb-7 border-l-4 border-green pl-4">
+        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">How do our available greys compare side by side?</h2>
+        <p class="font-sora text-stone-600 mt-2 text-sm leading-relaxed" style="max-width:70ch;">Every bird is an individual. Here is the quick side-by-side so you can find the one that fits your home — then read its full page. Still weighing the two variants? See <a href="/congo-vs-timneh-african-grey/" class="text-clay-text underline">Congo vs Timneh</a>.</p>
+      </div>
+      <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse" style="min-width:760px;">
+            <thead>
+              <tr>
+                <th class="text-left font-sora text-xs font-bold uppercase tracking-widest text-stone-600 bg-white px-4 py-4 border-b border-black/[0.07]">Trait</th>
+                {birds.map((b) => (
+                  <th class="text-left px-4 py-4 text-white" style="background:linear-gradient(135deg,#2D6A4F,#1f4d39);">
+                    <a href={b.slug} class="font-lora font-bold text-sm text-white hover:underline">{b.name}</a>
+                    <span class="block font-sora text-[11px] opacity-80">{b.vlabel} · {b.sex}</span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {compareRows.map((row, i) => (
+                <tr class={i % 2 === 0 ? 'bg-cream' : 'bg-white'}>
+                  <td class="px-4 py-3 font-sora text-xs font-semibold text-stone-600 border-b border-black/[0.05]">{row[0]}</td>
+                  {row.slice(1).map((cell) => (
+                    <td class="px-4 py-3 font-sora text-sm text-stone-700 border-l border-black/[0.05] border-b border-black/[0.05]">{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+  {/* ── WHAT COMES WITH EVERY BIRD ── */}
+  <section id="documentation" class="py-16 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">What does every C.A.Gs grey come home with?</h2>
+      <p class="font-sora text-stone-600 leading-relaxed mb-6">Whichever bird you choose, the standard is the same. Every grey leaves us captive-bred, documented, and health-checked — no chasing paperwork after the carrier opens.</p>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-2">The documentation set every bird carries</h3>
+      <ul class="space-y-2 mb-5">
+        {["DNA sex certificate (lab-confirmed)","AAV avian-vet health certificate","Hatch certificate + closed leg band","CITES Appendix I captive-bred documentation","Weaning &amp; feeding guidance"].map((d) => (
+          <li class="flex gap-3"><span style="color:#2D6A4F;font-weight:700;flex-shrink:0;">✔</span><span class="font-sora text-stone-600 text-sm" set:html={d}></span></li>
+        ))}
+      </ul>
+      <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2">How can you verify our paperwork yourself?</h4>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">Our USDA AWA license number is public and searchable, the DNA certificate names the testing lab, and your own avian vet can confirm the AAV health certificate at the first wellness visit. See <a href="/cites-african-grey-documentation/" class="text-clay-text underline">our CITES documentation page</a> for what each form covers.</p>
+      <h5 class="font-lora font-semibold text-base text-logo-dark mt-5 mb-1">Keep these documents for your bird's whole life</h5>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">Store the originals safely — you will want the CITES and hatch paperwork for future vet records, interstate travel, and to prove captive-bred origin decades from now.</p>
+      <h6 class="font-sora text-sm font-semibold text-logo-dark mt-4 mb-1">Source: CITES Appendix I captive-bred provisions (USFWS)</h6>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">Captive-bred African Greys are legal to own and transfer domestically with proper documentation under <a href="https://www.fws.gov/program/international-affairs/what-cites" target="_blank" rel="noopener noreferrer" class="text-clay-text underline">U.S. Fish &amp; Wildlife Service CITES guidance ↗</a>.</p>
+
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-2 mt-8">Our pre-placement health standard</h3>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed mb-3">We are a USDA Animal Welfare Act licensed facility, and every bird clears the same pre-placement checks before it is listed.</p>
+      <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2">What health checks does every grey clear?</h4>
+      <ul class="space-y-2 mb-4">
+        {["PBFD &amp; Polyomavirus PCR screening","Pre-placement avian-vet exam (AAV standard)","Weight &amp; condition assessment","Weaning verification before travel"].map((d) => (
+          <li class="flex gap-3"><span style="color:#2D6A4F;font-weight:700;flex-shrink:0;">✔</span><span class="font-sora text-stone-600 text-sm" set:html={d}></span></li>
+        ))}
+      </ul>
+      <h5 class="font-lora font-semibold text-base text-logo-dark mt-5 mb-1">A note on testing claims</h5>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">We only tell you what we have documented. If your vet recommends additional diagnostics beyond the AAV health certificate, that is a conversation we support. Every bird is also covered by <a href="/african-grey-parrot-health-guarantee/" class="text-clay-text underline">our health guarantee</a>.</p>
+      <h6 class="font-sora text-sm font-semibold text-logo-dark mt-4 mb-1">Source: AAV pre-travel exam standard</h6>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">Each health certificate follows <a href="https://aav.org/" target="_blank" rel="noopener noreferrer" class="text-clay-text underline">Association of Avian Veterinarians ↗</a> exam standards and is issued before the bird travels.</p>
+    </div>
+  </section>
+
+  {/* ── PRICING ── */}
+  <section id="pricing" class="py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">How much does an African Grey cost at C.A.Gs?</h2>
+      <p class="font-sora text-stone-600 leading-relaxed mb-5">Our available greys run from <strong>$1,500 to $3,500</strong>. The figure reflects the real cost of hand-rearing a documented bird — not what the market will bear. Our full <a href="/african-grey-parrot-price/" class="text-clay-text underline">African Grey price breakdown</a> shows where every dollar goes.</p>
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-2">Congo African Grey pricing</h3>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed mb-4">Single Congos run $1,700–$2,500 (Bery $1,700, Roys $2,300, Amie $2,500). The bonded <a href="/available/jins-jeni/" class="text-clay-text underline">Jins &amp; Jeni</a> pair is $3,500 and is placed together only.</p>
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-2">Timneh African Grey pricing</h3>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed mb-4"><a href="/available/elad/" class="text-clay-text underline">Elad</a> is $1,600 and <a href="/available/evie/" class="text-clay-text underline">Evie</a> is $1,500 — both reduced from a $2,200 Timneh starting price, and both DNA-sexed siblings from our Levi &times; Rily pairing.</p>
+      <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2">Is the price negotiable?</h4>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">No. Our prices reflect the true cost of raising a documented, hand-reared bird properly. We would rather be transparent than discount a bird and cut something you would not see until later.</p>
+      <h5 class="font-lora font-semibold text-base text-logo-dark mt-5 mb-1">What a $200 deposit secures</h5>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">A $200 deposit removes your chosen bird from the listing and holds it exclusively for you. It comes off the total — it is not an extra fee — and the balance is due before travel.</p>
+      <h6 class="font-sora text-sm font-semibold text-logo-dark mt-4 mb-1">Breeder note: why we don't discount documented birds</h6>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">A "cheap" grey is almost always a bird missing its DNA, CITES, or vet paperwork — or a listing with no real bird behind it. The gap is not markup; it is documentation, health, and a breeder you can still reach in year two.</p>
+    </div>
+  </section>
+
+  {/* ── RESERVE PROCESS ── */}
+  <section id="process" class="py-16 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">How do you reserve and bring a grey home?</h2>
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-4">The five-step reservation process</h3>
+      <ol class="space-y-4 mb-5">
+        {[
+          ["Reach out","Tell us which bird you are interested in through the form below. We reply within 24 hours with fresh dated photos and answer anything before a dollar moves."],
+          ["Place a $200 deposit","This holds your bird and pauses its listing. No one else can claim it once your deposit is confirmed."],
+          ["Settle the balance","The remaining balance is due before travel. We schedule around what works for your household."],
+          ["Choose shipping","Airport pickup ($185) or home delivery ($350) — or an in-cabin avian flight nanny, quoted per route."],
+          ["Arrive documented","Your grey lands with the full documentation set in hand, and we stay reachable for any post-arrival questions."],
+        ].map((s, i) => (
+          <li class="flex gap-4">
+            <span class="flex-shrink-0 w-8 h-8 rounded-full bg-green text-white font-sora font-bold text-sm flex items-center justify-center">{i + 1}</span>
+            <div><h4 class="font-lora font-semibold text-logo-dark text-base mb-0.5">{s[0]}</h4><p class="font-sora text-stone-600 text-sm leading-relaxed">{s[1]}</p></div>
+          </li>
+        ))}
+      </ol>
+      <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2">Is the deposit refundable?</h4>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">Yes — the $200 deposit is refundable any time before your bird ships. If circumstances change, reach out and we work it out directly.</p>
+    </div>
+  </section>
+
+  {/* ── SHIPPING ── */}
+  <section id="shipping" class="py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">Where do C.A.Gs deliver African Greys?</h2>
+      <div class="bg-logo-dark text-cream rounded-2xl p-5 mb-5" style="box-shadow:0 4px 16px rgba(28,26,24,0.15);">
+        <p class="font-sora text-xs font-semibold uppercase tracking-widest text-gold mb-3">Nationwide shipping — two tiers</p>
+        <div class="grid grid-cols-2 gap-4">
+          <div><p class="font-lora font-bold text-2xl">$185</p><p class="font-sora text-cream/70 text-xs mt-0.5 uppercase tracking-wide">Airport Pickup</p><p class="font-sora text-cream/60 text-xs mt-1 leading-relaxed">IATA LAR live-animal cargo to your nearest major airport. Delta, United, or American.</p></div>
+          <div><p class="font-lora font-bold text-2xl">$350</p><p class="font-sora text-cream/70 text-xs mt-0.5 uppercase tracking-wide">Home Delivery</p><p class="font-sora text-cream/60 text-xs mt-1 leading-relaxed">Door-to-door. Your grey arrives at your address, calm and ready to settle in.</p></div>
+        </div>
+      </div>
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-2">Airport pickup vs home delivery</h3>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed mb-4">Both travel in an <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener noreferrer" class="text-clay-text underline">IATA Live Animals Regulations (LAR) ↗</a> approved carrier with an avian-vet health certificate dated within 10 days of travel.</p>
+      <h4 class="font-lora font-semibold text-lg text-logo-dark mb-2">What is an avian flight nanny?</h4>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed mb-4">A flight nanny is a professional courier who carries your grey in-cabin rather than as cargo — never in the hold, never alone. Available from Midland, TX to most major airports, quoted per route.</p>
+      <h5 class="font-lora font-semibold text-base text-logo-dark mt-5 mb-1">Which states do we ship to?</h5>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">All 50. We have placed greys in <a href="/african-grey-parrot-for-sale-new-york/" class="text-clay-text underline">New York</a>, <a href="/african-grey-parrot-for-sale-ohio/" class="text-clay-text underline">Ohio</a>, <a href="/african-grey-parrot-for-sale-illinois/" class="text-clay-text underline">Illinois</a> and across the country. Don't see your state? Just ask.</p>
+      <h6 class="font-sora text-sm font-semibold text-logo-dark mt-4 mb-1">Breeder note: timing travel around weaning</h6>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed">We never ship a bird before it is independently weaned — African Greys typically wean between 12 and 16 weeks. A weaned grey travels far more stably than one rushed off formula.</p>
+    </div>
+  </section>
+
+  <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+  {/* ── MARKETPLACE ── */}
+  <section id="marketplace" class="py-16 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">Why buy from C.A.Gs instead of a marketplace?</h2>
+      <h3 class="font-lora font-semibold text-xl text-logo-dark mb-3">The accountability a marketplace can't offer</h3>
+      <p class="font-sora text-stone-600 leading-relaxed mb-4">The benefit we offer is not a different product — it is accountability. We are the same breeders, Mark &amp; Teri Benjamin, at the same address in Midland, TX, with the same USDA license number — findable before you pay and reachable after the bird lands. An anonymous listing cannot give you a verifiable license, real CITES paperwork, a named DNA lab, or someone who answers the phone in year two. Knowing <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay-text underline">how to avoid African Grey scams</a> mostly comes down to that one habit: insist on documentation and a breeder you can verify.</p>
+    </div>
+  </section>
+
+  {/* ── REVIEWS ── */}
+  <section id="reviews" class="py-16 px-4">
+    <div class="max-w-5xl mx-auto">
+      <div class="mb-8 text-center">
+        <p class="font-sora text-xs font-bold uppercase tracking-widest text-clay mb-2">What C.A.Gs families say</p>
+        <h2 class="font-lora font-bold text-3xl text-logo-dark">Reviews — families who brought home a C.A.Gs grey</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        {[
+          ["Lawrence Brunner","Fullerton, CA","/lawrence-brunner-fullerton-ca-review.webp","I'd been burned by a deposit scam before, so I asked C.A.Gs for everything — license number, CITES paperwork, a live video call. They sent it all without hesitating. My grey landed calm and healthy with his whole documentation packet."],
+          ["Sandra Soliz","Rome, GA","/sandra-soliz-rome-ga-review.webp","What sold me was how well they actually knew their birds. Teri answered every question for weeks, then checked in after he arrived to make sure he was settling. A real breeder, not a flipper."],
+          ["Ida Brim","Nashville, TN","/ida-brim-nashville-tn-review.webp","From the first email to home delivery, everything was exactly as promised. My grey arrived hand-raised, weaned, and confident — with his health certificate and CITES documents in hand."],
+        ].map((r) => (
+          <div class="bg-white rounded-2xl p-6 border border-stone-200" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
+            <div class="flex items-center gap-3 mb-4">
+              <img src={r[2]} alt={`${r[0]}, verified C.A.Gs African Grey buyer from ${r[1]}`} width="40" height="40" class="w-10 h-10 rounded-full object-cover flex-shrink-0" loading="lazy" />
+              <div><p class="font-sora font-semibold text-sm text-logo-dark">{r[0]}</p><p class="font-sora text-xs text-stone-600">{r[1]} &middot; African Grey</p></div>
+            </div>
+            <div class="flex gap-0.5 mb-3" aria-label="5 stars">{[1,2,3,4,5].map(() => <span style="color:#e8604c;">★</span>)}</div>
+            <p class="font-sora text-stone-600 text-sm leading-relaxed italic">"{r[3]}"</p>
+            <p class="font-sora text-xs text-stone-600 mt-3">Verified C.A.Gs buyer</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ── NEWSLETTER ── */}
+  <section class="py-12 px-4 bg-warm-white">
+    <div class="max-w-5xl mx-auto">
+      <NewsletterV2 variant="top" action="https://formspree.io/f/xrejpnvn" heading="None of these the right fit yet?" sub="Join our list and be first to hear when our next hand-raised Congo or Timneh clutch is ready to place — before it's listed publicly." cta="Join the waitlist" />
+    </div>
+  </section>
+
+  {/* ── FAQ ── */}
+  <section id="faq" class="py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <div class="mb-7">
+        <p class="font-sora text-xs font-bold uppercase tracking-widest text-clay mb-2">Straight answers</p>
+        <h2 class="font-lora font-bold text-3xl text-logo-dark">Available greys — frequently asked questions</h2>
+      </div>
+      <div class="space-y-3">
+        <h3 class="sr-only">Common questions about reserving an available African Grey</h3>
+        {faqItems.map((item) => (
+          <details class="group rounded-2xl border border-stone-200 bg-white overflow-hidden" style="box-shadow:0 2px 10px rgba(60,30,10,0.04);">
+            <summary class="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer list-none select-none hover:bg-cream/60 transition-colors">
+              <h4 class="font-lora font-semibold text-logo-dark text-base leading-snug">{item.q}</h4>
+              <svg class="flex-shrink-0 w-5 h-5 text-clay transition-transform group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="px-5 pb-5"><p class="font-sora text-stone-600 text-sm leading-relaxed">{item.a}</p></div>
+          </details>
+        ))}
+      </div>
+      <div class="mt-6 pl-1">
+        <h5 class="font-lora font-semibold text-base text-logo-dark mb-1">How our waitlist works</h5>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed">Tell us the variant, sex, and temperament you are hoping for. When a matching chick weans, you hear from us first — there is no charge to be on the list and no obligation to commit.</p>
+        <h6 class="font-sora text-sm font-semibold text-logo-dark mt-4 mb-1">Breeder note: next clutch timing</h6>
+        <p class="font-sora text-stone-600 text-sm leading-relaxed">Our pairs are seasonal, so availability ebbs and flows through the year. The fastest way to know what is coming is the waitlist above — we reach out before anything is listed publicly.</p>
+      </div>
+    </div>
+  </section>
+
+  {/* ── CARE GUIDES ── */}
+  <section id="resources" class="py-12 px-4 bg-cream">
+    <div class="max-w-5xl mx-auto" style="max-width:1100px;">
+      <div class="mb-7 border-l-4 border-green pl-4">
+        <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">Care Guides &amp; Resources</p>
+        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">Care guides for your new African Grey</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {careGuides.map((c) => (
+          <a href={c.href} class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white transition-colors hover:border-green/40" style="box-shadow:0 2px 12px rgba(60,30,10,0.05);">
+            <div class="aspect-[16/9] overflow-hidden bg-cream"><img src={c.img} alt={c.imgAlt} width="400" height="225" loading="lazy" class="w-full h-full object-cover object-center transition-transform duration-200 group-hover:scale-[1.03]" /></div>
+            <div class="flex flex-col flex-1 p-5">
+              <span class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] text-clay mb-2">{c.label}</span>
+              <h3 class="font-lora font-semibold text-base text-logo-dark leading-snug mb-1.5">{c.title}</h3>
+              <p class="font-sora text-stone-600 text-sm leading-relaxed mb-3">{c.desc}</p>
+              <span class="font-sora text-sm font-semibold text-clay-text mt-auto group-hover:underline">Read the guide →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ── RESERVE ── */}
+  <section id="reserve" class="py-16 px-4 bg-warm-white">
+    <div class="max-w-5xl mx-auto">
+      <div class="mb-8 text-center">
+        <p class="font-sora text-xs font-bold uppercase tracking-widest text-clay mb-2">Six available right now</p>
+        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">Ready to reserve your African Grey?</h2>
+        <p class="font-sora text-stone-600 mt-3 text-sm leading-relaxed" style="max-width:60ch;margin-left:auto;margin-right:auto;">Tell us which bird caught your eye and we will reply within 24 hours with fresh dated photos and answers to anything you want to know. No pressure — just a conversation.</p>
+        <p class="font-sora text-stone-600 text-xs mt-2">Ships nationwide &middot; $185 airport &middot; $350 home</p>
+      </div>
+      <form action="https://formspree.io/f/xrejpnvn" method="POST" class="max-w-2xl mx-auto bg-white rounded-2xl border border-stone-200 p-6 sm:p-8" style="box-shadow:0 6px 28px rgba(60,30,10,0.08);">
+        <input type="hidden" name="_subject" value="Available African Greys — inquiry" />
+        <input type="hidden" name="_next" value="https://congoafricangreys.com/contact-us/?success=true" />
+        <h3 class="font-lora font-bold text-xl text-logo-dark mb-1">Reserve a grey — quick inquiry</h3>
+        <p class="font-sora text-stone-600 text-sm mb-5">A few quick fields. We reply within 24 hours — no deposit is taken here, we talk first.</p>
+        <div class="space-y-4">
+          <div>
+            <label for="avail-name" class="block font-sora text-xs font-semibold uppercase tracking-wide text-stone-600 mb-1.5">Your name <span class="text-clay-text">*</span></label>
+            <input id="avail-name" name="full_name" type="text" required autocomplete="name" placeholder="Your full name" class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-sora text-sm text-stone-800 focus:border-green focus:ring-2 focus:ring-green/20 focus:outline-none" />
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="avail-email" class="block font-sora text-xs font-semibold uppercase tracking-wide text-stone-600 mb-1.5">Email <span class="text-clay-text">*</span></label>
+              <input id="avail-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com" class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-sora text-sm text-stone-800 focus:border-green focus:ring-2 focus:ring-green/20 focus:outline-none" />
+            </div>
+            <div>
+              <label for="avail-bird" class="block font-sora text-xs font-semibold uppercase tracking-wide text-stone-600 mb-1.5">Which bird?</label>
+              <select id="avail-bird" name="bird" class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-sora text-sm text-stone-800 focus:border-green focus:ring-2 focus:ring-green/20 focus:outline-none">
+                <option>Not sure yet</option>
+                {birds.map((b) => <option>{b.name} — {b.vlabel} {b.sex} ({b.price})</option>)}
+                <option>Waitlist — future clutch</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="avail-msg" class="block font-sora text-xs font-semibold uppercase tracking-wide text-stone-600 mb-1.5">Tell us about your home <span class="font-normal normal-case text-stone-600">(optional)</span></label>
+            <textarea id="avail-msg" name="message" rows="3" placeholder="Your household, questions, timing…" class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-sora text-sm text-stone-800 focus:border-green focus:ring-2 focus:ring-green/20 focus:outline-none"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="mt-5 w-full sm:w-auto inline-flex items-center justify-center bg-clay text-white font-sora font-semibold px-8 py-3.5 text-base hover:bg-clay-dk transition-colors" style="border-radius:12px;box-shadow:0 4px 14px rgba(232,96,76,0.28);">Send my inquiry →</button>
+        <div class="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 text-xs font-sora text-stone-600 border-t border-stone-200 pt-4">
+          <span><span style="color:#2D6A4F;font-weight:700;">✔</span> DNA-sexed + CITES documented</span>
+          <span><span style="color:#2D6A4F;font-weight:700;">✔</span> Avian-vet health certificate</span>
+          <span><span style="color:#2D6A4F;font-weight:700;">✔</span> USDA AWA licensed · family aviary since 2014</span>
+        </div>
+        <p class="font-sora text-xs font-normal text-stone-600 mt-3">Your details stay private — we never share or sell your information, and no payment is taken on this form.</p>
+      </form>
+      <div class="mt-4 text-center">
+        <p class="font-sora text-stone-600 text-sm leading-relaxed">Looking for the full buyer's guide? Visit <a href="/african-grey-parrots-for-sale/" class="text-clay-text underline font-semibold">our African Greys for sale hub →</a></p>
+      </div>
+    </div>
+  </section>
+
+  </div>{/* /.avail-d */}
+
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+  <Schema type="faq" data={faqSchema} />
+  <Schema type="organization" />
+
+  <script is:inline>
+    document.querySelectorAll('.filter-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const f = btn.getAttribute('data-filter');
+        document.querySelectorAll('.filter-btn').forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+        document.querySelectorAll('#roster-grid .roster-card').forEach((card) => {
+          const show = f === 'all' || card.classList.contains('variant-' + f);
+          card.style.display = show ? '' : 'none';
+        });
+      });
+    });
+  </script>
+
+</BaseLayout>
