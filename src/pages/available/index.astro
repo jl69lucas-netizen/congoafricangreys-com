@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Schema from '../../components/Schema.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
+import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import NewsletterV2 from '../../components/cag-library/NewsletterV2.astro';
 
 const title = "Available African Greys for Sale | Hand-Raised, DNA-Sexed & CITES-Documented Congo & Timneh — C.A.Gs, Midland TX";
@@ -37,6 +38,38 @@ const counterStats = [
   { num: "$1,500+",  label: "Starting Price" },
   { num: "100%",     label: "CITES Documented" },
   { num: "24h",      label: "Reply Guarantee" },
+];
+
+const ktItems = [
+  { stat: "2",          label: "Variants",          body: "We raise both Congo and Timneh African Greys, so you can match the size and temperament to your home." },
+  { stat: "$1,500+",    label: "Honest Pricing",    body: "Timnehs from $1,500 and single Congos from $1,700 — every price covers documentation and hand-rearing, never bait listings." },
+  { stat: "DNA",        label: "Sexed & Documented",body: "Each grey leaves with a DNA sex certificate, CITES Appendix I paperwork, a hatch certificate and an avian-vet health record." },
+  { stat: "PCR",        label: "Health Screened",   body: "Every bird clears PBFD and Polyomavirus PCR screening and a pre-placement avian-vet exam before it is listed." },
+  { stat: "$200",       label: "Refundable Deposit",body: "A $200 deposit holds your chosen bird and comes off the total — refundable any time before it ships." },
+  { stat: "50",         label: "States Shipped",    body: "We ship nationwide — $185 airport pickup or $350 home delivery — in an IATA-approved travel crate." },
+  { stat: "2014",       label: "Family Aviary",     body: "Mark & Teri Benjamin have hand-raised every grey in their Midland, Texas home since 2014, under a USDA AWA license." },
+  { stat: "24h",        label: "Reply Guarantee",   body: "Send an inquiry and hear back from us within one business day, with fresh dated photos of the bird." },
+];
+
+const tocGroups = [
+  { tag: "The birds", title: "Who's available", items: [
+    { n: 1, t: "Which greys are available now?", href: "#roster" },
+    { n: 2, t: "How do they compare side by side?", href: "#compare" },
+    { n: 3, t: "Breeding pairs & fertile eggs", href: "#breeding" },
+  ]},
+  { tag: "What you get", title: "Documentation & cost", items: [
+    { n: 4, t: "What comes home with every grey?", href: "#documentation" },
+    { n: 5, t: "How much does a grey cost?", href: "#pricing" },
+    { n: 6, t: "How do you reserve and bring one home?", href: "#process" },
+    { n: 7, t: "Where do you deliver?", href: "#shipping" },
+  ]},
+  { tag: "Trust & answers", title: "Why families choose us", items: [
+    { n: 8, t: "Why buy from us, not a marketplace?", href: "#marketplace" },
+    { n: 9, t: "What do C.A.Gs families say?", href: "#reviews" },
+    { n: 10, t: "Frequently asked questions", href: "#faq" },
+    { n: 11, t: "Care guides for your new grey", href: "#resources" },
+    { n: 12, t: "Ready to reserve?", href: "#reserve" },
+  ]},
 ];
 
 const careGuides = [
@@ -194,6 +227,50 @@ const faqSchema = {
     </div>
   </section>
 
+  {/* ── KEY TAKEAWAY ── */}
+  <KeyTakeawayV2
+    eyebrow="The short version"
+    heading="What you're looking at on this page"
+    badge="8 facts · 60-sec read"
+    items={ktItems}
+  />
+
+  {/* ── TOC ── */}
+  <nav class="py-10 px-4 md:py-12" aria-label="On this page">
+    <div class="mx-auto" style="max-width:1100px;">
+      <div class="rounded-2xl border border-black/[0.07] bg-white px-6 py-7 md:px-10 md:py-9" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+        <div class="flex flex-col items-start justify-between gap-1 border-b border-black/[0.07] pb-5 md:flex-row md:items-end">
+          <div>
+            <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">Inside this page</p>
+            <h2 class="font-lora mt-1.5 font-bold leading-tight text-logo-dark">On this page</h2>
+          </div>
+          <p class="font-sora text-[13px] text-stone-600">12 sections · everything about our available greys</p>
+        </div>
+        <div class="mt-6 grid grid-cols-1 gap-x-10 gap-y-6 md:grid-cols-3">
+          {tocGroups.map((g) => (
+            <div>
+              <div class="mb-2.5 flex items-baseline gap-2.5">
+                <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">{g.tag}</span>
+                <span class="h-px flex-1 bg-black/[0.08]"></span>
+              </div>
+              <p class="font-lora mb-2.5 text-lg font-semibold italic text-green">{g.title}</p>
+              <ol class="space-y-0">
+                {g.items.map((it) => (
+                  <li>
+                    <a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]">
+                      <span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span>
+                      <span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </nav>
+
   {/* ── COMPARISON ── */}
   <section id="compare" class="py-16 px-4">
     <div class="max-w-5xl mx-auto" style="max-width:1100px;">
@@ -308,7 +385,7 @@ const faqSchema = {
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <a href="/african-grey-breeding-pair-for-sale/" class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white transition-colors hover:border-green/40" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
-          <div class="aspect-[16/9] overflow-hidden bg-cream"><img src="/congo-african-grey-breeding-pair-aviary.webp" alt="A proven Congo African Grey breeding pair in the C.A.Gs aviary, captive-bred and DNA-sexed" width="560" height="315" loading="lazy" class="w-full h-full object-cover object-center transition-transform duration-200 group-hover:scale-[1.03]" /></div>
+          <div class="aspect-[16/9] overflow-hidden bg-cream"><img src="/congo-african-grey-breeding-pair-aviary.webp" alt="A proven Congo African Grey breeding pair perched together in the C.A.Gs aviary, captive-bred and DNA-sexed" width="560" height="315" loading="lazy" class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-[1.03]" style="object-position:center 22%;" /></div>
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-lora font-semibold text-lg text-logo-dark mb-1.5">Proven African Grey breeding pairs</h3>
             <p class="font-sora text-stone-600 text-sm leading-relaxed mb-3">A DNA-sexed, bonded breeding pair for serious aviculturists — distinct from a companion pair like Jins &amp; Jeni. Captive-bred, documented, and placed only with experienced homes.</p>
@@ -316,7 +393,7 @@ const faqSchema = {
           </div>
         </a>
         <a href="/african-grey-parrot-bird-eggs-for-sale-usa/" class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white transition-colors hover:border-green/40" style="box-shadow:0 4px 20px rgba(60,30,10,0.06);">
-          <div class="aspect-[16/9] overflow-hidden bg-cream"><img src="/african-grey-eggs-ready-to-hatch.webp" alt="Fertile, candled African Grey parrot eggs ready to hatch, from captive-bred USDA AWA licensed stock" width="560" height="315" loading="lazy" class="w-full h-full object-cover object-center transition-transform duration-200 group-hover:scale-[1.03]" /></div>
+          <div class="aspect-[16/9] overflow-hidden bg-cream"><img src="/african-grey-candled-eggs.webp" alt="Fertile, candled African Grey parrot eggs in nest bedding, from captive-bred USDA AWA licensed stock" width="560" height="315" loading="lazy" class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-[1.03]" style="object-position:center 64%;" /></div>
           <div class="p-6 flex flex-col flex-1">
             <h3 class="font-lora font-semibold text-lg text-logo-dark mb-1.5">Fertile African Grey eggs for hatching</h3>
             <p class="font-sora text-stone-600 text-sm leading-relaxed mb-3">Fertile, candled African Grey parrot eggs for experienced hobbyists running their own incubator. Captive-bred USA stock, transferred with documentation — never wild-sourced.</p>
