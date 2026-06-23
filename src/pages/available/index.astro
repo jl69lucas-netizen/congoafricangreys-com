@@ -4,6 +4,7 @@ import Schema from '../../components/Schema.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import CounterSnippet from '../../components/cag-library/CounterSnippet.astro';
 import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
+import JumpNav from '../../components/cag-jump-nav.astro';
 import NewsletterV2 from '../../components/cag-library/NewsletterV2.astro';
 
 const title = "Available African Greys for Sale | Hand-Raised, DNA-Sexed & CITES-Documented Congo & Timneh — C.A.Gs, Midland TX";
@@ -49,6 +50,18 @@ const ktItems = [
   { stat: "50",         label: "States Shipped",    body: "We ship nationwide — $185 airport pickup or $350 home delivery — in an IATA-approved travel crate." },
   { stat: "2014",       label: "Family Aviary",     body: "Mark & Teri Benjamin have hand-raised every grey in their Midland, Texas home since 2014, under a USDA AWA license." },
   { stat: "24h",        label: "Reply Guarantee",   body: "Send an inquiry and hear back from us within one business day, with fresh dated photos of the bird." },
+];
+
+const jumpLinks = [
+  { label: "Available", href: "#roster" },
+  { label: "Compare", href: "#compare" },
+  { label: "Breeding & eggs", href: "#breeding" },
+  { label: "What's included", href: "#documentation" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "Shipping", href: "#shipping" },
+  { label: "Reviews", href: "#reviews" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Reserve", href: "#reserve" },
 ];
 
 const tocGroups = [
@@ -140,6 +153,8 @@ const faqSchema = {
     .avail-d .filter-btn[aria-pressed="true"] { background: #2D6A4F; color: #fff; border-color: #2D6A4F; }
     .avail-d .hero-avail { min-height: 320px; }
     @media (min-width: 768px) { .avail-d .hero-avail { min-height: 400px; max-height: 440px; } }
+    .avail-d .jump-mobile { position: sticky; top: 94px; z-index: 40; background: #faf7f4; }
+    @media (min-width: 768px) { .avail-d .jump-mobile { display: none; } }
   </style>
 
   <div class="avail-d">
@@ -165,6 +180,11 @@ const faqSchema = {
   </section>
 
   <CounterSnippet stats={counterStats} />
+
+  {/* ── MOBILE JUMP BAR (sticky, mobile only) ── */}
+  <div class="jump-mobile px-4 py-2">
+    <JumpNav links={jumpLinks} sticky={false} />
+  </div>
 
   {/* ── ROSTER ── */}
   <section id="roster" class="py-16 px-4 bg-cream">
@@ -235,8 +255,8 @@ const faqSchema = {
     items={ktItems}
   />
 
-  {/* ── TOC ── */}
-  <nav class="py-10 px-4 md:py-12" aria-label="On this page">
+  {/* ── TOC (desktop only) ── */}
+  <nav class="hidden md:block py-10 px-4 md:py-12" aria-label="On this page">
     <div class="mx-auto" style="max-width:1100px;">
       <div class="rounded-2xl border border-black/[0.07] bg-white px-6 py-7 md:px-10 md:py-9" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
         <div class="flex flex-col items-start justify-between gap-1 border-b border-black/[0.07] pb-5 md:flex-row md:items-end">
