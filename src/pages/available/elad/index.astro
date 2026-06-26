@@ -6,6 +6,7 @@ import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro
 import KeyTakeawayV2 from '../../../components/cag-library/KeyTakeawayV2.astro';
 import NewsletterV2 from '../../../components/cag-library/NewsletterV2.astro';
 import JumpRail from '../../../components/cag-library/JumpRail.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
 
 const title = "Male Timneh African Grey for Sale | Want a Hand-Raised, DNA-Sexed Boy? Meet Elad — 1 Healthy 6-Month Timneh, $1,600 (was $2,200) | C.A.Gs – Midland, TX";
 const description = "Elad is a hand-raised male Timneh African Grey for sale — 6 months old, an early-talking, even-tempered young Timneh, now $1,600 (reduced from a $2,200 starting price). DNA sexed, CITES Appendix I documented, captive-bred in the USA. Ships nationwide · $185 airport · $350 home.";
@@ -134,6 +135,18 @@ const eladJumpParts = {
   3: "See & Compare",
   4: "Buying Elad",
 };
+
+const jumpLinks = [
+  { label: "Temperament", href: "#temperament" },
+  { label: "Talking", href: "#talking" },
+  { label: "Price", href: "#price-counter" },
+  { label: "What's included", href: "#documentation" },
+  { label: "Health", href: "#health" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Shipping", href: "#shipping" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Reserve", href: "#reserve" },
+];
 ---
 
 <BaseLayout {title} {description} {canonical} hideGlobalCta>
@@ -152,6 +165,10 @@ const eladJumpParts = {
     .elad-d .cag-seam__line { flex: 1; height: 1px; background: rgba(45,106,79,.16); }
     .elad-d .cag-seam img { height: 30px; width: auto; display: block; opacity: .92; flex-shrink: 0; }
     @media (max-width: 600px) { .elad-d .cag-seam { gap: 16px; } .elad-d .cag-seam img { height: 24px; } }
+
+    /* Mobile sticky jump bar */
+    .jump-mobile { position: sticky; top: 94px; z-index: 40; background: #faf7f4; }
+    @media (min-width: 768px) { .jump-mobile { display: none; } }
 
     /* Hero H1 — match homepage clamp (was text-4xl/5xl = oversized) */
     .elad-d .elad-hero h1 { font-size: clamp(1.7rem, 1.1rem + 2.6vw, 2.35rem) !important; line-height: 1.14 !important; }
@@ -314,8 +331,13 @@ const eladJumpParts = {
     />
   </section>
 
+  {/* ── MOBILE JUMP BAR (sticky, mobile only) ── */}
+  <div class="jump-mobile px-4 py-2">
+    <JumpNav links={jumpLinks} sticky={false} />
+  </div>
+
   {/* ── TABLE OF CONTENTS ── */}
-  <nav class="py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
+  <nav class="hidden md:block py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
     <div class="container mx-auto max-w-5xl">
       <div class="rounded-2xl border border-black/[0.07] bg-white px-6 py-7 md:px-10 md:py-9" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
         <div class="flex flex-col items-start justify-between gap-2 border-b border-black/[0.07] pb-5 md:flex-row md:items-end">
