@@ -16,8 +16,11 @@ interface Props {
   robots?: string;
   /** Pages that render their own <CTA /> set this to suppress the global pre-footer band (avoids a double CTA). */
   hideGlobalCta?: boolean;
+  /** LCP hero image to preload with fetchpriority=high. Use on pages whose LCP is a <video poster> or
+      any image not otherwise preload-discoverable in the initial document. */
+  heroPreload?: string;
 }
-const { title, description, canonical, ogType = 'website', schemaJson, extraHeadHtml, robots = 'index, follow', hideGlobalCta = false } = Astro.props;
+const { title, description, canonical, ogType = 'website', schemaJson, extraHeadHtml, robots = 'index, follow', hideGlobalCta = false, heroPreload } = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang="en-US">
@@ -101,6 +104,11 @@ const { title, description, canonical, ogType = 'website', schemaJson, extraHead
   <!-- Structured data -->
   {schemaJson && <script type="application/ld+json" set:html={schemaJson} />}
   {extraHeadHtml && <Fragment set:html={extraHeadHtml} />}
+
+  <!-- LCP hero preload — for pages whose LCP is a <video poster> (poster can't take fetchpriority
+       directly), preloading the poster image here makes it discoverable by the browser's preload
+       scanner and applies high priority, fixing the PageSpeed "LCP request discovery" flag. -->
+  {heroPreload && <link rel="preload" as="image" href={heroPreload} fetchpriority="high" />}
 </head>
 <body class="theme-d bg-warm-white font-sora text-stone-800 antialiased pb-16 md:pb-0">
   <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-clay focus:px-4 focus:py-2 focus:font-semibold focus:text-white">Skip to main content</a>
