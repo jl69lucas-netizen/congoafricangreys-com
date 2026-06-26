@@ -2,6 +2,7 @@
 """One-shot: downscale oversized /available/ cluster WebPs to ~2x their CSS display
 size. Mirrors commit 31368d7. Only shrinks (never upscales); re-encodes WebP q=80.
 Run from repo root: python3 scripts/downscale_available_images.py"""
+import io
 import os
 from PIL import Image
 
@@ -33,6 +34,11 @@ for path, target_w in JOBS:
     if target_w and im.width > target_w:
         new_h = round(im.height * target_w / im.width)
         im = im.resize((target_w, new_h), Image.LANCZOS)
-    im.save(path, "WEBP", quality=80, method=6)
-    kb1 = os.path.getsize(path) // 1024
-    print(f"{path}: {w0}x{h0} {kb0}KB -> {im.width}x{im.height} {kb1}KB")
+    buf = io.BytesIO()
+    im.save(buf, "WEBP", quality=80, method=6)
+    if len(buf.getvalue()) < os.path.getsize(path):
+        with open(path, "wb") as f:
+            f.write(buf.getvalue())
+        print(f"{path}: {w0}x{h0} {kb0}KB -> {im.width}x{im.height} {len(buf.getvalue())//1024}KB")
+    else:
+        print(f"{path}: {w0}x{h0} {kb0}KB -> SKIPPED (re-encode would grow to {len(buf.getvalue())//1024}KB)")
