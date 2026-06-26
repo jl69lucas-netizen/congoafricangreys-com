@@ -6,6 +6,7 @@ import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro
 import KeyTakeawayV2 from '../../../components/cag-library/KeyTakeawayV2.astro';
 import NewsletterV2 from '../../../components/cag-library/NewsletterV2.astro';
 import JumpRail from '../../../components/cag-library/JumpRail.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
 
 const title = "Male Congo African Grey for Sale | Want a Hand-Raised, DNA-Sexed Boy? Meet Roys — 1 Healthy 4-Month Congo, $2,300 | C.A.Gs – Midland, TX";
 const description = "Roys is a hand-raised male Congo African Grey for sale — 4 months old, energetic and great with families, $2,300. DNA sexed, CITES-documented, captive-bred in the USA. Ships nationwide · $185 airport · $350 home.";
@@ -134,6 +135,18 @@ const roysJumpParts = {
   3: "See & Compare",
   4: "Buying Roys",
 };
+
+const jumpLinks = [
+  { label: "Temperament", href: "#temperament" },
+  { label: "Talking", href: "#talking" },
+  { label: "Price", href: "#price-counter" },
+  { label: "What's included", href: "#documentation" },
+  { label: "Health", href: "#health" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Shipping", href: "#shipping" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Reserve", href: "#reserve" },
+];
 ---
 
 <BaseLayout {title} {description} {canonical} hideGlobalCta>
@@ -155,6 +168,10 @@ const roysJumpParts = {
 
     /* Hero H1 — match homepage clamp (was text-4xl/5xl = oversized) */
     .roys-d .roys-hero h1 { font-size: clamp(1.7rem, 1.1rem + 2.6vw, 2.35rem) !important; line-height: 1.14 !important; }
+
+    /* Mobile sticky jump bar */
+    .jump-mobile { position: sticky; top: 94px; z-index: 40; background: #faf7f4; }
+    @media (min-width: 768px) { .jump-mobile { display: none; } }
 
     /* Standard media height so portrait crops aren't cut at the edges */
     .roys-d .roys-feature-img { max-height: 420px !important; object-position: center top; }
@@ -315,8 +332,13 @@ const roysJumpParts = {
     />
   </section>
 
+  {/* ── MOBILE JUMP BAR (sticky, mobile only) ── */}
+  <div class="jump-mobile px-4 py-2">
+    <JumpNav links={jumpLinks} sticky={false} />
+  </div>
+
   {/* ── TABLE OF CONTENTS ── */}
-  <nav class="py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
+  <nav class="hidden md:block py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
     <div class="container mx-auto max-w-5xl">
       <div class="rounded-2xl border border-black/[0.07] bg-white px-6 py-7 md:px-10 md:py-9" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
         <div class="flex flex-col items-start justify-between gap-2 border-b border-black/[0.07] pb-5 md:flex-row md:items-end">
