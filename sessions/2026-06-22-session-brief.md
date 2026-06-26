@@ -13,6 +13,9 @@ Parents (supplied by breeder this session): **Levi** (sire, 7yo — talkative, c
 
 ## Open Flags
 
+### PERF — BREEDER ACTION (2026-06-26) — Rocket Loader is the source of the unused-JS / forced-reflow flag
+The ~71 KiB unused JS at `/70de/` + the forced-reflow warning Lighthouse reports on the `/available/` bird pages are **Cloudflare Rocket Loader**, injected at the edge — NOT in our repo, so there is no code fix. **Fix = Cloudflare dashboard → `congoafricangreys.com` zone → Speed → Optimization → Content Optimization → Rocket Loader → Off.** (CF API tokens are dead, so this is a manual dashboard toggle for the breeder.) Once off, the `/70de/` script and its reflow disappear from Lighthouse.
+
 ### GAP-FLAG (2026-06-26, Task 2 de-templating) — testimonial blockquote is byte-identical across all 6 bird pages
 During the first-person/anti-AI de-templating pass I individuated the shared "year one" paragraph and the "Breeder note:" H6 label on all 6 `/available/` bird pages (roys, amie, elad, evie, jins-jeni, bery). **Out of Task 2 scope but flagged:** every page also carries the SAME customer testimonial verbatim — *"I searched for African Grey parrots for sale near me for months before finding C.A.Gs. Their birds are truly top-notch! My African Grey is affectionate, intelligent, and already picking up words. The shipping process was seamless."* This is another mass-template fingerprint AND it contains anti-AI tells ("seamless", "top-notch"). I did NOT rewrite it because it is a quoted buyer review (verbatim — humanizing a quote would fabricate). **Need from Mark & Teri:** real, distinct buyer quotes (or permission to vary/attribute them) so each bird page can carry its own genuine testimonial instead of one copy-pasted line. Until then it stays as-is — no invented reviews.
 
