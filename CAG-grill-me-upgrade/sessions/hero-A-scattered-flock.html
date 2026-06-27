@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CAG Hero A — Scattered Flock · Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Lora:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --clay:#e8604c;--clay-lt:#f08070;--clay-dk:#c94d3a;
+  --green:#2D6A4F;--green-lt:#eaf4ef;
+  --cream:#faf7f4;--card-bg:#fff;--border:#ede5dc;
+  --text:#1c1a18;--mid:#5a5248;--light:#9b9189;
+  --shadow:0 2px 16px rgba(60,30,10,.10),0 8px 32px rgba(60,30,10,.07);
+  --shadow-btn:0 6px 20px rgba(232,96,76,.38);
+  --r-lg:20px;--r-pill:50px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Sora',sans-serif;background:#fdf0eb;color:var(--text);}
+h1,h2,h3{font-family:'Lora',serif;}
+p{max-width:70ch;}
+img{display:block;}
+
+.preview-bar{background:#1c1a18;color:#9b9189;text-align:center;font-size:11px;
+  font-family:monospace;padding:8px;letter-spacing:.5px;}
+.preview-bar strong{color:#e8604c;}
+
+/* HERO */
+.hero{
+  background:linear-gradient(150deg,#fde8e3 0%,#faf7f4 55%,#f0f7f3 100%);
+  padding:72px 0 56px;overflow:hidden;
+}
+.hero-inner{
+  max-width:1100px;margin:0 auto;padding:0 32px;
+  display:grid;grid-template-columns:1.15fr 1fr;
+  gap:48px;align-items:center;
+}
+
+/* LEFT */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#eaf4ef;color:var(--green);
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;padding:5px 14px;border-radius:50px;
+  margin-bottom:18px;
+}
+.hero-h1{
+  font-size:clamp(1.85rem,3.2vw,2.75rem);font-weight:700;
+  line-height:1.18;margin-bottom:14px;color:var(--text);
+}
+.hero-h1 em{color:var(--clay);font-style:normal;}
+.hero-sub{
+  font-size:1rem;color:var(--mid);line-height:1.65;
+  margin-bottom:28px;max-width:440px;
+}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;}
+.btn-primary{
+  background:var(--clay);color:#fff;
+  font-family:'Sora',sans-serif;font-size:.875rem;font-weight:700;
+  padding:13px 26px;border-radius:50px;border:none;cursor:pointer;
+  box-shadow:var(--shadow-btn);text-decoration:none;
+  display:inline-block;transition:transform .15s,box-shadow .15s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(232,96,76,.48);}
+.btn-ghost{
+  background:transparent;color:var(--green);
+  border:2px solid var(--green);font-family:'Sora',sans-serif;
+  font-size:.875rem;font-weight:700;padding:11px 22px;
+  border-radius:50px;cursor:pointer;text-decoration:none;
+  display:inline-block;transition:background .15s;
+}
+.btn-ghost:hover{background:var(--green-lt);}
+.trust-row{display:flex;gap:14px;flex-wrap:wrap;}
+.trust-chip{
+  display:flex;align-items:center;gap:5px;
+  font-size:11.5px;font-weight:600;color:var(--mid);
+}
+.trust-chip::before{content:'✓';color:var(--green);font-weight:700;}
+
+/* RIGHT: scattered cards */
+.photo-scatter{
+  position:relative;height:500px;
+}
+.photo-card{
+  position:absolute;background:#fff;
+  border-radius:16px;box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:transform .2s ease,box-shadow .2s ease,z-index 0s;
+}
+.photo-card:hover{
+  transform:scale(1.05) rotate(0deg)!important;
+  z-index:20!important;
+  box-shadow:0 12px 40px rgba(60,30,10,.18);
+}
+.photo-card img{width:100%;height:155px;object-fit:cover;}
+.card-meta{padding:10px 12px;}
+.card-type{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--light);margin-bottom:3px;
+}
+.card-name{font-weight:700;font-size:13px;color:var(--text);margin-bottom:2px;}
+.card-price{font-weight:700;font-size:13px;color:var(--clay);}
+.avail-dot{
+  position:absolute;top:10px;right:10px;
+  width:8px;height:8px;border-radius:50%;
+  background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.25);
+}
+
+/* card positions — photo-audit fix: ROYS, JINS/JENI, BERY, ELAD, EVIE (no AMIE) */
+.photo-card:nth-child(1){width:182px;top:10px; left:0;  transform:rotate(-4deg);z-index:1;}
+.photo-card:nth-child(2){width:192px;top:5px; left:152px;transform:rotate(3.5deg);z-index:3;}
+.photo-card:nth-child(3){width:178px;top:230px;left:15px; transform:rotate(-2.5deg);z-index:2;}
+.photo-card:nth-child(4){width:188px;top:225px;left:175px;transform:rotate(4.5deg);z-index:4;}
+.photo-card:nth-child(5){width:170px;top:435px;left:75px; transform:rotate(-3deg);z-index:2;
+  clip-path:inset(0 0 30% 0);pointer-events:none;opacity:.8;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:36px;}
+  .photo-scatter{height:auto;display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;}
+  .photo-card{position:static!important;transform:none!important;width:160px;flex-shrink:0;}
+  .photo-card:nth-child(5){clip-path:none;opacity:1;pointer-events:auto;}
+}
+@media(max-width:600px){
+  .hero{padding:48px 0 40px;}
+  .hero-inner{padding:0 18px;}
+  .photo-card{width:140px;}
+  .photo-card img{height:130px;}
+}
+</style>
+</head>
+<body>
+<div class="preview-bar"><strong>Hero A · Scattered Flock</strong> · 1100px · Resize to test tablet (768px) + mobile (375px)</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <!-- LEFT -->
+    <div>
+      <span class="hero-badge">USDA Licensed · Captive-Bred Since 2014</span>
+      <h1 class="hero-h1">Hand-Raised African Grey Parrots<br><em>Ready for Your Home</em></h1>
+      <p class="hero-sub">From our family in Midland, TX to yours — CITES-documented, DNA-sexed, and fully socialized. Meet your lifelong companion today.</p>
+      <div class="hero-ctas">
+        <a href="#available" class="btn-primary">Meet Available Birds</a>
+        <a href="#contact" class="btn-ghost">Ask a Question</a>
+      </div>
+      <div class="trust-row">
+        <span class="trust-chip">CITES Documented</span>
+        <span class="trust-chip">DNA Sexed</span>
+        <span class="trust-chip">Avian Vet Checked</span>
+        <span class="trust-chip">Air Shipping $185</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: scattered cards — photo-audit fix applied -->
+    <div class="photo-scatter">
+      <!-- Slot 1: ROYS 1080×1350 portrait — object-position center 30% -->
+      <div class="photo-card">
+        <span class="avail-dot"></span>
+        <img src="../ROYS- African Congo Grey Parrot - male 4 months.webp" alt="ROYS Congo African Grey" style="object-position:center 30%">
+        <div class="card-meta">
+          <div class="card-type">Congo · Male · 4 mo</div>
+          <div class="card-name">ROYS</div>
+          <div class="card-price">$2,300</div>
+        </div>
+      </div>
+      <!-- Slot 2: JINS/JENI 780×1040 portrait — replaces AMIE (landscape too wide) -->
+      <div class="photo-card">
+        <span class="avail-dot"></span>
+        <img src="../JINS:JENI -Unrelated african grey parrot pair for sale.webp" alt="JINS and JENI Congo African Grey pair" style="object-position:center top">
+        <div class="card-meta">
+          <div class="card-type">Congo · Pair</div>
+          <div class="card-name">JINS &amp; JENI</div>
+          <div class="card-price">$3,500</div>
+        </div>
+      </div>
+      <!-- Slot 3: BERY 960×960 square — object-position center center -->
+      <div class="photo-card">
+        <span class="avail-dot"></span>
+        <img src="../BERY -1 year female african grey parrot.webp" alt="BERY Congo African Grey" style="object-position:center center">
+        <div class="card-meta">
+          <div class="card-type">Congo · Female · 1 yr</div>
+          <div class="card-name">BERY</div>
+          <div class="card-price">$1,700</div>
+        </div>
+      </div>
+      <!-- Slot 4: ELAD 1023×685 landscape — object-position center 25% -->
+      <div class="photo-card">
+        <span class="avail-dot"></span>
+        <img src="../ELAD - Timneh african grey for sale - male 5 months.webp" alt="ELAD Timneh African Grey" style="object-position:center 25%">
+        <div class="card-meta">
+          <div class="card-type">Timneh · Male · 5 mo</div>
+          <div class="card-name">ELAD</div>
+          <div class="card-price">$1,600</div>
+        </div>
+      </div>
+      <!-- Slot 5: EVIE 591×640 near-square — object-position center top (clip-path teaser) -->
+      <div class="photo-card">
+        <span class="avail-dot"></span>
+        <img src="../EVIE- Timneh African Grey parrot female 6 months.webp" alt="EVIE Timneh African Grey" style="object-position:center top">
+        <div class="card-meta">
+          <div class="card-type">Timneh · Female · 6 mo</div>
+          <div class="card-name">EVIE</div>
+          <div class="card-price">$1,500</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

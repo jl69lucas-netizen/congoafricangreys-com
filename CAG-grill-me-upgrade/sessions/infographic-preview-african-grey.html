@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>African Grey Parrot — Infographic Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Sora', sans-serif;
+      padding: 40px 16px;
+      gap: 12px;
+    }
+
+    .preview-label {
+      font-family: 'Sora', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #666;
+    }
+
+    /* ─── INFOGRAPHIC SHELL ─── */
+    .infographic {
+      width: 100%;
+      max-width: 480px;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(60,30,10,0.14);
+      display: flex;
+      flex-direction: column;
+      background: #faf7f4;
+      font-family: 'Sora', sans-serif;
+    }
+
+    /* ─── ZONE 1: TITLE BAR (~52px) ─── */
+    .title-bar {
+      background: #1a1a2e;
+      height: 52px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      gap: 10px;
+    }
+
+    .title-bar__main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .title-bar__name {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .title-bar__sci {
+      font-size: 10px;
+      color: rgba(255,255,255,0.6);
+      font-style: italic;
+      letter-spacing: 0.3px;
+    }
+
+    .title-bar__badge {
+      background: #e8604c;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 50px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ─── ZONE 2: ORIGIN / GENETICS STRIP (~70px) ─── */
+    .origin-strip {
+      height: 70px;
+      flex-shrink: 0;
+      background: #2D6A4F;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .origin-cell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 10px;
+      position: relative;
+    }
+
+    .origin-cell + .origin-cell::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      bottom: 12px;
+      width: 1px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .origin-cell__icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .origin-cell__label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .origin-cell__value {
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    /* ─── ZONE 3: STATS ROW (~90px) ─── */
+    .stats-row {
+      height: 90px;
+      flex-shrink: 0;
+      display: flex;
+      border-bottom: 1px solid rgba(45,106,79,0.10);
+      background: #fff;
+    }
+
+    .stat-tile {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      position: relative;
+      gap: 3px;
+    }
+
+    .stat-tile + .stat-tile::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 14px;
+      bottom: 14px;
+      width: 1px;
+      background: rgba(45,106,79,0.12);
+    }
+
+    .stat-tile__icon {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .stat-tile__value {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: #2D6A4F;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .stat-tile__label {
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #777;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* ─── ZONE 4: TRAITS GRID (~130px) ─── */
+    .traits-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 14px 8px;
+      gap: 8px;
+      background: #faf7f4;
+      overflow: hidden;
+    }
+
+    .traits-section__heading {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #2D6A4F;
+    }
+
+    .traits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      flex: 1;
+    }
+
+    .trait-chip {
+      background: #fff;
+      border: 1px solid rgba(45,106,79,0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      box-shadow: 0 1px 4px rgba(60,30,10,0.06);
+    }
+
+    .trait-chip__dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #e8604c;
+      flex-shrink: 0;
+    }
+
+    .trait-chip__text {
+      font-size: 9.5px;
+      font-weight: 600;
+      color: #1a1a2e;
+      line-height: 1.2;
+    }
+
+    /* ─── ZONE 5: FOOTER CTA STRIP (~58px) ─── */
+    .footer-bar {
+      height: 58px;
+      flex-shrink: 0;
+      background: #2D6A4F;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .footer-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 0 16px;
+      position: relative;
+    }
+
+    .footer-badge + .footer-badge::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: rgba(255,255,255,0.25);
+    }
+
+    .footer-badge__icon {
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .footer-badge__text {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="preview-label">Infographic Preview — 400px · Test Only · Not Deployed</p>
+
+  <div class="infographic">
+
+    <!-- ZONE 1: TITLE BAR -->
+    <div class="title-bar">
+      <div class="title-bar__main">
+        <span class="title-bar__name">African Grey Parrot</span>
+        <span class="title-bar__sci">Psittacus erithacus</span>
+      </div>
+      <span class="title-bar__badge">CITES App. II</span>
+    </div>
+
+    <!-- ZONE 2: ORIGIN / GENETICS STRIP -->
+    <div class="origin-strip">
+      <div class="origin-cell">
+        <span class="origin-cell__icon">🌍</span>
+        <span class="origin-cell__label">Origin</span>
+        <span class="origin-cell__value">Central &amp; West Africa</span>
+      </div>
+      <div class="origin-cell">
+        <span class="origin-cell__icon">🧬</span>
+        <span class="origin-cell__label">Subspecies</span>
+        <span class="origin-cell__value">Congo (CAG) · Timneh (TAG)</span>
+      </div>
+      <div class="origin-cell">
+        <span class="origin-cell__icon">🏠</span>
+        <span class="origin-cell__label">Our Birds</span>
+        <span class="origin-cell__value">Captive-Bred USA</span>
+      </div>
+    </div>
+
+    <!-- ZONE 3: STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-tile">
+        <span class="stat-tile__icon">📅</span>
+        <span class="stat-tile__value">40–60</span>
+        <span class="stat-tile__label">Year Lifespan</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-tile__icon">⚖️</span>
+        <span class="stat-tile__value">400–600g</span>
+        <span class="stat-tile__label">Adult Weight</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-tile__icon">📏</span>
+        <span class="stat-tile__value">33 cm</span>
+        <span class="stat-tile__label">Body Length</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-tile__icon">🧠</span>
+        <span class="stat-tile__value">#1</span>
+        <span class="stat-tile__label">Parrot IQ Rank</span>
+      </div>
+    </div>
+
+    <!-- ZONE 4: TRAITS GRID -->
+    <div class="traits-section">
+      <span class="traits-section__heading">Key Personality Traits</span>
+      <div class="traits-grid">
+        <div class="trait-chip">
+          <span class="trait-chip__dot"></span>
+          <span class="trait-chip__text">Highly Vocal</span>
+        </div>
+        <div class="trait-chip">
+          <span class="trait-chip__dot"></span>
+          <span class="trait-chip__text">Problem Solver</span>
+        </div>
+        <div class="trait-chip">
+          <span class="trait-chip__dot"></span>
+          <span class="trait-chip__text">Empathetic</span>
+        </div>
+        <div class="trait-chip">
+          <span class="trait-chip__dot"></span>
+          <span class="trait-chip__text">Monogamous Bond</span>
+        </div>
+        <div class="trait-chip">
+          <span class="trait-chip__dot"></span>
+          <span class="trait-chip__text">Long Memory</span>
+        </div>
+        <div class="trait-chip">
+          <span class="trait-chip__dot"></span>
+          <span class="trait-chip__text">Feather Signals</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ZONE 5: FOOTER TRUST BAR -->
+    <div class="footer-bar">
+      <div class="footer-badge">
+        <span class="footer-badge__icon">✅</span>
+        <span class="footer-badge__text">Captive-Bred</span>
+      </div>
+      <div class="footer-badge">
+        <span class="footer-badge__icon">📋</span>
+        <span class="footer-badge__text">CITES Documented</span>
+      </div>
+      <div class="footer-badge">
+        <span class="footer-badge__icon">🔬</span>
+        <span class="footer-badge__text">DNA Sexed</span>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

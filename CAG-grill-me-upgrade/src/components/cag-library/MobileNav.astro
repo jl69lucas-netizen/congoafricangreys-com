@@ -1,0 +1,82 @@
+---
+/**
+ * MobileNav — fixed bottom tab bar navigation.
+ * Desktop (≥1025px): hidden via CSS. Mobile (≤1024px): always visible.
+ *
+ * Place at the bottom of a page layout, before </body>.
+ * Pair with StickyCtaBar on transactional pages.
+ *
+ * @prop active — which tab is highlighted: 'home' | 'birds' | 'guide' | 'contact'
+ */
+export interface Props {
+  active?: 'home' | 'birds' | 'guide' | 'contact';
+}
+const { active = 'home' } = Astro.props;
+
+const tabs = [
+  { id: 'home',    label: 'Home',    href: '/',                                 icon: '⌂' },
+  { id: 'birds',   label: 'Birds',   href: '/african-grey-parrots-for-sale/',   icon: '◎' },
+  { id: 'guide',   label: 'Guide',   href: '/african-grey-parrot-care-guide/',  icon: '◈' },
+  { id: 'contact', label: 'Inquire', href: '/contact-us/',                      icon: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>' },
+];
+---
+
+<nav class="mobile-tab-bar" aria-label="Bottom navigation">
+  {tabs.map(tab => (
+    <a
+      href={tab.href}
+      class={`tab-item ${active === tab.id ? 'active' : ''}`}
+      aria-current={active === tab.id ? 'page' : undefined}
+    >
+      <span class="tab-icon" aria-hidden="true">{tab.icon}</span>
+      <span class="tab-label">{tab.label}</span>
+    </a>
+  ))}
+</nav>
+
+<style>
+.mobile-tab-bar {
+  display: none;
+}
+@media (max-width: 1024px) {
+  .mobile-tab-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: var(--cream, #faf7f4);
+    border-top: 1px solid var(--border, #ede5dc);
+    box-shadow: 0 -4px 24px rgba(60,30,10,.08);
+    z-index: 9000;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--light, #9b9189);
+    transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+  }
+  .tab-item.active {
+    color: var(--clay, #e8604c);
+  }
+  .tab-icon {
+    font-size: 20px;
+    line-height: 1;
+  }
+  .tab-label {
+    font-family: var(--font-sans, 'Sora', system-ui, sans-serif);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+}
+</style>

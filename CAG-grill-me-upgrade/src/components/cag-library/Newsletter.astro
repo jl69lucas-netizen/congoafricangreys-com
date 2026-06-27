@@ -1,0 +1,96 @@
+---
+/**
+ * Newsletter — clutch-alert subscribe.
+ *
+ * @prop variant — 'banner' (full clay block) | 'split' (image + form) | 'footer' (dark inline)
+ */
+export interface Props {
+  variant?: 'banner' | 'split' | 'footer';
+  title?: string;
+  body?: string;
+  action?: string;       // form action URL — defaults to '#'
+  perks?: string[];
+}
+const {
+  variant = 'banner',
+  title = 'Get priority access to new Grey clutches',
+  body = 'Join 420+ families on our priority list. First to know when chicks are born — before they go public.',
+  action = '#',
+  perks = [
+    'Weekly clutch updates',
+    'Exclusive early reservation',
+    'Care tips from Teri',
+    'Unsubscribe anytime',
+  ],
+} = Astro.props;
+---
+
+<style>
+@media (max-width: 768px) {
+  .newsletter-inner { flex-direction: column !important; align-items: stretch !important; }
+  .newsletter-input-row { flex-direction: column !important; }
+  .newsletter-btn { width: 100%; font-size: 16px !important; padding: 16px !important; }
+}
+</style>
+
+{variant === 'banner' && (
+  <div class="bg-clay rounded-3xl p-12 text-center text-white relative overflow-hidden">
+    <div class="absolute -right-10 -top-10 opacity-10 leading-none"><img src="/emoji/cag-congo.png" alt="" style="width:260px;height:260px;object-fit:contain;" loading="lazy" /></div>
+    <div class="newsletter-inner relative">
+      <div class="text-4xl"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+      <h3 class="font-display font-bold text-4xl mt-3 max-w-2xl mx-auto leading-[1.1]">{title}</h3>
+      <p class="mt-4 text-white/85 max-w-xl mx-auto text-[15px]">{body}</p>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-[13px]">
+        {perks.map(p => <span class="flex items-center gap-1.5"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> <span>{p}</span></span>)}
+      </div>
+      <form action={action} class="newsletter-input-row mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+        <input type="email" required placeholder="Enter your email address…" class="flex-1 rounded-full bg-white text-ink px-5 py-3.5 placeholder:text-mute outline-none focus:ring-4 focus:ring-white/30" />
+        <button class="newsletter-btn bg-white text-clay hover:bg-cream transition rounded-full px-6 py-3.5 font-semibold text-[14px] flex items-center justify-center gap-2 cag-warm-shadow">
+          <img src="/emoji/cag-congo.png" alt="" class="cag-emoji" loading="lazy" /> Subscribe
+        </button>
+      </form>
+    </div>
+  </div>
+)}
+
+{variant === 'split' && (
+  <div class="bg-white border border-line rounded-3xl cag-warm-shadow overflow-hidden grid md:grid-cols-[1fr_1.2fr]">
+    <div class="cag-hero-grad relative min-h-[280px] p-10 flex items-end">
+      <div class="absolute inset-0 flex items-center justify-center opacity-50"><img src="/emoji/cag-congo.png" alt="" style="width:200px;height:200px;object-fit:contain;" loading="lazy" /></div>
+      <div class="relative">
+        <div class="cag-tag text-clay">NEXT CLUTCH · DEC 2026</div>
+        <div class="font-display font-bold text-2xl mt-1 max-w-[260px] leading-tight">Our best chicks reserve before we list them publicly.</div>
+      </div>
+    </div>
+    <div class="p-10">
+      <h3 class="font-display font-bold text-2xl flex items-center gap-2"><span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> {title}</h3>
+      <ul class="mt-4 space-y-2 text-[14px] text-mid">
+        {perks.map(p => <li class="flex items-start gap-2"><span class="text-forest">✓</span> {p}</li>)}
+      </ul>
+      <form action={action} class="mt-6 space-y-3">
+        <input type="email" required placeholder="Enter your email address…" class="w-full bg-warm border border-line rounded-xl px-4 py-3 outline-none focus:border-clay focus:ring-4 focus:ring-clay/15 transition" />
+        <button class="w-full bg-clay hover:bg-clay-dk transition text-white rounded-xl px-5 py-3 font-semibold cag-glow flex items-center justify-center gap-2">Subscribe me <img src="/emoji/cag-congo.png" alt="" class="cag-emoji" loading="lazy" /></button>
+      </form>
+      <p class="text-[11px] text-mute mt-3 text-center">We email about new clutches only. Unsubscribe in one click.</p>
+    </div>
+  </div>
+)}
+
+{variant === 'footer' && (
+  <div class="bg-panel rounded-3xl p-10 text-white grid md:grid-cols-[1.2fr_1fr] gap-8 items-center">
+    <div>
+      <div class="cag-tag text-clay"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> PRIORITY LIST</div>
+      <h3 class="font-display font-bold text-3xl mt-2 leading-tight">{title}</h3>
+      <p class="text-white/60 mt-2 text-[14px]">{body}</p>
+    </div>
+    <form action={action} class="space-y-2">
+      <div class="flex bg-white/10 backdrop-blur rounded-full p-1.5 border border-white/20 focus-within:border-clay transition">
+        <input type="email" required placeholder="you@yourdomain.com" class="flex-1 bg-transparent px-4 py-2 outline-none placeholder:text-white/40" />
+        <button class="bg-clay hover:bg-clay-dk transition rounded-full px-5 py-2 text-[13px] font-semibold cag-glow">Subscribe →</button>
+      </div>
+      <div class="flex gap-4 text-[11px] text-white/50">
+        <span>✓ Free</span><span>✓ Monthly</span><span>✓ Unsubscribe anytime</span>
+      </div>
+    </form>
+  </div>
+)}

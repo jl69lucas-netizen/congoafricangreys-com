@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CAG Available C — Tile Gateway · Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Lora:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --clay:#e8604c;--clay-dk:#c94d3a;
+  --green:#2D6A4F;--green-lt:#eaf4ef;
+  --cream:#faf7f4;--card-bg:#fff;--border:#ede5dc;
+  --text:#1c1a18;--mid:#5a5248;--light:#9b9189;
+  --shadow:0 2px 16px rgba(60,30,10,.09),0 8px 32px rgba(60,30,10,.06);
+  --r-lg:20px;--r-pill:50px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Sora',sans-serif;background:var(--cream);color:var(--text);}
+h1,h2,h3{font-family:'Lora',serif;}
+p{max-width:70ch;}
+img{display:block;}
+.preview-bar{background:#1c1a18;color:#9b9189;text-align:center;font-size:11px;
+  font-family:monospace;padding:8px;letter-spacing:.5px;}
+.preview-bar strong{color:#e8604c;}
+
+.available-section{padding:72px 0;}
+.section-inner{max-width:1100px;margin:0 auto;padding:0 32px;}
+.section-header{text-align:center;margin-bottom:40px;}
+.section-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1.2px;color:var(--green);margin-bottom:10px;}
+.section-h2{font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:700;margin-bottom:8px;}
+.section-sub{font-size:.9rem;color:var(--mid);margin-inline:auto;}
+
+/* CATEGORY TILES */
+.tiles-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:48px;
+}
+.cat-tile{
+  position:relative;border-radius:20px;overflow:hidden;
+  cursor:pointer;height:240px;
+  border:3px solid transparent;
+  box-shadow:var(--shadow);
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.cat-tile:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(60,30,10,.15);}
+.cat-tile.active{border-color:var(--clay);transform:translateY(-4px);}
+.cat-tile img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .4s;
+}
+.cat-tile:hover img,.cat-tile.active img{transform:scale(1.06);}
+.cat-tile::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(28,26,24,.85) 0%,rgba(28,26,24,.2) 60%,transparent 100%);
+}
+.tile-text{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:16px;z-index:2;
+}
+.tile-count{
+  display:inline-block;
+  background:var(--clay);color:#fff;
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.6px;padding:3px 9px;border-radius:50px;
+  margin-bottom:6px;
+}
+.tile-label{
+  font-family:'Lora',serif;font-size:1.05rem;font-weight:700;
+  color:#fff;display:block;line-height:1.2;
+}
+.tile-sub{font-size:11px;color:rgba(255,255,255,.72);margin-top:3px;}
+.tile-check{
+  position:absolute;top:12px;right:12px;z-index:3;
+  width:26px;height:26px;border-radius:50%;
+  background:var(--clay);border:2px solid #fff;
+  display:none;align-items:center;justify-content:center;
+  color:#fff;font-size:13px;font-weight:700;
+}
+.cat-tile.active .tile-check{display:flex;}
+
+/* CARDS PANEL */
+#cards-panel{display:none;}
+#cards-panel.visible{display:block;}
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;flex-wrap:wrap;gap:12px;
+}
+.panel-title{font-size:1.3rem;font-weight:700;}
+.back-btn{
+  background:transparent;border:1.5px solid var(--border);
+  color:var(--mid);font-family:'Sora',sans-serif;font-size:13px;font-weight:600;
+  padding:7px 16px;border-radius:50px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:all .15s;
+}
+.back-btn:hover{border-color:var(--clay);color:var(--clay);}
+.back-btn::before{content:'←';}
+
+/* Per-bird image crop overrides */
+.bird-card[data-bird="roys"]      .card-image-wrap img{object-position:center 30%;}
+.bird-card[data-bird="amie"]      .card-image-wrap img{object-position:center top;}
+.bird-card[data-bird="bery"]      .card-image-wrap img{object-position:center center;}
+.bird-card[data-bird="evie"]      .card-image-wrap img{object-position:center top;}
+.bird-card[data-bird="elad"]      .card-image-wrap img{object-position:center 25%;}
+.bird-card[data-bird="jins-jeni"] .card-image-wrap img{object-position:center top;}
+.bird-card[data-bird="breeding"]  .card-image-wrap img{object-position:center center;}
+.bird-card[data-bird="eggs"]      .card-image-wrap img{object-position:center 60%;}
+
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.bird-card{
+  background:var(--card-bg);border-radius:18px;
+  box-shadow:var(--shadow);overflow:hidden;
+  border:1px solid var(--border);
+  transition:transform .2s,box-shadow .2s;
+}
+.bird-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(60,30,10,.13);}
+.card-image-wrap{position:relative;overflow:hidden;}
+.card-image-wrap img{width:100%;height:200px;object-fit:cover;transition:transform .3s;}
+.bird-card:hover .card-image-wrap img{transform:scale(1.04);}
+.type-badge{
+  position:absolute;top:10px;left:10px;
+  font-size:9.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;padding:3px 9px;border-radius:50px;
+}
+.badge-congo{background:#eaf4ef;color:var(--green);}
+.badge-timneh{background:#fde8e3;color:var(--clay);}
+.badge-pair{background:#fff3cd;color:#7a5c00;}
+.badge-breeding{background:#f0f0ff;color:#4a4a8a;}
+.badge-eggs{background:#fff8e1;color:#8a6400;}
+.avail-dot{
+  position:absolute;top:10px;right:10px;
+  width:8px;height:8px;border-radius:50%;
+  background:#22c55e;border:2px solid #fff;
+}
+.card-body{padding:14px;}
+.card-name{font-family:'Lora',serif;font-size:1rem;font-weight:700;margin-bottom:2px;}
+.card-details{font-size:11px;color:var(--mid);margin-bottom:6px;}
+.card-note{font-size:10.5px;color:var(--light);font-style:italic;margin-bottom:6px;}
+.card-price{font-size:1.1rem;font-weight:700;color:var(--clay);margin-bottom:10px;}
+.btn-inquire{
+  display:block;width:100%;background:var(--clay);color:#fff;
+  font-family:'Sora',sans-serif;font-size:12px;font-weight:700;
+  padding:9px;border-radius:9px;border:none;cursor:pointer;
+  text-align:center;text-decoration:none;transition:background .15s;
+}
+.btn-inquire:hover{background:var(--clay-dk);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .tiles-grid{grid-template-columns:repeat(2,1fr);}
+  .cards-grid{grid-template-columns:repeat(2,1fr);}
+  .cat-tile{height:200px;}
+}
+@media(max-width:560px){
+  .available-section{padding:48px 0;}
+  .section-inner{padding:0 16px;}
+  .tiles-grid{gap:10px;}
+  .cat-tile{height:170px;}
+  .cards-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="preview-bar"><strong>Available C · Tile Gateway</strong> · 1100px · Click a category tile to reveal cards · Resize to test</div>
+
+<section class="available-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <p class="section-eyebrow">8 Birds Available Now · Ships Nationwide</p>
+      <h2 class="section-h2">What Are You Looking For?</h2>
+      <p class="section-sub">Choose a category below to see available birds and pricing.</p>
+    </div>
+
+    <!-- TILES -->
+    <div class="tiles-grid">
+      <div class="cat-tile" data-filter="congo" data-label="Congo African Greys">
+        <img src="../Male-and-Female-CONGO-African-Grey-Parrots.jpg" alt="Congo African Grey parrots" style="object-position:center center">
+        <span class="tile-check">✓</span>
+        <div class="tile-text">
+          <span class="tile-count">3 Available</span>
+          <span class="tile-label">Congo African Grey</span>
+          <span class="tile-sub">From $1,700</span>
+        </div>
+      </div>
+
+      <div class="cat-tile" data-filter="timneh" data-label="Timneh African Greys">
+        <img src="../Timneh Greys-PAIR.jpg" alt="Timneh African Grey parrots" style="object-position:center center">
+        <span class="tile-check">✓</span>
+        <div class="tile-text">
+          <span class="tile-count">2 Available</span>
+          <span class="tile-label">Timneh African Grey</span>
+          <span class="tile-sub">From $1,500</span>
+        </div>
+      </div>
+
+      <div class="cat-tile" data-filter="pair" data-label="Bonded Pairs">
+        <img src="../JINS:JENI -Unrelated african grey parrot pair for sale.webp" alt="African Grey bonded pair" style="object-position:center top">
+        <span class="tile-check">✓</span>
+        <div class="tile-text">
+          <span class="tile-count">1 Available</span>
+          <span class="tile-label">Bonded Pairs</span>
+          <span class="tile-sub">$3,500 · Must go together</span>
+        </div>
+      </div>
+
+      <div class="cat-tile" data-filter="breeding-eggs" data-label="Breeding Pairs &amp; Eggs">
+        <img src="../Healthy African Grey parrot eggs ready to hatch.webp" alt="African Grey eggs and breeding pair" style="object-position:center center">
+        <span class="tile-check">✓</span>
+        <div class="tile-text">
+          <span class="tile-count">2 Options</span>
+          <span class="tile-label">Breeding &amp; Eggs</span>
+          <span class="tile-sub">Pair $3,000 · Eggs $95/egg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARDS PANEL (hidden until tile click) -->
+    <div id="cards-panel">
+      <div class="panel-header">
+        <h3 class="panel-title" id="panel-title">Available Birds</h3>
+        <button class="back-btn" id="back-btn">Browse All Categories</button>
+      </div>
+
+      <div class="cards-grid">
+
+        <div class="bird-card" data-bird="roys" data-type="congo">
+          <div class="card-image-wrap">
+            <img src="../ROYS- African Congo Grey Parrot - male 4 months.webp" alt="ROYS Congo African Grey">
+            <span class="type-badge badge-congo">Congo CAG</span><span class="avail-dot"></span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">ROYS</div>
+            <div class="card-details">Male · 4 months · DNA Sexed</div>
+            <div class="card-price">$2,300</div>
+            <a href="#contact" class="btn-inquire">Inquire About ROYS</a>
+          </div>
+        </div>
+
+        <div class="bird-card" data-bird="amie" data-type="congo">
+          <div class="card-image-wrap">
+            <img src="../AMIE -congo african grey bird female -3 months($.webp" alt="AMIE Congo African Grey">
+            <span class="type-badge badge-congo">Congo CAG</span><span class="avail-dot"></span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">AMIE</div>
+            <div class="card-details">Female · 3 months · DNA Sexed</div>
+            <div class="card-price">$2,500</div>
+            <a href="#contact" class="btn-inquire">Inquire About AMIE</a>
+          </div>
+        </div>
+
+        <div class="bird-card" data-bird="bery" data-type="congo">
+          <div class="card-image-wrap">
+            <img src="../BERY -1 year female african grey parrot.webp" alt="BERY Congo African Grey">
+            <span class="type-badge badge-congo">Congo CAG</span><span class="avail-dot"></span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">BERY</div>
+            <div class="card-details">Female · 1 year · Fully socialized</div>
+            <div class="card-price">$1,700</div>
+            <a href="#contact" class="btn-inquire">Inquire About BERY</a>
+          </div>
+        </div>
+
+        <div class="bird-card" data-bird="elad" data-type="timneh">
+          <div class="card-image-wrap">
+            <img src="../ELAD - Timneh african grey for sale - male 5 months.webp" alt="ELAD Timneh African Grey">
+            <span class="type-badge badge-timneh">Timneh TAG</span><span class="avail-dot"></span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">ELAD</div>
+            <div class="card-details">Male · 5 months · DNA Sexed</div>
+            <div class="card-price">$1,600</div>
+            <a href="#contact" class="btn-inquire">Inquire About ELAD</a>
+          </div>
+        </div>
+
+        <div class="bird-card" data-bird="evie" data-type="timneh">
+          <div class="card-image-wrap">
+            <img src="../EVIE- Timneh African Grey parrot female 6 months.webp" alt="EVIE Timneh African Grey">
+            <span class="type-badge badge-timneh">Timneh TAG</span><span class="avail-dot"></span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">EVIE</div>
+            <div class="card-details">Female · 6 months · DNA Sexed</div>
+            <div class="card-price">$1,500</div>
+            <a href="#contact" class="btn-inquire">Inquire About EVIE</a>
+          </div>
+        </div>
+
+        <!-- JINS/JENI — $3,500 (photo sign shows old $2,100) -->
+        <div class="bird-card" data-bird="jins-jeni" data-type="pair">
+          <div class="card-image-wrap">
+            <img src="../JINS:JENI -Unrelated african grey parrot pair for sale.webp" alt="JINS and JENI African Grey pair">
+            <span class="type-badge badge-pair">Bonded Pair</span><span class="avail-dot"></span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">JINS &amp; JENI</div>
+            <div class="card-details">JENI female 4mo · JINS male 6mo</div>
+            <div class="card-note">Must go together as a pair</div>
+            <div class="card-price">$3,500</div>
+            <a href="#contact" class="btn-inquire">Inquire About This Pair</a>
+          </div>
+        </div>
+
+        <div class="bird-card" data-bird="breeding" data-type="breeding-eggs">
+          <div class="card-image-wrap">
+            <img src="../african-grey-breeding-pair-for-sale.webp" alt="African Grey breeding pair">
+            <span class="type-badge badge-breeding">Breeding Pair</span><span class="avail-dot"></span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">Breeding Pair</div>
+            <div class="card-details">Adult proven pair · CITES Documented</div>
+            <div class="card-price">$3,000</div>
+            <a href="#contact" class="btn-inquire">Inquire About Breeding Pair</a>
+          </div>
+        </div>
+
+        <div class="bird-card" data-bird="eggs" data-type="breeding-eggs">
+          <div class="card-image-wrap">
+            <img src="../Candled African Grey parrot bird eggs for sale.webp" alt="Candled African Grey eggs">
+            <span class="type-badge badge-eggs">Fertile Eggs</span><span class="avail-dot"></span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">Candled Eggs</div>
+            <div class="card-details">Fertile, candled · US shipping only</div>
+            <div class="card-note">Buy 5 eggs — free shipping</div>
+            <div class="card-price">$95 / egg</div>
+            <a href="#contact" class="btn-inquire">Inquire About Eggs</a>
+          </div>
+        </div>
+
+      </div><!-- /cards-grid -->
+    </div><!-- /cards-panel -->
+  </div>
+</section>
+
+<script>
+const tiles = document.querySelectorAll('.cat-tile');
+const panel = document.getElementById('cards-panel');
+const panelTitle = document.getElementById('panel-title');
+const backBtn = document.getElementById('back-btn');
+const cards = document.querySelectorAll('.bird-card');
+
+tiles.forEach(tile => {
+  tile.addEventListener('click', () => {
+    tiles.forEach(t => t.classList.remove('active'));
+    tile.classList.add('active');
+    const filter = tile.dataset.filter;
+    panelTitle.textContent = tile.dataset.label;
+    cards.forEach(card => {
+      card.style.display = card.dataset.type === filter ? '' : 'none';
+    });
+    panel.classList.add('visible');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+backBtn.addEventListener('click', () => {
+  tiles.forEach(t => t.classList.remove('active'));
+  panel.classList.remove('visible');
+  document.querySelector('.tiles-grid').scrollIntoView({ behavior: 'smooth' });
+});
+</script>
+</body>
+</html>
