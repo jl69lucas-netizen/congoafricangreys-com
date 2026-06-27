@@ -572,7 +572,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 - Working tree: `assets/brand/main-homepage-video-african-grey-parrots-video.mov`, `public/african-grey-parrot-head-scratch.webp`, `public/amie-congo-african-grey-female-3-months.webp` (deleted before this session)
 - Run: `scripts/generate_sitemaps.py`, `scripts/final_page_audit.py --birds`
 
-- [ ] **Step 1: Decide the pre-existing deletions (look before committing)**
+- [x] **Step 1: Decide the pre-existing deletions (look before committing)**
 
 For each deleted file, confirm nothing live still references it:
 ```bash
@@ -582,7 +582,7 @@ done
 ```
 Expected: the `.mov` is superseded by the untracked `.mp4`; the 2 webp deletions should have **no references** (Amie now uses `/birds/amie/` images). If a file is still referenced, RESTORE it (`git checkout -- <path>`) instead of committing the deletion. If unreferenced, stage the deletions.
 
-- [ ] **Step 2: Commit the resolved deletions**
+- [x] **Step 2: Commit the resolved deletions**
 
 ```bash
 git add -A assets/brand public/african-grey-parrot-head-scratch.webp public/amie-congo-african-grey-female-3-months.webp
@@ -592,24 +592,24 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 ```
 (Only if Step 1 confirmed zero references. Otherwise skip and note the restore.)
 
-- [ ] **Step 3: Regenerate sitemaps (image dimensions/pages may have shifted)**
+- [x] **Step 3: Regenerate sitemaps (image dimensions/pages may have shifted)**
 
 Run: `python3 scripts/generate_sitemaps.py`
 Expected: completes with 0 phantom URLs reported.
 
-- [ ] **Step 4: Run the final page audit on the bird cluster**
+- [x] **Step 4: Run the final page audit on the bird cluster**
 
 Run: `npx astro build && python3 scripts/final_page_audit.py --birds`
 Expected: one PASS / PASS-WITH-WARNINGS verdict per bird page. Resolve any new FAIL (e.g. heading levels, single Product/Offer, shipping line present, sold≠InStock) before deploy.
 
-- [ ] **Step 5: Push (= deploy) and re-check live PageSpeed**
+- [x] **Step 5: Push (= deploy) and re-check live PageSpeed**
 
 ```bash
 git push origin main
 ```
 After Cloudflare Pages finishes, re-run PageSpeed on `/available/`, `/available/roys/`, and one Timneh page. Expected improvements: no `JumpRail.css` render-blocking on bird pages; image savings realized; contrast pass; (after the breeder toggles Rocket Loader) the `/70de/` unused-JS + long-task flags gone.
 
-- [ ] **Step 6: Final verification summary**
+- [x] **Step 6: Final verification summary**
 
 Confirm and report to the breeder: (1) JumpRail removed from 6 pages; (2) gtag already deferred + Rocket Loader dashboard step handed off; (3) LCP poster preload live on 4 video pages; (4) images downscaled; (5) contrast ≥4.5:1; (6) fws link replaced (browser-verified URL); (7) Product critical cleared (Rich Results re-test); (8) geo distribution live with distinct angles; (9) audit report written; (10) deletions resolved + sitemaps regenerated.
 
