@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import CTA from '../../components/CTA.astro';
+import JumpNav from '../../components/cag-jump-nav.astro';
 
 const title = "African Grey Parrot Blog | Care, Training & Buyer Guides";
 const description = "African Grey parrot articles from USDA-licensed breeders. Diet, training, lifespan, health, CITES documentation, and species guides written from 10+ years of hands-on experience.";
@@ -146,38 +147,488 @@ const posts = [
     category: "Species",
   },
 ];
+
+// Category-to-section mapping
+const buyingCategories   = new Set(["Buying", "Buyer's Guide", "Costs", "Safety", "Legal"]);
+const careCategories     = new Set(["Care", "Nutrition", "Species"]);
+const trainingCategories = new Set(["Training", "Intelligence"]);
+const fitCategories      = new Set(["Facts", "Health", "Comparisons"]);
+
+const buyingPosts   = posts.filter(p => buyingCategories.has(p.category));
+const carePosts     = posts.filter(p => careCategories.has(p.category));
+const trainingPosts = posts.filter(p => trainingCategories.has(p.category));
+const fitPosts      = posts.filter(p => fitCategories.has(p.category));
+
+// Only the first 9 /blog/ posts for schema hasPart
+const blogPosts = posts.filter(p => p.slug.startsWith("/blog/"));
+
+const jumpLinks = [
+  { label: "Start Here",       href: "#start-here" },
+  { label: "Buying & Costs",   href: "#buying-costs" },
+  { label: "Daily Care",       href: "#daily-care" },
+  { label: "Talking & Training", href: "#training" },
+  { label: "Right Fit?",       href: "#right-fit" },
+  { label: "About These Guides", href: "#about-guides" },
+  { label: "FAQ",              href: "#faq" },
+];
+
+const schemaJson = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://congoafricangreys.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://congoafricangreys.com/blog/" }
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://congoafricangreys.com/blog/",
+      "url": "https://congoafricangreys.com/blog/",
+      "name": "African Grey Parrot Blog | Care, Training & Buyer Guides",
+      "description": "African Grey parrot articles from USDA-licensed breeders in Midland, TX — diet, training, lifespan, health, CITES documentation, and species guides.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "C.A.Gs – Midland, TX",
+        "url": "https://congoafricangreys.com/"
+      },
+      "hasPart": blogPosts.map(p => ({
+        "@type": "BlogPosting",
+        "name": p.title,
+        "url": `https://congoafricangreys.com${p.slug}`
+      }))
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://congoafricangreys.com/blog/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How often do you publish new African Grey guides?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We add new guides whenever a real buyer question comes up in our aviary that we haven't answered in writing yet. Care, buying, and comparison topics come first because those are the questions we hear most. When a buyer's question leads us to realize a gap in our library, that question becomes our next post."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I talk to a breeder before I buy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — we encourage it. Reach us through the contact form on our site or call us directly. When it's time to ship, airport pickup costs $185 and home delivery costs $350. We use IATA-compliant carriers (Delta, United, and American) for all domestic shipments."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do these guides cover both Congo and Timneh Greys?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. We raise both subspecies here at C.A.Gs and flag Congo vs Timneh differences wherever they matter — price, temperament, and talking timeline all vary between the two. The subspecies difference affects both what you pay and what daily life with the bird looks like."
+          }
+        }
+      ]
+    }
+  ]
+});
 ---
 
-<BaseLayout {title} {description} {canonical} hideGlobalCta>
+<BaseLayout {title} {description} {canonical} hideGlobalCta schemaJson={schemaJson}>
 
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
+  <!-- Breadcrumb -->
+  <div style="max-width:1200px;margin:0 auto;padding:0 1rem;">
     <Breadcrumb items={breadcrumbs} />
   </div>
 
-  <section style="background:#2D6A4F" class="text-white py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Written by USDA-Licensed Breeders · Midland, TX</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey Parrot Blog</h1>
-      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">Care guides, species comparisons, diet, health, and buyer resources — written by Mark &amp; Teri Benjamin after 10+ years raising captive-bred African Greys.</p>
+  <!-- ══════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════ -->
+  <section style="background:#2D6A4F;" class="text-white py-16 px-4">
+    <div style="max-width:760px;margin:0 auto;text-align:center;">
+      <p class="font-sora" style="color:#f0c674;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:1rem;">
+        Written by USDA-Licensed Breeders · Midland, TX
+      </p>
+      <h1 class="font-lora" style="color:#faf7f4;font-weight:700;margin-bottom:1rem;">
+        African Grey Parrot Blog: Real Breeder Guides to Care, Talking &amp; Buying
+      </h1>
+      <p class="font-sora" style="color:rgba(250,247,244,0.85);font-size:1.0625rem;line-height:1.65;max-width:60ch;margin:0 auto;">
+        Here at C.A.Gs, Mark &amp; Teri Benjamin have raised captive-bred Congo and Timneh African Greys for over a decade — and every guide in this library comes straight from our aviary in Midland, Texas, not a content farm.
+      </p>
     </div>
   </section>
 
-  <!-- Article Grid -->
-  <section class="py-16 px-4" style="background:#faf7f4">
-    <div class="max-w-5xl mx-auto">
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((post) => (
-          <a href={post.slug} class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 hover:border-clay transition-colors block" style="text-decoration:none">
-            <span class="text-xs font-sora font-semibold uppercase tracking-wide" style="color:#e8604c">{post.category}</span>
-            <h2 class="font-lora font-bold text-lg mt-2 mb-3" style="color:#2D6A4F">{post.title}</h2>
-            <p class="text-stone-600 text-sm leading-relaxed">{post.excerpt}</p>
-            <span class="text-sm font-sora font-semibold mt-4 inline-block" style="color:#e8604c">Read more →</span>
+  <!-- Jump Nav -->
+  <div style="max-width:1200px;margin:0 auto;padding:1.5rem 1rem 0;">
+    <JumpNav links={jumpLinks} sticky={false} />
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       START HERE
+  ══════════════════════════════════════════ -->
+  <section id="start-here" style="background:#faf7f4;padding:3rem 1rem 2rem;">
+    <div style="max-width:760px;margin:0 auto;">
+      <h2 class="font-lora" style="color:#2D6A4F;margin-bottom:1rem;">
+        New to African Greys? Start With These Guides
+      </h2>
+      <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;">
+        If you've never owned an African Grey before, the sections below are organised in the order that matters most — what you'll pay and where to buy, what daily care actually looks like, whether your home fits the bird, and whether you can really expect yours to talk. Work through them in order and you'll have a clearer picture than most buyers who've spent weeks Googling.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       BUYING & COSTS
+  ══════════════════════════════════════════ -->
+  <section id="buying-costs" style="background:#faf7f4;padding:2rem 1rem 3rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h2 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+        How Much Is an African Grey — and Where Should You Buy One?
+      </h2>
+      <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:2rem;">
+        Our buying and cost guides answer the two questions we get first from every new inquiry: what the price tag actually covers, and how to tell a legitimate captive-bred breeder from a scam. Each post below is grounded in the documentation every CITES Appendix I bird must ship with.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;">
+        {buyingPosts.map(post => (
+          <a href={post.slug}
+             style="background:#fff;border-radius:1rem;border:1px solid #ede5dc;box-shadow:0 2px 12px rgba(60,30,10,0.06);padding:1.5rem;text-decoration:none;display:block;transition:border-color 0.15s;"
+             class="blog-card">
+            <span class="font-sora"
+                  style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#b04228;">
+              {post.category}
+            </span>
+            <h3 class="font-lora"
+                style="color:#2D6A4F;font-size:1.0625rem;font-weight:600;margin:0.5rem 0 0.75rem;line-height:1.3;">
+              {post.title}
+            </h3>
+            <p class="font-sora" style="color:#5a5248;font-size:0.875rem;line-height:1.6;margin:0 0 1rem;">
+              {post.excerpt}
+            </p>
+            <span class="font-sora"
+                  style="font-size:0.875rem;font-weight:600;color:#e8604c;">
+              Read more
+              <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true"
+                   style="display:inline;vertical-align:middle;margin-left:0.2em;">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
           </a>
         ))}
       </div>
     </div>
   </section>
 
+  <!-- ══════════════════════════════════════════
+       DAILY CARE
+  ══════════════════════════════════════════ -->
+  <section id="daily-care" style="background:#fff;padding:3rem 1rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h2 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+        What Does Daily African Grey Care Actually Involve?
+      </h2>
+      <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:2rem;">
+        We write these care guides the way we'd explain things to a new owner picking up their bird from our aviary — not as a checklist, but as the real reasoning behind each practice. A 40–60 year commitment deserves that level of honesty about what the day-to-day looks like.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;">
+        {carePosts.map(post => (
+          <a href={post.slug}
+             style="background:#fff;border-radius:1rem;border:1px solid #ede5dc;box-shadow:0 2px 12px rgba(60,30,10,0.06);padding:1.5rem;text-decoration:none;display:block;transition:border-color 0.15s;"
+             class="blog-card">
+            <span class="font-sora"
+                  style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#b04228;">
+              {post.category}
+            </span>
+            <h3 class="font-lora"
+                style="color:#2D6A4F;font-size:1.0625rem;font-weight:600;margin:0.5rem 0 0.75rem;line-height:1.3;">
+              {post.title}
+            </h3>
+            <p class="font-sora" style="color:#5a5248;font-size:0.875rem;line-height:1.6;margin:0 0 1rem;">
+              {post.excerpt}
+            </p>
+            <span class="font-sora"
+                  style="font-size:0.875rem;font-weight:600;color:#e8604c;">
+              Read more
+              <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true"
+                   style="display:inline;vertical-align:middle;margin-left:0.2em;">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       TALKING & TRAINING
+  ══════════════════════════════════════════ -->
+  <section id="training" style="background:#faf7f4;padding:3rem 1rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h2 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+        Can You Really Teach an African Grey to Talk?
+      </h2>
+      <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:2rem;">
+        The short answer is: most will — but not on the buyer's timeline. Our training and intelligence guides pull from the methods we use in our facility before every bird leaves, and from watching hundreds of birds develop over the years. We're honest about what takes months and what can't be rushed.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;">
+        {trainingPosts.map(post => (
+          <a href={post.slug}
+             style="background:#fff;border-radius:1rem;border:1px solid #ede5dc;box-shadow:0 2px 12px rgba(60,30,10,0.06);padding:1.5rem;text-decoration:none;display:block;transition:border-color 0.15s;"
+             class="blog-card">
+            <span class="font-sora"
+                  style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#b04228;">
+              {post.category}
+            </span>
+            <h3 class="font-lora"
+                style="color:#2D6A4F;font-size:1.0625rem;font-weight:600;margin:0.5rem 0 0.75rem;line-height:1.3;">
+              {post.title}
+            </h3>
+            <p class="font-sora" style="color:#5a5248;font-size:0.875rem;line-height:1.6;margin:0 0 1rem;">
+              {post.excerpt}
+            </p>
+            <span class="font-sora"
+                  style="font-size:0.875rem;font-weight:600;color:#e8604c;">
+              Read more
+              <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true"
+                   style="display:inline;vertical-align:middle;margin-left:0.2em;">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       RIGHT FIT
+  ══════════════════════════════════════════ -->
+  <section id="right-fit" style="background:#fff;padding:3rem 1rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h2 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+        Is an African Grey the Right Parrot for Your Home?
+      </h2>
+      <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:2rem;">
+        We'd rather talk someone out of the wrong bird than sell a bird into the wrong home — that's how we've operated since 2014. The guides here cover the honest facts about African Grey temperament, health, and how they compare to other parrots, so you can make the call with real information.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;">
+        {fitPosts.map(post => (
+          <a href={post.slug}
+             style="background:#fff;border-radius:1rem;border:1px solid #ede5dc;box-shadow:0 2px 12px rgba(60,30,10,0.06);padding:1.5rem;text-decoration:none;display:block;transition:border-color 0.15s;"
+             class="blog-card">
+            <span class="font-sora"
+                  style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#b04228;">
+              {post.category}
+            </span>
+            <h3 class="font-lora"
+                style="color:#2D6A4F;font-size:1.0625rem;font-weight:600;margin:0.5rem 0 0.75rem;line-height:1.3;">
+              {post.title}
+            </h3>
+            <p class="font-sora" style="color:#5a5248;font-size:0.875rem;line-height:1.6;margin:0 0 1rem;">
+              {post.excerpt}
+            </p>
+            <span class="font-sora"
+                  style="font-size:0.875rem;font-weight:600;color:#e8604c;">
+              Read more
+              <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true"
+                   style="display:inline;vertical-align:middle;margin-left:0.2em;">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       ABOUT THESE GUIDES (E-E-A-T)
+  ══════════════════════════════════════════ -->
+  <section id="about-guides" style="background:#eaf4ef;padding:3rem 1rem;">
+    <div style="max-width:760px;margin:0 auto;">
+      <h2 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+        Who Writes These Guides — and Why Trust Them?
+      </h2>
+      <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:2rem;">
+        Every article in this library is written or reviewed by Mark and Teri Benjamin — USDA-licensed breeders who have raised captive-bred African Greys since 2014, here in Midland, Texas. We don't outsource our content to writers who've never handled a Grey, and we don't publish facts we can't trace back to our own aviary or a cited source.
+      </p>
+
+      <h3 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+        Why Real Breeders, Not Content Mills, Write Every Word
+      </h3>
+      <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:1.5rem;">
+        The difference shows up in the details — the feeding rotation we actually use, the health warning signs we've personally observed over hundreds of clutches, the CITES paperwork questions that trip up first-time buyers. Those specifics can't come from a content brief; they come from doing this work every day.
+      </p>
+
+      <h4 class="font-lora" style="color:#2D6A4F;margin-bottom:0.5rem;">
+        Where Do Our Facts Come From?
+      </h4>
+      <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:1.25rem;">
+        We cross-check every factual claim against our own aviary records or a cited external source before it goes on the page.
+      </p>
+
+      <h5 class="font-sora" style="color:#1c1a18;font-weight:700;margin-bottom:0.4rem;">
+        Every claim ties back to our own aviary or a cited source
+      </h5>
+      <p class="font-sora" style="color:#5a5248;font-size:0.9375rem;line-height:1.65;max-width:70ch;margin-bottom:1.25rem;">
+        If a claim about lifespan, diet, or health doesn't appear in our own records or in peer-reviewed avian literature, we don't publish it. That's the standard we hold ourselves to, and it's why our guides read differently from most of what you'll find on Google.
+      </p>
+
+      <h5 class="font-sora" style="color:#1c1a18;font-weight:700;margin-bottom:0.4rem;">
+        We frame every bird as CITES Appendix I and captive-bred in the USA
+      </h5>
+      <p class="font-sora" style="color:#5a5248;font-size:0.9375rem;line-height:1.65;max-width:70ch;margin-bottom:0.75rem;">
+        African Greys were uplisted to CITES Appendix I at CoP17, effective January 2017. Every bird we raise is captive-bred in our Texas aviary with full documentation — PCR DNA sexing certificate, avian-vet health certificate, and CITES papers included with each bird.
+      </p>
+
+      <h6 class="font-sora" style="color:#5a5248;font-weight:700;font-size:0.875rem;margin-bottom:0.4rem;">
+        Why we never reference wild-caught trade
+      </h6>
+      <p class="font-sora" style="color:#5a5248;font-size:0.875rem;line-height:1.65;max-width:70ch;margin-bottom:1.25rem;">
+        Wild-caught African Greys cannot be legally imported into or sold within the United States under current CITES Appendix I protections. Our guides reflect that reality — we don't treat it as a footnote.
+      </p>
+
+      <h5 class="font-sora" style="color:#1c1a18;font-weight:700;margin-bottom:0.4rem;">
+        How we keep these guides current
+      </h5>
+      <p class="font-sora" style="color:#5a5248;font-size:0.9375rem;line-height:1.65;max-width:70ch;margin-bottom:0.75rem;">
+        We review our articles whenever our own practices change or a buyer raises a question our existing guide doesn't answer well enough.
+      </p>
+
+      <h6 class="font-sora" style="color:#5a5248;font-weight:700;font-size:0.875rem;margin-bottom:0.4rem;">
+        Our freshness signals live in schema, never as a visible date
+      </h6>
+      <p class="font-sora" style="color:#5a5248;font-size:0.875rem;line-height:1.65;max-width:70ch;margin-bottom:0;">
+        Search engines see our <code>dateModified</code> metadata in structured data. We don't slap a visible "last updated" timestamp on articles because a date without context tells you nothing about whether the advice still holds — and our advice does.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       FAQ
+  ══════════════════════════════════════════ -->
+  <section id="faq" style="background:#faf7f4;padding:3rem 1rem 4rem;">
+    <div style="max-width:760px;margin:0 auto;">
+      <h2 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+        What Do Buyers Ask Us Most?
+      </h2>
+      <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:2rem;">
+        These are the questions that come through our contact form and phone calls most often, answered directly — no boilerplate.
+      </p>
+
+      <!-- Q1 -->
+      <div style="background:#fff;border-radius:1rem;border:1px solid #ede5dc;padding:1.75rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(60,30,10,0.05);">
+        <h3 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+          How often do you publish new African Grey guides?
+        </h3>
+        <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:1.25rem;">
+          We add new guides whenever a real buyer question comes up in our aviary that we haven't answered in writing yet — not on a content calendar.
+        </p>
+
+        <h4 class="font-lora" style="color:#2D6A4F;font-size:1rem;margin-bottom:0.5rem;">
+          How do we decide what to write next?
+        </h4>
+        <p class="font-sora" style="color:#5a5248;font-size:0.9375rem;line-height:1.65;max-width:70ch;margin-bottom:1rem;">
+          We look at the questions our contact form keeps surfacing and the gaps in what's available online for CITES-compliant breeders specifically.
+        </p>
+
+        <h5 class="font-sora" style="color:#1c1a18;font-weight:700;margin-bottom:0.4rem;">
+          Care, buying, and comparison topics come first
+        </h5>
+        <p class="font-sora" style="color:#5a5248;font-size:0.9375rem;line-height:1.65;max-width:70ch;margin-bottom:0.75rem;">
+          Those three categories cover the questions we field at least weekly. Health and training guides follow once the fundamentals are solid.
+        </p>
+
+        <h6 class="font-sora" style="color:#5a5248;font-weight:700;font-size:0.875rem;margin-bottom:0.4rem;">
+          How a buyer's question becomes our next post
+        </h6>
+        <p class="font-sora" style="color:#5a5248;font-size:0.875rem;line-height:1.65;max-width:70ch;margin-bottom:0;">
+          When the same question arrives three times in a month with no good answer already in our library, that's our signal to write the guide. The buyer who asked it becomes the intended reader.
+        </p>
+      </div>
+
+      <!-- Q2 -->
+      <div style="background:#fff;border-radius:1rem;border:1px solid #ede5dc;padding:1.75rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(60,30,10,0.05);">
+        <h3 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+          Can I talk to a breeder before I buy?
+        </h3>
+        <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:1.25rem;">
+          Yes, and we encourage it. Use the contact form on our site or call us directly — talking to Mark or Teri before you commit is part of how we make sure every bird goes to a prepared home.
+        </p>
+
+        <h4 class="font-lora" style="color:#2D6A4F;font-size:1rem;margin-bottom:0.5rem;">
+          How do you reach us, and how do birds ship?
+        </h4>
+        <p class="font-sora" style="color:#5a5248;font-size:0.9375rem;line-height:1.65;max-width:70ch;margin-bottom:1rem;">
+          Our <a href="/contact-us/" style="color:#2D6A4F;font-weight:600;">contact page</a> has the form and number. Once you're ready to proceed, we arrange shipment through IATA-compliant carriers on a date that works for both sides.
+        </p>
+
+        <h5 class="font-sora" style="color:#1c1a18;font-weight:700;margin-bottom:0.4rem;">
+          Airport pickup is $185, home delivery is $350
+        </h5>
+        <p class="font-sora" style="color:#5a5248;font-size:0.9375rem;line-height:1.65;max-width:70ch;margin-bottom:0.75rem;">
+          The two shipping tiers are airport pickup at $185 — you collect the bird at the receiving airport — and home delivery at $350, delivered to your address by a licensed courier. Both options are available anywhere in the continental United States.
+        </p>
+
+        <h6 class="font-sora" style="color:#5a5248;font-weight:700;font-size:0.875rem;margin-bottom:0.4rem;">
+          We ship via IATA-compliant carriers — Delta, United, American
+        </h6>
+        <p class="font-sora" style="color:#5a5248;font-size:0.875rem;line-height:1.65;max-width:70ch;margin-bottom:0;">
+          Every shipment uses IATA Live Animals Regulations (LAR) containers and travels on Delta, United, or American — the three major carriers with robust live-animal programs. We've used this process for years and our birds arrive calm and healthy.
+        </p>
+      </div>
+
+      <!-- Q3 -->
+      <div style="background:#fff;border-radius:1rem;border:1px solid #ede5dc;padding:1.75rem;box-shadow:0 2px 12px rgba(60,30,10,0.05);">
+        <h3 class="font-lora" style="color:#2D6A4F;margin-bottom:0.75rem;">
+          Do these guides cover both Congo and Timneh Greys?
+        </h3>
+        <p class="font-sora" style="color:#5a5248;line-height:1.65;max-width:70ch;margin-bottom:1.25rem;">
+          Yes — we raise both subspecies here at C.A.Gs, so our guides reflect real experience with both. We flag the Congo vs Timneh differences wherever they affect a buyer's decision.
+        </p>
+
+        <h4 class="font-lora" style="color:#2D6A4F;font-size:1rem;margin-bottom:0.5rem;">
+          How do we handle the two subspecies?
+        </h4>
+        <p class="font-sora" style="color:#5a5248;font-size:0.9375rem;line-height:1.65;max-width:70ch;margin-bottom:1rem;">
+          Most guides apply to both, with subspecies callouts where the answer diverges — training timelines, typical price ranges, and body size are the most common split points.
+        </p>
+
+        <h5 class="font-sora" style="color:#1c1a18;font-weight:700;margin-bottom:0.4rem;">
+          We flag Congo vs Timneh differences wherever they matter
+        </h5>
+        <p class="font-sora" style="color:#5a5248;font-size:0.9375rem;line-height:1.65;max-width:70ch;margin-bottom:0.75rem;">
+          You'll see explicit "Congo note" and "Timneh note" callouts in guides where the advice truly differs — not just boilerplate mentions of both birds at the top of every article.
+        </p>
+
+        <h6 class="font-sora" style="color:#5a5248;font-weight:700;font-size:0.875rem;margin-bottom:0.4rem;">
+          Why subspecies changes price and temperament
+        </h6>
+        <p class="font-sora" style="color:#5a5248;font-size:0.875rem;line-height:1.65;max-width:70ch;margin-bottom:0;">
+          Congo African Greys are larger with a bright red tail and typically command a higher price. Timnehs are smaller, darker, and many experienced owners find them calmer during adolescence. Both are CITES Appendix I birds — the documentation requirements are identical.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
   <CTA />
+
 </BaseLayout>
+
+<style>
+  .blog-card:hover {
+    border-color: #e8604c;
+  }
+</style>
