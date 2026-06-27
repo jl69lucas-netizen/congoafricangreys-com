@@ -1,0 +1,26 @@
+---
+/** cag-blog-callout — inline Mistake-Alert / Expert-Tip box for blog body. */
+export interface Props { variant: 'mistake' | 'tip'; title?: string }
+const { variant, title } = Astro.props;
+const isMistake = variant === 'mistake';
+const heading = title ?? (isMistake ? 'Common Mistake' : 'Expert Tip');
+---
+<aside class={`cag-blog-callout cag-blog-callout--${variant}`} role="note">
+  <span class="cag-blog-callout__icon" aria-hidden="true">
+    {isMistake ? (
+      <svg width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    ) : (
+      <svg width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>
+    )}
+  </span>
+  <div class="cag-blog-callout__body"><strong>{heading}:</strong> <slot /></div>
+</aside>
+<style>
+  .cag-blog-callout{display:flex;gap:.75rem;align-items:flex-start;padding:.9rem 1.1rem;border-radius:14px;margin:1.25rem 0;border:1px solid var(--border,#ede5dc);background:#fff9f6}
+  .cag-blog-callout--mistake{border-left:4px solid #b04228;color:#3a2c22}
+  .cag-blog-callout--mistake .cag-blog-callout__icon{color:#b04228}
+  .cag-blog-callout--tip{border-left:4px solid #2D6A4F;background:#eaf4ef}
+  .cag-blog-callout--tip .cag-blog-callout__icon{color:#2D6A4F}
+  .cag-blog-callout__body{line-height:1.55}
+  .cag-blog-callout__icon{flex-shrink:0;line-height:1}
+</style>
