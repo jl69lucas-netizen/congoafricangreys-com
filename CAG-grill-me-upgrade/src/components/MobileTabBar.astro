@@ -1,0 +1,51 @@
+---
+const current = Astro.url.pathname;
+
+const tabs = [
+  {
+    label: 'Home',
+    href: '/',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+  },
+  {
+    label: 'Birds',
+    href: '/african-grey-parrot-for-sale/',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  },
+  {
+    label: 'About',
+    href: '/trusted-african-grey-parrot-breeders/',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  },
+  {
+    label: 'Contact',
+    href: '/contact-us/',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+  },
+  {
+    label: 'More',
+    href: '/african-grey-parrot-for-sale/',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>`,
+  },
+];
+---
+
+<nav class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-stone-200" style="padding-bottom: env(safe-area-inset-bottom)">
+  <div class="flex">
+    {tabs.map(tab => {
+      const active = current === tab.href;
+      return (
+        <a
+          href={tab.href}
+          class:list={[
+            'flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors',
+            active ? 'text-clay' : 'text-stone-400 hover:text-stone-600'
+          ]}
+        >
+          <span class="w-5 h-5 block" set:html={tab.icon} />
+          <span class="font-sora text-[10px] font-medium leading-none">{tab.label}</span>
+        </a>
+      );
+    })}
+  </div>
+</nav>

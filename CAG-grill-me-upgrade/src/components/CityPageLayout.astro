@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TrustBar from './TrustBar.astro';
+import CTA from './CTA.astro';
+import Breadcrumb from './Breadcrumb.astro';
+
+interface Props {
+  city: string;
+  state: string;
+  stateAbbr: string;
+  stateSlug: string;
+  metaTitle: string;
+  metaDescription: string;
+  canonical: string;
+  faqs: { q: string; a: string }[];
+}
+
+const { city, state, stateAbbr, stateSlug, metaTitle, metaDescription, canonical, faqs } = Astro.props;
+
+const pagePath = canonical.replace("https://congoafricangreys.com", "");
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Grey Parrots for Sale", url: "/african-grey-parrots-for-sale/" },
+  { name: `African Grey for Sale in ${state}`, url: `/${stateSlug}/` },
+  { name: city, url: pagePath },
+];
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((b, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: b.name,
+    item: `https://congoafricangreys.com${b.url}`,
+  })),
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+---
+
+<BaseLayout title={metaTitle} description={metaDescription} {canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+  <!-- Breadcrumb strip: between nav and hero -->
+  <div style="max-width:1200px;margin:0 auto;">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <!-- Hero -->
+  <section class="bg-logo-dark text-cream py-16 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-4">CITES Documented · Ships Nationwide · USDA Licensed</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">African Grey Parrot for Sale in {city}, {stateAbbr}</h1>
+      <p class="text-cream/80 text-lg max-w-2xl mx-auto">Captive-bred Congo and Timneh African Greys raised by Mark &amp; Teri Benjamin in Midland, TX. Every bird ships IATA-compliant to {city} with full CITES documentation, DNA sexing, and avian vet certification.</p>
+      <a href="/contact-us/" class="inline-block mt-8 bg-clay text-white font-sora font-semibold px-8 py-3 rounded-full hover:bg-clay/90 transition-colors">Inquire About Available Birds</a>
+    </div>
+  </section>
+
+  <TrustBar />
+
+  <!-- Shipping info -->
+  <section class="py-16 px-4 bg-cream">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6">We Ship African Greys to {city}</h2>
+      <p class="text-stone-600 leading-relaxed mb-4">
+        We deliver captive-bred African Grey parrots directly to {city}, {state}. Every bird travels in an IATA-approved live animal carrier with all required paperwork — CITES Appendix I documentation, DNA sex certificate, avian vet health clearance, and a 3-day health guarantee.
+      </p>
+      <p class="text-stone-600 leading-relaxed mb-8">
+        Shipping is arranged through approved air freight carriers to the nearest major airport serving {city}. We coordinate pickup logistics with you before the bird ships so there are no surprises.
+      </p>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
+          <h3 class="font-lora font-bold text-lg text-logo-dark mb-2">CITES Appendix I Documentation</h3>
+          <p class="text-stone-600 text-sm leading-relaxed">Official captive-bred certification ships with every bird. No paperwork, no purchase.</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
+          <h3 class="font-lora font-bold text-lg text-logo-dark mb-2">DNA Sexed &amp; Vet Certified</h3>
+          <p class="text-stone-600 text-sm leading-relaxed">Every bird is DNA sexed and cleared by an avian vet before leaving our Midland, TX aviary.</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
+          <h3 class="font-lora font-bold text-lg text-logo-dark mb-2">IATA-Compliant Transport</h3>
+          <p class="text-stone-600 text-sm leading-relaxed">Airline-approved carriers, live animal manifests, and direct routing to {city}-area airports.</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
+          <h3 class="font-lora font-bold text-lg text-logo-dark mb-2">3-Day Health Guarantee</h3>
+          <p class="text-stone-600 text-sm leading-relaxed">We stand behind every bird we ship. Health issues reported within 72 hrs are covered.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="py-16 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4">African Grey Pricing</h2>
+      <p class="text-stone-600 mb-10">Prices are the same regardless of delivery location. Shipping fees are quoted at time of inquiry.</p>
+      <div class="grid sm:grid-cols-2 gap-6 text-left">
+        <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+          <h3 class="font-lora font-bold text-lg text-logo-dark mb-1">Congo African Grey</h3>
+          <p class="text-stone-500 text-sm mb-3">Psittacus erithacus erithacus</p>
+          <p class="font-lora font-bold text-3xl text-clay mb-4">$1,700–$3,500</p>
+          <ul class="text-sm text-stone-600 space-y-1">
+            <li>✓ Larger silver body, bright red tail</li>
+            <li>✓ 40–60 year lifespan</li>
+            <li>✓ Exceptional talkers</li>
+          </ul>
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+          <h3 class="font-lora font-bold text-lg text-logo-dark mb-1">Timneh African Grey</h3>
+          <p class="text-stone-500 text-sm mb-3">Psittacus erithacus timneh</p>
+          <p class="font-lora font-bold text-3xl text-clay mb-4">$1,500–$1,600</p>
+          <ul class="text-sm text-stone-600 space-y-1">
+            <li>✓ Smaller, maroon tail</li>
+            <li>✓ Calmer personality</li>
+            <li>✓ Matures faster</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-16 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8">Frequently Asked Questions</h2>
+      <div class="space-y-4">
+        {faqs.map(({ q, a }) => (
+          <details class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden group">
+            <summary class="flex justify-between items-center p-6 cursor-pointer font-sora font-semibold text-logo-dark hover:text-clay transition-colors list-none">
+              {q}
+              <span class="text-clay text-xl group-open:rotate-45 transition-transform shrink-0 ml-4">+</span>
+            </summary>
+            <p class="px-6 pb-6 text-stone-600 text-sm leading-relaxed">{a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Back to state page -->
+  <section class="py-12 px-4 text-center">
+    <p class="text-stone-600 mb-4">Looking for more options in {state}?</p>
+    <a href={`/${stateSlug}/`} class="inline-block border-2 border-logo-dark text-logo-dark font-sora font-semibold px-8 py-3 rounded-full hover:bg-logo-dark hover:text-white transition-colors">
+      See All African Greys for Sale in {state}
+    </a>
+  </section>
+
+  <CTA />
+</BaseLayout>
