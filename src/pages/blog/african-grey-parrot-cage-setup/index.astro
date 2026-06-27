@@ -2,9 +2,19 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import CTA from '../../../components/CTA.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
+import InquiryCompact from '../../../components/cag-inquiry-compact.astro';
+import Newsletter from '../../../components/cag-library/NewsletterV2.astro';
+import QuickAnswer from '../../../components/cag-blog-quick-answer.astro';
+import Callout from '../../../components/cag-blog-callout.astro';
+import ComparisonTable from '../../../components/cag-blog-comparison-table.astro';
+import BreederNote from '../../../components/cag-blog-breeder-note.astro';
+import DecisionTree from '../../../components/cag-blog-decision-tree.astro';
+import RelatedPosts from '../../../components/cag-blog-related-posts.astro';
+import StickyCta from '../../../components/cag-blog-sticky-cta.astro';
 
-const title = "African Grey Parrot Cage Setup | Size, Perches & Enrichment";
-const description = "African Greys need a minimum 36\"x24\"x48\" cage with stainless steel bars, 3/4\"–1\" bar spacing, and daily enrichment rotation. Full setup guide from USDA-licensed breeders.";
+const title = "African Grey Parrot Cage Setup: Size, Bar Spacing & Enrichment | C.A.Gs";
+const description = "African Grey cage setup from USDA-licensed breeders: minimum 36\"×24\"×48\" cage, safe 3/4\"–1\" bar spacing, stainless-steel materials, perch variety, placement rules, and the enrichment-rotation system we use in our aviary.";
 const canonical = "https://congoafricangreys.com/blog/african-grey-parrot-cage-setup/";
 
 const breadcrumbs = [
@@ -13,28 +23,82 @@ const breadcrumbs = [
   { name: "African Grey Parrot Cage Setup", url: "/blog/african-grey-parrot-cage-setup/" },
 ];
 
+const jumpLinks = [
+  { label: "Cage Size", href: "#size" },
+  { label: "Bar Spacing", href: "#bar-spacing" },
+  { label: "Materials", href: "#materials" },
+  { label: "Perches", href: "#perches" },
+  { label: "Placement", href: "#placement" },
+  { label: "Enrichment", href: "#enrichment" },
+  { label: "Checklist", href: "#checklist" },
+  { label: "FAQ", href: "#faq" },
+];
+
+const quickRows = [
+  { label: "Congo minimum cage", value: '36" W × 24" D × 48" H' },
+  { label: "Timneh minimum cage", value: '30" W × 20" D × 40" H' },
+  { label: "Bar spacing", value: '3/4"–1" (7/8"–1" for fledglings)' },
+  { label: "Safest material", value: "304 stainless steel" },
+  { label: "Perches", value: "3+ of varying diameter & texture" },
+  { label: "Toy rotation", value: "swap 2–3 every 5–7 days" },
+];
+
+const sizeColumns = ["Subspecies", "Minimum size", "Bar spacing", "Ideal size"];
+const sizeRows = [
+  { item: "Congo African Grey", values: ['36" × 24" × 48"', '3/4" – 1"', '40" × 30" × 60"'] },
+  { item: "Timneh African Grey", values: ['30" × 20" × 40"', '5/8" – 3/4"', '36" × 24" × 48"'] },
+];
+
+const cageBranches = [
+  { answer: "Congo + room to spare", result: 'Go 40"×30"×60" with 7/8"–1" bar spacing — the build we recommend for every Congo we place.' },
+  { answer: "Congo + tight budget/space", result: 'A 36"×24"×48" play-top cage at 3/4"–1" spacing is the safe floor — never smaller.' },
+  { answer: "Timneh African Grey", result: 'Drop to 30"×20"×40" minimum at 5/8"–3/4" spacing — Timnehs have smaller heads and slip through wider bars.' },
+  { answer: "Just-weaned fledgling", result: 'Stick to 7/8"–1" spacing regardless of subspecies until they fledge fully — wider gaps catch wings and heads.' },
+];
+
 const faqs = [
   {
     q: "What size cage does an African Grey parrot need?",
-    a: "The minimum cage size for a Congo African Grey is 36 inches wide × 24 inches deep × 48 inches tall. Bigger is always better — a 40\"×30\"×60\" cage is ideal if budget allows. Bar spacing must be 3/4\" to 1\" for Congos. Timnehs can use slightly tighter spacing (5/8\"–3/4\"). Avoid round cages — parrots need corners to feel secure.",
+    a: "The minimum cage for a Congo African Grey is 36\" wide × 24\" deep × 48\" tall; for a Timneh, 30\" × 20\" × 40\". Bigger is always better — we house ours in 40\"×30\"×60\" flights. Bar spacing should be 3/4\"–1\" for Congos and 5/8\"–3/4\" for Timnehs. Skip round cages — parrots need corners to feel secure.",
+  },
+  {
+    q: "What is the safest bar spacing for an African Grey?",
+    a: "3/4\" to 1\" is safe for adult Congos and 5/8\" to 3/4\" for Timnehs. For just-weaned fledglings we run 7/8\"–1\": at 3/4\" a clumsy young bird can wedge a wing or head between the bars. The rule is simple — your Grey should never be able to push its head through the gap.",
   },
   {
     q: "What material should an African Grey cage be made from?",
-    a: "Stainless steel is the only safe long-term option for African Grey cages. Powder-coated steel is acceptable if the coating is lead-free and zinc-free — verify with the manufacturer. Avoid galvanized metal (zinc poisoning is fatal), chrome plating (flakes and chips), and any cage with lead-soldered joints. African Greys chew cage bars constantly, so material safety is critical.",
+    a: "304-grade stainless steel is the only safe long-term choice — it never rusts and won't shed anything toxic when chewed. Powder-coated steel is acceptable only if the manufacturer confirms it's lead-free and zinc-free. Never use galvanized metal (zinc poisoning is fatal) or chrome plating (it flakes and causes heavy-metal toxicity).",
   },
   {
-    q: "How many perches does an African Grey need?",
-    a: "Provide at least 3 perches of varying diameter (3/4\"–1.5\") and texture. Use: one natural wood perch (manzanita or java wood), one rope perch (for sleeping), and one textured perch for nail/beak conditioning. Avoid smooth wooden dowels — they cause pressure sores on the feet and don't condition nails. Place perches at different heights to encourage movement.",
+    q: "How many perches does an African Grey need, and what kind?",
+    a: "At least three, in different diameters (3/4\"–1.5\") and textures: one natural-wood perch (manzanita or java wood), one rope perch for sleeping, and one pumice or concrete conditioning perch for nails and beak. Avoid smooth wooden dowels — uniform diameter causes pressure sores within months.",
   },
   {
-    q: "Where should I place the cage in my home?",
-    a: "Place the cage against a wall (not in the center of the room) so the bird has a sense of security from at least one side. Keep it away from: the kitchen (cooking fumes — Teflon/PTFE is fatal to birds), drafts, direct AC/heating vents, and direct sunlight for more than 4 hours. Eye level or slightly above eye level is ideal — too low creates anxiety, too high creates dominance behavior.",
+    q: "Where should I place an African Grey's cage in my home?",
+    a: "Against a wall (not marooned in the centre of a room) at eye level or slightly above, in a room the family actually uses. Keep it well away from the kitchen — PTFE/Teflon fumes from non-stick cookware kill birds — and away from drafts, vents, and more than a few hours of direct sun.",
   },
   {
-    q: "How often should I rotate enrichment toys?",
-    a: "Rotate toys every 5–7 days. African Greys are neophobic (fear of new things) initially but become bored with the same toys within a week. The rotation system: keep 6–8 toys in a bin, swap out 2–3 toys weekly while keeping 2 familiar toys in place. This balances novelty with security. Categories to rotate: foraging toys, shreddable toys, puzzle toys, and foot toys.",
+    q: "How often should I rotate my African Grey's toys?",
+    a: "Swap 2–3 toys every 5–7 days while leaving 2 familiar toys in place. African Greys are neophobic at first but bored within a week, so this rotation balances novelty against security. Cycle through four categories: foraging, shreddable, puzzle, and foot toys.",
   },
 ];
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "African Grey Parrot Cage Setup: Size, Bar Spacing, Materials & Enrichment",
+  description,
+  author: { "@type": "Person", name: "Mark & Teri Benjamin" },
+  publisher: {
+    "@type": "Organization",
+    name: "CongoAfricanGreys.com",
+    url: "https://congoafricangreys.com",
+  },
+  datePublished: "2026-05-22",
+  dateModified: "2026-06-27",
+  mainEntityOfPage: canonical,
+  url: canonical,
+};
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -46,112 +110,192 @@ const faqSchema = {
   })),
 };
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  headline: "African Grey Parrot Cage Setup: Size, Perches & Enrichment Guide",
-  description,
-  author: { "@type": "Person", name: "Mark & Teri Benjamin" },
-  publisher: {
-    "@type": "Organization",
-    name: "CongoAfricanGreys.com",
-    url: "https://congoafricangreys.com",
-  },
-  datePublished: "2026-05-22",
-  url: canonical,
-};
-
+const h2 = "font-lora font-bold text-3xl mt-12 mb-5 scroll-mt-24";
+const h3 = "font-lora font-bold text-2xl mt-8 mb-3";
+const h4 = "font-lora font-semibold text-xl mt-6 mb-2";
+const h5 = "font-sora font-semibold text-base mt-5 mb-1";
+const h6 = "font-sora font-semibold text-sm uppercase tracking-wide mt-4 mb-1";
+const p = "text-stone-700 leading-relaxed mb-4";
+const lnk = "underline font-medium";
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <!-- Hero -->
   <div style="max-width:1200px;margin:0 auto;">
     <Breadcrumb items={breadcrumbs} />
   </div>
 
+  <!-- 1. Hero -->
   <section style="background:#2D6A4F" class="text-white py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Care Guide · USDA-Licensed Breeders · Midland, TX</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey Parrot Cage Setup</h1>
-      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">Minimum dimensions, bar spacing, perch types, placement rules, and enrichment rotation — from breeders who've housed African Greys for 10+ years.</p>
+    <div class="max-w-3xl mx-auto text-center">
+      <p style="color:#f3a18f" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Care Guide · USDA-Licensed Breeders · Midland, TX</p>
+      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey Parrot Cage Setup: Size, Safety &amp; Enrichment</h1>
+      <p style="color:rgba(250,247,244,0.85)" class="text-lg max-w-2xl mx-auto">The exact cage standard we send every C.A.Gs chick home to — dimensions, safe bar spacing, non-toxic materials, perch variety, placement, and the toy-rotation system that keeps a Grey from plucking out of boredom.</p>
+      <a href="/available/" class="inline-block mt-6 bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">See available African Greys</a>
     </div>
   </section>
 
-  <!-- Content -->
-  <section class="py-16 px-4" style="background:#faf7f4">
-    <div class="max-w-760px mx-auto" style="max-width:760px">
+  <!-- 2. Top lead-capture strip -->
+  <div style="max-width:1100px;margin:0 auto;" class="px-4 -mt-8 relative z-10">
+    <InquiryCompact heading="Building a cage and not sure it's right?" subtext="Send us a photo of your setup — we'll tell you what to fix before your Grey comes home." subject="Cage setup question" page="blog/cage-setup" idPrefix="top" />
+  </div>
 
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Cage Size Requirements</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">African Greys spend 12+ hours per day in their cage. Undersizing the cage is one of the most common mistakes new owners make — and one of the leading causes of feather plucking and behavioral problems.</p>
-      <div class="bg-white rounded-xl border border-stone-200 overflow-hidden mb-8">
-        <table class="w-full text-sm">
-          <thead>
-            <tr style="background:#2D6A4F">
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Subspecies</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Minimum Size</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Bar Spacing</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Ideal Size</th>
-            </tr>
-          </thead>
-          <tbody class="text-stone-600 divide-y divide-stone-100">
-            <tr>
-              <td class="py-3 px-4">Congo African Grey</td>
-              <td class="py-3 px-4">36" × 24" × 48"</td>
-              <td class="py-3 px-4">3/4" – 1"</td>
-              <td class="py-3 px-4">40" × 30" × 60"</td>
-            </tr>
-            <tr>
-              <td class="py-3 px-4">Timneh African Grey</td>
-              <td class="py-3 px-4">30" × 20" × 40"</td>
-              <td class="py-3 px-4">5/8" – 3/4"</td>
-              <td class="py-3 px-4">36" × 24" × 48"</td>
-            </tr>
-          </tbody>
-        </table>
+  <!-- 3. TOC / jump links -->
+  <div style="max-width:760px;margin:1.5rem auto 0;" class="px-4">
+    <JumpNav links={jumpLinks} sticky={false} />
+  </div>
+
+  <!-- Content -->
+  <section class="py-12 px-4" style="background:#faf7f4">
+    <div style="max-width:760px;margin:0 auto;">
+
+      <!-- 4. Quick-Answer box (TOP special-element) -->
+      <QuickAnswer title="African Grey Cage Setup at a Glance" rows={quickRows} headingLevel="h2" />
+
+      <p class={p}>Most cage problems we see in returning birds trace back to the same root: a cage bought for the owner's budget, not the bird's biology. An undersized or unsafe cage is one of the leading triggers of <a href="/blog/african-grey-health-problems/" class={lnk} style="color:#b04228">feather plucking and behavioural decline</a>. Get the five things below right — size, bar spacing, materials, perches, and placement — and the cage stops being a problem and starts being a home.</p>
+
+      <!-- 5a. Cage size -->
+      <h2 id="size" class={h2} style="color:#2D6A4F">How Big Should an African Grey Cage Be?</h2>
+      <p class={p}>An African Grey spends 12 or more hours a day in its cage, so cage size is not a detail — it's the single biggest driver of whether your bird stays mentally well. The short answer: a Congo needs at least <strong>36" × 24" × 48"</strong>, a Timneh at least <strong>30" × 20" × 40"</strong>, and in both cases bigger genuinely is better.</p>
+
+      <ComparisonTable columns={sizeColumns} rows={sizeRows} verdict="Buy the largest cage your room and budget allow — we have never once heard an owner say their Grey's cage was too big." />
+
+      <h3 class={h3} style="color:#2D6A4F">Congo African Grey Cage Size</h3>
+      <p class={p}>A Congo is a powerful, full-sized parrot. The 36" × 24" × 48" minimum gives just enough room to fully extend both wings and move between perches without clipping the bars. If you can fit it, a <strong>40" × 30" × 60"</strong> cage is the standard we build around in our own aviary.</p>
+
+      <h4 class={h4} style="color:#2D6A4F">Minimum vs Ideal Dimensions</h4>
+      <p class={p}>Width matters more than height — Greys move side-to-side far more than they climb. A tall, narrow "tower" cage looks generous but plays small. Prioritise floor footprint over a tall, skinny silhouette.</p>
+
+      <h5 class={h5} style="color:#2D6A4F">Why a bigger cage prevents feather plucking</h5>
+      <p class={p}>Confinement stress is real. A Grey with no room to flap, forage, or move turns that frustrated energy inward — and the first casualty is usually the chest and leg feathers. Space is the cheapest enrichment you'll ever buy.</p>
+
+      <h6 class={h6} style="color:#b04228">Our aviary flight-space benchmark</h6>
+      <p class={p}>Every chick we raise grows up with daily out-of-cage flight time in addition to a large enclosure. We tell new families to treat the cage as a secure base camp, not a full-time residence — a few hours of supervised out-of-cage time daily does more for behaviour than any single toy.</p>
+
+      <h3 class={h3} style="color:#2D6A4F">Timneh African Grey Cage Size</h3>
+      <h4 class={h4} style="color:#2D6A4F">How Timneh Sizing Differs</h4>
+      <p class={p}>Timnehs run noticeably smaller than Congos, so a 30" × 20" × 40" cage clears the minimum — though many Timneh owners happily size up to a Congo-spec cage. The more important difference is bar spacing, which we cover next.</p>
+
+      <!-- 6. Bar spacing -->
+      <h2 id="bar-spacing" class={h2} style="color:#2D6A4F">What Bar Spacing Is Safe for an African Grey?</h2>
+      <p class={p}>Bar spacing is a safety spec, not a style choice. Too wide and a bird can force its head between the bars and strangle or break its neck; too narrow and toes and beaks get pinched. For Congos the safe window is <strong>3/4" to 1"</strong>; for the smaller-headed Timneh, <strong>5/8" to 3/4"</strong>.</p>
+
+      <h3 class={h3} style="color:#2D6A4F">Congo vs Timneh Bar Spacing</h3>
+      <h4 class={h4} style="color:#2D6A4F">The Head-Entrapment Risk</h4>
+      <p class={p}>The test is blunt: if your Grey can push its head through the gap, the spacing is unsafe — full stop. Most cage-related injuries we hear about are entrapment, not chewing.</p>
+
+      <h5 class={h5} style="color:#2D6A4F">Breeder note: why we run 7/8"–1" for fledglings</h5>
+      <p class={p}>For a just-weaned bird still learning to balance, we recommend the slightly wider-headed-safe <strong>7/8"–1"</strong> band rather than a tight 3/4". A clumsy fledgling is far more likely to catch a wing or head than a steady adult.</p>
+
+      <h6 class={h6} style="color:#b04228">A caught-wing story from our nursery</h6>
+      <p class={p}>Early on we had a fledgling catch a primary feather in a 3/4" gap during a flutter — no injury, but a genuine scare. Since then we've defaulted young birds to 7/8"–1" until they're fully sure-footed. It's a small change that removes a real risk.</p>
+
+      <Callout variant="mistake" title="The bar-spacing mistake that sends birds to the vet">
+        <p>Buying a "large bird" cage built for macaws (often 1.25"–1.5" spacing) for an African Grey. The cage looks impressive and the price is right — but the gaps are wide enough for a Grey to slip its head through. Always check the spacing number, never just the cage's size class.</p>
+      </Callout>
+
+      <!-- 7. Materials -->
+      <h2 id="materials" class={h2} style="color:#2D6A4F">What Cage Material Is Safe? Stainless vs Powder-Coat</h2>
+      <p class={p}>African Greys chew their bars constantly, so whatever the cage is made of, your bird is effectively eating a little of it every day. That turns material choice into a toxicology question, and the answer is mostly: stainless steel.</p>
+
+      <h3 class={h3} style="color:#2D6A4F">Stainless Steel (304 Grade)</h3>
+      <p class={p}>304-grade stainless is the gold standard — it never rusts, wipes clean, and is biologically inert, so chewing it does no harm. It costs more upfront, but a stainless cage is genuinely a once-in-a-bird's-life purchase across a 40–60 year lifespan.</p>
+
+      <h3 class={h3} style="color:#2D6A4F">Powder-Coated Steel</h3>
+      <h4 class={h4} style="color:#2D6A4F">Verifying Lead-Free / Zinc-Free</h4>
+      <p class={p}>Powder-coated steel is acceptable and much cheaper — but only if the coating is confirmed lead-free and zinc-free, because both metals are toxic to birds.</p>
+
+      <h5 class={h5} style="color:#2D6A4F">The one question to ask a manufacturer</h5>
+      <p class={p}>Ask, in writing: <em>"Is this cage's coating certified lead-free and zinc-free, and is it bird-safe?"</em> A reputable bird-cage maker answers instantly. Vagueness or a generic "it's pet-safe" is your cue to walk away.</p>
+
+      <h3 class={h3} style="color:#2D6A4F">Metals That Can Kill Your Grey</h3>
+      <h4 class={h4} style="color:#2D6A4F">Galvanized, Zinc &amp; Chrome</h4>
+      <p class={p}>Galvanized wire (common in hardware-store "flight cages" and DIY aviary panels) is zinc-coated, and chrome plating flakes over time. Both are dangerous to a species that gnaws metal for fun.</p>
+
+      <h5 class={h5} style="color:#2D6A4F">Signs of heavy-metal toxicity</h5>
+      <p class={p}>Watch for sudden appetite loss, regurgitation, unusual thirst, weakness, or seizures. Heavy-metal poisoning moves fast and looks like several other illnesses — which is exactly why prevention beats diagnosis here.</p>
+
+      <h6 class={h6} style="color:#b04228">When to call an avian vet</h6>
+      <p class={p}>Any combination of those signs is an emergency. Contact a board-certified avian vet immediately and mention possible metal exposure; the <a href="https://www.aav.org/search/custom.asp?id=1803" class={lnk} style="color:#b04228" target="_blank" rel="noopener">Association of Avian Veterinarians directory ↗</a> can help you find one near you. Zinc and lead toxicity are treatable when caught early.</p>
+
+      <!-- 8. Decision tree (MIDDLE special-element) -->
+      <div class="mt-12">
+        <DecisionTree question="Which cage setup fits your Grey?" branches={cageBranches} headingLevel="h2" />
       </div>
 
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Safe Cage Materials</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Material selection is a safety issue, not just a preference. African Greys chew cage bars constantly — any toxic coating or metal will end up being ingested.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>Stainless steel (304 grade):</strong> safest long-term choice, never rusts, easy to clean</li>
-        <li><strong>Powder-coated steel:</strong> acceptable only if explicitly labeled lead-free and zinc-free</li>
-        <li><strong>Galvanized metal:</strong> NEVER — zinc poisoning causes kidney failure and death</li>
-        <li><strong>Chrome plating:</strong> NEVER — flakes off and can cause heavy metal toxicity</li>
+      <!-- 9. Perches -->
+      <h2 id="perches" class={h2} style="color:#2D6A4F">How Should I Set Up the Perches?</h2>
+      <p class={p}>Perches are where your Grey stands every waking hour, so monotony here causes real harm. Provide at least three, and deliberately vary them — feet that grip the same diameter all day develop pressure sores and arthritis.</p>
+
+      <h3 class={h3} style="color:#2D6A4F">Diameter &amp; Material Variety</h3>
+      <h4 class={h4} style="color:#2D6A4F">Natural Wood, Rope &amp; Conditioning Perches</h4>
+      <p class={p}>The working trio is one natural-wood perch (1"–1.5", for daytime), one rope perch (softer, for sleeping), and one pumice or concrete conditioning perch placed low for nails and beak. Mount them at different heights to encourage movement, and never directly above a food or water bowl.</p>
+
+      <h5 class={h5} style="color:#2D6A4F">Why smooth dowels cause pressure sores</h5>
+      <p class={p}>The round wooden dowels that ship with most cages are a uniform diameter and slick — the foot grips identically, all day, every day. Within months that constant pressure point can ulcerate into bumblefoot. Treat the included dowel as packaging, not a perch.</p>
+
+      <h6 class={h6} style="color:#b04228">Manzanita vs java wood — our pick</h6>
+      <p class={p}>We favour manzanita for its rock-hard, irregular surface that resists chewing and conditions feet beautifully; java wood is a great second choice with more sculptural branching birds enjoy climbing. Both are non-toxic and built to last.</p>
+
+      <!-- 10. Placement -->
+      <h2 id="placement" class={h2} style="color:#2D6A4F">Where Should the Cage Go in My Home?</h2>
+      <h3 class={h3} style="color:#2D6A4F">Placement Rules That Prevent Anxiety</h3>
+      <h4 class={h4} style="color:#2D6A4F">Against-a-Wall &amp; Eye-Level</h4>
+      <p class={p}>Push the cage against at least one wall so your Grey isn't exposed on all sides — a bird surrounded by open space stays on alert and never fully relaxes. Set the top of the cage at roughly your eye level: too low breeds anxiety, too high can encourage territorial behaviour. And place it in a room the family genuinely uses, because Greys are intensely social and isolation drives plucking and screaming.</p>
+
+      <h5 class={h5} style="color:#2D6A4F">The kitchen / PTFE-fume danger zone</h5>
+      <p class={p}>Never put a cage in or beside the kitchen. Overheated non-stick cookware releases PTFE (Teflon) fumes that are odourless to us and lethal to birds within minutes. Keep the cage clear of stovetop fumes, drafty doors, AC and heating vents, and more than a few hours of direct sun.</p>
+
+      <Callout variant="tip" title="A simple placement test">
+        <p>Sit where the cage will go and look around. Can the bird see the family's daily comings and goings, but also retreat to a wall at its back? If yes, you've found the spot. If the bird would be either marooned in the open or hidden away alone, keep looking.</p>
+      </Callout>
+
+      <!-- 11. Enrichment -->
+      <h2 id="enrichment" class={h2} style="color:#2D6A4F">How Do I Stop an African Grey From Getting Bored?</h2>
+      <p class={p}>An African Grey has the cognition of a young child and the attention span to match. A cage full of toys it has already solved is, to a Grey, an empty cage — and a bored Grey is a plucking, screaming Grey. The fix isn't more toys; it's a rotation system.</p>
+
+      <h3 class={h3} style="color:#2D6A4F">The Neophobia Problem</h3>
+      <h4 class={h4} style="color:#2D6A4F">The 2–3 Toy Rotation System</h4>
+      <p class={p}>Here's the tension: Greys are <strong>neophobic</strong> — they distrust brand-new objects — yet they get bored of familiar ones within a week. So you can't swap everything at once (panic) or never swap (boredom). Keep a bin of 6–8 toys, and every 5–7 days rotate out 2–3 while leaving 2 trusted toys in place as anchors.</p>
+
+      <h5 class={h5} style="color:#2D6A4F">Foraging, shreddable, puzzle &amp; foot toys</h5>
+      <p class={p}>Rotate across four categories so the bird's whole brain stays engaged: <strong>foraging</strong> toys that hide food and make the bird work, <strong>shreddable</strong> toys (palm, cork, soft wood) that satisfy the chewing drive, <strong>puzzle</strong> toys with latches and stacking parts, and small <strong>foot</strong> toys to manipulate and chew.</p>
+
+      <h6 class={h6} style="color:#b04228">Our weekly rotation schedule</h6>
+      <p class={p}>In our aviary every bird gets fresh foraging opportunities daily and a 2–3 toy swap weekly, with shreddables refreshed as they're destroyed (destruction is the point — that's a job well done). New families get this exact schedule written down when a chick goes home.</p>
+
+      <BreederNote>
+        <p>The owners who never deal with plucking aren't the ones who spent the most on toys — they're the ones who kept their Grey's day <em>interesting</em>. Space, a rotation habit, and a few hours of out-of-cage time beat an expensive cage stuffed with stale toys every single time. That's the whole secret, and it's free.</p>
+      </BreederNote>
+
+      <!-- 12. Checklist -->
+      <h2 id="checklist" class={h2} style="color:#2D6A4F">African Grey Cage Setup Checklist</h2>
+      <h3 class={h3} style="color:#2D6A4F">Your Day-One Shopping List</h3>
+      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-6">
+        <li>Cage: <strong>304 stainless</strong> or verified lead/zinc-free powder-coat, Congo 36"×24"×48" min (40"×30"×60" ideal)</li>
+        <li>Correct bar spacing: 3/4"–1" Congo · 5/8"–3/4" Timneh · 7/8"–1" for fledglings</li>
+        <li>3+ perches: natural wood (manzanita/java), rope for sleeping, pumice/concrete conditioning</li>
+        <li>Stainless food &amp; water bowls (replace any chewable plastic)</li>
+        <li>Starter toy bin: 6–8 toys across foraging, shreddable, puzzle, and foot categories</li>
+        <li>A wall-backed spot at eye level, well away from the kitchen</li>
+        <li>Avian-vet contact saved before the bird arrives</li>
       </ul>
 
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Perch Setup</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Provide 3 perches minimum, varying in diameter and material. Feet health depends on perch variety — uniform diameter dowels cause pressure sores within months.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>Natural wood (manzanita or java wood):</strong> 1"–1.5" diameter, irregular texture, safe for chewing</li>
-        <li><strong>Rope perch:</strong> for sleeping — soft on joints</li>
-        <li><strong>Conditioning perch (pumice or concrete):</strong> trims nails and beak naturally</li>
-        <li>Avoid: smooth wooden dowels, plastic perches, and perches placed directly over food/water bowls</li>
-      </ul>
+      <!-- 13. Trust band + bottom conversion -->
+      <h2 class={h2} style="color:#2D6A4F">What You Get From a Real Breeder</h2>
+      <p class={p}>A safe cage is the easy part — the bird that lives in it is what matters. Here at C.A.Gs, every African Grey leaves fully weaned and socialised, with <a href="/blog/african-grey-parrot-price-what-you-get/" class={lnk} style="color:#b04228">PCR DNA sexing, an avian-vet health certificate, and CITES Appendix I paperwork</a> — all of it captive-bred in the USA and fully documented. We also walk every family through cage setup before pickup, so the build is right the first time.</p>
+      <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-6 mb-2">
+        <p class="font-lora font-bold text-2xl mb-2" style="color:#2D6A4F">Ready to set up a home for one of ours?</p>
+        <p class="text-stone-600 mb-1">Ships nationwide · $185 airport · $350 home</p>
+        <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American</p>
+        <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See available African Greys</a>
+        <a href="/contact-us/" class="inline-block font-sora font-semibold px-7 py-3 underline" style="color:#b04228">Ask a breeder</a>
+      </div>
 
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Cage Placement Rules</h2>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>Against a wall:</strong> provides security — birds feel exposed when surrounded on all sides</li>
-        <li><strong>Eye level or slightly above:</strong> too low causes anxiety; too high causes dominance issues</li>
-        <li><strong>Away from kitchen:</strong> PTFE/Teflon fumes from non-stick cookware are lethal to birds</li>
-        <li><strong>Away from drafts:</strong> AC vents, exterior doors, and windows create temperature fluctuations</li>
-        <li><strong>Near family activity:</strong> African Greys need to observe daily life — isolation causes behavioral problems</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Enrichment Rotation System</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">African Greys are intelligent enough to become bored within a week with the same toys — but neophobic enough to panic at entirely new environments. The solution is a rotation system with familiar anchors.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>Foraging toys:</strong> require the bird to work for food — the most mentally stimulating category</li>
-        <li><strong>Shreddable toys:</strong> wood blocks, palm fronds, cork — satisfies chewing drive</li>
-        <li><strong>Puzzle toys:</strong> locks, latches, stacking rings — cognitive enrichment</li>
-        <li><strong>Foot toys:</strong> small items held and manipulated with the foot</li>
-        <li>Rotate 2–3 toys every 5–7 days; keep 2 familiar toys in place at all times</li>
-      </ul>
-
-      <!-- FAQ -->
-      <h2 class="font-lora font-bold text-3xl mb-8" style="color:#2D6A4F">Frequently Asked Questions</h2>
+      <!-- 15. FAQ -->
+      <h2 id="faq" class={h2} style="color:#2D6A4F">African Grey Cage Setup: Frequently Asked Questions</h2>
       <div class="space-y-4">
         {faqs.map((faq) => (
           <details class="bg-white rounded-xl border border-stone-200 p-5">
@@ -161,8 +305,23 @@ const articleSchema = {
         ))}
       </div>
 
+      <!-- 12. Related posts (silo) -->
+      <div class="mt-12">
+        <RelatedPosts heading="Keep reading" headingLevel="h2" posts={[
+          { title: "African Grey Health Problems", slug: "/blog/african-grey-health-problems/", category: "Health" },
+          { title: "African Grey Parrot Training", slug: "/blog/african-grey-parrot-training/", category: "Training" },
+          { title: "African Grey for Sale: What You Get", slug: "/blog/african-grey-parrot-price-what-you-get/", category: "Buying" },
+        ]} />
+      </div>
+
     </div>
   </section>
 
+  <!-- 13. Newsletter -->
+  <Newsletter variant="bottom" action="/contact-us/" bottomText="New African Grey clutches before they're listed — cage-ready families first." />
+
+  <StickyCta label="See available African Greys" href="/available/" />
+
+  <!-- 14. Global CTA -->
   <CTA />
 </BaseLayout>
