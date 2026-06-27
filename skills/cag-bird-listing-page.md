@@ -6,6 +6,8 @@ description: Use when building, rebuilding, or retiring an individual African Gr
 # CAG Individual Bird Listing Page
 
 > **Deep standard (22-section, ~3,150w) → use `skills/cag-bird-page-build.md`. This lean profile remains for minimal one-bird listings.**
+>
+> **POLISH / DIFFERENTIATE / PERF-SEO-SCHEMA-A11Y QA on an existing bird page → use `skills/cag-bird-page-excellence/SKILL.md`** (the 2026-06 polish-program method: life-stage de-cannibalization across H1+title+meta+alt, distinct regional geo blocks, truthful Offer schema, JumpRail/LCP/image perf, AA clay-on-dark). Copy-paste runbook: **`BIRD-PAGE-BUILD-MANUAL.md`** (repo root). Failure log + guardrails: `docs/superpowers/sessions/2026-06-27-bird-pages-lessons.md`.
 
 ## Overview
 One indexable page per real, available bird. Job = **convert**, not educate. All CLAUDE.md
