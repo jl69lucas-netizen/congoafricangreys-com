@@ -3,7 +3,9 @@
 Reads dist/<slug>/index.html (slug may be nested, e.g. available/roys) and scores
 the objective checks against the page-type PROFILE, returning per-check pass plus a
 verdict: PASS / PASS-WITH-WARNINGS / FAIL. Subjective checks (voice/humor/Flesch/
-non-commodity/tone/brand-protocol) stay manual. Run AFTER `npx astro build`."""
+non-commodity/tone/brand-protocol) stay manual. Run AFTER `npx astro build`.
+Profiles: interior (default), bird (--birds), blog (--blog, auto-discovers the
+/blog/ hub + every dist/blog/<slug>/ post; also included in the default run)."""
 import re, json, sys
 from pathlib import Path
 from html.parser import HTMLParser
@@ -75,9 +77,28 @@ PROFILES = {
         "house_method": "WARN",
         "airport_codes": "WARN",         # transactional nicety on price page, not a ship-blocker
     },
+    "blog": {                            # /blog/ hub + dist/blog/<slug>/ posts (spec 2026-06-27)
+        # Blog gate = ONLY the checks the cluster spec defines; everything else is
+        # NA so a post is judged on what the program actually requires. The FAIL
+        # gates below mirror the Heading Outline Gate + blog-cluster requirements.
+        "_default": "NA",
+        "h1==1": "FAIL",                 # exactly one page topic
+        "no_skip": "FAIL",               # sequential H1→H6, no skipped levels
+        "all_six_levels": "FAIL",        # every blog page carries all six levels
+        "min_h5_5": "FAIL",              # >= 5 H5
+        "min_h6_5": "FAIL",              # >= 5 H6
+        "breadcrumb_one": "FAIL",        # exactly one BreadcrumbList (no dupes)
+        "faqpage_present": "FAIL",       # FAQPage schema present
+        "no_visible_date": "FAIL",       # freshness in schema only, never visible
+        "no_escaped_svg": "FAIL",        # no raw &lt;svg dumped to the page
+        "no_emoji": "FAIL",              # line-icon SVGs only, no colorful emoji
+        "single_canonical": "FAIL",      # exactly one canonical link
+    },
 }
 def severity(page_type, check):
-    return PROFILES.get(page_type, {}).get(check, DEFAULT_SEVERITY)
+    """Per-check severity, falling back to the profile's `_default`, then global."""
+    prof = PROFILES.get(page_type, {})
+    return prof.get(check, prof.get("_default", DEFAULT_SEVERITY))
 
 def audit_html(slug, html, page_type="interior"):
     raw = html
@@ -220,6 +241,28 @@ def audit_html(slug, html, page_type="interior"):
     visible=re.sub(r"<script[\s\S]*?</script>","",raw)
     visible=re.sub(r"<[^>]+>"," ",visible)
     r["no_visible_date"]=not re.search(r"(?:updated|last updated|last modified)\b[^0-9]{0,18}\b20\d\d", visible, re.I)
+    # --- blog-only gates (page_type == "blog") ---
+    # Computed only for blog so these never add new FAIL gates to bird/interior rows.
+    if page_type == "blog":
+        r["breadcrumb_one"] = flat.count("BreadcrumbList") == 1
+        r["faqpage_present"] = flat.count("FAQPage") >= 1
+        r["single_canonical"] = len(re.findall(
+            r"<link\b[^>]*\brel\s*=\s*['\"]canonical['\"]", raw, re.I)) == 1
+        # No colorful pictographic emoji (kept text glyphs ✔ ✗ ★ are BMP < U+2B00,
+        # so they never match these emoji planes). Catches 🎉 🔥 🚀 🦜 ⭐ flags, etc.
+        r["no_emoji"] = not re.search(
+            "[\U0001F1E6-\U0001F1FF\U0001F300-\U0001FAFF\U00002B00-\U00002BFF]", raw)
+        # Stricter freshness check: catch a real "Updated <Month>" / "Posted on
+        # <Month>" / "Last updated <Month/Year>" STAMP (a date label followed by an
+        # actual month or year). Requiring the date token avoids false-positiving on
+        # prose that merely names the policy (e.g. 'no visible "last updated" stamp').
+        blog_date = re.search(
+            r"\b(?:last updated|last modified|posted on|published on|updated|posted|published)\b"
+            r"[\s:,.–-]{0,4}"
+            r"(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|"
+            r"aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?|20\d\d)\b",
+            visible, re.I)
+        r["no_visible_date"] = r["no_visible_date"] and not blog_date
     # --- transactional-only (#5/#6) ---
     if slug in TRANSACTIONAL:
         r["airport_codes"]=bool(re.search(r"\b(DEN|LAX|MIA|ORD|LAR)\b",bodytext))
@@ -242,11 +285,23 @@ def audit(slug, page_type="interior"):
 BIRDS = ["available/bery","available/amie","available/roys",
          "available/jins-jeni","available/elad","available/evie"]
 
+def blog_targets():
+    """Discover the /blog/ hub (dist/blog/index.html) + every dist/blog/<slug>/ post."""
+    targets = []
+    blog = DIST / "blog"
+    if (blog / "index.html").exists():
+        targets.append(("blog", "blog"))
+    for f in sorted(blog.glob("*/index.html")):
+        targets.append((f"blog/{f.parent.name}", "blog"))
+    return targets
+
 def main():
     if "--birds" in sys.argv:
         targets = [(s, "bird") for s in BIRDS]
+    elif "--blog" in sys.argv:
+        targets = blog_targets()
     else:
-        targets = [(s, "interior") for s in SLUGS]
+        targets = [(s, "interior") for s in SLUGS] + blog_targets()
     rows = {s: audit(s, t) for s, t in targets}
     print("\n=== C.A.Gs FINAL PAGE PASS ===  (verdict per page)\n")
     for s, r in rows.items():
