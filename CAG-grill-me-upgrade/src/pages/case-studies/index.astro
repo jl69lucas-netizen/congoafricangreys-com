@@ -1,0 +1,338 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CTA from '../../components/CTA.astro';
+import { readFileSync, existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+const title = "African Grey Parrot Owner Stories | CongoAfricanGreys.com Reviews";
+const description = "Real stories from African Grey parrot buyers. Captive-bred, CITES-documented birds from CongoAfricanGreys.com now living with families across the United States.";
+const canonical = "https://congoafricangreys.com/case-studies/";
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "Owner Stories", url: "/case-studies/" },
+];
+
+const faqs = [
+  { q: "How do I submit my African Grey story?", a: "Email your story and a photo to us via the contact form at /contact-us/. We accept stories from verified buyers who received their bird from CongoAfricanGreys.com. Stories are reviewed before publishing." },
+  { q: "Are the owner stories on this page verified?", a: "Yes. Every story on this page comes from a verified buyer — someone who purchased a captive-bred, CITES-documented African Grey from our Midland, TX aviary. We do not publish or fabricate unverified testimonials." },
+  { q: "How long does it take for my story to be published?", a: "We review story submissions within 2–3 weeks. We may reach out for additional details, a photo, or to confirm your bird's documentation details before publishing." },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+// Attempt to load case studies data file
+let caseStudies: Array<{
+  name: string;
+  location?: string;
+  bird?: string;
+  story: string;
+  date?: string;
+}> = [];
+
+try {
+  const dataPath = resolve(process.cwd(), 'data/case-studies.json');
+  if (existsSync(dataPath)) {
+    const raw = readFileSync(dataPath, 'utf-8');
+    caseStudies = JSON.parse(raw);
+  }
+} catch {
+  // data file not yet created — show empty-graceful state
+  caseStudies = [];
+}
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+  <!-- HERO -->
+  <div style="max-width:1200px;margin:0 auto;">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="cs-hero">
+    <div class="page-container">
+      <h1 class="cs-h1">African Grey Owner Stories</h1>
+      <p class="cs-sub">
+        Real families. Real birds. Every story here is from a buyer who brought home a
+        captive-bred, CITES-documented African Grey from CongoAfricanGreys.com.
+      </p>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="cs-section">
+    <div class="page-container text-wrap">
+      <p class="cs-p">
+        These are verified stories from families who have brought home a captive-bred African
+        Grey from CongoAfricanGreys.com. Every bird ships with CITES documentation, DNA sexing
+        results, and a vet health certificate — and every story here is real.
+      </p>
+      <p class="cs-p">
+        Looking for Google Reviews?
+        <a href="/african-grey-reviews/" class="cs-link">See our verified Google Reviews</a> from
+        buyers across the United States.
+      </p>
+    </div>
+  </section>
+
+  <!-- CASE STUDIES OR EMPTY STATE -->
+  {caseStudies.length > 0 ? (
+    <section class="cs-section cs-alt">
+      <div class="page-container">
+        <h2 class="cs-h2">Stories from Our Families</h2>
+        <div class="cs-grid">
+          {caseStudies.map((cs) => (
+            <div class="cs-card">
+              <div class="cs-card-header">
+                <h3 class="cs-card-name">{cs.name}</h3>
+                {cs.location && <span class="cs-card-location">{cs.location}</span>}
+                {cs.bird && <span class="cs-card-bird">{cs.bird}</span>}
+              </div>
+              <p class="cs-card-story">{cs.story}</p>
+              {cs.date && <p class="cs-card-date">{cs.date}</p>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section class="cs-section cs-alt">
+      <div class="page-container text-wrap">
+        <h2 class="cs-h2">Stories Coming Soon</h2>
+        <p class="cs-p">
+          We are collecting stories from families who have brought home birds from us. Check
+          back soon — or
+          <a href="/african-grey-reviews/" class="cs-link">read our verified Google Reviews</a>
+          in the meantime.
+        </p>
+        <div class="cs-empty-cards">
+          <div class="cs-empty-card">
+            <div class="cs-empty-icon" aria-hidden="true">&#10003;</div>
+            <p>Captive-bred birds placed with verified buyers</p>
+          </div>
+          <div class="cs-empty-card">
+            <div class="cs-empty-icon" aria-hidden="true">&#10003;</div>
+            <p>Every bird CITES-documented and DNA sexed</p>
+          </div>
+          <div class="cs-empty-card">
+            <div class="cs-empty-icon" aria-hidden="true">&#10003;</div>
+            <p>Nationwide IATA-compliant shipping</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- SHARE YOUR STORY -->
+  <section class="cs-section">
+    <div class="page-container text-wrap">
+      <h2 class="cs-h2">Share Your Story</h2>
+      <p class="cs-p">
+        Did you bring home an African Grey from CongoAfricanGreys.com? We would love to share
+        your story. Send us a brief description of your bird, how the transition went, and a
+        photo if you have one. Stories are reviewed and published with your permission only.
+      </p>
+      <p class="cs-p">
+        Email your story to us through our
+        <a href="/contact-us/" class="cs-link">contact page</a> — include your bird's name,
+        when you got them, and one or two sentences about life together.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ ACCORDION -->
+  <section class="cs-section cs-faq">
+    <div class="page-container text-wrap">
+      <h2 class="cs-h2">Frequently Asked Questions</h2>
+      {faqs.map((f) => (
+        <details class="cs-details">
+          <summary class="cs-summary">{f.q}</summary>
+          <p class="cs-details-body">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <CTA
+    headline="Ready to Write Your Own Story?"
+    sub="Every bird from CongoAfricanGreys.com is hand-raised, CITES-documented, DNA sexed, and vet-certified. Reach out to start the conversation."
+  />
+</BaseLayout>
+
+<style>
+  .page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .text-wrap { max-width: 760px; }
+  .cs-h1 {
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 700;
+    color: #faf7f4;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.2;
+    margin: 0 0 1rem;
+  }
+  .cs-h2 {
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 700;
+    color: #2D6A4F;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    line-height: 1.25;
+    margin: 0 0 1.25rem;
+  }
+  .cs-hero {
+    background: #2D6A4F;
+    padding: 3.5rem 0 3rem;
+    text-align: center;
+  }
+  .cs-sub {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.65;
+    color: rgba(250,247,244,0.88);
+    max-width: 70ch;
+    margin: 0 auto;
+  }
+  .cs-section { padding: 3rem 0; }
+  .cs-alt { background: #faf7f4; }
+  .cs-p {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: #44403c;
+    max-width: 70ch;
+    margin: 0 0 1.2rem;
+  }
+  .cs-link { color: #e8604c; text-decoration: underline; }
+  .cs-link:hover { color: #d44e3b; }
+  .cs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+  }
+  .cs-card {
+    background: #fff;
+    border: 1px solid #e7e5e4;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(60,30,10,0.07);
+  }
+  .cs-card-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+  }
+  .cs-card-name {
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 700;
+    color: #2D6A4F;
+    font-size: 1.1rem;
+    margin: 0;
+  }
+  .cs-card-location,
+  .cs-card-bird {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: #78716c;
+    background: #f5f5f4;
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+  }
+  .cs-card-story {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.97rem;
+    line-height: 1.65;
+    color: #44403c;
+    margin: 0 0 0.75rem;
+  }
+  .cs-card-date {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.82rem;
+    color: #a8a29e;
+    margin: 0;
+  }
+  .cs-empty-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .cs-empty-card {
+    background: #fff;
+    border: 1px solid #e7e5e4;
+    border-radius: 16px;
+    padding: 1.25rem;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(60,30,10,0.06);
+  }
+  .cs-empty-icon {
+    font-size: 1.5rem;
+    color: #2D6A4F;
+    margin-bottom: 0.5rem;
+  }
+  .cs-empty-card p {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #44403c;
+    margin: 0;
+  }
+  .cs-faq { background: #fff; }
+  .cs-details {
+    border: 1px solid #e7e5e4;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+  .cs-details[open] { box-shadow: 0 2px 8px rgba(60,30,10,0.07); }
+  .cs-summary {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2D6A4F;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.15s;
+  }
+  .cs-summary::-webkit-details-marker { display: none; }
+  .cs-summary::after {
+    content: '+';
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #e8604c;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    transition: transform 0.15s;
+  }
+  details[open] > .cs-summary::after { content: '−'; }
+  .cs-summary:hover { background: #faf7f4; }
+  .cs-details-body {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.97rem;
+    line-height: 1.7;
+    color: #44403c;
+    padding: 0 1.25rem 1rem;
+    margin: 0;
+    max-width: 70ch;
+  }
+  @media (max-width: 767px) { .page-container { padding: 0 16px; } }
+  @media (min-width: 768px) and (max-width: 1024px) { .page-container { padding: 0 32px; } }
+</style>

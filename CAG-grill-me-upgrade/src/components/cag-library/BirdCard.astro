@@ -1,0 +1,139 @@
+---
+/**
+ * BirdCard — a single available-bird listing card.
+ * Compose three of these inside a grid to recreate the "Birds Available Right Now" row.
+ *
+ * @prop variant — 'classic' (photo top, info bottom) | 'horizontal' (list-row) | 'feature' (full-bleed magazine)
+ */
+export interface Props {
+  variant?: 'classic' | 'horizontal' | 'feature';
+  name: string;
+  sex: 'Male' | 'Female';
+  age: string;            // e.g. "11 months", "2 yr"
+  badge?: string;         // "NEW ARRIVAL", "TOP TALKER", "FAMILY BIRD"
+  badgeColor?: 'clay' | 'forest' | 'amber';
+  location?: string;
+  quote?: string;
+  description?: string;
+  certifications?: string[];   // defaults to ['CITES Cert','DNA Sexed','Vet Certified']
+  price: number;
+  deposit?: number;
+  imageSrc?: string;
+  href?: string;
+}
+const {
+  variant = 'classic',
+  name,
+  sex,
+  age,
+  badge,
+  badgeColor = 'clay',
+  location = 'Midland, TX',
+  quote,
+  description,
+  certifications = ['CITES Cert', 'DNA Sexed', 'Vet Certified'],
+  price,
+  deposit = 200,
+  imageSrc,
+  href = '#',
+} = Astro.props;
+
+const badgeBg = {
+  clay: 'bg-clay text-white',
+  forest: 'bg-forest text-white',
+  amber: 'bg-amber-500 text-white',
+}[badgeColor];
+
+const priceFmt = `$${price.toLocaleString()}`;
+---
+
+{variant === 'classic' && (
+  <article class="card-classic bg-white rounded-3xl border border-line cag-warm-shadow overflow-hidden hover:cag-warm-shadow-lg hover:-translate-y-1 transition-all">
+    <div class="cag-bird-ph aspect-[4/3] relative">
+      {imageSrc
+        ? <img src={imageSrc} alt={name} class="absolute inset-0 w-full h-full object-cover" />
+        : <div class="absolute inset-0 flex items-center justify-center opacity-70"><img src="/emoji/cag-congo.png" alt="" style="width:140px;height:140px;object-fit:contain;" loading="lazy" /></div>}
+      {badge && <span class={`absolute top-4 left-4 cag-tag rounded-full px-3 py-1.5 ${badgeBg}`}>{badge}</span>}
+      <span class="absolute top-4 right-4 bg-white/90 backdrop-blur cag-tag text-forest rounded-full px-3 py-1.5"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {location.toUpperCase()}</span>
+    </div>
+    <div class="card-content p-6">
+      <h3 class="font-display font-bold text-2xl">{name}</h3>
+      <div class="text-[13px] text-mid mt-1">{sex} · {age} · Congo African Grey</div>
+      {quote && <p class="font-display italic text-[15px] mt-4 leading-snug">"{quote}"</p>}
+      {description && <p class="text-[13px] text-mid mt-2 leading-relaxed">{description}</p>}
+      <div class="mt-4 flex flex-wrap gap-2">
+        {certifications.map(c => <span class="cag-tag text-forest bg-forest-lt rounded-full px-2.5 py-1">{c}</span>)}
+      </div>
+      <div class="mt-5 flex items-end justify-between pt-5 border-t border-line">
+        <div>
+          <div class="font-display font-bold text-2xl text-clay">{priceFmt}</div>
+          <div class="text-[11px] text-mid">+ ${deposit} deposit</div>
+        </div>
+        <a href={href} class="card-cta bg-clay hover:bg-clay-dk transition text-white rounded-full px-5 py-2.5 font-semibold text-[13px] cag-glow">Inquire →</a>
+      </div>
+    </div>
+  </article>
+)}
+
+{variant === 'horizontal' && (
+  <article class="horizontal-article bg-white rounded-2xl border border-line cag-warm-shadow overflow-hidden flex flex-col md:flex-row hover:border-clay/40 transition">
+    <div class="horizontal-image cag-bird-ph md:w-64 aspect-[4/3] md:aspect-auto flex items-center justify-center opacity-70 flex-shrink-0"><img src="/emoji/cag-congo.png" alt="" style="width:110px;height:110px;object-fit:contain;" loading="lazy" /></div>
+    <div class="p-6 flex-1 flex flex-col md:flex-row md:items-center gap-6">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-2">
+          {badge && <span class={`cag-tag rounded-full px-2.5 py-1 ${badgeBg}`}>{badge}</span>}
+          <span class="cag-tag text-forest"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {location}</span>
+        </div>
+        <h3 class="font-display font-bold text-2xl">{name} · <span class="text-mid font-normal text-lg">{sex}, {age}</span></h3>
+        {description && <p class="text-mid mt-2 text-[14px] leading-relaxed max-w-md">{description}</p>}
+        <div class="mt-3 flex gap-2 text-[11px]">
+          {certifications.map(c => <span class="text-forest">✓ {c}</span>)}
+        </div>
+      </div>
+      <div class="text-right shrink-0">
+        <div class="font-display font-bold text-3xl text-clay">{priceFmt}</div>
+        <div class="text-[11px] text-mid mb-3">+ ${deposit} deposit</div>
+        <a href={href} class="bg-clay hover:bg-clay-dk transition text-white rounded-full px-5 py-2.5 font-semibold text-[13px] inline-block cag-glow">Inquire</a>
+      </div>
+    </div>
+  </article>
+)}
+
+{variant === 'feature' && (
+  <article class="feature-article bg-panel text-white rounded-3xl overflow-hidden relative">
+    <div class="cag-bird-ph aspect-[16/10] relative">
+      <div class="absolute inset-0 flex items-center justify-center opacity-60"><img src="/emoji/cag-congo.png" alt="" style="width:260px;height:260px;object-fit:contain;" loading="lazy" /></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-panel via-panel/30 to-transparent"></div>
+    </div>
+    <div class="p-8 absolute inset-x-0 bottom-0">
+      {badge && <span class="cag-tag bg-clay text-white rounded-full px-3 py-1.5">{badge}</span>}
+      <h3 class="font-display font-bold text-4xl mt-3">{name}</h3>
+      {quote && <p class="text-white/80 mt-2 max-w-md text-[15px]">"{quote}"</p>}
+      <div class="mt-5 flex items-center justify-between">
+        <div>
+          <div class="font-display font-bold text-3xl text-clay">{priceFmt}</div>
+          <div class="text-[12px] text-white/60">+ ${deposit} deposit · CITES included</div>
+        </div>
+        <a href={href} class="bg-clay hover:bg-clay-dk transition rounded-full px-6 py-3 font-semibold text-[14px] cag-glow">Inquire about {name} →</a>
+      </div>
+    </div>
+  </article>
+)}
+
+<style>
+@media (max-width: 1024px) {
+  .horizontal-article { flex-direction: column !important; }
+  .horizontal-image { width: 100% !important; aspect-ratio: 16/9; flex-shrink: unset; }
+  .card-cta {
+    width: 100%;
+    text-align: center;
+    padding: 14px 20px !important;
+    font-size: 15px !important;
+    display: block;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 480px) {
+  .card-content { padding: 16px !important; }
+}
+</style>

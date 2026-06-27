@@ -1,0 +1,264 @@
+---
+/**
+ * cag-hero-3split — Style E (1100px) three-panel hero.
+ * LEFT / CENTER / RIGHT grid for homepage, hub pages, location pages.
+ * Left + Right: product photo cards. Center: H1, tag, two CTAs, trust strip.
+ */
+export interface Props {
+  headline?: string;
+  subtext?: string;
+  primaryCta?: string;
+  primaryCtaHref?: string;
+  secondaryCta?: string;
+  secondaryCtaHref?: string;
+  leftBirdName?: string;
+  leftBirdDesc?: string;
+  leftImageSrc?: string;
+  rightBirdName?: string;
+  rightBirdDesc?: string;
+  rightImageSrc?: string;
+  tag?: string;
+}
+
+const {
+  headline = 'African Grey Parrots for Sale — Direct from Our Family Aviary',
+  subtext = 'Congo & Timneh African Greys. Hand-raised, DNA sexed, CITES documented. Shipping $185 nationwide.',
+  primaryCta = 'View Available Birds →',
+  primaryCtaHref = '#available-birds',
+  secondaryCta = 'Learn About CITES Docs',
+  secondaryCtaHref = '/cites-african-grey-documentation/',
+  leftBirdName = 'ROYS',
+  leftBirdDesc = 'Congo · Male · 4 mo · $2,300',
+  leftImageSrc = '',
+  rightBirdName = 'EVIE',
+  rightBirdDesc = 'Timneh · Female · 6 mo · $1,500',
+  rightImageSrc = '',
+  tag = 'CITES Documented · Hand-Reared Since 2014',
+} = Astro.props;
+---
+
+<section class="hero-3split-section">
+  <div class="hero-3split-inner">
+    <!-- LEFT — bird image card -->
+    <div class="hero-photo-card">
+      <div class="hero-photo-img">
+        {leftImageSrc
+          ? <img src={leftImageSrc} alt={`${leftBirdName} — available African Grey`} class="absolute inset-0 w-full h-full object-cover rounded-2xl" loading="eager" fetchpriority="high" />
+          : <div class="hero-photo-placeholder left-placeholder">
+              <img src="/emoji/cag-congo.png" alt="" style="width:120px;height:120px;object-fit:contain;opacity:.55;" loading="eager" />
+            </div>
+        }
+        <span class="hero-available-badge">Available</span>
+      </div>
+      <div class="hero-photo-label">{leftBirdName} · {leftBirdDesc}</div>
+    </div>
+
+    <!-- CENTER — text + CTAs -->
+    <div class="hero-center">
+      <span class="hero-tag">{tag}</span>
+      <h1 class="font-lora hero-headline">{headline}</h1>
+      <p class="font-sora hero-subtext">{subtext}</p>
+      <div class="hero-cta-stack">
+        <a href={primaryCtaHref} class="hero-btn-primary font-sora">{primaryCta}</a>
+        <a href={secondaryCtaHref} class="hero-btn-outline font-sora">{secondaryCta}</a>
+      </div>
+      <div class="hero-trust-strip font-sora">
+        <span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> USDA AWA Licensed</span>
+        <span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> DNA Sexed</span>
+        <span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Health Guaranteed</span>
+      </div>
+    </div>
+
+    <!-- RIGHT — bird image card -->
+    <div class="hero-photo-card">
+      <div class="hero-photo-img">
+        {rightImageSrc
+          ? <img src={rightImageSrc} alt={`${rightBirdName} — available African Grey`} class="absolute inset-0 w-full h-full object-cover rounded-2xl" loading="eager" />
+          : <div class="hero-photo-placeholder right-placeholder">
+              <img src="/emoji/cag-timneh.png" alt="" style="width:120px;height:120px;object-fit:contain;opacity:.55;" loading="eager" />
+            </div>
+        }
+        <span class="hero-available-badge">Available</span>
+      </div>
+      <div class="hero-photo-label">{rightBirdName} · {rightBirdDesc}</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-3split-section {
+    background: linear-gradient(135deg, #fde8e3 0%, #fdf0e8 50%, #fdf6ec 100%);
+    padding: 72px 24px;
+  }
+
+  .hero-3split-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr 1fr;
+    gap: 28px;
+    align-items: center;
+  }
+
+  /* Photo card */
+  .hero-photo-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hero-photo-img {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(60, 30, 10, 0.1), 0 16px 56px rgba(60, 30, 10, 0.08);
+  }
+  .hero-photo-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+  }
+  .left-placeholder  { background: linear-gradient(160deg, #f0d4c4, #e4b89a); }
+  .right-placeholder { background: linear-gradient(160deg, #d4e8d8, #b8d4c0); }
+  .hero-available-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: #eaf4ef;
+    color: #2D6A4F;
+    border: 1px solid rgba(45, 106, 79, 0.2);
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    padding: 4px 10px;
+  }
+  .hero-photo-label {
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #5a5248;
+    text-align: center;
+    padding: 0 4px;
+  }
+
+  /* Center panel */
+  .hero-center {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: #eaf4ef;
+    color: #2D6A4F;
+    border: 1px solid rgba(45, 106, 79, 0.2);
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    padding: 5px 14px;
+  }
+  .hero-headline {
+    font-size: clamp(1.6rem, 2.5vw + 0.8rem, 2.4rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: #1c1a18;
+    margin: 0;
+  }
+  .hero-subtext {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #5a5248;
+    margin: 0;
+    max-width: 42ch;
+  }
+  .hero-cta-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .hero-btn-primary {
+    display: block;
+    text-align: center;
+    background: #e8604c;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(232, 96, 76, 0.38);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  }
+  .hero-btn-primary:hover {
+    background: #c94d3a;
+    box-shadow: 0 10px 28px rgba(232, 96, 76, 0.48);
+    transform: translateY(-2px);
+  }
+  .hero-btn-outline {
+    display: block;
+    text-align: center;
+    background: transparent;
+    color: #e8604c;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: 2px solid #e8604c;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .hero-btn-outline:hover {
+    background: rgba(232, 96, 76, 0.06);
+  }
+  .hero-trust-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #5a5248;
+    padding-top: 4px;
+  }
+
+  /* Mobile: stack center first, then images in a row */
+  @media (max-width: 767px) {
+    .hero-3split-section { padding: 48px 16px; }
+    .hero-3split-inner {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    /* Move center panel to top */
+    .hero-center { order: -1; }
+    /* Side-by-side image row on mobile */
+    .hero-3split-inner {
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-3split-inner::after {
+      content: '';
+      display: none;
+    }
+    /* Re-layout as flex with images side by side */
+    .hero-3split-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+    }
+    .hero-center {
+      grid-column: 1 / -1;
+    }
+    .hero-photo-img { aspect-ratio: 3 / 4; }
+    .hero-headline { font-size: 1.6rem; }
+  }
+</style>

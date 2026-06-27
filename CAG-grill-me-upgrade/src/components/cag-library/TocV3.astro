@@ -1,0 +1,93 @@
+---
+/**
+ * cag-toc-v3:02 — "Grouped by part"
+ * Source design: page-components-desktop.html → TocGrouped (card · clay part tags ·
+ * italic forest subtitles · numbered anchor lists, 2-col).
+ * Ported to site Tailwind tokens. Real homepage section anchors grouped into 4 parts.
+ */
+interface TocItem { n: number; t: string; href: string; }
+interface Group { tag: string; title: string; items: TocItem[]; }
+
+const groups: Group[] = [
+  {
+    tag: "Part One", title: "Meet C.A.Gs",
+    items: [
+      { n: 1, t: "Who Are the Breeders Behind C.A.Gs?", href: "#about" },
+      { n: 2, t: "Which African Greys Are Available Now?", href: "#available-birds" },
+      { n: 3, t: "Fertile African Grey Eggs &amp; Breeding Pairs", href: "#eggs-pairs" },
+    ],
+  },
+  {
+    tag: "Part Two", title: "Choose your Grey",
+    items: [
+      { n: 4, t: "What Is a Congo African Grey?", href: "#congo" },
+      { n: 5, t: "What Is a Timneh African Grey?", href: "#timneh" },
+      { n: 6, t: "Congo, Timneh or Another Species?", href: "#compare-species" },
+    ],
+  },
+  {
+    tag: "Part Three", title: "Why families trust us",
+    items: [
+      { n: 7, t: "Why Do Families Choose C.A.Gs?", href: "#why-us" },
+      { n: 8, t: "How Is C.A.Gs Different From a Typical Seller?", href: "#trust" },
+      { n: 9, t: "Where Do African Greys Come From?", href: "#history" },
+      { n: 10, t: "How Does C.A.Gs Protect Your Bird's Health?", href: "#health" },
+    ],
+  },
+  {
+    tag: "Part Four", title: "Pricing, tools & buying",
+    items: [
+      { n: 11, t: "How Much Does an African Grey Cost?", href: "#pricing" },
+      { n: 12, t: "What Will the First Year Cost?", href: "#tools" },
+      { n: 13, t: "How Does C.A.Gs Ship to My State?", href: "#shipping" },
+      { n: 14, t: "What Do Past Buyers Say?", href: "#reviews" },
+      { n: 15, t: "Watch the Aviary on Video", href: "#video" },
+      { n: 16, t: "African Grey Questions, Answered", href: "#faq" },
+      { n: 17, t: "How Do I Reserve a Bird — Step by Step?", href: "#how-to-buy" },
+      { n: 18, t: "How Do I Reach C.A.Gs in Midland, TX?", href: "#contact" },
+    ],
+  },
+];
+---
+
+<nav class="toc-v3 py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
+  <div class="container mx-auto max-w-[1100px]">
+    <div class="rounded-[20px] border border-black/[0.07] bg-white px-6 py-7 md:px-12 md:py-10" style="box-shadow:0 10px 40px rgba(60,30,10,0.07);">
+
+      <!-- header -->
+      <div class="flex flex-col items-start justify-between gap-2 border-b-[1.5px] border-black/[0.07] pb-5 md:flex-row md:items-end md:pb-5">
+        <div>
+          <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">Inside this page</p>
+          <h2 class="font-lora mt-1.5 text-2xl font-bold leading-tight text-logo-dark md:text-3xl">
+            On This Page
+          </h2>
+        </div>
+        <p class="font-sora text-[13px] text-stone-500">18 sections · everything about C.A.Gs</p>
+      </div>
+
+      <!-- grouped parts -->
+      <div class="mt-7 grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+        {groups.map((g) => (
+          <div>
+            <div class="mb-2.5 flex items-baseline gap-2.5">
+              <span class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-clay">{g.tag}</span>
+              <span class="h-px flex-1 bg-black/[0.08]"></span>
+            </div>
+            <p class="font-lora mb-3 text-lg font-semibold italic text-green">{g.title}</p>
+            <ol class="space-y-0">
+              {g.items.map((it) => (
+                <li>
+                  <a href={it.href} class="grid grid-cols-[28px_1fr] items-baseline gap-1 rounded-lg py-1.5 transition-colors hover:bg-green/[0.05]">
+                    <span class="font-sora text-[13px] font-semibold text-clay-ink">{String(it.n).padStart(2, "0")}</span>
+                    <span class="font-sora text-[15px] leading-snug text-stone-700">{it.t}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</nav>

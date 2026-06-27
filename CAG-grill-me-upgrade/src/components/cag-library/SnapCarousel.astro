@@ -1,0 +1,118 @@
+---
+/**
+ * SnapCarousel — bird card section wrapper.
+ *
+ * Desktop (≥1025px): 3-column grid.
+ * Mobile (≤1024px): horizontal CSS snap-scroll carousel with pagination dots.
+ *
+ * Usage: wrap 3x BirdCard components (or any cards) in the default slot.
+ *
+ * @prop title — section heading
+ * @prop subtitle — optional descriptive text below heading
+ */
+export interface Props {
+  title?: string;
+  subtitle?: string;
+}
+const {
+  title = 'Birds Available Right Now',
+  subtitle,
+} = Astro.props;
+---
+
+<section class="snap-section">
+  <div class="snap-header">
+    {title && <h2 class="snap-title">{title}</h2>}
+    {subtitle && <p class="snap-sub">{subtitle}</p>}
+  </div>
+  <div class="snap-track" role="region" aria-label={title}>
+    <slot />
+  </div>
+  <div class="snap-dots" aria-hidden="true">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+</section>
+
+<style>
+.snap-section {
+  padding: 40px 0;
+}
+.snap-header {
+  padding: 0 48px 24px;
+}
+.snap-title {
+  font-family: var(--font-display, 'Lora', Georgia, serif);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
+  color: var(--text, #1c1a18);
+}
+.snap-sub {
+  color: var(--mid, #5a5248);
+  margin-top: 8px;
+  font-size: 1rem;
+}
+/* Desktop: 3-column grid */
+.snap-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 0 48px;
+}
+.snap-dots {
+  display: none;
+}
+
+/* Mobile: snap-scroll carousel */
+@media (max-width: 1024px) {
+  .snap-header {
+    padding: 0 20px 20px;
+  }
+  .snap-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding: 0 20px 16px;
+    scroll-padding-left: 20px;
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .snap-track::-webkit-scrollbar {
+    display: none;
+  }
+  /* Each direct child card snaps and is ~80vw wide */
+  .snap-track > :global(*) {
+    flex: 0 0 80vw;
+    max-width: 320px;
+    scroll-snap-align: start;
+  }
+  .snap-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding-bottom: 4px;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border, #ede5dc);
+    transition: background 0.2s, width 0.2s;
+  }
+  .dot.active {
+    background: var(--clay, #e8604c);
+    width: 18px;
+    border-radius: 3px;
+  }
+}
+@media (max-width: 480px) {
+  .snap-track > :global(*) {
+    flex: 0 0 88vw;
+  }
+}
+</style>

@@ -1,0 +1,100 @@
+---
+/**
+ * VideoSection — YouTube embed block.
+ *
+ * @prop variant — 'vertical' (text + portrait short) | 'cinematic' (16:9 hero) | 'playlist' (3-up grid)
+ */
+export interface VideoItem {
+  title: string;
+  duration: string;
+  views?: string;
+  agoLabel?: string;
+  thumbnail?: string;
+  url?: string;
+}
+export interface Props {
+  variant?: 'vertical' | 'cinematic' | 'playlist';
+  videos?: VideoItem[];
+  channelUrl?: string;
+}
+const {
+  variant = 'vertical',
+  channelUrl = 'https://youtube.com/@congoafricangreys',
+  videos = [
+    { title: 'Amie learns "good morning"',                       duration: '3:14', views: '2.3k views', agoLabel: '5 days ago' },
+    { title: 'Hand-feeding the November clutch (live)',          duration: '8:21', views: '1.1k views', agoLabel: '2 weeks ago' },
+    { title: 'How we ship: behind the scenes with Delta Cargo',  duration: '4:48', views: '5.7k views', agoLabel: '1 month ago' },
+  ],
+} = Astro.props;
+---
+
+<style>
+@media (max-width: 1024px) {
+  .video-stack { flex-direction: column !important; grid-template-columns: 1fr !important; }
+  .video-player { border-radius: 12px; width: 100%; }
+}
+</style>
+
+{variant === 'vertical' && (
+  <div class="video-stack grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <h3 class="font-display font-bold text-3xl leading-tight">See our birds <em class="text-clay">in action</em> — real video, not pretty stills.</h3>
+      <p class="text-mid mt-5 leading-relaxed">Our YouTube channel posts unedited weekly videos of every available chick — feeding, playing, learning new words.</p>
+      <a href={channelUrl} class="mt-6 inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 transition text-white rounded-full px-5 py-3 font-semibold text-[14px]">▶ Subscribe on YouTube</a>
+    </div>
+    <div class="video-player relative aspect-[9/16] max-w-[320px] mx-auto bg-panel rounded-3xl overflow-hidden cag-warm-shadow-lg">
+      <div class="absolute inset-0 cag-bird-ph opacity-80 flex items-center justify-center"><img src="/emoji/cag-congo.png" alt="" style="width:180px;height:180px;object-fit:contain;" loading="lazy" /></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+      <div class="absolute inset-0 grid place-items-center">
+        <div class="bg-red-600 rounded-2xl w-16 h-16 grid place-items-center text-white text-3xl">▶</div>
+      </div>
+    </div>
+  </div>
+)}
+
+{variant === 'cinematic' && (
+  <div class="bg-white rounded-3xl border border-line cag-warm-shadow overflow-hidden">
+    <div class="relative aspect-video bg-panel">
+      <div class="absolute inset-0 cag-bird-ph opacity-90 flex items-center justify-center"><img src="/emoji/cag-congo.png" alt="" style="width:280px;height:280px;object-fit:contain;" loading="lazy" /></div>
+      <div class="absolute inset-0 bg-gradient-to-tr from-black/50 via-transparent to-black/30"></div>
+      <div class="absolute inset-0 grid place-items-center">
+        <button class="bg-red-600 hover:bg-red-700 transition rounded-full w-20 h-20 grid place-items-center text-white text-4xl shadow-xl">▶</button>
+      </div>
+      <div class="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white">
+        <div>
+          <span class="cag-tag bg-red-600 rounded-full px-3 py-1.5">▶ YOUTUBE · 4:32</span>
+          <h3 class="font-display font-bold text-3xl mt-3">A morning at the aviary with Teri &amp; the chicks</h3>
+        </div>
+        <a href={channelUrl} class="hidden md:inline-block bg-white text-ink rounded-full px-5 py-2.5 font-semibold text-[13px] hover:bg-cream transition">View all videos →</a>
+      </div>
+    </div>
+  </div>
+)}
+
+{variant === 'playlist' && (
+  <div class="cag-hero-grad rounded-3xl border border-line p-10">
+    <div class="flex items-end justify-between flex-wrap gap-4 mb-6">
+      <div>
+        <div class="cag-tag text-clay">▶ FROM THE CHANNEL</div>
+        <h3 class="font-display font-bold text-3xl mt-2">Watch our birds before you reserve.</h3>
+      </div>
+      <a href={channelUrl} class="text-clay font-semibold underline decoration-2 underline-offset-4 text-[14px]">All videos →</a>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5">
+      {videos.map((v, i) => (
+        <article class="bg-white rounded-2xl cag-warm-shadow overflow-hidden hover:-translate-y-1 transition">
+          <div class="relative aspect-video cag-bird-ph">
+            <div class="absolute inset-0 flex items-center justify-center opacity-70" style={`filter: saturate(${[100,150,50][i % 3]}%)`}><img src="/emoji/cag-congo.png" alt="" style="width:100px;height:100px;object-fit:contain;" loading="lazy" /></div>
+            <div class="absolute inset-0 bg-black/20"></div>
+            <div class="absolute inset-0 grid place-items-center"><div class="bg-red-600 rounded-xl w-12 h-12 grid place-items-center text-white text-xl">▶</div></div>
+            <span class="absolute bottom-2 right-2 bg-black/70 text-white text-[11px] rounded px-2 py-0.5">{v.duration}</span>
+          </div>
+          <div class="p-4">
+            <h4 class="font-display font-bold text-[15px] leading-snug">{v.title}</h4>
+            <div class="text-[12px] text-mid mt-1">{v.views} · {v.agoLabel}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+)}
