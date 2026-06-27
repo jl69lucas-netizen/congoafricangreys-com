@@ -1,0 +1,61 @@
+---
+/**
+ * cag-blog-breeder-note — First-person E-E-A-T moat box.
+ * Clay left-border accent with cream background. Label is a styled
+ * <p> (not a heading) so it never disrupts the heading hierarchy.
+ * Body content via <slot/>.
+ *
+ * Usage:
+ *   <BreederNote>We raise every chick on Harrison's pellets…</BreederNote>
+ *   <BreederNote label="From our aviary">Custom label text here.</BreederNote>
+ */
+
+export interface Props {
+  /** Box label — defaults to 'C.A.Gs Breeder Note' */
+  label?: string;
+}
+
+const { label = 'C.A.Gs Breeder Note' } = Astro.props;
+---
+
+<aside class="cag-breeder-note" aria-label={label}>
+  <p class="cag-breeder-note__label font-sora">{label}</p>
+  <div class="cag-breeder-note__body font-sora">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .cag-breeder-note {
+    border-left: 4px solid #e8604c;
+    background: #fff9f6;
+    border-radius: 0 14px 14px 0;
+    padding: 1rem 1.25rem 1rem 1.25rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 10px rgba(60, 30, 10, .06);
+  }
+
+  .cag-breeder-note__label {
+    margin: 0 0 .5rem 0;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #b04228;
+  }
+
+  .cag-breeder-note__body {
+    margin: 0;
+    color: #3a2c22;
+    font-size: .975rem;
+    line-height: 1.65;
+  }
+
+  /* Allow <p> tags placed inside the slot to inherit spacing naturally */
+  .cag-breeder-note__body :global(p) {
+    margin: 0 0 .5rem 0;
+  }
+  .cag-breeder-note__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>
