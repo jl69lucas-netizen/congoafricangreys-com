@@ -69,12 +69,14 @@ Top Tier-1 commercial competitors from `data/competitors.json`, scraped via Fire
 
 ---
 
-## (d) Prioritized fix list (for a FUTURE content pass — not this plan)
+## (d) Prioritized fix list
 
-| # | Item | Page | Priority | Why |
-|---|---|---|---|---|
-| 1 | Add 2–3 natural "Congo/Timneh African Grey for sale" phrases to hub intro | hub | Low | Hub "for sale" density (7) is the cluster's lowest; aggregator can carry a bit more without stuffing |
-| 2 | One counter-snippet answering "cheap African Grey for sale" | hub or `/african-grey-parrot-price/` | Low | Defensively capture afrigrey's primary query while reinforcing anti-commodity stance |
-| — | Keyword/voice/heading rewrites | none | — | **All 7 pages verdict = STRONG; no rewrite warranted** |
+| # | Item | Page | Priority | Status | Why |
+|---|---|---|---|---|---|
+| 1 | Add 2–3 natural "Congo/Timneh African Grey for sale" phrases to hub intro | hub | Low | ✅ **DONE** (commit 30a48fd) | Hub "for sale" density was the cluster's lowest; added 2 natural intro phrases, no stuffing |
+| 2 | One counter-snippet answering "cheap African Grey for sale" | `/african-grey-parrot-price/` | Low | ✅ **DONE** (commit 30a48fd) | Added FAQ "Where can I find a cheap African Grey parrot for sale?" — visible accordion + FAQPage schema; reframes to honest all-in value, links to /available/ |
+| — | Keyword/voice/heading rewrites | none | — | n/a | **All 7 pages verdict = STRONG; no rewrite warranted** |
+
+> Separately (post-audit, commit 08087a8): Bery vs Amie H1/title/meta were de-duplicated by life-stage to kill same-sex/same-species cannibalization — not an audit-(d) item but resolved in the same session.
 
 **Bottom line:** the `/available/` cluster is keyword-healthy, voice-consistent, structurally compliant, and entity-deep in exactly the areas (CITES / DNA / captive-bred documentation) where every scraped competitor is empty. Only two low-priority, optional additions surfaced — both for a later content pass, neither blocking.
