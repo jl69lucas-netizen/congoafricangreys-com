@@ -1,0 +1,91 @@
+---
+/**
+ * cag-blog-comparison-table — Spec/comparison table (Min/Recommended/Ideal style)
+ * with an optional breeder-verdict footer row.
+ * Mobile: horizontal scroll wrapper keeps the table readable at ≤767px.
+ * Uses color literals — cag-design-system.css is not imported globally.
+ */
+export interface Row {
+  item: string;
+  values: string[];
+}
+
+export interface Props {
+  columns: string[];
+  rows: Row[];
+  verdict?: string;
+}
+
+const { columns, rows, verdict } = Astro.props;
+---
+<figure class="cag-blog-table">
+  <div class="cag-blog-table__scroll">
+    <table>
+      <thead>
+        <tr>{columns.map((c) => <th>{c}</th>)}</tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <th scope="row">{r.item}</th>
+            {r.values.map((v) => <td>{v}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  {verdict && (
+    <figcaption class="cag-blog-table__verdict">
+      <strong>Breeder verdict:</strong> {verdict}
+    </figcaption>
+  )}
+</figure>
+<style>
+  .cag-blog-table {
+    margin: 1.5rem 0;
+    border: 1px solid var(--border, #ede5dc);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .cag-blog-table__scroll {
+    overflow-x: auto;
+  }
+
+  .cag-blog-table table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;
+  }
+
+  .cag-blog-table th {
+    background: #2D6A4F;
+    color: #faf7f4;
+    text-align: left;
+    padding: .7rem .9rem;
+    font-weight: 600;
+  }
+
+  .cag-blog-table tbody th {
+    background: #fff9f6;
+    color: #3a2c22;
+  }
+
+  .cag-blog-table td {
+    padding: .7rem .9rem;
+    border-bottom: 1px solid var(--line, #ede5dc);
+    color: #5a5248;
+  }
+
+  .cag-blog-table tbody tr:nth-child(even) td {
+    background: #fff9f6;
+  }
+
+  .cag-blog-table__verdict {
+    padding: .8rem 1.1rem;
+    background: #fdeee9;
+    color: #8a3a28;
+    border-top: 1px solid var(--border, #ede5dc);
+  }
+</style>
