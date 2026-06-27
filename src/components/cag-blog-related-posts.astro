@@ -1,0 +1,119 @@
+---
+/**
+ * cag-blog-related-posts — Silo-cluster related post grid.
+ * Renders a configurable heading then a responsive 3-col → 1-col grid
+ * of linked post cards. Each card shows an optional category label
+ * and the post title. All links open same-tab (internal silo linking).
+ *
+ * Usage:
+ *   <RelatedPosts posts={[
+ *     { title: 'African Grey Cage Size Guide', slug: '/blog/african-grey-cage-size/', category: 'Care' },
+ *     { title: 'Congo vs Timneh: Which Grey?',  slug: '/congo-vs-timneh-african-grey/', category: 'Comparison' },
+ *     { title: 'Hand-Raised African Grey Parrots', slug: '/hand-raised-african-grey-parrot-for-sale/' },
+ *   ]} />
+ */
+
+export interface Post {
+  /** Post/page title */
+  title: string;
+  /** Absolute or root-relative URL — internal, same-tab */
+  slug: string;
+  /** Optional category label shown above the title */
+  category?: string;
+}
+
+export interface Props {
+  /** Section heading — defaults to 'Keep reading' */
+  heading?: string;
+  /** Heading level — defaults to h3 */
+  headingLevel?: 'h2' | 'h3' | 'h4';
+  /** Array of related post objects */
+  posts: Post[];
+}
+
+const { heading = 'Keep reading', headingLevel = 'h3', posts } = Astro.props;
+const Heading = headingLevel;
+---
+
+<nav class="cag-related-posts" aria-label={heading}>
+  <Heading class="cag-related-posts__heading font-lora">{heading}</Heading>
+  <ul class="cag-related-posts__grid" role="list">
+    {posts.map((post) => (
+      <li class="cag-related-posts__item">
+        <a href={post.slug} class="cag-related-posts__card font-sora">
+          {post.category && (
+            <span class="cag-related-posts__category">{post.category}</span>
+          )}
+          <span class="cag-related-posts__title">{post.title}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .cag-related-posts {
+    margin: 2rem 0;
+  }
+
+  .cag-related-posts__heading {
+    font-size: 1.25rem;
+    color: #3a2c22;
+    margin: 0 0 1rem 0;
+  }
+
+  .cag-related-posts__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .cag-related-posts__item {
+    display: contents;
+  }
+
+  .cag-related-posts__card {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    padding: 1rem 1.1rem;
+    background: #fff;
+    border: 1px solid var(--border, #ede5dc);
+    border-radius: 14px;
+    text-decoration: none;
+    transition: box-shadow 0.18s, transform 0.18s;
+  }
+
+  .cag-related-posts__card:hover {
+    box-shadow: 0 6px 20px rgba(60, 30, 10, .1);
+    transform: translateY(-2px);
+  }
+
+  .cag-related-posts__category {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #b04228;
+  }
+
+  .cag-related-posts__title {
+    font-size: .95rem;
+    font-weight: 600;
+    color: #3a2c22;
+    line-height: 1.4;
+  }
+
+  .cag-related-posts__card:hover .cag-related-posts__title {
+    color: #2D6A4F;
+  }
+
+  @media (max-width: 640px) {
+    .cag-related-posts__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
