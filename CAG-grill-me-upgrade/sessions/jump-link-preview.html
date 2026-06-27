@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAG Homepage — Jump Link Design Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --clay:    #e8604c;
+    --green:   #2D6A4F;
+    --cream:   #faf7f4;
+    --dark:    #1c1a18;
+    --border:  #ede5dc;
+    --shadow:  0 4px 24px rgba(60,30,10,0.09);
+    --radius:  20px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Sora', sans-serif;
+    background: #f0ebe5;
+    color: #2a2420;
+    padding: 0 0 80px;
+  }
+
+  /* ── PAGE HEADER ─────────────────────────────── */
+  .page-header {
+    background: var(--green);
+    color: #fff;
+    padding: 36px 40px;
+    text-align: center;
+  }
+  .page-header h1 {
+    font-family: 'Lora', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .page-header p { font-size: 14px; opacity: 0.8; }
+
+  /* ── OPTION WRAPPER ──────────────────────────── */
+  .option-block {
+    max-width: 1160px;
+    margin: 48px auto 0;
+    padding: 0 24px;
+  }
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .option-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--clay);
+    color: #fff;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 50px;
+  }
+  .option-title {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .option-desc {
+    font-size: 13px;
+    color: #6b5f58;
+    margin-left: auto;
+  }
+  .rec-badge {
+    background: var(--green);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 50px;
+    flex-shrink: 0;
+  }
+  .option-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .mock-hero {
+    background: var(--green);
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mock-hero span {
+    color: rgba(255,255,255,0.45);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .option-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #8a7b72;
+    padding: 0 4px;
+  }
+  .section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 24px;
+  }
+
+  /* ═══════════════════════════════════════════════
+     OPTION A — STICKY SCROLLSPY PILL BAR
+     Based on cag-jump-nav.astro
+  ══════════════════════════════════════════════════ */
+  .jump-a {
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 24px;
+  }
+  .jump-a-inner {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: 1100px;
+    margin: 0 auto;
+    white-space: nowrap;
+  }
+  .jump-a-inner::-webkit-scrollbar { display: none; }
+  .jump-a-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5a5248;
+    padding: 7px 15px;
+    border-radius: 50px;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+    border: 1.5px solid transparent;
+  }
+  .jump-a-link:hover {
+    background: #f0e8e4;
+    color: var(--clay);
+  }
+  .jump-a-link.active {
+    background: var(--clay);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(232,96,76,0.28);
+  }
+  .jump-a-demo-sections {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .jump-a-section {
+    padding: 18px 0;
+    border-bottom: 1px solid #f0e8e4;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .jump-a-section:last-child { border-bottom: none; }
+  .jump-a-section-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--clay);
+    background: rgba(232,96,76,0.09);
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .jump-a-section-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2a2420;
+  }
+  .jump-a-section-name small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: #8a7b72;
+    margin-top: 1px;
+  }
+  .jump-a-context {
+    font-size: 11px;
+    color: #aaa;
+    margin-left: auto;
+    font-style: italic;
+  }
+
+  /* ═══════════════════════════════════════════════
+     OPTION B — SECTION DIVIDER BOTTOM LINKS
+     "Next: [Name] →" arrows at the bottom of each section
+  ══════════════════════════════════════════════════ */
+  .jump-b-section {
+    padding: 28px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .jump-b-section:last-child { border-bottom: none; }
+  .jump-b-section-content {
+    background: linear-gradient(135deg, rgba(45,106,79,0.04) 0%, rgba(255,255,255,0) 60%);
+    border: 1px solid #ede5dc;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .section-heading {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.3;
+  }
+  .section-subline {
+    font-size: 12px;
+    color: #8a7b72;
+    margin-top: 2px;
+  }
+  /* The actual jump link row */
+  .jump-b-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .jump-b-prev {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8a7b72;
+    text-decoration: none;
+    padding: 7px 14px;
+    border: 1.5px solid #e8ddd8;
+    border-radius: 50px;
+    transition: all 0.15s;
+  }
+  .jump-b-prev:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(45,106,79,0.05);
+  }
+  .jump-b-next {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--clay);
+    text-decoration: none;
+    padding: 8px 18px;
+    background: rgba(232,96,76,0.08);
+    border: 1.5px solid rgba(232,96,76,0.25);
+    border-radius: 50px;
+    transition: all 0.15s;
+    margin-left: auto;
+  }
+  .jump-b-next:hover {
+    background: var(--clay);
+    color: #fff;
+    border-color: var(--clay);
+    box-shadow: 0 4px 12px rgba(232,96,76,0.3);
+  }
+  .jump-b-next .arrow { font-size: 14px; }
+  .jump-b-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .jump-b-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #e0d8d2;
+  }
+  .jump-b-dot.cur { background: var(--clay); width: 18px; border-radius: 4px; }
+  .jump-b-dot.done { background: var(--green); }
+
+  /* ═══════════════════════════════════════════════
+     OPTION C — FLOATING PROGRESS SIDEBAR + IN-SECTION ANCHORS
+     Fixed right-rail on desktop, top bar on mobile
+  ══════════════════════════════════════════════════ */
+  .jump-c-wrapper {
+    display: flex;
+    gap: 0;
+    position: relative;
+    min-height: 580px;
+  }
+  .jump-c-content {
+    flex: 1;
+    padding: 32px 40px;
+    border-right: 1px solid var(--border);
+  }
+  .jump-c-section {
+    padding: 18px 0;
+    border-bottom: 1px dashed #f0e8e4;
+  }
+  .jump-c-section:last-child { border-bottom: none; }
+  .jump-c-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 4px;
+  }
+  .jump-c-section-title {
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+  .jump-c-section-body {
+    font-size: 12px;
+    color: #8a7b72;
+    line-height: 1.6;
+  }
+
+  /* The sidebar */
+  .jump-c-rail {
+    width: 200px;
+    flex-shrink: 0;
+    background: #faf7f4;
+    padding: 24px 16px;
+    border-left: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: fit-content;
+    max-height: 580px;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .jump-c-rail::-webkit-scrollbar { display: none; }
+  .jump-c-rail-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .jump-c-rail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 5px 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .jump-c-rail-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4px;
+    flex-shrink: 0;
+  }
+  .jump-c-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 2px solid #c8bdb8;
+    background: #fff;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .jump-c-rail-item.active .jump-c-dot {
+    background: var(--clay);
+    border-color: var(--clay);
+    box-shadow: 0 0 0 3px rgba(232,96,76,0.18);
+    width: 10px; height: 10px;
+  }
+  .jump-c-rail-item.done .jump-c-dot {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .jump-c-connector {
+    width: 2px;
+    height: 28px;
+    background: #e5ddd8;
+    margin: 2px 0;
+  }
+  .jump-c-rail-item.done .jump-c-connector { background: var(--green); opacity: 0.4; }
+  .jump-c-rail-text {
+    font-size: 11px;
+    font-weight: 500;
+    color: #8a7b72;
+    line-height: 1.35;
+    padding-top: 1px;
+    transition: color 0.15s;
+  }
+  .jump-c-rail-item.active .jump-c-rail-text {
+    color: var(--clay);
+    font-weight: 700;
+  }
+  .jump-c-rail-item.done .jump-c-rail-text { color: var(--green); }
+  .jump-c-part-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #b5a9a2;
+    padding: 10px 0 4px 18px;
+  }
+
+  /* Back-to-top + quick jump in section footer */
+  .jump-c-section-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 12px;
+  }
+  .jump-c-top-link {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8a7b72;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .jump-c-top-link:hover { color: var(--clay); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>CAG Homepage — Jump Link Navigation: 3 Design Options</h1>
+  <p>Each design uses the actual homepage section list (18 sections). Pick one and we'll build it.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     OPTION A — STICKY SCROLL-SPY PILL BAR
+════════════════════════════════════════════════ -->
+<div class="option-block">
+  <div class="option-label">
+    <span class="option-badge">Option A</span>
+    <span class="option-title">Sticky Scroll-Spy Pill Bar</span>
+    <span class="option-desc">Horizontal scrolling pills, fixed just below the navbar — quick access to any section at any scroll depth</span>
+  </div>
+  <div class="option-card">
+    <div class="mock-hero"><span>↑ Hero section above</span></div>
+
+    <!-- THE JUMP NAV -->
+    <nav class="jump-a" aria-label="Page sections">
+      <div class="jump-a-inner">
+        <a href="#" class="jump-a-link active">Available Birds</a>
+        <a href="#" class="jump-a-link">Eggs & Pairs</a>
+        <a href="#" class="jump-a-link">Congo Grey</a>
+        <a href="#" class="jump-a-link">Timneh Grey</a>
+        <a href="#" class="jump-a-link">Compare</a>
+        <a href="#" class="jump-a-link">Why C.A.Gs</a>
+        <a href="#" class="jump-a-link">vs Scammers</a>
+        <a href="#" class="jump-a-link">History</a>
+        <a href="#" class="jump-a-link">Health</a>
+        <a href="#" class="jump-a-link">Pricing</a>
+        <a href="#" class="jump-a-link">Cost Tools</a>
+        <a href="#" class="jump-a-link">Shipping</a>
+        <a href="#" class="jump-a-link">Reviews</a>
+        <a href="#" class="jump-a-link">Blog</a>
+        <a href="#" class="jump-a-link">Video</a>
+        <a href="#" class="jump-a-link">FAQ</a>
+        <a href="#" class="jump-a-link">How to Buy</a>
+        <a href="#" class="jump-a-link">Contact</a>
+      </div>
+    </nav>
+
+    <!-- show a few mock sections to demo the experience -->
+    <div class="jump-a-demo-sections">
+      <div class="jump-a-section">
+        <div class="jump-a-section-num">01</div>
+        <div class="jump-a-section-name">Available Birds<small>Active pill highlights as you scroll</small></div>
+        <span class="jump-a-context">← pill = clay active</span>
+      </div>
+      <div class="jump-a-section">
+        <div class="jump-a-section-num">02</div>
+        <div class="jump-a-section-name">Eggs & Breeding Pairs<small>Pill scrolls horizontally on mobile</small></div>
+        <span class="jump-a-context">← pill = inactive</span>
+      </div>
+      <div class="jump-a-section">
+        <div class="jump-a-section-num">03</div>
+        <div class="jump-a-section-name">Congo African Grey<small>One-click from any scroll depth</small></div>
+        <span class="jump-a-context">← pill = inactive</span>
+      </div>
+      <div class="jump-a-section">
+        <div class="jump-a-section-num">...</div>
+        <div class="jump-a-section-name">15 more sections below<small>Bar stays visible at top of viewport throughout</small></div>
+        <span class="jump-a-context">always visible</span>
+      </div>
+    </div>
+  </div>
+  <p class="option-note">Placement: right after the hero, position:sticky top:72px. Scroll-spy highlights current section pill in clay. Mobile: horizontal scroll with hidden scrollbar. Exact code: <code>src/components/cag-jump-nav.astro</code></p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     OPTION B — SECTION DIVIDER BOTTOM LINKS
+════════════════════════════════════════════════ -->
+<div class="option-block" style="margin-top: 56px;">
+  <div class="option-label">
+    <span class="option-badge">Option B</span>
+    <span class="option-title">Section-Bottom "Next →" Links</span>
+    <span class="option-desc">Prev / dots / Next strip at the bottom of every section — progressive, guided reading flow</span>
+  </div>
+  <div class="option-card">
+    <div class="mock-hero"><span>↑ Hero section above</span></div>
+
+    <!-- SECTION 1 with bottom jump -->
+    <div class="jump-b-section">
+      <div class="jump-b-section-content">
+        <span class="section-icon">✅</span>
+        <div>
+          <div class="section-heading">Available Birds — Congo &amp; Timneh African Greys</div>
+          <div class="section-subline">Section content here...</div>
+        </div>
+      </div>
+      <div class="jump-b-nav">
+        <!-- no prev on first -->
+        <div class="jump-b-dots">
+          <div class="jump-b-dot done"></div>
+          <div class="jump-b-dot cur"></div>
+          <div class="jump-b-dot"></div>
+          <div class="jump-b-dot"></div>
+          <div class="jump-b-dot"></div>
+          <div class="jump-b-dot"></div>
+        </div>
+        <a href="#" class="jump-b-next">
+          Next: Eggs &amp; Breeding Pairs <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- SECTION 2 with bottom jump -->
+    <div class="jump-b-section">
+      <div class="jump-b-section-content">
+        <span class="section-icon">🥚</span>
+        <div>
+          <div class="section-heading">Fertile African Grey Eggs &amp; Breeding Pairs</div>
+          <div class="section-subline">Section content here...</div>
+        </div>
+      </div>
+      <div class="jump-b-nav">
+        <a href="#" class="jump-b-prev">← Back: Available Birds</a>
+        <div class="jump-b-dots">
+          <div class="jump-b-dot done"></div>
+          <div class="jump-b-dot done"></div>
+          <div class="jump-b-dot cur"></div>
+          <div class="jump-b-dot"></div>
+          <div class="jump-b-dot"></div>
+          <div class="jump-b-dot"></div>
+        </div>
+        <a href="#" class="jump-b-next">
+          Next: Congo African Grey <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- SECTION 3 with bottom jump -->
+    <div class="jump-b-section">
+      <div class="jump-b-section-content">
+        <span class="section-icon">📋</span>
+        <div>
+          <div class="section-heading">What Is a Congo African Grey — the Classic Red-Tailed Talker?</div>
+          <div class="section-subline">Section content here...</div>
+        </div>
+      </div>
+      <div class="jump-b-nav">
+        <a href="#" class="jump-b-prev">← Back: Eggs &amp; Pairs</a>
+        <div class="jump-b-dots">
+          <div class="jump-b-dot done"></div>
+          <div class="jump-b-dot done"></div>
+          <div class="jump-b-dot done"></div>
+          <div class="jump-b-dot cur"></div>
+          <div class="jump-b-dot"></div>
+          <div class="jump-b-dot"></div>
+        </div>
+        <a href="#" class="jump-b-next">
+          Next: Timneh African Grey <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div style="padding:16px 40px; background:#faf7f4; border-top:1px solid #ede5dc;">
+      <p style="font-size:12px; color:#8a7b72; text-align:center;">Pattern continues through all 18 sections — ← Prev / progress dots / Next → at the bottom of each</p>
+    </div>
+  </div>
+  <p class="option-note">Placement: rendered inside every section as its bottom footer. Progress dots (filled green = done, clay bar = current, hollow = upcoming). No JS required — pure HTML anchor links. Prev hidden on Section 1.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     OPTION C — FLOATING PROGRESS SIDEBAR
+════════════════════════════════════════════════ -->
+<div class="option-block" style="margin-top: 56px;">
+  <div class="option-label">
+    <span class="option-badge">Option C</span>
+    <span class="option-title">Floating Progress Sidebar Rail</span>
+    <span class="option-desc">Fixed right-side dot rail shows all 18 sections with scroll-spy — reader always knows where they are</span>
+    <span class="rec-badge">★ Recommended</span>
+  </div>
+  <div class="option-card">
+    <div class="mock-hero"><span>↑ Hero section above</span></div>
+
+    <div class="jump-c-wrapper">
+      <!-- main page content -->
+      <div class="jump-c-content">
+        <div class="jump-c-section">
+          <div class="jump-c-section-label">Section 07 of 18</div>
+          <div class="jump-c-section-title">Available Birds — Congo &amp; Timneh African Greys</div>
+          <div class="jump-c-section-body">Section content fills this area. The sidebar rail on the right shows all 18 sections with the current one highlighted in clay. Completed sections turn green. Still-to-come sections are hollow.</div>
+          <div class="jump-c-section-footer">
+            <a href="#" class="jump-c-top-link">↑ Back to top</a>
+          </div>
+        </div>
+
+        <div class="jump-c-section">
+          <div class="jump-c-section-label">Section 08 of 18</div>
+          <div class="jump-c-section-title">Fertile African Grey Eggs &amp; Breeding Pairs</div>
+          <div class="jump-c-section-body">Content section. The sidebar stays fixed as the user scrolls, so they can always click any section from anywhere on the page without scrolling back up.</div>
+          <div class="jump-c-section-footer">
+            <a href="#" class="jump-c-top-link">↑ Back to top</a>
+          </div>
+        </div>
+
+        <div class="jump-c-section">
+          <div class="jump-c-section-label">Section 09 of 18</div>
+          <div class="jump-c-section-title">What Is a Congo African Grey — the Classic Red-Tailed Talker?</div>
+          <div class="jump-c-section-body">Sidebar collapses to a compact progress bar on mobile (&lt;768px) that appears at the top of the page. Dots only, no labels.</div>
+          <div class="jump-c-section-footer">
+            <a href="#" class="jump-c-top-link">↑ Back to top</a>
+          </div>
+        </div>
+
+        <div style="padding:18px 0; text-align:center; color:#aaa; font-size:12px; font-style:italic;">
+          ↓ more sections continue below...
+        </div>
+      </div>
+
+      <!-- THE SIDEBAR RAIL -->
+      <nav class="jump-c-rail" aria-label="Page progress">
+        <div class="jump-c-rail-title">On this page</div>
+
+        <div class="jump-c-part-label">Part One</div>
+
+        <a href="#" class="jump-c-rail-item done">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Who Are the Breeders?</span>
+        </a>
+        <a href="#" class="jump-c-rail-item done">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Counter Stats</span>
+        </a>
+        <a href="#" class="jump-c-rail-item done">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Key Takeaways</span>
+        </a>
+        <a href="#" class="jump-c-rail-item done">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">In This Page (TOC)</span>
+        </a>
+
+        <div class="jump-c-part-label">Part Two</div>
+
+        <a href="#" class="jump-c-rail-item done">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Owner Card</span>
+        </a>
+        <a href="#" class="jump-c-rail-item done">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Buyer Review #1</span>
+        </a>
+        <a href="#" class="jump-c-rail-item active">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Available Birds</span>
+        </a>
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Eggs &amp; Pairs</span>
+        </a>
+
+        <div class="jump-c-part-label">Part Three</div>
+
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Congo Grey</span>
+        </a>
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Timneh Grey</span>
+        </a>
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Compare Species</span>
+        </a>
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Why C.A.Gs</span>
+        </a>
+
+        <div class="jump-c-part-label">Part Four</div>
+
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">vs Scammers</span>
+        </a>
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">History &amp; Origin</span>
+        </a>
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Health &amp; Guarantee</span>
+        </a>
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Pricing</span>
+        </a>
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+            <div class="jump-c-connector"></div>
+          </div>
+          <span class="jump-c-rail-text">Cost Tools</span>
+        </a>
+        <a href="#" class="jump-c-rail-item">
+          <div class="jump-c-rail-line">
+            <div class="jump-c-dot"></div>
+          </div>
+          <span class="jump-c-rail-text">Contact</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+  <p class="option-note">Placement: fixed right side of viewport (position:fixed, right:0, centered vertically). Dot = done (green fill) / active (clay + glow ring) / upcoming (hollow). Label truncated to ~20 chars. Collapses to compact dot-only progress pill on mobile. Requires ~30 lines of IntersectionObserver JS for scroll-spy.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     RECOMMENDATION SUMMARY
+════════════════════════════════════════════════ -->
+<div class="option-block" style="margin-top: 56px;">
+  <div style="background: var(--green); color: #fff; border-radius: 20px; padding: 32px 40px;">
+    <div style="font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; opacity:0.7; margin-bottom:8px;">Recommendation</div>
+    <h2 style="font-family:'Lora',serif; font-size:22px; font-weight:700; margin-bottom:12px;">★ Option C — Floating Progress Sidebar</h2>
+    <p style="font-size:13px; line-height:1.7; opacity:0.9; max-width:680px;">
+      The sidebar rail is the strongest UX choice for a long-form 25-section homepage. It shows every section at a glance, tells the reader where they are at all times (green = read, clay = current), and never competes with content space. On mobile it collapses to a compact dot-only progress indicator at the top. It's also an SEO trust signal — organized, navigable pages reduce bounce rate. <br><br>
+      Option A (sticky pills) is the simplest to build but costs vertical screen space on every scroll. Option B (section footer arrows) is great for linear readers but doesn't give random-access across 25 sections. Option C does both.
+    </p>
+    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+      <span style="background:rgba(255,255,255,0.15); border-radius:50px; padding:5px 14px; font-size:11px; font-weight:600;">No content space stolen</span>
+      <span style="background:rgba(255,255,255,0.15); border-radius:50px; padding:5px 14px; font-size:11px; font-weight:600;">Always-visible progress</span>
+      <span style="background:rgba(255,255,255,0.15); border-radius:50px; padding:5px 14px; font-size:11px; font-weight:600;">Random-access any section</span>
+      <span style="background:rgba(255,255,255,0.15); border-radius:50px; padding:5px 14px; font-size:11px; font-weight:600;">Mobile-friendly collapse</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

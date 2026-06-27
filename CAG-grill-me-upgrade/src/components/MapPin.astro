@@ -1,0 +1,33 @@
+---
+/**
+ * MapPin — forest-green brand map marker overlaid on a Google iframe embed.
+ * Usage: place <MapPin /> as a child of a `.cag-map-wrap` element that wraps
+ * the map <iframe>. The teardrop tip sits at the map's center point, covering
+ * Google's default red marker so the location reads in brand color. The free
+ * `output=embed` iframe can't recolor its own pin, so this overlay is the
+ * no-API-key way to match a custom-pin look. Decorative (aria-hidden); does
+ * not capture pointer events, so the underlying map stays fully interactive.
+ * Note: the pin is anchored to map-center, so it does not follow if a visitor
+ * drags the map — intended for a fixed "here we are" location embed.
+ */
+---
+<span class="cag-map-pin" aria-hidden="true">
+  <svg width="34" height="45" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="C.A.Gs location — Midland, TX">
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 20 12 20s12-11 12-20C24 5.373 18.627 0 12 0z" fill="#2D6A4F" />
+    <circle cx="12" cy="12" r="4.6" fill="#ffffff" />
+  </svg>
+</span>
+
+<style is:global>
+  .cag-map-wrap { position: relative; }
+  .cag-map-wrap .cag-map-pin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+    z-index: 2;
+    line-height: 0;
+    filter: drop-shadow(0 3px 4px rgba(60, 30, 10, 0.45));
+  }
+</style>

@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CTA from '../../components/CTA.astro';
+
+const title = "Male African Grey Parrots for Sale NYC NY | Ships to New York";
+const description = "Male African Grey parrots for sale — ships to New York City and all of NY state. CITES documented, DNA sexed male Congo and Timneh African Greys from USDA licensed breeders.";
+const canonical = "https://congoafricangreys.com/buy-male-african-gray-birds-for-sale-nyc-ny/";
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Grey Parrots for Sale — New York", url: "/african-grey-parrot-for-sale-new-york/" },
+  { name: "Male African Greys — NYC, NY", url: "/buy-male-african-gray-birds-for-sale-nyc-ny/" },
+];
+
+const faqs = [
+  {
+    q: "Do male African Greys talk more than females?",
+    a: "Both male and female African Greys are equally capable talkers — sex does not determine talking ability. Talking is driven by socialization, training consistency, and individual personality. DNA sexing confirms the sex of your bird, but don't choose based on talking expectations alone.",
+  },
+  {
+    q: "How are birds shipped to New York City?",
+    a: "Birds ship IATA-compliant to JFK, LaGuardia, or Newark (EWR) — whichever is most convenient for you. You pick up at the cargo facility on the same day the bird arrives. We coordinate the exact arrival window with you in advance.",
+  },
+  {
+    q: "What does DNA sexed mean?",
+    a: "DNA sexing uses a feather or blood sample to definitively determine sex from genetic material. It is 99.9% accurate and provides a certificate. Visual sexing of African Greys is unreliable — all our birds are DNA sexed before sale.",
+  },
+  {
+    q: "Are there African Grey breeders in New York?",
+    a: "There are some breeders in New York, but the availability of USDA AWA licensed breeders with verified CITES documentation is limited. We ship IATA-compliant directly to NYC-area airports from Midland, TX — the bird arrives the same day it ships with all required documentation.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div style="max-width:1200px;margin:0 auto;">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section style="background:#2D6A4F;padding:4rem 1rem">
+    <div style="max-width:900px;margin:0 auto;text-align:center">
+      <p style="color:#f0c674;font-family:var(--font-sora,sans-serif);font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem">Ships to JFK · LaGuardia · Newark · USDA AWA Licensed</p>
+      <h1 style="font-family:var(--font-lora,serif);font-weight:700;font-size:clamp(2rem,5vw,3rem);color:#faf7f4;margin-bottom:1rem">Male African Grey Parrots for Sale — NYC, New York</h1>
+      <p style="color:rgba(250,247,244,.8);font-size:1.1rem;max-width:680px;margin:0 auto 2rem">DNA-sexed male Congo and Timneh African Greys, CITES documented, IATA live-shipped to New York City area airports from USDA AWA licensed breeders.</p>
+      <a href="/contact-us/" style="display:inline-block;background:#e8604c;color:white;font-family:var(--font-sora,sans-serif);font-weight:700;padding:.875rem 2rem;border-radius:50px;text-decoration:none;font-size:1rem">Inquire About Available Birds →</a>
+    </div>
+  </section>
+
+  <section style="padding:3rem 1rem;background:#faf7f4">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.5rem;color:#2D6A4F;margin-bottom:1rem">Shipping to New York</h2>
+      <p style="color:#374151;line-height:1.7;max-width:70ch;margin-bottom:1rem">We ship live to all three major NYC-area airports: JFK, LaGuardia (LGA), and Newark (EWR). You pick up from the airline cargo facility the same day the bird arrives. Our birds travel in temperature-controlled, IATA-approved shipping containers on direct-route flights — no connections.</p>
+      <p style="color:#374151;line-height:1.7;max-width:70ch">All birds ship with a vet health certificate dated within 10 days of shipping — required by New York state for live animal importation.</p>
+    </div>
+  </section>
+
+  <section style="padding:4rem 1rem;background:white">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.75rem;color:#2D6A4F;margin-bottom:2rem">Questions About Male African Greys in New York</h2>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        {faqs.map((faq) => (
+          <details style="background:#faf7f4;border:1px solid #e7e2db;border-radius:12px;padding:1.25rem">
+            <summary style="font-family:var(--font-sora,sans-serif);font-weight:600;cursor:pointer;color:#1f2937;list-style:none">{faq.q}</summary>
+            <p style="margin-top:.75rem;color:#4b5563;line-height:1.7;max-width:70ch">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

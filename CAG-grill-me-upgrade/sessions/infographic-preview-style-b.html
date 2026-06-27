@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Style B — Breeding Lifecycle Timeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #e5e0d8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Sora', sans-serif;
+      padding: 40px 16px;
+      gap: 12px;
+    }
+
+    .preview-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #666;
+    }
+
+    /* ─── SHELL ─── */
+    .infographic {
+      width: 100%;
+      max-width: 480px;
+      height: 400px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 28px rgba(60,30,10,0.18);
+      display: flex;
+      flex-direction: column;
+      background: #faf7f4;
+    }
+
+    /* ─── HEADER (54px) ─── */
+    .header {
+      height: 54px;
+      flex-shrink: 0;
+      background: #2D6A4F;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+    }
+
+    .header__left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header__title {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .header__sub {
+      font-size: 9.5px;
+      color: rgba(255,255,255,0.65);
+      font-weight: 600;
+      letter-spacing: 0.4px;
+    }
+
+    .header__tag {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #2D6A4F;
+      background: rgba(255,255,255,0.92);
+      padding: 3px 9px;
+      border-radius: 50px;
+    }
+
+    /* ─── INTRO ROW (38px) ─── */
+    .intro-row {
+      height: 38px;
+      flex-shrink: 0;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      border-bottom: 1px solid rgba(45,106,79,0.10);
+      gap: 8px;
+    }
+
+    .intro-row__icon {
+      font-size: 14px;
+    }
+
+    .intro-row__text {
+      font-size: 10px;
+      color: #444;
+      line-height: 1.35;
+    }
+
+    .intro-row__text strong {
+      color: #2D6A4F;
+      font-weight: 700;
+    }
+
+    /* ─── TIMELINE BODY (flex: 1 ~252px) ─── */
+    .timeline {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 12px 18px 10px;
+      position: relative;
+    }
+
+    /* vertical connector line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 36px;
+      top: 22px;
+      bottom: 22px;
+      width: 2px;
+      background: linear-gradient(to bottom, #2D6A4F, rgba(45,106,79,0.15));
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step__bubble {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      border: 2px solid #2D6A4F;
+      background: #fff;
+    }
+
+    .step__bubble--active {
+      background: #2D6A4F;
+    }
+
+    .step__bubble--active span {
+      filter: brightness(10);
+    }
+
+    .step__content {
+      flex: 1;
+      padding-top: 4px;
+    }
+
+    .step__title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1a1a2e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step__duration {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #e8604c;
+      background: #fff5f5;
+      border: 1px solid rgba(232,96,76,0.25);
+      padding: 1px 6px;
+      border-radius: 50px;
+    }
+
+    .step__desc {
+      font-size: 9.5px;
+      color: #666;
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    /* ─── FOOTER BAR (56px) ─── */
+    .footer-bar {
+      height: 56px;
+      flex-shrink: 0;
+      background: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .footer-stat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      position: relative;
+    }
+
+    .footer-stat + .footer-stat::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .footer-stat__num {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: #e8604c;
+      line-height: 1;
+    }
+
+    .footer-stat__label {
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="preview-label">Style B — Breeding Lifecycle Timeline · 400px · Test Only</p>
+
+  <div class="infographic">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header__left">
+        <span class="header__title">African Grey Breeding Journey</span>
+        <span class="header__sub">From clutch to your home — what to expect</span>
+      </div>
+      <span class="header__tag">CAG · TAG</span>
+    </div>
+
+    <!-- INTRO ROW -->
+    <div class="intro-row">
+      <span class="intro-row__icon">📅</span>
+      <span class="intro-row__text">Total journey: <strong>5–6 months</strong> from first egg to weaned, socialized bird ready for adoption.</span>
+    </div>
+
+    <!-- TIMELINE STEPS -->
+    <div class="timeline">
+
+      <div class="step">
+        <div class="step__bubble step__bubble--active"><span>🥚</span></div>
+        <div class="step__content">
+          <div class="step__title">
+            Clutch Laid
+            <span class="step__duration">Day 0</span>
+          </div>
+          <div class="step__desc">2–4 eggs laid, 2–3 days apart. Incubation begins immediately by both parents.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__bubble step__bubble--active"><span>🔆</span></div>
+        <div class="step__content">
+          <div class="step__title">
+            Incubation Period
+            <span class="step__duration">28 days</span>
+          </div>
+          <div class="step__desc">Eggs candled at day 7 and 14 to confirm fertility. Humidity and temperature monitored daily.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__bubble"><span>🐣</span></div>
+        <div class="step__content">
+          <div class="step__title">
+            First Hatch
+            <span class="step__duration">Week 4</span>
+          </div>
+          <div class="step__desc">Chick pips and hatches over 24–48 hrs. Pin feathers emerge at 2–3 weeks. Eyes open at 3 weeks.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__bubble"><span>🍼</span></div>
+        <div class="step__content">
+          <div class="step__title">
+            Hand-Feeding &amp; Socialization
+            <span class="step__duration">8–12 wks</span>
+          </div>
+          <div class="step__desc">Fed 3–4× daily. Handled from day 14 to build human bond. Vocabulary exposure begins.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__bubble"><span>✅</span></div>
+        <div class="step__content">
+          <div class="step__title">
+            Weaned &amp; Ready
+            <span class="step__duration">12–16 wks</span>
+          </div>
+          <div class="step__desc">DNA sexed, avian vet cleared, CITES documentation issued. Available to approved homes.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER STATS BAR -->
+    <div class="footer-bar">
+      <div class="footer-stat">
+        <span class="footer-stat__num">28</span>
+        <span class="footer-stat__label">Day Incubation</span>
+      </div>
+      <div class="footer-stat">
+        <span class="footer-stat__num">16 wks</span>
+        <span class="footer-stat__label">To Wean</span>
+      </div>
+      <div class="footer-stat">
+        <span class="footer-stat__num">2–4</span>
+        <span class="footer-stat__label">Eggs / Clutch</span>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

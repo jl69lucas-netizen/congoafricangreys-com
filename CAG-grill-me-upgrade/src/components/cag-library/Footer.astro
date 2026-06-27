@@ -1,0 +1,180 @@
+---
+/**
+ * Footer — site footer.
+ *
+ * @prop variant — 'dark' (full sitemap) | 'cream' (condensed with newsletter) | 'slim' (single bar)
+ */
+export interface FooterLink { label: string; href: string; }
+export interface FooterColumn { heading: string; links: FooterLink[]; }
+export interface Props {
+  variant?: 'dark' | 'cream' | 'slim';
+  brand?: string;
+  description?: string;
+  columns?: FooterColumn[];
+  phone?: string;
+  email?: string;
+  address?: string;
+  hours?: string;
+  copyright?: string;
+  legal?: FooterLink[];
+}
+const {
+  variant = 'dark',
+  brand = 'CongoAfricanGreys',
+  description = 'A small family aviary in Midland, Texas. Captive-bred African Greys, hand-fed and weaned by Mark & Teri since 2014.',
+  columns = [
+    { heading: 'OUR BIRDS', links: [
+      { label: 'Available now',  href: '#' },
+      { label: 'Reserved birds', href: '#' },
+      { label: 'Parent pairs',   href: '#' },
+      { label: 'Past placements', href: '#' },
+      { label: 'Waitlist',       href: '#' },
+    ]},
+    { heading: 'RESOURCES', links: [
+      { label: 'Care guide',         href: '#' },
+      { label: 'Scam awareness',     href: '#' },
+      { label: 'Diet & nutrition',   href: '#' },
+      { label: 'Toys we recommend',  href: '#' },
+      { label: 'YouTube channel',    href: '#' },
+    ]},
+  ],
+  phone = '(432) 555-0119',
+  email = 'teri@congoafricangreys.com',
+  address = 'Midland, TX 79701',
+  hours = 'Mon–Sat · 9 AM–6 PM CT',
+  copyright = '© 2026 CongoAfricanGreys · USDA AWA #74-A-1234',
+  legal = [
+    { label: 'Privacy', href: '#' },
+    { label: 'Terms',   href: '#' },
+    { label: 'Shipping policy', href: '#' },
+    { label: 'Health guarantee', href: '#' },
+  ],
+} = Astro.props;
+---
+
+<style>
+@media (max-width: 768px) {
+  .footer-cols { grid-template-columns: 1fr !important; }
+  .footer-col-title {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .footer-col-title::after { content: '+'; font-size: 1.25rem; color: var(--light, #9b9189); }
+  .footer-col.open .footer-col-title::after { content: '−'; }
+  .footer-col-links {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+  .footer-col.open .footer-col-links { max-height: 400px; }
+}
+</style>
+
+<script>
+  document.querySelectorAll('.footer-col-title').forEach(title => {
+    title.addEventListener('click', () => {
+      const col = title.closest('.footer-col');
+      if (col) col.classList.toggle('open');
+    });
+  });
+</script>
+
+{variant === 'dark' && (
+  <footer class="bg-panel text-white">
+    <div class="footer-cols mx-auto max-w-[1200px] px-10 py-14 grid md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10">
+      <div class="footer-col">
+        <div class="font-display font-bold text-2xl flex items-center gap-2"><img src="/emoji/cag-congo.png" alt="African Grey Parrot" class="cag-emoji" style="width:1.875rem;height:1.875rem;vertical-align:-0.4rem;" loading="lazy" /> {brand}</div>
+        <p class="mt-4 text-white/70 text-[14px] max-w-xs leading-relaxed">{description}</p>
+        <div class="mt-5 flex gap-2 flex-wrap">
+          <span class="cag-tag bg-white/10 rounded-full px-3 py-1.5">USDA Class A</span>
+          <span class="cag-tag bg-white/10 rounded-full px-3 py-1.5">CITES Doc'd</span>
+        </div>
+      </div>
+      {columns.map(c => (
+        <div class="footer-col">
+          <div class="footer-col-title cag-tag text-clay mb-4">{c.heading}</div>
+          <ul class="footer-col-links space-y-2.5 text-[14px] text-white/80">
+            {c.links.map(l => <li><a href={l.href} class="hover:text-clay">{l.label}</a></li>)}
+          </ul>
+        </div>
+      ))}
+      <div class="footer-col">
+        <div class="footer-col-title cag-tag text-clay mb-4">REACH US</div>
+        <ul class="footer-col-links space-y-2.5 text-[14px] text-white/80">
+          {phone && <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> <a href={`tel:${phone.replace(/\D/g,'')}`} class="hover:text-clay">{phone}</a></li>}
+          {email && <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg> <a href={`mailto:${email}`} class="hover:text-clay">{email}</a></li>}
+          {address && <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {address}</li>}
+          {hours && <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {hours}</li>}
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-white/10">
+      <div class="mx-auto max-w-[1200px] px-10 py-5 flex items-center justify-between text-[12px] text-white/50 flex-wrap gap-3">
+        <span>{copyright}</span>
+        <div class="flex gap-5">
+          {legal.map(l => <a href={l.href} class="hover:text-white">{l.label}</a>)}
+        </div>
+      </div>
+    </div>
+  </footer>
+)}
+
+{variant === 'cream' && (
+  <footer class="bg-warm border-t border-line">
+    <div class="mx-auto max-w-[1200px] px-10 py-12 grid md:grid-cols-[1.5fr_1fr_1fr] gap-10">
+      <div>
+        <div class="font-display font-bold text-2xl flex items-center gap-2"><img src="/emoji/cag-congo.png" alt="African Grey Parrot" class="cag-emoji" style="width:1.875rem;height:1.875rem;vertical-align:-0.4rem;" loading="lazy" /> {brand}</div>
+        <p class="mt-4 text-mid text-[14px] max-w-sm leading-relaxed">{description}</p>
+        <form action="/api/newsletter" method="post" class="mt-6 flex gap-2 max-w-sm">
+          <input type="email" name="email" required placeholder="Get clutch alerts…" class="flex-1 bg-white border border-line rounded-full px-4 py-2.5 text-[14px] outline-none focus:border-clay focus:ring-4 focus:ring-clay/15"/>
+          <button class="bg-clay hover:bg-clay-dk transition text-white rounded-full px-5 py-2.5 font-semibold text-[13px] cag-glow">Join</button>
+        </form>
+        <p class="text-[11px] text-mute mt-2">No spam. Unsubscribe in one click.</p>
+      </div>
+      {columns.slice(0, 1).map(c => (
+        <div>
+          <div class="cag-tag text-clay mb-3">EXPLORE</div>
+          <ul class="space-y-2 text-[14px] text-mid">
+            {c.links.map(l => <li><a href={l.href} class="hover:text-clay">{l.label}</a></li>)}
+          </ul>
+        </div>
+      ))}
+      <div>
+        <div class="cag-tag text-clay mb-3">CONTACT</div>
+        <ul class="space-y-2 text-[14px] text-mid">
+          {phone && <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> {phone}</li>}
+          {email && <li class="break-all"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg> {email}</li>}
+          {address && <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {address}</li>}
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-line bg-cream">
+      <div class="mx-auto max-w-[1200px] px-10 py-4 flex items-center justify-between text-[12px] text-mute flex-wrap gap-2">
+        <span>{copyright}</span>
+        <div class="flex gap-4">
+          {legal.map(l => <a href={l.href} class="hover:text-clay">{l.label}</a>)}
+        </div>
+      </div>
+    </div>
+  </footer>
+)}
+
+{variant === 'slim' && (
+  <footer class="bg-panel text-white">
+    <div class="mx-auto max-w-[1200px] px-10 py-6 flex items-center justify-between flex-wrap gap-4 text-[13px]">
+      <div class="flex items-center gap-3">
+        <img src="/emoji/cag-congo.png" alt="" class="cag-emoji" style="width:1.5rem;height:1.5rem;vertical-align:-0.35rem;" loading="lazy" />
+        <span class="font-display font-bold">{brand}</span>
+        <span class="text-white/40">·</span>
+        <span class="text-white/60">{address} · Est. 2014</span>
+      </div>
+      <div class="flex gap-5 text-white/70">
+        {columns[0]?.links.slice(0,4).map(l => <a href={l.href} class="hover:text-clay">{l.label}</a>)}
+      </div>
+      <div class="text-white/40 text-[11px]">{copyright}</div>
+    </div>
+  </footer>
+)}
