@@ -1,3 +1,9 @@
+---
+name: cag-blog-post
+description: Use when building or rebuilding any CongoAfricanGreys.com blog post or the /blog/ hub — the 14-step section architecture, desktop+mobile component map, 8 cag-blog-* special-element components, tiered Sprint 0.5 research, Style-2 gated humor, and 1,800–2,500 intent-scaled word counts. Triggers: "write a blog post", "build the blog", "blog hub", "cage setup post", any /blog/<slug> page. Reconciled to DESIGN.md; source of truth docs/superpowers/specs/2026-06-27-cags-blog-cluster-system-design.md.
+tools: [Read, Write, Bash]
+---
+
 THIS PAGE CONTAIN THE CHATGTP RESEARCH WORK DONE FOR ALL BLOG POST AND HUB PAGES AS WELL AS THE SKILL, GUILDLINES, RULES, ETC ON HOW TO CREATE THE BLOG POST., YOU MUST ENHANCE AND IMPROVE THE SKILL BELOW, I THINK WE HAVE A BLOG POST AGENT/SKILL, SEE IF WE CAN ADD OR CREATE A COMPREHENSIVE BLOG POST SKILL/AGENT, FRAMEWORKS, ANGLES, BASED ON THE DATA HERE, FRESH BING SEARCH, I HAVE DONE TOP 3 COMPETITORS ON GOOGLE ALREADY AS SEEN BELOW AND LASTLY THE 30 COMPETITORS WE HAVE IN THE LIST, ETC. EVERY TEXTS/WORDS, ETC IN THIS FILE/DOC IS IMPORTANT MAKE USE OFF THEM ALL, ARRANGE THEM ACCORDINGLY BASED ON THE STEP/PROCESS OF THE PAGE CREATION, ETC.
 
 * Change of plans, i want to see their weakness, all Headers, keywords types  
