@@ -1,0 +1,398 @@
+---
+name: cag-infographic
+description: Build 400–450px-tall HTML/CSS infographics for CongoAfricanGreys.com pages. Three types: Comparison, Feature Grid, Process Flow. Pure HTML — no images, no external libs. CAG brand colors. Default height: 400px. Use in Astro pages via component import or raw HTML paste in static HTML files.
+---
+
+# CAG Infographic Skill
+> **Image art-direction:** Read `IMAGE-DESIGNS.md` (repo root) BEFORE generating, editing, or placing any image — crop ratios, style wrapper, negative list, lighting, focal length, and scene-type-per-page. It is the image source of truth; it wins over any stale value here.
+
+## When to Use
+- A page section needs a visual that reinforces key claims (scam detection, price comparison, process steps)
+- The section has enough data for 2–4 rows / 6–12 grid items
+- You want visual differentiation without adding an AI-generated image
+
+## Mode Selection — HTML/CSS vs AI-Generated
+
+| Mode | When to use | Provider |
+|------|------------|---------|
+| **HTML/CSS (Claude Code native)** | Default. Instant, brand-perfect, no API cost, fully editable. Use for 90% of cases. | Claude Code generates code directly — say "use Claude Code" or "use HTML" |
+| **AI-Generated Image** | Photorealistic/artistic style needed, or design complexity beyond HTML. | `nanobanna` (Google Imagen) · `openai` (DALL-E 3) |
+| **Higgsfield MCP** | Character-consistent images, video, marketing studio assets, or when user provides a reference photo. | Higgsfield MCP (UUID `dd46f66a`) — `nano_banana_pro` / `soul_2` / `cinematic_studio_2_5` |
+
+**How to request each mode:**
+- "Build an infographic using Claude Code" → HTML/CSS (Types 1–3 below)
+- "Build an AI infographic using Nano Banana" → Type 4 below
+- "Build an AI infographic using OpenAI" → Type 4 with `openai` flag
+- "Build an infographic using Higgsfield" or "use Higgsfield MCP" → Type 5 below
+
+## Width Determination Rules (Desktop)
+
+The agent MUST select the correct `max-width` for the outer wrapper based on page type **before writing any HTML**:
+
+| Page type | Desktop max-width | Layout style |
+|---|---|---|
+| Species guide body, blog posts, care guides, articles | **760px** | Two-panel horizontal split — matches `.container-text` |
+| Homepage, location pages, hero sections | **1100px** | Three-zone dashboard — matches `.container` |
+
+**Responsive behavior — required in every infographic:**
+
+| Viewport | Width | Height | Layout |
+|---|---|---|---|
+| Desktop ≥1025px | 760px or 1100px (fixed max-width) | **400px fixed** | Horizontal (two-panel or three-zone) |
+| Tablet 768–1024px | 100% fluid within parent | 400px (if layout fits) or auto | Horizontal or transitioning |
+| Mobile ≤767px | 100% screen width | **auto** | Stacks vertically |
+
+**Breakpoint rule:**
+- 760px variant: stack at `@media (max-width: 640px)`
+- 1100px variant: stack at `@media (max-width: 767px)`
+
+Set width on the outer **wrapper div**, not on the infographic shell itself. The shell is always `width: 100%` so it fills its wrapper.
+
+```html
+<!-- 760px wrapper (informational pages) -->
+<div style="margin: 2rem auto; max-width: 760px; padding: 0 1rem;">
+
+<!-- 1100px wrapper (homepage / location / hero sections) -->
+<div style="margin: 2rem auto; max-width: 1100px; padding: 0 1rem;">
+```
+
+---
+
+## Height Determination Rules
+
+The agent MUST pick a height in the 400–450px range before writing any HTML:
+
+| Content density | Recommended height |
+|----------------|-------------------|
+| 2 feature rows per column | 400px |
+| 3 feature rows per column | 420px |
+| 4 feature rows per column | 440px |
+| 4 rows + dense footer bar | 450px |
+| Hero section (less room above fold) | 400px |
+| Mid-page section (more room) | 420–440px |
+
+**Default: 400px. Never exceed 450px. Never go below 380px.**
+Set height via: `style="height: 400px; min-height: 380px; max-height: 450px;"`
+On mobile (`≤767px`): override to `height: auto; min-height: unset;` so stacked content is not clipped.
+
+## Brand Colors
+
+| Token | Hex | Use |
+|-------|-----|-----|
+| Green | `#2D6A4F` | Headers, right-column accents, footer CTA bar |
+| Clay | `#e8604c` | Warning/alert labels, category labels |
+| Cream | `#faf7f4` | Page background, process flow background |
+| Red-light | `#fff5f5` | Scammer / negative column background |
+| Green-light | `#f0faf4` | Legitimate / positive column background |
+| Dark | `#1a1a2e` | Title bars, body copy headings |
+
+## Placement Wrapper
+
+Always wrap the infographic in this container. **Choose max-width based on page type** (see Width Determination Rules above):
+
+**In Astro pages (.astro files):**
+```astro
+{/* Infographic: [description] — width: [760|1100]px — height: [X]px */}
+{/* 760px: species guides, blogs, care pages */}
+<div class="my-8 mx-auto px-4" style="max-width: 760px;">
+  <ComparisonInfographic ... />
+</div>
+
+{/* 1100px: homepage, location pages, hero sections */}
+<div class="my-8 mx-auto px-4" style="max-width: 1100px;">
+  <ComparisonInfographic ... />
+</div>
+```
+
+**In static HTML pages (.html files):**
+```html
+<!-- Infographic: [description] — width: [760|1100]px — height: [X]px -->
+<!-- 760px: species guides, blogs, care pages -->
+<div style="margin: 2rem auto; max-width: 760px; padding: 0 1rem;">
+  <!-- paste full infographic HTML here -->
+</div>
+
+<!-- 1100px: homepage, location pages, hero sections -->
+<div style="margin: 2rem auto; max-width: 1100px; padding: 0 1rem;">
+  <!-- paste full infographic HTML here -->
+</div>
+```
+
+---
+
+## Type 1: Comparison Infographic
+
+**Use for:** Scam vs Legitimate, Male vs Female, Congo vs Timneh, Plan A vs Plan B
+
+**Astro component path:** `src/components/infographics/ComparisonInfographic.astro`
+
+**Raw HTML template (for static HTML pages):**
+
+```html
+<!-- CAG Infographic: Comparison | height: 400px -->
+<div aria-label="[TITLE]" style="display:flex;flex-direction:column;height:400px;min-height:380px;max-height:450px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.14);border:1px solid rgba(0,0,0,0.08);">
+
+  <!-- Title bar -->
+  <div style="background:#1a1a2e;color:#fff;padding:9px 16px;text-align:center;font-family:'Lora',serif;font-size:13px;font-weight:700;flex-shrink:0;line-height:1.3;">[TITLE]</div>
+
+  <!-- Two columns -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden;min-height:0;">
+
+    <!-- LEFT COLUMN (negative / red) -->
+    <div style="background:#fff5f5;display:flex;flex-direction:column;border-right:2px solid #e5e7eb;">
+      <div style="background:#fee2e2;color:#991b1b;padding:7px 10px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;flex-shrink:0;border-bottom:1px solid rgba(0,0,0,0.08);">
+        <span style="font-size:14px;">🚩</span>
+        <div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:0.03em;">[LEFT LABEL]</div>
+          <div style="font-size:13px;font-weight:800;color:#dc2626;">[LEFT PRICE/SUBTITLE]</div>
+        </div>
+      </div>
+      <!-- Repeat row block 2–4 times -->
+      <div style="padding:5px 10px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:flex-start;gap:7px;flex:1;">
+        <span style="font-size:16px;flex-shrink:0;width:20px;text-align:center;">[ICON]</span>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.2;">[FEATURE TITLE]</div>
+          <div style="font-size:9px;color:#555;line-height:1.3;margin-top:1px;">[FEATURE DESC]</div>
+        </div>
+      </div>
+      <!-- end row -->
+    </div>
+
+    <!-- RIGHT COLUMN (positive / green) -->
+    <div style="background:#f0faf4;display:flex;flex-direction:column;">
+      <div style="background:#dcfce7;color:#166534;padding:7px 10px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;flex-shrink:0;border-bottom:1px solid rgba(0,0,0,0.08);">
+        <span style="font-size:14px;">✅</span>
+        <div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:0.03em;">[RIGHT LABEL]</div>
+          <div style="font-size:13px;font-weight:800;color:#16a34a;">[RIGHT PRICE/SUBTITLE]</div>
+        </div>
+      </div>
+      <!-- Repeat same number of rows as left column -->
+      <div style="padding:5px 10px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:flex-start;gap:7px;flex:1;">
+        <span style="font-size:16px;flex-shrink:0;width:20px;text-align:center;">[ICON]</span>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.2;">[FEATURE TITLE]</div>
+          <div style="font-size:9px;color:#555;line-height:1.3;margin-top:1px;">[FEATURE DESC]</div>
+        </div>
+      </div>
+      <!-- end row -->
+    </div>
+  </div>
+
+  <!-- Footer CTA bar -->
+  <div style="background:#2D6A4F;color:#fff;padding:8px 16px;text-align:center;font-size:11px;font-weight:800;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:8px;">
+    <span>[CTA TEXT]</span>
+    <span style="opacity:0.75;font-weight:400;font-size:9px;">[CTA SUBTEXT]</span>
+  </div>
+</div>
+```
+
+---
+
+## Type 2: Feature Grid Infographic
+
+**Use for:** "N Red Flags", "N Benefits", "N Reasons", icon-heavy feature lists
+
+**Astro component path:** `src/components/infographics/FeatureGridInfographic.astro`
+
+**Raw HTML template:**
+
+```html
+<!-- CAG Infographic: Feature Grid | height: 400px -->
+<div aria-label="[TITLE]" style="background:#2D6A4F;color:#fff;height:400px;min-height:380px;max-height:450px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.2);display:flex;flex-direction:column;padding:12px 16px;">
+
+  <!-- Header -->
+  <div style="text-align:center;margin-bottom:10px;flex-shrink:0;">
+    <div style="font-size:11px;font-weight:800;color:#e8604c;letter-spacing:0.08em;text-transform:uppercase;">[CATEGORY LABEL]</div>
+    <div style="font-family:'Lora',serif;font-size:14px;font-weight:700;line-height:1.2;">[MAIN TITLE]</div>
+  </div>
+
+  <!-- Grid — use repeat(3,1fr) for 6–9 items; repeat(4,1fr) for 8–12 items -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;flex:1;align-content:start;">
+
+    <!-- Repeat this block per item -->
+    <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:7px 8px;display:flex;flex-direction:column;gap:3px;">
+      <div style="font-size:14px;">[ICON]</div>
+      <div style="font-size:9px;font-weight:800;line-height:1.2;color:#fff;">[ITEM TITLE]</div>
+      <div style="font-size:8px;color:rgba(255,255,255,0.65);line-height:1.3;">[ITEM DESC]</div>
+    </div>
+    <!-- end item -->
+
+  </div>
+</div>
+```
+
+---
+
+## Type 3: Process Flow Infographic
+
+**Use for:** "How to Buy", "Shipping Steps", "Documentation Process", sequential numbered steps
+
+**Raw HTML template:**
+
+```html
+<!-- CAG Infographic: Process Flow | height: 400px -->
+<div aria-label="[TITLE]" style="background:#faf7f4;height:400px;min-height:380px;max-height:450px;border-radius:12px;overflow:hidden;font-family:'Sora',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,0.1);border:1px solid rgba(45,106,79,0.15);display:flex;flex-direction:column;">
+
+  <!-- Header bar -->
+  <div style="background:#2D6A4F;color:#fff;padding:10px 16px;text-align:center;font-family:'Lora',serif;font-size:13px;font-weight:700;flex-shrink:0;">[TITLE]</div>
+
+  <!-- Steps row — 3 to 5 steps -->
+  <div style="display:flex;flex-direction:row;align-items:stretch;flex:1;overflow:hidden;padding:12px 16px;gap:8px;">
+
+    <!-- Repeat per step -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;">
+      <!-- connector line (omit on last step) -->
+      <div style="position:absolute;top:18px;left:calc(50% + 18px);right:calc(-50% + 18px);height:2px;background:#2D6A4F;opacity:0.2;"></div>
+      <div style="width:36px;height:36px;border-radius:50%;background:#2D6A4F;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;margin-bottom:6px;position:relative;z-index:1;">[N]</div>
+      <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.2;margin-bottom:3px;">[STEP TITLE]</div>
+      <div style="font-size:9px;color:#555;line-height:1.3;">[STEP DESC]</div>
+    </div>
+    <!-- end step -->
+
+  </div>
+</div>
+```
+
+---
+
+## Integration Checklist (run before every commit)
+
+- [ ] **Width:** wrapper `max-width` is 760px (informational pages) or 1100px (homepage/location/hero) — not 900px or 4xl
+- [ ] **Height:** 400–450px on desktop; `height: auto` on mobile via media query
+- [ ] **Responsive:** `@media (max-width: 640px)` for 760px variant; `@media (max-width: 767px)` for 1100px variant — stacks vertically
+- [ ] `overflow: hidden` on root element
+- [ ] `flex-shrink: 0` on title and footer bars
+- [ ] No `<script>` tags — pure HTML/CSS only
+- [ ] All font sizes between 8px and 14px
+- [ ] Row count matches on both columns (Comparison type)
+- [ ] Zero placeholder text `[LIKE THIS]` remaining in output
+- [ ] Wrapper div comment includes width and height: `<!-- Infographic: [desc] — width: Xpx — height: Ypx -->`
+
+## File Placement Rules
+
+| Page type | Component to use | How to insert |
+|-----------|-----------------|---------------|
+| Astro page (`.astro`) | `ComparisonInfographic.astro` or `FeatureGridInfographic.astro` | Import + JSX-style usage |
+| Static HTML page (`.html`) | Raw HTML template from this skill | Paste inside placement wrapper `<div>` |
+
+## Naming Convention for Raw HTML Infographics
+
+When pasting raw HTML, always add a comment on the opening `<div>`:
+```html
+<!-- CAG Infographic: [Type] | [Page] | height: [X]px | Added: YYYY-MM-DD -->
+```
+
+---
+
+## Type 4: AI-Generated Image Infographic (Nano Banana 2 / OpenAI)
+
+**Use for:** Photorealistic or artistically complex infographic images where HTML/CSS cannot express the required design. Use HTML/CSS types 1–3 for 90% of cases.
+
+**Output:** A 1200×2133px (9:16) WebP image, displayed at 300–350px via CSS. Generated at native high-res so text stays razor-sharp when CSS scales it to 300–350px. Never generate at 300px — text will be blurry.
+
+### Pro-Grade Prompt Template
+
+Fill in ALL-CAPS placeholders:
+
+```
+Role: Professional marketing designer for pet services specializing in responsive UI/UX assets.
+Scene: SCENE_DESCRIPTION
+Style: CAG brand aesthetic (Forest Green #2D6A4F, Clay #e8604c, Cream #faf7f4).
+       Lora serif for headers, Sora sans for body text.
+Technical:
+  - Aspect Ratio: 9:16 (Vertical) for mobile/tablet optimization.
+  - Dimensions: 1200×2133px render for perfect downscaling to 300–350px desktop width.
+  - Camera: Professional studio macro-lens clarity, flat-lay design composition,
+            ISO 100, f/8, sharp focus on all text elements.
+  - Responsive Ready: Minimalist, uncluttered layout with balanced white space to ensure
+                      legibility when downscaled to 300px.
+Text Constraints: Render title "TITLE_TEXT" in Lora serif at top.
+                  Use ALL CAPS for section headers. High contrast on all text.
+Content:
+  - CONTENT_ITEM_1
+  - CONTENT_ITEM_2
+  - CONTENT_ITEM_3
+Quality Levers: Photorealistic, professional graphic design, crisp vector-style iconography,
+                ultra-sharp text rendering, 8K resolution, high fidelity, no blurry text.
+CITES Safety: No wire cages, no aviary settings. Birds in loving home environments only.
+```
+
+### Generation Commands
+
+```bash
+# Nano Banana 2 (Google Imagen) — primary choice
+./scripts/generate_nb_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-nb.png" "1200x2133"
+
+# OpenAI DALL-E 3 (portrait mode)
+./scripts/generate_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-openai.png" "1024x1792" "openai"
+```
+
+### HTML Placement Wrapper
+
+```html
+<!-- AI Infographic: [slug] | Provider: [nanobanna/openai] | Generated: YYYY-MM-DD -->
+<div style="margin: 2rem auto; max-width: 350px; padding: 0 1rem; text-align:center;">
+  <img src="[wp-content/uploads/filename.webp]"
+       alt="[Primary keyword + descriptive text]"
+       width="1200"
+       height="2133"
+       loading="lazy"
+       style="max-width:350px;width:100%;height:auto;border-radius:12px;
+              box-shadow:0 4px 24px rgba(60,30,10,0.15);">
+</div>
+```
+
+### Integration Checklist (AI infographic)
+
+- [ ] Generated at 1200×2133px (9:16) — never at final display size
+- [ ] WebP conversion completed (`.webp` not `.png` in production)
+- [ ] `width="1200" height="2133"` attributes on `<img>` (prevents layout shift)
+- [ ] `loading="lazy"` unless this is the first above-fold image
+- [ ] `max-width: 350px; width: 100%; height: auto;` CSS applied
+- [ ] Alt text includes primary keyword
+- [ ] Handed off to `cag-image-pipeline` for SEO filename rename
+
+---
+
+## Type 5: Higgsfield MCP (Character-Consistent / Video / Marketing)
+
+**Use for:** Character-consistent lifestyle shots (same bird identity across pages), video generation (reels/shorts), marketing studio campaign assets, or when the user uploads an OG photo and wants AI-enhanced output.
+
+**When to invoke:** Say "use Higgsfield" or "use Higgsfield MCP"
+
+**Best Higgsfield models for CAG content:**
+
+| Goal | Model to use | Credits |
+|------|-------------|---------|
+| High-quality lifestyle image, text overlay | `nano_banana_pro` | 2 |
+| Character-consistent bird across multiple shots | `soul_2` with reference image | 2 |
+| Cinematic still, dramatic lighting | `cinematic_studio_2_5` | varies |
+| Marketing/ad creative | `marketing_studio_image` | varies |
+
+**Dimensions:** 9:16 for portrait (1200×2133px display at 350px CSS), 16:9 for landscape
+
+**Steps:**
+1. `ToolSearch: select:mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__generate_image`
+2. Check credits: `mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__balance`
+3. Read `data/parrot-image-schema.json` — use `visual_style` + `prompt_safety` fields
+4. Build prompt with species-accurate details (Congo: bright red tail, 400–600g; Timneh: maroon tail, 275–375g)
+5. Call `generate_image` with chosen model + 9:16 aspect ratio
+6. Save output → `@cag-image-pipeline` for WebP optimization + page placement
+
+**User photo as reference (Higgsfield only):**
+1. `ToolSearch: select:mcp__dd46f66a-ceb9-4042-b533-7b3fc3409318__media_upload`
+2. Upload photo → confirm → get media ID
+3. Pass `medias: [{value: "<media_id>", role: "image"}]` in generate_image call
+4. Use `soul_2` model for best character-consistent results with a reference
+
+**CITES rule:** Always include from `data/parrot-image-schema.json`:
+- `prompt_safety.always_include`: "captive-bred, domestic setting, hand-raised"
+- Never include: "wild-caught", "jungle", "imported", "exotic wildlife"
+
+**Integration checklist (Higgsfield):**
+- [ ] Credits checked before generation
+- [ ] `data/parrot-image-schema.json` read — CITES safety fields included in prompt
+- [ ] Species accuracy: Congo = bright red tail / Timneh = dark maroon tail
+- [ ] Output handed to `@cag-image-pipeline`
+- [ ] Displayed at `max-width: 350px; width: 100%; height: auto;` in HTML
