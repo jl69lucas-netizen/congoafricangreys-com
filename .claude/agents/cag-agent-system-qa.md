@@ -145,6 +145,16 @@ done
 
 ---
 
+### Check 6b — Skill Registration
+
+- **Skill registration:** run `python3 scripts/register_skills.py --check`. Every `skills/*.md` (and `skills/<name>/SKILL.md` dir-skill) must have `name:`+`description:` frontmatter AND a matching `.claude/skills/<name>/SKILL.md`. A missing or drifted entry is a FAIL — fix by rerunning `python3 scripts/register_skills.py --copy` and committing `.claude/skills/`.
+
+```bash
+echo "=== SKILL REGISTRATION ===" && python3 scripts/register_skills.py --check
+```
+
+---
+
 ### Check 7 — Staging Directory Hygiene
 
 Before any batch deploy, verify no stale `-rebuild/` directories exist:
