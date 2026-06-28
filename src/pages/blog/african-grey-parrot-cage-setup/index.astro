@@ -4,7 +4,6 @@ import Breadcrumb from '../../../components/Breadcrumb.astro';
 import JumpNav from '../../../components/cag-jump-nav.astro';
 import InquiryCompact from '../../../components/cag-inquiry-compact.astro';
 import Newsletter from '../../../components/cag-library/NewsletterV2.astro';
-import QuickAnswer from '../../../components/cag-blog-quick-answer.astro';
 import Callout from '../../../components/cag-blog-callout.astro';
 import ComparisonTable from '../../../components/cag-blog-comparison-table.astro';
 import BreederNote from '../../../components/cag-blog-breeder-note.astro';
@@ -207,13 +206,13 @@ const figc = "block text-center text-sm text-stone-500 mt-2";
     <section class="cage-hero text-white px-4 pt-12 pb-10" style="background:#2D6A4F">
       <div class="max-w-5xl mx-auto">
         <div class="grid md:grid-cols-2 gap-8 items-center">
-          <div>
+          <div class="order-2 md:order-1">
             <p class="font-sora text-sm font-semibold uppercase tracking-widest mb-3" style="color:#f3a18f">Care Guide · Breeder Blueprint · Midland, TX</p>
             <h1 class="font-lora font-bold mb-4" style="color:#faf7f4">African Grey Cage Setup: The Breeder's Blueprint</h1>
             <p class="text-lg mb-6" style="color:rgba(250,247,244,0.85)">Not a generic checklist — the exact cage we send every C.A.Gs chick home to. Size, zone-by-zone layout, perch variety, toy rotation, food, sleep and the mistakes that quietly cause plucking.</p>
             <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">See available African Greys</a>
           </div>
-          <figure class="m-0">
+          <figure class="m-0 order-1 md:order-2">
             <img src="/african-grey-cage-setup-blueprint-infographic.webp" width="1280" height="698" alt="The breeder blueprint for the ultimate African Grey cage setup, showing spatial requirements, layered perching strategy, enrichment, nutrition, safety and UV lighting" class="w-full rounded-2xl" fetchpriority="high" />
           </figure>
         </div>
@@ -234,9 +233,25 @@ const figc = "block text-center text-sm text-stone-500 mt-2";
     <section class="px-4 pt-8 pb-4" style="background:#faf7f4">
       <div style="max-width:760px;margin:0 auto;">
 
-        <!-- 4. Quick-Answer box (TOP special-element) -->
-        <div id="quick" class="scroll-mt-24">
-          <QuickAnswer title="What Does a Complete African Grey Cage Setup Include?" rows={quickRows} headingLevel="h2" />
+        <!-- 4. At-a-glance snapshot (bird-page style: green header band + spec tiles) -->
+        <div id="quick" class="scroll-mt-24 mb-6">
+          <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+            <div class="px-6 py-5 sm:px-8" style="background:#2D6A4F">
+              <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] mb-1.5" style="color:#f3a18f">At a glance</p>
+              <h2 class="font-lora font-bold text-xl sm:text-2xl leading-snug" style="color:#faf7f4">What Does a Complete African Grey Cage Setup Include?</h2>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="font-sora text-stone-700 leading-relaxed mb-6">The seven numbers that decide whether a cage works for a Grey — straight from the setup we build for every C.A.Gs chick before it goes home.</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {quickRows.map((r) => (
+                  <div class="rounded-xl border border-stone-200 bg-cream/60 px-4 py-3">
+                    <span class="block font-sora text-[11px] uppercase tracking-wide text-stone-600">{r.label}</span>
+                    <span class="block font-sora text-sm font-semibold text-logo-dark mt-1 leading-snug">{r.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <p class={p}>Most cage problems trace back to one thing: a cage chosen for the owner's budget instead of the bird's biology. Get the blueprint below right — size, zones, perches, toys, materials and placement — and the cage stops being a trigger for <a href="/blog/african-grey-health-problems/" class={lnk} style="color:#b04228">feather plucking and screaming</a> and starts being a home your Grey actually thrives in.</p>
