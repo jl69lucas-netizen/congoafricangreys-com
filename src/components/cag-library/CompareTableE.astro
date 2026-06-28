@@ -1,47 +1,77 @@
 ---
 // cag-compare-table-e — "Compare Table · Style E (1100px)"
 // Decoded from NEW CAG COMPONENTS bundle (Component 6 — Compare Table: Congo vs Timneh).
-// Green-gradient Congo header · Clay-gradient Timneh header · striped rows.
-// Data verified against data/price-matrix.json + homepage birds[] (2026-05-29).
+// Green-gradient left header · Clay-gradient right header · striped rows.
+// Generalised 2026-06-28: columns/rows/CTAs are now optional props whose defaults
+// reproduce the original Congo-vs-Timneh table EXACTLY, so the homepage <CompareTableE />
+// renders byte-identical output. Reused on the talking-ability blog (Grey vs Average Parrot).
 export interface Props {
   eyebrow?: string;
   heading?: string;
   sub?: string;
+  showHeader?: boolean;
+  showCtas?: boolean;
+  featureLabel?: string;
+  col1Title?: string; col1Sub?: string; col1Icon?: string; col1IconAlt?: string; col1IconHtml?: string; col1Grad?: string;
+  col2Title?: string; col2Sub?: string; col2Icon?: string; col2IconAlt?: string; col2IconHtml?: string; col2Grad?: string;
+  rows?: [string, string, string][];
   congoHref?: string;
   timnehHref?: string;
+  cta1Label?: string;
+  cta2Label?: string;
 }
+
+const check = '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg>';
+
 const {
   eyebrow = 'Compare Variants',
   heading = 'Is a Congo or a Timneh African Grey Right for You?',
   sub = 'Here at C.A.Gs we hand-raise both, and neither is "better" — the Congo is the bolder, more headline talker, while the Timneh is calmer and tends to start talking earlier, so the right one comes down to your home and your experience. Below we put our two Greys side by side, so you can see exactly which one we would help you bring home.',
+  showHeader = true,
+  showCtas = true,
+  featureLabel = 'Feature',
+  col1Title = 'Congo African Grey',
+  col1Sub = 'The classic, dramatic talker',
+  col1Icon = '/emoji/cag-congo.png',
+  col1IconAlt = 'Congo African Grey icon',
+  col1IconHtml,
+  col1Grad = 'linear-gradient(135deg,#2D6A4F,#1f4d39)',
+  col2Title = 'Timneh African Grey',
+  col2Sub = 'Calmer, earlier to bond',
+  col2Icon = '/emoji/cag-timneh.png',
+  col2IconAlt = 'Timneh African Grey icon',
+  col2IconHtml,
+  col2Grad = 'linear-gradient(135deg,#e8604c,#c94d3a)',
   congoHref = '/congo-african-grey-for-sale/',
   timnehHref = '/timneh-african-grey-for-sale/',
+  cta1Label = 'Inquire about a Congo →',
+  cta2Label = 'Inquire about a Timneh →',
+  rows = [
+    ['Species', '<em>Psittacus erithacus</em>', '<em>Psittacus timneh</em>'],
+    ['Size', '12–14 in · 400–600 g', '9–11 in · 275–375 g'],
+    ['Tail color', 'Scarlet red', 'Maroon / dark crimson'],
+    ['Lifespan', '40–60 years', '40–60 years'],
+    ['Talking ability', '★★★★★ exceptional', '★★★★☆ excellent, earlier'],
+    ['Talking onset', '~12 months', '~4–6 months (earlier)'],
+    ['Temperament', 'Confident, dramatic', 'Calmer, steadier'],
+    ['Best for', 'Experienced owners', 'First-time owners'],
+    ['Price (from C.A.Gs)', '$1,700–$2,500', '$1,500–$1,600'],
+    ['Available now', 'Roys · Amie · Bery · Jins/Jeni', 'Elad · Evie'],
+    ['PCR DNA sexed', check + ' Yes', check + ' Yes'],
+    ['CITES docs', check + ' Appendix I, captive-bred', check + ' Appendix I, captive-bred'],
+  ] as [string, string, string][],
 } = Astro.props;
-
-// [feature, congo, timneh]
-const rows: [string, string, string][] = [
-  ['Species', '<em>Psittacus erithacus</em>', '<em>Psittacus timneh</em>'],
-  ['Size', '12–14 in · 400–600 g', '9–11 in · 275–375 g'],
-  ['Tail color', 'Scarlet red', 'Maroon / dark crimson'],
-  ['Lifespan', '40–60 years', '40–60 years'],
-  ['Talking ability', '★★★★★ exceptional', '★★★★☆ excellent, earlier'],
-  ['Talking onset', '~12 months', '~4–6 months (earlier)'],
-  ['Temperament', 'Confident, dramatic', 'Calmer, steadier'],
-  ['Best for', 'Experienced owners', 'First-time owners'],
-  ['Price (from C.A.Gs)', '$1,700–$2,500', '$1,500–$1,600'],
-  ['Available now', 'Roys · Amie · Bery · Jins/Jeni', 'Elad · Evie'],
-  ['PCR DNA sexed', '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Yes', '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Yes'],
-  ['CITES docs', '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Appendix I, captive-bred', '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Appendix I, captive-bred'],
-];
 ---
 
 <div class="bg-cream py-14 md:py-16 px-4">
   <div class="mx-auto" style="max-width:1100px;">
-    <div class="mb-7 border-l-4 border-green pl-4">
-      <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">{eyebrow}</p>
-      <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">{heading}</h2>
-      <p class="font-sora text-stone-500 mt-2 text-sm leading-relaxed" style="max-width:70ch;">{sub}</p>
-    </div>
+    {showHeader && (
+      <div class="mb-7 border-l-4 border-green pl-4">
+        <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">{eyebrow}</p>
+        <h2 class="font-lora font-bold text-3xl text-logo-dark md:text-4xl">{heading}</h2>
+        <p class="font-sora text-stone-500 mt-2 text-sm leading-relaxed" style="max-width:70ch;">{sub}</p>
+      </div>
+    )}
 
     <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white"
          style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
@@ -49,22 +79,26 @@ const rows: [string, string, string][] = [
         <table class="w-full border-collapse" style="min-width:640px;">
           <thead>
             <tr>
-              <th class="text-left font-sora text-[11px] font-bold uppercase tracking-[0.09em] text-stone-500 bg-white px-6 py-5 border-b border-black/[0.07]" style="width:24%;">Feature</th>
-              <th class="text-left px-6 py-5 text-white" style="width:38%;background:linear-gradient(135deg,#2D6A4F,#1f4d39);">
+              <th class="text-left font-sora text-[11px] font-bold uppercase tracking-[0.09em] text-stone-500 bg-white px-6 py-5 border-b border-black/[0.07]" style="width:24%;">{featureLabel}</th>
+              <th class="text-left px-6 py-5 text-white" style={`width:38%;background:${col1Grad};`}>
                 <div class="flex items-center gap-2.5">
-                  <img src="/emoji/cag-congo.png" alt="Congo African Grey icon" width="30" height="30" loading="lazy" style="width:30px;height:30px;object-fit:contain;" />
+                  {col1IconHtml
+                    ? <span class="shrink-0 inline-flex" set:html={col1IconHtml} />
+                    : <img src={col1Icon} alt={col1IconAlt} width="30" height="30" loading="lazy" style="width:30px;height:30px;object-fit:contain;" />}
                   <span>
-                    <span class="block font-lora font-bold text-[1.1rem] leading-tight">Congo African Grey</span>
-                    <span class="block font-sora text-[12px] font-normal opacity-85 mt-0.5">The classic, dramatic talker</span>
+                    <span class="block font-lora font-bold text-[1.1rem] leading-tight">{col1Title}</span>
+                    <span class="block font-sora text-[12px] font-normal opacity-85 mt-0.5">{col1Sub}</span>
                   </span>
                 </div>
               </th>
-              <th class="text-left px-6 py-5 text-white" style="width:38%;background:linear-gradient(135deg,#e8604c,#c94d3a);">
+              <th class="text-left px-6 py-5 text-white" style={`width:38%;background:${col2Grad};`}>
                 <div class="flex items-center gap-2.5">
-                  <img src="/emoji/cag-timneh.png" alt="Timneh African Grey icon" width="30" height="30" loading="lazy" style="width:30px;height:30px;object-fit:contain;" />
+                  {col2IconHtml
+                    ? <span class="shrink-0 inline-flex" set:html={col2IconHtml} />
+                    : <img src={col2Icon} alt={col2IconAlt} width="30" height="30" loading="lazy" style="width:30px;height:30px;object-fit:contain;" />}
                   <span>
-                    <span class="block font-lora font-bold text-[1.1rem] leading-tight">Timneh African Grey</span>
-                    <span class="block font-sora text-[12px] font-normal opacity-90 mt-0.5">Calmer, earlier to bond</span>
+                    <span class="block font-lora font-bold text-[1.1rem] leading-tight">{col2Title}</span>
+                    <span class="block font-sora text-[12px] font-normal opacity-90 mt-0.5">{col2Sub}</span>
                   </span>
                 </div>
               </th>
@@ -83,9 +117,11 @@ const rows: [string, string, string][] = [
       </div>
     </div>
 
-    <div class="flex flex-wrap justify-center gap-3 mt-7">
-      <a href={congoHref} class="inline-flex items-center justify-center rounded-full bg-clay px-6 py-3 font-sora text-sm font-semibold text-white transition-colors hover:bg-clay-dk" style="box-shadow:0 4px 14px rgba(232,96,76,0.25);">Inquire about a Congo →</a>
-      <a href={timnehHref} class="inline-flex items-center justify-center rounded-full border-2 border-green px-6 py-3 font-sora text-sm font-semibold text-green transition-colors hover:bg-green hover:text-white">Inquire about a Timneh →</a>
-    </div>
+    {showCtas && (
+      <div class="flex flex-wrap justify-center gap-3 mt-7">
+        <a href={congoHref} class="inline-flex items-center justify-center rounded-full bg-clay px-6 py-3 font-sora text-sm font-semibold text-white transition-colors hover:bg-clay-dk" style="box-shadow:0 4px 14px rgba(232,96,76,0.25);">{cta1Label}</a>
+        <a href={timnehHref} class="inline-flex items-center justify-center rounded-full border-2 border-green px-6 py-3 font-sora text-sm font-semibold text-green transition-colors hover:bg-green hover:text-white">{cta2Label}</a>
+      </div>
+    )}
   </div>
 </div>
