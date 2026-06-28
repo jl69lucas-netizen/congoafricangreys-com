@@ -69,4 +69,6 @@ _(Appended as the interview proceeds.)_
 4. Build section-by-section → Maxy video + VideoObject → final_page_audit (blog) PASS → commit+push.
 
 ## What's Next
-[Filled at end of build.]
+- ✅ talking-ability BUILT + LIVE (commit c0c7962): video-led Maxy hero + VideoObject, counter snippet, timeline spine, 2 real infographics (congo-talking + development-milestones, PNG→WebP), ~3,900 words, final_page_audit PASS (H1:1 H2:12 H3:20 H4:10 H5:9 H6:6). Visual-verified.
+- NEXT (this session block): **training** page — still thin/FAIL (H2:6 H3:4, no H4–H6). Header style = FAQ-led (how-to). Then talking→price next session block.
+- Carryover: Cloudflare Rocket Loader still ON (manual toggle, affects mobile perf on every page).
