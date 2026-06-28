@@ -1,154 +1,454 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
+import InquiryCompact from '../../../components/cag-inquiry-compact.astro';
+import Newsletter from '../../../components/cag-library/NewsletterV2.astro';
+import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
+import Callout from '../../../components/cag-blog-callout.astro';
+import ComparisonTable from '../../../components/cag-blog-comparison-table.astro';
+import BreederNote from '../../../components/cag-blog-breeder-note.astro';
+import MythFact from '../../../components/cag-blog-myth-fact.astro';
+import DecisionTree from '../../../components/cag-blog-decision-tree.astro';
+import RelatedPosts from '../../../components/cag-blog-related-posts.astro';
+import StickyCta from '../../../components/cag-blog-sticky-cta.astro';
+import BirdCard from '../../../components/BirdCard.astro';
 
-const title = "African Grey Parrot Training | Step-by-Step Guide for New Owners";
-const description = "Target training, trick training, recall, and talking development for African Grey parrots. Step-by-step methods from USDA-licensed breeders with 10+ years of hands-on experience.";
+const title = "African Grey Parrot Training: A Breeder's Step-by-Step Guide | Step-Up, Recall, Talking & Fixing Biting/Screaming the Right Way | C.A.Gs – Midland, TX";
+const description = "How to train an African Grey the breeder's way — train the mind before the behaviour. Trust first, then step-up, recall and target training, talking, and how to fix biting, screaming and fear with positive reinforcement. Short sessions, real body-language reading, no punishment.";
 const canonical = "https://congoafricangreys.com/blog/african-grey-parrot-training/";
+
+const hero = "/african-grey-step-up-target-training.webp";
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "Blog", url: "/blog/" },
-  { name: "African Grey Parrot Training", url: "/blog/african-grey-parrot-training/" },
+  { name: "African Grey Training", url: "/blog/african-grey-parrot-training/" },
+];
+
+const jumpLinks = [
+  { label: "Quick Answer", href: "#quick" },
+  { label: "Principles", href: "#principles" },
+  { label: "Trust First", href: "#trust" },
+  { label: "Commands", href: "#commands" },
+  { label: "Talking", href: "#talking" },
+  { label: "Behaviour", href: "#behaviour" },
+  { label: "Mistakes", href: "#mistakes" },
+  { label: "FAQ", href: "#faq" },
+];
+
+const counterStats = [
+  { num: "5–15 min", label: "Ideal Session" },
+  { num: "Trust",    label: "Comes First" },
+  { num: "Reward",   label: "Never Punish" },
+  { num: "Any age",  label: "Still Trainable" },
+];
+
+const quickFacts = [
+  { label: "Method", value: "Positive reinforcement" },
+  { label: "Session length", value: "5–15 minutes, daily" },
+  { label: "First skill", value: "Step-up" },
+  { label: "Golden rule", value: "Trust before tricks" },
+];
+
+const goalCols = ["Training goal", "Difficulty", "Typical time"];
+const goalRows = [
+  { item: "Step-up", values: ["Easy", "1–7 days"] },
+  { item: "Step-down", values: ["Easy", "1–5 days"] },
+  { item: "Recall (come when called)", values: ["Medium", "2–4 weeks"] },
+  { item: "Target training", values: ["Medium", "1–3 weeks"] },
+  { item: "Talking on cue", values: ["Medium–Hard", "Weeks–months"] },
+];
+
+const signalCols = ["Body-language signal", "What it usually means", "What to do"];
+const signalRows = [
+  { item: "Pinned / flashing eyes", values: ["Excited or over-aroused", "Pause — don't reach in yet"] },
+  { item: "Fanned tail, raised wings", values: ["Agitated or territorial", "Lower the energy, give space"] },
+  { item: "Sleeked feathers, leaning away", values: ["Fear — 'back off'", "Slow down, rebuild trust"] },
+  { item: "Relaxed fluff + beak grinding", values: ["Content, winding down", "Bond — don't drill"] },
+  { item: "Open beak, lunging", values: ["A bite warning", "Respect it — never punish"] },
+];
+
+const planBranches = [
+  { answer: "Your Grey just arrived / is brand new", result: "Don't train yet. Spend one to two weeks simply being present — sit nearby, talk softly, drop treats through the bars. Trust is the prerequisite, not the reward." },
+  { answer: "Your Grey steps up but bites sometimes", result: "Go back to body language. Almost every 'sudden' bite is a missed warning, not aggression — read the eyes and posture and you'll see it coming." },
+  { answer: "Your Grey is confident and bonded", result: "Build the ladder: step-up → step-down → recall → target, 5–15 minutes a day, and always end on a win while the bird still wants more." },
+  { answer: "Your Grey screams when you leave the room", result: "That's contact-calling, not misbehaviour. Answer once, reward the quiet that follows, and never come running for the scream — that only trains it louder." },
+];
+
+// Available birds — hand-raised and socialised for trainability (mirrors clutch-inventory + homepage grid).
+const birds = [
+  { id: 'amie', name: 'Amie', sex: 'Female', age: '3 mo', price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'Already steps up and responds to her name.',
+    notes: 'Premium hand-raised female, 3 months old. Full social training from weaning — calm with hands, easy to start training.' },
+  { id: 'roys', name: 'Roys', sex: 'Male', age: '4 mo', price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Curious, food-motivated — a trainer’s dream.',
+    notes: "Hand-raised male, 4 months old. Bold and treat-driven, which makes positive-reinforcement training quick to take." },
+  { id: 'bery', name: 'Bery', sex: 'Female', age: '1 yr', price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp', objectPos: 'object-center',
+    hook: 'Gentle and trusting — ideal for first-time trainers.',
+    notes: 'Soft temperament, easy to handle. 1-year-old female already comfortable with step-up and gentle handling.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Bonded Duo', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair-talking-birds.webp', objectPos: 'object-center',
+    hook: 'Two birds, trained together since weaning.',
+    notes: 'Unrelated pair, adopted together. Jins (male, 6mo) + Jeni (female, 4mo). Both hand-raised with daily handling and social training.' },
 ];
 
 const faqs = [
-  {
-    q: "How do you start training an African Grey parrot?",
-    a: "Start with target training — teaching the bird to touch a target stick (a chopstick or wooden dowel) with its beak. This is the foundation for all other behaviors. Session length: 5–10 minutes maximum, 2–3 times per day. Always end on a successful repetition, never on a refusal. African Greys learn fastest when they're calm, slightly hungry (before meals), and in a distraction-free environment.",
-  },
-  {
-    q: "How long does it take to train an African Grey?",
-    a: "Basic targeting can be learned in 2–5 sessions. Simple step-up on command: 1–2 weeks. Recall (flying to owner on command): 4–8 weeks. Talking: varies widely — some birds begin repeating words within weeks of arrival, others take 6–12 months. Talking development cannot be rushed. The key variable is daily consistent interaction, not the number of 'training sessions.'",
-  },
-  {
-    q: "What is positive reinforcement training for parrots?",
-    a: "Positive reinforcement means rewarding the behavior you want immediately after it occurs, which makes it more likely to happen again. For African Greys, effective rewards include: high-value food treats (small piece of walnut, almond, or a favorite vegetable), verbal praise, and physical attention (head scratches for birds that enjoy them). Punishment is never used — it causes fear and destroys trust. African Greys have exceptional memory for negative experiences.",
-  },
-  {
-    q: "How do I teach an African Grey to talk?",
-    a: "Talk to your bird constantly — narrate your activities, name objects you're using, greet the bird every morning and say goodnight. Context is key: African Greys learn words that have consistent associations. Say 'good morning' every morning. Say the bird's name before every interaction. Read aloud. Watch TV in the same room. Don't use word cards or audio recordings as the primary method — live human interaction produces faster, more contextual speech.",
-  },
-  {
-    q: "How do I stop my African Grey from biting?",
-    a: "Biting in African Greys is a communication failure, not dominance. Read body language first: pinned pupils, raised neck feathers, tail fanned, eyes wide — these are pre-bite warning signs. When you see them, stop the interaction and give the bird space. Never punish a bite — yelling or dropping the bird destroys trust and escalates aggression. Instead, learn to read warnings early and end interactions before the bird reaches the biting threshold.",
-  },
+  { q: "Are African Greys easy to train?",
+    a: "African Greys are among the most trainable parrots because they're so intelligent — but that intelligence cuts both ways. They learn good habits fast and bad ones just as fast, and they bore quickly. The bird isn't hard to train; it's easy to train wrongly. Keep sessions short, reward generously, never punish, and an African Grey will out-learn almost any other companion bird." },
+  { q: "How do I stop my African Grey from biting?",
+    a: "Stop reading the bite as the start of the problem — it's the end of one. A Grey almost always warns first with pinned eyes, a fanned tail or a leaning-away posture, and the bite only comes when those signals were missed or pushed past. Learn the body language, back off when you see a warning, and never grab, flick or shout — punishment makes a bird bite harder and trust you less." },
+  { q: "How long does it take to train an African Grey?",
+    a: "Simple skills come fast: most Greys learn a reliable step-up in a few days to a week. Recall and target training take a few weeks, and talking on cue can take weeks to months. But the real timeline is the trust that comes first — rush that and everything after it stalls, so we tell owners to think in terms of months of relationship, not days of drilling." },
+  { q: "Can you train an older or rehomed African Grey?",
+    a: "Yes. The 'you can't teach an old Grey new tricks' idea is a myth — these birds learn for life. A rehomed or older African Grey may carry baggage (fear, distrust, learned screaming) so progress is slower at first, but with patience, routine and positive reinforcement they absolutely retrain. Many of the most bonded Greys we hear about were second-chance birds." },
+  { q: "Can African Greys learn commands like a dog?",
+    a: "They can learn cued behaviours — step-up, step-down, recall, turn around, target — using the same positive-reinforcement science (operant conditioning) used for dogs. The difference is motivation: a Grey works for trust and reward on its own terms, not to please you. Frame it as cooperation, not obedience, and you'll get far more out of the bird." },
+  { q: "Why is my African Grey suddenly aggressive?",
+    a: "'Sudden' aggression almost always has a cause: hormones, fear, a change in the home, a cage it's guarding, or — most often — a string of ignored body-language warnings that finally escalated. Greys are sensitive and territorial, so look for the trigger rather than labelling the bird 'mean'. Fix the cause and lower the pressure, and the aggression usually fades." },
+  { q: "How long should an African Grey training session be?",
+    a: "Short. Five to fifteen minutes is the sweet spot, once or twice a day. African Greys fatigue mentally, and a tired, over-faced bird stops learning and starts resenting the sessions. Always finish while the bird is still keen and on a success — leaving it wanting more is what keeps it coming back tomorrow." },
+  { q: "What's the best reward for training an African Grey?",
+    a: "Whatever your individual bird will work hardest for — usually a small, special food treat it doesn't get any other time (a sliver of nut, a single seed, a piece of fruit), paired with warm praise. Keep treats tiny so the bird doesn't fill up, and reserve the 'jackpot' favourite strictly for training so it stays valuable." },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const imageObjects = [
+  {
+    "@type": "ImageObject",
+    "contentUrl": "https://congoafricangreys.com" + hero,
+    "url": "https://congoafricangreys.com" + hero,
+    "name": "A hand-raised African Grey learning the step-up command from a C.A.Gs breeder",
+    "caption": "Step-up training with a hand-raised Congo African Grey — trust first, reward always.",
+    "width": 1000,
+    "height": 560,
+    "description": "A hand-raised Congo African Grey practising the step-up command onto a human hand in a calm home setting, used to illustrate the core method of this guide: African Grey training is built on trust and positive reinforcement, taught in short daily sessions, never forced. Every chick we raise at C.A.Gs in Midland, Texas is handled and gentled from weaning so it arrives already comfortable with hands and ready to learn."
+  }
+];
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "African Grey Parrot Training: Step-by-Step Guide for New Owners",
+  headline: "African Grey Parrot Training: A Breeder's Step-by-Step Guide",
   description,
+  image: imageObjects,
   author: { "@type": "Person", name: "Mark & Teri Benjamin" },
-  publisher: {
-    "@type": "Organization",
-    name: "CongoAfricanGreys.com",
-    url: "https://congoafricangreys.com",
-  },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com", url: "https://congoafricangreys.com" },
   datePublished: "2026-05-22",
+  dateModified: "2026-06-28",
+  mainEntityOfPage: canonical,
   url: canonical,
 };
 
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to train an African Grey parrot",
+  description: "A breeder's step-by-step method for training an African Grey using trust and positive reinforcement.",
+  step: [
+    { "@type": "HowToStep", name: "Build trust first", text: "Before any training, spend one to two weeks earning trust — be present, talk softly, and offer treats through the cage bars with no pressure." },
+    { "@type": "HowToStep", name: "Teach the step-up", text: "Present a steady hand or perch just above the feet, cue 'step up', and reward the instant the bird steps on. Keep sessions to 5–15 minutes." },
+    { "@type": "HowToStep", name: "Reinforce and add skills", text: "Once step-up is reliable, build step-down, recall and target training, rewarding every success and always ending on a win." },
+    { "@type": "HowToStep", name: "Expand vocabulary", text: "Pair short words with the moment they belong to, repeat them in context daily, and reward every attempt rather than drilling." },
+  ],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+
+// heading classes — match Roys/homepage parity (font-lora, text-logo-dark, no text-3xl)
+const h2 = "font-lora font-bold text-logo-dark leading-tight mb-4 mt-2 scroll-mt-24";
+const h3 = "font-lora font-semibold text-xl text-logo-dark mb-3 mt-6";
+const h4 = "font-lora font-semibold text-lg text-logo-dark mb-2 mt-5";
+const h5 = "font-lora font-semibold text-base text-logo-dark mt-5 mb-1";
+const h6 = "font-sora font-semibold text-xs uppercase tracking-wide mt-4 mb-1";
+const p = "text-stone-700 leading-relaxed mb-4";
+const lnk = "underline font-medium";
+const figc = "block text-center text-sm text-stone-600 mt-2";
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta heroPreload={hero} heroPreloadSrcset={"/african-grey-step-up-target-training-500.webp 500w, /african-grey-step-up-target-training-760.webp 760w, /african-grey-step-up-target-training.webp 1000w"} heroPreloadSizes={"(min-width: 768px) 480px, 92vw"}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
+  <style>
+    .train-d .cag-seam { display:flex; align-items:center; gap:26px; max-width:1100px; margin:2.25rem auto 1.5rem; padding:0 24px; }
+    .train-d .cag-seam__line { flex:1; height:1px; background:rgba(45,106,79,.16); }
+    .train-d .cag-seam img { height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+    @media (max-width:600px){ .train-d .cag-seam { gap:16px; } .train-d .cag-seam img { height:24px; } }
+    .train-d .train-hero h1 { font-size:clamp(1.7rem, 1.1rem + 2.6vw, 2.4rem) !important; line-height:1.14 !important; }
+    .train-d figure img { box-shadow:0 10px 30px rgba(60,30,10,.08); }
+    .train-jump { max-width:900px; margin:1.25rem auto 0; }
+    .train-jump .jump-eyebrow { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:#b04228; margin:0 0 6px 4px; }
+    @media (max-width:767px){
+      .train-jump { position:sticky; top:94px; z-index:40; background:#faf7f4; padding-top:8px; padding-bottom:8px; margin-top:.5rem; box-shadow:0 8px 14px -10px rgba(60,30,10,.28); }
+      .train-jump .jump-eyebrow { display:none; }
+    }
+    /* Step ladder */
+    .tl-spine { position:relative; margin:1.5rem 0 0.5rem; }
+    .tl-spine::before { content:""; position:absolute; left:15px; top:8px; bottom:8px; width:2px; background:rgba(45,106,79,.22); }
+    .tl-step { position:relative; padding:0 0 1.4rem 48px; }
+    .tl-step:last-child { padding-bottom:0; }
+    .tl-dot { position:absolute; left:6px; top:2px; width:20px; height:20px; border-radius:50%; background:#2D6A4F; color:#faf7f4; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; font-family:'Sora',sans-serif; }
+    .tl-head { font-family:'Lora',serif; font-weight:700; color:#1c1a18; margin:1px 0 4px; }
+  </style>
+
+  <div class="train-d">
+    <div style="max-width:1200px;margin:0 auto;">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
+
+    <!-- 1. Hero — photo-led (step-up) -->
+    <section class="train-hero text-white px-4 pt-12 pb-10" style="background:#2D6A4F">
+      <div class="max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div class="order-2 md:order-1">
+            <p class="font-sora text-xs font-medium tracking-wide mb-3" style="color:#f08070">Training Guide · Step-by-Step · Midland, TX</p>
+            <h1 class="font-lora font-bold mb-4" style="color:#faf7f4">African Grey Parrot Training: A Breeder's Step-by-Step Guide</h1>
+            <p class="text-lg mb-6" style="color:rgba(250,247,244,0.85)">Train the mind before the behaviour. Trust first, then step-up, recall and talking — taught the way we raise them, with rewards and patience, never force.</p>
+            <a href="#principles" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">Start with the principles</a>
+            <p class="font-sora text-xs mt-4 mb-0" style="color:rgba(250,247,244,0.72)">Written by <strong style="color:#faf7f4">Mark &amp; Teri Benjamin</strong> · C.A.Gs African Grey breeders, Midland TX · USDA-licensed since 2014</p>
+          </div>
+          <figure class="m-0 order-1 md:order-2">
+            <img src={hero} srcset="/african-grey-step-up-target-training-500.webp 500w, /african-grey-step-up-target-training-760.webp 760w, /african-grey-step-up-target-training.webp 1000w" sizes="(min-width: 768px) 480px, 92vw" width="1000" height="560" alt="A hand-raised Congo African Grey stepping up onto a human hand during a calm training session" title="African Grey step-up training | C.A.Gs" class="w-full rounded-2xl" fetchpriority="high" />
+            <span class="block text-center text-sm mt-2" style="color:rgba(250,247,244,0.7)">Step-up, the right way — trust first, reward always.</span>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Counter snippet -->
+    <CounterSnippet stats={counterStats} />
+
+    <!-- 3. Top lead-capture strip -->
+    <div style="max-width:1100px;margin:0 auto;" class="px-4 mt-6 relative z-10">
+      <InquiryCompact heading="Want a Grey that's easy to train from day one?" subtext="Every chick we raise is handled and gentled from weaning — tell us about your home and we'll match you with one ready to learn." subject="African Grey training enquiry" page="blog/training" idPrefix="top" />
+    </div>
+
+    <!-- 4. Jump nav -->
+    <div class="train-jump px-4">
+      <p class="jump-eyebrow font-sora">On This Page</p>
+      <JumpNav links={jumpLinks} sticky={false} />
+    </div>
+
+    <section class="px-4 pt-8 pb-4" style="background:#faf7f4">
+      <div style="max-width:760px;margin:0 auto;">
+
+        <!-- 5. Quick-Answer box (AEO / Position 0) -->
+        <div id="quick" class="scroll-mt-24 mb-6">
+          <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+            <div class="px-6 py-5 sm:px-8" style="background:#2D6A4F">
+              <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] mb-1.5" style="color:#ffd6c9">The short answer</p>
+              <h2 class="font-lora font-bold text-xl sm:text-2xl leading-snug" style="color:#faf7f4">How Do You Train an African Grey Parrot?</h2>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="font-sora text-stone-700 leading-relaxed mb-6">Train an African Grey with <strong>positive reinforcement in short 5–15 minute sessions</strong>, and earn its <strong>trust before you teach anything</strong>. Start with step-up, build to recall and target training, reward every success, and <strong>never punish</strong>. The bird is brilliant — your job is to make learning safe, rewarding and worth its while.</p>
+              <div class="grid grid-cols-2 gap-3">
+                {quickFacts.map((r) => (
+                  <div class="rounded-xl border border-stone-200 bg-cream/60 px-4 py-3">
+                    <span class="block font-sora text-[11px] uppercase tracking-wide text-stone-600">{r.label}</span>
+                    <span class="block font-sora text-sm font-semibold text-logo-dark mt-1 leading-snug">{r.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Principles -->
+        <h2 id="principles" class={h2}>How Do You Train an African Grey — and Why Is It Different?</h2>
+        <p class={p}>Most parrot-training advice treats the bird like a small dog: give a command, get a behaviour, hand over a treat. With an African Grey that misses the whole point. You're not training a pet that wants to please you — you're negotiating with one of the most intelligent animals you'll ever keep, a bird whose cooperation has to be <em>earned</em>. Get that mindset right and everything else on this page works. Get it wrong and you'll spend years fighting a bird that's smarter than your methods.</p>
+
+        <ComparisonTable columns={goalCols} rows={goalRows} verdict="Start at the top and work down — step-up is the foundation every other skill is built on." />
+
+        <h3 class={h3}>What Makes African Grey Training Different?</h3>
+        <h4 class={h4}>Why You Train the Mind Before the Behaviour</h4>
+        <p class={p}>An under-stimulated African Grey doesn't just fail to learn — it invents its own jobs, and you won't like them: screaming, feather-plucking, cage aggression. So the first goal of training isn't a trick at all; it's <a href="/blog/african-grey-parrot-cage-setup/" class={lnk} style="color:#b04228">a mentally engaged, secure bird</a>. Once the mind is occupied and the bird feels safe, behaviours fall into place almost on their own.</p>
+        <h5 class={h5}>Why 5–15 minutes is the ceiling</h5>
+        <p class={p}>Greys fatigue mentally far faster than people expect. Past about fifteen minutes a bird stops absorbing and starts resenting, so two short, upbeat sessions a day beat one long grind every time. Always stop while the bird still wants more — that's what makes it eager for tomorrow's session instead of dreading it.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: how we start gentling chicks</h6>
+        <p class={p}>Our chicks are handled gently from weaning — picked up, talked to, exposed to hands and household life every day — so "training" never starts from zero. By the time one of our Greys goes home it already reads a hand as safe, which is half the battle most owners never have to fight.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 7. Trust first -->
+        <h2 id="trust" class={h2}>Why Trust Has to Come Before Any Training</h2>
+        <p class={p}>This is the section almost every competitor skips, and it's the one that decides whether the rest works. You cannot train a bird that doesn't trust you — not really. Push a frightened Grey into "step up" and you'll teach it that hands mean pressure, which is exactly how lifelong biters and hand-shy birds are made. Spend the first week or two doing nothing but earning trust and you'll save yourself months later.</p>
+
+        <figure class="my-6">
+          <img src="/talking-african-grey-hand-close-bond.webp" srcset="/talking-african-grey-hand-close-bond.webp 900w" sizes="(min-width: 768px) 700px, 92vw" width="900" height="600" alt="A hand-raised African Grey resting calmly against a trusted owner's hand, the bond that has to come before training" title="Building trust with an African Grey before training | C.A.Gs" class="w-full rounded-2xl border border-stone-200" loading="lazy" />
+          <span class={figc}>Trust looks like this — a calm, leaning-in bird. Train from here, never before it.</span>
+        </figure>
+
+        <h3 class={h3}>How Do You Build Trust With an African Grey?</h3>
+        <h4 class={h4}>Respecting Boundaries and Reading "No"</h4>
+        <p class={p}>Trust is built by listening, not pushing. When a Grey leans away, fluffs up defensively or steps back, that's a "not yet" — honour it, and the bird learns you're safe and predictable. Treats offered through the bars with no demand attached, your calm voice, and simply being in the room doing quiet things all bank trust far faster than any drill.</p>
+        <h5 class={h5}>Signs your Grey isn't ready to train yet</h5>
+        <p class={p}>Hold off on formal training while a bird still freezes when you approach, refuses treats from your hand, paces or alarm-calls when you're near, or lunges at the cage front. None of that is stubbornness — it's a bird telling you it doesn't feel safe yet. Rush it and you'll cement the fear; wait it out and the same bird will come to you.</p>
+        <h4 class={h4}>Building a Predictable Daily Routine</h4>
+        <p class={p}>Greys are creatures of routine, and routine is itself a trust-builder. Feeding, covering, out-of-cage time and short training at roughly the same times each day tell the bird the world is reliable — and a bird that feels the world is reliable takes risks, tries new behaviours, and learns.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the trust timeline we see</h6>
+        <p class={p}>With our hand-raised birds, real trust in a brand-new home usually lands somewhere in the first two to four weeks — faster than a parent-reared or imported Grey, because ours arrive already used to people. Slower than that is normal too, especially for a sensitive bird; the worst thing you can do is read patience as failure and start forcing it.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 8. Essential commands -->
+        <h2 id="commands" class={h2}>The Essential Commands Every African Grey Should Learn</h2>
+        <p class={p}>Once trust is in place, training becomes a ladder — each rung makes the next one easier. Step-up is the foundation: master it and step-down, recall and target training follow naturally. Here's the order we teach them, and roughly where each one sits.</p>
+
+        <div class="tl-spine">
+          <div class="tl-step"><span class="tl-dot">1</span><p class="tl-head">Build trust</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">The rung under every other rung — no skipping it. A bird that trusts your hand will try anything; one that doesn't will fight everything.</p></div>
+          <div class="tl-step"><span class="tl-dot">2</span><p class="tl-head">Step-up</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">The single most useful command. A reliable step-up makes handling, vet trips and every other lesson possible.</p></div>
+          <div class="tl-step"><span class="tl-dot">3</span><p class="tl-head">Step-down</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">The safety partner to step-up — a bird that steps down on cue is a bird you can always place back where it belongs.</p></div>
+          <div class="tl-step"><span class="tl-dot">4</span><p class="tl-head">Recall</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">Come-when-called. Genuinely useful, and a confidence-builder for both of you — but only once step-up is rock solid.</p></div>
+          <div class="tl-step"><span class="tl-dot">5</span><p class="tl-head">Target training</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">Touch a target stick on cue. The gateway to almost every advanced behaviour and a brilliant way to redirect a beaky bird.</p></div>
+        </div>
+
+        <h3 class={h3}>How Do You Teach the Step-Up Command?</h3>
+        <h4 class={h4}>Hand Position and Reward Timing</h4>
+        <p class={p}>Present a steady hand or perch just above the bird's feet and level with its lower chest, say your cue once — "step up" — and the moment a foot lifts onto your hand, mark it and reward. Timing is everything: the treat has to land within a second or two so the bird connects the reward to the <em>step</em>, not to whatever it did next. Keep the hand calm and confident; a wobbling, hesitant hand reads as unsafe.</p>
+        <h5 class={h5}>The most common step-up mistakes</h5>
+        <p class={p}>The usual culprits: pushing the hand into the bird's belly so it feels shoved, repeating "step up, step up, step UP" until the cue means nothing, rewarding too late, and quitting on a failure. Cue once, reward fast, and if a session goes sideways, ask for one easy win you know the bird will give, reward that, and stop there.</p>
+        <h3 class={h3}>When Do You Add Recall and Target Training?</h3>
+        <h4 class={h4}>Building From Step-Up to the Advanced Skills</h4>
+        <p class={p}>Add recall and target only once step-up happens every time without coaxing. Target training in particular is worth its weight — teaching a Grey to touch a stick on cue gives you a remote, hands-off way to move it, redirect biting energy, and shape new behaviours without ever forcing the bird.</p>
+        <h6 class={h6} style="color:#b04228">Citation: positive reinforcement &amp; operant conditioning</h6>
+        <p class={p}>None of this is breeder folklore — it's <strong>operant conditioning</strong>, the same positive-reinforcement science used to train everything from service dogs to zoo animals, applied to a parrot. For the behaviour-science background we point owners to established avian-behaviour resources; the principle is constant: reward the behaviour you want, ignore the one you don't, and never punish.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 9. Talking training -->
+        <h2 id="talking" class={h2}>How Do You Train an African Grey to Talk?</h2>
+        <p class={p}>Talking isn't really "trained" so much as grown — but you can absolutely stack the odds. The trick is to stop drilling and start <em>communicating</em>: African Greys learn words the way toddlers do, by tying sound to meaning. For the full picture see our <a href="/blog/african-grey-parrot-talking-ability/" class={lnk} style="color:#b04228">guide to African Grey talking ability</a>; here's the training-specific version.</p>
+
+        <figure class="my-6">
+          <img src="/african-grey-parrot-talking-microphone.webp" srcset="/african-grey-parrot-talking-microphone-500.webp 500w, /african-grey-parrot-talking-microphone-760.webp 760w, /african-grey-parrot-talking-microphone.webp 1000w" sizes="(min-width: 768px) 700px, 92vw" width="1000" height="596" alt="An African Grey parrot vocalising, reproducing words and household sounds it has learned through daily contextual repetition" title="Training an African Grey to talk | C.A.Gs" class="w-full rounded-2xl border border-stone-200" loading="lazy" />
+          <span class={figc}>Words stick when they're tied to a moment — say the greeting, not the flashcard.</span>
+        </figure>
+
+        <h3 class={h3}>Choosing First Words and Using Repetition</h3>
+        <h4 class={h4}>Pick Easy Words and Reward Every Attempt</h4>
+        <p class={p}>Start with short, punchy words full of hard consonants and bright vowels — "hello", "step up", the bird's own name — and pair each with the exact moment it belongs to, every single day. Reward any attempt, even a garbled half-version, because what you're really rewarding is the bird <em>trying</em> to talk to you. Perfection comes later; willingness comes first.</p>
+        <h5 class={h5}>Why context beats word-drilling</h5>
+        <p class={p}>Playing a word on a loop or repeating it twenty times in a row does almost nothing — Greys tune out anything that isn't connected to life. The goodbye you say a thousand times as you actually leave will beat the flashcard word you said ten times in a vacuum. Context is the whole engine of African Grey speech.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 10. Behaviour problems -->
+        <h2 id="behaviour" class={h2}>Fixing the Big Behaviour Problems: Biting, Screaming, Aggression &amp; Fear</h2>
+        <p class={p}>This is the section most owners actually arrive for. The good news: nearly every "behaviour problem" in an African Grey is communication, not malice — the bird is telling you something in the only language it has. Learn to read it, and most problems shrink dramatically. The body-language chart below is the single most useful thing on this page.</p>
+
+        <ComparisonTable columns={signalCols} rows={signalRows} verdict="A Grey almost never bites 'out of nowhere' — it warns first. Read the warning and the bite never happens." />
+
+        <h3 class={h3}>How Do I Stop My African Grey From Biting?</h3>
+        <h4 class={h4}>Reading the Body Language Before the Bite</h4>
+        <p class={p}>The fix for biting starts well before the beak. Watch the eyes and the feathers: a Grey winding up to bite usually pins its eyes, sleeks or fans its feathers, shifts its weight away, or opens its beak in warning. Back off at the warning and you teach the bird it doesn't need to escalate; ignore the warning and you teach it that only a bite gets you to listen.</p>
+        <h5 class={h5}>Eye pinning, posture and what they warn</h5>
+        <p class={p}>Pinning (the pupils rapidly shrinking and flaring) signals high arousal — excitement <em>or</em> aggression, so it's a "pause" sign, not a green light. A fanned tail and raised wings mean territorial or over-stimulated; sleeked feathers with a lean-away mean fear. Read the cluster, not one sign in isolation, and respond by lowering the pressure.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the bite we could have prevented</h6>
+        <p class={p}>Almost every "my sweet bird suddenly bit me" story we hear, when we walk through it, had two or three ignored warnings in the seconds before. The bird wasn't being treacherous — it was being read too late. Slow down, watch, and you'll catch the warnings you're currently missing.</p>
+
+        <h3 class={h3}>What About Screaming, Aggression and Fearfulness?</h3>
+        <h4 class={h4}>What the Behaviour Is Really Telling You</h4>
+        <p class={p}>Screaming is usually contact-calling (or a habit you accidentally rewarded by running over); aggression is usually fear, hormones, or cage-guarding; fearfulness is usually under-socialisation or a bad past. In every case the move is the same — find the trigger, lower the pressure, and reward the calm alternative — rather than punishing the symptom, which only adds fear to the mix.</p>
+
+        <Callout variant="alert" title="Never punish a bite or a scream">
+          <p>Hitting, flicking the beak, "laddering" angrily, dropping the bird, or covering it as punishment all teach the same lesson: <em>you are not safe.</em> A punished Grey bites harder, screams more and trusts less. Redirect, reward the behaviour you want, and remove the trigger — that's the only thing that actually works.</p>
+        </Callout>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 11. Mistakes -->
+        <h2 id="mistakes" class={h2}>The Training Mistakes That Set You Back</h2>
+        <p class={p}>You can do everything else right and still stall if you fall into these. They're the four traps we see most often — and the good news is they're all easy to fix once you can name them.</p>
+
+        <MythFact
+          myth="If my African Grey misbehaves, I need to show it who's boss with a firm correction."
+          fact="There is no 'boss' to a parrot — there's safe or unsafe. Punishment doesn't correct a Grey, it frightens one, and a frightened Grey bites, screams and shuts down. Reward what you want and ignore or redirect what you don't. That's the entire method." />
+
+        <h3 class={h3}>Why Punishment, Marathon Sessions and Inconsistency Fail</h3>
+        <h4 class={h4}>What to Do Instead</h4>
+        <p class={p}>Swap punishment for redirection and reward. Swap the long, ambitious session for two short upbeat ones that end on a win. And swap "whenever I remember" for a daily rhythm — Greys learn from patterns, and an inconsistent owner is an unreadable one.</p>
+        <h5 class={h5}>The one habit that undoes weeks of work</h5>
+        <p class={p}>Rewarding the wrong moment. Come running every time the bird screams and you've just trained a screamer; give a treat to quiet a biter and you've paid it to bite. Watch <em>what</em> you reward as closely as how — the bird is always learning something, the only question is whether it's the lesson you meant.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: consistency is the whole game</h6>
+        <p class={p}>If we had to hand a new owner one rule it would be this: be boringly consistent. The same cue, the same reward, the same calm response to the same behaviour, every day. A Grey will forgive a clumsy hand and a wrong word — what it can't learn from is a moving target.</p>
+
+        <BreederNote>
+          <p>The best-trained Greys we follow up on don't belong to the owners who drilled hardest — they belong to the ones who stayed <em>patient and consistent</em>, kept sessions short and happy, and treated training as a conversation the bird wanted to be part of. That's free, it's repeatable, and no shortcut replaces it.</p>
+        </BreederNote>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 12. Decision tree -->
+        <h2 class={h2}>Where Should YOU Start? A Quick Training Plan</h2>
+        <p class={p}>The right first step depends entirely on where your bird is today. Find your situation below for an honest starting point.</p>
+        <div class="mt-6">
+          <DecisionTree question="Match a Starting Point to Your Grey" branches={planBranches} headingLevel="h3" />
+        </div>
+
+        <!-- 13. Trust band + birds -->
+        <h2 class={h2}>What Do You Get From a Breeder Who Raises for Trainability?</h2>
+        <p class={p}>A trainable Grey starts long before you ever hold it. Here at C.A.Gs, every chick is hand-raised and handled daily from weaning, so it arrives already trusting hands, used to household life, and primed to learn — with <a href="/blog/african-grey-parrot-price-what-you-get/" class={lnk} style="color:#b04228">PCR DNA sexing, an avian-vet health certificate, and CITES Appendix I paperwork</a>, all captive-bred in the USA.</p>
+        <h3 class={h3}>Which of Our Greys Are Ready to Start Training?</h3>
+        <p class={p}>Every bird below is hand-raised here in Midland and gentled from weaning — fully weaned, PCR DNA-sexed, vet-checked and CITES-documented. Here's who we have available right now:</p>
+        <div class="grid sm:grid-cols-2 gap-5 mt-2">
+          {birds.map((b) => (
+            <BirdCard
+              id={b.id} name={b.name} sex={b.sex} age={b.age} price={b.price}
+              tag={b.tag} tagType={b.tagType} notes={b.notes} hook={b.hook}
+              image={b.image} variant={b.variant} objectPos={b.objectPos}
+            />
+          ))}
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-6 mb-2">
+          <p class="font-lora font-bold text-2xl mb-2 text-logo-dark">Want a Grey that's a joy to train?</p>
+          <p class="text-stone-600 mb-1">Ships nationwide · $185 airport · $350 home</p>
+          <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American · IATA LAR</p>
+          <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See all available African Greys</a>
+          <a href="/contact-us/" class="inline-block font-sora font-semibold px-7 py-3 underline" style="color:#b04228">Ask a breeder</a>
+        </div>
+
+        <p class="font-lora italic text-stone-600 text-center mt-8 mb-0">— Written by Mark &amp; Teri Benjamin, the breeders behind C.A.Gs · USDA-licensed African Grey aviary, Midland, TX</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 14. FAQ -->
+        <h2 id="faq" class={h2}>African Grey Training: Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {faqs.map((faq) => (
+            <details class="bg-white rounded-xl border border-stone-200 p-5">
+              <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
+              <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <!-- 15. Related posts -->
+        <div class="mt-12">
+          <RelatedPosts heading="Keep reading" headingLevel="h2" posts={[
+            { title: "African Grey Talking Ability: How Well Do They Talk?", slug: "/blog/african-grey-parrot-talking-ability/", category: "Talking" },
+            { title: "African Grey Cage Setup: The Breeder's Blueprint", slug: "/blog/african-grey-parrot-cage-setup/", category: "Care" },
+            { title: "African Grey for Sale: What You Get", slug: "/blog/african-grey-parrot-price-what-you-get/", category: "Buying" },
+          ]} />
+        </div>
+
+      </div>
+    </section>
   </div>
 
-  <section style="background:#2D6A4F" class="text-white py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Training Guide · USDA-Licensed Breeders · Midland, TX</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey Parrot Training</h1>
-      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">Target training, step-up, recall, talking development, and bite prevention — the exact methods we use with every bird we raise.</p>
-    </div>
-  </section>
+  <!-- Newsletter -->
+  <Newsletter variant="bottom" action="/contact-us/" bottomText="Training tips and new hand-raised clutches before they're listed — socialised families first." />
 
-  <!-- Content -->
-  <section class="py-16 px-4" style="background:#faf7f4">
-    <div class="max-w-760px mx-auto" style="max-width:760px">
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">The Foundation: Target Training</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Before any trick, recall, or talking work, every African Grey should learn target training. It establishes communication between you and the bird, builds trust, and creates a universal way to guide movement without force.</p>
-      <ol class="list-decimal pl-6 space-y-3 text-stone-700 mb-8">
-        <li><strong>Choose your target:</strong> a chopstick, pencil, or purpose-built target stick</li>
-        <li><strong>Present the target</strong> 2–3 inches from the bird's beak</li>
-        <li><strong>Wait:</strong> most birds will touch it out of curiosity within 30 seconds</li>
-        <li><strong>The moment beak contacts target:</strong> say "good" or click (if using a clicker) and immediately offer a high-value treat</li>
-        <li><strong>Repeat</strong> 5–8 times per session, 2–3 sessions per day</li>
-        <li><strong>When the bird reliably touches the target:</strong> begin moving it to guide the bird — left, right, up, down, onto a perch, into the carrier</li>
-      </ol>
-      <p class="text-stone-700 leading-relaxed mb-8">Session length: 5–10 minutes maximum. End every session on a successful touch, not on a refusal. If the bird stops engaging, end immediately — do not push for one more rep.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Step-Up Training</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Step-up on command is the most practical behavior for daily management. African Greys that step up reliably are far safer to handle and easier to work with.</p>
-      <ol class="list-decimal pl-6 space-y-3 text-stone-700 mb-8">
-        <li>With the bird on a perch at waist height, present your forearm parallel to the perch</li>
-        <li>Apply gentle upward pressure below the bird's feet while saying "step up"</li>
-        <li>The moment one foot steps onto your arm, reward immediately</li>
-        <li>Do not chase the bird with your arm — present it and wait</li>
-        <li>Practice stepping up and back to the perch 3–5 times per session</li>
-      </ol>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Talking Development</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">African Greys learn speech through contextual repetition, not rote drilling. The most effective talking development technique is simply living with and talking to your bird — not running word-recording loops.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Narrate your daily activities: "I'm making coffee," "Let's go outside," "Time for breakfast"</li>
-        <li>Use the same phrases in the same contexts consistently — the bird associates words with situations</li>
-        <li>Say the bird's name before every interaction (builds name recognition)</li>
-        <li>Greet with "good morning" and "good night" daily — these are often among the first phrases learned</li>
-        <li>Whistle: many African Greys learn whistles faster than words initially</li>
-        <li>Watch TV in the same room — the constant varied language input accelerates vocabulary development</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Reading Body Language</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Preventing bites is more important than correcting them. Learn the warning signs before the bite occurs:</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>Pinned pupils</strong> (pupils rapidly contracting and expanding): high arousal — proceed with caution</li>
-        <li><strong>Feathers raised on neck/head:</strong> defensive posture</li>
-        <li><strong>Tail fanning:</strong> agitation or excitement (context-dependent)</li>
-        <li><strong>Leaning away with weight on both feet:</strong> the bird wants to retreat — give space</li>
-        <li><strong>Beak grinding:</strong> contentment — a relaxed bird ready to rest</li>
-        <li><strong>Regurgitating food toward you:</strong> a bonding gesture — do not confuse with illness</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Training Session Rules</h2>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>5–10 minutes max per session:</strong> African Greys lose focus; shorter sessions outperform long ones</li>
-        <li><strong>2–3 sessions per day:</strong> consistency matters more than session length</li>
-        <li><strong>Before meals, not after:</strong> a slightly hungry bird is more motivated by food rewards</li>
-        <li><strong>Same location:</strong> familiar environment reduces distraction and anxiety</li>
-        <li><strong>End on success:</strong> the last repetition of every session should be a win — even if you have to simplify the behavior to get it</li>
-        <li><strong>Never force physical contact:</strong> any behavior done under duress sets back training by days or weeks</li>
-      </ul>
-
-      <!-- FAQ -->
-      <h2 class="font-lora font-bold text-3xl mb-8" style="color:#2D6A4F">Frequently Asked Questions</h2>
-      <div class="space-y-4">
-        {faqs.map((faq) => (
-          <details class="bg-white rounded-xl border border-stone-200 p-5">
-            <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
-            <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
-          </details>
-        ))}
-      </div>
-
-    </div>
-  </section>
-
+  <StickyCta label="Meet our hand-raised Greys" href="/available/" />
 </BaseLayout>
