@@ -1,48 +1,176 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
+import InquiryCompact from '../../../components/cag-inquiry-compact.astro';
+import Newsletter from '../../../components/cag-library/NewsletterV2.astro';
+import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
+import Callout from '../../../components/cag-blog-callout.astro';
+import ComparisonTable from '../../../components/cag-blog-comparison-table.astro';
+import BreederNote from '../../../components/cag-blog-breeder-note.astro';
+import MythFact from '../../../components/cag-blog-myth-fact.astro';
+import DecisionTree from '../../../components/cag-blog-decision-tree.astro';
+import RelatedPosts from '../../../components/cag-blog-related-posts.astro';
+import StickyCta from '../../../components/cag-blog-sticky-cta.astro';
+import BirdCard from '../../../components/BirdCard.astro';
 
-const title = "African Grey Parrot Talking Ability | How Well Do They Really Talk?";
-const description = "African Greys can learn 200–1,000+ words and use them contextually — not just mimic. What to realistically expect, timelines, and how to develop talking ability.";
+const title = "African Grey Parrot Talking Ability: How Well Do They Really Talk? | Word Counts, Timeline, Congo vs Timneh & the Truth About Mimicry vs Understanding | C.A.Gs – Midland, TX";
+const description = "How well do African Greys really talk? A breeder's honest guide — vocabulary (200–1,000+ words), when they start, multi-syllable phrases, contextual speech vs mimicry, the Alex studies, Congo vs Timneh, and whether a timid bird will talk. With real footage of Maxy, one of our Congos.";
 const canonical = "https://congoafricangreys.com/blog/african-grey-parrot-talking-ability/";
+
+const poster = "/african-grey-breeder-with-bird-midland-tx.webp";
+const videoUrl = "/talking-african-grey-parrot-video.mp4";
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "Blog", url: "/blog/" },
-  { name: "African Grey Parrot Talking Ability", url: "/blog/african-grey-parrot-talking-ability/" },
+  { name: "African Grey Talking Ability", url: "/blog/african-grey-parrot-talking-ability/" },
+];
+
+const jumpLinks = [
+  { label: "Quick Answer", href: "#quick" },
+  { label: "How They Talk", href: "#how" },
+  { label: "Timeline", href: "#timeline" },
+  { label: "How Many Words", href: "#words" },
+  { label: "Do All Talk?", href: "#all" },
+  { label: "Congo vs Timneh", href: "#vs" },
+  { label: "What Helps", href: "#develops" },
+  { label: "Will Mine Talk?", href: "#will" },
+  { label: "FAQ", href: "#faq" },
+];
+
+const counterStats = [
+  { num: "#1",        label: "Ranked Talker" },
+  { num: "200–1000+", label: "Word Vocabulary" },
+  { num: "12–18mo",   label: "First Words" },
+  { num: "30 yrs",    label: "Alex Science" },
+];
+
+const quickFacts = [
+  { label: "Best talker", value: "of any parrot species" },
+  { label: "Vocabulary", value: "200–1,000+ words possible" },
+  { label: "First words", value: "usually 12–18 months" },
+  { label: "Understanding", value: "contextual, not just mimicry" },
+];
+
+const timeline = [
+  { age: "0–6 months", head: "Experimental sounds", text: "Clicks, whistles, beeps and soft babble — the bird is tuning its syrinx. No real words yet, and none expected. A quiet chick now is not a quiet adult later." },
+  { age: "6–12 months", head: "First word attempts", text: "The first recognisable word usually appears here — almost always a phrase tied to a moment ('hello' at the door, its own name, a morning greeting). Timnehs often beat Congos to this milestone." },
+  { age: "1–2 years", head: "10–50 words", text: "In a well-socialised bird the vocabulary builds quickly and pronunciation sharpens. Phrases start linking to context — 'want up?', 'night night', the microwave beep it stole from your kitchen." },
+  { age: "2–5 years", head: "Phrases & sentences", text: "The big expansion. Words become phrases, phrases become little sentences, and genuine contextual use settles in. This is when owners stop saying 'it mimics' and start saying 'it talks'." },
+  { age: "5+ years", head: "200–1,000+ words", text: "Full range. Some birds plateau at a few dozen favourites; the keenest reach several hundred and a documented few pass a thousand. Development never fully stops — Greys add words for life." },
+];
+
+const talkerCols = ["Trait", "Congo African Grey", "Timneh African Grey"];
+const talkerRows = [
+  { item: "Starts talking", values: ["12–18 months", "9–14 months (earlier)"] },
+  { item: "Voice quality", values: ["Clearer, more human", "Slightly raspier / softer"] },
+  { item: "Ultimate vocabulary", values: ["Often larger", "Strong, modestly smaller"] },
+  { item: "Settling in a new home", values: ["Steadier, slower", "Adapts & vocalises faster"] },
+];
+
+const willBranches = [
+  { answer: "You're home and talk to the bird daily", result: "Excellent odds. Daily, contextual speech from a bonded human is the single biggest driver of a strong talker." },
+  { answer: "You're out most of the day", result: "Still likely, but plan for it — leave the radio off and the bird in a busy room, and make your hellos and goodbyes consistent verbal rituals." },
+  { answer: "Your bird is young and still shy", result: "Give it time. Most timid chicks talk once they settle and trust the room; pressure and staring slow it down, patience speeds it up." },
+  { answer: "You want a guaranteed talker on a deadline", result: "No honest breeder can promise that. We raise for the best odds, but talking is a relationship, not a spec — manage that expectation before you buy." },
+];
+
+// Available birds — talkers ready to go home (mirrors data/clutch-inventory.json + homepage grid).
+const birds = [
+  { id: 'amie', name: 'Amie', sex: 'Female', age: '3 mo', price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'She mimics your laugh before you finish it.',
+    notes: 'Premium hand-raised female, 3 months old. Full social training. Responds to her name already.' },
+  { id: 'roys', name: 'Roys', sex: 'Male', age: '4 mo', price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Energetic, curious, and impossible to ignore.',
+    notes: "Hand-raised male, 4 months old. Thrives in a lively home where there's always something to watch." },
+  { id: 'bery', name: 'Bery', sex: 'Female', age: '1 yr', price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp', objectPos: 'object-center',
+    hook: 'Gentle, easy, and the bird first-time owners dream of.',
+    notes: 'Soft temperament, easy to handle. 1-year-old female — personality fully developed, ready to bond.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Talking Pair', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair-talking-birds.webp', objectPos: 'object-center',
+    hook: 'Two birds, one bond — and twice the chatter.',
+    notes: 'Unrelated pair, adopted together. Jins (male, 6mo) + Jeni (female, 4mo). Both hand-raised with full social training.' },
 ];
 
 const faqs = [
-  {
-    q: "How well do African Grey parrots talk?",
-    a: "African Greys are consistently rated the best talkers of all parrot species. They can develop vocabularies of 200–1,000+ words and — uniquely among parrots — use words contextually rather than just repeating sounds. A well-socialized African Grey will say 'good morning' when you enter the room in the morning, ask 'what are you doing?' when it hears unfamiliar sounds, and respond appropriately to questions it recognizes.",
-  },
-  {
-    q: "When do African Grey parrots start talking?",
-    a: "Most African Greys begin experimenting with sounds and words between 12–18 months of age. Some start earlier (9–10 months), others not until 2 years. Timneh African Greys often start talking earlier than Congos. The first words are usually words or phrases repeated in consistent contexts — 'hello,' the bird's name, or a phrase said every morning or evening.",
-  },
-  {
-    q: "Do all African Grey parrots talk?",
-    a: "No. While African Greys have the highest talking potential of any parrot species, not every individual will become a talker. Genetics, socialization, the amount of human interaction, and individual personality all play a role. Birds that grow up with minimal human contact in their first year typically develop significantly smaller vocabularies. Birds raised with constant human interaction and voice stimulation have the highest talking potential.",
-  },
-  {
-    q: "Congo vs Timneh — which talks better?",
-    a: "Congo African Greys (the larger subspecies) tend to develop larger ultimate vocabularies and clearer pronunciation. Timneh African Greys typically start talking earlier, speak in a slightly different voice quality (sometimes described as more raspy), and adapt faster to new environments. Both subspecies talk well — the difference in ultimate vocabulary is real but modest. Socialization matters far more than subspecies.",
-  },
-  {
-    q: "Can African Grey parrots understand what they say?",
-    a: "This is still debated among researchers, but the evidence from Dr. Irene Pepperberg's 30 years studying Alex (a Congo African Grey) suggests that at least some African Greys use words with genuine semantic understanding — not just learned associations. Alex could identify objects by color, shape, and material, answer 'how many?' questions correctly, and request specific items by name. Whether all African Greys have this capacity or Alex was exceptional remains an open question.",
-  },
+  { q: "How many words can an African Grey learn?",
+    a: "Most well-socialised African Greys settle into a working vocabulary of a few dozen to a couple of hundred words and phrases, and the keenest reach several hundred — a documented few pass 1,000. More telling than the count is that Greys use words contextually, not as random mimicry, so even a 40-word bird can feel like it's holding a conversation." },
+  { q: "Do African Greys really talk, or just mimic sounds?",
+    a: "They genuinely talk in the sense that matters: they attach words to situations. An African Grey says 'hello' when someone arrives, asks 'want up?' to be picked up, and names objects it wants. Whether that is 'understanding' in the human sense is still debated, but Greys use speech as communication far more than any other parrot — which is why they're ranked the #1 talking species." },
+  { q: "When do African Grey parrots start talking?",
+    a: "Usually between 12 and 18 months, though some start as early as 9–10 months and others not until two years. Timneh African Greys often begin a few months earlier than Congos. The first 'word' is almost always a phrase tied to a repeated moment — a morning greeting, the bird's name, or 'hello' at the door." },
+  { q: "Can a timid or shy African Grey still talk?",
+    a: "Yes. A timid young Grey is usually a bird that hasn't settled yet, not a bird that will never talk. Once it trusts the room and the people in it, the talking almost always comes. Staring, pressure and a chaotic environment slow it down; calm routine, consistent phrases and patience speed it up." },
+  { q: "Can African Greys say multiple-syllable words and whole phrases?",
+    a: "They can. Greys move from single words to multi-syllable words, then to phrases and short sentences, typically across years two to five. Many string several words into a contextual phrase ('night night, see you tomorrow') and reproduce household sounds with eerie accuracy — the microwave beep, the phone, even another pet's name." },
+  { q: "Do African Greys talk more at certain times of day?",
+    a: "Often, yes. Like wild flocks calling at first and last light, many companion Greys have their chattiest spells at dawn and again in the early evening — a 'before-bed' wind-down where the bird runs through its favourite words. It's normal, it's a good sign of a content bird, and covering the cage settles it for the night." },
+  { q: "Congo vs Timneh — which African Grey talks better?",
+    a: "Both talk beautifully. Congos tend toward clearer, more human-sounding pronunciation and a slightly larger ultimate vocabulary; Timnehs usually start earlier and adapt faster to a new home. The gap is real but modest — a well-socialised bird of either subspecies out-talks a neglected one of the other every time. Socialisation matters far more than subspecies." },
+  { q: "Will my African Grey definitely talk?",
+    a: "We never guarantee it, and you should be wary of any breeder who does. Talking depends on genetics, socialisation and — most of all — daily human interaction in the bird's home. We raise every chick with constant speech to give it the best possible odds, but talking is a relationship you build, not a feature you buy." },
 ];
 
-const faqSchema = {
+const imageObjects = [
+  {
+    "@type": "ImageObject",
+    "contentUrl": "https://congoafricangreys.com" + poster,
+    "url": "https://congoafricangreys.com" + poster,
+    "name": "Maxy, a talking Congo African Grey, with a C.A.Gs breeder in Midland, TX",
+    "caption": "Maxy, one of our hand-raised Congo African Greys, talking at our Midland aviary.",
+    "width": 640,
+    "height": 480,
+    "description": "Maxy, a hand-raised Congo African Grey, perched with a C.A.Gs breeder at our Midland, Texas home aviary. Maxy is one of our talking Congos and the bird featured in the video on this page, used here to show that contextual African Grey speech is a real, documented ability rather than a sales claim — every Grey we raise grows up hearing daily human conversation from weaning."
+  },
+  {
+    "@type": "ImageObject",
+    "contentUrl": "https://congoafricangreys.com/jins-jeni-congo-african-grey-pair-talking-birds.webp",
+    "url": "https://congoafricangreys.com/jins-jeni-congo-african-grey-pair-talking-birds.webp",
+    "name": "Jins and Jeni, a hand-raised Congo African Grey talking pair",
+    "caption": "Jins and Jeni, a hand-raised Congo African Grey pair, both in full social training.",
+    "width": 640,
+    "height": 480,
+    "description": "Jins and Jeni, an unrelated pair of hand-raised Congo African Greys sold together, photographed at our Midland aviary. Both are in full social training with daily speech exposure, illustrating the early socialisation window that gives a young Grey its best odds of becoming a confident talker."
+  },
+  {
+    "@type": "ImageObject",
+    "contentUrl": "https://congoafricangreys.com/congo-african-grey-talking-ability.webp",
+    "url": "https://congoafricangreys.com/congo-african-grey-talking-ability.webp",
+    "name": "Congo African Grey using contextual speech",
+    "caption": "A Congo African Grey mid-vocalisation — contextual speech, not just mimicry.",
+    "width": 1100,
+    "height": 600,
+    "description": "A Congo African Grey captured mid-vocalisation, used to illustrate the central idea of this guide: that African Greys use words in context rather than merely copying sounds. Where most talking birds repeat noises, a Grey attaches learned phrases to the situation in front of it, which is why the species is ranked the number-one talking parrot and why owners describe living with one as a conversation rather than a recording."
+  },
+  {
+    "@type": "ImageObject",
+    "contentUrl": "https://congoafricangreys.com/african-grey-talking-development-milestones-infographic.webp",
+    "url": "https://congoafricangreys.com/african-grey-talking-development-milestones-infographic.webp",
+    "name": "African Grey speech development milestones infographic",
+    "caption": "African Grey talking milestones from 0–6 months to 5+ years.",
+    "width": 900,
+    "height": 1612,
+    "description": "An infographic mapping African Grey speech development across the bird's first years, the same realistic timeline C.A.Gs walks every family through before a chick goes home. It moves from experimental sounds, clicks and babble at 0 to 6 months, to first word attempts at 6 to 12 months, a 10 to 50 word vocabulary at 1 to 2 years, phrases and short sentences at 2 to 5 years, and a full 200 to 1,000-plus word range from 5 years onward. The graphic exists to reset the common expectation that a Grey talks immediately, showing instead that talking is a multi-year arc driven by daily, contextual human conversation rather than a switch that flips on purchase."
+  }
+];
+
+const videoSchema = {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
+  "@type": "VideoObject",
+  name: "Maxy, a Congo African Grey, talking",
+  description: "Maxy, one of the hand-raised Congo African Greys at C.A.Gs in Midland, TX, talking — a real example of contextual African Grey speech.",
+  thumbnailUrl: ["https://congoafricangreys.com" + poster],
+  uploadDate: "2026-05-22",
+  contentUrl: "https://congoafricangreys.com" + videoUrl,
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com", url: "https://congoafricangreys.com" },
 };
 
 const articleSchema = {
@@ -50,101 +178,329 @@ const articleSchema = {
   "@type": "Article",
   headline: "African Grey Parrot Talking Ability: How Well Do They Really Talk?",
   description,
+  image: imageObjects,
   author: { "@type": "Person", name: "Mark & Teri Benjamin" },
-  publisher: {
-    "@type": "Organization",
-    name: "CongoAfricanGreys.com",
-    url: "https://congoafricangreys.com",
-  },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com", url: "https://congoafricangreys.com" },
   datePublished: "2026-05-22",
+  dateModified: "2026-06-28",
+  mainEntityOfPage: canonical,
   url: canonical,
 };
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+
+// heading classes — match Roys/homepage parity (font-lora, text-logo-dark, no text-3xl)
+const h2 = "font-lora font-bold text-logo-dark leading-tight mb-4 mt-2 scroll-mt-24";
+const h3 = "font-lora font-semibold text-xl text-logo-dark mb-3 mt-6";
+const h4 = "font-lora font-semibold text-lg text-logo-dark mb-2 mt-5";
+const h5 = "font-lora font-semibold text-base text-logo-dark mt-5 mb-1";
+const h6 = "font-sora font-semibold text-xs uppercase tracking-wide mt-4 mb-1";
+const p = "text-stone-700 leading-relaxed mb-4";
+const lnk = "underline font-medium";
+const figc = "block text-center text-sm text-stone-600 mt-2";
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta heroPreload={poster}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
+  <style>
+    .talk-d .cag-seam { display:flex; align-items:center; gap:26px; max-width:1100px; margin:2.25rem auto 1.5rem; padding:0 24px; }
+    .talk-d .cag-seam__line { flex:1; height:1px; background:rgba(45,106,79,.16); }
+    .talk-d .cag-seam img { height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+    @media (max-width:600px){ .talk-d .cag-seam { gap:16px; } .talk-d .cag-seam img { height:24px; } }
+    .talk-d .talk-hero h1 { font-size:clamp(1.7rem, 1.1rem + 2.6vw, 2.4rem) !important; line-height:1.14 !important; }
+    .talk-d figure img { box-shadow:0 10px 30px rgba(60,30,10,.08); }
+    .talk-jump { max-width:900px; margin:1.25rem auto 0; }
+    .talk-jump .jump-eyebrow { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:#b04228; margin:0 0 6px 4px; }
+    @media (max-width:767px){
+      .talk-jump { position:sticky; top:94px; z-index:40; background:#faf7f4; padding-top:8px; padding-bottom:8px; margin-top:.5rem; box-shadow:0 8px 14px -10px rgba(60,30,10,.28); }
+      .talk-jump .jump-eyebrow { display:none; }
+    }
+    /* Timeline spine */
+    .tl-spine { position:relative; margin:1.5rem 0 0.5rem; }
+    .tl-spine::before { content:""; position:absolute; left:15px; top:8px; bottom:8px; width:2px; background:rgba(45,106,79,.22); }
+    .tl-step { position:relative; padding:0 0 1.4rem 48px; }
+    .tl-step:last-child { padding-bottom:0; }
+    .tl-dot { position:absolute; left:6px; top:2px; width:20px; height:20px; border-radius:50%; background:#2D6A4F; color:#faf7f4; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; font-family:'Sora',sans-serif; }
+    .tl-age { font-family:'Sora',sans-serif; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#b04228; }
+    .tl-head { font-family:'Lora',serif; font-weight:700; color:#1c1a18; margin:1px 0 4px; }
+  </style>
+
+  <div class="talk-d">
+    <div style="max-width:1200px;margin:0 auto;">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
+
+    <!-- 1. Hero — video-led (Maxy) -->
+    <section class="talk-hero text-white px-4 pt-12 pb-10" style="background:#2D6A4F">
+      <div class="max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div class="order-2 md:order-1">
+            <p class="font-sora text-xs font-medium tracking-wide mb-3" style="color:#f08070">Talking Guide · Real Footage · Midland, TX</p>
+            <h1 class="font-lora font-bold mb-4" style="color:#faf7f4">African Grey Parrot Talking Ability: How Well Do They Really Talk?</h1>
+            <p class="text-lg mb-6" style="color:rgba(250,247,244,0.85)">Not "1,000 words on day one." Here's the honest version — what they really say, when it starts, and Maxy, one of our Congos, doing it on camera.</p>
+            <a href="#how" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">Hear how they talk</a>
+            <p class="font-sora text-xs mt-4 mb-0" style="color:rgba(250,247,244,0.72)">Written by <strong style="color:#faf7f4">Mark &amp; Teri Benjamin</strong> · C.A.Gs African Grey breeders, Midland TX · USDA-licensed since 2014</p>
+          </div>
+          <figure class="m-0 order-1 md:order-2">
+            <video controls preload="none" playsinline poster={poster} width="768" height="432" class="w-full rounded-2xl" style="aspect-ratio:768/432;background:#1c1a18">
+              <source src={videoUrl} type="video/mp4" />
+              Your browser does not support the video tag. Maxy, one of our Congo African Greys, talking at our Midland, TX aviary.
+            </video>
+            <span class="block text-center text-sm mt-2" style="color:rgba(250,247,244,0.7)">That's Maxy, one of our hand-raised Congos, talking.</span>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Counter snippet (Option 1 — Talking facts) -->
+    <CounterSnippet stats={counterStats} />
+
+    <!-- 3. Top lead-capture strip -->
+    <div style="max-width:1100px;margin:0 auto;" class="px-4 mt-6 relative z-10">
+      <InquiryCompact heading="Want a Grey with the best shot at talking?" subtext="Tell us about your home and routine — we'll match you with a chick we've been talking to daily since weaning." subject="Talking African Grey enquiry" page="blog/talking-ability" idPrefix="top" />
+    </div>
+
+    <!-- 4. Jump nav -->
+    <div class="talk-jump px-4">
+      <p class="jump-eyebrow font-sora">On This Page</p>
+      <JumpNav links={jumpLinks} sticky={false} />
+    </div>
+
+    <section class="px-4 pt-8 pb-4" style="background:#faf7f4">
+      <div style="max-width:760px;margin:0 auto;">
+
+        <!-- 5. Quick-Answer box (AEO / Position 0) -->
+        <div id="quick" class="scroll-mt-24 mb-6">
+          <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+            <div class="px-6 py-5 sm:px-8" style="background:#2D6A4F">
+              <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] mb-1.5" style="color:#ffd6c9">The short answer</p>
+              <h2 class="font-lora font-bold text-xl sm:text-2xl leading-snug" style="color:#faf7f4">How Well Do African Greys Really Talk?</h2>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="font-sora text-stone-700 leading-relaxed mb-6">African Greys are the best-talking parrots in the world. A well-socialised Grey can learn anywhere from a few dozen to <strong>200–1,000+ words</strong>, usually says its first word around <strong>12–18 months</strong>, and — uniquely — uses words <strong>in context</strong> rather than just mimicking. No breeder can guarantee a talker, but a Grey raised with daily conversation has the best odds of any companion bird.</p>
+              <div class="grid grid-cols-2 gap-3">
+                {quickFacts.map((r) => (
+                  <div class="rounded-xl border border-stone-200 bg-cream/60 px-4 py-3">
+                    <span class="block font-sora text-[11px] uppercase tracking-wide text-stone-600">{r.label}</span>
+                    <span class="block font-sora text-sm font-semibold text-logo-dark mt-1 leading-snug">{r.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. How do they actually talk? -->
+        <h2 id="how" class={h2}>How Do African Greys Actually Talk — Mimicry or Real Understanding?</h2>
+        <p class={p}>Here's the question every buyer is really asking: when an African Grey "talks," is anyone home? The honest answer is that Greys do something no other parrot reliably does — they tie words to situations. Most talking birds repeat sounds; a Grey says "hello" when you walk in, asks "want up?" to be lifted, and names the treat it's hoping for. That's the difference between a recording and a conversation.</p>
+
+        <figure class="my-6">
+          <img src="/congo-african-grey-talking-ability.webp" srcset="/congo-african-grey-talking-ability-500.webp 500w, /congo-african-grey-talking-ability-760.webp 760w, /congo-african-grey-talking-ability.webp 1100w" sizes="(min-width: 768px) 700px, 92vw" width="1100" height="600" alt="A Congo African Grey mid-vocalisation, illustrating how African Greys use words in context rather than simple mimicry" title="How African Greys talk — contextual speech | C.A.Gs" class="w-full rounded-2xl border border-stone-200" loading="lazy" />
+          <span class={figc}>African Greys don't just copy sounds — they tie words to the moment in front of them.</span>
+        </figure>
+
+        <h3 class={h3}>Is It Contextual Speech or Just Copying Sounds?</h3>
+        <h4 class={h4}>What Contextual Speech Looks Like Day to Day</h4>
+        <p class={p}>Contextual speech is the whole point of an African Grey. The bird isn't running a tape — it's matching a learned phrase to the moment in front of it. Once you live with one you stop noticing the vocabulary count and start noticing the timing: the goodbye as you pick up your keys, the "night night" when the lights dim, the wolf-whistle aimed squarely at the dog.</p>
+        <h5 class={h5}>Phrases our birds tie to a moment</h5>
+        <p class={p}>In our home aviary the chicks pick up our routine before they pick up rare words — a morning greeting, "step up," the call we use at feeding. Those context phrases come first precisely because they're anchored to something that happens the same way every day, which is exactly how a Grey learns best.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: why we don't call it "a parrot trick"</h6>
+        <p class={p}>We're careful never to sell talking as a circus act, because framing it that way sets owners up to "drill" their bird and get nowhere. Treat it as communication — talk <em>to</em> the bird, narrate your day, respond when it speaks — and the vocabulary takes care of itself.</p>
+
+        <h3 class={h3}>What Did the Alex Studies Actually Prove?</h3>
+        <h4 class={h4}>What Dr. Pepperberg Documented Over 30 Years</h4>
+        <p class={p}>The reason "African Grey understanding" is taken seriously at all traces to one bird. From 1977 to 2007, <a href="https://alexfoundation.org/" class={lnk} style="color:#b04228" target="_blank" rel="noopener">Dr. Irene Pepperberg studied a Congo African Grey named Alex</a> for three decades, and the findings reshaped how scientists think about animal minds.</p>
+        <h5 class={h5}>Objects, colours, shapes and the concept of "none"</h5>
+        <p class={p}>Alex could identify around 50 objects, seven colours and five shapes, answer "how many?" up to six, grasp "same" and "different," and — remarkably — use the concept of "none." He requested items by name rather than just responding to cues. Whether every Grey shares that capacity or Alex was exceptional is still open, but it moved the conversation from "can parrots mimic?" to "what can a Grey actually understand?"</p>
+        <h6 class={h6} style="color:#b04228">Citation: The Alex Foundation</h6>
+        <p class={p}>The full body of work lives at the Alex Foundation, and the species background at the <a href="https://parrots.org/encyclopedia/grey-parrot/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">World Parrot Trust's grey parrot profile ↗</a>. We point new owners to both, because the more you understand the mind you're bringing home, the better a talker you'll raise.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 7. Timeline -->
+        <h2 id="timeline" class={h2}>When Do African Greys Start Talking? The Month-by-Month Timeline</h2>
+        <p class={p}>The single most common disappointment we hear is "my Grey isn't talking yet" — almost always from an owner whose bird is doing exactly what it should for its age. Talking is a multi-year arc, not a switch. Here's the realistic timeline, the same one we walk every family through before a chick goes home.</p>
+
+        <figure class="my-6">
+          <img src="/african-grey-talking-development-milestones-infographic.webp" srcset="/african-grey-talking-development-milestones-infographic-500.webp 500w, /african-grey-talking-development-milestones-infographic.webp 900w" sizes="(min-width: 768px) 448px, 92vw" width="900" height="1612" alt="African Grey parrot speech development milestones infographic, from experimental sounds at 0 to 6 months to a 200 to 1,000-plus word vocabulary at 5 years and beyond" title="African Grey talking development milestones (0–6 months to 5+ years) | C.A.Gs" class="w-full max-w-md mx-auto rounded-2xl border border-stone-200" loading="lazy" />
+          <span class={figc}>African Grey speech milestones at a glance — read the month-by-month version below.</span>
+        </figure>
+
+        <div class="tl-spine">
+          {timeline.map((t, i) => (
+            <div class="tl-step">
+              <span class="tl-dot">{i + 1}</span>
+              <span class="tl-age">{t.age}</span>
+              <p class="tl-head">{t.head}</p>
+              <p class="text-stone-700 leading-relaxed text-[15px] mb-0">{t.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <h3 class={h3}>What Should You Expect in the First Year?</h3>
+        <h4 class={h4}>From Babble to First Words (0–12 Months)</h4>
+        <p class={p}>The first year is groundwork, not performance. Expect clicks, whistles and babble that slowly sharpen into a first recognisable word somewhere around the end of it. Pushing a six-month-old to "say hello" does nothing; talking to it constantly does everything.</p>
+        <h5 class={h5}>Why the first "word" is usually a context phrase</h5>
+        <p class={p}>That first word is rarely a random one you drilled — it's the phrase your bird hears in the same situation every day. Greys learn language the way toddlers do, by attaching sound to meaning, so the goodbye you say a thousand times beats the flashcard word you said ten times.</p>
+
+        <h3 class={h3}>How Does Vocabulary Grow From Year One to Five?</h3>
+        <h4 class={h4}>The 1–5 Year Expansion Curve</h4>
+        <p class={p}>Years one through five are where a Grey earns its reputation. Vocabulary climbs from a handful of words to dozens, pronunciation clears up, and single words knit into phrases and short sentences. Most birds find their personality as talkers in this window — the jokers, the mimics, the quiet ones with three perfect words.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 8. How many words -->
+        <h2 id="words" class={h2}>How Many Words Can an African Grey Learn?</h2>
+        <p class={p}>This is the number everyone wants, so here it is straight: a typical well-socialised African Grey settles into a working vocabulary of a few dozen to a couple of hundred words and phrases. The keenest reach several hundred, and a documented few have passed a thousand. But the count is the least interesting thing about it — a 40-word Grey that uses every word in context feels far more like a companion than a 200-word bird rattling off sounds.</p>
+
+        <h3 class={h3}>Can African Greys Say Multiple-Syllable Words and Whole Phrases?</h3>
+        <h4 class={h4}>Single Words vs Phrases vs Sentences</h4>
+        <p class={p}>Yes — and the progression is part of the fun. Greys move from single words to multi-syllable words, then to phrases, then to short sentences, usually across years two to five. Plenty of birds will string several words into a context-correct line ("night night, see you tomorrow") and reproduce household sounds with unnerving accuracy: the microwave, the phone, the smoke-alarm chirp you wish you'd never let them hear.</p>
+        <h5 class={h5}>Realistic vocabulary ranges (200–1,000+)</h5>
+        <p class={p}>Treat 200–1,000+ words as the ceiling of what's possible, not a target you're failing to hit. Most companion Greys land comfortably below it and are wonderful talkers anyway. Vocabulary tracks the conversation in the home far more than the genes — a Grey only ever learns the words it actually hears, said with meaning.</p>
+        <h6 class={h6} style="color:#b04228">Citation: documented record-holders</h6>
+        <p class={p}>The famous high counts — Alex's working set, and pet Greys credited with vocabularies in the hundreds — come from birds in language-rich homes with owners who narrated everything. They show the ceiling. Your bird's real number will be set at your kitchen table, not by its hatch certificate.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 9. Do all talk / timid -->
+        <h2 id="all" class={h2}>Do All African Greys Talk — and Can a Timid One?</h2>
+        <p class={p}>No, not every African Grey becomes a talker — and any breeder who tells you otherwise is selling, not breeding. Greys have the highest talking <em>potential</em> of any parrot, but potential isn't a promise. The good news for nervous buyers: most birds that "don't talk" are birds that haven't been given the right conditions, not birds that can't.</p>
+
+        <h3 class={h3}>Why Don't Some African Greys Talk?</h3>
+        <h4 class={h4}>Genetics, Socialisation and Personality</h4>
+        <p class={p}>Three things decide it: a little genetics, a lot of early socialisation, and the bird's own personality. A Grey that spent its first year with minimal human contact almost always ends up with a smaller vocabulary, no matter how chatty its family becomes later. Some birds are simply quieter characters — brilliant, bonded, and content to whistle rather than recite.</p>
+        <h5 class={h5}>The first-year socialisation window</h5>
+        <p class={p}>The first twelve months matter more than any other period. Birds raised with constant, gentle human interaction in that window have consistently better talking outcomes — which is the entire reason we hand-raise every chick in the house rather than in a barn, talking to them from weaning. You can't easily buy that back later.</p>
+
+        <h3 class={h3}>Can a Shy or Timid African Grey Still Become a Talker?</h3>
+        <h4 class={h4}>How a Quiet Bird Finds Its Voice</h4>
+        <p class={p}>Almost always, yes. A timid young Grey is usually a bird that hasn't settled yet — new home, new people, everything unfamiliar — not a bird that will stay silent for life. Greys are <strong>neophobic</strong>; they distrust the new until it becomes routine. Give a shy bird a calm room, a predictable rhythm, and no pressure, and the talking tends to arrive once the trust does.</p>
+        <h5 class={h5}>What changes when a timid bird settles</h5>
+        <p class={p}>The tell is usually private practice first: you'll catch a quiet Grey muttering its words to itself, alone, weeks before it ever performs for the room. That's the breakthrough. Staring at it, demanding "say hello," or a chaotic household all push it back into its shell; patience and a normal, talkative home draw it out.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: our shy chicks still talk</h6>
+        <p class={p}>We raise the occasional reserved chick, and we tell those families the truth — go slower, expect a longer runway — but in our experience the quiet ones get there. A timid bird isn't a non-talker. It's a talker on a longer timeline.</p>
+
+        <Callout variant="tip" title="The fastest way to a talking Grey">
+          <p>Stop trying to teach it. Just talk <em>to</em> it — narrate your morning, greet it the same way every day, answer when it speaks. Live, contextual conversation from someone the bird trusts beats every recording, app and flashcard ever made.</p>
+        </Callout>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 10. Congo vs Timneh -->
+        <h2 id="vs" class={h2}>Congo vs Timneh: Which African Grey Talks Better?</h2>
+        <p class={p}>Both subspecies talk beautifully, and the rivalry is more fun than it is decisive. If you forced us to generalise: Congos tend toward clearer, more human-sounding pronunciation and a slightly larger ultimate vocabulary, while Timnehs usually start earlier and settle into a new home faster. The gap is real but modest.</p>
+
+        <ComparisonTable columns={talkerCols} rows={talkerRows} verdict="Pick the bird, not the subspecies — a well-socialised Grey of either kind out-talks a neglected one of the other, every time." />
+
+        <h3 class={h3}>How Do the Two Subspecies Differ as Talkers?</h3>
+        <h4 class={h4}>Timing, Clarity and Voice Quality</h4>
+        <p class={p}>Timnehs often say their first words a few months ahead of Congos and tend to roll with change more easily, so a Timneh may chatter sooner in a brand-new home. Congos catch up and frequently overtake on clarity — that uncanny, almost human delivery Greys are famous for is usually a Congo. Timneh voices are often described as a touch raspier or softer, which many owners adore.</p>
+        <h5 class={h5}>Why socialisation beats subspecies every time</h5>
+        <p class={p}>Whichever you choose, the variable that actually moves the needle is how the bird was raised and how much you talk to it. The difference between a well-socialised Congo and a well-socialised Timneh is small; the difference between either of those and an under-socialised bird is enormous. Choose the individual chick and the breeder, not the label.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: our Congos vs our Timnehs</h6>
+        <p class={p}>Across our own clutches the pattern mostly holds — our Timnehs like <a href="/available/" class={lnk} style="color:#b04228">Elad and Evie</a> tend to find their voices a little earlier, our Congos a little clearer — but we've raised exceptions to every rule. We match families to a bird's temperament first and its subspecies second.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 11. What develops it -->
+        <h2 id="develops" class={h2}>What Actually Develops an African Grey's Talking Ability?</h2>
+        <p class={p}>If talking were just genetics, every Grey from talkative parents would be a chatterbox and they aren't. What reliably builds a talker is exposure — daily, contextual human speech from a bird that feels safe enough to join in. Almost everything that helps is free, and almost everything that's sold as a shortcut doesn't work.</p>
+
+        <h3 class={h3}>What Do We Do at the Aviary to Build It?</h3>
+        <h4 class={h4}>Daily Speech From Weaning</h4>
+        <p class={p}>Our chicks grow up inside the conversation, not beside it. From weaning they hear us greet them the same way each morning, name their food, and chat through hand-feeding and cleaning — so by the time a bird goes home it already associates human speech with safety and routine. That head start is the whole point of buying a properly hand-raised Grey instead of a parent-reared or imported one.</p>
+        <h5 class={h5}>What helps versus what wastes your time</h5>
+        <p class={p}><strong>Helps:</strong> talking to the bird directly, consistent context phrases, a busy room, responding when it vocalises, and patience. <strong>Wastes your time:</strong> recordings on a loop (Greys tune them out), word-drilling flashcards, leaving a talk-radio station on as a babysitter, and — worst of all — any kind of punishment for not talking, which only teaches the bird to stay quiet around you.</p>
+
+        <h3 class={h3}>When Do African Greys Talk Most During the Day?</h3>
+        <h4 class={h4}>Dawn Greetings and the Before-Bed Chatter</h4>
+        <p class={p}>Like wild flocks calling at first and last light, companion Greys often have two chatty peaks: a morning burst as the house wakes, and an early-evening wind-down before sleep. That "talks before bedtime" habit owners notice is completely normal — the bird is running through its favourite words as the day closes, and it's a sign of a settled, content Grey.</p>
+        <h5 class={h5}>Why evenings get chatty</h5>
+        <p class={p}>Evenings are when the household finally slows down and the bird has your attention, so it's prime talking time. It's also why a consistent bedtime and a cage cover matter — let the chatter run a while, then cover the cage for the 10–12 hours of dark, quiet sleep a Grey needs to stay even-tempered the next day.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: Maxy's evening wind-down</h6>
+        <p class={p}>Maxy, the Congo in the video at the top of this page, is at his most talkative in the evening — which is exactly when we filmed him. If your Grey saves its best material for dusk, that's not a quirk; that's a Grey being a Grey.</p>
+
+        <MythFact
+          myth="African Greys are guaranteed to talk, and playing recordings on a loop teaches them faster."
+          fact="No bird is guaranteed to talk, and looped audio actually slows them down — Greys tune out recordings. They learn from live, contextual conversation with people they trust. There is no shortcut that replaces you." />
+
+        <BreederNote>
+          <p>The owners with the most talkative Greys aren't the ones who bought a "guaranteed talker" or the most expensive bird — they're the ones who simply <em>talk to their bird like it's listening</em>. It is. That's the whole secret, it's free, and no breeder can sell it to you in a box.</p>
+        </BreederNote>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 12. Will my bird talk? (decision tree) -->
+        <h2 id="will" class={h2}>Will MY African Grey Talk? A Quick Decision Guide</h2>
+        <p class={p}>Talking is a relationship, not a spec sheet — so the honest answer to "will mine talk?" depends mostly on your home and your routine. Find your situation below for a realistic read on the odds.</p>
+        <div class="mt-6">
+          <DecisionTree question="Match Your Home to a Realistic Expectation" branches={willBranches} headingLevel="h3" />
+        </div>
+
+        <!-- 13. Trust band + birds -->
+        <h2 class={h2}>What Do You Really Get From a Breeder Who Raises Talkers?</h2>
+        <p class={p}>You can't buy a guaranteed talker, but you can buy the best possible odds — and that starts with how the bird was raised. Here at C.A.Gs, every African Grey leaves fully weaned and socialised, talked to daily since weaning, with <a href="/blog/african-grey-parrot-price-what-you-get/" class={lnk} style="color:#b04228">PCR DNA sexing, an avian-vet health certificate, and CITES Appendix I paperwork</a> — all captive-bred in the USA and fully documented.</p>
+        <figure class="my-6">
+          <img src="/jins-jeni-congo-african-grey-pair-talking-birds.webp" srcset="/jins-jeni-congo-african-grey-pair-talking-birds-480.webp 480w, /jins-jeni-congo-african-grey-pair-talking-birds.webp 640w" sizes="(min-width: 768px) 640px, 92vw" width="640" height="480" alt="Jins and Jeni, a hand-raised Congo African Grey pair, socialised with daily speech at the C.A.Gs aviary" title="Jins & Jeni — a hand-raised Congo African Grey talking pair | C.A.Gs" class="w-full rounded-2xl border border-stone-200" loading="lazy" />
+          <span class={figc}>Jins &amp; Jeni — raised inside the conversation, like every C.A.Gs chick.</span>
+        </figure>
+        <h3 class={h3}>Which of Our Greys Are Ready to Talk Their Way Home?</h3>
+        <p class={p}>Every bird below is hand-raised here in Midland and has grown up hearing daily human speech — fully weaned, PCR DNA-sexed, vet-checked and CITES-documented. Here's who we have available right now:</p>
+        <div class="grid sm:grid-cols-2 gap-5 mt-2">
+          {birds.map((b) => (
+            <BirdCard
+              id={b.id} name={b.name} sex={b.sex} age={b.age} price={b.price}
+              tag={b.tag} tagType={b.tagType} notes={b.notes} hook={b.hook}
+              image={b.image} variant={b.variant} objectPos={b.objectPos}
+            />
+          ))}
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-6 mb-2">
+          <p class="font-lora font-bold text-2xl mb-2 text-logo-dark">Want to hear yours talk one day?</p>
+          <p class="text-stone-600 mb-1">Ships nationwide · $185 airport · $350 home</p>
+          <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American · IATA LAR</p>
+          <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See all available African Greys</a>
+          <a href="/contact-us/" class="inline-block font-sora font-semibold px-7 py-3 underline" style="color:#b04228">Ask a breeder</a>
+        </div>
+
+        <p class="font-lora italic text-stone-600 text-center mt-8 mb-0">— Written by Mark &amp; Teri Benjamin, the breeders behind C.A.Gs · USDA-licensed African Grey aviary, Midland, TX</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 14. FAQ -->
+        <h2 id="faq" class={h2}>African Grey Talking Ability: Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {faqs.map((faq) => (
+            <details class="bg-white rounded-xl border border-stone-200 p-5">
+              <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
+              <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <!-- 15. Related posts -->
+        <div class="mt-12">
+          <RelatedPosts heading="Keep reading" headingLevel="h2" posts={[
+            { title: "African Grey Cage Setup: The Breeder's Blueprint", slug: "/blog/african-grey-parrot-cage-setup/", category: "Care" },
+            { title: "African Grey Parrot Training", slug: "/blog/african-grey-parrot-training/", category: "Training" },
+            { title: "African Grey for Sale: What You Get", slug: "/blog/african-grey-parrot-price-what-you-get/", category: "Buying" },
+          ]} />
+        </div>
+
+      </div>
+    </section>
   </div>
 
-  <section style="background:#2D6A4F" class="text-white py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Intelligence Guide · USDA-Licensed Breeders · Midland, TX</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey Parrot Talking Ability</h1>
-      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">African Greys are the most accomplished talkers in the parrot world — but the reality is more nuanced than "they can say 1,000 words." Here's what to actually expect.</p>
-    </div>
-  </section>
+  <!-- Newsletter -->
+  <Newsletter variant="bottom" action="/contact-us/" bottomText="New talking African Grey clutches before they're listed — socialised families first." />
 
-  <!-- Content -->
-  <section class="py-16 px-4" style="background:#faf7f4">
-    <div class="max-w-760px mx-auto" style="max-width:760px">
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">What Makes African Greys Different</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Most parrots that "talk" are mimicking sounds without understanding. African Greys are different — they use words in context. An African Grey doesn't just say "hello" — it says "hello" when someone walks in the door. It says "want water?" when it's thirsty. It says "step up" when it wants to be picked up.</p>
-      <p class="text-stone-700 leading-relaxed mb-8">This contextual speech is what makes African Greys extraordinary and what Dr. Pepperberg spent 30 years studying in Alex. Whether this constitutes "understanding" in the philosophical sense remains debated. What isn't debated: African Greys use language more like communication and less like random mimicry than any other parrot species.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Realistic Expectations by Timeline</h2>
-      <div class="bg-white rounded-xl border border-stone-200 overflow-hidden mb-8">
-        <table class="w-full text-sm">
-          <thead>
-            <tr style="background:#2D6A4F">
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Age</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Typical Talking Development</th>
-            </tr>
-          </thead>
-          <tbody class="text-stone-600 divide-y divide-stone-100">
-            <tr><td class="py-3 px-4">0–6 months</td><td class="py-3 px-4">Experimental sounds, clicking, whistling. No words yet.</td></tr>
-            <tr><td class="py-3 px-4">6–12 months</td><td class="py-3 px-4">First word attempts begin. Timnehs may start earlier than Congos.</td></tr>
-            <tr><td class="py-3 px-4">1–2 years</td><td class="py-3 px-4">Vocabulary of 10–50 words in well-socialized birds. Clearer pronunciation.</td></tr>
-            <tr><td class="py-3 px-4">2–5 years</td><td class="py-3 px-4">Rapid vocabulary expansion. Phrases and sentences appear. Contextual use develops.</td></tr>
-            <tr><td class="py-3 px-4">5+ years</td><td class="py-3 px-4">Full vocabulary range. Some birds reach 200–1,000+ words. Development continues throughout life.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Congo vs Timneh: Talking Differences</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Both subspecies talk, but there are consistent differences between them:</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>Congo:</strong> tends toward clearer, more human-sounding pronunciation; typically develops larger ultimate vocabulary; slower to start than Timneh</li>
-        <li><strong>Timneh:</strong> typically starts talking 3–6 months earlier; voice quality is often slightly different (some describe it as more raspy or mumbled); adapts faster to new environments so may vocalize more readily in a new home</li>
-        <li><strong>Key truth:</strong> the difference between a well-socialized Congo and a well-socialized Timneh is modest — individual variation within subspecies is much larger than the subspecies difference</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">What Develops Talking Ability</h2>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>Daily human voice exposure:</strong> the single biggest factor — birds raised with constant conversation develop larger vocabularies</li>
-        <li><strong>Contextual repetition:</strong> same phrases in same situations (greeting, feeding, play) accelerate contextual understanding</li>
-        <li><strong>Socialization before 12 months:</strong> birds that have rich human interaction before age 1 have consistently better talking outcomes</li>
-        <li><strong>Gender:</strong> no significant difference — both male and female African Greys talk equally well</li>
-        <li><strong>What does NOT help:</strong> audio recordings on loop, word-drilling flash cards, punishment for not talking</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">The Alex Studies: What Science Found</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Alex was a Congo African Grey studied by Dr. Irene Pepperberg at Brandeis University and Harvard for 30 years (1977–2007). The research produced findings that changed the scientific understanding of animal cognition:</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Could identify 50 different objects, 7 colors, 5 shapes, and quantities up to 6</li>
-        <li>Understood the concept of "same" and "different"</li>
-        <li>Could ask for items by name — not just respond to commands</li>
-        <li>His last words to Dr. Pepperberg before his death: "You be good. I love you."</li>
-        <li>His cognitive performance was equivalent to a 5-year-old child in many tasks</li>
-      </ul>
-
-      <!-- FAQ -->
-      <h2 class="font-lora font-bold text-3xl mb-8" style="color:#2D6A4F">Frequently Asked Questions</h2>
-      <div class="space-y-4">
-        {faqs.map((faq) => (
-          <details class="bg-white rounded-xl border border-stone-200 p-5">
-            <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
-            <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
-          </details>
-        ))}
-      </div>
-
-    </div>
-  </section>
-
+  <StickyCta label="Meet our talking Greys" href="/available/" />
 </BaseLayout>
