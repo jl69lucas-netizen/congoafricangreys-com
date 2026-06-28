@@ -113,6 +113,25 @@ All 8 are Direction-D themed by inheritance (do NOT re-implement per page). Colo
 
 ---
 
+### 7. Finalization & Polish Playbook (learned 2026-06-28 on cage-setup — apply to EVERY blog page before "pass")
+
+These are the things the breeder caught polishing the cage-setup pilot. Bake them into every blog build/rebuild so they never recur.
+
+**A. Mobile performance → 100% (the `/70de/` mystery script).**
+- The PageSpeed items **"missing source maps for large first-party JS"** and **"reduce unused JavaScript 72 KB"** pointing at `/70de/(congoafricangreys.com)` are **Cloudflare Rocket Loader**, injected at the edge — it is **NOT in our source** (`grep` finds nothing). On CPU-throttled mobile it is the single biggest drag (why mobile lags desktop).
+  - **Fix = MANUAL, Cloudflare dashboard only:** dash.cloudflare.com → congoafricangreys.com zone → **Speed → Optimization → Content Optimization → Rocket Loader → Off** → then **Caching → Configuration → Purge Everything**. The "missing source map" line is *Unscored* (informational) — Rocket Loader removal makes it vanish.
+- **Image delivery (code, do this every page):** put `srcset`/`sizes` on the **hero** image and the **first in-content** image (they are LCP/early-paint). Generate downscaled WebP variants with **Pillow** (`Image.resize(..., LANCZOS).save(..., "WEBP", quality=82, method=6)`) — `cwebp` is NOT installed. Hero pattern: variants at ~550/800w + original; `sizes="(min-width: 768px) 480px, 92vw"` for a 2-col hero, `(min-width: 768px) 700px, 92vw` for a full-width 760px-container image.
+- **Hero preload must mirror the srcset** or the LCP image double-downloads. `BaseLayout` now takes `heroPreloadSrcset` + `heroPreloadSizes` (→ `<link rel=preload imagesrcset imagesizes>`). Always pass them when the hero `<img>` uses `srcset`.
+- Fonts (media=print swap) and GA (interaction-deferred) are already handled in BaseLayout — don't re-solve them. Remaining render-blocking is just Astro's small bundled CSS (~21 KB); it mostly clears once Rocket Loader is off — not worth critical-CSS surgery.
+
+**B. Author signature / E-E-A-T (every post).** Ship a **visible** byline, not just schema. Pattern: hero byline `Written by Mark & Teri Benjamin · C.A.Gs… USDA-licensed since 2014` (small, `text-xs`, on the hero dek) **and** a signed editorial sign-off at the end of the body (`— Written by Mark & Teri Benjamin, …`). Keep `author: { "@type": "Person", name: "Mark & Teri Benjamin" }` in the Article schema too. This is an AI-citation + Google-author signal.
+
+**C. Hero eyebrow parity (do not ship `text-sm uppercase`).** Blog hero eyebrow = the Roys/homepage style: `font-sora text-xs font-medium tracking-wide`, **sentence/Title case (NOT uppercase)**, color `#f08070` on the green hero. `text-sm uppercase tracking-widest` renders oversized on mobile (no fluid shrink) — the breeder flagged it explicitly.
+
+**D. "Page already shows for a query but has no coverage" → FAQ-first.** When GSC/Bing shows the page ranking for a query the body doesn't answer, **verify existing coverage first**, then add the answer as new entries in the page's `faqs` array (auto-feeds the visible accordion *and* FAQPage schema) plus, if it's a real subtopic, one sequential H3 (never skip a level — re-run `final_page_audit.py` to confirm ≥5 H5 / ≥5 H6 still hold). Watch for intent splits the single-topic page misses: e.g. cage-setup showed for **"two African Greys"** and **"breeding cage size"** — both distinct from the single-companion-cage the page covered. Always show the placement map for approval before writing.
+
+---
+
 ## Per-Page Research Data (ChatGPT source — all 9 posts + hub)
 
 > The sections below contain the original per-page competitor research, keyword universes, H1–H6 outlines, entity lists, and strategy notes from the breeder's ChatGPT research sessions. Use this as the **input data** for the Sprint 0.5 strategy docs. Do not treat these as final outlines — run the full 17-field research pass and present options to the breeder before writing any page.
