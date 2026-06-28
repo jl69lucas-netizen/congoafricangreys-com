@@ -69,6 +69,13 @@ if [ -f scripts/verify_model_tiers.sh ]; then
 fi
 echo "  skills found: $(ls skills/*.md 2>/dev/null | wc -l | tr -d ' ')"
 
+if python3 scripts/register_skills.py --check >/tmp/cag-skillreg.log 2>&1; then
+  pass "$(tail -1 /tmp/cag-skillreg.log)"
+else
+  fail "Skill registration drift — run: python3 scripts/register_skills.py --copy && git add .claude/skills/"
+  sed 's/^/      /' /tmp/cag-skillreg.log
+fi
+
 # -----------------------------------------------------------------------------
 hdr "3. ASTRO BUILD"
 # -----------------------------------------------------------------------------
