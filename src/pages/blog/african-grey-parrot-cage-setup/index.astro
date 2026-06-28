@@ -12,6 +12,7 @@ import BreederNote from '../../../components/cag-blog-breeder-note.astro';
 import DecisionTree from '../../../components/cag-blog-decision-tree.astro';
 import RelatedPosts from '../../../components/cag-blog-related-posts.astro';
 import StickyCta from '../../../components/cag-blog-sticky-cta.astro';
+import BirdCard from '../../../components/BirdCard.astro';
 
 const title = "African Grey Cage Setup: The Breeder's Blueprint | C.A.Gs";
 const description = "The breeder's blueprint for African Grey cage setup: cage size (36\"–48\" min), bar spacing, zone-by-zone layout, perch variety, toy rotation, food/water placement, sleep, UVB and the mistakes that cause plucking.";
@@ -66,6 +67,41 @@ const cageBranches = [
   { answer: "Congo + tight space/budget", result: 'A 36"×24"×48" play-top at 3/4"–1" is the safe floor — never smaller.' },
   { answer: "Timneh African Grey", result: 'Drop to 30"×20"×40" minimum at 5/8"–3/4" spacing — smaller head, tighter bars.' },
   { answer: "Just-weaned fledgling", result: 'Use 7/8"–1" spacing regardless of subspecies until they fledge fully.' },
+];
+
+// Available birds — mirrors the homepage filterable grid (data/clutch-inventory.json).
+// Keep in sync with src/pages/index.astro so the cards stay accurate as inventory changes.
+const birds = [
+  { id: 'roys', name: 'Roys', sex: 'Male', age: '4 mo', price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Energetic, curious, and impossible to ignore.',
+    notes: "Hand-raised male, 4 months old. Thrives in a lively home where there's always something to watch." },
+  { id: 'amie', name: 'Amie', sex: 'Female', age: '3 mo', price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'She mimics your laugh before you finish it.',
+    notes: 'Premium hand-raised female, 3 months old. Full social training. Responds to her name already.' },
+  { id: 'bery', name: 'Bery', sex: 'Female', age: '1 yr', price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp', objectPos: 'object-center',
+    hook: 'Gentle, easy, and the bird first-time owners dream of.',
+    notes: 'Soft temperament, easy to handle. 1-year-old female — personality fully developed, ready to bond.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Must-Go Pair', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair.webp', objectPos: 'object-center',
+    hook: 'Two birds, one bond. They go together — and so do you.',
+    notes: 'Unrelated pair, must be adopted together. Jins (male, 6mo) + Jeni (female, 4mo). Both hand-raised with full social training.' },
+  { id: 'elad', name: 'Elad', sex: 'Male', age: '5 mo', price: '$1,600',
+    tag: 'Timneh', tagType: 'new' as const, variant: 'Timneh African Grey',
+    image: '/elad-timneh-african-grey-male-5-months.webp', objectPos: 'object-center',
+    hook: 'Smaller bird. Bigger personality than you expected.',
+    notes: 'Hand-raised male Timneh African Grey, 5 months old. Full social training. Ready to go home.' },
+  { id: 'evie', name: 'Evie', sex: 'Female', age: '6 mo', price: '$1,500',
+    tag: 'Timneh', tagType: 'value' as const, variant: 'Timneh African Grey',
+    image: '/evie-timneh-african-grey-female-6-months.webp', objectPos: 'object-top',
+    hook: 'Calm, clever, and ready to come home.',
+    notes: 'Hand-raised female Timneh African Grey, 6 months old. Full social training. Gentle and sociable.' },
 ];
 
 const howToSteps = [
@@ -300,7 +336,7 @@ const figc = "block text-center text-sm text-stone-500 mt-2";
         </figure>
 
         <h3 class={h3}>Puzzle &amp; Foraging Toys</h3>
-        <p class={p}>Puzzle toys with latches, locks and stacking parts engage a Grey's problem-solving brain, while foraging toys that hide food make the bird work for every bite — the most mentally stimulating category of all, and the one that belongs in the lower zone.</p>
+        <p class={p}>Puzzle toys with latches, locks and stacking parts engage a Grey's problem-solving brain, while foraging toys that hide food make the bird work for every bite. As the <a href="https://parrots.org/encyclopedia/grey-parrot/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">World Parrot Trust's grey parrot profile ↗</a> documents, wild Greys spend much of the day foraging across the canopy — so foraging is the most mentally stimulating category of all, and the one that belongs in the lower zone.</p>
 
         <h3 class={h3}>The Weekly Rotation System</h3>
         <h4 class={h4}>The 2–3 Swap Rule</h4>
@@ -394,11 +430,22 @@ const figc = "block text-center text-sm text-stone-500 mt-2";
         <figure class="my-6">
           <img src="/our-african-greys-in-cage.webp" width="584" height="390" alt="Two hand-raised C.A.Gs African Greys together inside a well set-up cage with rope perches and foraging toys" class="w-full rounded-2xl border border-stone-200" loading="lazy" />
         </figure>
-        <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-2 mb-2">
+        <h3 class={h3}>Meet the Greys Ready for a Setup Like This</h3>
+        <p class={p}>Every bird below is hand-raised here in Midland and goes home cage-ready — fully weaned, PCR DNA-sexed, vet-checked and CITES-documented. Here's who we have available right now:</p>
+        <div class="grid sm:grid-cols-2 gap-5 mt-2">
+          {birds.map((b) => (
+            <BirdCard
+              id={b.id} name={b.name} sex={b.sex} age={b.age} price={b.price}
+              tag={b.tag} tagType={b.tagType} notes={b.notes} hook={b.hook}
+              image={b.image} variant={b.variant} objectPos={b.objectPos}
+            />
+          ))}
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-6 mb-2">
           <p class="font-lora font-bold text-2xl mb-2 text-logo-dark">Ready to set up a home for one of ours?</p>
           <p class="text-stone-600 mb-1">Ships nationwide · $185 airport · $350 home</p>
-          <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American</p>
-          <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See available African Greys</a>
+          <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American · IATA LAR</p>
+          <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See all available African Greys</a>
           <a href="/contact-us/" class="inline-block font-sora font-semibold px-7 py-3 underline" style="color:#b04228">Ask a breeder</a>
         </div>
 
