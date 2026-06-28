@@ -2,7 +2,10 @@
 /**
  * cag-blog-comparison-table — Spec/comparison table (Min/Recommended/Ideal style)
  * with an optional breeder-verdict footer row.
- * Mobile: horizontal scroll wrapper keeps the table readable at ≤767px.
+ * Desktop (≥641px): a real <table>.
+ * Mobile (≤640px): each row collapses into a self-contained card — the row
+ * header becomes the card title, and every cell shows its column label
+ * (via data-label) so nothing needs horizontal scroll.
  * Uses color literals — cag-design-system.css is not imported globally.
  */
 export interface Row {
@@ -18,74 +21,140 @@ export interface Props {
 
 const { columns, rows, verdict } = Astro.props;
 ---
-<figure class="cag-blog-table">
-  <div class="cag-blog-table__scroll">
-    <table>
-      <thead>
-        <tr>{columns.map((c) => <th scope="col">{c}</th>)}</tr>
-      </thead>
-      <tbody>
-        {rows.map((r) => (
-          <tr>
-            <th scope="row">{r.item}</th>
-            {r.values.map((v) => <td>{v}</td>)}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+<figure class="cag-ctable">
+  <table>
+    <thead>
+      <tr>{columns.map((c) => <th scope="col">{c}</th>)}</tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <th scope="row" data-label={columns[0]}>{r.item}</th>
+          {r.values.map((v, i) => <td data-label={columns[i + 1]}>{v}</td>)}
+        </tr>
+      ))}
+    </tbody>
+  </table>
   {verdict && (
-    <figcaption class="cag-blog-table__verdict">
+    <figcaption class="cag-ctable__verdict">
       <strong>Breeder verdict:</strong> {verdict}
     </figcaption>
   )}
 </figure>
 <style>
-  .cag-blog-table {
+  .cag-ctable {
     margin: 1.5rem 0;
-    border: 1px solid var(--border, #ede5dc);
+    border: 1px solid #ece3da;
     border-radius: 16px;
     overflow: hidden;
     background: #fff;
   }
 
-  .cag-blog-table__scroll {
-    overflow-x: auto;
-  }
-
-  .cag-blog-table table {
+  .cag-ctable table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 520px;
   }
 
-  .cag-blog-table th {
+  .cag-ctable thead th {
     background: #2D6A4F;
     color: #faf7f4;
     text-align: left;
     padding: .7rem .9rem;
     font-weight: 600;
+    font-size: .92rem;
   }
 
-  .cag-blog-table tbody th {
+  .cag-ctable tbody th {
     background: #fff9f6;
     color: #3a2c22;
+    text-align: left;
+    padding: .7rem .9rem;
+    font-weight: 700;
   }
 
-  .cag-blog-table td {
+  .cag-ctable td {
     padding: .7rem .9rem;
-    border-bottom: 1px solid var(--line, #ede5dc);
+    border-bottom: 1px solid #f0e8e0;
     color: #5a5248;
   }
 
-  .cag-blog-table tbody tr:nth-child(even) td {
-    background: #fff9f6;
-  }
+  .cag-ctable tbody tr:nth-child(even) td { background: #fff9f6; }
 
-  .cag-blog-table__verdict {
+  .cag-ctable__verdict {
     padding: .8rem 1.1rem;
     background: #fdeee9;
     color: #8a3a28;
-    border-top: 1px solid var(--border, #ede5dc);
+    border-top: 1px solid #ece3da;
+    font-size: .92rem;
+    line-height: 1.5;
+  }
+
+  /* ── Mobile: collapse the table into stacked cards ── */
+  @media (max-width: 640px) {
+    .cag-ctable {
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      overflow: visible;
+    }
+    .cag-ctable table,
+    .cag-ctable tbody,
+    .cag-ctable tbody tr,
+    .cag-ctable tbody th,
+    .cag-ctable tbody td { display: block; }
+
+    /* visually hide the column-header row (labels come from data-label) */
+    .cag-ctable thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .cag-ctable tbody tr {
+      border: 1px solid #ece3da;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: .85rem;
+      box-shadow: 0 1px 3px rgba(60, 30, 10, .05);
+    }
+
+    .cag-ctable tbody th {
+      background: #2D6A4F;
+      color: #faf7f4;
+      font-size: 1rem;
+      padding: .65rem .9rem;
+    }
+
+    .cag-ctable tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      background: #fff !important;
+      padding: .6rem .9rem;
+      text-align: right;
+    }
+
+    .cag-ctable tbody td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #3a2c22;
+      text-align: left;
+      flex-shrink: 0;
+    }
+
+    .cag-ctable tbody tr td:last-child { border-bottom: none; }
+
+    .cag-ctable__verdict {
+      border: 1px solid #f3d9cf;
+      border-radius: 14px;
+      margin-top: .25rem;
+    }
   }
 </style>
