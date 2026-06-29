@@ -18,7 +18,21 @@ const title = "African Grey Parrot Price: What $1,700–$3,500 Actually Gets You
 const description = "What does an African Grey really cost — and what does the price buy? A breeder's transparent guide to Congo and Timneh pricing, exactly what's included (PCR DNA sexing, avian-vet certificate, CITES Appendix I papers), why a cheap Grey is the costliest mistake, and whether one is worth it.";
 const canonical = "https://congoafricangreys.com/blog/african-grey-parrot-price-what-you-get/";
 
-const hero = "/african-grey-parrot-breeder-midland-tx-hero.webp";
+const hero = "/african-grey-price-hero.webp";
+const heroSrcset = "/african-grey-price-hero-480w.webp 480w, /african-grey-price-hero-800w.webp 800w, /african-grey-price-hero.webp 1408w";
+const heroSizes = "(min-width: 768px) 480px, 92vw";
+
+// In-content infographic helper: each image ships a 1200w + 760w variant
+const ig = (base: string) => ({
+  src: `/${base}.webp`,
+  srcset: `/${base}-760w.webp 760w, /${base}.webp 1200w`,
+  sizes: "(min-width: 768px) 712px, 92vw",
+});
+const igTiers   = ig("african-grey-price-tiers-2026-infographic");
+const igInc     = ig("african-grey-whats-included-breeder-vs-marketplace");
+const igSeller  = ig("african-grey-5-minute-seller-check-infographic");
+const igCost    = ig("african-grey-first-year-cost-roadmap");
+const igCompare = ig("congo-vs-timneh-price-value-comparison");
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
@@ -127,17 +141,38 @@ const faqs = [
     a: "Yes. A $200 deposit reserves a specific bird, and the balance is settled before it travels. We confirm the payment method during reservation, send updates while the bird finishes weaning, and ship nationwide — $185 to your nearest airport or $350 home delivery, on IATA-compliant Delta, United or American flights." },
 ];
 
+const img = (path: string, w: number, h: number, name: string, caption: string, description: string) => ({
+  "@type": "ImageObject",
+  "contentUrl": "https://congoafricangreys.com" + path,
+  "url": "https://congoafricangreys.com" + path,
+  name, caption, width: w, height: h, description,
+});
+
 const imageObjects = [
-  {
-    "@type": "ImageObject",
-    "contentUrl": "https://congoafricangreys.com" + hero,
-    "url": "https://congoafricangreys.com" + hero,
-    "name": "A hand-raised Congo African Grey from C.A.Gs, the breeder behind the price",
-    "caption": "What the price buys — a healthy, hand-raised, fully documented Congo African Grey.",
-    "width": 800,
-    "height": 600,
-    "description": "A hand-raised Congo African Grey raised by Mark and Teri Benjamin at C.A.Gs in Midland, Texas, used to illustrate what an African Grey's $1,700–$3,500 price actually buys: a weaned, socialised, PCR DNA-sexed, avian-vet-checked and CITES Appendix I-documented captive-bred companion, rather than an undocumented bird from a marketplace. The image anchors this guide's central point — that price reflects the months of hand-feeding and the testing and paperwork a real breeder includes."
-  }
+  img(hero, 1408, 768,
+    "A hand-raised Congo African Grey beside its documents — what an African Grey's price buys",
+    "What the price buys: a healthy, hand-raised, fully documented Congo African Grey.",
+    "A hand-raised Congo African Grey raised by Mark and Teri Benjamin at C.A.Gs in Midland, Texas, perched on a warm wood stand beside a neat stack of health and ownership paperwork. The image illustrates what an African Grey's $1,700–$3,500 price actually buys: a weaned, socialised, PCR DNA-sexed, avian-vet-checked and CITES Appendix I-documented captive-bred companion, rather than an undocumented bird from a marketplace. It anchors this guide's central point that price reflects the months of hand-feeding and the testing and paperwork a real breeder includes."),
+  img(igTiers.src, 1200, 655,
+    "African Grey price tiers for 2026 shown as a bar chart",
+    "African Grey price tiers, and the under-$1,500 red flag.",
+    "A flat-design bar chart titled 'African Grey Price Tiers — 2026' showing the four pricing tiers covered in this guide: a Congo baby aged three to six months at $2,300–$2,500 (the longest bar), a tame Congo adult at $1,700, a Timneh African Grey at $1,500–$1,600, and a faded, striped 'suspiciously cheap' bar for birds under $1,500 marked with a red flag. The chart visualises that legitimate, documented, hand-raised African Greys sit in a predictable band, and that an unusually low price is a warning sign rather than a bargain."),
+  img(igInc.src, 1200, 655,
+    "What a real C.A.Gs breeder includes versus a cheap marketplace, as a two-column checklist",
+    "What the price includes, and what a cheap marketplace leaves out.",
+    "A two-column comparison titled 'What's Included: Real Breeder vs Cheap Marketplace'. The left column, headed 'Real C.A.Gs Breeder', shows green check marks beside PCR DNA sexing, an avian-vet health certificate, CITES Appendix I papers, a weaned and socialised bird, a three-day written guarantee, and lifetime support. The right column, headed 'Cheap Marketplace', shows the same rows marked 'rarely / no / missing'. The graphic makes the point that the price difference between a real breeder and a cheap listing is precisely this column of testing, documentation and support."),
+  img(igSeller.src, 1200, 655,
+    "The five-minute African Grey seller check shown as a numbered five-step flow",
+    "Run this five-step check before you pay anyone.",
+    "A flat-design vertical flow titled 'The 5-Minute Seller Check' listing the five steps a buyer should run before paying for an African Grey: verify the USDA licence, demand the documents (CITES, DNA and an avian-vet certificate), get the seller on a live video call, use a reversible payment method, and confirm a physical location. A clay banner at the foot reads 'Under $1,500 = Red Flag'. The graphic doubles as a consumer-protection checklist for spotting advance-fee scams and undocumented birds."),
+  img(igCost.src, 1200, 655,
+    "First-year African Grey costs beyond the bird shown as a stepped roadmap",
+    "First-year setup beyond the bird, roughly $1,100–$2,400.",
+    "A flat-design stepped roadmap titled 'First-Year Costs Beyond the Bird' breaking down the first-year ownership budget on top of the purchase price: a cage at $300–$800, perches and toys at $100–$300, a first avian-vet visit at $75–$200, food at $200–$400, enrichment at $150–$300, and shipping at $185–$350, with a band reading approximately $1,100–$2,400 first-year total. The graphic shows buyers the real cost of ownership beyond the sticker price so they can budget before the bird arrives."),
+  img(igCompare.src, 1200, 655,
+    "Congo versus Timneh African Grey value comparison card",
+    "Congo vs Timneh: larger and clearer, or smaller, cheaper and often earlier to talk.",
+    "A side-by-side comparison card titled 'Congo vs Timneh — Which Is the Better Value?'. The left panel shows a true-to-life Congo African Grey with its light-grey body and bright red tail, priced $1,700–$2,500, larger, and a classic clear talker. The right panel shows a Timneh African Grey with its darker charcoal body, maroon tail and horn-coloured beak, priced $1,500–$1,600, smaller, and often an earlier talker. The graphic helps buyers choose between the two subspecies on temperament and household fit rather than price alone."),
 ];
 
 const articleSchema = {
@@ -184,7 +219,7 @@ const lnk = "underline font-medium";
 const figc = "block text-center text-sm text-stone-600 mt-2";
 ---
 
-<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta heroPreload={hero} heroPreloadSrcset={"/african-grey-parrot-breeder-midland-tx-hero.webp 800w"} heroPreloadSizes={"(min-width: 768px) 480px, 92vw"}>
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta heroPreload={hero} heroPreloadSrcset={heroSrcset} heroPreloadSizes={heroSizes}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
@@ -202,30 +237,6 @@ const figc = "block text-center text-sm text-stone-600 mt-2";
       .price-jump { position:sticky; top:94px; z-index:40; background:#faf7f4; padding-top:8px; padding-bottom:8px; margin-top:.5rem; box-shadow:0 8px 14px -10px rgba(60,30,10,.28); }
       .price-jump .jump-eyebrow { display:none; }
     }
-    /* Price-tier infographic */
-    .pr-info { border:1px solid #ece3da; border-radius:16px; background:#fff; padding:1.25rem 1.25rem .5rem; margin:1.5rem 0; box-shadow:0 8px 30px rgba(60,30,10,.06); }
-    .pr-info__cap { font-family:'Sora',sans-serif; font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#b04228; margin:0 0 .9rem; }
-    .pr-tier { margin:0 0 1rem; }
-    .pr-tier__top { display:flex; justify-content:space-between; align-items:baseline; gap:.75rem; margin-bottom:.3rem; }
-    .pr-tier__name { font-family:'Lora',serif; font-weight:700; color:#1c1a18; font-size:.98rem; }
-    .pr-tier__price { font-family:'Sora',sans-serif; font-weight:700; color:#2D6A4F; font-size:.95rem; white-space:nowrap; }
-    .pr-tier__bar { height:12px; border-radius:7px; background:#e8604c; }
-    .pr-tier--floor .pr-tier__bar { background:#c8472f; }
-    .pr-tier--flag .pr-tier__price { color:#b04228; }
-    .pr-tier--flag .pr-tier__bar { background:repeating-linear-gradient(45deg,#e3cfc6,#e3cfc6 6px,#f3e7e1 6px,#f3e7e1 12px); }
-    /* Stacked first-year cost */
-    .pr-stack { display:flex; height:30px; border-radius:8px; overflow:hidden; margin:1rem 0 .4rem; border:1px solid #ece3da; }
-    .pr-stack span { display:block; height:100%; }
-    .pr-stack__key { display:flex; flex-wrap:wrap; gap:.4rem 1rem; font-family:'Sora',sans-serif; font-size:12px; color:#5a5248; margin:0 0 .5rem; }
-    .pr-stack__key b { display:inline-flex; align-items:center; gap:.35rem; font-weight:500; }
-    .pr-stack__key i { width:11px; height:11px; border-radius:3px; display:inline-block; }
-    /* Seller-check ladder (reused) */
-    .tl-spine { position:relative; margin:1.5rem 0 0.5rem; }
-    .tl-spine::before { content:""; position:absolute; left:15px; top:8px; bottom:8px; width:2px; background:rgba(45,106,79,.22); }
-    .tl-step { position:relative; padding:0 0 1.4rem 48px; }
-    .tl-step:last-child { padding-bottom:0; }
-    .tl-dot { position:absolute; left:6px; top:2px; width:20px; height:20px; border-radius:50%; background:#2D6A4F; color:#faf7f4; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; font-family:'Sora',sans-serif; }
-    .tl-head { font-family:'Lora',serif; font-weight:700; color:#1c1a18; margin:1px 0 4px; }
   </style>
 
   <div class="price-d">
@@ -245,7 +256,7 @@ const figc = "block text-center text-sm text-stone-600 mt-2";
             <p class="font-sora text-xs mt-4 mb-0" style="color:rgba(250,247,244,0.85)">Written by <strong style="color:#faf7f4">Mark &amp; Teri Benjamin</strong> · C.A.Gs African Grey breeders, Midland TX · USDA-licensed since 2014</p>
           </div>
           <figure class="m-0 order-1 md:order-2">
-            <img src={hero} width="800" height="600" alt="A healthy hand-raised Congo African Grey from C.A.Gs — what an African Grey's price actually buys" title="What an African Grey's price buys | C.A.Gs" class="w-full rounded-2xl" fetchpriority="high" />
+            <img src={hero} srcset={heroSrcset} sizes={heroSizes} width="1408" height="768" alt="A hand-raised Congo African Grey perched beside its health and ownership documents — what an African Grey's price actually buys" title="What an African Grey's price buys | C.A.Gs" class="w-full rounded-2xl" fetchpriority="high" decoding="async" />
             <span class="block text-center text-sm mt-2" style="color:rgba(250,247,244,0.85)">What the price buys — a healthy, documented, hand-raised Grey.</span>
           </figure>
         </div>
@@ -294,13 +305,10 @@ const figc = "block text-center text-sm text-stone-600 mt-2";
         <h2 id="cost" class={h2}>How Much Does an African Grey Parrot Cost?</h2>
         <p class={p}>Ask the internet what an African Grey costs and you'll get everything from $500 to $13,000 — forums, marketplaces and cost-guides that never quite agree. Here's the honest version from people who actually raise them: a documented, hand-raised African Grey sits between <strong>$1,700 and $3,500</strong> — African Greys are slow to breed and demanding to raise, as <a href="https://parrots.org/encyclopedia/grey-parrot/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">the World Parrot Trust's grey parrot profile ↗</a> makes clear — and where a bird lands in that band comes down to age, subspecies and how much real work went into it.</p>
 
-        <div class="pr-info" role="img" aria-label="African Grey price tiers: Congo baby $2,300–$2,500, Congo adult $1,700, Timneh $1,500–$1,600, and 'suspiciously cheap' under $1,500 marked as a red flag.">
-          <p class="pr-info__cap">African Grey price tiers — 2026</p>
-          <div class="pr-tier"><div class="pr-tier__top"><span class="pr-tier__name">Congo baby (3–6 mo)</span><span class="pr-tier__price">$2,300–$2,500</span></div><div class="pr-tier__bar" style="width:100%"></div></div>
-          <div class="pr-tier pr-tier--floor"><div class="pr-tier__top"><span class="pr-tier__name">Congo adult</span><span class="pr-tier__price">$1,700</span></div><div class="pr-tier__bar" style="width:70%"></div></div>
-          <div class="pr-tier"><div class="pr-tier__top"><span class="pr-tier__name">Timneh African Grey</span><span class="pr-tier__price">$1,500–$1,600</span></div><div class="pr-tier__bar" style="width:64%"></div></div>
-          <div class="pr-tier pr-tier--flag"><div class="pr-tier__top"><span class="pr-tier__name">Suspiciously cheap</span><span class="pr-tier__price">under $1,500 — red flag</span></div><div class="pr-tier__bar" style="width:40%"></div></div>
-        </div>
+        <figure class="m-0 my-6">
+          <img src={igTiers.src} srcset={igTiers.srcset} sizes={igTiers.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="African Grey price tiers for 2026: Congo baby $2,300–$2,500, Congo adult $1,700, Timneh $1,500–$1,600, and 'suspiciously cheap' under $1,500 flagged as a red flag" title="African Grey price tiers 2026 | C.A.Gs" />
+          <figcaption class={figc}>African Grey price tiers — where each bird falls, and the under-$1,500 red flag.</figcaption>
+        </figure>
 
         <ComparisonTable columns={tierCols} rows={tierRows} verdict="Our hand-raised Congo baby sits at the top on purpose — it's the most work to produce and the easiest bird to bond with. A Timneh is the value pick; anything under $1,500 is a warning, not a deal." />
 
@@ -325,6 +333,11 @@ const figc = "block text-center text-sm text-stone-600 mt-2";
         <!-- 7. H2-2 What you get -->
         <h2 id="included" class={h2}>What Do You Actually Get for $1,700–$3,500?</h2>
         <p class={p}>This is the question competitors never answer. They'll tell you a number; almost none tell you what the number <em>buys</em>. Here at C.A.Gs every figure is an all-in price — the documentation, the health testing and the support are part of the bird, not upsells bolted on at checkout. Here's the line-by-line.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igInc.src} srcset={igInc.srcset} sizes={igInc.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="What a real C.A.Gs breeder includes versus a cheap marketplace: PCR DNA sexing, avian-vet certificate, CITES papers, weaning, written guarantee and lifetime support" title="What's included: breeder vs marketplace | C.A.Gs" />
+          <figcaption class={figc}>What the price includes — and what a cheap marketplace leaves out.</figcaption>
+        </figure>
 
         <ComparisonTable columns={incCols} rows={incRows} verdict="The price gap between a real breeder and a cheap marketplace is exactly this column of inclusions — testing, papers, weaning and support. That's what you're buying, not just the bird." />
 
@@ -376,13 +389,18 @@ const figc = "block text-center text-sm text-stone-600 mt-2";
         <h4 class={h4}>The 5-Minute Seller Check</h4>
         <p class={p}>Before you send a deposit to anyone, run this five-step check. It takes about five minutes and it's the cheapest insurance in birds. If a seller fails any single step, that's your answer — and the more they resist, the clearer the answer gets.</p>
 
-        <div class="tl-spine">
-          <div class="tl-step"><span class="tl-dot">1</span><p class="tl-head">Verify the licence</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">Ask for the USDA licence and breeder details, and confirm they're real before anything else.</p></div>
-          <div class="tl-step"><span class="tl-dot">2</span><p class="tl-head">Demand the documents</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">CITES Appendix I papers, a PCR DNA certificate and an avian-vet certificate — see them before you pay.</p></div>
-          <div class="tl-step"><span class="tl-dot">3</span><p class="tl-head">Get a live video call</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">Ask to see the actual bird, live, on video. A refusal almost always means there's no bird.</p></div>
-          <div class="tl-step"><span class="tl-dot">4</span><p class="tl-head">Use a reversible payment</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">Never wire money or send gift cards or crypto. Use something you can dispute and claw back.</p></div>
-          <div class="tl-step"><span class="tl-dot">5</span><p class="tl-head">Confirm a physical location</p><p class="text-stone-700 leading-relaxed text-[15px] mb-0">Verify the address and that the bird is genuinely where the seller says it is.</p></div>
-        </div>
+        <figure class="m-0 my-6">
+          <img src={igSeller.src} srcset={igSeller.srcset} sizes={igSeller.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="The five-minute African Grey seller check: verify the USDA licence, demand CITES, DNA and vet papers, get a live video call, use reversible payment, confirm a physical location" title="The 5-minute seller check | C.A.Gs" />
+          <figcaption class={figc}>Run this five-step check before you pay anyone — under $1,500 is a red flag.</figcaption>
+        </figure>
+
+        <ol class="space-y-3 mt-4 mb-2 list-none pl-0">
+          <li class="text-stone-700 leading-relaxed text-[15px]"><strong class="text-logo-dark">1. Verify the licence.</strong> Ask for the USDA licence and breeder details, and confirm they're real before anything else.</li>
+          <li class="text-stone-700 leading-relaxed text-[15px]"><strong class="text-logo-dark">2. Demand the documents.</strong> CITES Appendix I papers, a PCR DNA certificate and an avian-vet certificate — see them before you pay.</li>
+          <li class="text-stone-700 leading-relaxed text-[15px]"><strong class="text-logo-dark">3. Get a live video call.</strong> Ask to see the actual bird, live, on video. A refusal almost always means there's no bird.</li>
+          <li class="text-stone-700 leading-relaxed text-[15px]"><strong class="text-logo-dark">4. Use a reversible payment.</strong> Never wire money or send gift cards or crypto. Use something you can dispute and claw back.</li>
+          <li class="text-stone-700 leading-relaxed text-[15px]"><strong class="text-logo-dark">5. Confirm a physical location.</strong> Verify the address and that the bird is genuinely where the seller says it is.</li>
+        </ol>
 
         <h5 class={h5}>Licence, papers, video call, reversible payment, location</h5>
         <p class={p}>Those five are deliberately simple. As <a href="https://consumer.ftc.gov/consumer-alerts/2024/12/getting-pet-avoid-scams" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">the FTC's guidance on avoiding pet scams ↗</a> documents, the cons rely on you skipping the boring checks in the excitement of a "deal." A real breeder will happily clear every one — we'd rather you ran this check on us than lost money to someone who couldn't. For more, our full <a href="/how-to-avoid-african-grey-parrot-scams/" class={lnk} style="color:#b04228">guide to avoiding African Grey scams</a> walks through the cons in detail.</p>
@@ -399,25 +417,10 @@ const figc = "block text-center text-sm text-stone-600 mt-2";
         <h2 id="ownership" class={h2}>What Does an African Grey Really Cost Beyond the Purchase Price?</h2>
         <p class={p}>The sticker price is the start, not the whole bill. A Grey needs a proper cage, a vet, good food and a steady stream of toys it will destroy with great enthusiasm. None of it is extravagant, but it's real — and the buyers who thrive are the ones who budgeted for it before the bird arrived, not after. For the full breakdown see our <a href="/african-grey-parrot-price/" class={lnk} style="color:#b04228">complete African Grey cost-of-ownership guide</a>; here's the short version.</p>
 
-        <div class="pr-info" role="img" aria-label="First-year African Grey costs beyond the bird: cage $300–$800, perches and toys $100–$300, first vet visit $75–$200, food $200–$400, enrichment $150–$300, shipping $185–$350.">
-          <p class="pr-info__cap">First-year costs beyond the bird</p>
-          <div class="pr-stack">
-            <span style="width:32%;background:#2D6A4F"></span>
-            <span style="width:14%;background:#3f8a68"></span>
-            <span style="width:10%;background:#e8604c"></span>
-            <span style="width:18%;background:#c8472f"></span>
-            <span style="width:13%;background:#d98a4a"></span>
-            <span style="width:13%;background:#8a6f4a"></span>
-          </div>
-          <div class="pr-stack__key">
-            <b><i style="background:#2D6A4F"></i>Cage $300–$800</b>
-            <b><i style="background:#3f8a68"></i>Perches &amp; toys $100–$300</b>
-            <b><i style="background:#e8604c"></i>First vet $75–$200</b>
-            <b><i style="background:#c8472f"></i>Food $200–$400</b>
-            <b><i style="background:#d98a4a"></i>Enrichment $150–$300</b>
-            <b><i style="background:#8a6f4a"></i>Shipping $185–$350</b>
-          </div>
-        </div>
+        <figure class="m-0 my-6">
+          <img src={igCost.src} srcset={igCost.srcset} sizes={igCost.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="First-year African Grey costs beyond the bird: cage $300–$800, perches and toys $100–$300, first vet visit $75–$200, food $200–$400, enrichment $150–$300, shipping $185–$350, about $1,100–$2,400 total" title="First-year cost roadmap | C.A.Gs" />
+          <figcaption class={figc}>First-year setup beyond the bird — roughly $1,100–$2,400.</figcaption>
+        </figure>
 
         <ComparisonTable columns={costCols} rows={costRows} verdict="Budget roughly $1,100–$2,400 of first-year setup on top of the bird. The cage is the one place not to economise — a Grey lives in it for decades." />
 
@@ -442,16 +445,10 @@ const figc = "block text-center text-sm text-stone-600 mt-2";
         <p class={p}>Honestly? For the right home, an African Grey is worth every dollar — and for the wrong one, no price is low enough. Worth isn't really about the figure; it's about whether you want a brilliant, demanding, decades-long companion that talks back. If you do, the question stops being "is it expensive?" and becomes "which Grey, and what should I budget?"</p>
 
         <h3 class={h3}>Congo vs Timneh — Which Is the Better Value?</h3>
-        <div class="grid sm:grid-cols-2 gap-5 my-6">
-          <figure class="m-0">
-            <img src="/congo-african-grey-variant.webp" width="640" height="480" alt="A Congo African Grey with its classic red tail — the larger subspecies at $1,700–$2,500" title="Congo African Grey value | C.A.Gs" class="w-full rounded-2xl border border-stone-200" loading="lazy" />
-            <span class={figc}>Congo — larger, red tail, $1,700–$2,500, classically clear talker.</span>
-          </figure>
-          <figure class="m-0">
-            <img src="/baby-timneh-african-grey-evie-training-plan.webp" width="600" height="509" alt="A baby Timneh African Grey — the smaller, value subspecies at $1,500–$1,600" title="Timneh African Grey value | C.A.Gs" class="w-full rounded-2xl border border-stone-200" loading="lazy" />
-            <span class={figc}>Timneh — smaller, maroon tail, $1,500–$1,600, often an earlier talker.</span>
-          </figure>
-        </div>
+        <figure class="m-0 my-6">
+          <img src={igCompare.src} srcset={igCompare.srcset} sizes={igCompare.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="Congo versus Timneh African Grey value: the Congo at $1,700–$2,500 is larger and a classic clear talker; the Timneh at $1,500–$1,600 is smaller and often an earlier talker" title="Congo vs Timneh value | C.A.Gs" />
+          <figcaption class={figc}>Congo vs Timneh — larger and clearer, or smaller, cheaper and often earlier to talk.</figcaption>
+        </figure>
         <p class={p}>On pure value the Timneh wins on price and tends to settle and start talking a little sooner; the Congo costs a touch more for its size and famously clear speech. But the gap is modest and the documentation is identical, so the better value is simply the bird whose temperament fits your home — not the cheaper line on a spec sheet.</p>
 
         <div class="mt-6">
