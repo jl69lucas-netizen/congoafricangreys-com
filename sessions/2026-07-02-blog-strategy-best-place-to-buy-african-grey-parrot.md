@@ -26,6 +26,43 @@ Competitors post either (a) classified listings or (b) generic care articles tha
 ## 6. Winning angle (moat)
 "The 5 Safest Places to Buy an African Grey — Ranked by Risk" + first-hand breeder E-E-A-T ("buyers reach us after nearly losing deposits to fake breeders"). Snippet + AI-citation friendly.
 
+## 7. Competitor Deep-Dive — Weaknesses · Headers · Keyword Types (added 2026-07-02, "change of plans")
+> Live pull: Firecrawl SERP + on-page scrape, 2026-07-02, US. Un-fetched fields = `NOT FETCHED` (never fabricated, per CLAUDE.md).
+
+### 7a. Fresh SERP (who actually ranks)
+| # | Result | Type | Why it ranks | **Weakness (our wedge)** |
+|---|--------|------|--------------|--------------------------|
+| 1 | reddit.com/r/AfricanGrey | UGC thread | Community trust, exact-question match, freshness | Not a guide — no structure, no schema, answers scattered/anecdotal, no seller you can act on |
+| 2 | parrotforums.com | UGC thread | Topical authority, long dwell, Q&A | Same — thread, not an authoritative rankable guide; advice conflicting/dated |
+| 3 | facebook.com/groups | UGC post | Social signals, local intent ("PA area") | Login-walled, ephemeral, zero SEO surface for a searcher |
+| 4 | graybreedersfoundation.yolasite.com | Single breeder (MAP-certified, $1,500) | Exact keyword, MAP cert, price stated | **Yolasite free-builder** = weak authority/UX; one bird, no buyer education, no scam guidance, thin |
+| 5 | birdbreeders.com | Classified directory | Huge footprint, exact-match page, state pages | **See 7b** — pure state directory, listings $4k–$8.5k, zero trust/scam/education |
+| 6 | youtube.com | Video ("$13k on my Greys") | Video carousel, cost angle | Not a text guide; no verification framework |
+
+**Verdict:** positions 1–3 are people *asking each other who to trust* and 4–6 are thin sellers/video. **No structured, authoritative, trust-ranked buyer's guide owns this SERP** → exactly the lane our page fills. (Confirms §4.)
+
+### 7b. On-page structure — birdbreeders.com (scraped, the only true exact-match competitor)
+- **Title / H1:** "Best Place to Buy African Grey" (exact-match — they target our head term directly)
+- **H2:** just `Find Local Breeders` (one)
+- **H3:** 19 **state names** only (CA, CO, FL, GA, IL, MD, MI, MN, NC, NJ, NY, OH, PA, SC, TN, TX, UT, VA, WA)
+- **Keyword types on page:** transactional/local only — "buy African Grey", "African Grey breeders", "local African Grey", "African Grey for sale". Meta-keywords tag = a legacy keyword-stuffed dump (200+ terms).
+- **Trust/scam content:** NONE · **Pricing:** none on hub (listings $4k–$8.5k on child pages) · **Content type:** bare directory
+- **Weakness → our win:** they win the *string* match but offer nothing a nervous buyer needs — no verification method, no scam defense, no source comparison, no E-E-A-T. We match the H1 keyword AND out-teach them on every axis they skip.
+
+### 7c. Keyword-type map (what to own vs. what competitors leave uncovered)
+| Keyword type | Examples | Who owns it now | C.A.Gs coverage on page |
+|---|---|---|---|
+| Head / exact-match | best place to buy african grey parrot | birdbreeders (thin) | H1 + title + quick-answer ✓ |
+| Commercial-investigation | where to buy, reputable/legit breeder, how to choose | Reddit/forums (unstructured) | H2 "Where…2026", reputable-breeder H2 ✓ |
+| **Scam-avoidance (biggest gap)** | is it legit, avoid african grey scams, red flags, wire/gift-card | *nobody structured* — forums only | Red-flags H2 + MythFact + FTC/BBB cites ✓ (links OUT to scam interior) |
+| Transactional | for sale, price $1,700–$3,500, buy near me | birdbreeders/graybreeders | linked OUT (cannibalization guard §5) — quick facts + available cards ✓ |
+| Long-tail conversational / voice | "where can I buy a healthy african grey without getting scammed" | none | title long-tail + H3/H4 question headers ✓ |
+| Entity / AEO | CITES Appendix I, USDA AWA, PCR DNA, avian-vet cert, IATA, Congo/Timneh | Spruce/PetMD (generic) | woven across §reputable + breeder notes + schema ✓ |
+| Local | state/city + shipping | birdbreeders (state H3s) | shipping line + IATA airports (linked OUT to location cluster) |
+
+### 7d. Content gaps competitors leave (our moat, all now on-page)
+1. Sources **ranked by risk** (nobody does this) · 2. **Source comparison** table (breeder vs marketplace vs rescue vs pet store) · 3. The **one-question filter** (live video call) · 4. **Reversible-payment** framing w/ FTC+BBB citations · 5. First-hand **breeder E-E-A-T** ("buyers reach us after nearly losing a deposit") · 6. **Buyer's-shield** verification visual.
+
 ---
 ## BUILD COMPLETE (2026-07-02) — PASS, ~5,926 words, images pending
 Page built: `src/pages/blog/best-place-to-buy-african-grey-parrot/index.astro`. `final_page_audit.py` → **[PASS]** (H1:1 H2:12 H3:24 H4:14 H5:7 H6:5, zero skips; Article+FAQPage+HowTo+Breadcrumb+ImageObject schema). Framework PAS+EBP+QAB; angle "5 Sources Ranked by Risk". Cannibalization handled — links OUT to price blog, scam interior page, /available/, contact.
