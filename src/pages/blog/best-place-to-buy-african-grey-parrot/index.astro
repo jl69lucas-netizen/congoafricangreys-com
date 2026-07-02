@@ -1,131 +1,553 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
+import InquiryCompact from '../../../components/cag-inquiry-compact.astro';
+import Newsletter from '../../../components/cag-library/NewsletterV2.astro';
+import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
+import Callout from '../../../components/cag-blog-callout.astro';
+import ComparisonTable from '../../../components/cag-blog-comparison-table.astro';
+import BreederNote from '../../../components/cag-blog-breeder-note.astro';
+import MythFact from '../../../components/cag-blog-myth-fact.astro';
+import DecisionTree from '../../../components/cag-blog-decision-tree.astro';
+import RelatedPosts from '../../../components/cag-blog-related-posts.astro';
+import StickyCta from '../../../components/cag-blog-sticky-cta.astro';
+import BirdCard from '../../../components/BirdCard.astro';
 
-const title = "Best Place to Buy an African Grey Parrot in 2026: Breeder vs Marketplace vs Rescue";
-const description = "Breeder, online marketplace, or rescue — where's the safest place to buy an African Grey in 2026? An honest comparison of price, CITES documentation, health risk, and scam exposure.";
+const title = "Best Place to Buy an African Grey Parrot | 5 Safest Sources Ranked by Risk | Where Can I Buy a Healthy African Grey Without Getting Scammed? | C.A.Gs – Midland, TX";
+const description = "Wondering where the best place to buy an African Grey parrot is? A breeder ranks the 5 safest sources by risk and shows how to buy a healthy African Grey without getting scammed.";
 const canonical = "https://congoafricangreys.com/blog/best-place-to-buy-african-grey-parrot/";
+
+// Hero + in-content visuals are PLACEHOLDERS — drop generated WebP files at these paths.
+const hero = "/best-place-buy-african-grey-hero.webp";
+const heroSrcset = "/best-place-buy-african-grey-hero-480w.webp 480w, /best-place-buy-african-grey-hero-800w.webp 800w, /best-place-buy-african-grey-hero.webp 1408w";
+const heroSizes = "(min-width: 768px) 480px, 92vw";
+
+const ig = (base: string) => ({
+  src: `/${base}.webp`,
+  srcset: `/${base}-760w.webp 760w, /${base}.webp 1200w`,
+  sizes: "(min-width: 768px) 712px, 92vw",
+});
+const igRank   = ig("african-grey-5-safest-places-to-buy-ranked-by-risk-infographic");
+const igSource = ig("where-to-buy-african-grey-breeder-vs-marketplace-vs-rescue-comparison");
+const igVerify = ig("how-to-spot-a-reputable-african-grey-breeder-checklist");
+const igFlags  = ig("african-grey-buyer-red-flags-walk-away-infographic");
+const igTrust  = ig("why-buyers-choose-cags-trusted-african-grey-breeder");
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
   { name: "Blog", url: "/blog/" },
-  { name: "Best Place to Buy an African Grey", url: "/blog/best-place-to-buy-african-grey-parrot/" },
+  { name: "Best Place to Buy", url: "/blog/best-place-to-buy-african-grey-parrot/" },
+];
+
+const jumpLinks = [
+  { label: "Short Answer", href: "#quick" },
+  { label: "Where to Buy", href: "#where" },
+  { label: "5 Places Ranked", href: "#places" },
+  { label: "Compare Sources", href: "#compare" },
+  { label: "Spot a Breeder", href: "#reputable" },
+  { label: "Red Flags", href: "#redflags" },
+  { label: "Available", href: "#available" },
+  { label: "FAQ", href: "#faq" },
+];
+
+const counterStats = [
+  { num: "USDA",   label: "Licensed since 2014" },
+  { num: "CITES",  label: "Appendix I docs" },
+  { num: "PCR",    label: "DNA-sexed birds" },
+  { num: "$185",   label: "Ships nationwide" },
+];
+
+const quickFacts = [
+  { label: "Safest source", value: "Licensed breeder" },
+  { label: "Highest risk", value: "Online marketplace" },
+  { label: "Honest price", value: "$1,700–$3,500" },
+  { label: "Never pay by", value: "Wire · gift card · crypto" },
+];
+
+const sourceCols = ["Where you buy", "Typical price", "Scam risk", "Health record", "Overall trust"];
+const sourceRows = [
+  { item: "Licensed breeder", values: ["$1,700–$3,500", "Low", "Full & verifiable", "Highest"] },
+  { item: "Rescue / adoption", values: ["$200–$800 fee", "Low", "Usually documented", "High"] },
+  { item: "Bird expo", values: ["Varies", "Medium", "Ask on the day", "Mixed"] },
+  { item: "Pet store", values: ["$3,000–$5,000+", "Medium", "Often thin", "Medium"] },
+  { item: "Online marketplace", values: ["Suspiciously low", "Very high", "Rarely any", "Lowest"] },
+];
+
+const reputableCols = ["A reputable breeder will…", "A risky seller will…"];
+const reputableRows = [
+  { item: "Do a live video call with the bird in hand", values: ["Refuse, stall, or send old photos"] },
+  { item: "Provide CITES, PCR DNA & an avian-vet certificate", values: ["Have 'papers coming later'"] },
+  { item: "Show a verifiable USDA licence & address", values: ["Give no licence or a fake one"] },
+  { item: "Quote one fair, fixed price", values: ["Dangle a low price, then add 'fees'"] },
+  { item: "Take a reversible deposit", values: ["Demand wire, gift cards or crypto"] },
+];
+
+const flagRows = [
+  { item: "Price far below $1,500", values: ["No papers, unweaned, or a pure scam"] },
+  { item: "No CITES / DNA / vet certificate", values: ["Untested, undocumented or wild-caught risk"] },
+  { item: "Won't do a live video call", values: ["The bird may not exist at all"] },
+  { item: "Wants wire, gift card or crypto", values: ["Irreversible — classic advance-fee scam"] },
+  { item: "Pressure and urgency", values: ["'Another buyer is waiting' is a sales trap"] },
+  { item: "No verifiable licence or address", values: ["Nobody to hold accountable"] },
+];
+
+const sellerBranches = [
+  { answer: "They'll video-call you live with the bird, and show CITES, DNA and vet papers", result: "Green light on the two checks that matter most. Confirm the USDA licence and a verifiable address, use a reversible deposit, and you're buying from a real breeder — proceed." },
+  { answer: "They have the bird on video but the paperwork is 'coming later'", result: "Pause. Real documentation exists before a sale, not after payment. Ask to see the CITES, PCR DNA and avian-vet certificate now — if they can't produce them, treat it as a red flag." },
+  { answer: "They refuse a live video call or only send photos", result: "Walk away. A refusal to show the actual bird, live, is the single most reliable sign the bird doesn't exist. No paperwork or price makes that safe." },
+  { answer: "The price is well under $1,500 and they want wire, gift cards or crypto", result: "Stop and keep your money. That combination — bargain price plus irreversible payment — is an advance-fee scam in progress. Run the seller check on our scam guide before you send a cent." },
+];
+
+const birds = [
+  { id: 'amie', name: 'Amie', sex: 'Female', age: '3 mo', price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'Hand-raised, fully documented, ready to reserve.',
+    notes: 'Premium hand-raised female, 3 months old. PCR DNA-sexed, vet-checked, CITES-documented — captive-bred in the USA with the full paper trail.' },
+  { id: 'roys', name: 'Roys', sex: 'Male', age: '4 mo', price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Curious, food-motivated baby boy.',
+    notes: "Hand-raised male, 4 months old. Same documentation and health-testing as every C.A.Gs Grey, weaned and socialised before he travels." },
+  { id: 'bery', name: 'Bery', sex: 'Female', age: '1 yr', price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp', objectPos: 'object-center',
+    hook: 'Gentle, established — our value Congo.',
+    notes: 'Soft temperament, 1-year-old female at the $1,700 honest floor — tame, documented and ready for the right home.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Bonded Duo', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair-talking-birds.webp', objectPos: 'object-center',
+    hook: 'Two hand-raised birds, adopted together.',
+    notes: 'Unrelated companion pair sold together. Jins (male, 6mo) + Jeni (female, 4mo), both fully documented and hand-raised.' },
 ];
 
 const faqs = [
-  {
-    q: "Where is the safest place to buy an African Grey parrot?",
-    a: "A USDA-licensed breeder who hands you the documentation before any money moves is the safest source. That means a verifiable USDA Animal Welfare Act license, CITES Appendix I captive-bred paperwork, PCR DNA sexing, a board-certified avian-vet health certificate, and a willingness to video-call your specific bird on demand. Those checks are exactly what anonymous marketplace sellers can't or won't provide.",
-  },
-  {
-    q: "Is it safe to buy an African Grey from an online marketplace?",
-    a: "It is the highest-risk option. Most African Grey scams live on classified sites and social media, where 'breeders' post stolen photos, demand untraceable payment, and vanish after the deposit. If you do shop a marketplace, treat reversible payment, a verifiable location, and a live video of your actual bird as non-negotiable — and walk away the moment a seller resists any of them.",
-  },
-  {
-    q: "Can you adopt an African Grey instead of buying one?",
-    a: "Yes, and it can be a great fit for an experienced, patient owner. Rescues and rehomes often have wonderful birds, usually adults, sometimes with behavioural quirks from previous homes. The trade-off is that documentation and history can be incomplete, and well-run rescues screen adopters carefully. Adoption suits buyers who want to give an older bird a home more than they want a specific age or a paper trail.",
-  },
-  {
-    q: "How can I verify an African Grey seller is legitimate?",
-    a: "Run five checks: a verifiable USDA license number, CITES Appendix I captive-bred documentation, a live video call showing your specific bird on demand, reversible payment (card, PayPal Goods, or bank wire), and a findable physical location. A legitimate breeder passes all five. Reverse-image-search the listing photos too — stolen stock images are the fastest way to expose a scam.",
-  },
+  { q: "Can I buy an African Grey online safely?",
+    a: "Yes — but only when you verify the seller the same way every time. Buying online is safe with a reputable, USDA-licensed breeder who will do a live video call with the bird in hand, provide CITES Appendix I papers, a PCR DNA-sexing certificate and an avian-vet health certificate, and accept a reversible deposit. It becomes dangerous the moment a seller refuses any of those. The internet isn't the risk; skipping the checks is." },
+  { q: "Are Facebook or Instagram bird sellers legit?",
+    a: "Some are, but social platforms are where most African Grey scams start, so treat every listing as unverified until it passes the seller check. A genuine breeder on Facebook or Instagram will happily move to a live video call, show full paperwork and a USDA licence, and take a payment you can dispute. A scammer will push you toward urgency, wire transfers or gift cards, and will always have a reason they can't video-call the bird right now. If you can't verify a physical location and licence, don't send money." },
+  { q: "How much should an African Grey deposit be?",
+    a: "A reasonable deposit to hold a specific bird is a few hundred dollars — we take $200 — paid by a reversible method, with the balance settled before the bird travels. Be wary of a seller who wants the full amount up front by wire or crypto, or a 'deposit' that's suspiciously large. A real breeder reserves the bird, keeps you updated while it finishes weaning, and never needs an irreversible payment to hold it." },
+  { q: "Is a breeder or a rescue better for a first-time owner?",
+    a: "For most first-time owners, a reputable breeder is the more predictable path, because a hand-raised, health-tested baby arrives socialised, documented and without a hidden behavioural history. A rescue African Grey can be a wonderful choice too, but rescued Greys often carry trust issues, feather-plucking or bonded-to-one-person behaviour that suit an experienced home better. Either way, insist on health records and never on wild-caught origin." },
+  { q: "What paperwork should a reputable breeder provide?",
+    a: "Every legitimate African Grey should come with CITES Appendix I captive-bred documentation, a PCR DNA-sexing certificate, an avian-vet health certificate, a hatch certificate and a closed band number — plus a written health guarantee and a USDA licence you can verify. If a seller can't produce that full set before you pay, that isn't a paperwork delay; it's a warning. Missing papers is the single most common thread in undocumented and scam birds." },
+  { q: "How do I find an African Grey breeder near me?",
+    a: "Start with breeders who publish a real address, a USDA licence and original photos and video of their own birds, then verify them the same way you'd verify any online seller. 'Near me' matters less than 'verifiable' — a reputable breeder a few states away who ships on IATA-compliant flights is safer than an anonymous local listing. We ship nationwide, $185 to your nearest airport or $350 home delivery, so distance rarely needs to decide it." },
+  { q: "What's the safest way to pay for a parrot?",
+    a: "Use a payment method you can dispute and reverse if something goes wrong. Never wire money, buy gift cards or send cryptocurrency for a bird you haven't verified, because those payments are gone the instant you send them — which is exactly why scammers demand them. A reversible deposit, paid only after you've seen the bird live and the paperwork in full, is the safest route every time." },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const img = (path: string, w: number, h: number, name: string, caption: string, description: string) => ({
+  "@type": "ImageObject",
+  "contentUrl": "https://congoafricangreys.com" + path,
+  "url": "https://congoafricangreys.com" + path,
+  name, caption, width: w, height: h, description,
+});
+
+const imageObjects = [
+  img(hero, 1600, 900,
+    "A trustworthy home aviary where a healthy hand-raised Congo African Grey is verified before purchase",
+    "The safest place to buy an African Grey is a real, verifiable breeder.",
+    "A warm, natural-light photograph of a healthy hand-raised Congo African Grey perched calmly on a natural manzanita perch in a clean home aviary, with a breeder's hands loosely offering a foraging toy. The image illustrates this guide's central point: the safest place to buy an African Grey is from a reputable, USDA-licensed breeder you can verify by live video and full documentation, not from an anonymous marketplace listing."),
+  img(igRank.src, 1200, 700,
+    "The five safest places to buy an African Grey ranked from lowest to highest risk",
+    "The 5 places to buy an African Grey, ranked by risk.",
+    "A flat-design vertical ranking infographic titled 'The 5 Safest Places to Buy an African Grey — Ranked by Risk', listing licensed breeder and rescue as lowest risk in green, bird expo and pet store as medium risk in amber, and online marketplace as highest risk in clay red with a warning icon. It visualises the guide's core ranking so buyers can see at a glance which sources protect them and which expose them to scams."),
+  img(igSource.src, 1200, 700,
+    "Breeder versus marketplace versus rescue versus pet store compared on price, risk, health and trust",
+    "Where to buy compared: price, scam risk, health record and trust.",
+    "A flat-design four-column comparison graphic titled 'Where to Buy an African Grey — Source Comparison', comparing a licensed breeder, an online marketplace, a rescue and a pet store across price, scam risk, health record and overall trust, using green, amber and clay markers. The graphic gives buyers a scannable, snippet-ready summary of how the buying sources stack up."),
+  img(igVerify.src, 1200, 700,
+    "A checklist for spotting a reputable African Grey breeder",
+    "How to spot a reputable breeder — the five-point checklist.",
+    "A flat-design checklist infographic titled 'How to Spot a Reputable African Grey Breeder' with five checked items: does a live video call, provides CITES, DNA and avian-vet paperwork, shows a verifiable USDA licence, quotes one fair fixed price, and takes a reversible deposit. It doubles as a printable buyer-safety checklist and link-magnet asset."),
+  img(igFlags.src, 1200, 700,
+    "The red flags that mean walk away from an African Grey seller",
+    "Red flags that mean walk away — before you pay anyone.",
+    "A flat-design warning infographic titled 'Red Flags: Walk Away' showing the danger signs of an African Grey scam — a price far below fifteen hundred dollars, no CITES, DNA or vet paperwork, a seller who won't video-call, demands for wire, gift-card or crypto payment, and high-pressure urgency — each with a clay warning accent. It helps buyers recognise a scam before sending money."),
+  img(igTrust.src, 1200, 900,
+    "Mark and Teri Benjamin with a hand-raised Congo African Grey at C.A.Gs in Midland, Texas",
+    "Why buyers choose C.A.Gs — a verifiable, USDA-licensed breeder.",
+    "An authentic photograph of a hand-raised Congo African Grey with its breeders at C.A.Gs in Midland, Texas, conveying original media and first-hand E-E-A-T. The image supports the section on why buyers choose a verifiable, USDA-licensed breeder who provides health testing, documentation and lifetime support."),
+];
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Best Place to Buy an African Grey Parrot in 2026: Breeder vs Marketplace vs Rescue",
+  headline: "Best Place to Buy an African Grey Parrot: 5 Sources Ranked by Risk",
   description,
+  image: imageObjects,
   author: { "@type": "Person", name: "Mark & Teri Benjamin" },
   publisher: { "@type": "Organization", name: "CongoAfricanGreys.com", url: "https://congoafricangreys.com" },
-  datePublished: "2026-06-03",
+  datePublished: "2026-07-02",
+  dateModified: "2026-07-02",
+  mainEntityOfPage: canonical,
   url: canonical,
 };
 
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to verify a reputable African Grey breeder in five minutes",
+  description: "A breeder's quick screen for confirming an African Grey seller is legitimate before you pay a deposit.",
+  step: [
+    { "@type": "HowToStep", name: "Ask for a live video call", text: "Ask the seller to video-call you with the actual bird in hand. A refusal is the clearest red flag." },
+    { "@type": "HowToStep", name: "Demand the documents", text: "Insist on CITES Appendix I papers, a PCR DNA-sexing certificate and an avian-vet health certificate before paying." },
+    { "@type": "HowToStep", name: "Verify the licence and address", text: "Confirm a real USDA licence and a physical location you can check." },
+    { "@type": "HowToStep", name: "Check the price is honest", text: "Be wary of a price far below the $1,700 floor — a bargain listing is usually a scam or an undocumented bird." },
+    { "@type": "HowToStep", name: "Use a reversible payment", text: "Take a reversible deposit and never wire money, buy gift cards or send crypto." },
+  ],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+
+const h2 = "font-lora font-bold text-logo-dark leading-tight mb-4 mt-2 scroll-mt-24";
+const h3 = "font-lora font-semibold text-xl text-logo-dark mb-3 mt-6";
+const h4 = "font-lora font-semibold text-lg text-logo-dark mb-2 mt-5";
+const h5 = "font-lora font-semibold text-base text-logo-dark mt-5 mb-1";
+const h6 = "font-sora font-semibold text-xs uppercase tracking-wide mt-4 mb-1";
+const p = "text-stone-700 leading-relaxed mb-4";
+const lnk = "underline font-medium";
+const figc = "block text-center text-sm text-stone-600 mt-2";
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta heroPreload={hero} heroPreloadSrcset={heroSrcset} heroPreloadSizes={heroSizes}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
+  <style>
+    .bp-d .cag-seam { display:flex; align-items:center; gap:26px; max-width:1100px; margin:2.25rem auto 1.5rem; padding:0 24px; }
+    .bp-d .cag-seam__line { flex:1; height:1px; background:rgba(45,106,79,.16); }
+    .bp-d .cag-seam img { height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+    @media (max-width:600px){ .bp-d .cag-seam { gap:16px; } .bp-d .cag-seam img { height:24px; } }
+    .bp-d .bp-hero h1 { font-size:clamp(1.7rem, 1.1rem + 2.6vw, 2.4rem) !important; line-height:1.14 !important; }
+    .bp-d figure img { box-shadow:0 10px 30px rgba(60,30,10,.08); }
+    .bp-jump { max-width:900px; margin:1.25rem auto 0; }
+    .bp-jump .jump-eyebrow { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:#b04228; margin:0 0 6px 4px; }
+    @media (max-width:767px){
+      .bp-jump { position:sticky; top:94px; z-index:40; background:#faf7f4; padding-top:8px; padding-bottom:8px; margin-top:.5rem; box-shadow:0 8px 14px -10px rgba(60,30,10,.28); }
+      .bp-jump .jump-eyebrow { display:none; }
+    }
+  </style>
+
+  <div class="bp-d">
+    <div style="max-width:1200px;margin:0 auto;">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
+
+    <!-- 1. Hero -->
+    <section class="bp-hero text-white px-4 pt-12 pb-10" style="background:#2D6A4F">
+      <div class="max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div class="order-2 md:order-1">
+            <p class="font-sora text-xs font-medium tracking-wide mb-3" style="color:#ffd6c9">Buyer's Guide · Ranked by Risk · Midland, TX</p>
+            <h1 class="font-lora font-bold mb-4" style="color:#faf7f4">Best Place to Buy an African Grey Parrot: 5 Sources Ranked by Risk</h1>
+            <p class="text-lg mb-6" style="color:rgba(250,247,244,0.85)">Where should you actually spend $1,700–$3,500 — and who's most likely to take it and run? A working breeder ranks every source by risk, and shows you how to verify any seller in five minutes.</p>
+            <a href="#places" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">See the 5 places ranked</a>
+            <p class="font-sora text-xs mt-4 mb-0" style="color:rgba(250,247,244,0.85)">Written by <strong style="color:#faf7f4">Mark &amp; Teri Benjamin</strong> · C.A.Gs African Grey breeders, Midland TX · USDA-licensed since 2014</p>
+          </div>
+          <figure class="m-0 order-1 md:order-2">
+            <img src={hero} srcset={heroSrcset} sizes={heroSizes} width="1408" height="768" alt="A healthy hand-raised Congo African Grey being verified by its breeder in a clean home aviary — the safest place to buy an African Grey" title="The safest place to buy an African Grey | C.A.Gs" class="w-full rounded-2xl" fetchpriority="high" decoding="async" />
+            <span class="block text-center text-sm mt-2" style="color:rgba(250,247,244,0.85)">The safest place to buy — a real breeder you can verify.</span>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Counter snippet -->
+    <CounterSnippet stats={counterStats} />
+
+    <!-- 3. Top lead-capture strip -->
+    <div style="max-width:1100px;margin:0 auto;" class="px-4 mt-6 relative z-10">
+      <InquiryCompact heading="Want to buy from a breeder you can actually verify?" subtext="Tell us what you're looking for and we'll send live video, full paperwork and the birds available now — no pressure, no games." subject="African Grey buying enquiry" page="blog/best-place" idPrefix="top" />
+    </div>
+
+    <!-- 4. Jump nav -->
+    <div class="bp-jump px-4">
+      <p class="jump-eyebrow font-sora">On This Page</p>
+      <JumpNav links={jumpLinks} sticky={false} />
+    </div>
+
+    <section class="px-4 pt-8 pb-4" style="background:#faf7f4">
+      <div style="max-width:760px;margin:0 auto;">
+
+        <!-- 5. Quick-Answer box -->
+        <div id="quick" class="scroll-mt-24 mb-6">
+          <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+            <div class="px-6 py-5 sm:px-8" style="background:#2D6A4F">
+              <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] mb-1.5" style="color:#ffd6c9">The short answer</p>
+              <h2 class="font-lora font-bold text-xl sm:text-2xl leading-snug" style="color:#faf7f4">Where Is the Best Place to Buy an African Grey?</h2>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="font-sora text-stone-700 leading-relaxed mb-6">The safest place to buy an African Grey is from a <strong>reputable, USDA-licensed breeder</strong> who will do a <strong>live video call</strong> with the bird, provide <strong>CITES, PCR DNA and avian-vet paperwork</strong>, and take a <strong>reversible deposit</strong>. Online marketplaces and anonymous social sellers carry the highest scam risk. If a seller refuses the video call or the papers, that's your answer — walk away.</p>
+              <div class="grid grid-cols-2 gap-3">
+                {quickFacts.map((r) => (
+                  <div class="rounded-xl border border-stone-200 bg-cream/60 px-4 py-3">
+                    <span class="block font-sora text-[11px] uppercase tracking-wide text-stone-600">{r.label}</span>
+                    <span class="block font-sora text-sm font-semibold text-logo-dark mt-1 leading-snug">{r.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. H2-1 Where to buy -->
+        <h2 id="where" class={h2}>Where Is the Best Place to Buy an African Grey in 2026?</h2>
+        <p class={p}>Type "best place to buy an African Grey" into Google and the top result isn't a shop — it's people in a forum asking each other for a seller they can trust, because the scams are that bad. That tells you everything about this purchase: you're not really shopping for a bird, you're shopping for someone to trust with $1,700–$3,500 and a 40–60 year commitment. The best place to buy, in one line, is wherever you can <strong>verify</strong> the seller — and the honest ranking below is really a ranking of how easy each source makes that verification.</p>
+
+        <figure class="m-0 my-6">
+          <img src="/male-and-female-congo-african-grey-parrots.webp" width="735" height="529" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="A male and female Congo African Grey — hand-raised, DNA-sexed and documented — the kind of verifiable bird a reputable breeder can show you on a live call" title="Male and female Congo African Grey parrots | C.A.Gs" />
+          <figcaption class={figc}>Real, documented Congo African Greys — the bird a trustworthy source can prove is theirs.</figcaption>
+        </figure>
+
+        <h3 class={h3}>Why Does It Matter So Much Where You Buy?</h3>
+        <p class={p}>Because the African Grey is one of the most trafficked and most faked birds in the pet trade, and the damage from buying badly isn't only financial. A bird from the wrong source can arrive sick, undocumented, unweaned — or not arrive at all. As <a href="https://www.worldwildlife.org/species/african-grey-parrot" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">the World Wildlife Fund notes about heavy trapping of the species ↗</a>, captive-bred documentation is exactly what separates a legal, ethical bird from a laundered one. Where you buy decides whether you get papers, a health guarantee and a breeder who still answers the phone in year three — or a dead end.</p>
+        <h4 class={h4}>The real cost of choosing the wrong source</h4>
+        <p class={p}>A saved few hundred dollars up front routinely turns into thousands at the avian vet, or the total loss of a deposit to a seller who vanishes. The buyers who reach us most upset aren't the ones who paid a fair price — they're the ones who chased a cheap one and are now trying to rescue the situation. Where you buy is the decision every other outcome hangs on.</p>
+
+        <figure class="m-0 my-6 mx-auto max-w-sm">
+          <img src="/african-grey-parrot-buyers-shield.webp" srcset="/african-grey-parrot-buyers-shield-560w.webp 560w, /african-grey-parrot-buyers-shield.webp 900w" sizes="(min-width: 768px) 384px, 92vw" width="900" height="1612" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="African Grey Parrot Buyer's Shield — the documents and checks that protect you from scams when buying an African Grey: live video call, CITES and DNA paperwork, USDA licence, fair price and a reversible deposit" title="African Grey buyer's shield | C.A.Gs" />
+          <figcaption class={figc}>The buyer's shield — the checks and papers that keep your money, and your bird, safe.</figcaption>
+        </figure>
+
+        <h3 class={h3}>What's the One Question That Filters 90% of Sellers?</h3>
+        <p class={p}>Ask any seller a single question and most of the risk sorts itself out: <em>"Will you get on a live video call with the bird in your hands right now?"</em> A real breeder says yes without hesitation — we do it every week. A scammer suddenly has a reason they can't: the bird's asleep, the camera's broken, another buyer is deciding. The question costs nothing and it's the fastest trust test in birds.</p>
+        <h4 class={h4}>"Will you do a live video call with the bird in hand?"</h4>
+        <p class={p}>It works because it's almost impossible to fake in the moment. Photos can be stolen, paperwork can be promised, prices can be adjusted — but a live, unedited video of a specific bird, on demand, is exactly what a person who doesn't have the bird cannot produce. Lead with this question, and the sources at the bottom of our ranking eliminate themselves before you've risked a cent.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 7. H2-2 Five places ranked -->
+        <h2 id="places" class={h2}>The 5 Places You Can Buy an African Grey, Ranked by Risk</h2>
+        <p class={p}>Here's the honest ranking, from safest to most dangerous. We put ourselves at the top, but with the receipts to back it up — the point isn't "buy from us," it's "buy from whoever passes the same checks we happily pass." Every source below can, in theory, sell you a wonderful bird; what changes from top to bottom is how likely you are to end up documented and protected instead of scammed.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igRank.src} srcset={igRank.srcset} sizes={igRank.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="The five safest places to buy an African Grey ranked from lowest to highest risk: licensed breeder and rescue lowest, bird expo and pet store medium, online marketplace highest" title="5 places to buy an African Grey, ranked by risk | C.A.Gs" />
+          <figcaption class={figc}>The five buying sources, ranked from lowest risk to highest.</figcaption>
+        </figure>
+
+        <ComparisonTable columns={sourceCols} rows={sourceRows} verdict="A licensed breeder and a documented rescue sit at the safe end; an anonymous online marketplace sits at the dangerous end. Everything in between comes down to how much you can verify before you pay." />
+
+        <h3 class={h3}>1. Licensed Breeder — the Lowest-Risk Source</h3>
+        <p class={p}>A reputable, USDA-licensed breeder is the safest place to buy an African Grey, full stop. You get a bird raised by someone who is legally accountable, whose birds you can see on live video, and whose paperwork — CITES, DNA, avian-vet certificate — you can verify before a cent changes hands. It isn't the cheapest headline price, but it's the only source where the price, the papers and the support all line up.</p>
+        <h4 class={h4}>What "licensed" actually means (USDA AWA)</h4>
+        <p class={p}>"Licensed" isn't a marketing word. A breeder selling regulated birds is meant to hold a USDA licence under the <a href="https://www.aphis.usda.gov/aphis/ourfocus/animalwelfare" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">Animal Welfare Act, administered by USDA APHIS ↗</a>, which means an accountable identity, an inspectable facility and a real address behind the sale. We've been licensed since 2014. Ask any seller for their licence; a real one is proud to give it, and a scammer can't.</p>
+        <h5 class={h5}>Breeder note: the paperwork we send home with every chick</h5>
+        <p class={p}>Every Grey that leaves us goes home with the same folder: a PCR DNA-sexing certificate, an avian-vet health certificate, CITES Appendix I captive-bred documentation, a hatch certificate and closed band, and a written health guarantee. That folder is the difference between a companion you can prove is healthy and legal, and a bird you merely hope is. It's also, not coincidentally, exactly what a low-risk source can produce and a high-risk one can't.</p>
+
+        <h3 class={h3}>2. Rescue &amp; Adoption — Low Risk, for the Right Owner</h3>
+        <p class={p}>A parrot rescue or adoption is a genuinely low-risk, ethical way to bring home an African Grey, and for an experienced owner it can be the most rewarding of all. Reputable rescues health-check their birds, are honest about history, and charge a modest adoption fee rather than a sale price. The trade-off is the bird itself: a rescue Grey often comes with a past.</p>
+        <h4 class={h4}>When a rescue Grey is the better choice</h4>
+        <p class={p}>If you've kept parrots before and you're prepared for a bird that may be bonded to one person, nervous of hands, or a feather-plucker working through old stress, a rescue is a wonderful thing to do — you're giving a long-lived bird a second home. For a first-time owner who wants a predictable, socialised start, a hand-raised baby from a breeder is usually the gentler path. Neither is "better"; they suit different homes.</p>
+
+        <h3 class={h3}>3. Bird Expo — Mixed Risk, Verify on the Day</h3>
+        <p class={p}>Bird expos and avicultural shows sit in the middle. The good news is you meet the seller and the bird in person, which beats any photo. The catch is that an expo compresses a big decision into a loud afternoon, and not every table is a licensed breeder — some are resellers. Treat an expo as a place to <em>meet</em> breeders, not to make an impulse purchase; take the card, run the same checks later, and buy when you've verified, not because the show ends at five.</p>
+
+        <h3 class={h3}>4. Pet Store — Medium Risk, High Price</h3>
+        <p class={p}>A pet store is usually safer than a random online listing but pricier and shallower than a breeder. You can see the bird, and a good store health-checks its stock — but staff rarely know the bird's hatch history or socialisation, documentation is often thin, and African Greys command $3,000–$5,000 or more at retail. You're paying a premium for convenience and getting less of the paperwork and lifetime support a breeder builds in.</p>
+
+        <h3 class={h3}>5. Online Marketplace &amp; Social Sellers — the Highest Risk</h3>
+        <p class={p}>Anonymous classified listings, Facebook groups and Instagram "aviaries" you can't verify are where the overwhelming majority of African Grey scams live. This is the source the forums are warning each other about. Some legitimate breeders do advertise here — but the platform gives you nothing to verify, so you must do all the checking yourself, and a seller who resists any check is telling you what you need to know.</p>
+        <h4 class={h4}>Why the cheapest listing is the most dangerous</h4>
+        <p class={p}>On a marketplace, the lowest price is bait, not a bargain. A documented, hand-raised African Grey costs more than $1,500 to produce, so a listing well under that is almost always missing the bird, the papers, or both. The cheap number exists to switch off your caution — and once you've wired a deposit for a bird you never verified, there's usually no getting it back.</p>
+        <h5 class={h5}>Example: the $600 "African Grey" math that never adds up</h5>
+        <p class={p}>A "$600 African Grey, shipping included" cannot exist honestly: the DNA test, avian-vet exam, weeks of hand-feeding and CITES paperwork alone cost a real breeder more than that before the bird is even priced. So the $600 is paying for none of it. Either the papers don't exist, the bird was never properly raised, or — most often on marketplaces — there is no bird, just an advance-fee scam collecting "shipping deposits." The math is the tell.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: what it really costs us to raise one</h6>
+        <p class={p}>Before we ever set a price, a chick has already run up months of hand-feeding, a DNA test, an avian-vet exam and its CITES paperwork. That floor is why we can't — and wouldn't — sell a documented Grey for a marketplace "bargain," and why a listing that undercuts it is undercutting the bird's own health and legality.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 8. H2-3 Compare sources -->
+        <h2 id="compare" class={h2}>Breeder vs Marketplace vs Rescue vs Pet Store: Side by Side</h2>
+        <p class={p}>If you only look at one thing on this page, make it this comparison. It's the block competitors leave out — most tell you where you <em>can</em> buy without ever telling you how the sources actually stack up on the things that decide whether you're happy in a year: price, scam risk, health record and trust. Read across the row and the safe choice tends to make itself.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igSource.src} srcset={igSource.srcset} sizes={igSource.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="Breeder versus online marketplace versus rescue versus pet store compared across price, scam risk, health record and overall trust" title="Where to buy an African Grey — source comparison | C.A.Gs" />
+          <figcaption class={figc}>Where to buy compared — price, scam risk, health record and trust.</figcaption>
+        </figure>
+
+        <h3 class={h3}>How to Read This Table as a Buyer</h3>
+        <p class={p}>Don't read down the price column and stop — that's the mistake the marketplace listing is counting on. Read <em>across</em> each row. A low price paired with "very high" scam risk and "rarely any" health record isn't a deal; it's the profile of exactly the loss you're trying to avoid. The row that stays green across all four columns is the one worth paying for.</p>
+        <h4 class={h4}>The column most buyers ignore (post-sale support)</h4>
+        <p class={p}>There's a fifth column the table can't fully show, and it's the one seasoned owners care about most: what happens after the money's sent. A breeder answers your questions in year three when your Grey starts plucking or stops eating; a marketplace seller is unreachable by the time the box arrives. Over a 40–60 year life, that ongoing relationship is worth more than any price difference on day one — and it only exists at the top of the ranking.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 9. H2-4 Identify a reputable breeder -->
+        <h2 id="reputable" class={h2}>How Do You Identify a Reputable African Grey Breeder?</h2>
+        <p class={p}>A reputable breeder isn't defined by a nice website — it's defined by what they'll let you check. Every genuine breeder clears the same five signals without complaint, because they have nothing to hide and everything to gain from an informed buyer. Here's what to look for, and what a risky seller does instead when you ask.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igVerify.src} srcset={igVerify.srcset} sizes={igVerify.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="How to spot a reputable African Grey breeder: does a live video call, provides CITES, DNA and vet papers, shows a USDA licence, quotes one fair price, takes a reversible deposit" title="How to spot a reputable African Grey breeder | C.A.Gs" />
+          <figcaption class={figc}>The five-point check a reputable breeder passes without hesitation.</figcaption>
+        </figure>
+
+        <ComparisonTable columns={reputableCols} rows={reputableRows} verdict="A reputable breeder makes verification easy; a risky seller makes it awkward. If checking a seller feels like pulling teeth, that resistance is your answer." />
+
+        <h3 class={h3}>Will They Do a Live Video Call?</h3>
+        <p class={p}>This is the first and most powerful test, so lead with it. A reputable breeder will happily video-call you with the actual bird in hand — we treat it as a normal part of every sale. If a seller dodges, delays, or only ever sends photos and pre-recorded clips, stop there. Everything else on this list matters, but nothing substitutes for seeing the specific bird, alive, on demand.</p>
+
+        <h3 class={h3}>Do They Provide Health Testing &amp; DNA Paperwork?</h3>
+        <p class={p}>A genuine breeder tests and documents, and hands you the proof. That means a PCR DNA-sexing certificate that tells you for certain whether your Grey is male or female, and a real avian-vet examination — not a glance, but a wellness check by a qualified avian vet. If the "paperwork" is always arriving after payment, it usually never arrives at all.</p>
+        <h4 class={h4}>PCR DNA Sexing and the Avian-Vet Exam</h4>
+        <p class={p}>Two documents do the heavy lifting here. A PCR DNA test settles your Grey's sex with certainty rather than a guess, and an avian-vet certificate records a genuine physical exam by a qualified vet. A breeder who provides both unprompted is showing you the testing a cheap seller quietly skips.</p>
+        <h5 class={h5}>Phone the vet on the certificate before you pay</h5>
+        <p class={p}>The certificate is only as good as the vet behind it, so call them. A legitimate breeder will gladly give you the clinic's number and encourage the check; a forged certificate falls apart the moment a real practice says they've never seen the bird.</p>
+        <h6 class={h6} style="color:#b04228">Citation: the Association of Avian Veterinarians on pre-purchase exams</h6>
+        <p class={p}>A pre-purchase or new-bird veterinary exam is standard best practice, and the <a href="https://www.aav.org/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians ↗</a> maintains the professional standards behind it. A breeder who works with a real avian vet — and lets you phone that vet to confirm the certificate — is showing you the single clearest sign of a legitimate operation.</p>
+
+        <h3 class={h3}>Can They Show CITES &amp; Captive-Bred Documentation?</h3>
+        <p class={p}>Because the African Grey is CITES Appendix I, captive-bred documentation isn't optional paperwork — it's what makes owning and transporting the bird legal. A reputable breeder provides it as a matter of course; a seller who can't, or who gets vague when you ask about origin, is exposing you to a bird that may be undocumented or wild-caught.</p>
+        <h4 class={h4}>What the Captive-Bred Papers Actually Prove</h4>
+        <p class={p}>The documentation traces your bird to a captive breeding source rather than the wild, which is what keeps ownership and interstate transport legal. It's the paper equivalent of a clean title on a car — easy to overlook until it's missing, at which point it's the only thing that matters.</p>
+        <h5 class={h5}>Why "origin unknown" is never acceptable for an African Grey</h5>
+        <p class={p}>If a seller can't say where a Grey came from, assume the worst, because on an Appendix I species "origin unknown" is a legal and ethical dead end. A reputable breeder always knows — and can show — a bird's captive-bred lineage.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: what CITES Appendix I means for you (captive-bred is legal)</h6>
+        <p class={p}>African Greys were uplisted to <strong>CITES Appendix I</strong> in 2017, and the <a href="https://cites.org/eng/app/appendices.php" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">CITES appendices ↗</a> set the framework. That does <em>not</em> make owning one illegal — a captive-bred bird with proper documentation is entirely legal to own and transfer within the USA. It simply means the paperwork is essential, and any seller who treats it as an afterthought is a seller to avoid.</p>
+
+        <h3 class={h3}>Is Their Pricing Transparent, With Real Reviews?</h3>
+        <p class={p}>A reputable breeder quotes one fair, fixed figure and can point to real, verifiable reviews or references. Watch for the opposite pattern: a headline price that's suspiciously low, then "fees" for shipping, crates or paperwork that inflate it — or a wall of reviews that all sound identical and can't be traced to real buyers. Honest pricing and traceable reputation travel together.</p>
+        <h4 class={h4}>Reading Prices and Reviews Together</h4>
+        <p class={p}>Price and reputation are best read as a pair. An honest figure backed by traceable reviews is reassuring; a bargain figure propped up by identical, unverifiable testimonials is the opposite. Treat a price that seems too good, and reviews that seem too perfect, as the same warning wearing two hats.</p>
+        <h5 class={h5}>What an honest price range looks like ($1,700–$3,500)</h5>
+        <p class={p}>For context, a documented, hand-raised Congo runs $1,700 for a tame adult up to $2,500 for a baby, and a Timneh $1,500–$1,600 — the honest band we <a href="/blog/african-grey-parrot-price-what-you-get/" class={lnk} style="color:#b04228">break down in our price guide</a>. A figure sitting comfortably in that range, quoted plainly and inclusive of the papers, is a good sign. A figure far below it is the loudest red flag there is, which is exactly where the next section starts.</p>
+
+        <Callout variant="tip" title="Verify the breeder even when the birds look perfect">
+          <p>The best-looking listings can be the most dangerous, because scammers steal real breeders' photos. Never let good photos replace the live video call and the paperwork. Run all five checks every time — a genuine breeder will thank you for it.</p>
+        </Callout>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 10. MIDDLE special element — decision tree -->
+        <div class="mt-2">
+          <DecisionTree question="Should You Buy From This Seller?" branches={sellerBranches} headingLevel="h2" />
+        </div>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 11. H2-5 Red flags -->
+        <h2 id="redflags" class={h2}>Red Flags That Mean Walk Away</h2>
+        <p class={p}>Some warning signs are worth memorising, because they show up in almost every African Grey scam. Any single one of these is a reason to slow down; two or more together is a reason to close the tab. We won't make jokes in this section — this is the part that protects your money, and the con only works while you're excited enough to skip the obvious.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igFlags.src} srcset={igFlags.srcset} sizes={igFlags.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="African Grey buyer red flags to walk away from: too-low price, no CITES DNA or vet paperwork, no live video call, wire gift-card or crypto payment, and high-pressure urgency" title="African Grey red flags: walk away | C.A.Gs" />
+          <figcaption class={figc}>The red flags that mean walk away — before you pay anyone.</figcaption>
+        </figure>
+
+        <ComparisonTable columns={["Red flag", "What it usually means"]} rows={flagRows} verdict="Any one of these is a reason to pause. Two or more is a scam in progress — keep your money and move on." />
+
+        <h3 class={h3}>The Five Warning Signs, in Detail</h3>
+        <p class={p}>Each of these deserves a closer look, because scammers rely on you recognising none of them until the money's gone. Read them once now and they'll jump out at you the next time a listing feels too good to be true.</p>
+        <h4 class={h4}>Price Far Below Market</h4>
+        <p class={p}>A price well under the $1,700 floor is the most common bait in the trade. A legitimate, documented, hand-raised African Grey simply costs more than that to produce, so a bargain listing isn't generosity — it's the hook. The gap between the "deal" and the real price is precisely the testing, papers and weaning that were skipped, or the bird that was never there.</p>
+
+        <h4 class={h4}>No Paperwork or Vet Records</h4>
+        <p class={p}>If a seller can't produce CITES documentation, a DNA certificate and an avian-vet record before you pay, treat the bird as undocumented — because that's what it is. "Papers coming later" is the single most reliable phrase in a bird scam. Real documentation exists before the sale; a promise of documentation after payment is a promise scammers make and never keep.</p>
+
+        <h4 class={h4}>Crypto, Gift-Card or Wire-Only Payment</h4>
+        <p class={p}>The payment method is often the clearest tell of all. Scammers insist on wire transfers, gift cards or cryptocurrency for one reason: those payments are irreversible, so once you've sent the money it's gone. A legitimate breeder takes a payment you can dispute and reverse. Anyone who <em>only</em> accepts irreversible methods is choosing the one option that leaves you no recourse.</p>
+        <h5 class={h5}>Reversible payment is your only real safety net</h5>
+        <p class={p}>A payment you can dispute is the difference between a bad experience and an unrecoverable loss. Insist on one, and a scammer's favourite tools — wire, gift cards, crypto — lose their power entirely.</p>
+        <h6 class={h6} style="color:#b04228">Citation: the FTC on reversible vs irreversible payments</h6>
+        <p class={p}>Consumer-protection guidance is blunt on this point. As <a href="https://consumer.ftc.gov/consumer-alerts/2024/12/getting-pet-avoid-scams" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">the FTC's advice on avoiding pet scams ↗</a> spells out, demands for wire transfers, gift cards or crypto are a defining signature of pet-purchase fraud, and the <a href="https://www.bbb.org/scamtracker" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">Better Business Bureau's scam tracker ↗</a> logs these advance-fee pet cons by the thousand. Use a reversible method, every time.</p>
+
+        <h4 class={h4}>Urgency &amp; Pressure Tactics</h4>
+        <p class={p}>"Another buyer is deciding tonight." "I need the deposit in the next hour to hold her." Manufactured urgency exists to stop you running the checks in this guide. A real breeder understands that a 40–60 year commitment deserves a few days' thought and will hold a reasonable, reversible deposit without drama. If someone is rushing you, they're rushing you past the very step that would expose them.</p>
+
+        <MythFact
+          myth="If the seller has lots of photos and a professional-looking website, the bird must be real and it's safe to pay."
+          fact="Photos and slick sites are the easiest things to fake — scammers routinely steal real breeders' images. Legitimacy is proven by a live video call, verifiable paperwork and a reversible payment, not by how polished the listing looks. Verify the seller, not the screenshots." />
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 12. H2-6 Why C.A.Gs -->
+        <h2 id="why" class={h2}>Why Buyers Choose C.A.Gs (and How We Rank Ourselves Honestly)</h2>
+        <p class={p}>We put ourselves at the top of the ranking, so it's only fair we show our work. Here at C.A.Gs, we're not the cheapest listing you'll find and we'd never pretend to be — we're the source that passes every check in this guide, because we built the aviary around exactly those checks. Most of our buyers reach us after a scare somewhere else, wanting a bird they can verify, and here's what that looks like.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igTrust.src} srcset={igTrust.srcset} sizes={igTrust.sizes} width="1200" height="900" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="Mark and Teri Benjamin with a hand-raised Congo African Grey at C.A.Gs in Midland, Texas — a verifiable, USDA-licensed breeder" title="Why buyers choose C.A.Gs | C.A.Gs" />
+          <figcaption class={figc}>A verifiable, USDA-licensed breeder — real people, real birds, real paperwork.</figcaption>
+        </figure>
+
+        <h3 class={h3}>Health Testing &amp; a Written Guarantee</h3>
+        <p class={p}>Every C.A.Gs Grey is PCR DNA-sexed, examined by an avian vet, and screened for the diseases that matter, then sent home with a written health guarantee and the certificates to match. You're not hoping the bird is healthy; you're holding the paperwork that proves it — and you're welcome to call the vet on the certificate to confirm every word before you commit.</p>
+
+        <h3 class={h3}>Hand-Raising &amp; Socialisation</h3>
+        <p class={p}>Our birds are hand-raised in our home in Midland, Texas — fed, handled and gentled every day from hatching — so they arrive bonded to people and ready to learn. That daily work is the whole reason a well-raised Grey is calm on your hand and quick to <a href="/blog/african-grey-parrot-training/" class={lnk} style="color:#b04228">start training and talking</a>, and it's the one thing a marketplace flipper can't fake with a stolen photo.</p>
+
+        <h3 class={h3}>Lifetime Breeder Support + Nationwide Shipping</h3>
+        <p class={p}>When you buy from us, the relationship doesn't end at the airport. We answer questions for the life of the bird — the plucking scare in year three, the diet question in year eight — and we ship nationwide on IATA-compliant flights, $185 to your nearest airport or $350 home delivery. That combination of verifiable documentation and a breeder who stays reachable is exactly what the top of the ranking is supposed to mean.</p>
+        <h4 class={h4}>What "Lifetime Support" Means in Practice</h4>
+        <p class={p}>It means you have a number to call for the next four decades, not just until the sale clears. New Grey owners hit the same milestones — the first moult, the first tantrum, the first vet scare — and having the breeder who raised the bird on the other end of the line is worth more than any discount.</p>
+        <h5 class={h5}>Shipping that's safe, tracked and IATA-compliant</h5>
+        <p class={p}>Distance rarely needs to decide this purchase. Our birds travel on IATA-compliant Delta, United or American flights — $185 to your nearest airport or $350 home — crated, monitored and documented the whole way, so a verifiable breeder a few states away is still the safer choice.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the buyers who came to us after nearly losing a deposit</h6>
+        <p class={p}>We hear the same story constantly: a "$700 African Grey" on a marketplace, a seller pushing gift cards, a knot in the stomach — and a search that finally led somewhere they could verify. It's why this whole page exists. We'd genuinely rather you ran every check in this guide on <em>us</em> and bought with total confidence than sent a hopeful deposit to someone who couldn't pass a single one.</p>
+
+        <BreederNote>
+          <p>If you remember one line from this page, make it this: you're not choosing a bird, you're choosing a source you can verify. Run the live-video and paperwork checks on every seller — including us — and buy from whoever passes without flinching. The right African Grey from the right source is a 40–60 year joy; the wrong one from the wrong source is a heartbreak you can avoid with five minutes of questions.</p>
+        </BreederNote>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 13. BOTTOM conversion — available birds -->
+        <h2 id="available" class={h2}>See Our Available Hand-Raised Greys</h2>
+        <p class={p}>Here are the African Greys available now — each one hand-raised in Midland, Texas, PCR DNA-sexed, vet-checked and CITES-documented, at one fair, fixed price with nothing hidden behind it. Every card shows exactly what you'd verify on a live call before reserving with a $200 deposit.</p>
+        <div class="grid sm:grid-cols-2 gap-5 mt-2">
+          {birds.map((b) => (
+            <BirdCard
+              id={b.id} name={b.name} sex={b.sex} age={b.age} price={b.price}
+              tag={b.tag} tagType={b.tagType} notes={b.notes} hook={b.hook}
+              image={b.image} variant={b.variant} objectPos={b.objectPos}
+            />
+          ))}
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-6 mb-2">
+          <p class="font-lora font-bold text-2xl mb-2 text-logo-dark">Want to verify us before you commit?</p>
+          <p class="text-stone-600 mb-1">Ships nationwide · $185 airport · $350 home</p>
+          <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American · IATA LAR</p>
+          <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See all available African Greys</a>
+          <a href="/contact-us/" class="inline-block font-sora font-semibold px-7 py-3 underline" style="color:#b04228">Book a live video call</a>
+        </div>
+
+        <p class="font-lora italic text-stone-600 text-center mt-8 mb-0">— Written by Mark &amp; Teri Benjamin, the breeders behind C.A.Gs · USDA-licensed African Grey aviary, Midland, TX</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 14. FAQ -->
+        <h2 id="faq" class={h2}>Where to Buy an African Grey: Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {faqs.map((faq) => (
+            <details class="bg-white rounded-xl border border-stone-200 p-5">
+              <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
+              <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <!-- 15. Related posts -->
+        <div class="mt-12">
+          <RelatedPosts heading="Keep reading" headingLevel="h2" posts={[
+            { title: "African Grey Parrot Price: What $1,700–$3,500 Actually Gets You", slug: "/blog/african-grey-parrot-price-what-you-get/", category: "Pricing" },
+            { title: "African Grey Cage Setup: The Breeder's Blueprint", slug: "/blog/african-grey-parrot-cage-setup/", category: "Care" },
+            { title: "African Grey Training: A Breeder's Step-by-Step Guide", slug: "/blog/african-grey-parrot-training/", category: "Training" },
+          ]} />
+        </div>
+
+      </div>
+    </section>
   </div>
 
-  <section style="background:#2D6A4F" class="text-white py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Buyer's Guide · USDA-Licensed Breeders · Midland, TX</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">Best Place to Buy an African Grey Parrot in 2026</h1>
-      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">Breeder, online marketplace, or rescue? The right answer depends on what you value — but on documentation and safety, the gap is wide. Here's the honest comparison.</p>
-    </div>
-  </section>
+  <!-- Newsletter -->
+  <Newsletter variant="bottom" action="/contact-us/" bottomText="New hand-raised clutches, verified and documented, before they're listed — socialised families first." />
 
-  <section class="py-16 px-4" style="background:#faf7f4">
-    <div class="cag-article mx-auto" style="max-width:760px">
-
-      <p class="text-stone-700 leading-relaxed mb-4">"Where should I actually buy an African Grey?" is the question behind almost every first message we get — and it deserves an honest answer, not just "from us." There are three real routes: a licensed breeder, an online marketplace, or a rescue. Our <a href="#options">three-way comparison below</a> lays them out on the factors that matter, and then we'll be candid about who each one is right for.</p>
-      <p class="text-stone-700 leading-relaxed mb-8">We're a USDA-licensed breeder, so we obviously have a view — but we'll tell you plainly where adoption beats us and where the marketplace route goes wrong. If you'd rather start from a vetted list, our guide to <a href="/trusted-african-grey-parrot-breeders/">trusted African Grey parrot breeders</a> is the place to begin.</p>
-
-      <h2 id="options" class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Breeder vs Marketplace vs Rescue, Compared</h2>
-      <div class="bg-white rounded-xl border border-stone-200 overflow-hidden mb-8">
-        <table class="w-full text-sm">
-          <thead>
-            <tr style="background:#2D6A4F">
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Factor</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Licensed breeder</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Online marketplace</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Rescue / rehome</th>
-            </tr>
-          </thead>
-          <tbody class="text-stone-600 divide-y divide-stone-100">
-            <tr><td class="py-3 px-4 font-semibold">Typical price</td><td class="py-3 px-4">$1,500–$3,500</td><td class="py-3 px-4">"Too good to be true"</td><td class="py-3 px-4">Adoption fee</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">CITES + health docs</td><td class="py-3 px-4">Full, before payment</td><td class="py-3 px-4">Often missing/faked</td><td class="py-3 px-4">Partial / variable</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">Health risk</td><td class="py-3 px-4">Low — vet-checked</td><td class="py-3 px-4">High — unknown</td><td class="py-3 px-4">Moderate — known history helps</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">Scam risk</td><td class="py-3 px-4">Low</td><td class="py-3 px-4">Highest</td><td class="py-3 px-4">Low (reputable rescues)</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">Best for</td><td class="py-3 px-4">A documented, hand-raised bird</td><td class="py-3 px-4">Almost no one</td><td class="py-3 px-4">Experienced homes for older birds</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Buying From a USDA-Licensed Breeder</h2>
-      <p class="text-stone-700 leading-relaxed mb-8">This is the route we know best, because it's how we work. Here at C.A.Gs, paperwork comes before the bird, not after: we hand a buyer a verifiable USDA Animal Welfare Act license number, CITES Appendix I captive-bred documentation, a <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11939742/" target="_blank" rel="noopener noreferrer">PCR DNA sexing</a> certificate, and a board-certified avian-vet health certificate before any money moves. A good breeder will also video-call to show your specific bird on demand and stay reachable long after pickup. The trade-off is honest — a documented, hand-raised Grey costs more than a bargain listing, because ethical breeding genuinely costs more. You can see the birds we have available on our <a href="/congo-african-grey-for-sale/">Congo African Grey page</a>.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Online Marketplaces: The Scam Math</h2>
-      <p class="text-stone-700 leading-relaxed mb-8">This is where most African Grey buyers get burned. The scammer's whole model depends on untraceable payment and a camera that's conveniently always broken — they post stolen photos, take a deposit, and disappear. The patterns even have names: advance-fee and non-delivery fraud, both of which you can report to the FBI's <a href="https://www.ic3.gov/" target="_blank" rel="noopener noreferrer">Internet Crime Complaint Center</a>. We walk through every red flag in our guide on <a href="/how-to-avoid-african-grey-parrot-scams/">how to avoid African Grey parrot scams</a> — but the short version is that an unverifiable marketplace seller is the one route we'd steer almost everyone away from.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Rescue and Adoption</h2>
-      <p class="text-stone-700 leading-relaxed mb-8">Adoption is the route where we'll happily point you elsewhere if it fits you better. Reputable rescues rehome wonderful birds — usually adults, sometimes with quirks from a previous home — and a well-run rescue screens adopters as carefully as we screen buyers. The honest trade-offs are that documentation and history can be incomplete, and you rarely get to choose a specific age or a clean paper trail. If giving an older Grey a second home appeals to you more than a documented baby does, start with our overview of <a href="/african-grey-adoption/">African Grey adoption</a>.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">How to Verify Any Seller in 5 Minutes</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Whichever route you take, run the same five checks before you send a cent:</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>Verifiable USDA license number</strong> you can look up</li>
-        <li><strong>CITES Appendix I captive-bred documentation</strong> offered up front, not after the deposit</li>
-        <li><strong>A live video call</strong> showing your specific bird on demand</li>
-        <li><strong>Reversible payment</strong> — card, PayPal Goods, or bank wire (never gift cards or crypto)</li>
-        <li><strong>A findable physical location</strong> and a reverse-image search of the listing photos</li>
-      </ul>
-      <p class="text-stone-700 leading-relaxed mb-8">If you're shopping by location, our guide on <a href="/where-to-buy-african-greys-near-me/">where to buy African Greys near you</a> applies these same checks to local options. A seller who clears all five is the seller worth your deposit — wherever they fall on the breeder-marketplace-rescue map.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-8" style="color:#2D6A4F">Frequently Asked Questions</h2>
-      <div class="space-y-4">
-        {faqs.map((faq) => (
-          <details class="bg-white rounded-xl border border-stone-200 p-5">
-            <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
-            <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
-          </details>
-        ))}
-      </div>
-
-    </div>
-  </section>
-
+  <StickyCta label="See available African Greys" href="/available/" />
 </BaseLayout>
