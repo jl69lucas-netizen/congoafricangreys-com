@@ -132,6 +132,92 @@ These are the things the breeder caught polishing the cage-setup pilot. Bake the
 
 ---
 
+### 8. Competitor Deep-Dive Protocol — Weakness · All Headers · Keyword Types (binding — 2026-07-02)
+
+The breeder's standing "change of plans": for every post, don't just name competitors — **expose their weakness, extract ALL their headers, and classify their keyword types.** This is field #6 of the 17-field research (§3) upgraded to a required, tool-driven pass. Run it BEFORE the outline gate.
+
+**Sources to pull (in order):** (1) the per-page `.md` ChatGPT top-3 Google; (2) a **fresh Firecrawl `firecrawl_search`** for the primary KW + one reputable/"legit" variant (location: United States) — the real current SERP; (3) the 30-competitor registry `data/competitors.json`.
+
+**For each of the top 5–6 rankable results, scrape with `firecrawl_scrape` (formats:["json"], onlyMainContent:false)** and extract into a schema: `page_title, meta_description, h1, h2_headings[], h3_headings[], visible_keywords[], has_pricing, trust_or_scam_content_present, content_type`. Forums/FB/Reddit and video = note as UGC/video (not header-outrankable) but record that they rank — a SERP owned by forums is a **wide-open authoritative-guide lane**.
+
+Then produce three tables in the strategy doc (see the worked example in `sessions/2026-07-02-blog-strategy-best-place-to-buy-african-grey-parrot.md §7`):
+- **7a. Fresh SERP table** — result · type · why it ranks · **weakness (our wedge)**.
+- **7b. On-page structure** of the true exact-match competitor(s) — their H1/H2/H3 verbatim + keyword types on page + what trust/scam/pricing they omit.
+- **7c. Keyword-type map** — rows = keyword type (head / commercial-investigation / **scam-avoidance** / transactional / long-tail-conversational-voice / entity-AEO / local), cols = examples · who owns it now · our on-page coverage.
+- **7d. Content-gap list** — the moves nobody makes (= our moat), each mapped to an on-page section.
+
+**Rules:** never fabricate a competitor metric — un-fetched = `NOT FETCHED`. Never invent competitor traffic/DR. Extract their **weakness** honestly (thin, no trust, login-walled, free-builder platform, exact-string-match-but-no-education) — that weakness list becomes our section plan. If a scrape 404s or returns a fallback, say so and downgrade confidence rather than trusting the JSON.
+
+### 9. The 2026 "Perfect Blog Post" Framework (binding voice/structure rules)
+
+Layer these onto the 14-step architecture — they are how we beat commodity + AI-overview content:
+1. **Satisfy intent above the fold** — a 2–3 sentence **TL;DR / Quick-Answer** before any scroll (this is the TOP special-element, §1 step 4). Answer the primary question in the first 50 words of every H2 (BLUF).
+2. **Predict the next question** — after each answer, structure toward what the reader asks next, and link there (price → first-year cost; talking → training). No reason to return to Google.
+3. **"RELATED:" binge links** — above key H2s, a bolded inline **RELATED: [Post Title]** link (rendered as a styled inline callout, not all-caps shouting) to pull readers into a second tab and deepen the silo. Distinct from the bottom `cag-blog-related-posts`.
+4. **Humanize / SEO-storytelling** — 1–3 sentence paragraphs, parenthetical asides, italic emphasis, the C.A.Gs breeder "smart friend" voice. Real, unpolished breeder/bird photos over stock (conversion + trust).
+5. **Anti-AI fingerprints** — run `skills/anti-ai-writing.md`. Ban em-dash-as-dramatic-pause overuse, "delve / unlock / leverage / groundbreaking / in today's world / navigate the world of". Human-in-the-loop: AI drafts, breeder facts + the Verified-Claim Ledger govern.
+6. **Interactive engagement (optional, per page)** — an AI-generated 3–5-question comprehension quiz (mid or end) as a self-contained HTML/JS widget in brand hex, whose success message recommends the newsletter or an available bird. Gate to lighter pages; never on health/CITES.
+7. **Formatting for skimmers** — bold key terms, real HTML tables (not image-of-table) for data, clean bullet/step lists for snippet + AI-chunk capture.
+
+### 10. Visual Production Pipeline + Image-Placeholder Workflow (proven on best-place, 2026-07-02)
+
+**Placeholder-first (default).** Build the page with image constants + `<figure>` slots wired to **exact final paths**, but treat every generated asset as a PLACEHOLDER until the breeder confirms design/size. The breeder supplies real bird photos + generated infographics into `assets/CAGs-BLOG-POSTS/<Page>/`; a manifest in the strategy doc lists each target filename. **Do NOT commit/push while any referenced image 404s** (main auto-deploys → broken imgs go live).
+
+**Asset categories & sizes** (art direction from `IMAGE-DESIGNS.md` + DESIGN.md; palette forest `#2D6A4F`, clay `#e8604c`, cream `#faf7f4`, IBM Plex Sans, line icons, no emoji/logos/other species/visible price overlays):
+| Category | Per page | Native gen size | On-page render |
+|---|---|---|---|
+| Hero (photoreal editorial) | 1 | 1408×768 or 1600×900 (16:9) | `srcset` 480w/800w + full; `sizes` `(min-width:768px) 480px, 92vw` |
+| Section infographics (flat) | 3–5 | 1200×700 (landscape) | base `.webp` + `-760w`; `sizes` `(min-width:768px) 712px, 92vw` |
+| Portrait infographic / checklist | as needed | tall (e.g. 1536×2752) | centered card `mx-auto max-w-sm` + `-560w` (precedent: price-page seller-check, best-place buyer's-shield) |
+| Real OG / trust photo | 1–2 | native | plain `<img>` in the long visual-less H2/H3; real brand shot for E-E-A-T |
+
+**The encode → wire → deploy pipeline (copy this):**
+1. **Encode with Pillow** (`cwebp` NOT installed): flatten RGBA onto cream `#faf7f4` for infographics / white for photos; `Image.resize((w, h), LANCZOS).save(path, "WEBP", quality=82, method=6)`. Generate the srcset variants. Output straight to `public/` at the manifest paths.
+2. **Fix CLS** — set each `<img width/height>` to the file's **native ratio** (don't trust the placeholder's guessed dims). Verify in preview that displayed ratio ≈ native ratio (no stretch). Best-place used hero `1408×768`, infographics `1200×655`.
+3. **Hero preload mirrors the srcset** (`heroPreloadSrcset`/`heroPreloadSizes`) or the LCP image double-downloads.
+4. **Add a visual to every long visual-less H2/H3** — the breeder's rule: tall/important sections must carry an image; weave real OG photos into them.
+5. **Rebuild** (`npx astro build`) → confirm every referenced `.webp` exists in `dist/` (grep the built HTML, fail on any missing) → **`final_page_audit.py`** must PASS → preview-verify images 200 + ratios → then deploy.
+
+### 11. Universal Special-Element Boxes (reuse on every page)
+
+Every page carries the 3 slot boxes (TOP/MIDDLE/BOTTOM, §1) plus draws from this catalog — all Direction-D-themed Astro components, Feather line-icons only (never 💡/⚠/emoji):
+1. **Quick-Answer / TL;DR** → `cag-blog-quick-answer` (TOP, AEO).
+2. **Breeder Note** (first-person moat) → `cag-blog-breeder-note`.
+3. **Expert Tip** → `cag-blog-callout` variant `tip`.
+4. **Mistake / Warning Alert** → `cag-blog-callout` variant `alert`.
+5. **Myth vs Fact** → `cag-blog-myth-fact`.
+6. **Decision Tree** (AI-extraction-friendly) → `cag-blog-decision-tree` (MIDDLE on beginners / vs-Eclectus).
+7. **Comparison / spec table** (with "breeder verdict" row) → `cag-blog-comparison-table`.
+8. **FAQ accordion** (visible + FAQPage schema) → page `faqs[]` array.
+Plus `cag-blog-related-posts` (bottom silo) and `cag-blog-sticky-cta` (mobile).
+
+### 12. Toolbelt & CAG Context (know these before building any post)
+
+- **Competitor intel:** Firecrawl MCP (`firecrawl_search` fresh SERP, `firecrawl_scrape` json headers). Retry with `-A Mozilla/5.0` logic / stealth proxy on 403; `cites.org` 403-to-curl = bot-block not dead.
+- **Images:** Pillow (`quality=82, method=6`), output to `public/`. Higgsfield / Nano Banana / Claude-HTML infographics per `skills/cag-image-generation.md` + `cag-infographic.md`.
+- **Audit/deploy:** `python3 scripts/final_page_audit.py` (blog profile; all six heading levels, ≥5 H5 AND ≥5 H6, no skips) → `python3 scripts/generate_sitemaps.py` (writes BOTH `public/` and `site/content/` — commit both) → commit + push on `main`.
+- **Data (never hardcode):** `data/financial-entities.json` (shipping `$185/$350`, prices), `data/price-matrix.json`, `data/clutch-inventory.json` (available birds), `data/competitors.json`, `docs/reference/external-link-library.md`.
+- **Deploy/push caveat:** an auto-push hook (`.claude/settings.local.json` PostToolUse → `git push`) normally pushes automatically using the macOS-keychain GitHub PAT. In a session where the keychain isn't reachable, `git push` fails with "could not read Username" — the commit is safe locally; ask the breeder to push from their terminal. Build on `main` only (feature branches strand at live-404).
+- **Cannibalization guard:** blog posts LINK OUT to money/interior pages (for-sale hub, price, scam) — never re-teach or re-list what a money page owns (see best-place §5).
+
+### 13. Fill-in Placeholders (set these before running the skill)
+
+Copy this block into the session brief and fill it before Sprint 0.5:
+```
+{{TARGET_BLOG_POST}}      e.g. /blog/african-grey-vs-eclectus/   ← the post to work on
+{{PRIMARY_KEYWORD}}       e.g. "African Grey vs Eclectus"
+{{BATCH / SESSION DATE}}  e.g. Batch-2 Page 2 · 2026-07-0X
+{{SOURCE_RESEARCH_MD}}    assets/CAGs-BLOG-POSTS/<Page Name>/<Page Name>.md
+{{IMAGE_SOURCE_FOLDER}}   assets/CAGs-BLOG-POSTS/<Page Name>/   ← breeder drops photos+infographics here
+{{FRAMEWORK}}             PAS / EBP / QAB / BAB / PDB (breeder-selected, §17)
+{{ANGLE}}                 breeder-selected winning angle + why
+{{HUMOR}}                 on (commercial/comparison) | OFF (health/CITES/legal)
+{{IMAGE_MANIFEST}}        list every target /public path + native size (see best-place §Image Manifest)
+```
+**Session cadence (breeder's plan):** batch-1 (hub, cage-setup, training, talking-ability, price) built+live; **batch-2 = best-place ✓, vs-eclectus, facts, health-problems, beginners** — 4 pages/session, next 3 following session.
+
+---
+
 ## Per-Page Research Data (ChatGPT source — all 9 posts + hub)
 
 > The sections below contain the original per-page competitor research, keyword universes, H1–H6 outlines, entity lists, and strategy notes from the breeder's ChatGPT research sessions. Use this as the **input data** for the Sprint 0.5 strategy docs. Do not treat these as final outlines — run the full 17-field research pass and present options to the breeder before writing any page.

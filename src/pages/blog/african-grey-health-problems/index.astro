@@ -1,10 +1,32 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
+import InquiryCompact from '../../../components/cag-inquiry-compact.astro';
+import Newsletter from '../../../components/cag-library/NewsletterV2.astro';
+import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
+import Callout from '../../../components/cag-blog-callout.astro';
+import ComparisonTable from '../../../components/cag-blog-comparison-table.astro';
+import BreederNote from '../../../components/cag-blog-breeder-note.astro';
+import MythFact from '../../../components/cag-blog-myth-fact.astro';
+import RelatedPosts from '../../../components/cag-blog-related-posts.astro';
+import StickyCta from '../../../components/cag-blog-sticky-cta.astro';
+import BirdCard from '../../../components/BirdCard.astro';
 
-const title = "African Grey Parrot Health Problems | 7 Common Issues & Prevention";
-const description = "Feather plucking, calcium deficiency, psittacosis, and aspergillosis are the most common African Grey health problems. Prevention guide from USDA-licensed breeders.";
+const title = "African Grey Health Problems | 10 Common Issues, Symptoms & When to Call a Vet | Why Is My African Grey Sick? | C.A.Gs – Midland, TX";
+const description = "Worried about African Grey health problems? A breeder's guide to 10 common issues — symptoms, causes, prevention, and exactly when to call an avian vet immediately.";
 const canonical = "https://congoafricangreys.com/blog/african-grey-health-problems/";
+
+// Hero = real OG breeder+bird photo. In-content visuals: final encoded assets in public/.
+const hero = "/african-grey-breeder-with-bird-midland-tx.webp"; // OG, 640x480
+const ig = (base: string) => ({
+  src: `/${base}.webp`,
+  srcset: `/${base}-760w.webp 760w, /${base}.webp 1200w`,
+  sizes: "(min-width: 768px) 712px, 92vw",
+});
+const igChecker = ig("african-grey-symptom-checker-infographic");
+const breederPhoto = "/timneh-african-grey-pair-cags-aviary.webp"; // OG, 640x426
+const checkupPhoto = "/african-grey-parrot-health-review.webp"; // OG, 500x375
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
@@ -12,152 +34,431 @@ const breadcrumbs = [
   { name: "African Grey Health Problems", url: "/blog/african-grey-health-problems/" },
 ];
 
-const faqs = [
-  {
-    q: "What are the most common health problems in African Grey parrots?",
-    a: "The 7 most common African Grey health problems are: (1) feather destructive behavior (plucking/chewing), (2) calcium/vitamin D3 deficiency causing seizures, (3) psittacosis (Chlamydia psittaci bacterial infection), (4) aspergillosis (fungal infection affecting the respiratory tract), (5) proventricular dilatation disease (PDD), (6) beak and feather disease (PBFD, caused by a circovirus), and (7) heavy metal toxicity from zinc or lead ingestion.",
-  },
-  {
-    q: "Why is my African Grey plucking its feathers?",
-    a: "Feather plucking in African Greys is almost always behavioral or medical — never a 'grooming habit.' Causes include: boredom or insufficient daily interaction (under 3 hours), nutritional deficiencies (especially vitamin A and calcium), hormonal imbalance, internal parasites, skin infection or allergy, or chronic stress. A full avian vet examination is required to rule out medical causes before assuming behavioral origin.",
-  },
-  {
-    q: "How do I prevent calcium deficiency in my African Grey?",
-    a: "Feed a varied diet: pellets (70% of diet), fresh vegetables (dark leafy greens high in calcium: kale, collards, bok choy), occasional dairy (hard-boiled egg whites), and limited seed. Provide UVB lighting (12 hours per day) — African Greys cannot synthesize vitamin D3 without UV exposure, and D3 is required for calcium absorption. Supplement only under avian vet guidance — calcium oversupplementation is also harmful.",
-  },
-  {
-    q: "What are signs that an African Grey is sick?",
-    a: "African Greys hide illness as a survival mechanism — by the time obvious symptoms appear, the bird is often critically ill. Early warning signs: puffed feathers for more than a few hours, reduced vocalization, changes in droppings (color, consistency, or frequency), reduced appetite, sitting at the bottom of the cage, discharge from eyes or nares, or labored breathing. Any of these warrants immediate avian vet contact.",
-  },
-  {
-    q: "How often should an African Grey see a vet?",
-    a: "Annual well-bird exams by a certified avian vet (CAV) are the minimum. A new bird should see a vet within 72 hours of arrival for a baseline health panel including CBC, chemistry panel, psittacosis culture, and PBFD/polyomavirus PCR testing. Find an avian vet before you purchase — not after an emergency.",
-  },
+const jumpLinks = [
+  { label: "Warning Signs", href: "#warning" },
+  { label: "Unique Risks", href: "#risks" },
+  { label: "10 Problems", href: "#problems" },
+  { label: "Call a Vet Now", href: "#emergency" },
+  { label: "Prevention", href: "#prevention" },
+  { label: "Available", href: "#available" },
+  { label: "FAQ", href: "#faq" },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const counterStats = [
+  { num: "PCR",      label: "Disease-screened" },
+  { num: "Vet",      label: "Checked before travel" },
+  { num: "USDA",     label: "Licensed since 2014" },
+  { num: "Lifetime", label: "Breeder support" },
+];
+
+const quickSigns = [
+  { label: "Appetite", value: "Eating less / not at all" },
+  { label: "Posture", value: "Fluffed up, sitting low" },
+  { label: "Breathing", value: "Tail-bobbing, open beak" },
+  { label: "Droppings", value: "Colour / consistency change" },
+  { label: "Energy", value: "Sleeping far more than usual" },
+  { label: "Feathers", value: "Plucking or poor condition" },
+];
+
+const dxCols = ["Symptom", "Possible cause", "Urgency"];
+const dxRows = [
+  { item: "Feather plucking / chewing", values: ["Stress, boredom, diet, skin or hormonal issue", "Vet soon"] },
+  { item: "Tail-bobbing / laboured breathing", values: ["Respiratory infection or aspergillosis", "Emergency"] },
+  { item: "Weak grip, tremors, unsteadiness", values: ["Hypocalcemia (low calcium)", "Emergency"] },
+  { item: "Sneezing, eye or nasal discharge", values: ["Irritant or infection (e.g. psittacosis)", "Vet soon"] },
+  { item: "Undigested food in droppings", values: ["PDD / digestive-nerve disease", "Vet soon"] },
+  { item: "Fluffed and sitting at the cage bottom", values: ["Critically ill — a bird this sick is an emergency", "Emergency"] },
+];
+
+const urgency = [
+  { tier: "Monitor", color: "#2D6A4F", bg: "rgba(45,106,79,0.08)",
+    text: "Note it, watch closely, and improve the underlying factor (diet, enrichment, cleanliness). If it doesn't resolve in 24–48 hours, escalate to your avian vet." },
+  { tier: "Vet soon", color: "#b45309", bg: "rgba(180,83,9,0.08)",
+    text: "Book an avian-vet appointment within a day or two. Birds hide illness, so 'a bit off' is often further along than it looks — don't wait for it to worsen." },
+  { tier: "Emergency", color: "#c8472f", bg: "rgba(200,71,47,0.08)",
+    text: "Call an avian or emergency-exotics vet now. Laboured breathing, bleeding, collapse, seizures, or a bird fluffed at the cage bottom are life-threatening and time-sensitive." },
+];
+
+const birds = [
+  { id: 'amie', name: 'Amie', sex: 'Female', age: '3 mo', price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'Hand-raised, health-tested, ready to reserve.',
+    notes: 'Premium hand-raised female, 3 months old. PCR DNA-sexed, vet-checked and disease-screened, CITES-documented — captive-bred in the USA with the full paper trail.' },
+  { id: 'roys', name: 'Roys', sex: 'Male', age: '4 mo', price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Curious, food-motivated baby boy.',
+    notes: "Hand-raised male, 4 months old. Same health-testing and documentation as every C.A.Gs Grey, weaned and socialised before he travels." },
+  { id: 'bery', name: 'Bery', sex: 'Female', age: '1 yr', price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp', objectPos: 'object-center',
+    hook: 'Gentle, established — our value Congo.',
+    notes: 'Soft temperament, 1-year-old female at the $1,700 honest floor — tame, health-tested and ready for the right home.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Bonded Duo', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair-talking-birds.webp', objectPos: 'object-center',
+    hook: 'Two hand-raised birds, adopted together.',
+    notes: 'Unrelated companion pair sold together. Jins (male, 6mo) + Jeni (female, 4mo), both fully documented, health-tested and hand-raised.' },
+];
+
+const faqs = [
+  { q: "What are the most common health problems in African Grey parrots?",
+    a: "The most common African Grey health problems are hypocalcemia (calcium deficiency), feather-destructive behaviour (plucking), psittacosis, aspergillosis, proventricular dilatation disease (PDD), psittacine beak and feather disease (PBFD), vitamin A deficiency, obesity and fatty liver disease, heavy-metal toxicity, and respiratory infections. Several are preventable with correct diet, lighting and a clean environment — but any suspected illness needs an avian vet, because Greys hide sickness until it's serious." },
+  { q: "Why is my African Grey plucking its feathers?",
+    a: "Feather plucking is never normal grooming — it always signals an underlying problem. Common causes include boredom or too little daily interaction, nutritional deficiency (especially vitamin A and calcium), skin infection or allergy, hormonal changes, internal parasites, and chronic stress. Because medical and behavioural causes overlap, an avian-vet exam is needed to rule out disease before assuming it's behavioural." },
+  { q: "How do I know if my African Grey is sick?",
+    a: "African Greys instinctively hide illness, so watch for subtle early signs: eating less, fluffed feathers for more than a few hours, sleeping far more than usual, quieter than normal, changes in droppings, discharge from eyes or nares, or any change in breathing. Tail-bobbing, open-beak breathing, or a bird sitting fluffed at the bottom of the cage are emergencies — call an avian vet immediately." },
+  { q: "Can African Greys make people sick?",
+    a: "One African Grey illness, psittacosis (caused by Chlamydia psittaci), is zoonotic — it can pass to humans and cause flu-like respiratory illness. This is exactly why every new bird should be tested and why sourcing from a reputable, health-screening breeder matters. Good hygiene and prompt avian-vet care keep the risk low; tell your doctor you keep birds if you develop respiratory symptoms." },
+  { q: "How often should an African Grey see an avian vet?",
+    a: "At minimum, an annual well-bird exam with a qualified avian vet. A newly acquired bird should be seen within about 72 hours for a baseline check, which may include bloodwork and disease screening. Crucially, find your avian vet before you bring a bird home — not during an emergency, when the nearest bird-treating clinic may be hours away." },
+  { q: "Why are African Greys so prone to calcium deficiency?",
+    a: "African Greys are unusually susceptible to hypocalcemia compared with other parrots. Calcium is only usable if the bird also has vitamin D3, which Greys synthesise through UV-B light exposure — so a seed-heavy diet plus no UV-B is a common recipe for deficiency. Signs include weakness, tremors and, in severe cases, seizures. Prevention is a balanced pelleted diet, leafy greens, and UV-B lighting; supplement only under avian-vet guidance." },
+  { q: "What is the most urgent African Grey health emergency?",
+    a: "Any breathing difficulty — tail-bobbing, open-beak breathing, wheezing — is a top emergency, as are collapse, seizures, active bleeding, and a bird fluffed and unable to perch at the cage bottom. These are life-threatening and time-sensitive; contact an avian or emergency-exotics vet immediately rather than waiting to 'see how it goes.'" },
+  { q: "Are C.A.Gs African Greys health-tested before they go home?",
+    a: "Yes. Every C.A.Gs Grey is examined by an avian vet and screened, including PCR testing for PBFD and polyomavirus, before it travels, and goes home with its health documentation. Health testing at the source doesn't replace your own avian-vet relationship, but it means you start from a known-healthy, documented bird rather than an unknown one." },
+];
+
+const img = (path: string, w: number, h: number, name: string, caption: string, description: string) => ({
+  "@type": "ImageObject",
+  "contentUrl": "https://congoafricangreys.com" + path,
+  "url": "https://congoafricangreys.com" + path,
+  name, caption, width: w, height: h, description,
+});
+
+const imageObjects = [
+  img(hero, 640, 480,
+    "A breeder gently holding a healthy, alert Congo African Grey",
+    "African Grey health starts with a known-healthy, well-cared-for bird.",
+    "An authentic photograph of a healthy, alert Congo African Grey being gently held by its breeder at C.A.Gs in Midland, Texas, conveying calm, caring, first-hand expertise for this guide to African Grey health problems, symptoms and prevention."),
+  img(igChecker.src, 1200, 670,
+    "African Grey symptom checker chart mapping symptoms to possible causes and urgency",
+    "The African Grey symptom checker — symptom, cause and urgency at a glance.",
+    "A flat-design symptom-checker infographic titled 'African Grey Symptom Checker', mapping common symptoms such as feather plucking, tail-bobbing, weak grip and abnormal droppings to their possible causes and a colour-coded urgency level (monitor, vet soon, emergency), helping owners judge how quickly to act. It is a reference-grade, shareable buyer-safety asset — not a substitute for an avian-vet diagnosis."),
+  img(breederPhoto, 640, 426,
+    "A pair of health-tested Timneh African Greys at the C.A.Gs aviary",
+    "Health-tested, documented birds from a USDA-licensed breeder.",
+    "An authentic photograph of a pair of health-tested Timneh African Greys at the C.A.Gs aviary in Midland, Texas, supporting the prevention and 'health-tested birds' sections of this guide with first-hand breeder evidence."),
+  img(checkupPhoto, 500, 375,
+    "An African Grey during a hands-on health check",
+    "A hands-on check catches trouble while it is still small.",
+    "An authentic photograph of an African Grey during a hands-on health review, reinforcing this guide's advice to know the emergency warning signs and have an avian vet identified before a crisis."),
+];
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "African Grey Parrot Health Problems: 7 Common Issues & Prevention",
+  headline: "10 Common African Grey Health Problems (Symptoms, Causes & When to Call a Vet)",
   description,
+  image: imageObjects,
   author: { "@type": "Person", name: "Mark & Teri Benjamin" },
-  publisher: {
-    "@type": "Organization",
-    name: "CongoAfricanGreys.com",
-    url: "https://congoafricangreys.com",
-  },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com", url: "https://congoafricangreys.com" },
   datePublished: "2026-05-22",
+  dateModified: "2026-07-02",
+  mainEntityOfPage: canonical,
   url: canonical,
 };
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+
+const h2 = "font-lora font-bold text-logo-dark leading-tight mb-4 mt-2 scroll-mt-24";
+const h3 = "font-lora font-semibold text-xl text-logo-dark mb-3 mt-6";
+const h4 = "font-lora font-semibold text-lg text-logo-dark mb-2 mt-5";
+const h5 = "font-lora font-semibold text-base text-logo-dark mt-5 mb-1";
+const h6 = "font-sora font-semibold text-xs uppercase tracking-wide mt-4 mb-1";
+const p = "text-stone-700 leading-relaxed mb-4";
+const lnk = "underline font-medium";
+const figc = "block text-center text-sm text-stone-600 mt-2";
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta heroPreload={hero}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
+  <div class="bp-d">
+    <div style="max-width:1200px;margin:0 auto;">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
+
+    <!-- 1. Hero -->
+    <section class="bp-hero text-white px-4 pt-12 pb-10" style="background:#2D6A4F">
+      <div class="max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div class="order-2 md:order-1">
+            <p class="font-sora text-xs font-medium tracking-wide mb-3" style="color:#ffd6c9">Health Guide · Symptoms &amp; When to Call a Vet · Midland, TX</p>
+            <h1 class="font-lora font-bold mb-4" style="color:#faf7f4">10 Common African Grey Health Problems (Symptoms, Causes &amp; When to Call a Vet)</h1>
+            <p class="text-lg mb-6" style="color:rgba(250,247,244,0.85)">African Greys hide illness until it's serious. Here are the 10 problems we see most, the early warning signs, and a clear rule for when to monitor at home versus call an avian vet now.</p>
+            <a href="#emergency" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">When to call a vet now</a>
+            <p class="font-sora text-xs mt-4 mb-0" style="color:rgba(250,247,244,0.85)">Written by <strong style="color:#faf7f4">Mark &amp; Teri Benjamin</strong> · C.A.Gs African Grey breeders, Midland TX · USDA-licensed since 2014</p>
+          </div>
+          <figure class="m-0 order-1 md:order-2">
+            <img src={hero} width="640" height="480" alt="A breeder gently holding a healthy, alert Congo African Grey while discussing African Grey health" title="African Grey health | C.A.Gs" class="w-full rounded-2xl" fetchpriority="high" decoding="async" />
+            <span class="block text-center text-sm mt-2" style="color:rgba(250,247,244,0.85)">Good health starts with a known-healthy, well-cared-for bird.</span>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Counter snippet -->
+    <CounterSnippet stats={counterStats} />
+
+    <!-- 3. Top lead-capture strip -->
+    <div style="max-width:1100px;margin:0 auto;" class="px-4 mt-6 relative z-10">
+      <InquiryCompact heading="Want a health-tested African Grey to start with?" subtext="Ask us anything about African Grey health, or about our vet-checked, disease-screened birds available now — no pressure." subject="African Grey health enquiry" page="blog/health" idPrefix="top" />
+    </div>
+
+    <!-- 4. Jump nav -->
+    <div class="bp-jump px-4">
+      <p class="jump-eyebrow font-sora">On This Page</p>
+      <JumpNav links={jumpLinks} sticky={false} />
+    </div>
+
+    <section class="px-4 pt-8 pb-4" style="background:#faf7f4">
+      <div style="max-width:760px;margin:0 auto;">
+
+        <!-- Vet disclaimer -->
+        <Callout variant="alert" title="This is breeder guidance, not veterinary advice">
+          <p>We're USDA-licensed African Grey breeders sharing what we've seen raising these birds — not veterinarians. Nothing here diagnoses or treats your bird. For any suspected illness, contact a qualified avian vet, and treat this guide as a way to know how urgently to do so.</p>
+        </Callout>
+
+        <!-- 5. Quick-Answer / warning signs box -->
+        <div id="warning" class="scroll-mt-24 my-6">
+          <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+            <div class="px-6 py-5 sm:px-8" style="background:#2D6A4F">
+              <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] mb-1.5" style="color:#ffd6c9">Watch for these first</p>
+              <h2 class="font-lora font-bold text-xl sm:text-2xl leading-snug" style="color:#faf7f4">Warning Signs Your African Grey May Be Sick</h2>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="font-sora text-stone-700 leading-relaxed mb-6">African Greys hide illness as a survival instinct, so by the time signs are obvious a bird is often already unwell. The earliest, most reliable warning signs are a drop in appetite, fluffed feathers, unusual sleepiness, quieter-than-normal behaviour, and any change in droppings or breathing. Any of these warrants a call to your avian vet — sooner rather than later.</p>
+              <div class="grid grid-cols-2 gap-3">
+                {quickSigns.map((r) => (
+                  <div class="rounded-xl border border-stone-200 bg-cream/60 px-4 py-3">
+                    <span class="block font-sora text-[11px] uppercase tracking-wide text-stone-600">{r.label}</span>
+                    <span class="block font-sora text-sm font-semibold text-logo-dark mt-1 leading-snug">{r.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. H2 Unique risks -->
+        <h2 id="risks" class={h2}>Why African Greys Face Unique Health Risks</h2>
+        <p class={p}>African Greys aren't more fragile than other parrots, but they do carry a couple of species-specific tendencies worth understanding before you interpret any symptom. Knowing these makes you far quicker to spot trouble.</p>
+
+        <h3 class={h3}>The Calcium Sensitivity No Other Parrot Shares</h3>
+        <p class={p}>More than any other companion parrot, African Greys are prone to hypocalcemia — low blood calcium. It's the single most important reason a Grey's diet and lighting have to be right from the start, and why "weakness" or "tremors" in a Grey should always put calcium near the top of your suspect list.</p>
+
+        <h3 class={h3}>Why a Grey Hides Illness Until It's Serious</h3>
+        <p class={p}>Like all prey animals, parrots mask weakness so they don't look like an easy target — and Greys are especially good at it. That instinct is why subtle changes matter so much: a slightly quieter, slightly less hungry Grey may be further along than it appears, so early action beats waiting every time.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 7. H2 The 10 problems -->
+        <h2 id="problems" class={h2}>The 10 Most Common African Grey Health Problems</h2>
+        <p class={p}>Here are the ten we see and hear about most, each with its typical symptoms, causes and the action to take. Use the symptom checker below to move from "something's off" to "how urgent is this" — then let an avian vet make the actual diagnosis.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igChecker.src} srcset={igChecker.srcset} sizes={igChecker.sizes} width="1200" height="670" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="African Grey symptom checker mapping symptoms like plucking, tail-bobbing and weak grip to possible causes and colour-coded urgency" title="African Grey symptom checker | C.A.Gs" />
+          <figcaption class={figc}>The symptom checker — match a sign to its likely cause and urgency, then call your vet.</figcaption>
+        </figure>
+
+        <ComparisonTable columns={dxCols} rows={dxRows} verdict="Use this to judge urgency, not to self-diagnose. Anything marked 'Emergency' means contact an avian or emergency-exotics vet now; 'Vet soon' means book within a day or two." />
+
+        <h3 class={h3}>1. Hypocalcemia (Calcium Deficiency)</h3>
+        <p class={p}>The signature African Grey health problem. Low blood calcium causes weakness and, untreated, seizures — and it's largely preventable with correct diet and lighting.</p>
+        <h4 class={h4}>Symptoms of Hypocalcemia</h4>
+        <p class={p}>Watch for muscle weakness, a poor or trembling grip, unsteadiness or falling off the perch, and in severe cases seizures. Because these escalate quickly, calcium problems sit high on the urgency scale.</p>
+        <h5 class={h5}>Early signs vs. emergency signs</h5>
+        <p class={p}>Early: a bird that seems a little clumsy, grips less firmly, or tires fast. Emergency: tremors, collapse or seizures — a bird actively seizing needs an avian or emergency vet immediately, not in the morning.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the subtle change we tell new owners to watch for</h6>
+        <p class={p}>The first thing we ask owners to watch isn't dramatic — it's grip. A Grey that starts gripping your finger a little less confidently, or slips on a perch it used to own, is worth a calcium conversation with your vet before anything worse appears.</p>
+        <h4 class={h4}>Causes and Prevention</h4>
+        <p class={p}>The usual cause is a seed-heavy diet plus no UV-B light, which leaves the bird short on the vitamin D3 needed to absorb calcium. Prevention is a quality pelleted base, calcium-rich leafy greens, and UV-B lighting — with any supplement used only under avian-vet guidance, since too much calcium is also harmful. Our <a href="/blog/african-grey-parrot-cage-setup/" class={lnk} style="color:#b04228">cage-setup guide</a> covers safe lighting placement.</p>
+
+        <h3 class={h3}>2. Feather-Destructive Behavior (Plucking)</h3>
+        <p class={p}>The most visible and distressing problem owners face — and one of the most misunderstood. It is never normal grooming.</p>
+        <h4 class={h4}>Behavioral vs. Medical Causes</h4>
+        <p class={p}>Behavioural causes include boredom, too little interaction, and stress; medical causes include skin infection, allergy, parasites, hormonal changes, liver disease and nutritional deficiency. Because the two overlap, plucking always warrants a vet exam to rule out disease before it's treated as purely behavioural.</p>
+        <h5 class={h5}>Why plucking is never "just grooming"</h5>
+        <p class={p}>Normal preening tidies feathers; plucking removes or destroys them, leaving bald patches or damaged shafts. A Grey doing that is telling you something is wrong — physically, emotionally or both — and the sooner the cause is found, the better the outcome.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: what we check first when a Grey starts plucking</h6>
+        <p class={p}>Before assuming a behaviour problem, we look at the basics that quietly cause it: hours of real interaction per day, diet quality, sleep (a solid 10–12 hours of dark), and any recent change in the home. Fixing those, alongside a vet check, resolves more plucking than any single "cure."</p>
+
+        <h3 class={h3}>3. Psittacosis (Chlamydiosis)</h3>
+        <p class={p}>A bacterial infection caused by <em>Chlamydia psittaci</em>, with signs including nasal or eye discharge, lethargy, lime-green droppings and weight loss. It's treatable by an avian vet, usually with a course of doxycycline.</p>
+        <h4 class={h4}>Why It Matters to You Too (Zoonotic)</h4>
+        <p class={p}>Psittacosis is zoonotic — it can infect people, causing flu-like respiratory illness — which is exactly why testing and sourcing matter. If you keep birds and develop respiratory symptoms, tell your doctor you have parrots.</p>
+        <h5 class={h5}>Testing every new bird</h5>
+        <p class={p}>Every newly acquired Grey should be tested, and ideally quarantined from other birds until cleared. Sourcing from a breeder who health-screens reduces the odds you ever meet this one.</p>
+        <h6 class={h6} style="color:#b04228">Citation: avian-vet guidance on psittacosis</h6>
+        <p class={p}>For clinical detail, the <a href="https://www.aav.org/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians ↗</a> and your avian vet are the authorities — psittacosis is well understood and manageable when caught and treated properly.</p>
+
+        <h3 class={h3}>4. Aspergillosis (Respiratory Fungal Infection)</h3>
+        <p class={p}>A fungal infection of the respiratory tract from <em>Aspergillus</em> mould spores, often linked to damp substrate, mouldy food or poor ventilation. Signs include laboured breathing, tail-bobbing, voice changes and lethargy — any breathing difficulty is an emergency. Prevention is a dry, clean, well-ventilated (not draughty) environment and never feeding mouldy produce.</p>
+
+        <h3 class={h3}>5. Proventricular Dilatation Disease (PDD)</h3>
+        <p class={p}>A serious disease linked to avian bornavirus that affects the nerves controlling digestion. The hallmark sign is passing undigested food and losing weight despite eating normally. There's no cure, only veterinary management, so early diagnosis and sourcing from tested stock matter.</p>
+
+        <h3 class={h3}>6. Beak &amp; Feather Disease (PBFD)</h3>
+        <p class={p}>Caused by a psittacine circovirus, PBFD damages feathers and beak and suppresses the immune system, leaving birds prone to secondary infections. It's contagious via feather dust and droppings, which is why every C.A.Gs Grey is PCR-tested for it — screening new birds before contact with a flock is the key safeguard.</p>
+
+        <h3 class={h3}>7. Vitamin A Deficiency</h3>
+        <p class={p}>Common in seed-heavy diets, vitamin A deficiency shows up as poor feather quality, mouth or sinus issues and greater infection risk. It's prevented the same way as most Grey nutrition problems — a formulated pellet base plus vitamin-A-rich vegetables like sweet potato, carrot and dark leafy greens.</p>
+
+        <h3 class={h3}>8. Obesity &amp; Fatty Liver Disease</h3>
+        <p class={p}>Too many seeds and nuts and too little exercise lead to obesity and, over time, fatty liver disease (hepatic lipidosis). Signs can be subtle — reduced stamina, poor feather condition — so prevention through diet and daily out-of-cage activity is far easier than treatment.</p>
+
+        <h3 class={h3}>9. Heavy-Metal (Zinc / Lead) Toxicity</h3>
+        <p class={p}>Chewing galvanised wire, cheap cage hardware or certain toy parts can cause zinc or lead poisoning — an emergency. Signs include weakness, vomiting, bloody droppings and seizures; treatment is time-sensitive chelation therapy at the vet. Prevention is stainless-steel caging and verified bird-safe toys only.</p>
+
+        <h3 class={h3}>10. Respiratory Infections &amp; Air-Sac Disease</h3>
+        <p class={p}>Birds have a complex air-sac system, so respiratory infections can spread and worsen fast. Sneezing, discharge, wheezing, tail-bobbing or open-beak breathing all point here — mild signs mean vet soon, any real breathing difficulty means emergency. Clean air (no smoke, aerosols or non-stick fumes) is the best prevention.</p>
+
+        <MythFact
+          myth="A little feather plucking is just an African Grey grooming or a harmless habit."
+          fact="Plucking is never normal grooming. It's a reliable sign of an underlying problem — medical, nutritional, environmental or emotional — and it tends to worsen the longer the cause goes unaddressed. Treat the first bald patch as a reason to book an avian-vet exam, not something to wait out." />
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 8. H2 Emergency / urgency -->
+        <h2 id="emergency" class={h2}>When Should You Call an Avian Vet Immediately?</h2>
+        <p class={p}>Not every symptom is an emergency, but a few always are. Use this simple three-tier rule to decide how fast to act — and when in doubt with a bird, act sooner, because they decline quickly.</p>
+
+        <div class="grid gap-3 my-6" role="list" aria-label="Urgency levels">
+          {urgency.map((u) => (
+            <div role="listitem" class="rounded-xl border p-4" style={`border-color:${u.color}; background:${u.bg};`}>
+              <span class="inline-block font-sora text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full mb-2" style={`background:${u.color}; color:#fff;`}>{u.tier}</span>
+              <p class="font-sora text-sm text-stone-700 leading-relaxed mb-0">{u.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <figure class="m-0 my-6">
+          <img src={checkupPhoto} width="500" height="375" loading="lazy" decoding="async" class="w-full max-w-sm mx-auto rounded-2xl border border-stone-200" alt="An African Grey during a hands-on health check with its keeper" title="African Grey health check | C.A.Gs" />
+          <figcaption class="block text-center text-sm text-stone-600 mt-2">A hands-on check catches trouble while it's still small — know the signs below.</figcaption>
+        </figure>
+
+        <h3 class={h3}>Labored Breathing or Tail-Bobbing</h3>
+        <p class={p}>A resting bird whose tail pumps with each breath, or that breathes with an open beak or visible effort, is in respiratory distress. This is a top-tier emergency — call an avian or emergency-exotics vet immediately.</p>
+
+        <h3 class={h3}>Bleeding or Injury</h3>
+        <p class={p}>Active bleeding — from a broken blood feather, a nail, or a wound — needs prompt control and a vet. A small bird has very little blood to spare, so treat any significant bleeding as urgent.</p>
+
+        <h3 class={h3}>Collapse, Seizures or Sitting at the Cage Bottom</h3>
+        <p class={p}>A bird that collapses, seizes, or sits fluffed and unable to perch at the bottom of the cage is critically ill. These are the clearest "go now" signs on this page.</p>
+        <h4 class={h4}>The "Cage-Bottom" Emergency</h4>
+        <p class={p}>A perching bird chooses the floor of its cage only when it's too weak to do otherwise. It's one of the most serious signs in aviculture and should never be given a "wait and see."</p>
+        <h5 class={h5}>What to do in the first 10 minutes</h5>
+        <p class={p}>Keep the bird warm, quiet and contained; don't force food or water; and phone your avian or nearest emergency-exotics vet on the way, so they're ready when you arrive. Warmth and a fast, calm transport are what you can control.</p>
+        <h6 class={h6} style="color:#b04228">Citation: AAV on avian emergencies</h6>
+        <p class={p}>Having an avian vet identified <em>before</em> a crisis is the advice every authority gives; the <a href="https://www.aav.org/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians ↗</a> can help you find a qualified one near you. Save the number in your phone today, not during the emergency.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 9. H2 Prevention -->
+        <h2 id="prevention" class={h2}>How Do You Prevent African Grey Health Problems?</h2>
+        <p class={p}>Most of the problems above share the same handful of preventable roots. Get these four things right and you avoid the large majority of what sends Greys to the vet.</p>
+
+        <figure class="m-0 my-6">
+          <img src={breederPhoto} width="640" height="426" loading="lazy" decoding="async" class="w-full max-w-md mx-auto rounded-2xl border border-stone-200" alt="A pair of health-tested Timneh African Greys at the C.A.Gs aviary in Midland, Texas" title="Health-tested African Greys | C.A.Gs" />
+          <figcaption class={figc}>Prevention starts at the source — health-tested, well-raised birds.</figcaption>
+        </figure>
+
+        <h3 class={h3}>Diet and Calcium</h3>
+        <p class={p}>A quality formulated pellet as the base, plus fresh vegetables and calcium-rich leafy greens, prevents the deficiencies behind hypocalcemia, vitamin A problems and obesity. A seed-only diet is the single most common dietary cause of Grey illness — our <a href="/blog/african-grey-parrot-price-what-you-get/" class={lnk} style="color:#b04228">price guide</a> factors ongoing quality food into the real cost of ownership.</p>
+
+        <h3 class={h3}>UV-B Lighting and Vitamin D3</h3>
+        <p class={p}>Because Greys need UV-B exposure to make the vitamin D3 that lets them use calcium, proper avian lighting (or safe natural sunlight) is preventive medicine, not a luxury. It's one of the cheapest ways to protect a Grey's long-term health.</p>
+
+        <h3 class={h3}>A Safe, Clean Environment</h3>
+        <p class={p}>A dry, clean, well-ventilated space free of mould, smoke and toxic fumes prevents aspergillosis, respiratory disease and poisoning in one stroke.</p>
+        <h4 class={h4}>Cage Materials and Air Quality</h4>
+        <p class={p}>The cage itself is a health decision: the wrong metal or a smoky kitchen can quietly harm a Grey over time.</p>
+        <h5 class={h5}>Why stainless steel and no PTFE/Teflon fumes</h5>
+        <p class={p}>Use stainless-steel caging to avoid zinc and lead toxicity, and never run non-stick (PTFE/Teflon) cookware near birds — its fumes are rapidly fatal to parrots. Keep the air free of smoke, aerosols and scented plug-ins too.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the setup we start every chick on</h6>
+        <p class={p}>Our chicks begin life on a pelleted, calcium-aware diet with proper lighting, in a clean stainless-steel environment — so the preventable problems are designed out before a bird ever reaches its new home. That head start is a real part of what "health-tested and well-raised" means.</p>
+
+        <h3 class={h3}>Mental Stimulation and Routine</h3>
+        <p class={p}>Because so much Grey illness is stress- and boredom-driven, daily interaction, foraging and a predictable routine are genuine preventive care — not just enrichment. A mentally satisfied Grey is a physically healthier one.</p>
+
+        <BreederNote>
+          <p>The single best thing you can do for a Grey's health you'll do before you ever see a symptom: start with a health-tested, well-raised bird, set up the diet, lighting and clean environment correctly, and find your avian vet on day one. Everything on this page is easier to prevent than to treat — and a Grey that hides illness rewards the owner who's already prepared.</p>
+        </BreederNote>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 10. Soft available module -->
+        <h2 id="available" class={h2}>See Our Health-Tested Hand-Raised African Greys</h2>
+        <p class={p}>Good health is far easier to keep than to recover, and it starts at the source. Every African Grey we place is examined by an avian vet, PCR-screened for PBFD and polyomavirus, and sent home with its health documentation — so you begin with a known-healthy, well-raised bird rather than an unknown one.</p>
+        <div class="grid sm:grid-cols-2 gap-5 mt-2">
+          {birds.map((b) => (
+            <BirdCard
+              id={b.id} name={b.name} sex={b.sex} age={b.age} price={b.price}
+              tag={b.tag} tagType={b.tagType} notes={b.notes} hook={b.hook}
+              image={b.image} variant={b.variant} objectPos={b.objectPos}
+            />
+          ))}
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-6 mb-2">
+          <p class="font-lora font-bold text-2xl mb-2 text-logo-dark">Start with a health-tested Grey</p>
+          <p class="text-stone-600 mb-1">Ships nationwide · $185 airport · $350 home</p>
+          <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American · IATA LAR</p>
+          <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See all available African Greys</a>
+          <a href="/contact-us/" class="inline-block font-sora font-semibold px-7 py-3 underline" style="color:#b04228">Ask us about health testing</a>
+        </div>
+
+        <p class="font-lora italic text-stone-600 text-center mt-8 mb-0">— Written by Mark &amp; Teri Benjamin, the breeders behind C.A.Gs · USDA-licensed African Grey aviary, Midland, TX. This guide is educational and not a substitute for veterinary care.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 11. FAQ -->
+        <h2 id="faq" class={h2}>African Grey Health Problems: Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {faqs.map((faq) => (
+            <details class="bg-white rounded-xl border border-stone-200 p-5">
+              <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
+              <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <!-- 12. Related posts -->
+        <div class="mt-12">
+          <RelatedPosts heading="Keep reading" headingLevel="h2" posts={[
+            { title: "African Grey Cage Setup: The Breeder's Blueprint", slug: "/blog/african-grey-parrot-cage-setup/", category: "Care" },
+            { title: "25 Amazing African Grey Parrot Facts You Didn't Know", slug: "/blog/african-grey-parrot-facts/", category: "Facts" },
+            { title: "African Grey Training: A Breeder's Step-by-Step Guide", slug: "/blog/african-grey-parrot-training/", category: "Training" },
+          ]} />
+        </div>
+
+      </div>
+    </section>
   </div>
 
-  <section style="background:#2D6A4F" class="text-white py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Health Guide · USDA-Licensed Breeders · Midland, TX</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey Parrot Health Problems</h1>
-      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">The 7 most common health issues in African Grey parrots, their causes, warning signs, and how to prevent them — from breeders who've raised these birds for 10+ years.</p>
-    </div>
-  </section>
+  <!-- Newsletter -->
+  <Newsletter variant="bottom" action="/contact-us/" bottomText="African Grey health tips, prevention checklists and new hand-raised clutches — straight to your inbox." />
 
-  <!-- Content -->
-  <section class="py-16 px-4" style="background:#faf7f4">
-    <div class="max-w-760px mx-auto" style="max-width:760px">
-
-      <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8">
-        <p class="font-sora font-semibold text-amber-800 mb-1">Critical Note</p>
-        <p class="text-amber-700 text-sm leading-relaxed">African Greys hide illness as a survival instinct. By the time symptoms are obvious, the bird is often in critical condition. Annual avian vet exams are not optional — they are the only way to catch problems before they become emergencies.</p>
-      </div>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">1. Feather Destructive Behavior (Plucking)</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Feather plucking is the most visible and distressing health issue African Grey owners encounter. It is never normal grooming — it always indicates an underlying problem.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li><strong>Behavioral causes:</strong> insufficient interaction (under 3 hrs/day), boredom, lack of enrichment, separation anxiety</li>
-        <li><strong>Medical causes:</strong> bacterial or fungal skin infection, internal parasites, liver disease, hormonal imbalance, PBFD virus</li>
-        <li><strong>Nutritional causes:</strong> vitamin A deficiency, low-quality seed-only diet</li>
-        <li><strong>Prevention:</strong> 3–4 hours of daily interaction, varied diet with pellets as the base, enrichment rotation, UVB lighting</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">2. Calcium / Vitamin D3 Deficiency</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">African Greys are uniquely susceptible to calcium deficiency compared to other parrot species. The result can be fatal: hypocalcemia seizures.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Signs: tremors, muscle weakness, seizures, balance problems, toe-tapping</li>
-        <li>Cause: seed-heavy diet, no UVB lighting (D3 required for calcium absorption), no leafy greens</li>
-        <li>Prevention: pelleted diet as 70% of food intake, 12 hours UVB daily, dark leafy greens, annual blood calcium panel</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">3. Psittacosis (Chlamydiosis)</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Psittacosis is a bacterial infection caused by <em>Chlamydia psittaci</em>. It is zoonotic — meaning it can infect humans. All new birds should be tested.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Signs: nasal/eye discharge, lethargy, lime-green droppings, weight loss</li>
-        <li>Transmission: inhalation of dried feces or respiratory secretions</li>
-        <li>Treatment: doxycycline (antibiotic) under avian vet supervision — 45-day protocol</li>
-        <li>Prevention: PCR test for all new birds within 72 hours of arrival; source birds from reputable USDA-licensed breeders only</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">4. Aspergillosis</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Aspergillosis is a fungal infection of the respiratory system caused by <em>Aspergillus</em> mold spores. It is chronic and difficult to treat once established.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Signs: labored breathing, tail bobbing (respiratory effort), voice changes, lethargy</li>
-        <li>Risk factors: damp cage substrate, moldy food, poor ventilation, immunosuppression</li>
-        <li>Prevention: dry cage environment, remove fresh food after 4 hours, never feed moldy produce, good airflow (not drafts)</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">5. Proventricular Dilatation Disease (PDD)</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">PDD is a neurological and digestive disease caused by Avian Bornavirus. It affects the nerves controlling the digestive system, causing inability to digest food.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Signs: passing undigested food, weight loss despite normal appetite, regurgitation</li>
-        <li>No cure — management only; supportive diet and anti-inflammatory medication</li>
-        <li>Prevention: source birds from clean, tested breeding facilities; annual avian vet checkups</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">6. Beak and Feather Disease (PBFD)</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">PBFD is caused by Psittacine Circovirus. It is immunosuppressive — infected birds cannot fight off secondary infections.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Signs: abnormal feather development, beak deformities, recurrent infections</li>
-        <li>Highly contagious — can spread through feather dust and feces</li>
-        <li>Prevention: PCR test all new birds before introducing to existing flock</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">7. Heavy Metal Toxicity</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">Zinc or lead poisoning from chewing cage hardware, galvanized wire, or certain toy components is an emergency situation requiring immediate veterinary treatment.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Signs: weakness, vomiting, bloody droppings, seizures, sudden death</li>
-        <li>Treatment: chelation therapy — time-sensitive, seek emergency avian vet immediately</li>
-        <li>Prevention: stainless steel cages only, no galvanized hardware, verify all toy components are bird-safe</li>
-      </ul>
-
-      <!-- FAQ -->
-      <h2 class="font-lora font-bold text-3xl mb-8" style="color:#2D6A4F">Frequently Asked Questions</h2>
-      <div class="space-y-4">
-        {faqs.map((faq) => (
-          <details class="bg-white rounded-xl border border-stone-200 p-5">
-            <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
-            <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
-          </details>
-        ))}
-      </div>
-
-    </div>
-  </section>
-
+  <StickyCta label="See available African Greys" href="/available/" />
+  <style>
+    .bp-d .cag-seam { display:flex; align-items:center; gap:26px; max-width:1100px; margin:2.25rem auto 1.5rem; padding:0 24px; }
+    .bp-d .cag-seam__line { flex:1; height:1px; background:rgba(45,106,79,.16); }
+    .bp-d .cag-seam img { height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+    @media (max-width:600px){ .bp-d .cag-seam { gap:16px; } .bp-d .cag-seam img { height:24px; } }
+    .bp-d .bp-hero h1 { font-size:clamp(1.7rem, 1.1rem + 2.6vw, 2.4rem) !important; line-height:1.14 !important; }
+    .bp-d figure img { box-shadow:0 10px 30px rgba(60,30,10,.08); }
+    .bp-jump { max-width:900px; margin:1.25rem auto 0; }
+    .bp-jump .jump-eyebrow { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:#b04228; margin:0 0 6px 4px; }
+    @media (max-width:767px){
+      .bp-jump { position:sticky; top:94px; z-index:40; background:#faf7f4; padding-top:8px; padding-bottom:8px; margin-top:.5rem; box-shadow:0 8px 14px -10px rgba(60,30,10,.28); }
+      .bp-jump .jump-eyebrow { display:none; }
+    }
+  </style>
 </BaseLayout>

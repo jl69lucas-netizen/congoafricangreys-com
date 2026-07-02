@@ -1,10 +1,34 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
+import InquiryCompact from '../../../components/cag-inquiry-compact.astro';
+import Newsletter from '../../../components/cag-library/NewsletterV2.astro';
+import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
+import Callout from '../../../components/cag-blog-callout.astro';
+import ComparisonTable from '../../../components/cag-blog-comparison-table.astro';
+import BreederNote from '../../../components/cag-blog-breeder-note.astro';
+import DecisionTree from '../../../components/cag-blog-decision-tree.astro';
+import RelatedPosts from '../../../components/cag-blog-related-posts.astro';
+import StickyCta from '../../../components/cag-blog-sticky-cta.astro';
+import BirdCard from '../../../components/BirdCard.astro';
 
-const title = "Is an African Grey Parrot Good for Beginners? | Honest Answer";
-const description = "African Greys are not beginner parrots — but some first-time owners do succeed. Here's what you actually need to know before buying, from USDA licensed breeders.";
+const title = "Is an African Grey Good for Beginners? | The Honest Answer + a 5-Point Readiness Check | Can a First-Time Owner Handle an African Grey? | C.A.Gs – Midland, TX";
+const description = "Is an African Grey good for beginners? An honest breeder's answer — why they're hard, who succeeds, easier alternatives, and a readiness check before you buy your first parrot.";
 const canonical = "https://congoafricangreys.com/blog/is-african-grey-good-for-beginners/";
+
+// Hero = real OG breeder+bird photo. In-content visuals: final encoded assets in public/.
+const hero = "/african-grey-head-scratch-cags-breeder.webp"; // OG, 465x500
+const ig = (base: string) => ({
+  src: `/${base}.webp`,
+  srcset: `/${base}-760w.webp 760w, /${base}.webp 1200w`,
+  sizes: "(min-width: 768px) 712px, 92vw",
+});
+const igScore = ig("african-grey-beginner-suitability-scorecard-infographic");
+const greyPhoto = "/african-grey-parrot-positive-reinforcement.webp"; // OG, 1024x768
+const timnehPhoto = "/timneh-african-grey-pair-cags-aviary.webp"; // OG, 640x426
+const safeRoomPhoto = "/african-grey-parrot-safe-environment.webp"; // OG, 500x327
+const trainingPhoto = "/african-grey-parrot-training-free-play.webp"; // OG, 465x500
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
@@ -12,108 +36,483 @@ const breadcrumbs = [
   { name: "Is an African Grey Good for Beginners?", url: "/blog/is-african-grey-good-for-beginners/" },
 ];
 
-const faqs = [
-  {
-    q: "Is an African Grey parrot good for a first-time bird owner?",
-    a: "Rarely. African Greys are emotionally complex, highly sensitive to routine disruptions, and require 3–4 hours of daily interaction. Most first-time bird owners underestimate these demands and end up with a feather-plucking, anxious bird. That said, some first-time owners with genuinely high commitment and patience do succeed — especially those who've done serious research and have stable home environments.",
-  },
-  {
-    q: "What makes African Greys hard for beginners?",
-    a: "Three things: emotional sensitivity (they pick up on your stress and respond with behavioral problems), dietary complexity (calcium deficiency is a documented cause of seizures — their diet requires active management), and the 40–60 year commitment. Most beginners don't realize they're signing up for a bird that may outlive them.",
-  },
-  {
-    q: "Which African Grey is better for beginners — Congo or Timneh?",
-    a: "If you're set on an African Grey as a first bird, a Timneh is the better choice. Timnehs mature faster, are less emotionally reactive, and are generally more adaptable to new environments. They're still not 'easy' birds — but the learning curve is less steep than with a Congo.",
-  },
-  {
-    q: "What parrot should a beginner get instead?",
-    a: "For first-time parrot owners, cockatiels, conures, or caiques are better fits — birds that are forgiving of beginner mistakes, resilient to routine disruptions, and won't develop serious behavioral problems from a new owner's learning curve. Once you have 2–3 years of experience with a smaller species, you'll be far better prepared for an African Grey.",
-  },
+const jumpLinks = [
+  { label: "Quick Answer", href: "#quick" },
+  { label: "Why Challenging", href: "#challenging" },
+  { label: "Who Succeeds", href: "#succeed" },
+  { label: "Who Shouldn't", href: "#notfit" },
+  { label: "Who Fits", href: "#goodfit" },
+  { label: "Are You Ready?", href: "#ready" },
+  { label: "Alternatives", href: "#alternatives" },
+  { label: "Prepare", href: "#prepare" },
+  { label: "Available", href: "#available" },
+  { label: "FAQ", href: "#faq" },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const counterStats = [
+  { num: "40–60",    label: "Year commitment" },
+  { num: "3–4 hrs",  label: "Daily interaction" },
+  { num: "USDA",     label: "Licensed since 2014" },
+  { num: "Lifetime", label: "Breeder support" },
+];
+
+const quickFacts = [
+  { label: "Beginner fit", value: "Low–moderate (with prep)" },
+  { label: "Care difficulty", value: "High" },
+  { label: "Daily time", value: "3–4 hours" },
+  { label: "Commitment", value: "40–60 years" },
+];
+
+const factorCols = ["Ownership factor", "African Grey", "Beginner-friendly?"];
+const factorRows = [
+  { item: "Intelligence", values: ["Very high", "Hard — needs constant enrichment"] },
+  { item: "Training need", values: ["High", "Hard — a daily commitment"] },
+  { item: "Noise level", values: ["Medium–high", "Moderate"] },
+  { item: "Lifespan", values: ["40–60+ years", "Hard — may outlive you"] },
+  { item: "Bonding / attention need", values: ["Very high", "Hard — hours every day"] },
+  { item: "Diet management", values: ["Calcium-sensitive", "Moderate — needs active management"] },
+];
+
+const altCols = ["Starter species", "Beginner fit", "Why it's easier"];
+const altRows = [
+  { item: "Cockatiel", values: ["Excellent", "Gentle, affectionate, forgiving of mistakes; can whistle and talk a little"] },
+  { item: "Budgerigar (budgie)", values: ["Excellent", "Small, hardy, social, low cost — and surprisingly good talkers"] },
+  { item: "Green-cheeked conure", values: ["Very good", "Big personality, playful, quieter than most conures"] },
+  { item: "Timneh African Grey", values: ["If you're set on a Grey", "The more adaptable, earlier-maturing Grey — still a serious commitment"] },
+];
+
+const readyBranches = [
+  { answer: "Yes to all: 3–4 hours daily, a 40–60 year commitment, and you genuinely enjoy training", result: "You're the prepared kind of owner who succeeds with a Grey. Consider starting with a Timneh for a slightly gentler curve, line up an avian vet first, and reach out — we support first-time buyers closely." },
+  { answer: "Yes to the commitment, but you're unsure about the daily time", result: "Be honest about the hours. A Grey needs several hours of interaction every day, for decades. If your schedule can't reliably give that yet, wait until it can — or start with an easier species below." },
+  { answer: "You love the idea, but you're out of the house all day", result: "This isn't the right time for a Grey. A bird left alone all day tends to pluck and scream. Consider a more independent starter species now, and revisit a Grey when your routine allows daily interaction." },
+  { answer: "You want a talking bird, but on a lighter commitment", result: "A Grey may be more than you're looking for. A budgie or cockatiel can talk and is far more forgiving — see the alternatives below. If it's the Grey's mind you want, build up with a smaller species first." },
+];
+
+const readyChecklist = [
+  "You can give 3–4 hours of interaction every day, for years — not just at first",
+  "You're ready for a 40–60 year commitment and have thought about who inherits the bird",
+  "You genuinely enjoy training and problem-solving, not just the talking novelty",
+  "Your home is stable, with a fairly consistent daily routine and no very young children underfoot",
+  "You've found an avian vet and budgeted for quality food, a stainless cage and ongoing care",
+];
+
+const birds = [
+  { id: 'amie', name: 'Amie', sex: 'Female', age: '3 mo', price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'Hand-raised, fully documented, ready to reserve.',
+    notes: 'Premium hand-raised female, 3 months old. PCR DNA-sexed, vet-checked, CITES-documented — captive-bred in the USA with the full paper trail.' },
+  { id: 'roys', name: 'Roys', sex: 'Male', age: '4 mo', price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Curious, food-motivated baby boy.',
+    notes: "Hand-raised male, 4 months old. Same documentation and health-testing as every C.A.Gs Grey, weaned and socialised before he travels." },
+  { id: 'bery', name: 'Bery', sex: 'Female', age: '1 yr', price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp', objectPos: 'object-center',
+    hook: 'Gentle, established — our value Congo.',
+    notes: 'Soft temperament, 1-year-old female at the $1,700 honest floor — tame, documented and ready for the right home.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Bonded Duo', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair-talking-birds.webp', objectPos: 'object-center',
+    hook: 'Two hand-raised birds, adopted together.',
+    notes: 'Unrelated companion pair sold together. Jins (male, 6mo) + Jeni (female, 4mo), both fully documented and hand-raised.' },
+];
+
+const faqs = [
+  { q: "Is an African Grey good for a first-time bird owner?",
+    a: "Usually not — but not never. African Greys are emotionally complex, sensitive to routine changes, and need 3–4 hours of daily interaction, which most first-timers underestimate. That said, a genuinely committed, well-researched first-time owner with a stable home can succeed, especially starting with a Timneh. If you're honestly weighing the question, that carefulness is itself a good sign." },
+  { q: "What makes African Greys hard for beginners?",
+    a: "Three things above all: extreme intelligence (they need constant mental stimulation or they develop behavioural problems), emotional sensitivity (they read and react to household stress), and the 40–60 year commitment. Add a calcium-sensitive diet that needs active management, and you have a bird that punishes a casual, under-prepared owner." },
+  { q: "Which African Grey is better for beginners, a Congo or a Timneh?",
+    a: "If you're set on a Grey as a first bird, choose a Timneh. Timnehs mature faster, are generally less emotionally reactive, and adapt more readily to new environments than Congos. They're still a serious commitment and not an 'easy' bird — but the margin for a beginner's mistakes is a little wider." },
+  { q: "What parrot should a beginner get instead of an African Grey?",
+    a: "Great starter parrots include the cockatiel, budgerigar (budgie) and green-cheeked conure — all more forgiving of a new owner's learning curve, more resilient to routine changes, and less prone to serious behavioural fallout. After two or three years with a smaller species, you'll be far better prepared for an African Grey." },
+  { q: "Are African Greys hard to keep?",
+    a: "They're demanding rather than fragile. Kept correctly — a balanced diet with calcium and UV-B, a safe stainless cage, daily interaction and enrichment, and a relationship with an avian vet — a Grey is robust and thrives. The difficulty is the consistency it requires, day after day, for decades." },
+  { q: "Do African Greys need a lot of attention?",
+    a: "Yes — a great deal. Plan on several hours of daily interaction plus foraging and out-of-cage time. A Grey is a highly social flock animal, so your household effectively becomes its flock; under-socialised or lonely Greys commonly develop screaming and feather-plucking. If you can't reliably give daily time, it's the wrong bird for now." },
+  { q: "What is the easiest talking parrot for beginners?",
+    a: "For talking on a beginner-friendly budget and temperament, budgerigars are the surprise standout — many learn dozens of words — and cockatiels whistle and mimic well. Neither rivals a Grey's context-aware speech, but both are far easier first birds. If clear, conversational speech is your non-negotiable, prepare properly and step up to a Grey rather than rushing it." },
+  { q: "Can a dedicated first-time owner really succeed with an African Grey?",
+    a: "Absolutely — we've placed Greys with first-time owners who did superbly. What they shared wasn't bird experience; it was patience, a stable routine, deep pre-purchase research, an avian vet lined up, and a real appetite for the relationship. Success with a Grey is about temperament and preparation far more than prior parrot experience." },
+];
+
+const img = (path: string, w: number, h: number, name: string, caption: string, description: string) => ({
+  "@type": "ImageObject",
+  "contentUrl": "https://congoafricangreys.com" + path,
+  "url": "https://congoafricangreys.com" + path,
+  name, caption, width: w, height: h, description,
+});
+
+const imageObjects = [
+  img(hero, 465, 500,
+    "A breeder gently scratching the head of a calm, bonded African Grey",
+    "The right first-time owner succeeds with a Grey through patience, not prior experience.",
+    "An authentic photograph of a hand-raised African Grey enjoying a head-scratch from its breeder at C.A.Gs in Midland, Texas, illustrating the patient, hands-on relationship a first-time owner needs to succeed with this demanding but rewarding parrot."),
+  img(igScore.src, 1200, 670,
+    "Beginner suitability scorecard rating African Grey ownership factors by difficulty",
+    "The beginner suitability scorecard — an honest look at the difficulty.",
+    "A flat-design scorecard infographic titled 'Is an African Grey Right for a Beginner?', rating ownership factors — intelligence, training need, noise, lifespan, bonding/attention need and diet management — by beginner difficulty with green, amber and clay badges. It gives prospective first-time owners an honest, scannable readiness overview."),
+  img(greyPhoto, 1024, 768,
+    "An owner practising positive-reinforcement training with an African Grey",
+    "Prepared beginners can thrive with a well-raised, documented Grey.",
+    "A photograph of an owner practising short, positive-reinforcement training with an African Grey, illustrating the daily, patient habit that separates the first-time owners who succeed from those who struggle."),
+  img(timnehPhoto, 640, 426,
+    "A pair of Timneh African Greys at the C.A.Gs aviary",
+    "The Timneh — the gentler, more beginner-tolerant African Grey.",
+    "An authentic photograph of a pair of Timneh African Greys at the C.A.Gs aviary, supporting this guide's advice that a Timneh is the most beginner-tolerant way into the species."),
+  img(safeRoomPhoto, 500, 327,
+    "An African Grey in a safe, bird-proofed home environment",
+    "A safe, prepared room before the bird arrives — not after.",
+    "A photograph of an African Grey in a safe, bird-proofed home environment, illustrating the cage-and-environment preparation this guide asks first-time owners to complete before the bird comes home."),
+  img(trainingPhoto, 465, 500,
+    "An African Grey enjoying supervised free play during training",
+    "Daily training and free play keep a Grey confident and well-adjusted.",
+    "A photograph of an African Grey enjoying supervised out-of-cage free play, illustrating the daily training-and-enrichment commitment this guide describes for prepared first-time owners."),
+];
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Is an African Grey Parrot Good for Beginners?",
-  description: "African Greys are not beginner parrots — but some first-time owners do succeed. Here's what you actually need to know.",
+  headline: "Is an African Grey a Good Pet for Beginners? An Honest 2026 Guide",
+  description,
+  image: imageObjects,
   author: { "@type": "Person", name: "Mark & Teri Benjamin" },
-  publisher: {
-    "@type": "Organization",
-    name: "CongoAfricanGreys.com",
-    url: "https://congoafricangreys.com",
-  },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com", url: "https://congoafricangreys.com" },
   datePublished: "2026-05-21",
+  dateModified: "2026-07-02",
+  mainEntityOfPage: canonical,
   url: canonical,
 };
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+
+const h2 = "font-lora font-bold text-logo-dark leading-tight mb-4 mt-2 scroll-mt-24";
+const h3 = "font-lora font-semibold text-xl text-logo-dark mb-3 mt-6";
+const h4 = "font-lora font-semibold text-lg text-logo-dark mb-2 mt-5";
+const h5 = "font-lora font-semibold text-base text-logo-dark mt-5 mb-1";
+const h6 = "font-sora font-semibold text-xs uppercase tracking-wide mt-4 mb-1";
+const p = "text-stone-700 leading-relaxed mb-4";
+const lnk = "underline font-medium";
+const figc = "block text-center text-sm text-stone-600 mt-2";
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta heroPreload={hero}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
+  <div class="bp-d">
+    <div style="max-width:1200px;margin:0 auto;">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
+
+    <!-- 1. Hero -->
+    <section class="bp-hero text-white px-4 pt-12 pb-10" style="background:#2D6A4F">
+      <div class="max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div class="order-2 md:order-1">
+            <p class="font-sora text-xs font-medium tracking-wide mb-3" style="color:#ffd6c9">Honest Buyer's Guide · Who Should (and Shouldn't) · Midland, TX</p>
+            <h1 class="font-lora font-bold mb-4" style="color:#faf7f4">Is an African Grey a Good Pet for Beginners? An Honest 2026 Guide</h1>
+            <p class="text-lg mb-6" style="color:rgba(250,247,244,0.85)">African Greys are amazing — but they're not easy. Here's the honest answer, who actually succeeds as a first-time owner, easier alternatives, and a readiness check to run before you spend a cent.</p>
+            <a href="#ready" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">Are you ready? Take the check</a>
+            <p class="font-sora text-xs mt-4 mb-0" style="color:rgba(250,247,244,0.85)">Written by <strong style="color:#faf7f4">Mark &amp; Teri Benjamin</strong> · C.A.Gs African Grey breeders, Midland TX · USDA-licensed since 2014</p>
+          </div>
+          <figure class="m-0 order-1 md:order-2">
+            <img src={hero} width="465" height="500" alt="A breeder gently scratching the head of a calm African Grey, illustrating the patient relationship a first-time owner needs" title="Is an African Grey good for beginners | C.A.Gs" class="w-full rounded-2xl" fetchpriority="high" decoding="async" />
+            <span class="block text-center text-sm mt-2" style="color:rgba(250,247,244,0.85)">Success is about patience and preparation — not prior bird experience.</span>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Counter snippet -->
+    <CounterSnippet stats={counterStats} />
+
+    <!-- 3. Top lead-capture strip -->
+    <div style="max-width:1100px;margin:0 auto;" class="px-4 mt-6 relative z-10">
+      <InquiryCompact heading="Think you might be ready?" subtext="Tell us about your home and routine and we'll give you an honest read on whether a Grey fits — and support you if it does. No pressure." subject="African Grey beginner enquiry" page="blog/beginners" idPrefix="top" />
+    </div>
+
+    <!-- 4. Jump nav -->
+    <div class="bp-jump px-4">
+      <p class="jump-eyebrow font-sora">On This Page</p>
+      <JumpNav links={jumpLinks} sticky={false} />
+    </div>
+
+    <section class="px-4 pt-8 pb-4" style="background:#faf7f4">
+      <div style="max-width:760px;margin:0 auto;">
+
+        <!-- 5. Quick-Answer box -->
+        <div id="quick" class="scroll-mt-24 mb-6">
+          <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+            <div class="px-6 py-5 sm:px-8" style="background:#2D6A4F">
+              <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] mb-1.5" style="color:#ffd6c9">The honest answer</p>
+              <h2 class="font-lora font-bold text-xl sm:text-2xl leading-snug" style="color:#faf7f4">Quick Answer: Are African Greys Good for Beginners?</h2>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="font-sora text-stone-700 leading-relaxed mb-6">African Greys are usually <strong>not ideal for beginners</strong>, because they need advanced mental stimulation, daily interaction, training and a 40–60 year commitment. But a <strong>highly dedicated, well-prepared first-time owner can succeed</strong> — especially starting with a Timneh. If you're honestly asking the question, you're already ahead of the owners who get into trouble by not asking at all.</p>
+              <div class="grid grid-cols-2 gap-3">
+                {quickFacts.map((r) => (
+                  <div class="rounded-xl border border-stone-200 bg-cream/60 px-4 py-3">
+                    <span class="block font-sora text-[11px] uppercase tracking-wide text-stone-600">{r.label}</span>
+                    <span class="block font-sora text-sm font-semibold text-logo-dark mt-1 leading-snug">{r.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. H2 Why challenging -->
+        <h2 id="challenging" class={h2}>Why Are African Greys Challenging for Beginners?</h2>
+        <p class={p}>Greys aren't more fragile than other parrots — they're more <em>demanding</em>. The traits that make them extraordinary companions are exactly the ones that overwhelm an under-prepared first-timer. Here's the honest breakdown.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igScore.src} srcset={igScore.srcset} sizes={igScore.sizes} width="1200" height="670" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="Beginner suitability scorecard rating African Grey intelligence, training need, noise, lifespan, bonding and diet by difficulty" title="African Grey beginner suitability scorecard | C.A.Gs" />
+          <figcaption class={figc}>The honest scorecard — most ownership factors sit in the 'hard' column.</figcaption>
+        </figure>
+
+        <ComparisonTable columns={factorCols} rows={factorRows} verdict="Read down the right-hand column: most of what makes a Grey special also makes it hard for a beginner. None of it is a dealbreaker for a prepared owner — but pretending it's an 'easy' bird is how first-timers get hurt." />
+
+        <h3 class={h3}>Extreme Intelligence and Mental Demands</h3>
+        <p class={p}>An African Grey has the cognitive ability of roughly a five-year-old child, and a mind that sharp needs constant work. This is the trait competitors most understate: a Grey isn't a decorative bird, it's a problem-solver that will find its own (destructive) entertainment if you don't provide it.</p>
+        <h4 class={h4}>What "Cognitively Demanding" Means Day to Day</h4>
+        <p class={p}>In practice it means rotating foraging toys, teaching new things, and genuinely interacting — not just topping up a food bowl. A Grey that's mentally bored becomes a Grey that screams and plucks, and that decline can happen within weeks of a routine going stale.</p>
+        <h5 class={h5}>The daily interaction and enrichment load</h5>
+        <p class={p}>Plan on 3–4 hours of daily engagement plus out-of-cage time — every day, not just when it's new and exciting. If that sounds like a lot, it is; it's the single biggest reason casual buyers fail, and the honest bar you should measure your own life against.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the number-one thing new owners underestimate</h6>
+        <p class={p}>It isn't the price, the noise or the mess — it's the sheer <em>daily</em> mental engagement a Grey needs, forever. The owners who struggle almost always tell us the same thing: "I didn't realise it needed this much of me, every single day." Believe that before you buy, not after.</p>
+
+        <h3 class={h3}>Emotional Sensitivity</h3>
+        <p class={p}>Greys are famously sensitive. They bond deeply, read your moods, and stress over changes a hardier bird wouldn't notice — a new work schedule, a moved cage, a tense household. That sensitivity is part of their magic, but it means they're unforgiving of the inconsistency that comes naturally to a first-time owner still finding their feet.</p>
+
+        <h3 class={h3}>A 40–60 Year Commitment</h3>
+        <p class={p}>This is the fact most beginners nod past and shouldn't. A Grey can share four to six decades of your life — outlasting jobs, moves, and relationships.</p>
+        <h4 class={h4}>Planning for a Bird That May Outlive You</h4>
+        <p class={p}>A Grey bought in your thirties may still be here in your eighties, or beyond. That's not a reason to say no — it's a reason to plan honestly for the bird's whole life, not just the exciting first year.</p>
+        <h5 class={h5}>Who inherits the bird?</h5>
+        <p class={p}>It sounds morbid, but it's kindness: knowing who would take your Grey if you couldn't is part of responsible ownership for a bird this long-lived. A settled answer here is a green flag that you're thinking at the right timescale.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the question we ask every first-time buyer</h6>
+        <p class={p}>We ask everyone, gently: "In forty years, who's this bird's person?" Not to scare anyone off, but because the buyers who have an answer are exactly the ones who go on to give a Grey a wonderful, stable life.</p>
+
+        <h3 class={h3}>Noise and Mess (the Honest Version)</h3>
+        <p class={p}>Greys are moderate, not silent — expect whistles, mimicry, chatter and the occasional piercing call, plus the feather dust and scattered food that come with any parrot. It's manageable in a normal home and quieter than a macaw or cockatoo, but anyone expecting a tidy, low-noise pet should know the reality up front.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 7. H2 Why some succeed -->
+        <h2 id="succeed" class={h2}>Why Do Some First-Time Owners Succeed?</h2>
+        <p class={p}>Plenty of first-time owners do beautifully with a Grey — and the ones who do share a pattern that has nothing to do with prior bird experience.</p>
+
+        <h3 class={h3}>They Research Deeply Before Buying</h3>
+        <p class={p}>The successful first-timers arrive knowing more than many experienced owners. They've read the hard parts (like this page), not just the cute videos, and they buy with clear eyes.</p>
+
+        <h3 class={h3}>They Commit Real Daily Time</h3>
+        <p class={p}>They build the bird into their daily life rather than fitting it around a busy schedule. The Grey gets its hours because those hours were planned for before the bird ever arrived.</p>
+
+        <h3 class={h3}>They Genuinely Enjoy Training</h3>
+        <p class={p}>They're drawn to the relationship and the mental challenge, not just the novelty of a talking bird. That enjoyment is what carries them through the plateaus — and a Grey rewards it richly. Our <a href="/blog/african-grey-parrot-training/" class={lnk} style="color:#b04228">training guide</a> is where committed beginners start.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 8. H2 Who should not -->
+        <h2 id="notfit" class={h2}>Who Should NOT Get an African Grey (Yet)?</h2>
+        <p class={p}>Honesty cuts both ways. If you're one of these right now, a Grey isn't the right bird today — and saying so protects both you and the bird.</p>
+
+        <h3 class={h3}>Busy Professionals Who Are Out All Day</h3>
+        <p class={p}>A bird alone in a quiet house for ten hours is a recipe for screaming and plucking. If your days are long and unpredictable, this isn't the time for a Grey.</p>
+
+        <h3 class={h3}>Frequent Travellers</h3>
+        <p class={p}>Greys need consistency and their person. A life of frequent trips and rotating bird-sitters is stressful for a bird this bonded and routine-driven.</p>
+
+        <h3 class={h3}>Impulse Buyers</h3>
+        <p class={p}>If you're drawn in by a talking-parrot video and want one this week, please wait. The Greys that end up rehomed are almost always impulse purchases; the ones that thrive were decided on slowly.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 9. H2 Who fits -->
+        <h2 id="goodfit" class={h2}>Who Might Actually Be a Good Fit?</h2>
+        <p class={p}>On the other hand, some first-time owners are quietly perfect for a Grey — often more so than a jaded veteran.</p>
+
+        <figure class="m-0 my-6">
+          <img src={greyPhoto} width="1024" height="768" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="An owner practising positive-reinforcement training with an African Grey — the daily habit a good-fit beginner keeps" title="Positive-reinforcement training | C.A.Gs" />
+          <figcaption class={figc}>Prepared beginners thrive with a well-raised, documented Grey.</figcaption>
+        </figure>
+
+        <h3 class={h3}>Remote Workers and Homebodies</h3>
+        <p class={p}>If you're home most of the day and enjoy company, you can give a Grey the near-constant presence it craves — one of the strongest predictors of success.</p>
+
+        <h3 class={h3}>Dedicated Learners and Bird Enthusiasts</h3>
+        <p class={p}>If you love learning a new skill deeply and you're patient with slow progress, a Grey will meet you all the way. Enthusiasm plus patience beats raw experience every time.</p>
+        <h4 class={h4}>The Owner Personality That Thrives With a Grey</h4>
+        <p class={p}>The pattern we see isn't "experienced" — it's calm, consistent and curious. Someone who likes routine, doesn't rattle easily, and treats setbacks as puzzles rather than failures.</p>
+        <h5 class={h5}>Patience, routine and consistency</h5>
+        <p class={p}>These three traits carry a Grey owner further than any prior parrot résumé. A predictable daily rhythm makes a sensitive bird feel safe, and a patient owner rides out the inevitable tantrums without escalating them.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: success is about temperament, not experience</h6>
+        <p class={p}>We've watched nervous first-timers outperform seasoned keepers, again and again. What they had wasn't experience — it was the temperament to be consistent and patient. If that's you, don't let "beginner" talk you out of a bird you're actually well-suited to.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 10. MIDDLE — readiness decision tree + checklist -->
+        <h2 id="ready" class={h2}>Are You Ready for an African Grey?</h2>
+        <p class={p}>Here's the honest self-check. Read the readiness list, then follow the decision paths — and trust your gut on which line sounds most like your real life, not your best intentions.</p>
+
+        <div class="rounded-2xl border border-stone-200 bg-white p-6 sm:p-8 my-6" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+          <p class="font-sora font-semibold text-logo-dark mb-4">You're likely ready if you can honestly say yes to all five:</p>
+          <ul class="space-y-3 m-0 p-0" style="list-style:none;">
+            {readyChecklist.map((c) => (
+              <li class="flex items-start gap-3">
+                <span aria-hidden="true" class="font-bold" style="color:#2D6A4F; line-height:1.6;">✔</span>
+                <span class="font-sora text-sm text-stone-700 leading-relaxed">{c}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="font-sora text-sm text-stone-600 mt-4 mb-0">A "no" on any of these isn't a permanent verdict — it's a "not yet." Most can be fixed with time, routine or a smaller starter bird first.</p>
+        </div>
+
+        <DecisionTree question="Should You Get an African Grey as Your First Bird?" branches={readyBranches} headingLevel="h3" />
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 11. H2 Alternatives -->
+        <h2 id="alternatives" class={h2}>What Are the Best Beginner Parrot Alternatives?</h2>
+        <p class={p}>If the honest answer for you right now is "not yet," that's a good decision, not a failure — and there are wonderful starter parrots that will teach you the ropes. Here are the ones we'd point a first-timer toward.</p>
+
+        <ComparisonTable columns={altCols} rows={altRows} verdict="Any of these makes a more forgiving first bird than a Grey. Spend a couple of years with one and you'll step up to an African Grey far better prepared — and if you're set on a Grey now, a Timneh is the gentler starting point." />
+
+        <h3 class={h3}>Cockatiel</h3>
+        <p class={p}>The classic first parrot: gentle, affectionate, forgiving of beginner mistakes, and capable of whistling and a little talking. Long-lived enough to be a real companion (15–20+ years) without a Grey's decades-long weight.</p>
+
+        <h3 class={h3}>Budgerigar (Budgie)</h3>
+        <p class={p}>Small, hardy, social and inexpensive — and, surprisingly, among the best talkers in the bird world, with some learning dozens of words. An outstanding, low-pressure way to learn parrot care.</p>
+
+        <h3 class={h3}>Green-Cheeked Conure</h3>
+        <p class={p}>Playful, full of personality and quieter than most conures, the green-cheek is a step up in engagement from a budgie while staying beginner-manageable — a great bridge toward a bigger parrot.</p>
+
+        <h3 class={h3}>If You Still Want a Grey: Start With a Timneh</h3>
+        <figure class="m-0 my-6">
+          <img src={timnehPhoto} width="640" height="426" loading="lazy" decoding="async" class="w-full max-w-md mx-auto rounded-2xl border border-stone-200" alt="A pair of Timneh African Greys at the C.A.Gs aviary — the gentler, more beginner-tolerant Grey" title="Timneh African Greys | C.A.Gs" />
+          <figcaption class="block text-center text-sm text-stone-600 mt-2">The Timneh — smaller, earlier to mature, and the most beginner-tolerant Grey.</figcaption>
+        </figure>
+        <p class={p}>Set on a Grey regardless? Choose a Timneh. It matures earlier, tends to be less emotionally reactive, and adapts more readily than a Congo — the most beginner-tolerant way into the species. Our <a href="/blog/african-grey-vs-eclectus/" class={lnk} style="color:#b04228">species comparisons</a> can help you weigh it against other birds first.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 12. H2 Prepare -->
+        <h2 id="prepare" class={h2}>How Do You Prepare Before Buying an African Grey?</h2>
+        <p class={p}>If you've read this far and you're still nodding, here's how to set yourself — and your future Grey — up to succeed. Do these before the bird comes home, not after.</p>
+
+        <h3 class={h3}>Cage and Environment Setup</h3>
+        <p class={p}>The right cage and a safe room are day-one decisions, not afterthoughts.</p>
+        <h4 class={h4}>The Minimum Setup Before a Grey Comes Home</h4>
+        <p class={p}>You'll want the cage, perches, foraging toys, a diet plan and safe lighting all in place before arrival, so the bird lands in a settled, ready environment rather than a work-in-progress.</p>
+        <figure class="m-0 my-6">
+          <img src={safeRoomPhoto} width="500" height="327" loading="lazy" decoding="async" class="w-full max-w-sm mx-auto rounded-2xl border border-stone-200" alt="An African Grey in a safe, bird-proofed home environment set up before arrival" title="Safe African Grey environment | C.A.Gs" />
+          <figcaption class="block text-center text-sm text-stone-600 mt-2">A settled, bird-proofed space — ready before the Grey ever lands in it.</figcaption>
+        </figure>
+        <h5 class={h5}>Cage size and safe materials</h5>
+        <p class={p}>Go as large as you can, in stainless steel (never galvanised, to avoid metal toxicity), with varied natural perches. Our <a href="/blog/african-grey-parrot-cage-setup/" class={lnk} style="color:#b04228">cage-setup guide</a> covers dimensions, bar spacing and placement in detail.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the setup we start every chick on</h6>
+        <p class={p}>Our chicks begin in a clean, stainless environment on a pelleted, calcium-aware diet with proper lighting — so the closer your setup matches that from day one, the smoother your Grey's transition into your home.</p>
+
+        <h3 class={h3}>Diet and Calcium Plan</h3>
+        <p class={p}>Sort the diet before you buy: a quality formulated pellet as the base, fresh vegetables and calcium-rich greens, and UV-B lighting so the bird can use that calcium. Getting this right from the start prevents the deficiencies covered in our <a href="/blog/african-grey-health-problems/" class={lnk} style="color:#b04228">health-problems guide</a>.</p>
+
+        <h3 class={h3}>Training Commitment</h3>
+        <figure class="m-0 my-6">
+          <img src={trainingPhoto} width="465" height="500" loading="lazy" decoding="async" class="w-full max-w-sm mx-auto rounded-2xl border border-stone-200" alt="An African Grey enjoying supervised free play — part of the daily training habit" title="African Grey training free play | C.A.Gs" />
+          <figcaption class="block text-center text-sm text-stone-600 mt-2">Short daily sessions and supervised free play — the habit that makes the difference.</figcaption>
+        </figure>
+        <p class={p}>Decide honestly that you'll do short, positive daily sessions — step-up, recall, target training — because a trained Grey is a happy, well-adjusted one. This is a habit to commit to, not a weekend project.</p>
+        <h4 class={h4}>Lifestyle and Budget Factors</h4>
+        <p class={p}>Beyond time, a Grey is a real financial commitment — and being clear-eyed about the numbers now prevents strain later.</p>
+        <h5 class={h5}>Monthly cost estimate</h5>
+        <p class={p}>Budget for quality food, replacement toys (they're destroyed, by design), and an annual avian-vet exam plus an emergency fund. The <a href="/blog/african-grey-parrot-price-what-you-get/" class={lnk} style="color:#b04228">price guide</a> breaks down the real first-year and ongoing costs.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the realistic first-year budget</h6>
+        <p class={p}>Between the bird, a proper cage, initial vet work and setup, the true first year runs well beyond the sticker price. We'd rather you plan for that honestly than be caught short — a well-funded first year is one of the quiet markers of an owner who'll go the distance.</p>
+
+        <h3 class={h3}>Finding an Avian Vet First</h3>
+        <p class={p}>Locate a qualified avian vet <em>before</em> you bring a bird home — not during an emergency, when the nearest bird-treating clinic may be hours away. It's the single most overlooked preparation step, and one of the most important.</p>
+
+        <Callout variant="tip" title="If you're still unsure, that's the right instinct">
+          <p>The buyers who thrive are rarely the most confident ones — they're the ones who took the question seriously. If you're weighing this carefully, talk to us; we'll give you an honest read on whether now is your time, and point you to an easier bird if it isn't.</p>
+        </Callout>
+
+        <BreederNote>
+          <p>Here's the truth after decades of placing these birds: we'd genuinely rather tell you "not yet" than sell you a Grey you're not ready for and watch it come back. If you're prepared — patient, consistent, home enough, and clear on the commitment — a first African Grey can be the companion of a lifetime. If you're not there yet, a cockatiel or budgie today and a Grey in a few years is the wiser, kinder path.</p>
+        </BreederNote>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 13. Soft available module -->
+        <h2 id="available" class={h2}>See Our Hand-Raised African Greys (for Prepared Beginners)</h2>
+        <p class={p}>If you've read the hard parts and you're ready, a well-raised, hand-fed Grey is the best possible start for a first-time owner. Every C.A.Gs Grey is PCR DNA-sexed, vet-checked and CITES-documented, and we stay reachable for the life of the bird — because a prepared beginner plus a well-raised Grey is a partnership that works.</p>
+        <div class="grid sm:grid-cols-2 gap-5 mt-2">
+          {birds.map((b) => (
+            <BirdCard
+              id={b.id} name={b.name} sex={b.sex} age={b.age} price={b.price}
+              tag={b.tag} tagType={b.tagType} notes={b.notes} hook={b.hook}
+              image={b.image} variant={b.variant} objectPos={b.objectPos}
+            />
+          ))}
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-6 mb-2">
+          <p class="font-lora font-bold text-2xl mb-2 text-logo-dark">Not sure if you're ready? Let's talk it through</p>
+          <p class="text-stone-600 mb-1">Ships nationwide · $185 airport · $350 home</p>
+          <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American · IATA LAR</p>
+          <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See all available African Greys</a>
+          <a href="/contact-us/" class="inline-block font-sora font-semibold px-7 py-3 underline" style="color:#b04228">Ask for an honest read</a>
+        </div>
+
+        <p class="font-lora italic text-stone-600 text-center mt-8 mb-0">— Written by Mark &amp; Teri Benjamin, the breeders behind C.A.Gs · USDA-licensed African Grey aviary, Midland, TX</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 14. FAQ -->
+        <h2 id="faq" class={h2}>Is an African Grey Good for Beginners? Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {faqs.map((faq) => (
+            <details class="bg-white rounded-xl border border-stone-200 p-5">
+              <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
+              <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <!-- 15. Related posts -->
+        <div class="mt-12">
+          <RelatedPosts heading="Keep reading" headingLevel="h2" posts={[
+            { title: "African Grey Training: A Breeder's Step-by-Step Guide", slug: "/blog/african-grey-parrot-training/", category: "Training" },
+            { title: "African Grey Cage Setup: The Breeder's Blueprint", slug: "/blog/african-grey-parrot-cage-setup/", category: "Care" },
+            { title: "African Grey vs Eclectus: Which Parrot Is Better for You?", slug: "/blog/african-grey-vs-eclectus/", category: "Compare" },
+          ]} />
+        </div>
+
+      </div>
+    </section>
   </div>
 
-  <section style="background:#2D6A4F;padding:4rem 1rem">
-    <div style="max-width:760px;margin:0 auto">
-      <p style="color:#f0c674;font-family:var(--font-sora,sans-serif);font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem">Buyer's Guide · Written by Mark &amp; Teri Benjamin</p>
-      <h1 style="font-family:var(--font-lora,serif);font-weight:700;font-size:clamp(2rem,5vw,2.75rem);color:#faf7f4;margin-bottom:1rem">Is an African Grey Parrot Good for Beginners?</h1>
-      <p style="color:rgba(250,247,244,.8);font-size:1.1rem">The honest answer from breeders who've had this conversation thousands of times.</p>
-    </div>
-  </section>
+  <!-- Newsletter -->
+  <Newsletter variant="bottom" action="/contact-us/" bottomText="Honest African Grey buying advice, care tips and new hand-raised clutches — straight to your inbox." />
 
-  <section style="padding:4rem 1rem;background:white">
-    <div style="max-width:760px;margin:0 auto">
-      <p style="color:#374151;line-height:1.75;max-width:70ch;font-size:1.05rem;margin-bottom:1.5rem">The short answer: African Greys are <strong>not</strong> beginner parrots. But the question deserves a fuller answer, because "beginner" means different things to different people.</p>
-
-      <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.5rem;color:#2D6A4F;margin:2rem 0 1rem">What Makes African Greys Difficult</h2>
-      <p style="color:#374151;line-height:1.75;max-width:70ch;margin-bottom:1rem">African Greys are extraordinarily sensitive to stress. A routine disruption — a new person in the house, a moved cage, a changed feeding schedule — can trigger feather plucking that becomes permanent. They are not forgiving of beginner mistakes in the way that cockatiels or conures are.</p>
-      <p style="color:#374151;line-height:1.75;max-width:70ch;margin-bottom:1rem">They also require serious dietary management. Calcium deficiency causes documented seizure disorders in African Greys. A seed-heavy diet that would merely make a budgie fat can cause neurological damage in a Grey.</p>
-      <p style="color:#374151;line-height:1.75;max-width:70ch;margin-bottom:1.5rem">And then there's the commitment: 40–60 years. Every bird we sell will likely outlive its first owner. We ask every buyer to think about who inherits the bird — not as a morbid exercise, but because it matters for the animal.</p>
-
-      <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.5rem;color:#2D6A4F;margin:2rem 0 1rem">When First-Time Owners Succeed</h2>
-      <p style="color:#374151;line-height:1.75;max-width:70ch;margin-bottom:1rem">We have sold to first-time bird owners who did exceptionally well. What they had in common:</p>
-      <ul style="color:#374151;line-height:1.75;max-width:70ch;margin-bottom:1.5rem;padding-left:1.5rem">
-        <li style="margin-bottom:.5rem">A stable home environment with consistent daily schedules</li>
-        <li style="margin-bottom:.5rem">Prior research — they arrived knowing more than most experienced owners</li>
-        <li style="margin-bottom:.5rem">Genuine appetite for the relationship, not just the talking novelty</li>
-        <li style="margin-bottom:.5rem">An avian vet already identified before the bird arrived</li>
-        <li>No young children in the home</li>
-      </ul>
-
-      <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.5rem;color:#2D6A4F;margin:2rem 0 1rem">Congo vs Timneh for First-Time Owners</h2>
-      <p style="color:#374151;line-height:1.75;max-width:70ch;margin-bottom:1.5rem">If you're committed to an African Grey as your first bird, choose a Timneh. They mature faster (behavioral maturity at 18–24 months vs. 3–5 years for Congos), are less emotionally reactive, and adapt more readily to new environments. They're still a serious commitment — but the margin for error is wider.</p>
-
-      <div style="background:#faf7f4;border-left:4px solid #e8604c;padding:1.25rem 1.5rem;border-radius:0 8px 8px 0;margin:2rem 0">
-        <p style="color:#374151;line-height:1.7;max-width:70ch;margin:0"><strong>Bottom line:</strong> If you're asking "is this good for beginners?" you probably already know the answer is complicated. That's actually a good sign — the buyers who get into trouble are the ones who didn't ask the question at all.</p>
-      </div>
-    </div>
-  </section>
-
-  <section style="padding:4rem 1rem;background:#faf7f4">
-    <div style="max-width:760px;margin:0 auto">
-      <h2 style="font-family:var(--font-lora,serif);font-weight:700;font-size:1.75rem;color:#2D6A4F;margin-bottom:2rem">Frequently Asked Questions</h2>
-      <div style="display:flex;flex-direction:column;gap:1rem">
-        {faqs.map((faq) => (
-          <details style="background:white;border:1px solid #e7e2db;border-radius:12px;padding:1.25rem">
-            <summary style="font-family:var(--font-sora,sans-serif);font-weight:600;cursor:pointer;color:#1f2937;list-style:none">{faq.q}</summary>
-            <p style="margin-top:.75rem;color:#4b5563;line-height:1.7;max-width:70ch">{faq.a}</p>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
+  <StickyCta label="See available African Greys" href="/available/" />
+  <style>
+    .bp-d .cag-seam { display:flex; align-items:center; gap:26px; max-width:1100px; margin:2.25rem auto 1.5rem; padding:0 24px; }
+    .bp-d .cag-seam__line { flex:1; height:1px; background:rgba(45,106,79,.16); }
+    .bp-d .cag-seam img { height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+    @media (max-width:600px){ .bp-d .cag-seam { gap:16px; } .bp-d .cag-seam img { height:24px; } }
+    .bp-d .bp-hero h1 { font-size:clamp(1.7rem, 1.1rem + 2.6vw, 2.4rem) !important; line-height:1.14 !important; }
+    .bp-d figure img { box-shadow:0 10px 30px rgba(60,30,10,.08); }
+    .bp-jump { max-width:900px; margin:1.25rem auto 0; }
+    .bp-jump .jump-eyebrow { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:#b04228; margin:0 0 6px 4px; }
+    @media (max-width:767px){
+      .bp-jump { position:sticky; top:94px; z-index:40; background:#faf7f4; padding-top:8px; padding-bottom:8px; margin-top:.5rem; box-shadow:0 8px 14px -10px rgba(60,30,10,.28); }
+      .bp-jump .jump-eyebrow { display:none; }
+    }
+  </style>
 </BaseLayout>
