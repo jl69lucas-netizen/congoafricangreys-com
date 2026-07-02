@@ -58,6 +58,11 @@ Title (161): African Grey Parrot Breeder | 12 Years Hand-Raising DNA-Sexed Congo
 Desc (182): Trusted African Grey parrot breeder in Midland, TX. Mark & Teri hand-raise DNA-sexed, vet-checked Congo & Timneh Greys with full CITES paperwork. Reserve yours — nationwide shipping.
 ```
 
+> **BLOG POSTS = FORMAT 1, LOCKED (breeder rule, 2026-07-02).** Every `/blog/<slug>/` post uses Format 1 with this exact title order — no deviation:
+> **`[Primary Keyword FIRST] | [Number] + [Positive/Power Word] | [Long-tail Conversational Query — What/How/Where/Can/Is] | C.A.Gs – Midland, TX`** (pipe `|` separators, ≤205 chars).
+> **Description (≤185):** clear, conversational, benefit-driven; opens with the conversational hook, includes the **primary keyword** AND the **long-tail keyword** in one natural sentence.
+> Applied 2026-07-02 to the 5 built blog posts (best-place-to-buy, cage-setup, training, talking-ability, price-what-you-get). Retrofit any new or legacy blog post to this pattern before deploy.
+
 ### Format 2 — 4-Part Long Title + Tone (Title ≤ 205 / Desc ≤ 300)
 Used on: homepage, hubs, highest-competition / high-intent pages.
 **Title:** `[Primary Keyword] | [Conversational Query] | [Comparison / LSI / NLP] | C.A.Gs – Midland, TX Trust Ending` (still include a number + power word).
