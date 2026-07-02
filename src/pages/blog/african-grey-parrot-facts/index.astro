@@ -1,10 +1,40 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
+import InquiryCompact from '../../../components/cag-inquiry-compact.astro';
+import Newsletter from '../../../components/cag-library/NewsletterV2.astro';
+import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
+import Callout from '../../../components/cag-blog-callout.astro';
+import BreederNote from '../../../components/cag-blog-breeder-note.astro';
+import MythFact from '../../../components/cag-blog-myth-fact.astro';
+import RelatedPosts from '../../../components/cag-blog-related-posts.astro';
+import StickyCta from '../../../components/cag-blog-sticky-cta.astro';
+import BirdCard from '../../../components/BirdCard.astro';
 
-const title = "African Grey Parrot Facts | 20 Things Every Owner Should Know";
-const description = "African Grey parrots live 40–60 years, speak up to 1,000 words, and are CITES Appendix I. Here are 20 verified facts from USDA-licensed breeders.";
+const title = "African Grey Parrot Facts | 25 Amazing Things You Probably Didn't Know | Why Are African Greys So Smart? | C.A.Gs – Midland, TX";
+const description = "Looking for African Grey parrot facts? A breeder shares 25 amazing, science-backed facts — from Alex the genius parrot to why African Greys are so smart and long-lived.";
 const canonical = "https://congoafricangreys.com/blog/african-grey-parrot-facts/";
+
+// Hero + in-content visuals: final encoded assets in public/.
+const hero = "/african-grey-parrot-facts-hero.webp";
+const heroSrcset = "/african-grey-parrot-facts-hero-480w.webp 480w, /african-grey-parrot-facts-hero-800w.webp 800w, /african-grey-parrot-facts-hero.webp 1408w";
+const heroSizes = "(min-width: 768px) 480px, 92vw";
+
+const ig = (base: string) => ({
+  src: `/${base}.webp`,
+  srcset: `/${base}-760w.webp 760w, /${base}.webp 1200w`,
+  sizes: "(min-width: 768px) 712px, 92vw",
+});
+const igQuick = ig("african-grey-parrot-quick-facts-infographic");
+const igMind  = ig("inside-the-mind-of-an-african-grey-cognition-infographic");
+const factSheet = {
+  src: "/african-grey-25-facts-visual-sheet.webp",
+  srcset: "/african-grey-25-facts-visual-sheet-560w.webp 560w, /african-grey-25-facts-visual-sheet.webp 768w",
+  sizes: "(min-width: 768px) 448px, 92vw",
+};
+const greyPhoto = "/cags-tame-african-grey-with-owner.webp"; // OG, 540x535
+const breederPhoto = "/african-grey-head-scratch-cags-breeder.webp"; // OG reuse, 465x500
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
@@ -12,147 +42,541 @@ const breadcrumbs = [
   { name: "African Grey Parrot Facts", url: "/blog/african-grey-parrot-facts/" },
 ];
 
-const faqs = [
-  {
-    q: "How long do African Grey parrots live?",
-    a: "Captive African Grey parrots typically live 40–60 years, with some reaching 70+ years in exceptional cases. Wild African Greys average 20–25 years due to predation and habitat loss. The 40–60 year commitment is one of the most important facts prospective owners must understand before purchasing.",
-  },
-  {
-    q: "How many words can an African Grey parrot learn?",
-    a: "African Grey parrots can learn 200–1,000 words, with exceptional individuals exceeding 1,000. They don't just mimic — they use words contextually. Alex, the famous Congo African Grey studied by Dr. Irene Pepperberg, demonstrated object recognition, color naming, and numerical concepts at the level of a 5-year-old child.",
-  },
-  {
-    q: "Are African Grey parrots endangered?",
-    a: "African Grey parrots are listed as Endangered on the IUCN Red List and are CITES Appendix I, meaning international trade is strictly regulated. All legally sold African Grey parrots in the United States must be captive-bred with CITES documentation — not wild-caught. Our birds ship with complete CITES paperwork.",
-  },
-  {
-    q: "What is the difference between a Congo and Timneh African Grey?",
-    a: "The Congo African Grey (Psittacus erithacus) is larger (12–14 inches, 400–650g), has a bright red tail, and is slightly more emotionally reactive. The Timneh African Grey (Psittacus timneh) is smaller (9–11 inches, 275–400g), has a dark maroon tail, matures faster, and adapts more easily to new environments. Both subspecies talk well, but Congo Greys tend to develop larger vocabularies.",
-  },
-  {
-    q: "Where do African Grey parrots come from?",
-    a: "African Grey parrots are native to the rainforests of West and Central Africa — primarily Cameroon, the Congo Basin, Ghana, Ivory Coast, and Kenya. In the wild, they live in large flocks and travel up to 10 miles daily to find food. All legally sold birds in the US are captive-bred, not imported from the wild.",
-  },
-  {
-    q: "How smart is an African Grey parrot?",
-    a: "African Greys are consistently rated the most intelligent of all parrot species. Dr. Irene Pepperberg's 30-year study of Alex (a Congo African Grey) demonstrated object permanence, basic arithmetic, phoneme awareness, and abstract concept understanding. They have the cognitive ability of a 5-year-old human child and the emotional intelligence of a 2-year-old.",
-  },
+const jumpLinks = [
+  { label: "Quick Facts", href: "#quick" },
+  { label: "Intelligence", href: "#intelligence" },
+  { label: "Behavior", href: "#behavior" },
+  { label: "Talking", href: "#talking" },
+  { label: "Quiz", href: "#quiz" },
+  { label: "Wild & Origin", href: "#wild" },
+  { label: "Health", href: "#health" },
+  { label: "Fun Facts", href: "#fun" },
+  { label: "Available", href: "#available" },
+  { label: "FAQ", href: "#faq" },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const counterStats = [
+  { num: "40–60", label: "Year lifespan" },
+  { num: "1,000+", label: "Words possible" },
+  { num: "CITES", label: "Appendix I" },
+  { num: "USDA", label: "Licensed breeders" },
+];
+
+const quickFacts = [
+  { label: "Scientific name", value: "Psittacus erithacus" },
+  { label: "Origin", value: "West & Central Africa" },
+  { label: "Lifespan", value: "40–60 years" },
+  { label: "Size", value: "12–14 in · 400–650 g" },
+  { label: "Vocabulary", value: "100–1,000+ words" },
+  { label: "Intelligence", value: "Exceptional" },
+];
+
+const birds = [
+  { id: 'amie', name: 'Amie', sex: 'Female', age: '3 mo', price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'Hand-raised, fully documented, ready to reserve.',
+    notes: 'Premium hand-raised female, 3 months old. PCR DNA-sexed, vet-checked, CITES-documented — captive-bred in the USA with the full paper trail.' },
+  { id: 'roys', name: 'Roys', sex: 'Male', age: '4 mo', price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Curious, food-motivated baby boy.',
+    notes: "Hand-raised male, 4 months old. Same documentation and health-testing as every C.A.Gs Grey, weaned and socialised before he travels." },
+  { id: 'bery', name: 'Bery', sex: 'Female', age: '1 yr', price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp', objectPos: 'object-center',
+    hook: 'Gentle, established — our value Congo.',
+    notes: 'Soft temperament, 1-year-old female at the $1,700 honest floor — tame, documented and ready for the right home.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Bonded Duo', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair-talking-birds.webp', objectPos: 'object-center',
+    hook: 'Two hand-raised birds, adopted together.',
+    notes: 'Unrelated companion pair sold together. Jins (male, 6mo) + Jeni (female, 4mo), both fully documented and hand-raised.' },
+];
+
+const quiz = [
+  { q: "Which scientist spent 30 years studying Alex, the famous African Grey?",
+    opts: [["a","Jane Goodall"],["b","Dr. Irene Pepperberg"],["c","Charles Darwin"],["d","Dr. Konrad Lorenz"]], answer: "b" },
+  { q: "How long can an African Grey typically live in captivity?",
+    opts: [["a","5–10 years"],["b","15–20 years"],["c","40–60 years"],["d","100+ years"]], answer: "c" },
+  { q: "What makes an African Grey's speech special compared to most parrots?",
+    opts: [["a","It's louder"],["b","They only whistle"],["c","They can use words in context, not just mimic"],["d","They can't actually talk"]], answer: "c" },
+  { q: "Under CITES, wild African Greys are protected as which appendix?",
+    opts: [["a","Appendix I"],["b","Appendix III"],["c","Not protected"],["d","Appendix V"]], answer: "a" },
+  { q: "How can you tell a male African Grey from a female by sight?",
+    opts: [["a","Males are green"],["b","Females are larger"],["c","You can't — they look identical, so DNA testing is used"],["d","Males have longer tails"]], answer: "c" },
+];
+
+const faqs = [
+  { q: "Are African Grey parrots intelligent?",
+    a: "African Grey parrots are considered among the most intelligent birds in the world. Dr. Irene Pepperberg's 30-year study of Alex, a Congo African Grey, demonstrated problem-solving, counting, colour and shape recognition, and contextual language use comparable to a young child — abilities far beyond simple mimicry." },
+  { q: "How many words can an African Grey parrot learn?",
+    a: "African Greys can learn anywhere from 100 to over 1,000 words. What sets them apart is that they don't just mimic — they use many words in context, associating them with objects, actions and requests. Alex, the most-studied African Grey, worked with a vocabulary of around 150 words and used them meaningfully." },
+  { q: "How long do African Grey parrots live?",
+    a: "African Greys typically live 40–60 years in captivity, with some reaching 70 or more. Wild birds average 20–25 years. That long lifespan means they can genuinely outlive their owners, which is why serious buyers plan for the bird's whole life — including who cares for it if they can't." },
+  { q: "Can African Greys really understand what they say?",
+    a: "To a meaningful degree, yes. While much parrot speech is mimicry, African Greys demonstrably use words in context — asking for specific foods, naming colours and objects, and even grasping the concept of 'none'. The famous Alex studies documented this contextual understanding scientifically, which is why the species is a landmark in animal-cognition research." },
+  { q: "Do African Greys recognise their owners?",
+    a: "Yes. African Greys bond deeply and recognise individual people by voice and appearance, often reacting differently to family members versus strangers. Many owners report their Grey reads daily routines and moods closely — greeting them at the same time each day or reacting when the household is tense." },
+  { q: "Where do African Grey parrots come from?",
+    a: "African Greys are native to the rainforests of West and Central Africa, including Cameroon, the Congo Basin, Ghana and Ivory Coast, where they live in large flocks. They are listed as Endangered on the IUCN Red List and are CITES Appendix I, so every legally sold bird in the US is captive-bred with documentation — never wild-caught." },
+  { q: "What is the difference between a Congo and a Timneh African Grey?",
+    a: "The Congo African Grey is larger (12–14 inches, silver body, bright red tail); the Timneh is smaller (9–11 inches, darker, with a maroon tail) and often starts talking a little earlier. Both are exceptional talkers and highly intelligent — the Congo tends to develop the larger vocabulary and the clearer 'classic' voice." },
+  { q: "Are African Greys good pets for everyone?",
+    a: "No — and that's an honest fact worth stating. Their intelligence means they need hours of daily interaction and enrichment, they're emotionally sensitive, and a bored Grey can start feather-plucking. For the right, committed owner they're extraordinary companions; for someone away all day, they're the wrong bird. Match the bird to your life before you fall for the facts." },
+];
+
+const img = (path: string, w: number, h: number, name: string, caption: string, description: string) => ({
+  "@type": "ImageObject",
+  "contentUrl": "https://congoafricangreys.com" + path,
+  "url": "https://congoafricangreys.com" + path,
+  name, caption, width: w, height: h, description,
+});
+
+const imageObjects = [
+  img(hero, 1408, 768,
+    "A curious Congo African Grey parrot tilting its head, illustrating its intelligence",
+    "African Grey parrot facts — inside the mind of the world's smartest parrot.",
+    "A warm editorial close-up portrait of a Congo African Grey with silver scalloped plumage and a scarlet tail, head tilted with a bright, intelligent eye, illustrating this guide's 25 facts about the African Grey's remarkable intelligence, speech and long life."),
+  img(igQuick.src, 1200, 655,
+    "African Grey parrot quick-facts card: scientific name, origin, lifespan, size, vocabulary and intelligence",
+    "African Grey quick facts at a glance.",
+    "A flat-design quick-facts infographic titled 'African Grey Parrot — Quick Facts', summarising the scientific name Psittacus erithacus, West and Central African origin, 40–60 year lifespan, 12–14 inch size, 100–1,000+ word vocabulary and exceptional intelligence, giving an AI- and snippet-friendly overview."),
+  img(igMind.src, 1200, 670,
+    "Inside the mind of an African Grey infographic showing cognition and Alex's abilities",
+    "Inside the mind of an African Grey — the cognition facts.",
+    "A flat-design cognition infographic titled 'Inside the Mind of an African Grey', visualising the abilities documented in the Alex studies — identifying colours, shapes, numbers and materials, grasping the concept of 'none', a working vocabulary, and cognitive ability comparable to a five-year-old child — the science behind the African Grey's fame."),
+  img(factSheet.src, 768, 1376,
+    "A shareable visual sheet of 25 amazing African Grey parrot facts",
+    "25 amazing African Grey facts — the shareable fact sheet.",
+    "A flat-design portrait fact-sheet infographic titled '25 Amazing African Grey Facts', presenting twenty-five one-line facts grouped by intelligence, behaviour, talking, wild origin, health and fun, in a scannable numbered grid designed as a shareable, link-worthy reference for the African Grey."),
+  img(greyPhoto, 540, 535,
+    "A hand-raised C.A.Gs Congo African Grey perched calmly with its owner",
+    "African Greys in the wild live in large flocks; ours are hand-raised.",
+    "A photograph of a tame, hand-raised C.A.Gs Congo African Grey perched calmly with its owner, contrasting the species' wild flocking origins with the documented, captive-bred companion birds this guide describes."),
+];
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "African Grey Parrot Facts: 20 Things Every Owner Should Know",
+  headline: "25 Amazing African Grey Parrot Facts You Probably Didn't Know (2026)",
   description,
+  image: imageObjects,
   author: { "@type": "Person", name: "Mark & Teri Benjamin" },
-  publisher: {
-    "@type": "Organization",
-    name: "CongoAfricanGreys.com",
-    url: "https://congoafricangreys.com",
-  },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com", url: "https://congoafricangreys.com" },
   datePublished: "2026-05-22",
+  dateModified: "2026-07-02",
+  mainEntityOfPage: canonical,
   url: canonical,
 };
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+
+const h2 = "font-lora font-bold text-logo-dark leading-tight mb-4 mt-2 scroll-mt-24";
+const h3 = "font-lora font-semibold text-xl text-logo-dark mb-3 mt-6";
+const h4 = "font-lora font-semibold text-lg text-logo-dark mb-2 mt-5";
+const h5 = "font-lora font-semibold text-base text-logo-dark mt-5 mb-1";
+const h6 = "font-sora font-semibold text-xs uppercase tracking-wide mt-4 mb-1";
+const p = "text-stone-700 leading-relaxed mb-4";
+const lnk = "underline font-medium";
+const figc = "block text-center text-sm text-stone-600 mt-2";
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta heroPreload={hero} heroPreloadSrcset={heroSrcset} heroPreloadSizes={heroSizes}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
+  <div class="bp-d">
+    <div style="max-width:1200px;margin:0 auto;">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
+
+    <!-- 1. Hero -->
+    <section class="bp-hero text-white px-4 pt-12 pb-10" style="background:#2D6A4F">
+      <div class="max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div class="order-2 md:order-1">
+            <p class="font-sora text-xs font-medium tracking-wide mb-3" style="color:#ffd6c9">Facts &amp; Science · The World's Smartest Parrot · Midland, TX</p>
+            <h1 class="font-lora font-bold mb-4" style="color:#faf7f4">25 Amazing African Grey Parrot Facts You Probably Didn't Know (2026)</h1>
+            <p class="text-lg mb-6" style="color:rgba(250,247,244,0.85)">They use words in context, read your moods, can live past 60, and once helped rewrite the science of animal minds. Here are 25 breeder-verified, science-backed facts about the African Grey.</p>
+            <a href="#quiz" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">Take the 60-second quiz</a>
+            <p class="font-sora text-xs mt-4 mb-0" style="color:rgba(250,247,244,0.85)">Written by <strong style="color:#faf7f4">Mark &amp; Teri Benjamin</strong> · C.A.Gs African Grey breeders, Midland TX · USDA-licensed since 2014</p>
+          </div>
+          <figure class="m-0 order-1 md:order-2">
+            <img src={hero} srcset={heroSrcset} sizes={heroSizes} width="1408" height="768" alt="A curious Congo African Grey parrot tilting its head, illustrating the intelligence behind these African Grey facts" title="African Grey parrot facts | C.A.Gs" class="w-full rounded-2xl" fetchpriority="high" decoding="async" />
+            <span class="block text-center text-sm mt-2" style="color:rgba(250,247,244,0.85)">The African Grey — famous for what's happening behind the eyes.</span>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Counter snippet -->
+    <CounterSnippet stats={counterStats} />
+
+    <!-- 3. Top lead-capture strip -->
+    <div style="max-width:1100px;margin:0 auto;" class="px-4 mt-6 relative z-10">
+      <InquiryCompact heading="Fascinated by African Greys?" subtext="Tell us what you're curious about and we'll send live video, care info and the hand-raised Greys available now — no pressure." subject="African Grey facts enquiry" page="blog/facts" idPrefix="top" />
+    </div>
+
+    <!-- 4. Jump nav -->
+    <div class="bp-jump px-4">
+      <p class="jump-eyebrow font-sora">On This Page</p>
+      <JumpNav links={jumpLinks} sticky={false} />
+    </div>
+
+    <section class="px-4 pt-8 pb-4" style="background:#faf7f4">
+      <div style="max-width:760px;margin:0 auto;">
+
+        <!-- 5. Quick-Answer / Quick Facts box -->
+        <div id="quick" class="scroll-mt-24 mb-6">
+          <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+            <div class="px-6 py-5 sm:px-8" style="background:#2D6A4F">
+              <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] mb-1.5" style="color:#ffd6c9">The short version</p>
+              <h2 class="font-lora font-bold text-xl sm:text-2xl leading-snug" style="color:#faf7f4">African Grey Parrot Quick Facts</h2>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="font-sora text-stone-700 leading-relaxed mb-6">The African Grey (<em>Psittacus erithacus</em>) is widely considered the most intelligent parrot in the world — capable of a 1,000-word vocabulary used <em>in context</em>, a 40–60 year lifespan, and cognition compared to a five-year-old child. It's native to West and Central Africa, listed as Endangered, and CITES Appendix I, so every legal US bird is captive-bred and documented.</p>
+              <div class="grid grid-cols-2 gap-3">
+                {quickFacts.map((r) => (
+                  <div class="rounded-xl border border-stone-200 bg-cream/60 px-4 py-3">
+                    <span class="block font-sora text-[11px] uppercase tracking-wide text-stone-600">{r.label}</span>
+                    <span class="block font-sora text-sm font-semibold text-logo-dark mt-1 leading-snug">{r.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="m-0 my-6">
+          <img src={igQuick.src} srcset={igQuick.srcset} sizes={igQuick.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="African Grey parrot quick-facts card showing scientific name, origin, lifespan, size, vocabulary and intelligence" title="African Grey quick facts | C.A.Gs" />
+          <figcaption class={figc}>The African Grey at a glance — the facts every owner starts with.</figcaption>
+        </figure>
+
+        <!-- 6. H2 Intelligence -->
+        <h2 id="intelligence" class={h2}>How Smart Is an African Grey, Really? (Intelligence Facts)</h2>
+        <p class={p}>If you only remember one thing about African Greys, make it this: their intelligence is not a marketing line, it's peer-reviewed science. This is the group of facts that made the species famous — and the part competitors' generic lists skate over.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igMind.src} srcset={igMind.srcset} sizes={igMind.sizes} width="1200" height="670" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="Inside the mind of an African Grey infographic: Alex's abilities, cognitive age, vocabulary and contextual speech" title="Inside the mind of an African Grey | C.A.Gs" />
+          <figcaption class={figc}>Inside the mind of an African Grey — the cognition that rewrote the textbooks.</figcaption>
+        </figure>
+
+        <h3 class={h3}>1. They're Among the Smartest Birds on Earth</h3>
+        <p class={p}>African Greys sit at the very top of avian intelligence rankings, alongside corvids like crows and ravens. Their problem-solving, memory and communication put them in a cognitive class most people simply don't expect from a bird — which is exactly why they've become the species scientists reach for when studying animal minds.</p>
+
+        <h3 class={h3}>2. They Learn Hundreds of Words — and Use Them in Context</h3>
+        <p class={p}>A well-raised Grey can build a vocabulary of several hundred to over a thousand words. But the headline isn't the number — it's that they use words <em>meaningfully</em>, not just as random mimicry. We cover this in depth in our <a href="/blog/african-grey-parrot-talking-ability/" class={lnk} style="color:#b04228">guide to African Grey talking ability</a>.</p>
+        <h4 class={h4}>Mimicry vs. Genuine Understanding</h4>
+        <p class={p}>Most talking birds mimic; the African Grey crosses into something closer to comprehension. The difference is whether a word is a copied sound or a label the bird attaches to a real thing — and Greys, uniquely, do the latter routinely.</p>
+        <h5 class={h5}>How a Grey associates a word with an object</h5>
+        <p class={p}>Through repetition tied to context — hearing "grape" every time a grape appears — a Grey links the sound to the object, then produces it to request that object. It's the same associative learning that underpins early human language, running in a bird the size of a pigeon.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the first time one of ours "asked" for something by name</h6>
+        <p class={p}>You never forget the first time a chick you raised looks at the fruit bowl and clearly says "apple" — not on cue, but because it wants one. That moment, which every long-time Grey owner has, is the difference between a parrot that talks and a parrot that <em>means</em> it.</p>
+
+        <h3 class={h3}>3. Alex the Grey Changed Science</h3>
+        <p class={p}>No single bird did more for the species' reputation than Alex, the Congo African Grey studied for three decades by Dr. Irene Pepperberg. Alex didn't just talk — he demonstrated reasoning that forced scientists to rethink what "bird brain" means.</p>
+        <h4 class={h4}>What Alex Could Actually Do</h4>
+        <p class={p}>Alex could identify around 50 objects, seven colours and five shapes, count small quantities, and answer questions about the attributes of things he'd never been tested on before. His last word to Pepperberg each night was "You be good, I love you."</p>
+        <h5 class={h5}>Colors, shapes, numbers — and the concept of "none"</h5>
+        <p class={p}>Most strikingly, Alex grasped the abstract concept of <em>zero</em> or "none" — spontaneously using it to describe the absence of a difference between two objects. That's a level of abstraction once thought impossible outside primates.</p>
+        <h6 class={h6} style="color:#b04228">Citation: the Pepperberg / Alex research</h6>
+        <p class={p}>These findings are documented across decades of peer-reviewed work by <a href="https://alexfoundation.org/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">Dr. Irene Pepperberg and The Alex Foundation ↗</a>. When people ask why African Greys command respect (and their price), this body of science is a large part of the answer.</p>
+
+        <h3 class={h3}>4. Their Minds Rival a Young Child's</h3>
+        <p class={p}>Researchers often place the African Grey's cognitive ability at roughly that of a five-year-old child, with the emotional development of a two-year-old. That combination — clever enough to reason, sensitive enough to sulk — is exactly what makes them so rewarding, and so demanding, to live with.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 7. H2 Behavior -->
+        <h2 id="behavior" class={h2}>What Are African Greys Like to Live With? (Behavior Facts)</h2>
+        <p class={p}>Intelligence shapes personality. These behaviour facts explain both the joy and the responsibility of sharing a home with a bird this bright.</p>
+
+        <h3 class={h3}>5. They Bond Deeply — Sometimes to One Person</h3>
+        <p class={p}>Greys form intense attachments. Raised and handled by the whole family, a Grey usually bonds with several people; handled by only one, it can become a classic "one-person bird." Broad early socialisation — which is how we raise ours — is what keeps them friendly with everyone.</p>
+
+        <h3 class={h3}>6. They Read Your Routine and Your Mood</h3>
+        <p class={p}>Owners consistently report that their Grey seems to know what's coming — greeting them before they're visible, or going quiet when the house is tense. This isn't imagination; it's a socially intelligent animal reading patterns.</p>
+        <h4 class={h4}>The Emotional-Intelligence Side</h4>
+        <p class={p}>Beyond routines, Greys appear to pick up on emotional tone. Many will change their behaviour around an upset owner — a reminder that you're not just keeping a pet, you're living with a sensitive companion that notices you.</p>
+        <h5 class={h5}>Why they seem to "know" when you're leaving</h5>
+        <p class={p}>They're reading your cues — keys, shoes, the bag by the door — and predicting the outcome. It's the same pattern-learning behind their speech, applied to your daily life.</p>
+        <h6 class={h6} style="color:#b04228">The routine-reading examples owners report most</h6>
+        <p class={p}>The classics we hear again and again: a Grey that announces "bye!" the moment you pick up your keys, one that mimics the microwave beep at dinnertime, and one that calls the dog by name to stir up trouble. Living with that much awareness is the whole appeal.</p>
+
+        <h3 class={h3}>7. They Need Hours of Daily Interaction</h3>
+        <p class={p}>A Grey isn't a decorative bird you admire from across the room. It needs several hours a day of interaction and enrichment — conversation, foraging, training, out-of-cage time. Give it that and it thrives; withhold it and problems follow.</p>
+
+        <h3 class={h3}>8. Boredom Can Lead to Feather-Plucking</h3>
+        <p class={p}>One of the most important facts on this page: a bored, understimulated Grey can begin plucking its own feathers. It's usually a stress and boredom response, not a medical mystery — and it's the clearest reason not to buy a Grey for its brains and then fail to feed them.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 8. H2 Talking -->
+        <h2 id="talking" class={h2}>How Do African Greys Talk? (Talking Facts)</h2>
+        <p class={p}>Speech is the Grey's superpower, and it's stranger and more impressive than most people realise.</p>
+
+        <h3 class={h3}>9. They Mimic Household Sounds Perfectly</h3>
+        <p class={p}>Beyond words, Greys reproduce microwaves, phone ringtones, smoke alarms and squeaky doors with unnerving accuracy — often at the least convenient moment. Many owners have "answered" a phone that was actually their bird.</p>
+
+        <h3 class={h3}>10. They Recognise and Imitate Specific Voices</h3>
+        <p class={p}>A Grey can imitate not just words but <em>who</em> says them — copying one family member's laugh or another's cough. They map sounds to individuals, which is why yours may only say certain phrases in a particular person's voice.</p>
+
+        <h3 class={h3}>11. Timneh vs Congo: Who Talks Sooner?</h3>
+        <p class={p}>The Timneh African Grey often starts talking a little earlier (around 9–14 months) than the Congo (12–18 months), though the Congo tends toward the larger vocabulary and the classic clear voice. Both are exceptional — see how they stack up against another species in our <a href="/blog/african-grey-vs-eclectus/" class={lnk} style="color:#b04228">African Grey vs Eclectus comparison</a>.</p>
+
+        <h3 class={h3}>12. Some Invent Their Own Words and Sounds</h3>
+        <p class={p}>Greys don't only copy — some combine sounds into new "words" or apply a phrase in a novel situation, a small but real flash of creativity. It's another sign the species is doing more than parroting.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 9. MIDDLE special element — trivia quiz -->
+        <section id="quiz" class="scroll-mt-24 my-8">
+          <div class="ag-quiz rounded-2xl border border-stone-200 bg-white p-6 sm:p-8" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+            <h2 class="font-lora font-bold text-2xl text-logo-dark mb-1">Quick Quiz: How Well Do You Know African Greys?</h2>
+            <p class="text-stone-600 text-sm mb-5">Five questions, sixty seconds. Pick an answer for each, then check your score.</p>
+            <div class="ag-quiz__list space-y-6">
+              {quiz.map((item, qi) => (
+                <div class="ag-quiz__q" data-answer={item.answer}>
+                  <p class="font-sora font-semibold text-stone-800 mb-3">{qi + 1}. {item.q}</p>
+                  <div class="grid gap-2" role="group" aria-label={`Question ${qi + 1}`}>
+                    {item.opts.map(([key, text]) => (
+                      <button type="button" class="ag-opt text-left rounded-xl border border-stone-200 px-4 py-2.5 text-sm text-stone-700 hover:border-stone-400 transition-colors" data-opt={key} aria-pressed="false">
+                        <span class="ag-opt__mark font-semibold mr-1"></span>{text}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button type="button" id="ag-quiz-submit" class="mt-6 inline-block bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">See my score</button>
+            <p id="ag-quiz-result" class="font-sora font-semibold text-logo-dark mt-4 mb-0" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <script is:inline>
+          (function () {
+            var root = document.querySelector('.ag-quiz');
+            if (!root) return;
+            root.querySelectorAll('.ag-quiz__q').forEach(function (q) {
+              q.querySelectorAll('.ag-opt').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                  q.querySelectorAll('.ag-opt').forEach(function (b) {
+                    b.setAttribute('aria-pressed', 'false');
+                    b.style.borderColor = ''; b.style.background = '';
+                    var m = b.querySelector('.ag-opt__mark'); if (m) m.textContent = '';
+                  });
+                  btn.setAttribute('aria-pressed', 'true');
+                  btn.style.borderColor = '#c8472f'; btn.style.background = 'rgba(200,71,47,0.06)';
+                });
+              });
+            });
+            var submit = document.getElementById('ag-quiz-submit');
+            var result = document.getElementById('ag-quiz-result');
+            submit.addEventListener('click', function () {
+              var qs = root.querySelectorAll('.ag-quiz__q'), score = 0, answered = 0;
+              // reset marks/styles from any prior submit, re-highlighting current selections
+              qs.forEach(function (q) {
+                q.querySelectorAll('.ag-opt').forEach(function (b) {
+                  var m = b.querySelector('.ag-opt__mark'); if (m) m.textContent = '';
+                  if (b.getAttribute('aria-pressed') === 'true') {
+                    b.style.borderColor = '#c8472f'; b.style.background = 'rgba(200,71,47,0.06)';
+                  } else { b.style.borderColor = ''; b.style.background = ''; }
+                });
+              });
+              qs.forEach(function (q) { if (q.querySelector('.ag-opt[aria-pressed="true"]')) answered++; });
+              if (answered < qs.length) {
+                result.textContent = 'Answer all ' + qs.length + ' questions, then check your score.';
+                return;
+              }
+              qs.forEach(function (q) {
+                var chosen = q.querySelector('.ag-opt[aria-pressed="true"]');
+                var correct = q.getAttribute('data-answer');
+                q.querySelectorAll('.ag-opt').forEach(function (b) {
+                  var mark = b.querySelector('.ag-opt__mark');
+                  if (b.getAttribute('data-opt') === correct) {
+                    b.style.borderColor = '#2D6A4F'; b.style.background = 'rgba(45,106,79,0.08)';
+                    if (mark) { mark.textContent = '✓'; mark.style.color = '#2D6A4F'; }
+                  } else if (b === chosen) {
+                    b.style.borderColor = '#c8472f'; b.style.background = 'rgba(200,71,47,0.08)';
+                    if (mark) { mark.textContent = '✗'; mark.style.color = '#c8472f'; }
+                  }
+                });
+                if (chosen && chosen.getAttribute('data-opt') === correct) score++;
+              });
+              var msg = 'You scored ' + score + '/' + qs.length + '. ';
+              if (score === qs.length) msg += 'A true African Grey expert. Ready to meet one? See our available hand-raised Greys below.';
+              else if (score >= 3) msg += 'Nicely done — you know your Greys. There is more in the facts above, and real birds waiting below.';
+              else msg += 'Now you know a few things most people do not. Read on — and meet our hand-raised Greys below.';
+              result.textContent = msg;
+            });
+          })();
+        </script>
+
+        <MythFact
+          myth="African Greys are just clever mimics — they don't really understand the words they say."
+          fact="Mimicry is only part of the story. Decades of research, most famously the Alex studies, show African Greys use words in context — labelling objects, colours and quantities, and even grasping the concept of 'none'. They're the strongest evidence we have that a bird can genuinely understand language, not just repeat it." />
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 10. H2 Wild & origin -->
+        <h2 id="wild" class={h2}>Where Do African Greys Come From? (Wild &amp; Origin Facts)</h2>
+        <p class={p}>Before they were the world's favourite talking companion, African Greys were — and still are — wild rainforest birds with a story that shapes how you can legally own one.</p>
+
+        <figure class="m-0 my-6">
+          <img src={greyPhoto} width="540" height="535" loading="lazy" decoding="async" class="w-full max-w-md mx-auto rounded-2xl border border-stone-200" alt="A hand-raised C.A.Gs Congo African Grey perched calmly with its owner" title="Hand-raised Congo African Grey | C.A.Gs" />
+          <figcaption class={figc}>In the wild they flock in the thousands; ours are hand-raised and documented.</figcaption>
+        </figure>
+
+        <h3 class={h3}>13. They're Native to Central African Rainforests</h3>
+        <p class={p}>African Greys come from the equatorial rainforests of West and Central Africa — Cameroon, the Congo Basin, Ghana and Ivory Coast among them — where they forage across the canopy and can travel miles a day between roosting and feeding sites.</p>
+
+        <h3 class={h3}>14. Wild Flocks Number in the Thousands</h3>
+        <p class={p}>In the wild, Greys are intensely social, gathering at night in roosts that can number in the thousands. That flock instinct is exactly why a lone, under-socialised Grey struggles — your household becomes its flock.</p>
+
+        <h3 class={h3}>15. They're Endangered and CITES Appendix I</h3>
+        <p class={p}>Heavy trapping for the pet trade and habitat loss have pushed the wild African Grey onto the IUCN Endangered list, and in 2017 it was uplisted to CITES Appendix I — the highest level of international protection.</p>
+        <h4 class={h4}>What CITES Appendix I Means for Owners</h4>
+        <p class={p}>Appendix I does <em>not</em> make owning a Grey illegal — it means a captive-bred bird must come with documentation proving it wasn't taken from the wild. As the <a href="https://cites.org/eng/app/appendices.php" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">CITES appendices ↗</a> set out, that paperwork is what keeps ownership and transport legal.</p>
+        <h5 class={h5}>Why captive-bred documentation is the whole point</h5>
+        <p class={p}>The document trail is the line between an ethical, legal companion and a laundered wild bird. It's the single most important fact a buyer can act on: no papers, no purchase.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the paperwork every one of our chicks carries</h6>
+        <p class={p}>Every C.A.Gs Grey goes home with CITES Appendix I captive-bred documentation, a PCR DNA-sexing certificate and an avian-vet health certificate. It's how we prove, not just promise, that our birds are exactly what we say they are.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 11. H2 Health -->
+        <h2 id="health" class={h2}>What About Their Health and Lifespan? (Health Facts)</h2>
+        <p class={p}>A Grey's long life is a gift and a responsibility. These are the health facts every prospective owner should know before, not after, they commit.</p>
+
+        <h3 class={h3}>16. They Can Live 60+ Years — and Outlive Their Owners</h3>
+        <p class={p}>With good care an African Grey commonly reaches 40–60 years, and some pass 70. That means a Grey bought by a 40-year-old may well outlive them — which is why responsible owners plan for the bird's whole life, including who inherits its care.</p>
+
+        <h3 class={h3}>17. They're Prone to Calcium Deficiency</h3>
+        <p class={p}>African Greys are unusually susceptible to hypocalcemia — low blood calcium — more so than most parrots. Left unmanaged it can cause weakness and even seizures, which is why calcium and vitamin D3 are a real part of Grey care.</p>
+        <h4 class={h4}>The UV-B and Calcium Connection</h4>
+        <p class={p}>Calcium is only useful if the bird can absorb it, and that requires vitamin D3 — which Greys make with exposure to UV-B light. Adequate lighting or supplementation is therefore central to preventing deficiency. Our full <a href="/blog/african-grey-health-problems/" class={lnk} style="color:#b04228">African Grey health-problems guide</a> covers the wider list.</p>
+        <h5 class={h5}>Warning signs of hypocalcemia</h5>
+        <p class={p}>Watch for weakness, unsteadiness, clenching toes or, in severe cases, seizures. Any of these warrant an urgent avian-vet visit — calcium issues are very manageable when caught early.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the calcium foundation we set early</h6>
+        <p class={p}>We start our chicks on a calcium-aware diet with proper lighting from the beginning, so the foundation is in place before a bird ever reaches its new home. Prevention on day one beats treatment in year five, every time.</p>
+
+        <h3 class={h3}>18. Stress Shows Up in Their Feathers</h3>
+        <p class={p}>Because Greys are so sensitive, chronic stress, boredom or illness often surfaces first as feather-plucking. Healthy feathers are, in a real sense, a visible readout of a Grey's mental and physical wellbeing.</p>
+
+        <h3 class={h3}>19. They Need a Specialist Avian Vet</h3>
+        <p class={p}>A dog-and-cat vet usually isn't equipped for a parrot. Greys need an avian vet for annual wellness exams and any illness — and finding one <em>before</em> you bring a bird home is part of responsible ownership, not an afterthought.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 12. H2 Fun facts -->
+        <h2 id="fun" class={h2}>Fun African Grey Facts (Just for Delight)</h2>
+        <p class={p}>Not every fact has to be a responsibility. Here are the ones that just make people grin — and the reason Greys are as beloved as they are impressive.</p>
+
+        <h3 class={h3}>20. They Dance to Music</h3>
+        <p class={p}>Many Greys genuinely move to a beat — bobbing, swaying and stepping in time. Rhythmic entrainment like this was long thought uniquely human; parrots are one of the few animals that share it.</p>
+
+        <h3 class={h3}>21. Males and Females Look Identical</h3>
+        <p class={p}>Unlike a peacock or an Eclectus, you cannot sex an African Grey by sight — males and females are visually identical. That's why reputable breeders DNA-test, and why every one of ours comes with a PCR sexing certificate.</p>
+
+        <h3 class={h3}>22. They Can Learn to Count</h3>
+        <p class={p}>Alex could count small quantities and even answer "how many?" about sets he'd never seen — numerical reasoning that stunned researchers. Your Grey may not do formal math, but the capacity is genuinely there.</p>
+
+        <h3 class={h3}>23. They Have Regional "Dialects" in the Wild</h3>
+        <p class={p}>Wild Grey flocks develop local calls — effectively regional dialects — that young birds learn from their neighbours. Their famous vocal flexibility starts long before any human teaches them a word.</p>
+
+        <h3 class={h3}>24. They Hold Grudges — and Favourites</h3>
+        <p class={p}>A Grey remembers who was kind and who wasn't. Many pick a favourite person and stay a little wary of someone who once startled them — a long memory that's equal parts charming and humbling.</p>
+
+        <h3 class={h3}>25. A Well-Raised Grey Becomes Part of the Family</h3>
+        <p class={p}>The final and most important fact: a hand-raised, well-socialised African Grey doesn't just live in your home, it joins your family — greeting you, learning your names, and sharing decades of your life. That's the whole reason we do this.</p>
+
+        <Callout variant="tip" title="Loved these facts? Here's the honest one that matters most">
+          <p>Every amazing thing on this list is also a responsibility. A Grey's intelligence, sensitivity and 40–60 year life make it an extraordinary companion for the right, committed owner — and the wrong choice for someone who can't give it daily time. Fall for the facts, then be honest about the fit.</p>
+        </Callout>
+
+        <BreederNote>
+          <p>People come for the fun facts and stay for the bird. After decades of raising Greys, the thing that still amazes us isn't the counting or the mimicry — it's the relationship. A Grey chooses you back, and once it does, you understand why a 40-year commitment feels like a privilege, not a burden.</p>
+        </BreederNote>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 13. Shareable fact sheet -->
+        <figure class="m-0 my-6 mx-auto max-w-md">
+          <img src={factSheet.src} srcset={factSheet.srcset} sizes={factSheet.sizes} width="768" height="1376" loading="lazy" decoding="async" class="w-full max-w-md mx-auto rounded-2xl border border-stone-200" alt="A shareable visual sheet of 25 amazing African Grey parrot facts grouped by intelligence, behaviour, talking, wild origin, health and fun" title="25 amazing African Grey facts | C.A.Gs" />
+          <figcaption class={figc}>Save or share the full 25-fact sheet — free to repost with a link back.</figcaption>
+        </figure>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 14. Soft available-birds module -->
+        <h2 id="available" class={h2}>See Our Hand-Raised African Greys</h2>
+        <p class={p}>If these facts have you picturing a Grey of your own, here are the hand-raised African Greys available now — each PCR DNA-sexed, vet-checked and CITES-documented, at one fair, fixed price. No pressure; we're happy to just answer your questions on a live video call.</p>
+        <div class="grid sm:grid-cols-2 gap-5 mt-2">
+          {birds.map((b) => (
+            <BirdCard
+              id={b.id} name={b.name} sex={b.sex} age={b.age} price={b.price}
+              tag={b.tag} tagType={b.tagType} notes={b.notes} hook={b.hook}
+              image={b.image} variant={b.variant} objectPos={b.objectPos}
+            />
+          ))}
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-6 mb-2">
+          <p class="font-lora font-bold text-2xl mb-2 text-logo-dark">Curious about a Grey of your own?</p>
+          <p class="text-stone-600 mb-1">Ships nationwide · $185 airport · $350 home</p>
+          <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American · IATA LAR</p>
+          <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See all available African Greys</a>
+          <a href="/contact-us/" class="inline-block font-sora font-semibold px-7 py-3 underline" style="color:#b04228">Ask us anything</a>
+        </div>
+
+        <p class="font-lora italic text-stone-600 text-center mt-8 mb-0">— Written by Mark &amp; Teri Benjamin, the breeders behind C.A.Gs · USDA-licensed African Grey aviary, Midland, TX</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 15. FAQ -->
+        <h2 id="faq" class={h2}>African Grey Facts: Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {faqs.map((faq) => (
+            <details class="bg-white rounded-xl border border-stone-200 p-5">
+              <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
+              <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <!-- 16. Related posts -->
+        <div class="mt-12">
+          <RelatedPosts heading="Keep reading" headingLevel="h2" posts={[
+            { title: "African Grey Talking Ability: How Well Do They Really Talk?", slug: "/blog/african-grey-parrot-talking-ability/", category: "Talking" },
+            { title: "African Grey vs Eclectus: Which Parrot Is Better for You?", slug: "/blog/african-grey-vs-eclectus/", category: "Compare" },
+            { title: "Is an African Grey Good for Beginners? An Honest Answer", slug: "/blog/is-african-grey-good-for-beginners/", category: "Buying" },
+          ]} />
+        </div>
+
+      </div>
+    </section>
   </div>
 
-  <section style="background:#2D6A4F" class="text-white py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Facts · USDA-Licensed Breeders · Midland, TX</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey Parrot Facts</h1>
-      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">20 verified facts about African Grey parrots — lifespan, intelligence, CITES status, subspecies differences, and what it actually takes to own one.</p>
-    </div>
-  </section>
+  <!-- Newsletter -->
+  <Newsletter variant="bottom" action="/contact-us/" bottomText="African Grey facts, care tips and new hand-raised clutches — straight to your inbox." />
 
-  <!-- Content -->
-  <section class="py-16 px-4" style="background:#faf7f4">
-    <div class="max-w-760px mx-auto" style="max-width:760px">
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">The Biology</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">African Grey parrots (<em>Psittacus erithacus</em>) are medium-to-large parrots native to the equatorial rainforests of West and Central Africa. Two subspecies are recognized: the larger Congo African Grey and the smaller Timneh African Grey.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Congo African Grey: 12–14 inches, 400–650g, bright red tail</li>
-        <li>Timneh African Grey: 9–11 inches, 275–400g, dark maroon tail</li>
-        <li>Lifespan: 40–60 years in captivity (20–25 in the wild)</li>
-        <li>Native range: Cameroon, Congo Basin, Ghana, Ivory Coast, Uganda</li>
-        <li>IUCN status: Endangered (population declined 80%+ since 1992)</li>
-        <li>CITES status: Appendix I — all legal US sales must be captive-bred</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">The Intelligence</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">African Greys are widely recognized as the most cognitively advanced parrot species. Dr. Irene Pepperberg's 30-year study of Alex — a Congo African Grey — changed how scientists understand animal intelligence.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Vocabulary: 200–1,000+ words (contextually used, not just mimicked)</li>
-        <li>Cognitive level: comparable to a 5-year-old child in some tasks</li>
-        <li>Emotional intelligence: comparable to a 2-year-old</li>
-        <li>Can identify colors, shapes, numbers, and materials</li>
-        <li>Demonstrates object permanence — understands objects exist when hidden</li>
-        <li>Problem-solving ability: can unlock latches, open puzzle boxes</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">The Commitment</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">African Greys are not a beginner pet. Their 40–60 year lifespan, emotional sensitivity, and daily care demands make them a lifetime commitment — one that outlasts many marriages, careers, and living situations.</p>
-      <ul class="list-disc pl-6 space-y-2 text-stone-700 mb-8">
-        <li>Daily interaction needed: 3–4 hours minimum</li>
-        <li>Highly sensitive to routine changes and household stress</li>
-        <li>Feather plucking is a documented stress response — not a grooming habit</li>
-        <li>Diet must be actively managed (calcium deficiency causes seizures)</li>
-        <li>Require annual avian vet visits — not all vets treat birds</li>
-        <li>CITES documentation must be kept with the bird for its lifetime</li>
-      </ul>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Congo vs Timneh: Key Differences</h2>
-      <div class="bg-white rounded-xl border border-stone-200 overflow-hidden mb-8">
-        <table class="w-full text-sm">
-          <thead>
-            <tr style="background:#2D6A4F">
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Trait</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Congo (CAG)</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Timneh (TAG)</th>
-            </tr>
-          </thead>
-          <tbody class="text-stone-600 divide-y divide-stone-100">
-            <tr><td class="py-3 px-4">Size</td><td class="py-3 px-4">12–14 inches</td><td class="py-3 px-4">9–11 inches</td></tr>
-            <tr><td class="py-3 px-4">Weight</td><td class="py-3 px-4">400–650g</td><td class="py-3 px-4">275–400g</td></tr>
-            <tr><td class="py-3 px-4">Tail color</td><td class="py-3 px-4">Bright red</td><td class="py-3 px-4">Dark maroon</td></tr>
-            <tr><td class="py-3 px-4">Talking onset</td><td class="py-3 px-4">12–18 months</td><td class="py-3 px-4">9–14 months</td></tr>
-            <tr><td class="py-3 px-4">Temperament</td><td class="py-3 px-4">More reactive</td><td class="py-3 px-4">More adaptable</td></tr>
-            <tr><td class="py-3 px-4">Price range</td><td class="py-3 px-4">$1,500–$3,500</td><td class="py-3 px-4">$1,200–$2,500</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- FAQ -->
-      <h2 class="font-lora font-bold text-3xl mb-8" style="color:#2D6A4F">Frequently Asked Questions</h2>
-      <div class="space-y-4">
-        {faqs.map((faq) => (
-          <details class="bg-white rounded-xl border border-stone-200 p-5">
-            <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
-            <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
-          </details>
-        ))}
-      </div>
-
-    </div>
-  </section>
-
+  <StickyCta label="See available African Greys" href="/available/" />
+  <style>
+    .bp-d .cag-seam { display:flex; align-items:center; gap:26px; max-width:1100px; margin:2.25rem auto 1.5rem; padding:0 24px; }
+    .bp-d .cag-seam__line { flex:1; height:1px; background:rgba(45,106,79,.16); }
+    .bp-d .cag-seam img { height:30px; width:auto; display:block; opacity:.92; flex-shrink:0; }
+    @media (max-width:600px){ .bp-d .cag-seam { gap:16px; } .bp-d .cag-seam img { height:24px; } }
+    .bp-d .bp-hero h1 { font-size:clamp(1.7rem, 1.1rem + 2.6vw, 2.4rem) !important; line-height:1.14 !important; }
+    .bp-d figure img { box-shadow:0 10px 30px rgba(60,30,10,.08); }
+    .bp-jump { max-width:900px; margin:1.25rem auto 0; }
+    .bp-jump .jump-eyebrow { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:#b04228; margin:0 0 6px 4px; }
+    @media (max-width:767px){
+      .bp-jump { position:sticky; top:94px; z-index:40; background:#faf7f4; padding-top:8px; padding-bottom:8px; margin-top:.5rem; box-shadow:0 8px 14px -10px rgba(60,30,10,.28); }
+      .bp-jump .jump-eyebrow { display:none; }
+    }
+  </style>
 </BaseLayout>
