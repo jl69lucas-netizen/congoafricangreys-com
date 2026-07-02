@@ -1,10 +1,39 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
+import JumpNav from '../../../components/cag-jump-nav.astro';
+import InquiryCompact from '../../../components/cag-inquiry-compact.astro';
+import Newsletter from '../../../components/cag-library/NewsletterV2.astro';
+import CounterSnippet from '../../../components/cag-library/CounterSnippet.astro';
+import Callout from '../../../components/cag-blog-callout.astro';
+import ComparisonTable from '../../../components/cag-blog-comparison-table.astro';
+import BreederNote from '../../../components/cag-blog-breeder-note.astro';
+import MythFact from '../../../components/cag-blog-myth-fact.astro';
+import DecisionTree from '../../../components/cag-blog-decision-tree.astro';
+import RelatedPosts from '../../../components/cag-blog-related-posts.astro';
+import StickyCta from '../../../components/cag-blog-sticky-cta.astro';
+import BirdCard from '../../../components/BirdCard.astro';
 
-const title = "African Grey vs Eclectus: Which Is the Better Talking Parrot?";
-const description = "African Grey vs Eclectus — which parrot talks more, screams less, and fits your home? An honest, breeder's side-by-side on talking, temperament, noise, diet, sexing, and price.";
+const title = "African Grey vs Eclectus | 6 Honest Differences That Decide Which Is Right for You | Which Parrot Is Better, an African Grey or an Eclectus? | C.A.Gs – Midland, TX";
+const description = "African Grey vs Eclectus — which parrot is better for you? A breeder ranks talking, noise, diet and temperament, and shows which bird fits which owner.";
 const canonical = "https://congoafricangreys.com/blog/african-grey-vs-eclectus/";
+
+// Hero + in-content visuals are PLACEHOLDERS — drop generated WebP files at these paths.
+const hero = "/african-grey-vs-eclectus-hero.webp";
+const heroSrcset = "/african-grey-vs-eclectus-hero-480w.webp 480w, /african-grey-vs-eclectus-hero-800w.webp 800w, /african-grey-vs-eclectus-hero.webp 1408w";
+const heroSizes = "(min-width: 768px) 480px, 92vw";
+
+const ig = (base: string) => ({
+  src: `/${base}.webp`,
+  srcset: `/${base}-760w.webp 760w, /${base}.webp 1200w`,
+  sizes: "(min-width: 768px) 712px, 92vw",
+});
+const igScore = ig("african-grey-vs-eclectus-comparison-scorecard-infographic");
+const igRadar = ig("african-grey-vs-eclectus-radar-comparison-chart");
+const igFits  = ig("african-grey-vs-eclectus-which-parrot-fits-you-infographic");
+const eclectusPhoto = ig("eclectus-parrot-male-female");
+const greyPhoto = "/male-and-female-congo-african-grey-parrots.webp"; // OG reuse, 735x529
+const trustPhoto = "/about-mark-teri-benjamin-african-grey-breeders-midland-tx.webp"; // OG reuse, 640x480
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
@@ -12,117 +41,476 @@ const breadcrumbs = [
   { name: "African Grey vs Eclectus", url: "/blog/african-grey-vs-eclectus/" },
 ];
 
-const faqs = [
-  {
-    q: "Which talks better, an African Grey or an Eclectus?",
-    a: "The African Grey is generally rated the better talker. Both species can build real vocabularies, but the African Grey — especially the Congo — is famous for clear, human-sounding speech and for using words in context rather than just mimicking. Eclectus parrots are surprisingly good talkers too and can have very clear voices, but the Grey is the species most often called the best talking parrot in the world.",
-  },
-  {
-    q: "Is an Eclectus easier to care for than an African Grey?",
-    a: "Not necessarily — the Eclectus has a uniquely demanding diet. Eclectus parrots have an unusually long digestive tract and do best on a fresh, low-fat, high-fibre diet heavy in fruits and vegetables; many react badly to synthetic vitamins and heavily fortified pellets with behaviours like toe-tapping and wing-flipping. African Greys eat a more straightforward formulated-pellet-plus-fresh-produce diet, but they are more emotionally sensitive and prone to feather-plucking if under-stimulated. Neither is low-maintenance.",
-  },
-  {
-    q: "Which is quieter, an African Grey or an Eclectus?",
-    a: "Both are moderate by parrot standards — far quieter than a macaw or cockatoo. African Greys whistle, mimic, and chatter more than they scream, and Eclectus parrots are generally calm and laid-back. Either one is usually manageable in a normal home, which is part of why both suit households that can't tolerate a loud bird.",
-  },
-  {
-    q: "Can you tell male and female Eclectus and African Greys apart by looking?",
-    a: "Eclectus are the most sexually dimorphic of all parrots — males are bright emerald green, females are deep red and purple, so striking that they were once thought to be separate species. African Greys are the opposite: males and females look identical, so PCR DNA sexing is the only certain way to know the sex, and we include that certificate with every Grey we place.",
-  },
+const jumpLinks = [
+  { label: "Quick Verdict", href: "#verdict" },
+  { label: "At a Glance", href: "#glance" },
+  { label: "The Two Birds", href: "#species" },
+  { label: "Category by Category", href: "#categories" },
+  { label: "Which Fits You", href: "#lifestyle" },
+  { label: "Health", href: "#health" },
+  { label: "Male vs Female", href: "#sexing" },
+  { label: "Final Verdict", href: "#final" },
+  { label: "Available", href: "#available" },
+  { label: "FAQ", href: "#faq" },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const counterStats = [
+  { num: "USDA",  label: "Licensed since 2014" },
+  { num: "CITES", label: "Appendix I docs" },
+  { num: "PCR",   label: "DNA-sexed birds" },
+  { num: "$185",  label: "Ships nationwide" },
+];
+
+const quickFacts = [
+  { label: "Best talker",       value: "African Grey" },
+  { label: "Calmer & quieter",  value: "Eclectus" },
+  { label: "Simpler diet",      value: "African Grey" },
+  { label: "Bonds like family", value: "African Grey" },
+];
+
+const scoreCols = ["Trait", "African Grey", "Eclectus", "Winner"];
+const scoreRows = [
+  { item: "Talking ability", values: ["Exceptional, context-aware", "Very good, clear voice", "African Grey"] },
+  { item: "Intelligence",    values: ["Extremely high", "High", "African Grey"] },
+  { item: "Noise level",     values: ["Moderate", "Low–moderate", "Eclectus"] },
+  { item: "Beginner-friendly", values: ["Demanding", "A little more forgiving", "Eclectus"] },
+  { item: "Diet",            values: ["Pellet + fresh produce", "Specialised fresh, low-fat", "African Grey (simpler)"] },
+  { item: "Training",        values: ["Loves it", "Willing", "African Grey"] },
+  { item: "Telling sexes apart", values: ["Identical — needs DNA", "Obvious — male green, female red", "Depends"] },
+  { item: "Lifespan",        values: ["40–60 years", "~30 years", "African Grey"] },
+];
+
+const fitBranches = [
+  { answer: "You want the best talker and a bird that bonds like family", result: "Choose an African Grey. You get superior, context-aware speech, deep family bonding, and a bird that thrives on the training and enrichment you'll enjoy giving it. Our hand-raised Congos are raised for exactly this." },
+  { answer: "You want a calmer, quieter bird and you love striking colour", result: "An Eclectus fits beautifully — laid-back temperament, lower volume, and the most spectacular sexual dimorphism in the parrot world. Commit to its fresh-food, low-fat diet and it's a wonderful companion." },
+  { answer: "You're a first-time owner who wants a gentle, predictable start", result: "Either can work, but be honest about your routine. A hand-raised African Grey arrives socialised and predictable; an Eclectus is a touch more forgiving on attention but far less forgiving on diet. Match the bird to the routine you can actually keep." },
+  { answer: "You need a bird you can leave alone all day", result: "Reconsider both species. Neither a Grey nor an Eclectus does well on long solitude — a bored Grey plucks, a neglected Eclectus withdraws. If all-day alone time is unavoidable, this pair of birds may not be the right fit right now." },
+];
+
+const birds = [
+  { id: 'amie', name: 'Amie', sex: 'Female', age: '3 mo', price: '$2,500',
+    tag: 'New Arrival', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/amie-congo-african-grey-female-3-months.webp', objectPos: 'object-center',
+    hook: 'Hand-raised, fully documented, ready to reserve.',
+    notes: 'Premium hand-raised female, 3 months old. PCR DNA-sexed, vet-checked, CITES-documented — captive-bred in the USA with the full paper trail.' },
+  { id: 'roys', name: 'Roys', sex: 'Male', age: '4 mo', price: '$2,300',
+    tag: 'Baby Boy', tagType: 'new' as const, variant: 'Congo African Grey',
+    image: '/roys-congo-african-grey-male-4-months.webp', objectPos: 'object-center',
+    hook: 'Curious, food-motivated baby boy.',
+    notes: "Hand-raised male, 4 months old. Same documentation and health-testing as every C.A.Gs Grey, weaned and socialised before he travels." },
+  { id: 'bery', name: 'Bery', sex: 'Female', age: '1 yr', price: '$1,700',
+    tag: 'Best Value', tagType: 'value' as const, variant: 'Congo African Grey',
+    image: '/bery-congo-african-grey-female-1-year.webp', objectPos: 'object-center',
+    hook: 'Gentle, established — our value Congo.',
+    notes: 'Soft temperament, 1-year-old female at the $1,700 honest floor — tame, documented and ready for the right home.' },
+  { id: 'jins-jeni', name: 'Jins + Jeni', sex: 'Pair', age: '4–6 mo', price: '$3,500 pair',
+    tag: 'Bonded Duo', tagType: 'family' as const, variant: 'Congo African Grey',
+    image: '/jins-jeni-congo-african-grey-pair-talking-birds.webp', objectPos: 'object-center',
+    hook: 'Two hand-raised birds, adopted together.',
+    notes: 'Unrelated companion pair sold together. Jins (male, 6mo) + Jeni (female, 4mo), both fully documented and hand-raised.' },
+];
+
+const faqs = [
+  { q: "Which talks better, an African Grey or an Eclectus?",
+    a: "The African Grey is generally rated the better talker. Both build real vocabularies, but the Grey — especially the Congo — is famous for clear, human-sounding speech and for using words in context rather than only mimicking. Eclectus parrots are genuinely good talkers with clear voices too, but the Grey is the species most often called the best talking parrot in the world." },
+  { q: "Is an Eclectus quieter than an African Grey?",
+    a: "Slightly, yes — but both are moderate by parrot standards and far quieter than a macaw or cockatoo. The Eclectus is famously laid-back and low-volume; the African Grey whistles, mimics and chatters more than it screams. Either one is usually manageable in a normal home, which is why both suit owners who can't tolerate a loud bird." },
+  { q: "Is an African Grey or an Eclectus better for beginners?",
+    a: "Neither is truly a beginner bird, but they're demanding in different ways. The Eclectus is a little more forgiving on attention and temperament, while the African Grey is more emotionally sensitive and needs consistent mental stimulation. The catch is diet: the Eclectus needs a strict fresh-food regimen that trips up new owners, whereas the Grey eats a more straightforward pellet-plus-produce diet. A hand-raised, well-socialised bird of either species is the gentlest start." },
+  { q: "Which parrot is more affectionate, an African Grey or an Eclectus?",
+    a: "It depends on the individual and how it was raised. African Greys bond deeply and read a household's mood closely, but they show affection more through trust and interaction than constant cuddling. Eclectus parrots are typically gentle and even-tempered. Neither is a guaranteed 'cuddle bird' — affection in both comes from patient, daily relationship-building." },
+  { q: "Which parrot is smarter, an African Grey or an Eclectus?",
+    a: "The African Grey is widely considered the more intelligent of the two — the species Dr. Irene Pepperberg's decades of research with the parrot Alex made famous for reasoning, counting and using words in context. Eclectus parrots are clever and capable, but the Grey's problem-solving and cognitive depth are exceptional, which also means it gets bored faster and needs more enrichment." },
+  { q: "Are African Greys really one-person birds?",
+    a: "Not inherently. The 'one-person bird' reputation usually comes from a Grey that was only ever handled by one person. A Grey socialised with the whole family from the start — as ours are — commonly bonds with several people. Both Greys and Eclectus do best when more than one household member handles them regularly from a young age." },
+  { q: "Why is the Eclectus diet so different from an African Grey's?",
+    a: "The Eclectus has an unusually long digestive tract and does best on a fresh, low-fat, high-fibre diet built around fruits and vegetables. Many react to synthetic vitamins and heavily fortified pellets with stress behaviours like toe-tapping and wing-flipping. African Greys eat a more standard formulated-pellet base plus fresh produce, with calcium support because they're prone to hypocalcemia. Neither thrives on a seed-only diet." },
+  { q: "Which lives longer, an African Grey or an Eclectus?",
+    a: "The African Grey typically lives longer — commonly 40–60 years with good care — while the Eclectus averages around 30 years. Either way you're making a multi-decade commitment, which is exactly why matching the bird to your life for the long haul matters more than any single trait." },
+];
+
+const img = (path: string, w: number, h: number, name: string, caption: string, description: string) => ({
+  "@type": "ImageObject",
+  "contentUrl": "https://congoafricangreys.com" + path,
+  "url": "https://congoafricangreys.com" + path,
+  name, caption, width: w, height: h, description,
+});
+
+const imageObjects = [
+  img(hero, 1408, 768,
+    "An African Grey parrot and an Eclectus parrot shown side by side for comparison",
+    "African Grey vs Eclectus — the honest breeder comparison.",
+    "A split-screen editorial photograph comparing a Congo African Grey with its silver scalloped plumage and scarlet tail against a brightly coloured Eclectus pair, illustrating this guide's side-by-side comparison of the two intelligent companion parrots on talking, temperament, noise and diet."),
+  img(igScore.src, 1200, 655,
+    "African Grey vs Eclectus head-to-head scorecard across six traits",
+    "The African Grey vs Eclectus scorecard, trait by trait.",
+    "A flat-design head-to-head scorecard infographic titled 'African Grey vs Eclectus — Head-to-Head Scorecard', scoring talking, intelligence, quietness, beginner-friendliness, trainability and diet simplicity, with the African Grey winning most categories and the Eclectus leading on quietness and beginner-friendliness. It gives buyers a scannable, snippet-ready summary."),
+  img(igRadar.src, 1200, 655,
+    "African Grey vs Eclectus radar chart comparing six traits at a glance",
+    "African Grey vs Eclectus at a glance — the radar comparison.",
+    "A flat-design six-axis radar chart titled 'African Grey vs Eclectus at a Glance', overlaying the African Grey in forest green and the Eclectus in clay across talking, intelligence, quietness, beginner-friendliness, trainability and diet simplicity. The visual makes the two birds' different strengths obvious in one glance."),
+  img(igFits.src, 1200, 655,
+    "A two-column chooser showing which owner should pick an African Grey or an Eclectus",
+    "Which parrot fits you — African Grey or Eclectus?",
+    "A flat-design two-column decision infographic titled 'Which Parrot Fits You?', listing when to choose an African Grey (advanced speech, training, deep bonding) versus when to choose an Eclectus (calmer, quieter, striking colour, willing to commit to a fresh-food diet). It helps buyers self-select the right species for their home."),
+  img(eclectusPhoto.src, 1200, 655,
+    "A male and female Eclectus parrot perched together showing their striking colour difference",
+    "The Eclectus parrot — emerald-green male, crimson-and-purple female.",
+    "A photograph of an emerald-green male Eclectus and a crimson-and-purple female Eclectus perched together, illustrating the most extreme sexual dimorphism in the parrot world and providing the visual counterpart to the African Grey in this comparison."),
+  img(greyPhoto, 735, 529,
+    "A male and female Congo African Grey, hand-raised and documented",
+    "The African Grey — hand-raised, DNA-sexed and documented.",
+    "A photograph of a male and female Congo African Grey with silver scalloped plumage and scarlet tails, hand-raised and fully documented, illustrating the African Grey side of this species comparison."),
+  img(trustPhoto, 640, 480,
+    "Mark and Teri Benjamin with a hand-raised Congo African Grey at C.A.Gs in Midland, Texas",
+    "Why buyers who choose the Grey choose C.A.Gs.",
+    "An authentic photograph of a hand-raised Congo African Grey with its breeders at C.A.Gs in Midland, Texas, conveying first-hand E-E-A-T for the section on why buyers who decide on an African Grey choose a verifiable, USDA-licensed breeder."),
+];
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "African Grey vs Eclectus: Which Is the Better Talking Parrot?",
+  headline: "African Grey vs Eclectus: Which Parrot Is Better for You? (2026)",
   description,
+  image: imageObjects,
   author: { "@type": "Person", name: "Mark & Teri Benjamin" },
   publisher: { "@type": "Organization", name: "CongoAfricanGreys.com", url: "https://congoafricangreys.com" },
   datePublished: "2026-06-03",
+  dateModified: "2026-07-02",
+  mainEntityOfPage: canonical,
   url: canonical,
 };
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+
+const h2 = "font-lora font-bold text-logo-dark leading-tight mb-4 mt-2 scroll-mt-24";
+const h3 = "font-lora font-semibold text-xl text-logo-dark mb-3 mt-6";
+const h4 = "font-lora font-semibold text-lg text-logo-dark mb-2 mt-5";
+const h5 = "font-lora font-semibold text-base text-logo-dark mt-5 mb-1";
+const h6 = "font-sora font-semibold text-xs uppercase tracking-wide mt-4 mb-1";
+const p = "text-stone-700 leading-relaxed mb-4";
+const lnk = "underline font-medium";
+const figc = "block text-center text-sm text-stone-600 mt-2";
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<BaseLayout {title} {description} {canonical} ogType="article" hideGlobalCta heroPreload={hero} heroPreloadSrcset={heroSrcset} heroPreloadSizes={heroSizes}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
+  <div class="bp-d">
+    <div style="max-width:1200px;margin:0 auto;">
+      <Breadcrumb items={breadcrumbs} />
+    </div>
+
+    <!-- 1. Hero -->
+    <section class="bp-hero text-white px-4 pt-12 pb-10" style="background:#2D6A4F">
+      <div class="max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div class="order-2 md:order-1">
+            <p class="font-sora text-xs font-medium tracking-wide mb-3" style="color:#ffd6c9">Species Comparison · Which Bird Fits Which Owner · Midland, TX</p>
+            <h1 class="font-lora font-bold mb-4" style="color:#faf7f4">African Grey vs Eclectus: Which Parrot Is Better for You? (2026)</h1>
+            <p class="text-lg mb-6" style="color:rgba(250,247,244,0.85)">Two smart, mid-sized companions that suit calmer homes — but they split hard on talking, diet and looks. Here's the honest breeder side-by-side, and a simple way to tell which one fits your life.</p>
+            <a href="#final" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3" style="border-radius:50px">Skip to the final verdict</a>
+            <p class="font-sora text-xs mt-4 mb-0" style="color:rgba(250,247,244,0.85)">Written by <strong style="color:#faf7f4">Mark &amp; Teri Benjamin</strong> · C.A.Gs African Grey breeders, Midland TX · USDA-licensed since 2014</p>
+          </div>
+          <figure class="m-0 order-1 md:order-2">
+            <img src={hero} srcset={heroSrcset} sizes={heroSizes} width="1408" height="768" alt="A Congo African Grey and a colourful Eclectus parrot shown side by side to compare which parrot is better" title="African Grey vs Eclectus | C.A.Gs" class="w-full rounded-2xl" fetchpriority="high" decoding="async" />
+            <span class="block text-center text-sm mt-2" style="color:rgba(250,247,244,0.85)">Grey or Eclectus? It comes down to who you are, not which bird is 'best'.</span>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Counter snippet -->
+    <CounterSnippet stats={counterStats} />
+
+    <!-- 3. Top lead-capture strip -->
+    <div style="max-width:1100px;margin:0 auto;" class="px-4 mt-6 relative z-10">
+      <InquiryCompact heading="Leaning toward an African Grey?" subtext="Tell us what you're looking for and we'll send live video, full paperwork and the hand-raised Greys available now — no pressure." subject="African Grey vs Eclectus enquiry" page="blog/vs-eclectus" idPrefix="top" />
+    </div>
+
+    <!-- 4. Jump nav -->
+    <div class="bp-jump px-4">
+      <p class="jump-eyebrow font-sora">On This Page</p>
+      <JumpNav links={jumpLinks} sticky={false} />
+    </div>
+
+    <section class="px-4 pt-8 pb-4" style="background:#faf7f4">
+      <div style="max-width:760px;margin:0 auto;">
+
+        <!-- 5. Quick-Answer box -->
+        <div id="verdict" class="scroll-mt-24 mb-6">
+          <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white" style="box-shadow:0 10px 40px rgba(60,30,10,0.08);">
+            <div class="px-6 py-5 sm:px-8" style="background:#2D6A4F">
+              <p class="font-sora text-[11px] font-semibold uppercase tracking-[0.18em] mb-1.5" style="color:#ffd6c9">The short answer</p>
+              <h2 class="font-lora font-bold text-xl sm:text-2xl leading-snug" style="color:#faf7f4">Quick Verdict: Should You Get an African Grey or an Eclectus?</h2>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="font-sora text-stone-700 leading-relaxed mb-6">Choose an <strong>African Grey</strong> for the best talking ability, the deepest intelligence and a bird that bonds like family — if you'll give it daily interaction and enrichment. Choose an <strong>Eclectus</strong> for a calmer, quieter, stunningly colourful companion — if you'll commit to its specialised fresh-food diet. Most buyers who came looking for conversation want the Grey; the best bird is always the one whose needs match the home you can give it.</p>
+              <div class="grid grid-cols-2 gap-3">
+                {quickFacts.map((r) => (
+                  <div class="rounded-xl border border-stone-200 bg-cream/60 px-4 py-3">
+                    <span class="block font-sora text-[11px] uppercase tracking-wide text-stone-600">{r.label}</span>
+                    <span class="block font-sora text-sm font-semibold text-logo-dark mt-1 leading-snug">{r.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. H2 At a glance -->
+        <h2 id="glance" class={h2}>How Do African Grey and Eclectus Compare at a Glance?</h2>
+        <p class={p}>Before the deep dive, here's the whole comparison on one card. This is the block the forum threads that dominate this search never give you — a structured, trait-by-trait scorecard you can read in ten seconds. We raise African Greys and don't breed Eclectus, so treat the Grey scores as first-hand and the Eclectus scores as fair, well-sourced species facts.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igScore.src} srcset={igScore.srcset} sizes={igScore.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="African Grey vs Eclectus head-to-head scorecard: Grey wins talking, intelligence, training and diet simplicity; Eclectus wins quietness and beginner-friendliness" title="African Grey vs Eclectus scorecard | C.A.Gs" />
+          <figcaption class={figc}>The head-to-head scorecard — Grey leads on talking and brains, Eclectus on calm and quiet.</figcaption>
+        </figure>
+
+        <ComparisonTable columns={scoreCols} rows={scoreRows} verdict="For a talking, trainable companion that bonds like family, the African Grey wins most rows; for a calmer, quieter, showstopping-colour bird, the Eclectus is the pick. Read across the row that matters most to you, not down the column you like." />
+
+        <h3 class={h3}>How to Read This African Grey vs Eclectus Scorecard</h3>
+        <p class={p}>Don't just tally the wins — weight the rows by what actually matters in your home. If conversation is your whole reason for getting a parrot, the talking and intelligence rows should outweigh everything else, and the Grey runs away with it. If your deciding factors are noise and a forgiving temperament, the Eclectus's two green rows may matter more to you than the Grey's six.</p>
+        <h4 class={h4}>What Each Score Means for Your Decision</h4>
+        <p class={p}>A "win" here isn't a grade — it's a fit signal. "African Grey wins talking" means *if talking is your priority*, buy the Grey; it doesn't mean the Eclectus is a poor talker. Read the scorecard as a mirror: the row you care about most is the one that should decide your bird, and the honest truth is that most people who reach this page care most about the rows the Grey wins.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 7. H2 Species overview -->
+        <h2 id="species" class={h2}>What Are You Actually Choosing Between?</h2>
+        <p class={p}>These two birds are often cross-shopped because they overlap on the things beginners screen for — mid-size, intelligent, not as loud as a macaw. But underneath, they're built for different owners. Here's who each bird really is before we score them category by category.</p>
+
+        <h3 class={h3}>The African Grey Parrot at a Glance</h3>
+        <figure class="m-0 my-6">
+          <img src={greyPhoto} width="735" height="529" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="A male and female Congo African Grey with silver scalloped plumage and scarlet tails, hand-raised and documented" title="Congo African Grey pair | C.A.Gs" />
+          <figcaption class={figc}>The African Grey — understated silver plumage, extraordinary mind.</figcaption>
+        </figure>
+        <p class={p}>The African Grey is the parrot the whole hobby points to when the subject is intelligence and speech. Native to the rainforests of West and Central Africa, it's an understated silver-grey bird with a scarlet tail (Congo) or maroon tail (Timneh) — plain next to an Eclectus, and famous precisely for what's going on behind the eyes rather than the plumage.</p>
+        <h4 class={h4}>Congo vs Timneh: The Two African Greys</h4>
+        <p class={p}>There are two African Greys, and it's worth knowing the split before you compare with an Eclectus. The Congo is larger, silver-bodied with a bright red tail and the classic clear voice; the Timneh is a little smaller, darker, with a maroon tail and often an earlier, more relaxed start to talking. We break the two down fully in our <a href="/congo-vs-timneh-african-grey/" class={lnk} style="color:#b04228">Congo vs Timneh comparison</a>.</p>
+        <h5 class={h5}>Origin, size and lifespan of the African Grey</h5>
+        <p class={p}>Expect a bird of roughly 12–14 inches and 400–550 grams that lives, with good care, 40–60 years — a genuine multi-generational commitment. That lifespan is one of the Grey's quiet advantages over the Eclectus, and one of the biggest reasons to buy from a source you can still reach in year twenty.</p>
+
+        <h3 class={h3}>The Eclectus Parrot at a Glance</h3>
+        <figure class="m-0 my-6">
+          <img src={eclectusPhoto.src} srcset={eclectusPhoto.srcset} sizes={eclectusPhoto.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="An emerald-green male Eclectus and a crimson-and-purple female Eclectus perched together, showing extreme sexual dimorphism" title="Male and female Eclectus parrot | C.A.Gs" />
+          <figcaption class={figc}>The Eclectus — the most colour-divided parrot in the world.</figcaption>
+        </figure>
+        <p class={p}>The Eclectus is the Grey's visual opposite: a calm, glossy, spectacularly coloured parrot from the Solomon Islands, New Guinea and northern Australia. Where the Grey wins you over with its mind, the Eclectus stops you in the room with its colour and its easy, laid-back temperament.</p>
+        <h4 class={h4}>Why Male and Female Eclectus Look Like Two Different Birds</h4>
+        <p class={p}>The Eclectus is the most sexually dimorphic parrot in the world — males are brilliant emerald green, females deep crimson and purple. The difference is so extreme that early naturalists classified them as two separate species. It's a genuine charm of the bird, and, as we'll see in the sexing section, the exact mirror image of the African Grey's problem.</p>
+        <h5 class={h5}>Origin, size and lifespan of the Eclectus</h5>
+        <p class={p}>An Eclectus runs a similar size to a Congo — around 13–15 inches — but typically lives closer to 30 years rather than the Grey's 40–60. Still a long commitment, just a meaningfully shorter one, which matters if lifespan is part of how you're weighing the two.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 8. H2 Category by category -->
+        <h2 id="categories" class={h2}>African Grey vs Eclectus, Category by Category</h2>
+        <p class={p}>Now the head-to-head. Here's the same data as the radar chart below, walked through one decision at a time — because the "winner" only matters once you know which category is <em>your</em> priority.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igRadar.src} srcset={igRadar.srcset} sizes={igRadar.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="Radar chart comparing African Grey and Eclectus across talking, intelligence, quietness, beginner-friendliness, trainability and diet simplicity" title="African Grey vs Eclectus radar chart | C.A.Gs" />
+          <figcaption class={figc}>The two birds' strengths, shape for shape — Grey stretches toward brains, Eclectus toward calm.</figcaption>
+        </figure>
+
+        <h3 class={h3}>Which Parrot Is Smarter?</h3>
+        <p class={p}>The African Grey, decisively. It's the species behind the most famous parrot-cognition research on record, and the difference isn't subtle — a Grey solves, remembers and problem-solves at a level the Eclectus, clever as it is, doesn't reach. The flip side: a smarter bird gets bored faster and needs more from you.</p>
+        <h4 class={h4}>Speech, Problem-Solving and Boredom</h4>
+        <p class={p}>Intelligence in a Grey shows up as three things at once — quick learning, real problem-solving, and a low tolerance for boredom. Give a Grey puzzles and interaction and it flourishes; leave it under-stimulated and that same brainpower turns into screaming or feather-plucking. The Eclectus is content with less mental load, which is part of why some owners find it easier to live with.</p>
+        <h5 class={h5}>Vocabulary size: how many words each really learns</h5>
+        <p class={p}>A well-raised Congo commonly builds a working vocabulary of several hundred words, and — the part that sets it apart — uses many of them in context, a trait <a href="https://alexfoundation.org/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">Dr. Irene Pepperberg documented with the Grey named Alex ↗</a>. Eclectus parrots can learn a respectable vocabulary with clear pronunciation, but context-aware speech is the Grey's signature. We go deeper in our <a href="/blog/african-grey-parrot-talking-ability/" class={lnk} style="color:#b04228">guide to African Grey talking ability</a>.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: what "talking in context" sounds like day to day</h6>
+        <p class={p}>People picture a parrot reciting words; what a Grey actually does is spookier. Ours ask for specific foods by name, comment when someone leaves, and reuse phrases at the moment they fit. That's the real gap between the two birds — not how many words, but whether the words mean something to the bird using them.</p>
+
+        <h3 class={h3}>Which Parrot Talks Better?</h3>
+        <p class={p}>The Grey, on both clarity and use. Eclectus parrots genuinely surprise people — many develop clear, pleasant voices and a real vocabulary — but across the hobby the Grey is still the species most often crowned the best talking parrot in the world. If conversation is your top priority, this row alone tends to settle the decision.</p>
+
+        <h3 class={h3}>Which Parrot Is Quieter?</h3>
+        <p class={p}>The Eclectus, slightly. Both are moderate — a Grey whistles and mimics far more than it screams, and an Eclectus is generally calm — but the Eclectus edges it on sheer volume and is often the pick for close neighbours. If quiet is your hard constraint, note that both still make daily noise, and see how much louder the alternatives get in our <a href="/african-grey-vs-macaw/" class={lnk} style="color:#b04228">African Grey vs Macaw comparison</a>.</p>
+
+        <h3 class={h3}>Which Parrot Is More Affectionate?</h3>
+        <p class={p}>This one genuinely depends on the individual bird and how it was raised. Greys bond hard and read your mood closely, but they show it through trust and interaction more than constant cuddling; Eclectus tend to be gentle and even-keeled. Neither is a guaranteed lap-parrot — affection in both is earned through patient daily handling.</p>
+
+        <h3 class={h3}>Which Is Easier for Beginners?</h3>
+        <p class={p}>The Eclectus, by a hair, on temperament — it's a touch more forgiving of an inconsistent owner than a sensitive Grey. But "easier" flips the moment you factor in diet, where the Eclectus is far less forgiving. If you're weighing your first parrot seriously, read our honest take on whether the <a href="/blog/is-african-grey-good-for-beginners/" class={lnk} style="color:#b04228">African Grey is good for beginners</a> before you decide.</p>
+
+        <h3 class={h3}>Which Has the Simpler Diet?</h3>
+        <p class={p}>The African Grey — and this is the most underrated difference between the two birds. A Grey does well on a quality formulated pellet plus fresh produce and calcium support. The Eclectus needs something genuinely more demanding.</p>
+        <h4 class={h4}>Why the Eclectus Diet Trips New Owners Up</h4>
+        <p class={p}>The Eclectus has an unusually long digestive tract and does best on a fresh, low-fat, high-fibre diet built around fruits and vegetables. Many react to synthetic vitamins and heavily fortified pellets — the very foods that are fine for other parrots — with visible stress behaviours. It's the single most common reason a new Eclectus owner ends up at the avian vet.</p>
+        <h5 class={h5}>Toe-tapping and wing-flipping as diet warning signs</h5>
+        <p class={p}>Two odd behaviours — rhythmic toe-tapping and repetitive wing-flipping — are classic red flags that an Eclectus's diet or supplementation is off. A Grey simply doesn't have this failure mode; get its calcium and pellets right and diet largely takes care of itself. With an Eclectus, diet is a daily, hands-on responsibility.</p>
+        <h6 class={h6} style="color:#b04228">Citation: World Parrot Trust &amp; avian-vet guidance on Eclectus nutrition</h6>
+        <p class={p}>The Eclectus's dietary sensitivity is well documented — <a href="https://www.parrots.org/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">the World Parrot Trust ↗</a> and most avian vets stress a fresh, natural diet and caution against over-supplementation. If you're choosing on care effort rather than looks, this is the row that most often points a realistic owner back toward the Grey.</p>
+
+        <h3 class={h3}>Which Is Easier to Train?</h3>
+        <p class={p}>The African Grey — its intelligence makes it a fast, enthusiastic student for step-up, recall and target training, provided you keep sessions short and positive. The Eclectus is willing and trainable too, just less driven. Our <a href="/blog/african-grey-parrot-training/" class={lnk} style="color:#b04228">step-by-step African Grey training guide</a> shows the method we start every chick on.</p>
+
+        <MythFact
+          myth="African Greys are cold, one-person birds, and Eclectus parrots can't really talk."
+          fact="Both are half-myths. A Grey socialised with a whole family bonds with several people — the 'one-person' pattern usually comes from being handled by only one. And Eclectus parrots can be genuinely clear talkers; they're just outshone by the Grey's context-aware speech. Judge the individual bird and how it was raised, not the stereotype." />
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 9. H2 Lifestyle fit -->
+        <h2 id="lifestyle" class={h2}>Which Bird Fits Your Lifestyle?</h2>
+        <p class={p}>This is the question the trait table can't answer for you — and the one this whole page is really about. Stop asking "which bird is better?" and ask "which bird fits the home and routine I actually have?" Here's how the two sort by owner.</p>
+
+        <figure class="m-0 my-6">
+          <img src={igFits.src} srcset={igFits.srcset} sizes={igFits.sizes} width="1200" height="655" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="Which parrot fits you: choose an African Grey for speech, training and bonding; choose an Eclectus for a calmer, quieter, colourful bird and a fresh-food diet" title="Which parrot fits you — Grey or Eclectus | C.A.Gs" />
+          <figcaption class={figc}>Match the bird to your life, not your wish list.</figcaption>
+        </figure>
+
+        <h3 class={h3}>Best for Families with Children</h3>
+        <p class={p}>Either bird can suit a family, with a nudge toward the Eclectus for its calmer temperament around busy households — as long as the Grey is socialised with everyone from the start. A family that wants a talking, interactive bird the kids will bond with usually loves a hand-raised Grey; a family that wants a gentler, lower-key presence often leans Eclectus.</p>
+
+        <h3 class={h3}>Best for Working Professionals</h3>
+        <p class={p}>Neither bird suits someone who's genuinely out all day, but the calmer Eclectus copes marginally better with quiet stretches than a stimulation-hungry Grey. If your days are long, be honest about it before you choose either.</p>
+        <h4 class={h4}>How Much Alone Time Each Bird Tolerates</h4>
+        <p class={p}>A rough rule: both want several hours of daily interaction, but the Grey's boredom threshold is lower and its reaction to neglect is louder. An Eclectus left alone tends to go quiet and withdrawn; a Grey left alone tends to get loud, then destructive, then plucked.</p>
+        <h5 class={h5}>Why a bored African Grey starts plucking</h5>
+        <p class={p}>Feather-plucking in a Grey is usually a symptom, not a disease — the outlet of a brilliant bird with nothing to do. It's the clearest reason not to buy a Grey for its intelligence and then fail to feed that intelligence daily.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: the daily routine we teach new Grey owners</h6>
+        <p class={p}>We send every Grey home with the same simple rhythm: a morning greeting and out-of-cage time, foraging toys rotated through the day, a few short training moments, and a settled, dark night's sleep. Owners who keep that rhythm almost never see the plucking and screaming that make people wrongly call Greys "difficult."</p>
+
+        <h3 class={h3}>Best for Experienced Bird Owners</h3>
+        <p class={p}>Experienced keepers can thrive with either and often relish the challenge each brings — the Grey's mental complexity or the Eclectus's dietary precision. If you've kept parrots before and want the deepest cognitive relationship on offer, the Grey is hard to beat; if you want a calmer bird and enjoy dialling in a fresh diet, the Eclectus rewards the effort.</p>
+
+        <Callout variant="tip" title="Decide on your non-negotiable first">
+          <p>Pick the one factor you refuse to compromise on — conversation, quiet, colour, or care effort — and let it break the tie. Buyers who choose on that single non-negotiable are far happier a year later than buyers who tried to score every trait equally.</p>
+        </Callout>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 10. H2 Health -->
+        <h2 id="health" class={h2}>What Health Problems Should You Plan For?</h2>
+        <p class={p}>Every long-lived parrot comes with a short list of things to watch, and the two birds' lists barely overlap. Knowing each one up front is part of choosing honestly — and part of budgeting for a bird that may outlive the decision by decades.</p>
+
+        <h3 class={h3}>Common African Grey Health Concerns</h3>
+        <p class={p}>The Grey's two headline issues are calcium-related and behavioural. Both are largely preventable with the right start, which is exactly what a good breeder builds in. Our full <a href="/blog/african-grey-health-problems/" class={lnk} style="color:#b04228">African Grey health-problems guide</a> covers the wider list.</p>
+        <h4 class={h4}>Hypocalcemia and Feather-Plucking</h4>
+        <p class={p}>African Greys are prone to hypocalcemia — low blood calcium — more than most parrots, which makes calcium and vitamin D3 management a real part of care. Feather-plucking, as covered above, is the other classic Grey issue, and it's usually about boredom and stress rather than illness.</p>
+        <h5 class={h5}>The UV-B and calcium link every Grey owner should know</h5>
+        <p class={p}>Greys need adequate calcium <em>and</em> the vitamin D3 to use it, which is why access to UV-B light or supplementation matters more for this species than for many others. Get that foundation right early and you sidestep one of the Grey's most common long-term problems.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: how we screen chicks and set the calcium foundation</h6>
+        <p class={p}>Every C.A.Gs Grey is vet-checked and DNA-screened, and we start chicks on a calcium-aware diet with proper lighting from the beginning, so the foundation is laid before the bird ever reaches you. Prevention on day one is far cheaper — and kinder — than treatment in year five.</p>
+
+        <h3 class={h3}>Common Eclectus Health Concerns</h3>
+        <p class={p}>The Eclectus's problems cluster almost entirely around diet and supplementation — the price of that specialised digestive system. Get the diet right and the Eclectus is a robust bird; get it wrong and the warning signs appear fast.</p>
+        <h4 class={h4}>Toe-Tapping, Wing-Flipping and Nutritional Sensitivity</h4>
+        <p class={p}>The Eclectus's signature red flags are toe-tapping and wing-flipping, widely linked to over-supplementation and synthetic vitamins. It's a health profile with no real African Grey equivalent, and the clearest illustration of why "easier to care for" depends entirely on which kind of effort you'd rather give.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 11. H2 Sexing -->
+        <h2 id="sexing" class={h2}>How Do You Tell Males from Females — and Does It Matter?</h2>
+        <p class={p}>Here the two birds are perfect opposites, and it's one of the most charming contrasts between them. With one, your eyes tell you the sex instantly; with the other, only science can.</p>
+
+        <h3 class={h3}>Eclectus: The Most Sexually Dimorphic Parrot in the World</h3>
+        <p class={p}>With an Eclectus, sexing is effortless: the male is emerald green, the female crimson and purple. You know the sex the moment you see the bird — no test, no guesswork. It's a genuine practical advantage if knowing the sex up front matters to you.</p>
+
+        <h3 class={h3}>African Grey: Identical Sexes, So We DNA-Sex Every Bird</h3>
+        <p class={p}>African Greys are the opposite — males and females look identical, so the only certain way to know the sex is a DNA test. That's why every Grey we place comes with its sex confirmed and documented, rather than guessed.</p>
+        <h4 class={h4}>What PCR DNA Sexing Puts on Your Bird's Paperwork</h4>
+        <p class={p}>A PCR DNA-sexing certificate tells you for certain whether your Grey is male or female, and it goes home in the same folder as the CITES Appendix I documentation, avian-vet certificate and health guarantee. With a Grey, the paperwork tells you the sex; with an Eclectus, the colour does.</p>
+        <h5 class={h5}>How the PCR test is run and why it's certain</h5>
+        <p class={p}>PCR sexing reads the bird's chromosomes from a small blood or feather sample, so it isn't an estimate — it's a genetic result. It's the same method reputable breeders across the hobby rely on precisely because visual sexing of a Grey is impossible.</p>
+        <h6 class={h6} style="color:#b04228">Citation: PCR DNA-sexing accuracy in psittacines</h6>
+        <p class={p}>Molecular sexing of monomorphic parrots is the established standard — the <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11939742/" class={lnk} style="color:#b04228" target="_blank" rel="noopener noreferrer">peer-reviewed literature on avian PCR sexing ↗</a> documents its reliability. For a species where you simply cannot tell by looking, that certainty is exactly what a certificate is for.</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 12. MIDDLE/decision — final verdict tree -->
+        <h2 id="final" class={h2}>The Final Verdict: Grey or Eclectus?</h2>
+        <p class={p}>Put it all together and the choice is genuinely simple once you're honest about yourself rather than the birds. Answer the one line below that sounds most like you.</p>
+        <div class="mt-2">
+          <DecisionTree question="Which Parrot Is Right for You?" branches={fitBranches} headingLevel="h3" />
+        </div>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 13. H2 Why C.A.Gs -->
+        <h2 id="why" class={h2}>Why Buyers Who Choose the Grey Choose C.A.Gs</h2>
+        <p class={p}>If the honest answer for you is the African Grey, the next question is where to get one — and that decision matters as much as the species. Here at C.A.Gs we raise Greys, not Eclectus, and everything about how we place a bird is built around the checks a careful buyer should insist on.</p>
+
+        <figure class="m-0 my-6">
+          <img src={trustPhoto} width="640" height="480" loading="lazy" decoding="async" class="w-full rounded-2xl border border-stone-200" alt="Mark and Teri Benjamin with a hand-raised Congo African Grey at C.A.Gs in Midland, Texas" title="Why buyers choose C.A.Gs | C.A.Gs" />
+          <figcaption class={figc}>Real people, real birds, real paperwork — a breeder you can verify.</figcaption>
+        </figure>
+
+        <h3 class={h3}>Hand-Raised, DNA-Sexed and Documented</h3>
+        <p class={p}>Every C.A.Gs Grey is hand-raised in our home in Midland, Texas, PCR DNA-sexed, examined by an avian vet, and sent home with CITES Appendix I documentation and a written health guarantee. You're not hoping the bird is healthy and legal — you're holding the paperwork that proves it.</p>
+
+        <h3 class={h3}>Lifetime Breeder Support and Nationwide Shipping</h3>
+        <p class={p}>Because a Grey can share 40–60 years of your life, the relationship shouldn't end at the airport. We answer questions for the life of the bird and ship nationwide on IATA-compliant flights.</p>
+        <h4 class={h4}>What Lifetime Support Actually Covers</h4>
+        <p class={p}>It means you have a number to call for the plucking scare in year three and the diet question in year eight — the everyday milestones of Grey ownership — with the people who raised your bird on the other end.</p>
+        <h5 class={h5}>Safe, IATA-compliant nationwide shipping</h5>
+        <p class={p}>Our birds travel on IATA-compliant Delta, United or American flights — $185 to your nearest airport or $350 home delivery — crated, monitored and documented the whole way, so a verifiable breeder a few states away is still the right choice.</p>
+        <h6 class={h6} style="color:#b04228">Breeder note: buyers who came to us torn between the two</h6>
+        <p class={p}>Plenty of our owners arrived undecided between a Grey and an Eclectus. The ones who wanted conversation and a bird that engages with the whole family almost always landed on the Grey — and told us later that the daily "talking back" was exactly what they'd hoped for and what tipped the decision.</p>
+
+        <BreederNote>
+          <p>If you remember one line from this page, make it this: don't ask which bird is better, ask which bird fits the life you actually live. An African Grey in a home ready for its mind, or an Eclectus in a home ready for its diet, are both a joy for decades. The mismatch — either bird in the wrong home — is the only real wrong answer.</p>
+        </BreederNote>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 14. BOTTOM conversion — available birds -->
+        <h2 id="available" class={h2}>See Our Available Hand-Raised African Greys</h2>
+        <p class={p}>If the Grey is your bird, here are the hand-raised African Greys available now — each PCR DNA-sexed, vet-checked and CITES-documented, at one fair, fixed price. We don't breed Eclectus, but for the smartest talking companion in the comparison, these are ready to meet on a live video call.</p>
+        <div class="grid sm:grid-cols-2 gap-5 mt-2">
+          {birds.map((b) => (
+            <BirdCard
+              id={b.id} name={b.name} sex={b.sex} age={b.age} price={b.price}
+              tag={b.tag} tagType={b.tagType} notes={b.notes} hook={b.hook}
+              image={b.image} variant={b.variant} objectPos={b.objectPos}
+            />
+          ))}
+        </div>
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 text-center mt-6 mb-2">
+          <p class="font-lora font-bold text-2xl mb-2 text-logo-dark">Ready to meet a talking Grey?</p>
+          <p class="text-stone-600 mb-1">Ships nationwide · $185 airport · $350 home</p>
+          <p class="text-stone-500 text-sm mb-5">IATA-compliant transport · Delta / United / American · IATA LAR</p>
+          <a href="/available/" class="inline-block bg-clay text-white font-sora font-semibold px-7 py-3 mr-2" style="border-radius:50px">See all available African Greys</a>
+          <a href="/contact-us/" class="inline-block font-sora font-semibold px-7 py-3 underline" style="color:#b04228">Book a live video call</a>
+        </div>
+
+        <p class="font-lora italic text-stone-600 text-center mt-8 mb-0">— Written by Mark &amp; Teri Benjamin, the breeders behind C.A.Gs · USDA-licensed African Grey aviary, Midland, TX</p>
+
+        <div class="cag-seam" aria-hidden="true"><span class="cag-seam__line"></span><img src="/cag-footer-logo.webp" alt="" width="200" height="66" loading="lazy" /><span class="cag-seam__line"></span></div>
+
+        <!-- 15. FAQ -->
+        <h2 id="faq" class={h2}>African Grey vs Eclectus: Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {faqs.map((faq) => (
+            <details class="bg-white rounded-xl border border-stone-200 p-5">
+              <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
+              <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <!-- 16. Related posts -->
+        <div class="mt-12">
+          <RelatedPosts heading="Keep reading" headingLevel="h2" posts={[
+            { title: "African Grey Talking Ability: How Well Do They Really Talk?", slug: "/blog/african-grey-parrot-talking-ability/", category: "Talking" },
+            { title: "Is an African Grey Good for Beginners? An Honest Answer", slug: "/blog/is-african-grey-good-for-beginners/", category: "Buying" },
+            { title: "African Grey Comparison Hub: Grey vs Every Other Big Talker", slug: "/african-grey-comparison/", category: "Compare" },
+          ]} />
+        </div>
+
+      </div>
+    </section>
   </div>
 
-  <section style="background:#2D6A4F" class="text-white py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <p style="color:#f0c674" class="font-sora text-sm font-semibold uppercase tracking-widest mb-4">Species Comparison · USDA-Licensed Breeders · Midland, TX</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4" style="color:#faf7f4">African Grey vs Eclectus: Which Is the Better Talking Parrot?</h1>
-      <p style="color:rgba(250,247,244,0.8)" class="text-lg max-w-2xl mx-auto">Two intelligent, mid-sized companions that suit calmer homes — but they differ sharply on talking, diet, and looks. Here is the honest side-by-side.</p>
-    </div>
-  </section>
+  <!-- Newsletter -->
+  <Newsletter variant="bottom" action="/contact-us/" bottomText="New hand-raised African Grey clutches, verified and documented, before they're listed — socialised families first." />
 
-  <section class="py-16 px-4" style="background:#faf7f4">
-    <div class="cag-article mx-auto" style="max-width:760px">
-
-      <p class="text-stone-700 leading-relaxed mb-4">Buyers who have narrowed their search to smart, manageable parrots often end up choosing between the African Grey and the Eclectus — and it is a genuinely close call on temperament and noise, but not on everything. Our <a href="#verdict">quick-verdict table below</a> sums it up, and then we will walk through where each bird actually pulls ahead.</p>
-      <p class="text-stone-700 leading-relaxed mb-8">We raise African Greys ourselves and don't breed Eclectus, so treat the Eclectus details here as neutral species facts and the Grey details as what we see first-hand in our aviary every day. If you want the wider field, our <a href="/african-grey-comparison/">African Grey comparison hub</a> weighs the Grey against the other big talkers too.</p>
-
-      <h2 id="verdict" class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Quick Verdict: African Grey vs Eclectus</h2>
-      <div class="bg-white rounded-xl border border-stone-200 overflow-hidden mb-8">
-        <table class="w-full text-sm">
-          <thead>
-            <tr style="background:#2D6A4F">
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Factor</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">African Grey</th>
-              <th class="text-left py-3 px-4 font-sora font-semibold text-white">Eclectus</th>
-            </tr>
-          </thead>
-          <tbody class="text-stone-600 divide-y divide-stone-100">
-            <tr><td class="py-3 px-4 font-semibold">Talking ability</td><td class="py-3 px-4">Exceptional, context-aware</td><td class="py-3 px-4">Very good, clear voice</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">Temperament</td><td class="py-3 px-4">Sensitive, deeply bonded</td><td class="py-3 px-4">Calm, laid-back</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">Noise level</td><td class="py-3 px-4">Moderate</td><td class="py-3 px-4">Moderate</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">Diet</td><td class="py-3 px-4">Pellet-first + fresh produce</td><td class="py-3 px-4">Specialised: fresh, high-fibre, low-fat</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">Telling sexes apart</td><td class="py-3 px-4">Identical — needs DNA sexing</td><td class="py-3 px-4">Obvious — male green, female red</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">Lifespan</td><td class="py-3 px-4">40–60 years</td><td class="py-3 px-4">~30 years</td></tr>
-            <tr><td class="py-3 px-4 font-semibold">Best for</td><td class="py-3 px-4">Owners wanting the smartest talker</td><td class="py-3 px-4">Owners wanting a calm, colourful bird</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Talking Ability: The Grey's Strongest Suit</h2>
-      <p class="text-stone-700 leading-relaxed mb-4">This is where the African Grey earns its reputation. Our Congo Greys commonly build vocabularies of several hundred words and — uniquely among parrots — use them in context, a trait <a href="https://alexfoundation.org/" target="_blank" rel="noopener noreferrer">Dr. Irene Pepperberg documented</a> over three decades with the famous Grey named Alex. We go deep on this in our guide to <a href="/blog/african-grey-parrot-talking-ability/">African Grey talking ability</a>.</p>
-      <p class="text-stone-700 leading-relaxed mb-8">Eclectus parrots are no slouches — many develop clear, pleasant voices and a respectable vocabulary, and some owners rate their clarity highly. But across the hobby the Grey is still the species most often crowned the best talking parrot in the world, and for buyers whose top priority is genuine, conversational speech, that edge is decisive.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Temperament and Noise</h2>
-      <p class="text-stone-700 leading-relaxed mb-8">Here the two are closer. The Eclectus is famously easy-going and even-tempered, which makes it forgiving for a household that wants a calmer presence. Our African Greys are more emotionally sensitive — they read the mood of a home closely and bond hard, which is wonderful but asks for consistency. On volume both are moderate: a Grey whistles and mimics far more than it screams, and an Eclectus is generally quiet, so either one suits close neighbours far better than a macaw or cockatoo would. If volume is your deciding factor, our <a href="/african-grey-vs-macaw/">African Grey vs Macaw comparison</a> shows just how much louder the alternatives get.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Diet: Where the Eclectus Is Genuinely Different</h2>
-      <p class="text-stone-700 leading-relaxed mb-8">The single biggest care difference is diet. The Eclectus has an unusually long digestive tract and does best on a fresh, low-fat, high-fibre diet built around fruits and vegetables; many react to synthetic vitamins and heavily fortified pellets with stress behaviours such as toe-tapping and wing-flipping. As <a href="https://www.parrots.org/" target="_blank" rel="noopener noreferrer">the World Parrot Trust</a> and most avian vets note, getting an Eclectus diet wrong shows up fast. Our African Greys are more straightforward — a quality formulated pellet as the base, plus fresh produce and calcium support, since Greys are prone to hypocalcemia. Neither bird thrives on a seed-only diet.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Appearance and Sexing</h2>
-      <p class="text-stone-700 leading-relaxed mb-8">Visually they could hardly be more different. The Eclectus is the most sexually dimorphic parrot in the world — emerald-green males and crimson-and-purple females, once mistaken for two species. The African Grey is the opposite: a silver-scalloped grey body with a scarlet tail (Congo) or maroon tail (Timneh), and males and females are identical. That is exactly why we <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11939742/" target="_blank" rel="noopener noreferrer">PCR DNA-sex</a> every Grey we raise and hand you the certificate — with a Grey, the science tells you the sex; with an Eclectus, the colour does.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-6" style="color:#2D6A4F">Which One Is Right for You?</h2>
-      <p class="text-stone-700 leading-relaxed mb-8">If your heart is set on the most accomplished talker and you want a bird that bonds like family, the African Grey is the clear pick — and our hand-raised <a href="/congo-african-grey-for-sale/">Congo African Greys</a> are bred for exactly that. If you want a calmer, spectacularly colourful companion and you are happy to commit to a fresh-food diet, the Eclectus is a wonderful bird. For most buyers who came looking for conversation, the Grey wins — but the best parrot is always the one whose needs match the home you can actually give it.</p>
-
-      <h2 class="font-lora font-bold text-3xl mb-8" style="color:#2D6A4F">Frequently Asked Questions</h2>
-      <div class="space-y-4">
-        {faqs.map((faq) => (
-          <details class="bg-white rounded-xl border border-stone-200 p-5">
-            <summary class="font-sora font-semibold text-stone-800 cursor-pointer">{faq.q}</summary>
-            <p class="mt-3 text-stone-600 leading-relaxed text-sm">{faq.a}</p>
-          </details>
-        ))}
-      </div>
-
-    </div>
-  </section>
-
+  <StickyCta label="See available African Greys" href="/available/" />
 </BaseLayout>
