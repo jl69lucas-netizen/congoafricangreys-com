@@ -7,14 +7,13 @@ import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
-  // Inline small render-blocking component stylesheets (JumpRail ~5.4KB,
-  // cag-inquiry-form ~5.8KB, small per-route index.*.css) into <style> tags so
-  // they leave the critical request path. 'auto' inlines any stylesheet smaller
-  // than vite.build.assetsInlineLimit; we raise it to 6500 to catch those two
-  // component files while keeping the 105KB BaseLayout.css external. Verified safe:
-  // zero non-CSS assets are <7KB, so no image/font gets base64-inlined as a side effect.
+  // Inline ALL stylesheets (incl. the ~105KB raw / ~18KB gzip BaseLayout.css) into
+  // <style> tags. Lighthouse flagged the external BaseLayout.css as the render-blocking
+  // request + critical-chain tail (~300ms) on every page; inlining removes that round
+  // trip entirely. Trade-off: the CSS is no longer cached across page navigations
+  // (+~18KB gzip per HTML load) — accepted 2026-07-03 to clear the perf gate.
   build: {
-    inlineStylesheets: 'auto',
+    inlineStylesheets: 'always',
   },
   vite: {
     plugins: [tailwindcss()],
