@@ -10,7 +10,7 @@ Status: PENDING BREEDER COPY APPROVAL.
 
 ## S14 — H2: What Do Congo and Timneh Greys Cost? (~420w) [INF cost chart]
 
-Sticker prices first, because nobody trusts a page that hides them: our Congos run $1,700–$2,500 (weaned chicks at the top of that band, tame adults lower) and our Timnehs $1,500–$1,600. A $200 deposit reserves either. Full current pricing per bird lives on the [price guide → /african-grey-parrot-price/].
+Sticker prices first, because nobody trusts a page that hides them: our Congos run $1,700–$3,500 (weaned chicks $1,700–$2,500, older or proven birds up to $3,500) and our Timnehs $1,500–$1,600. A $200 deposit reserves either. Full current pricing per bird lives on the [price guide → /african-grey-parrot-price/].
 
 ### H3: Our Price vs What You'll See Elsewhere
 

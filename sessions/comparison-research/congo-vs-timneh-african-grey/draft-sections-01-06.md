@@ -19,11 +19,11 @@ Status: PENDING BREEDER COPY APPROVAL. Components: Hero A · counter snippet · 
 **Quick Answer:** Congo and Timneh African Greys differ mainly in size, tail color, maturity speed, and bonding style. The Congo (400–600 g, bright red tail) is the larger variant and the more precise mimic, and usually bonds hardest with one person. The Timneh (275–375 g, maroon tail) matures earlier, often talks sooner, and tends to share its bond across the household.
 
 [follow paragraph, ~55 words]
-Neither variant is "better," and we say that as the people who raise both. The price gap is smaller than most buyers expect — our Congos run $1,700–$2,500 and our Timnehs $1,500–$1,600 — and the lifespan is identical. What actually decides it is your household, and that's what the rest of this page works out.
+Neither variant is "better," and we say that as the people who raise both. The price gap is smaller than most buyers expect — our Congos run $1,700–$3,500 and our Timnehs $1,500–$1,600 — and the lifespan is identical. What actually decides it is your household, and that's what the rest of this page works out.
 
 ## S5 — H2: What Should You Take Away Before Choosing? (3A stat grid, 8 tiles)
 1. **400–600 g** — a Congo in the hand; Timnehs run 275–375 g
-2. **$1,500–$2,500** — the full C.A.Gs price band across both variants, paperwork included
+2. **$1,500–$3,500** — the full C.A.Gs price band across both variants, paperwork included
 3. **40–60 yrs** — either grey is a retirement-length commitment
 4. **2–3 yrs** — Timneh maturity, vs 4–6 for a Congo; that means a steadier adolescence
 5. **Red vs maroon** — fastest visual ID: tail color, plus the Timneh's horn-colored upper beak
@@ -39,7 +39,7 @@ Neither variant is "better," and we say that as the people who raise both. The p
 | Adult weight | 400–600 g | 275–375 g | Depends on your space |
 | Tail color | Bright red | Dark maroon | Preference |
 | Beak | Solid black | Horn-colored upper mandible | ID marker only |
-| Price at C.A.Gs | $1,700–$2,500 | $1,500–$1,600 | Timneh |
+| Price at C.A.Gs | $1,700–$3,500 | $1,500–$1,600 | Timneh |
 | Talking style | Later start, uncanny precision | Earlier start, very capable | Depends on patience |
 | Maturity | 4–6 years | 2–3 years | Timneh |
 | Bonding | Deep, usually one person | Steadier, whole household | Depends on your home |
