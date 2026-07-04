@@ -77,6 +77,21 @@ PROFILES = {
         "house_method": "WARN",
         "airport_codes": "WARN",         # transactional nicety on price page, not a ship-blocker
     },
+    "comparison": {                      # [X] vs [Y] spokes + hub (added 2026-07-04 per breeder review)
+        "no_aggregateoffer": "FAIL",     # comparison pages never carry Offer/AggregateOffer (variant pages own it)
+        "no_pbfd_claim": "NA",
+        "sold_not_instock": "NA",
+        "shipping_line": "FAIL",         # shipping section must show $185 airport / $350 home
+        "real_hero_image": "FAIL",
+        "wordcount_in_band": "WARN",     # deep-standard band 3,000–8,000 incl. chrome (5.2k target)
+        "house_method": "WARN",
+        "cites_captive_usda_early": "WARN",
+        "lifespan_40_60": "WARN",
+        "breadcrumb_one": "FAIL",
+        "faqpage_present": "FAIL",
+        "single_canonical": "FAIL",
+        "no_emoji": "FAIL",
+    },
     "blog": {                            # /blog/ hub + dist/blog/<slug>/ posts (spec 2026-06-27)
         # Blog gate = ONLY the checks the cluster spec defines; everything else is
         # NA so a post is judged on what the program actually requires. The FAIL
@@ -166,6 +181,8 @@ def audit_html(slug, html, page_type="interior"):
     # Interior/other pages use the lean target (700–1,000 ±buffer for chrome).
     if page_type == "bird":
         r["wordcount_in_band"] = 1500 <= nwords <= 4000
+    elif page_type == "comparison":
+        r["wordcount_in_band"] = 3000 <= nwords <= 8000  # deep 22–25-section standard + chrome
     else:
         r["wordcount_in_band"] = 600 <= nwords <= 1200  # 700-1000 target ±buffer for chrome
     # hero must be a real photo, not a placeholder/logo
@@ -200,7 +217,14 @@ def audit_html(slug, html, page_type="interior"):
     r["img_dims"]=all(yes(i,"width") and yes(i,"height") for i in imgs) if imgs else True
     # --- a11y / gotcha traps (Part K / M / #26, #28) ---
     r["no_svg_in_content"] = not re.search(r"content\s*:\s*['\"]\s*<svg", raw)
-    r["no_userselect_none"] = "user-select:none" not in raw.replace(" ","")
+    # user-select:none is banned when APPLIED. Tailwind's bundled ".select-none{…}"
+    # utility DEFINITION ships in the global CSS on every page even when unused
+    # (site-wide false positive confirmed 2026-07-04) — strip that rule definition,
+    # then fail only if markup actually applies the class or any other CSS sets it.
+    css_nospace = raw.replace(" ", "").replace("\n", "")
+    defs_stripped = re.sub(r"\.select-none[^{]*\{[^}]*\}", "", css_nospace)
+    applied_class = bool(re.search(r'class="[^"]*\bselect-none\b', raw))
+    r["no_userselect_none"] = ("user-select:none" not in defs_stripped) and not applied_class
     r["no_escaped_svg"] = "&lt;svg" not in raw
     r["no_emoji_parrot"] = "\U0001F99C" not in raw
     # --- links (Part F / #3, #23) ---
@@ -243,7 +267,7 @@ def audit_html(slug, html, page_type="interior"):
     r["no_visible_date"]=not re.search(r"(?:updated|last updated|last modified)\b[^0-9]{0,18}\b20\d\d", visible, re.I)
     # --- blog-only gates (page_type == "blog") ---
     # Computed only for blog so these never add new FAIL gates to bird/interior rows.
-    if page_type == "blog":
+    if page_type in ("blog", "comparison"):
         r["breadcrumb_one"] = flat.count("BreadcrumbList") == 1
         r["faqpage_present"] = flat.count("FAQPage") >= 1
         r["single_canonical"] = len(re.findall(
@@ -285,6 +309,11 @@ def audit(slug, page_type="interior"):
 BIRDS = ["available/bery","available/amie","available/roys",
          "available/jins-jeni","available/elad","available/evie"]
 
+COMPARISONS = ["african-grey-comparison","congo-vs-timneh-african-grey",
+               "male-vs-female-african-grey-parrots-for-sale","african-grey-vs-macaw",
+               "african-grey-vs-cockatoo","african-grey-vs-amazon-parrot",
+               "african-grey-parrot-breeders-comparison"]
+
 def blog_targets():
     """Discover the /blog/ hub (dist/blog/index.html) + every dist/blog/<slug>/ post."""
     targets = []
@@ -300,8 +329,11 @@ def main():
         targets = [(s, "bird") for s in BIRDS]
     elif "--blog" in sys.argv:
         targets = blog_targets()
+    elif "--comparison" in sys.argv:
+        targets = [(s, "comparison") for s in COMPARISONS]
     else:
-        targets = [(s, "interior") for s in SLUGS] + blog_targets()
+        targets = ([(s, "interior") for s in SLUGS] + blog_targets()
+                   + [(s, "comparison") for s in COMPARISONS])
     rows = {s: audit(s, t) for s, t in targets}
     print("\n=== C.A.Gs FINAL PAGE PASS ===  (verdict per page)\n")
     for s, r in rows.items():
