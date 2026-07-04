@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAG Comparison Component Lab — Screen 1: Hero A/B/C (Set B)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--forest:#2D6A4F;--clay:#e8604c;--clay-ink:#c8472f;--clay-text:#b04228;--cream:#faf7f4;--ink:#2a2622;--border:#e7ddd3;}
+  *{box-sizing:border-box;margin:0}
+  body{font-family:'IBM Plex Sans',sans-serif;background:#efe9e2;color:var(--ink);padding:32px 4vw 80px}
+  h1,h2,h3,.serif{font-family:'Newsreader',serif}
+  .lab-head{max-width:1200px;margin:0 auto 28px}
+  .lab-head h1{font-size:2rem;color:var(--forest)}
+  .lab-head p{max-width:70ch;margin-top:8px;color:#5b524a}
+  .variant{max-width:1200px;margin:0 auto 48px;background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:0 6px 24px rgba(60,30,10,.08);overflow:hidden;cursor:pointer;transition:box-shadow .2s}
+  .variant.selected{outline:4px solid var(--clay);box-shadow:0 10px 30px rgba(60,30,10,.18)}
+  .variant-bar{display:flex;align-items:center;gap:12px;padding:14px 22px;background:var(--forest);color:#fff}
+  .variant-bar .tag{background:#fff;color:var(--forest);font-weight:600;border-radius:50px;padding:4px 14px;font-size:.85rem}
+  .variant-bar .rec{background:var(--clay);color:#fff;border-radius:50px;padding:4px 14px;font-size:.8rem;font-weight:600}
+  .variant-bar small{opacity:.85}
+  .frames{display:grid;grid-template-columns:1fr 415px;gap:0;align-items:start}
+  @media(max-width:1000px){.frames{grid-template-columns:1fr}}
+  .frame-label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#8a7f74;padding:10px 22px 4px}
+  .desktop{border-right:1px solid var(--border)}
+  .phone-wrap{padding:10px 20px 24px}
+  .phone{width:375px;border:10px solid #22201d;border-radius:34px;overflow:hidden;background:var(--cream)}
+  /* ---------- shared hero bits ---------- */
+  .eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--clay-text);font-weight:600}
+  .eyebrow::before{content:"";display:inline-block;width:14px;height:3px;background:var(--clay);margin-right:8px;vertical-align:middle}
+  .h1{font-family:'Newsreader',serif;font-weight:700;color:var(--ink);line-height:1.12}
+  .lead{color:#4c443c;max-width:60ch}
+  .cta{display:inline-block;background:var(--clay-ink);color:#fff;border-radius:50px;padding:13px 28px;font-weight:600;text-decoration:none;font-size:.95rem}
+  .cta.ghost{background:transparent;color:var(--forest);border:2px solid var(--forest)}
+  .vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border:3px solid var(--clay);color:var(--clay-ink);font-family:'Newsreader',serif;font-weight:700;font-size:1.15rem;width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(60,30,10,.25);z-index:2}
+  .chip{position:absolute;bottom:10px;background:rgba(255,255,255,.92);border-radius:50px;padding:5px 13px;font-size:.75rem;font-weight:600;color:var(--forest)}
+  img{display:block;width:100%;height:100%;object-fit:cover}
+  /* ---------- HERO A : Editorial Split ---------- */
+  .heroA{background:var(--cream);padding:40px 44px}
+  .heroA .imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:4px;border-radius:20px;overflow:hidden;height:300px}
+  .heroA .imgs .chip.l{left:12px}.heroA .imgs .chip.r{right:12px}
+  .heroA .copy{margin-top:26px;text-align:center}
+  .heroA .h1{font-size:2.3rem;margin:10px 0 12px}
+  .heroA .lead{margin:0 auto 20px}
+  .phone .heroA{padding:18px 16px}
+  .phone .heroA .imgs{height:190px;border-radius:16px}
+  .phone .heroA .h1{font-size:1.5rem}
+  .phone .heroA .cta{display:block;text-align:center;margin-bottom:10px}
+  /* ---------- HERO B : Scorecard Split ---------- */
+  .heroB{position:relative}
+  .heroB .imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;height:340px}
+  .heroB .panel{position:relative}
+  .heroB .stats{position:absolute;left:12px;right:12px;bottom:12px;display:flex;gap:6px;flex-wrap:wrap}
+  .heroB .stats span{background:rgba(45,106,79,.92);color:#fff;border-radius:50px;padding:4px 11px;font-size:.72rem;font-weight:600}
+  .heroB .band{background:var(--forest);color:#fff;padding:26px 44px}
+  .heroB .band .eyebrow{color:#ffd6c9}.heroB .band .eyebrow::before{background:#ffd6c9}
+  .heroB .h1{color:#fff;font-size:2.1rem;margin:8px 0 10px}
+  .heroB .lead{color:#e8f0eb}
+  .heroB .band .cta{margin-top:16px}
+  .phone .heroB .imgs{grid-template-columns:1fr;height:auto}
+  .phone .heroB .panel{height:150px}
+  .phone .heroB .vs{top:150px}
+  .phone .heroB .band{padding:18px 16px}
+  .phone .heroB .h1{font-size:1.45rem}
+  /* ---------- HERO C : Photo + Decision Bar ---------- */
+  .heroC{background:var(--cream)}
+  .heroC .imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;height:280px}
+  .heroC .copy{padding:26px 44px 8px}
+  .heroC .h1{font-size:2.2rem;margin:8px 0 10px}
+  .heroC .decide{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 44px 34px}
+  .heroC .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 18px;box-shadow:0 3px 12px rgba(60,30,10,.06)}
+  .heroC .card b{font-family:'Newsreader',serif;color:var(--forest);font-size:1.02rem}
+  .heroC .card p{font-size:.85rem;color:#5b524a;margin-top:6px}
+  .heroC .card .go{color:var(--clay-text);font-weight:600;font-size:.85rem}
+  .phone .heroC .imgs{height:180px}
+  .phone .heroC .copy{padding:16px 16px 4px}
+  .phone .heroC .h1{font-size:1.45rem}
+  .phone .heroC .decide{grid-template-columns:1fr;padding:12px 16px 20px}
+  .picker{position:fixed;bottom:0;left:0;right:0;background:var(--forest);color:#fff;padding:12px 4vw;display:flex;gap:16px;align-items:center;z-index:9}
+  .picker b{font-family:'Newsreader',serif}
+</style>
+</head>
+<body>
+<div class="lab-head">
+  <h1>Comparison Component Lab — Screen 1 of 2: HERO (Set B pages)</h1>
+  <p>Click a card to select. Set B = congo-vs-timneh · pros-and-cons · breeders-comparison. All three follow your spec: split layout, grey LEFT vs rival RIGHT, VS seam, mobile stacks with images BEFORE the H1. Desktop render left, true 375px mobile render right.</p>
+</div>
+
+<!-- ============ VARIANT A ============ -->
+<section class="variant" id="A" onclick="pick('A')">
+  <div class="variant-bar"><span class="tag">HERO A — Editorial Split</span><span class="rec">Recommended</span><small>Why: closest to your described spec + calmest editorial register (PRODUCT.md); centered copy scales to all 3 Set-B pages. Trade-off: less overt data than B — the scorecard arrives in section 12 instead.</small></div>
+  <div class="frames">
+    <div class="desktop"><div class="frame-label">Desktop 1200px</div>
+      <div class="heroA">
+        <div class="imgs">
+          <div style="position:relative"><img src="https://congoafricangreys.com/congo-african-grey-talking-ability-760.webp" alt="Congo African Grey"><span class="chip l">Congo African Grey</span></div>
+          <div style="position:relative"><img src="https://congoafricangreys.com/evie-timneh-african-grey-female-6-months.webp" alt="Timneh African Grey"><span class="chip r">Timneh African Grey</span></div>
+          <span class="vs">VS</span>
+        </div>
+        <div class="copy">
+          <span class="eyebrow">Hand-Raised · CITES-Documented · Midland, TX</span>
+          <div class="h1">Congo vs Timneh African Grey: Key Differences</div>
+          <p class="lead">We raise both. Here's the honest, side-by-side breakdown — size, talking ability, temperament, cost — so you choose the right grey the first time.</p>
+          <a class="cta" href="#">Compare Now</a>&nbsp;&nbsp;<a class="cta ghost" href="#">See Available Greys</a>
+        </div>
+      </div>
+    </div>
+    <div class="phone-wrap"><div class="frame-label">Mobile 375px — images first</div>
+      <div class="phone"><div class="heroA">
+        <div class="imgs">
+          <div style="position:relative"><img src="https://congoafricangreys.com/congo-african-grey-talking-ability-500.webp" alt=""><span class="chip l">Congo</span></div>
+          <div style="position:relative"><img src="https://congoafricangreys.com/evie-timneh-african-grey-female-6-months.webp" alt=""><span class="chip r">Timneh</span></div>
+          <span class="vs">VS</span>
+        </div>
+        <div class="copy">
+          <span class="eyebrow">Hand-Raised · CITES-Documented</span>
+          <div class="h1">Congo vs Timneh African Grey: Key Differences</div>
+          <a class="cta" href="#">Compare Now</a>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VARIANT B ============ -->
+<section class="variant" id="B" onclick="pick('B')">
+  <div class="variant-bar"><span class="tag">HERO B — Scorecard Overlay Split</span><small>Data-forward: stat chips on each bird, H1 on forest band. Why consider: strongest instant-comparison signal. Trade-off: busiest hero; chips repeat section-12 scorecard data.</small></div>
+  <div class="frames">
+    <div class="desktop"><div class="frame-label">Desktop 1200px</div>
+      <div class="heroB">
+        <div class="imgs">
+          <div class="panel"><img src="https://congoafricangreys.com/congo-african-grey-talking-ability-760.webp" alt="Congo"><div class="stats"><span>Congo</span><span>400–650 g</span><span>Talker 10/10</span></div></div>
+          <div class="panel"><img src="https://congoafricangreys.com/elad-timneh-african-grey-male-5-months.webp" alt="Timneh"><div class="stats"><span>Timneh</span><span>275–375 g</span><span>Earlier maturity</span></div></div>
+          <span class="vs">VS</span>
+        </div>
+        <div class="band">
+          <span class="eyebrow">Hand-Raised · CITES-Documented · Midland, TX</span>
+          <div class="h1">Congo vs Timneh African Grey: Key Differences</div>
+          <p class="lead">Two greys, one honest breeder comparison — from the aviary that raises both.</p>
+          <a class="cta" href="#">Compare Now</a>
+        </div>
+      </div>
+    </div>
+    <div class="phone-wrap"><div class="frame-label">Mobile 375px — images first</div>
+      <div class="phone"><div class="heroB">
+        <div class="imgs">
+          <div class="panel"><img src="https://congoafricangreys.com/congo-african-grey-talking-ability-500.webp" alt=""><div class="stats"><span>Congo</span><span>Talker 10/10</span></div></div>
+          <div class="panel"><img src="https://congoafricangreys.com/elad-timneh-african-grey-male-5-months.webp" alt=""><div class="stats"><span>Timneh</span><span>275–375 g</span></div></div>
+        </div>
+        <div class="band">
+          <div class="h1">Congo vs Timneh African Grey: Key Differences</div>
+          <a class="cta" href="#">Compare Now</a>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VARIANT C ============ -->
+<section class="variant" id="C" onclick="pick('C')">
+  <div class="variant-bar"><span class="tag">HERO C — Photo + Decision Bar</span><small>Quick-Answer built into the hero as two choose-if cards. Why consider: fastest path to the AI-extractable decision block. Trade-off: pushes H1 lower; duplicates section-4 Quick Answer.</small></div>
+  <div class="frames">
+    <div class="desktop"><div class="frame-label">Desktop 1200px</div>
+      <div class="heroC">
+        <div class="imgs">
+          <div style="position:relative"><img src="https://congoafricangreys.com/congo-african-grey-talking-ability-760.webp" alt="Congo"><span class="chip" style="left:12px">Congo</span></div>
+          <div style="position:relative"><img src="https://congoafricangreys.com/evie-timneh-african-grey-female-6-months.webp" alt="Timneh"><span class="chip" style="right:12px">Timneh</span></div>
+          <span class="vs">VS</span>
+        </div>
+        <div class="copy">
+          <span class="eyebrow">Hand-Raised · CITES-Documented · Midland, TX</span>
+          <div class="h1">Congo vs Timneh African Grey: Key Differences</div>
+        </div>
+        <div class="decide">
+          <div class="card"><b>Choose a Congo if…</b><p>you want the classic larger grey, the strongest mimicry precision, and a deep one-person bond.</p><span class="go">Jump to Congo deep dive →</span></div>
+          <div class="card"><b>Choose a Timneh if…</b><p>you want a slightly smaller, earlier-maturing grey that often bonds with the whole family.</p><span class="go">Jump to Timneh deep dive →</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-wrap"><div class="frame-label">Mobile 375px — images first</div>
+      <div class="phone"><div class="heroC">
+        <div class="imgs">
+          <div style="position:relative"><img src="https://congoafricangreys.com/congo-african-grey-talking-ability-500.webp" alt=""></div>
+          <div style="position:relative"><img src="https://congoafricangreys.com/evie-timneh-african-grey-female-6-months.webp" alt=""></div>
+          <span class="vs">VS</span>
+        </div>
+        <div class="copy"><div class="h1">Congo vs Timneh African Grey: Key Differences</div></div>
+        <div class="decide">
+          <div class="card"><b>Choose a Congo if…</b><p>strongest talker, one-person bond.</p></div>
+          <div class="card"><b>Choose a Timneh if…</b><p>smaller, steadier, family bonder.</p></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<div class="picker"><b>Your pick:</b> <span id="sel">none yet — click a hero card</span></div>
+<script>
+function pick(id){document.querySelectorAll('.variant').forEach(v=>v.classList.remove('selected'));
+document.getElementById(id).classList.add('selected');
+document.getElementById('sel').textContent='HERO '+id+' selected — tell Claude "Hero '+id+'" in chat to lock it.';
+localStorage.setItem('cag-hero-pick',id);}
+const prev=localStorage.getItem('cag-hero-pick');if(prev)pick(prev);
+</script>
+</body>
+</html>
