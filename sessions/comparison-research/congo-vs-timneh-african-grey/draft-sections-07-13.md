@@ -39,11 +39,11 @@ Slowly, then completely. The classic Congo pattern — and the Reddit owner thre
 
 ##### H5: What Congo Families Notice in Week One
 
-New Congo owners call us around day five, worried the bird is "boring." It isn't — it's auditing you. A settling Congo sits lower, watches more than it moves, eats when you leave the room. Week two the audit ends and the personality starts leaking out. We tell every family: the quieter the first week, the more normal your Congo.
+If your new Congo seems "boring" in week one, it isn't — it's auditing you. A settling Congo sits lower, watches more than it moves, eats when you leave the room. Week two the audit ends and the personality starts leaking out. We tell every family: the quieter the first week, the more normal your Congo.
 
-###### H6: Breeder note: Maxy's first phrase
+###### H6: Breeder note: Maxy's first words
 
-Maxy, the Congo in the video on our homepage, spent his first ten days with us nearly silent — then produced Teri's phone ringtone, complete with her footsteps coming to answer it. Nobody taught him that. That's the variant in one anecdote.
+Maxy, the Congo in the video on our homepage, started exactly the way Congos do: with the most useful word in the house. He learned to call "Teri" — and once calling Teri worked, "bye bye" and "come here please" followed close behind. Not random mimicry: words that get results, deployed on purpose. That's the variant in one anecdote. ✅ BREEDER-CONFIRMED 2026-07-04
 
 ### H3: Which Health Risks Do We Screen Congos For? [external links here]
 
@@ -85,7 +85,7 @@ Timnehs reach behavioral maturity around 2–3 years; Congos take 4–6. That's 
 
 ###### H6: Breeder note: Elad & Evie's line (Levi × Rily)
 
-Our current Timnehs, Elad and Evie, come from our proven pair Levi and Rily — you can meet both youngsters on their pages [→ /available/elad/ [verify], /available/evie/ [verify]]. Same-clutch siblings, completely different comedians: Elad works for attention, Evie works for almonds. Variant patterns are real; individuals still win.
+Our current Timnehs, Elad and Evie, come from our proven pair Levi and Rily — you can meet both youngsters on their pages [→ /available/elad/ [verify], /available/evie/ [verify]]. Same parents, two different birds: Elad is small in size and fearless in spirit, always ready to explore something new; Evie is calm by nature, observant by instinct, and endlessly affectionate once she trusts you. Variant patterns are real; individuals still win. ✅ BREEDER-CONFIRMED personality lines 2026-07-04
 
 ### H3: Which Health Risks Do We Screen Timnehs For?
 

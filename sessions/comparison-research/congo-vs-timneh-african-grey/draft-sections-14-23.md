@@ -1,9 +1,9 @@
 # Draft — Sections 14–23 (/congo-vs-timneh-african-grey/) · 2026-07-04
 Status: PENDING BREEDER COPY APPROVAL.
 
-## Open Flags (survive session teardown)
-1. **S8/S9 anecdotes (from 7–13 review):** breeder is supplying real versions of — Maxy's first-phrase story · the "day-five boring call" pattern · Elad/Evie personality line. Placeholders stay OUT of the built page until replaced.
-2. **S20 owner story:** `data/case-studies.json` is EMPTY. Need ONE real placement story (family + variant choice + outcome; first names or anonymized fine). Recommended: the most recent Congo-vs-Timneh undecided buyer who ended up happy. Until supplied, S20 builds as Mark & Teri's first-person account frame with no invented buyers.
+## Open Flags
+1. ✅ RESOLVED 2026-07-04 — real anecdotes supplied by breeder: Maxy's first words ("Teri", then "bye bye", "come here please"); Elad fearless-explorer + Evie calm-observer lines (chosen for contrast from the 3 options each); "day-five call" claim SOFTENED to advice framing (was not confirmed).
+2. ✅ RESOLVED 2026-07-04 — S20 uses BOTH breeder-supplied owner stories verbatim (one Timneh, one Congo family) as 17A quote cards. Hybrid declined — merging real quotes fabricates.
 3. Availability status of Elad/Evie for S19 cards is read from `data/clutch-inventory.json` at assembly — never hardcoded.
 
 ---
@@ -106,9 +106,19 @@ Reading this page usually means one variant has started winning. Here's who's ac
 
 ---
 
-## S20 — H2: How One Family Chose (~260w) [OG photo — REAL STORY PENDING, Open Flag #2]
+## S20 — H2: How Two Families Chose (~260w) [17A quote cards ×2 — REAL STORIES, breeder-supplied 2026-07-04]
 
-[FRAME ONLY until breeder supplies a real story. First-person Mark & Teri account of a real undecided buyer: what they thought they wanted, what question settled it, which variant went home, one follow-up detail. NO invented names, cities, or outcomes. If no story is supplied by assembly, this section converts to "The Conversation We Have Most Often" — Mark & Teri describing the typical deciding question in general terms, which requires no unverifiable claims.]
+[frame, first-person] We could summarize a decade of these decisions, but two of our own families say it better — one landed Timneh, one landed Congo, both for the right reasons.
+
+[17A quote card — Timneh family, verbatim]
+"We were nervous about bringing home our first African Grey, but Teri walked us through every step. Our Timneh settled in much faster than we expected, eating confidently from day one and already stepping onto our hands within the first week. The ongoing support after pickup made us feel like we weren't doing it alone." — C.A.Gs family · Timneh
+
+[17A quote card — Congo family, verbatim]
+"After speaking with several Grey parrot breeders, C.A.Gs stood out because of the transparency and health documentation. Our Congo African Grey arrived healthy, confident, and incredibly curious. Months later, we're still amazed by how quickly she learns new words and enjoys being part of our daily routine. Choosing C.A.Gs was one of the best decisions we made." — C.A.Gs family · Congo
+
+[close line] Notice what neither family mentions: regretting the variant. Match the bird to the household and that sentence never gets written.
+
+✅ Both quotes BREEDER-SUPPLIED verbatim 2026-07-04 — used as-is, never merged or embellished (hybrid option declined: blending two real quotes creates an unreal one).
 
 ---
 
