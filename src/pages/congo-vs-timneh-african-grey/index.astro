@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import clutch from '../../../data/clutch-inventory.json';
 
 const title = "Congo vs Timneh African Grey: Key Differences | CongoAfricanGreys.com";
-const description = "Congo vs Timneh African Grey compared: size, color, price, temperament and talking ability. Find which captive-bred, CITES-documented African Grey fits your home.";
+const description = "Congo vs Timneh African Grey compared by breeders who raise both: size, tail color, talking ability, temperament, cost and CITES documentation. Find the right grey for your home.";
 const canonical = "https://congoafricangreys.com/congo-vs-timneh-african-grey/";
 
 const breadcrumbs = [
@@ -12,565 +13,738 @@ const breadcrumbs = [
   { name: "Congo vs Timneh", url: "/congo-vs-timneh-african-grey/" },
 ];
 
+// S19 — available birds, read live from clutch-inventory (never hardcoded status)
+const available = ((clutch as any).birds as any[])
+  .filter((b) => b.status === 'available')
+  .sort((a, b) => (a.variant === 'timneh_african_grey' ? -1 : 1));
+
 const faqs = [
-  {
-    q: "What is the main difference between a Congo and Timneh African Grey?",
-    a: "The Congo African Grey is larger (12–14 inches, 400–550 g) with a bright red tail and an all-black beak. The Timneh African Grey is smaller (9–11 inches, 275–375 g) with a darker maroon tail and a horn-colored upper mandible. Both are intelligent talking parrots and both are CITES Appendix I species supplied with full captive-bred documentation.",
-  },
-  {
-    q: "Which talks better, a Congo or a Timneh African Grey?",
-    a: "Both subspecies are among the best talking parrots in the world. Congo African Greys are famous for crisp, near-human speech clarity. Timneh African Greys often begin talking earlier and are typically calmer and less prone to nervousness, which can make them easier for first-time owners.",
-  },
-  {
-    q: "How much does a Congo vs a Timneh African Grey cost?",
-    a: "At CongoAfricanGreys.com a captive-bred Congo African Grey ranges from $1,700 to $3,500, and a Timneh African Grey ranges from $1,500 to $1,600. Price reflects age, training progress and documentation. See our African Grey parrot price guide for a full breakdown.",
-  },
-  {
-    q: "Is a Congo or Timneh African Grey better for apartments?",
-    a: "The Timneh African Grey is generally the better apartment choice. It is smaller, often calmer and tends to vocalize at a slightly lower volume. Congos are also suitable for apartments but their louder contact calls can carry further through shared walls.",
-  },
-  {
-    q: "Are Congo and Timneh African Greys both legal to own?",
-    a: "Yes. Both the Congo and Timneh African Grey are CITES Appendix I species. Every bird we place is captive-bred in the United States and ships with CITES captive-bred documentation, a hatch certificate with band number, DNA sexing results and an avian veterinary health certificate.",
-  },
-  {
-    q: "Which African Grey is better for a first-time owner?",
-    a: "Many first-time owners do well with a Timneh African Grey because of its typically steadier, more easygoing temperament. That said, a well-socialized, hand-raised Congo from a reputable breeder also adjusts smoothly. The bigger factor is choosing a fully weaned, hand-raised bird with complete documentation.",
-  },
-  {
-    q: "Do Congo and Timneh African Greys have the same lifespan?",
-    a: "Yes. Both subspecies commonly live 40 to 60 years with proper nutrition, veterinary care and enrichment. Choosing either bird is a multi-decade commitment that should be planned for as a lifelong companion.",
-  },
+  { q: "Is a Congo African Grey bigger than a Timneh?", a: "Yes — Congos run 400–600 g with a broader build; Timnehs run 275–375 g, roughly a third smaller. Both carry the same intelligence and 40–60 year lifespan; the size difference is about presence and cage space, not capability." },
+  { q: "Which African Grey talks better, Congo or Timneh?", a: "Congos are the more precise mimics with typically larger repertoires; Timnehs usually start talking earlier. If precision is the dream, choose a Congo. If early words matter more, choose a Timneh. Individual birds outvote both averages." },
+  { q: "Are Timneh African Greys quieter than Congos?", a: "They trend steadier and their loud moments trend milder, but 'always quieter' is a myth — enrichment and environment drive noise more than variant. Neither grey approaches cockatoo or macaw volume." },
+  { q: "Why are Timnehs cheaper than Congos?", a: "Demand, not quality. The Congo's fame and red tail carry a premium. Our Timnehs ($1,500–$1,600) get identical documentation, PCR screening and hand-raising as our Congos ($1,700–$3,500)." },
+  { q: "Is every African Grey a Congo?", a: "In casual use, usually — which confuses buyers. 'African Grey' covers two species: the Congo (Psittacus erithacus) and the Timneh (Psittacus timneh). Listings that don't say which one deserve a follow-up question." },
+  { q: "Which African Grey is better for a first-time owner?", a: "We lean Timneh: earlier maturity (2–3 years vs 4–6), steadier temperament, and more forgiving of beginner mistakes. A well-researched first-timer can absolutely succeed with a Congo too." },
+  { q: "How long do Congo and Timneh African Greys live?", a: "40–60 years for both with proper diet, UV-B exposure and avian-vet care. Plan for a bird that attends your retirement party." },
+  { q: "Can I keep a Congo or Timneh in an apartment?", a: "Yes, both — with daily out-of-cage time and realistic noise expectations (dawn and dusk vocal sessions, constant ambient mimicry). Timnehs are the marginally safer pick for thin walls." },
+  { q: "When do Timnehs mature compared to Congos?", a: "Timnehs reach behavioral maturity around 2–3 years; Congos take 4–6. A shorter adolescence means a shorter hormonal-teenager phase — the stretch where most rehoming happens." },
+  { q: "What if I pick the wrong variant?", a: "In a decade of placing both, 'wrong variant' regret is rare; 'wrong expectations' regret is not. Match the bird to your household with the scorecard on this page, ask us the hard questions before reserving, and either grey becomes the right one." },
 ];
 
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 };
 
-const comparisonRows = [
-  { attr: "Body size", congo: "12–14 inches (33–36 cm)", timneh: "9–11 inches (28–33 cm)" },
-  { attr: "Weight", congo: "400–550 grams", timneh: "275–375 grams" },
-  { attr: "Tail color", congo: "Bright cherry-red", timneh: "Dark maroon / charcoal" },
-  { attr: "Upper mandible (beak)", congo: "Solid black", timneh: "Horn / bone-colored tip" },
-  { attr: "Plumage", congo: "Light silver-grey", timneh: "Darker charcoal-grey" },
-  { attr: "Price range", congo: "$1,700 – $3,500", timneh: "$1,500 – $1,600" },
-  { attr: "Temperament", congo: "Affectionate, sensitive, can be reserved", timneh: "Calm, confident, easygoing" },
-  { attr: "Talking ability", congo: "Exceptional clarity, large vocabulary", timneh: "Talks early, slightly softer voice" },
-  { attr: "Apartment suitability", congo: "Good — louder contact calls", timneh: "Excellent — quieter, smaller" },
-  { attr: "Lifespan", congo: "40–60 years", timneh: "40–60 years" },
-  { attr: "CITES status", congo: "Appendix I — fully documented", timneh: "Appendix I — fully documented" },
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "Congo vs Timneh African Grey: Key Differences",
+  description: description,
+  author: { "@type": "Organization", name: "C.A.Gs – Congo African Greys, Midland TX" },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com" },
+  mainEntityOfPage: canonical,
+  datePublished: "2026-06-13",
+  dateModified: "2026-07-04",
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: `https://congoafricangreys.com${b.url}` })),
+};
+
+// verdict table (S6)
+const rows = [
+  { attr: "Adult weight", congo: "400–600 g", timneh: "275–375 g", edge: "Depends on your space" },
+  { attr: "Tail color", congo: "Bright red", timneh: "Dark maroon", edge: "Preference" },
+  { attr: "Beak", congo: "Solid black", timneh: "Horn-colored upper mandible", edge: "ID marker only" },
+  { attr: "Price at C.A.Gs", congo: "$1,700–$3,500", timneh: "$1,500–$1,600", edge: "Timneh" },
+  { attr: "Talking style", congo: "Later start, uncanny precision", timneh: "Earlier start, very capable", edge: "Depends on patience" },
+  { attr: "Maturity", congo: "4–6 years", timneh: "2–3 years", edge: "Timneh" },
+  { attr: "Bonding", congo: "Deep, usually one person", timneh: "Steadier, whole household", edge: "Depends on your home" },
+  { attr: "Temperament", congo: "Sensitive, watchful", timneh: "Calmer, more even", edge: "Timneh" },
+  { attr: "Lifespan", congo: "40–60 years", timneh: "40–60 years", edge: "Equal" },
+  { attr: "CITES documentation", congo: "Appendix I — included", timneh: "Appendix I — included", edge: "Equal" },
+];
+
+const takeaways = [
+  { big: "400–600 g", sub: "a Congo in the hand; Timnehs run 275–375 g" },
+  { big: "$1,500–$3,500", sub: "the full C.A.Gs price band, both variants, paperwork included" },
+  { big: "40–60 yrs", sub: "either grey is a retirement-length commitment" },
+  { big: "2–3 yrs", sub: "Timneh maturity vs 4–6 for a Congo — a steadier adolescence" },
+  { big: "Red vs maroon", sub: "fastest visual ID: tail color, plus the Timneh's horn-colored beak" },
+  { big: "One vs the flock", sub: "Congos pick their person; Timnehs spread the bond" },
+  { big: "100%", sub: "every chick leaves with CITES docs, DNA sexing and PBFD/APV PCR screening" },
+  { big: "$185 / $350", sub: "airport pickup vs home delivery, nationwide" },
+];
+
+const scores = [
+  { trait: "Talking precision", c: 10, t: 8, note: "Congo's signature" },
+  { trait: "Early talking onset", c: 6, t: 8, note: "Timneh maturity advantage" },
+  { trait: "Temperament steadiness", c: 7, t: 9, note: "Timnehs shrug more" },
+  { trait: "Beginner suitability", c: 7, t: 9, note: "shorter adolescence, forgiving nature" },
+  { trait: "Apartment fit", c: 7, t: 8, note: "both plausible; Timneh slightly easier" },
+  { trait: "Depth of one-person bond", c: 10, t: 8, note: "Congo's other signature" },
 ];
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical}>
+<BaseLayout title={title} description={description} canonical={canonical}
+  heroPreload="/congo-african-grey-variant.webp">
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
-  <!-- HERO -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
-  </div>
+  <div class="cvt">
+  <div class="container"><Breadcrumb items={breadcrumbs} /></div>
 
-  <section class="cvt-hero">
-    <div class="container">
+  <!-- S1 HERO (Hero A) -->
+  <section class="cvt-hero container">
+    <div class="hero-imgs">
+      <figure><img src="/congo-african-grey-variant.webp" width="600" height="300" alt="Congo African Grey with bright red tail" fetchpriority="high"><figcaption class="chip l">Congo African Grey</figcaption></figure>
+      <figure><img src="/timneh-african-grey-variant.webp" width="600" height="300" alt="Timneh African Grey with dark maroon tail" loading="lazy"><figcaption class="chip r">Timneh African Grey</figcaption></figure>
+      <span class="vs">VS</span>
+    </div>
+    <div class="hero-copy">
+      <p class="eyebrow">Hand-Raised · CITES-Documented · Midland, TX</p>
       <h1 class="cag-h1">Congo vs Timneh African Grey: Key Differences</h1>
-      <p class="cvt-sub">
-        Two subspecies, one remarkable parrot. Compare size, color, price,
-        temperament and talking ability so you can choose the right
-        captive-bred, CITES-documented African Grey for your family.
-      </p>
-      <div class="cvt-hero-cta">
-        <a class="btn-primary" href="/congo-african-grey-for-sale/">View Congo African Greys</a>
-        <a class="btn-secondary" href="/timneh-african-grey-for-sale/">View Timneh African Greys</a>
-      </div>
+      <p class="lead">We hand-raise both variants here in Midland — Congo chicks in one nursery room, Timnehs in the other — and buyers ask us the same question almost weekly: which grey should I take home? This is the honest side-by-side we give them, from size and talking ability to temperament, cost and paperwork.</p>
+      <p class="hero-cta"><a class="btn-clay" href="#side-by-side">Compare Now</a> <a class="btn-ghost" href="/available/">See Available Greys</a></p>
     </div>
   </section>
 
-  <!-- QUICK ANSWER -->
-  <section class="cvt-section">
-    <div class="container container-text">
-      <h2 class="cag-h2">The Quick Answer</h2>
-      <div class="cvt-quick">
-        <div class="cvt-quick-card">
-          <h3>Choose a Congo if&hellip;</h3>
-          <p>
-            You want the larger, classic silver-grey African Grey with a
-            striking red tail and want the crispest, most human-like speech.
-          </p>
+  <!-- S2 COUNTER SNIPPET -->
+  <section class="cvt-counter"><div class="container counter-row">
+    <div><b>12+</b><span>Years in the aviary</span></div>
+    <div><b>100%</b><span>CITES documented</span></div>
+    <div><b>$1,500</b><span>Floor price</span></div>
+    <div><b>24h</b><span>Reply to inquiries</span></div>
+  </div></section>
+
+  <!-- S3 mobile jump rail (2C numbered) -->
+  <nav class="cvt-rail" aria-label="Jump to section"><div class="container rail-row">
+    <a href="#quick-answer"><b>04</b> Answer</a>
+    <a href="#side-by-side"><b>06</b> Side-by-Side</a>
+    <a href="#congo"><b>08</b> Congo</a>
+    <a href="#timneh"><b>09</b> Timneh</a>
+    <a href="#talking"><b>10</b> Talking</a>
+    <a href="#scorecard"><b>12</b> Scorecard</a>
+    <a href="#cost"><b>14</b> Cost</a>
+    <a href="#faq"><b>21</b> FAQ</a>
+  </div></nav>
+
+  <div class="container cvt-body">
+
+  <!-- S3 desktop TOC (1A minimal) -->
+  <aside class="cvt-toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <a href="#quick-answer"><b>04</b> Quick Answer</a>
+    <a href="#side-by-side"><b>06</b> Side-by-Side</a>
+    <a href="#trust"><b>07</b> Why Trust Us</a>
+    <a href="#congo"><b>08</b> The Congo</a>
+    <a href="#timneh"><b>09</b> The Timneh</a>
+    <a href="#talking"><b>10</b> Which Talks Better</a>
+    <a href="#noise"><b>11</b> Noise &amp; Dander</a>
+    <a href="#scorecard"><b>12</b> Decision Scorecard</a>
+    <a href="#lifestyle"><b>13</b> Lifestyle Match</a>
+    <a href="#cost"><b>14</b> Cost</a>
+    <a href="#first30"><b>15</b> First 30 Days</a>
+    <a href="#myths"><b>16</b> Myths</a>
+    <a href="#cites"><b>17</b> CITES &amp; Docs</a>
+    <a href="#shipping"><b>18</b> Shipping</a>
+    <a href="#available"><b>19</b> Available Now</a>
+    <a href="#stories"><b>20</b> Owner Stories</a>
+    <a href="#faq"><b>21</b> FAQ</a>
+  </aside>
+
+  <div class="cvt-main">
+
+  <!-- S4 QUICK ANSWER (4A clay-edge) -->
+  <section id="quick-answer">
+    <h2 class="cag-h2">What's the Quick Answer — Congo or Timneh?</h2>
+    <div class="qa-box">
+      <p><strong>Quick Answer:</strong> Congo and Timneh African Greys differ mainly in size, tail color, maturity speed and bonding style. The Congo (400–600 g, bright red tail) is the larger variant and the more precise mimic, and usually bonds hardest with one person. The Timneh (275–375 g, maroon tail) matures earlier, often talks sooner, and tends to share its bond across the household.</p>
+    </div>
+    <p>Neither variant is "better," and we say that as the people who raise both. The price gap is smaller than most buyers expect — our Congos run $1,700–$3,500 and our Timnehs $1,500–$1,600 — and the lifespan is identical. What actually decides it is your household, and that's what the rest of this page works out.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S5 KEY TAKEAWAYS (3A stat grid) -->
+  <section id="takeaways">
+    <h2 class="cag-h2">What Should You Take Away Before Choosing?</h2>
+    <div class="kt-grid">
+      {takeaways.map((k) => (<div class="kt-c"><b>{k.big}</b><span>{k.sub}</span></div>))}
+    </div>
+  </section>
+
+  <!-- S6 SIDE-BY-SIDE (5B verdict table) -->
+  <section id="side-by-side">
+    <h2 class="cag-h2">How Do Congo and Timneh Greys Compare Side-by-Side?</h2>
+    <p>Ten attributes, one honest verdict column — including the three rows where the right answer is "depends on you." We filled this in the way we'd answer at the aviary door, not the way a listicle would.</p>
+    <div class="tbl-wrap"><table class="cmp-tbl">
+      <thead><tr><th>Attribute</th><th>Congo African Grey</th><th>Timneh African Grey</th><th>Edge</th></tr></thead>
+      <tbody>{rows.map((r) => (<tr><td data-l="Attribute">{r.attr}</td><td data-l="Congo">{r.congo}</td><td data-l="Timneh">{r.timneh}</td><td data-l="Edge" class="edge">{r.edge}</td></tr>))}</tbody>
+    </table></div>
+    <p class="cap">Every "Edge" call above is ours, from raising both — not aggregated from other websites.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S7 WHY TRUST US (11A author card) -->
+  <section id="trust">
+    <h2 class="cag-h2">Why Trust Our Comparison?</h2>
+    <div class="author-card">
+      <img src="/about-mark-teri-benjamin-african-grey-breeders-midland-tx.webp" width="120" height="120" alt="Mark and Teri Benjamin, African Grey breeders in Midland, TX" loading="lazy">
+      <div><h3 class="ac-name">Mark &amp; Teri Benjamin</h3><p class="ac-sub">Breeding both variants in Midland, TX since 2014</p>
+        <p class="ac-badges"><span>USDA AWA</span><span>CITES docs</span><span>DNA sexing</span></p></div>
+    </div>
+    <p>Most Congo-vs-Timneh articles are written by people who have never weighed a chick at 6 a.m. We're Mark and Teri Benjamin, and we've raised both variants side by side here at C.A.Gs since 2014 — same nursery, same hand-feeding schedule, same vet. When we describe a difference on this page, it's because we've watched it play out across clutches, not because three other websites said so.</p>
+    <p>That matters for this particular question, because the internet's Congo-vs-Timneh answers mostly come from single-bird owners generalizing from a sample of one. A Congo person tells you Congos are moodier; a Timneh person tells you Timnehs are easier. Raising both, we get to see where the pattern is real and where it's just personality.</p>
+    <h3 class="cag-h3">The C.A.Gs Philosophy: Health-Documentation ROI</h3>
+    <p>The cheapest part of a grey is the purchase price — the expensive part is the 40–60 years after it. So we front-load the boring paperwork that protects those years: PBFD and Avian Polyomavirus PCR screening on our birds, DNA sexing certificates, an avian veterinarian's health certificate, hatch certificate with closed band, and the CITES Appendix I documentation that proves your bird was captive-bred in the USA. Whichever variant you land on, that stack comes with it — the details live on our <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S8 CONGO DEEP DIVE -->
+  <section id="congo">
+    <h2 class="cag-h2">What Makes the Congo African Grey Special?</h2>
+    <img class="sec-img" src="/bery-congo-african-grey-female-1-year.webp" width="760" height="400" alt="Congo African Grey showing bright red tail and black beak" loading="lazy">
+    <p>The Congo is what most people picture when they hear "African Grey": the lighter silver-grey body, the solid black beak, and that unmistakable bright red tail. It's the larger of the two variants and the one with the bigger reputation — deserved, mostly, though the reputation leaves out a few things we'll be honest about below. Our Congo chicks run $1,700–$3,500 depending on age, and they're the majority of what hatches here — <a href="/congo-african-grey-for-sale/">browse our Congos</a>.</p>
+
+    <h3 class="cag-h3">How Big Is a Congo? Size, Build &amp; the Red Tail</h3>
+    <div class="size-inf">
+      <div class="size-row"><span class="size-lbl">Congo</span><div class="size-bar"><i style="width:100%"></i></div><span class="size-val">400–600 g</span></div>
+      <div class="size-row"><span class="size-lbl">Timneh</span><div class="size-bar"><i class="t" style="width:60%"></i></div><span class="size-val">275–375 g</span></div>
+      <p class="inf-cap">Relative adult body mass — a Timneh is roughly a third smaller.</p>
+    </div>
+    <p>A healthy adult Congo weighs 400–600 grams — noticeably more bird than a Timneh, though photos exaggerate the gap. In the hand it reads as substance rather than bulk: broader chest, bigger head, a beak with real presence. The tail is the giveaway at any distance. Congo tail feathers are a saturated scarlet from the moment the adult plumage comes in, and they stay that way for life.</p>
+
+    <h3 class="cag-h3">What Is Congo Temperament Really Like?</h3>
+    <p>Watchful is the word we use with visitors. A Congo clocks everything — new shoes, moved furniture, the fact that you're using the other coffee mug. That intelligence is the whole appeal, and it's also the maintenance item: a bird that notices everything needs a household that gives it something worth noticing. Congos are sensitive to routine changes and slower to forgive them than Timnehs. They're not fragile; they're particular. Ours have opinions about which direction the cage faces, and we've stopped arguing.</p>
+
+    <h4 class="cag-h4">Is a Congo Right for an Apartment?</h4>
+    <p>Usually yes, with eyes open. Congos aren't screamers by disposition — their signature sounds are whistles, environmental mimicry and talking rather than the sustained shrieking that gets cockatoo owners evicted. But "quieter than a cockatoo" is a low bar. Expect real morning and dusk vocal sessions, and expect your microwave beep back at you forever. Thin walls survive a Congo; a noise-phobic landlord might not.</p>
+
+    <h4 class="cag-h4">How Fast Does a Congo Bond — and With Whom?</h4>
+    <p>Slowly, then completely. The classic Congo pattern — and the owner threads on <a href="https://www.reddit.com/r/AfricanGrey/" target="_blank" rel="noopener">r/AfricanGrey ↗</a> agree with our aviary experience here — is a bird that surveys the household for weeks, picks a person, and invests in that person with startling depth. Other family members get tolerated, sometimes warmly, sometimes on probation. If you want one bird bonded to one human, this is the variant. If four family members all expect to handle the bird daily, keep reading — the Timneh section is going to sound good.</p>
+
+    <h5 class="cag-h5">What Congo Families Notice in Week One</h5>
+    <p>If your new Congo seems "boring" in week one, it isn't — it's auditing you. A settling Congo sits lower, watches more than it moves, eats when you leave the room. Week two the audit ends and the personality starts leaking out. We tell every family: the quieter the first week, the more normal your Congo.</p>
+
+    <h6 class="cag-h6">Breeder note: Maxy's first words</h6>
+    <p>Maxy, the Congo in the video on our homepage, started exactly the way Congos do: with the most useful word in the house. He learned to call "Teri" — and once calling Teri worked, "bye bye" and "come here please" followed close behind. Not random mimicry: words that get results, deployed on purpose. That's the variant in one anecdote.</p>
+
+    <h3 class="cag-h3">Which Health Risks Do We Screen Congos For?</h3>
+    <p>Two things belong on every Congo buyer's radar. First, hypocalcemia: African Greys regulate calcium differently than other parrots, and per the avian-medicine literature at <a href="https://lafeber.com/vet/" target="_blank" rel="noopener">Lafeber's veterinary resources ↗</a> low calcium is a documented grey-specific risk, managed with proper diet and UV-B exposure — which is why our care sheets cover full-spectrum lighting from day one. Second, feather-destructive behavior: an under-stimulated grey can turn grooming into plucking. Neither is inevitable; both are why we vet buyers as much as buyers vet us.</p>
+
+    <h4 class="cag-h4">Hypocalcemia &amp; Feather-Destructive Behavior, Plainly</h4>
+    <p>Hypocalcemia shows up as weakness or, severely, seizures — and it's substantially preventable with a pellet-based diet, calcium-bearing fresh foods and UV-B light. Feather-destructive behavior is an enrichment problem before it's a medical one: a Congo with work to do rarely barbers its feathers. Our buyers get our exact diet and lighting setup in writing.</p>
+
+    <h5 class="cag-h5">What Our PBFD + Polyomavirus PCR Panel Rules Out</h5>
+    <p>Psittacine Beak and Feather Disease and Avian Polyomavirus are the two viral diseases that make "cheap grey" listings expensive. We PCR-screen for both — that's a lab test on the bird, not a promise on a webpage. It's also why we tell buyers to run from any seller who can't produce the same paperwork.</p>
+
+    <h6 class="cag-h6">Citation: World Parrot Trust species profile</h6>
+    <p>Species-level facts in this section align with the <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener">World Parrot Trust's <em>Psittacus erithacus</em> profile ↗</a> — the same organization whose CITES trade data corrected this industry's worst habits.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S9 TIMNEH DEEP DIVE -->
+  <section id="timneh">
+    <h2 class="cag-h2">What Makes the Timneh African Grey Special?</h2>
+    <img class="sec-img" src="/elad-timneh-african-grey-male-5-months.webp" width="760" height="400" alt="Timneh African Grey showing dark maroon tail and horn-colored beak" loading="lazy">
+    <p>The Timneh is the grey people haven't heard of, and it might be the better first grey. Darker charcoal body, a maroon tail instead of red, and a horn-colored patch on the upper beak — smaller than the Congo at 275–375 grams, priced at $1,500–$1,600 here, and in our aviary experience the steadier personality of the two — <a href="/timneh-african-grey-for-sale/">browse our Timnehs</a>.</p>
+
+    <h3 class="cag-h3">How Much Smaller Is a Timneh? Size &amp; the Maroon Tail</h3>
+    <div class="size-inf">
+      <div class="size-row"><span class="size-lbl">Congo</span><div class="size-bar"><i style="width:100%"></i></div><span class="size-val">up to 600 g</span></div>
+      <div class="size-row"><span class="size-lbl">Timneh</span><div class="size-bar"><i class="t" style="width:60%"></i></div><span class="size-val">up to 375 g</span></div>
+      <p class="inf-cap">The Timneh is about a third less bird — closer to a big conure's mass than photos suggest.</p>
+    </div>
+    <p>Put the two side by side and the Timneh is about a third less bird. Don't read "smaller" as "lesser": the intelligence, the talking, the 40–60 year lifespan are all fully present. The maroon tail runs darker than the Congo's scarlet, and the two-tone beak is the fastest tell when tails are hidden.</p>
+
+    <h3 class="cag-h3">What Is Timneh Temperament Really Like?</h3>
+    <p>Even. Where a Congo watches and deliberates, a Timneh tends to shrug and adapt. New cage placement, houseguests, a schedule that shifts — Timnehs generally ride it out with less drama. Owners who've kept both describe their Timnehs as more easy-going about noise, novelty and handling, and that matches what we see at weaning: Timneh chicks step up for strangers sooner.</p>
+
+    <h4 class="cag-h4">Why Do First-Time Owners Lean Timneh?</h4>
+    <p>Three reasons we hear at pickup: the steadier temperament, the family-wide bonding and the earlier maturity. A Timneh is likelier to accept handling from everyone in the house instead of electing a favorite and filibustering the rest. For a family buying "our bird" rather than "my bird," that difference is the entire decision.</p>
+
+    <h5 class="cag-h5">Earlier Maturity, Steadier Adolescence</h5>
+    <p>Timnehs reach behavioral maturity around 2–3 years; Congos take 4–6. That's not trivia — the maturation window is when hormonal moodiness, testing and nipping happen. A shorter adolescence means a shorter stretch of "why is my sweet baby bird suddenly a critic," which is exactly the stretch that gets first-time owners rehoming birds.</p>
+
+    <h6 class="cag-h6">Breeder note: Elad &amp; Evie's line (Levi × Rily)</h6>
+    <p>Our current Timnehs, Elad and Evie, come from our proven pair Levi and Rily — you can meet both youngsters on their pages (<a href="/available/elad/">Elad</a>, <a href="/available/evie/">Evie</a>). Same parents, two different birds: Elad is small in size and fearless in spirit, always ready to explore something new; Evie is calm by nature, observant by instinct, and endlessly affectionate once she trusts you. Variant patterns are real; individuals still win.</p>
+
+    <h3 class="cag-h3">Which Health Risks Do We Screen Timnehs For?</h3>
+    <p>The same grey-specific list as the Congo — hypocalcemia and feather-destructive behavior — with the same prevention stack, and the same PBFD/Polyomavirus PCR screening before any Timneh leaves here. Species-wise, <em>Psittacus timneh</em> was recognized as its own species and is IUCN-listed Vulnerable (the Congo is Endangered), which is why captive-bred documentation matters just as much on the "budget" grey. There is no budget grey. There are documented greys and there are risks.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S10 TALKING -->
+  <section id="talking">
+    <h2 class="cag-h2">Which Grey Talks Better — Congo or Timneh?</h2>
+    <div class="talk-inf">
+      <div class="talk-col"><span class="talk-tag c">Congo</span><b>Precision</b><p>Later start · uncanny clarity · larger eventual repertoire</p></div>
+      <div class="talk-col"><span class="talk-tag t">Timneh</span><b>Early onset</b><p>Talks sooner · casual, capable · rougher first impressions</p></div>
+    </div>
+    <p>This is the question, so here's the honest version: <strong>Congos are the more precise mimics; Timnehs usually start sooner.</strong> If you want the bird that reproduces your ringtone so accurately you check your pocket, that's the Congo. If you want words earlier and don't mind a slightly rougher impression, the Timneh gets there first.</p>
+
+    <h3 class="cag-h3">Mimicry Precision vs Early Onset — What Owners Actually Report</h3>
+    <p>The owner consensus across the big African Grey communities matches our nursery notes almost exactly. Congo owners describe a determined perfectionist — one owner of both put it as her Congo being "much more determined to mimic what she hears correctly," while her Timneh was "way more slack and easy-going about what noise he says." That's the trade in two sentences: precision versus ease.</p>
+
+    <h4 class="cag-h4">When Does Each Variant Start Talking?</h4>
+    <p>Timnehs typically begin making speech-like sounds earlier — often within their first year — consistent with their earlier overall maturity. Congos commonly start later but compound harder: bigger eventual repertoires, cleaner reproduction, and that eerie context-appropriate usage greys are famous for. Individual variance swamps averages, though. We've weaned quiet Congos and chatterbox Congos out of the same clutch. There's a fuller breakdown on our <a href="/blog/african-grey-parrot-talking-ability/">African Grey talking ability guide</a>.</p>
+
+    <h5 class="cag-h5">Reddit-Owner Consensus vs Our Aviary Notes</h5>
+    <p>Where the internet and our experience agree: onset (Timneh earlier), precision (Congo cleaner), and volume of mimicry attempts (Timneh more casual noise, Congo more rehearsal-then-performance). Where we'd push back: the claim that Timnehs are categorically "worse talkers." Ours narrate the aviary all day. The ceiling is similar; the style differs.</p>
+
+    <h6 class="cag-h6">Citation: r/AfricanGrey owner thread</h6>
+    <p>Owner quotes in this section come from the <a href="https://www.reddit.com/r/AfricanGrey/" target="_blank" rel="noopener">r/AfricanGrey community's "Main differences between a Timneh and Congo?" discussion ↗</a>, the top-ranked real-owner comparison online as of mid-2026.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S11 NOISE & DANDER -->
+  <section id="noise">
+    <h2 class="cag-h2">How Loud Are They — and What About Dander?</h2>
+    <div class="noise-inf">
+      <div class="noise-row"><span>African Grey (both)</span><div class="nbar"><i style="width:45%"></i></div></div>
+      <div class="noise-row"><span>Amazon parrot</span><div class="nbar"><i style="width:62%"></i></div></div>
+      <div class="noise-row"><span>Macaw</span><div class="nbar"><i style="width:85%"></i></div></div>
+      <div class="noise-row"><span>Cockatoo</span><div class="nbar"><i style="width:100%"></i></div></div>
+      <p class="inf-cap">Relative sustained-volume potential. Greys are talkers, not screamers.</p>
+    </div>
+    <p>Neither grey belongs anywhere near the top of the parrot noise chart — that podium is cockatoos, macaws and conures. Greys are talkers, whistlers and appliance impersonators, with predictable vocal peaks at dawn and dusk. Between the two, owners tend to report Congos as marginally more intense when they <em>do</em> sound off, and Timnehs as more frequent, lower-stakes chatterers. Both are apartment-plausible; neither is silent.</p>
+
+    <h3 class="cag-h3">Powder-Down Dander: The Allergy Question Nobody Asks First</h3>
+    <p>Here's the one buyers never ask about and always should: African Greys (both variants, equally) are powder-down birds. They produce a fine white feather dust that ends up on shelves, screens and — relevantly — in the air. For most households it's a dusting-schedule issue; for allergy- or asthma-prone households it's a real screening question, and an air purifier near the cage is a standard grey-owner purchase. If bird dander allergies run in your family, spend an afternoon around adult greys before you reserve either variant. We'd rather lose a sale than place a bird in a home that can't breathe with it.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S12 SCORECARD (6A paired bars) -->
+  <section id="scorecard">
+    <h2 class="cag-h2">Decision Scorecard: Congo vs Timneh Across 6 Traits</h2>
+    <p>Our scores, 0–10, from raising both — editorial calls, not lab measurements, and we've marked where the honest answer is "individual bird wins."</p>
+    <div class="score-inf">
+      {scores.map((s) => (
+        <div class="score-block">
+          <div class="score-head"><span>{s.trait}</span><span class="score-note">Congo {s.c} · Timneh {s.t}</span></div>
+          <div class="score-bar c"><i style={`width:${s.c*10}%`}></i></div>
+          <div class="score-bar t"><i style={`width:${s.t*10}%`}></i></div>
         </div>
-        <div class="cvt-quick-card">
-          <h3>Choose a Timneh if&hellip;</h3>
-          <p>
-            You want a smaller, typically calmer bird that often talks earlier,
-            settles quickly and suits apartments and first-time owners.
-          </p>
-        </div>
-        <div class="cvt-quick-card">
-          <h3>They are equal on&hellip;</h3>
-          <p>
-            Intelligence, 40–60 year lifespan, CITES Appendix I status and the
-            full captive-bred documentation included with every bird we place.
-          </p>
-        </div>
-      </div>
+      ))}
+      <p class="score-legend"><span class="dot c"></span> Congo &nbsp; <span class="dot t"></span> Timneh</p>
+    </div>
+    <p>Read the pattern, not the totals: the Timneh wins the "easier to live with" cluster; the Congo wins the "peak grey experience" cluster. Neither column has a bad number because neither is a bad bird — you're choosing between two kinds of excellent.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S13 LIFESTYLE MATCH -->
+  <section id="lifestyle">
+    <h2 class="cag-h2">Which Grey Fits Your Lifestyle?</h2>
+    <h3 class="cag-h3">Match by Household</h3>
+    <div class="match-grid">
+      <div class="match-c"><h4 class="cag-h4">First-Time Bird Owner</h4><p>Lean Timneh. The steadier temperament and shorter adolescence forgive the mistakes every first-timer makes. A Congo is absolutely achievable as a first bird — plenty of our buyers prove it — but the Timneh gives you a wider margin for error at a slightly lower price.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Family with Kids</h4><p>Lean Timneh, for one specific reason: bond distribution. A Congo that elects Mom can spend years treating the kids as furniture. Timnehs are likelier to accept the whole flock. Either way, greys and toddlers need supervised distance — this is a 40-year bird, not a starter pet.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Apartment or Condo</h4><p>Either works; the Timneh is the marginally safer call on noise intensity, and both need the same non-negotiable: out-of-cage hours every day. What fails in apartments isn't decibels — it's a bored grey turning into a loud one. Budget time before you budget square footage.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Busy Professional</h4><p>Honest answer: think hard, then think again. A grey alone ten hours a day is how feather-destructive behavior starts, whichever variant you pick. If your schedule is genuinely full, consider whether an <a href="/african-grey-parrot-price/">adult bird with an established temperament</a> fits better than a chick — or whether this is the year to wait.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Senior or Quiet Household</h4><p>This is where Congos shine. A calm, consistent, deeply attentive household is the exact environment where the one-person Congo bond becomes the thing owners write us about years later. One planning note we'd be negligent to skip: a grey bought at 65 needs a succession plan in writing. It will outlive the arrangement otherwise.</p></div>
+    </div>
+    <p>Still torn after the breakdown? That's what we're for — the inquiry form at the bottom reaches Mark and Teri directly, and "which variant fits our house" is our favorite email to answer.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S14 COST -->
+  <section id="cost">
+    <h2 class="cag-h2">What Do Congo and Timneh Greys Cost?</h2>
+    <div class="cost-inf">
+      <div class="cost-row"><span>Timneh at C.A.Gs</span><div class="cbar"><i class="t" style="width:32%"></i></div><b>$1,500–$1,600</b></div>
+      <div class="cost-row"><span>Congo at C.A.Gs</span><div class="cbar"><i class="c" style="width:70%"></i></div><b>$1,700–$3,500</b></div>
+      <div class="cost-row"><span>Year-one setup</span><div class="cbar"><i style="width:40%"></i></div><b>$825–$2,000</b></div>
+      <p class="inf-cap">Purchase plus first-year setup. A $200 deposit reserves either bird.</p>
+    </div>
+    <p>Sticker prices first, because nobody trusts a page that hides them: our Congos run $1,700–$3,500 (weaned chicks $1,700–$2,500, older or proven birds up to $3,500) and our Timnehs $1,500–$1,600. A $200 deposit reserves either. Full current pricing per bird lives on the <a href="/african-grey-parrot-price/">price guide</a>.</p>
+
+    <h3 class="cag-h3">Our Price vs What You'll See Elsewhere</h3>
+    <p>We track competitor grey pricing weekly, and the pattern worth knowing isn't the high end — it's the low end. Listings at $800–$900 with no CITES paperwork, no DNA sexing and no vet certificate are where the scam reports come from, and "cheap grey" ads are the single most common thing buyers ask us to sanity-check. A documented grey costs what it costs because the documentation is real work. An undocumented one isn't a discount; it's a different product.</p>
+
+    <h4 class="cag-h4">What's Included in Our Price</h4>
+    <p>Everything in the trust stack, at no line-item cost: CITES captive-bred documentation, DNA sexing certificate, avian-vet health certificate, hatch certificate with closed band, and the PBFD/Polyomavirus PCR screening. The only add-on is getting the bird to you — $185 airport, $350 home delivery.</p>
+
+    <h5 class="cag-h5">First-Year Budget Beyond the Bird</h5>
+    <p>Plan on $825–$2,000 in year one on top of purchase: a proper large cage ($300–$800 — this is not the place to economize), perches and first toys ($100–$300), the establishing avian-vet visit ($75–$200), a year of quality pellets ($200–$400) and enrichment ($150–$300). Ongoing years run roughly $375–$1,350 depending on your vet luck and your bird's toy-destruction ethic.</p>
+
+    <h6 class="cag-h6">Breeder note: why we don't sell unweaned chicks</h6>
+    <p>You'll find unweaned grey chicks online for less. We don't sell them at any price — hand-feeding mistakes (crop burn, aspiration) kill chicks in inexperienced hands, and "save money by finishing the weaning yourself" is the worst trade in aviculture. Every C.A.Gs bird leaves fully weaned. That's included in the price too.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S15 FIRST 30 DAYS -->
+  <section id="first30">
+    <h2 class="cag-h2">What Do the First 30 Days Look Like?</h2>
+    <p>The variant you choose changes the flavor of the first month, not the structure. Teri walks every buyer through the same four phases:</p>
+    <h3 class="cag-h3">The Four Adjustment Phases</h3>
+    <div class="timeline">
+      <div class="tl-c"><span class="tl-n">1</span><b>Days 1–3 · Settling</b><p>Quiet, low perching, eating only when you're not staring. Congos run quieter here; Timnehs often start test-chattering by day two. Both normal.</p></div>
+      <div class="tl-c"><span class="tl-n">2</span><b>Week 1 · Mapping</b><p>The bird learns the household: who moves how, what sounds mean, when food happens. Keep the routine boring on purpose.</p></div>
+      <div class="tl-c"><span class="tl-n">3</span><b>Week 2 · Trust</b><p>Step-ups get voluntary, treats get taken gently, and you'll hear the first experimental sounds of <em>your</em> house.</p></div>
+      <div class="tl-c"><span class="tl-n">4</span><b>Weeks 3–4 · Stabilizing</b><p>The personality arrives — and we make our check-in call. Buyers of both variants get our direct line for that whole first month.</p></div>
     </div>
   </section>
 
-  <!-- 5 KEY FACTS -->
-  <section class="cvt-section cvt-alt">
-    <div class="container container-text">
-      <h2 class="cag-h2">5 Facts That Actually Matter</h2>
-      <ul class="cvt-facts">
-        <li><strong>They are the same species.</strong> Congo (<em>Psittacus erithacus erithacus</em>) and Timneh (<em>Psittacus erithacus timneh</em>) are two subspecies of the same African Grey parrot.</li>
-        <li><strong>Beak color is the fastest tell.</strong> A solid black upper beak means Congo; a horn-colored tip means Timneh.</li>
-        <li><strong>Smaller does not mean less smart.</strong> Timnehs match Congos in cognitive ability and often begin talking sooner.</li>
-        <li><strong>Both are legal and documented.</strong> Captive-bred status and CITES Appendix I paperwork apply equally to both.</li>
-        <li><strong>Temperament beats subspecies.</strong> A hand-raised, fully weaned bird from a reputable breeder is the single biggest predictor of a smooth transition home.</li>
-      </ul>
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S16 MYTHS -->
+  <section id="myths">
+    <h2 class="cag-h2">Congo vs Timneh Myths — What's Actually True?</h2>
+    <h3 class="cag-h3">The Three Myths We Hear Most</h3>
+    <div class="myth-grid">
+      <div class="myth-c"><span class="myth-x">Myth</span><p><strong>"Congos are smarter."</strong> No evidence — both are <em>Psittacus</em> with the same celebrated cognition. Congos are more <em>demonstrative</em> about it, which reads as smarter and is really just louder scholarship.</p></div>
+      <div class="myth-c"><span class="myth-x">Myth</span><p><strong>"Timnehs are budget greys."</strong> The Timneh is its own recognized species (<em>Psittacus timneh</em>), IUCN-listed Vulnerable, with identical documentation requirements. It's smaller and priced lower here; it is not lesser.</p></div>
+    </div>
+    <h4 class="cag-h4">The Big One: "Timnehs Are Always Quieter"</h4>
+    <p>The most repeated claim online, usually stated as law.</p>
+    <h5 class="cag-h5">The Reality: Individual Personality Wins</h5>
+    <p>Owners of both variants report quiet Congos and loud Timnehs routinely; environment and enrichment drive noise more than variant does. Our honest version: Timnehs <em>trend</em> steadier, and a specific bird can flip the trend without apologizing.</p>
+    <h6 class="cag-h6">Citation: owner reports across variants</h6>
+    <p>The pattern above matches owner discussions in the large African Grey communities (Reddit, the major Facebook groups) as well as what our own clutches do — trends real, guarantees nonexistent.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S17 CITES -->
+  <section id="cites">
+    <h2 class="cag-h2">CITES Status &amp; Documentation</h2>
+    <img class="sec-img" src="/african-grey-breeder-with-bird-midland-tx.webp" width="760" height="400" alt="C.A.Gs breeder with a documented captive-bred African Grey in Midland, TX" loading="lazy">
+    <p>Both variants sit on CITES Appendix I — the treaty's highest protection tier, applied to African Greys at CoP17 (effective January 2017) after wild-trapping devastated wild flocks. Appendix I doesn't mean ownership is illegal; it means the paperwork proving captive-bred origin is everything.</p>
+    <h3 class="cag-h3">What Paperwork Comes With Every Bird?</h3>
+    <p>The full stack, both variants, no exceptions: CITES captive-bred documentation, hatch certificate with closed leg band, DNA sexing certificate, and the avian-vet health certificate. If any grey seller anywhere hesitates on any of those four, that hesitation is your answer.</p>
+    <h4 class="cag-h4">Appendix I, in Plain English</h4>
+    <p>Wild-caught greys cannot legally enter the US pet trade. Captive-bred greys, documented, transfer legally within the country. The band on your bird's leg was closed when it was a chick — it physically cannot be added to a wild adult, which is why it matters more than any receipt.</p>
+    <h5 class="cag-h5">Congo (Endangered) vs Timneh (Vulnerable): The IUCN Line</h5>
+    <p>The wild Congo African Grey is IUCN-listed Endangered; the Timneh, Vulnerable. Neither status touches your captive-bred bird's legality — but it's why ethical sourcing isn't a marketing word on this page. Every documented captive-bred sale removes a reason for someone to trap a wild one.</p>
+    <h6 class="cag-h6">Citation: cites.org &amp; IUCN Red List</h6>
+    <p>Listing details: the <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">CITES species database ↗</a> and the <a href="https://www.iucnredlist.org/species/22724813/154068024" target="_blank" rel="noopener">IUCN Red List profiles ↗</a> for <em>Psittacus erithacus</em> and <em>Psittacus timneh</em>.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S18 SHIPPING & HEALTH (15A + 16A) -->
+  <section id="shipping">
+    <h2 class="cag-h2">How Do Shipping &amp; Our Health Guarantee Work?</h2>
+    <div class="ship-cards">
+      <div class="ship-c"><span class="ship-tier">Tier 1</span><b>Airport Pickup</b><span class="ship-price">$185</span><p>IATA live-animal cargo · Delta, United or American to your nearest major airport</p></div>
+      <div class="ship-c"><span class="ship-tier clay">Tier 2</span><b>Home Delivery</b><span class="ship-price">$350</span><p>Couriered to your door</p></div>
+    </div>
+    <p>Two delivery tiers, nationwide, whichever variant you reserve. Every shipment travels with the health certificate and full document folder.</p>
+    <div class="health-card">
+      <div class="hc-head">Every grey leaves with</div>
+      <ul class="hc-list"><li>PBFD PCR screening</li><li>Avian Polyomavirus PCR</li><li>DNA sexing certificate</li><li>Avian-vet health certificate</li><li>Hatch certificate + closed band</li></ul>
+    </div>
+    <p>The written health guarantee covers both variants identically — terms on the <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>. Reserve with a $200 deposit; the balance settles before shipping.</p>
+    <p class="ship-line">Ships nationwide · $185 airport · $350 home</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S19 AVAILABLE (13A cards from clutch-inventory) -->
+  <section id="available">
+    <h2 class="cag-h2">Which Congos and Timnehs Are Available Now?</h2>
+    <p>Reading this page usually means one variant has started winning. Here's who's actually in the nursery — every card links to that bird's own page with its photos, parentage and documentation.</p>
+    <div class="bird-cards">
+      {available.slice(0, 4).map((b) => (
+        <a class="bird-c" href={b.slug}>
+          <div class="bird-badge">{b.variant === 'timneh_african_grey' ? 'Timneh' : 'Congo'} · Available</div>
+          <div class="bird-body"><h3 class="bird-name">{b.name}</h3><span class="bird-price">{b.price_display}</span>
+          <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span></div>
+        </a>
+      ))}
+    </div>
+    <div class="pair-row">
+      <div class="pair-c"><b>Bonded Breeding Pair</b><span class="bird-price">$3,000</span><span class="ship-mini">Proven, documented · ships nationwide</span></div>
+      <div class="pair-c"><b>Fertile Eggs</b><span class="pair-sub">Candled &amp; documented</span><a class="btn-ghost sm" href="/african-grey-parrot-bird-eggs-for-sale-usa/">Eggs Page</a></div>
+    </div>
+    <p class="ctr"><a class="btn-clay" href="/available/">See All Available Greys</a></p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S20 OWNER STORIES (17A grid quotes — verbatim) -->
+  <section id="stories">
+    <h2 class="cag-h2">How Two Families Chose</h2>
+    <p>We could summarize a decade of these decisions, but two of our own families say it better — one landed Timneh, one landed Congo, both for the right reasons.</p>
+    <div class="quote-grid">
+      <blockquote class="quote-c"><span class="stars">★★★★★</span><p>"We were nervous about bringing home our first African Grey, but Teri walked us through every step. Our Timneh settled in much faster than we expected, eating confidently from day one and already stepping onto our hands within the first week. The ongoing support after pickup made us feel like we weren't doing it alone."</p><cite>— C.A.Gs family · Timneh</cite></blockquote>
+      <blockquote class="quote-c"><span class="stars">★★★★★</span><p>"After speaking with several Grey parrot breeders, C.A.Gs stood out because of the transparency and health documentation. Our Congo African Grey arrived healthy, confident and incredibly curious. Months later, we're still amazed by how quickly she learns new words and enjoys being part of our daily routine. Choosing C.A.Gs was one of the best decisions we made."</p><cite>— C.A.Gs family · Congo</cite></blockquote>
+    </div>
+    <p>Notice what neither family mentions: regretting the variant. Match the bird to the household and that sentence never gets written.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S21 FAQ (7C hybrid — first 3 open) -->
+  <section id="faq">
+    <h2 class="cag-h2">Congo vs Timneh African Grey: FAQ</h2>
+    {faqs.map((f, i) => (
+      i < 3
+        ? (<div class="faq-open"><h3 class="faq-q">{f.q}</h3><p>{f.a}</p></div>)
+        : (<details class="faq-d"><summary>{f.q}</summary><p>{f.a}</p></details>)
+    ))}
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S22 KEEP LEARNING (18A blog cards) -->
+  <section id="learn">
+    <h2 class="cag-h2">Keep Learning Before You Decide</h2>
+    <div class="blog-cards">
+      <a class="blog-c" href="/blog/african-grey-parrot-talking-ability/"><img src="/african-grey-blog-hub-hero-480.webp" width="230" height="120" alt="" loading="lazy"><div class="blog-body"><span class="blog-tag">Talking</span><h3 class="blog-t">When Do African Greys Start Talking?</h3></div></a>
+      <a class="blog-c" href="/blog/african-grey-parrot-price-what-you-get/"><img src="/african-grey-blog-hub-hero-480.webp" width="230" height="120" alt="" loading="lazy"><div class="blog-body"><span class="blog-tag">Cost</span><h3 class="blog-t">What an African Grey Really Costs</h3></div></a>
+      <a class="blog-c" href="/blog/is-african-grey-good-for-beginners/"><img src="/african-grey-blog-hub-hero-480.webp" width="230" height="120" alt="" loading="lazy"><div class="blog-body"><span class="blog-tag">Beginners</span><h3 class="blog-t">Is an African Grey Good for Beginners?</h3></div></a>
     </div>
   </section>
 
-  <!-- MAIN COMPARISON TABLE -->
-  <section class="cvt-section">
-    <div class="container">
-      <h2 class="cag-h2">Congo vs Timneh African Grey: Side-by-Side</h2>
-      <div class="cvt-table-wrap">
-        <table class="cvt-table">
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>Congo African Grey</th>
-              <th>Timneh African Grey</th>
-            </tr>
-          </thead>
-          <tbody>
-            {comparisonRows.map((row) => (
-              <tr>
-                <th scope="row">{row.attr}</th>
-                <td>{row.congo}</td>
-                <td>{row.timneh}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p class="cvt-note">
-        Pricing reflects age, training progress and documentation. For a full
-        breakdown see our <a href="/african-grey-parrot-price/">African Grey parrot price guide</a>.
-      </p>
+  <div class="seam"><img src="/cag-footer-logo.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S23 FINAL CTA + FORM + NEWSLETTER -->
+  <section id="reserve" class="final-cta">
+    <h2 class="cag-h2">Ready to Bring Home Your Grey?</h2>
+    <p>Whether the scorecard sent you Congo or Timneh, the next step is the same: tell us about your household and we'll tell you honestly which chicks fit it — including "none right now" if that's the true answer.</p>
+    <form class="cta-form" name="compare-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="compare-inquiry" />
+      <p class="hp"><label>Don't fill this out: <input name="bot-field" /></label></p>
+      <label for="compare-name">Your name<input id="compare-name" name="name" type="text" required></label>
+      <label for="compare-email">Email<input id="compare-email" name="email" type="email" required></label>
+      <label for="compare-msg">Tell us about your home<textarea id="compare-msg" name="message" rows="3" placeholder="First bird? Apartment or house? Who'll be home during the day?"></textarea></label>
+      <button type="submit" class="btn-clay">Reserve Now</button>
+      <a class="btn-ghost" href="/contact-us/">Ask Us First</a>
+    </form>
+    <div class="nl-band">
+      <b>Clutch updates, no spam.</b>
+      <form name="newsletter" method="POST" data-netlify="true" class="nl-form">
+        <input type="hidden" name="form-name" value="newsletter" />
+        <input name="email" type="email" placeholder="Your email" aria-label="Email for clutch updates" required>
+        <button type="submit" class="btn-clay">Join Us</button>
+      </form>
     </div>
   </section>
 
-  <!-- DEEP DIVE: CONGO -->
-  <section class="cvt-section cvt-alt">
-    <div class="container container-text">
-      <h2 class="cag-h2">The Congo African Grey in Depth</h2>
-      <p>
-        The Congo African Grey is the bird most people picture when they hear
-        "African Grey" — a light silver-grey parrot, 12 to 14 inches long, with
-        a brilliant cherry-red tail and a solid black beak. Adults weigh between
-        400 and 550 grams, giving them a confident, substantial presence on the
-        hand.
-      </p>
-      <p>
-        Congos are renowned for speech clarity. Many develop large vocabularies
-        and reproduce human inflection so precisely that visitors mistake them
-        for a person in the next room. They are sensitive, observant birds that
-        bond deeply and thrive on routine, mental enrichment and a calm
-        household.
-      </p>
-      <p>
-        A captive-bred Congo from CongoAfricanGreys.com ranges from
-        <strong>$1,700 to $3,500</strong>, fully weaned and hand-raised. Browse
-        current availability on our
-        <a href="/congo-african-grey-for-sale/">Congo African Grey for sale</a> page.
-      </p>
-    </div>
-  </section>
-
-  <!-- DEEP DIVE: TIMNEH -->
-  <section class="cvt-section">
-    <div class="container container-text">
-      <h2 class="cag-h2">The Timneh African Grey in Depth</h2>
-      <p>
-        The Timneh African Grey is the smaller subspecies — 9 to 11 inches long
-        and 275 to 375 grams — with darker charcoal plumage, a maroon tail and a
-        distinctive horn-colored upper mandible. It is every bit as intelligent
-        as the Congo, simply packaged in a more compact bird.
-      </p>
-      <p>
-        Timnehs are widely regarded as calmer and more confident. They tend to
-        be less prone to the nervousness some Congos show, often start talking
-        at a younger age and settle into new homes quickly. That steadiness
-        makes them a popular choice for apartments and for first-time African
-        Grey owners.
-      </p>
-      <p>
-        A captive-bred Timneh from CongoAfricanGreys.com ranges from
-        <strong>$1,500 to $1,600</strong>, fully weaned and hand-raised. Browse
-        current availability on our
-        <a href="/timneh-african-grey-for-sale/">Timneh African Grey for sale</a> page.
-      </p>
-    </div>
-  </section>
-
-  <!-- MID-PAGE CTA -->
-  <section class="cvt-cta">
-    <div class="container">
-      <h2 class="cag-h2">Still Deciding Between Congo and Timneh?</h2>
-      <p>
-        Tell our breeder team about your home and experience level — we will
-        recommend the right African Grey and walk you through every document.
-      </p>
-      <a class="btn-primary" href="/african-grey-parrot-for-sale-near-me/">Talk to Our Breeder Team</a>
-    </div>
-  </section>
-
-  <!-- CITES SECTION -->
-  <section class="cvt-section cvt-alt">
-    <div class="container container-text">
-      <h2 class="cag-h2">CITES Status &amp; Documentation</h2>
-      <p>
-        Both the Congo and Timneh African Grey are listed under
-        <strong>CITES Appendix I</strong>. This protects wild populations and
-        regulates international trade — it does not restrict responsible
-        ownership of captive-bred birds within the United States.
-      </p>
-      <p>Every African Grey we place — Congo or Timneh — ships with:</p>
-      <ul class="cvt-doc-list">
-        <li>CITES captive-bred documentation</li>
-        <li>Hatch certificate with leg-band number</li>
-        <li>DNA sexing certificate</li>
-        <li>Avian veterinary health certificate</li>
-        <li>USDA Animal Welfare Act compliance under our licensed facility</li>
-      </ul>
-      <p>
-        We never sell wild-caught birds. Every parrot is bred and hand-raised in
-        our care, fully weaned before it goes home.
-      </p>
-    </div>
-  </section>
-
-  <!-- WHICH IS RIGHT FOR YOU -->
-  <section class="cvt-section">
-    <div class="container">
-      <h2 class="cag-h2">Which One Is Right for You?</h2>
-      <div class="cvt-match">
-        <div class="cvt-match-col">
-          <h3>A Congo African Grey suits you if&hellip;</h3>
-          <ul>
-            <li>You want the larger, iconic red-tailed African Grey</li>
-            <li>Crisp, human-like speech clarity is a priority</li>
-            <li>Your household is calm and keeps a steady routine</li>
-            <li>You can offer daily one-on-one interaction and enrichment</li>
-            <li>You have a home or unit where louder contact calls are fine</li>
-          </ul>
-        </div>
-        <div class="cvt-match-col">
-          <h3>A Timneh African Grey suits you if&hellip;</h3>
-          <ul>
-            <li>You prefer a smaller, lighter parrot</li>
-            <li>You are a first-time African Grey owner</li>
-            <li>You live in an apartment or noise-sensitive setting</li>
-            <li>You want a typically calmer, more confident temperament</li>
-            <li>You would like a bird that often starts talking earlier</li>
-          </ul>
-        </div>
-      </div>
-      <p class="cvt-note">
-        Not sure which side you fall on? A well-socialized, hand-raised bird
-        from a reputable breeder adjusts beautifully either way — temperament
-        and proper rearing matter more than subspecies.
-      </p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="cvt-section cvt-alt">
-    <div class="container container-text">
-      <h2 class="cag-h2">Congo vs Timneh African Grey: FAQ</h2>
-      <div class="cvt-faq">
-        {faqs.map((f) => (
-          <details class="cvt-faq-item">
-            <summary>{f.q}</summary>
-            <p>{f.a}</p>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- FINAL CTA -->
-  <section class="cvt-cta">
-    <div class="container">
-      <h2 class="cag-h2">Ready to Bring Home an African Grey?</h2>
-      <p>
-        Whether you choose a Congo or a Timneh, every bird is captive-bred,
-        hand-raised and placed with complete documentation.
-      </p>
-      <div class="cvt-hero-cta">
-        <a class="btn-primary" href="/congo-african-grey-for-sale/">See Congo African Greys</a>
-        <a class="btn-secondary" href="/timneh-african-grey-for-sale/">See Timneh African Greys</a>
-      </div>
-    </div>
-  </section>
+  </div><!-- /cvt-main -->
+  </div><!-- /cvt-body -->
+  </div><!-- /cvt -->
 </BaseLayout>
 
 <style>
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 48px;
-  }
-  .container-text {
-    max-width: 760px;
-  }
-  .cag-h1 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.2;
-    margin: 0 0 1rem;
-  }
-  .cag-h2 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(1.5rem, 3vw, 2.1rem);
-    line-height: 1.25;
-    margin: 0 0 1.25rem;
-  }
-  .cvt-hero {
-    background: #faf7f4;
-    padding: 3.5rem 0 3rem;
-    text-align: center;
-  }
-  .cvt-sub {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.65;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 auto 1.75rem;
-  }
-  .cvt-hero-cta {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .btn-primary,
-  .btn-secondary {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.85rem 1.9rem;
-    border-radius: 50px;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.2s ease;
-  }
-  .btn-primary {
-    background: #e8604c;
-    color: #fff;
-  }
-  .btn-primary:hover {
-    background: #d44e3b;
-  }
-  .btn-secondary {
-    background: #fff;
-    color: #2D6A4F;
-    border: 2px solid #2D6A4F;
-  }
-  .btn-secondary:hover {
-    background: #2D6A4F;
-    color: #fff;
-  }
-  .cvt-section {
-    padding: 3rem 0;
-  }
-  .cvt-alt {
-    background: #faf7f4;
-  }
-  .cvt-section p,
-  .cvt-facts li,
-  .cvt-doc-list li {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    max-width: 70ch;
-  }
-  .cvt-quick {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-  }
-  .cvt-quick-card {
-    background: #fff;
-    border: 1px solid #e7e0d8;
-    border-radius: 20px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 14px rgba(60, 30, 10, 0.06);
-  }
-  .cvt-quick-card h3 {
-    font-family: 'Lora', Georgia, serif;
-    color: #2D6A4F;
-    font-size: 1.2rem;
-    margin: 0 0 0.6rem;
-  }
-  .cvt-quick-card p {
-    font-size: 0.98rem;
-    margin: 0;
-  }
-  .cvt-facts {
-    padding-left: 1.25rem;
-  }
-  .cvt-facts li {
-    margin-bottom: 0.85rem;
-  }
-  .cvt-table-wrap {
-    overflow-x: auto;
-    border-radius: 20px;
-    border: 1px solid #e7e0d8;
-    box-shadow: 0 4px 14px rgba(60, 30, 10, 0.06);
-  }
-  .cvt-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Sora', system-ui, sans-serif;
-    background: #fff;
-  }
-  .cvt-table thead th {
-    background: #2D6A4F;
-    color: #fff;
-    font-weight: 600;
-    padding: 1rem;
-    text-align: left;
-    font-size: 1rem;
-  }
-  .cvt-table tbody th,
-  .cvt-table tbody td {
-    padding: 0.9rem 1rem;
-    border-top: 1px solid #e7e0d8;
-    font-size: 0.97rem;
-    color: #44403c;
-    text-align: left;
-    vertical-align: top;
-  }
-  .cvt-table tbody th {
-    font-weight: 600;
-    color: #2D6A4F;
-    width: 22%;
-  }
-  .cvt-table tbody tr:nth-child(even) {
-    background: #faf7f4;
-  }
-  .cvt-note {
-    font-size: 0.95rem !important;
-    color: #57534e !important;
-    margin-top: 1rem;
-  }
-  .cvt-cta {
-    background: #2D6A4F;
-    padding: 3rem 0;
-    text-align: center;
-  }
-  .cvt-cta .cag-h2 {
-    color: #fff;
-  }
-  .cvt-cta p {
-    color: #e7f0ec !important;
-    margin: 0 auto 1.5rem;
-    text-align: center;
-  }
-  .cvt-doc-list {
-    padding-left: 1.25rem;
-  }
-  .cvt-doc-list li {
-    margin-bottom: 0.5rem;
-  }
-  .cvt-match {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-  .cvt-match-col {
-    background: #fff;
-    border: 1px solid #e7e0d8;
-    border-radius: 20px;
-    padding: 1.75rem;
-    box-shadow: 0 4px 14px rgba(60, 30, 10, 0.06);
-  }
-  .cvt-match-col h3 {
-    font-family: 'Lora', Georgia, serif;
-    color: #2D6A4F;
-    font-size: 1.25rem;
-    margin: 0 0 1rem;
-  }
-  .cvt-match-col ul {
-    padding-left: 1.2rem;
-    margin: 0;
-  }
-  .cvt-match-col li {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.98rem;
-    line-height: 1.6;
-    color: #44403c;
-    margin-bottom: 0.55rem;
-  }
-  .cvt-faq-item {
-    background: #fff;
-    border: 1px solid #e7e0d8;
-    border-radius: 12px;
-    padding: 0.25rem 1.25rem;
-    margin-bottom: 0.75rem;
-  }
-  .cvt-faq-item summary {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    color: #2D6A4F;
-    cursor: pointer;
-    padding: 0.9rem 0;
-    list-style: none;
-  }
-  .cvt-faq-item summary::-webkit-details-marker {
-    display: none;
-  }
-  .cvt-faq-item summary::after {
-    content: '+';
-    float: right;
-    color: #e8604c;
-    font-size: 1.3rem;
-    line-height: 1;
-  }
-  .cvt-faq-item[open] summary::after {
-    content: '\2212';
-  }
-  .cvt-faq-item p {
-    margin: 0 0 1rem;
-    font-size: 0.98rem;
-  }
-  @media (max-width: 1024px) {
-    .container {
-      padding: 0 32px;
-    }
-  }
-  @media (max-width: 767px) {
-    .container {
-      padding: 0 16px;
-    }
-    .cvt-quick {
-      grid-template-columns: 1fr;
-    }
-    .cvt-match {
-      grid-template-columns: 1fr;
-    }
-  }
+.cvt{--f:#2D6A4F;--clay:#e8604c;--clay-ink:#c8472f;--clay-t:#b04228;--cream:#faf7f4;--bd:#e7ddd3;color:#2a2622}
+.cvt .container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+.cvt-hero{display:grid;gap:26px;padding-top:14px;padding-bottom:8px}
+.hero-imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:4px;border-radius:20px;overflow:hidden;box-shadow:0 8px 26px rgba(60,30,10,.12)}
+.hero-imgs figure{position:relative;margin:0}
+.hero-imgs img{display:block;width:100%;height:300px;object-fit:cover}
+.chip{position:absolute;bottom:12px;background:rgba(255,255,255,.93);border-radius:50px;padding:5px 14px;font-size:.8rem;font-weight:600;color:var(--f)}
+.chip.l{left:12px}.chip.r{right:12px}
+.vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border:3px solid var(--clay);color:var(--clay-ink);font-family:'Newsreader',serif;font-weight:700;font-size:1.15rem;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(60,30,10,.25);z-index:2}
+.hero-copy{text-align:center;max-width:760px;margin:0 auto}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--clay-t);font-weight:600;margin:0 0 8px}
+.cvt .cag-h1{font-family:'Newsreader',serif;font-size:clamp(1.9rem,4vw,2.5rem);line-height:1.12;margin:0 0 14px;color:#2a2622}
+.lead{font-size:1.08rem;line-height:1.6;color:#4c443c;max-width:62ch;margin:0 auto 20px}
+.hero-cta{margin:0}
+.btn-clay,.btn-ghost{display:inline-block;border-radius:50px;padding:13px 28px;font-weight:600;text-decoration:none;font-size:.95rem}
+.btn-clay{background:var(--clay-ink);color:#fff}
+.btn-ghost{border:2px solid var(--f);color:var(--f)}
+.cvt-counter{background:var(--f);color:#fff;margin:18px 0}
+.counter-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-top:20px;padding-bottom:20px;text-align:center}
+.counter-row b{font-family:'Newsreader',serif;font-size:1.7rem;display:block}
+.counter-row span{font-size:.82rem;opacity:.9}
+.cvt-rail{position:sticky;top:0;z-index:5;background:var(--cream);border-bottom:1px solid var(--bd);display:none}
+.rail-row{display:flex;gap:8px;overflow-x:auto;padding-top:10px;padding-bottom:10px}
+.rail-row a{white-space:nowrap;font-size:.78rem;padding:7px 13px;border-radius:50px;text-decoration:none;color:var(--f);background:#fff;border:1px solid var(--bd)}
+.rail-row a b{color:var(--clay-t);margin-right:4px}
+.cvt-body{display:grid;grid-template-columns:230px 1fr;gap:40px;padding-top:26px;padding-bottom:40px;align-items:start}
+.cvt-toc{position:sticky;top:20px;font-size:.85rem}
+.toc-title{font-weight:600;color:var(--f);font-family:'Newsreader',serif;margin:0 0 8px}
+.cvt-toc a{display:block;color:#2a2622;text-decoration:none;padding:5px 0;border-bottom:1px solid var(--bd)}
+.cvt-toc a b{color:var(--clay-t);margin-right:6px}
+.cvt-toc a:hover{color:var(--clay-t)}
+.cvt-main{min-width:0}
+.cvt-main section{margin-bottom:8px}
+.cvt .cag-h2{font-family:'Newsreader',serif;font-size:clamp(1.5rem,3vw,2rem);color:#2a2622;margin:12px 0 14px;line-height:1.2}
+.cvt .cag-h3{font-family:'Newsreader',serif;font-size:1.35rem;color:var(--f);margin:22px 0 10px}
+.cvt .cag-h4{font-family:'Newsreader',serif;font-size:1.12rem;margin:18px 0 8px}
+.cvt .cag-h5{font-family:'Newsreader',serif;font-size:1rem;margin:16px 0 6px;color:#3a332c}
+.cvt .cag-h6{font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;color:var(--clay-t);margin:14px 0 4px}
+.cvt-main p{line-height:1.68;margin:0 0 14px;max-width:70ch}
+.cvt-main a{color:var(--clay-t);text-decoration:underline;text-underline-offset:2px}
+.sec-img{width:100%;max-width:760px;height:auto;border-radius:16px;margin:6px 0 16px;box-shadow:0 4px 16px rgba(60,30,10,.08)}
+.qa-box{background:#fff;border:1px solid var(--bd);border-left:5px solid var(--clay);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.qa-box p{margin:0;max-width:none}
+.qa-box strong{color:var(--f)}
+.seam{display:flex;align-items:center;gap:16px;margin:26px 0}
+.seam::before,.seam::after{content:"";flex:1;height:2px;background:linear-gradient(90deg,transparent,#d8cbbd,transparent)}
+.seam img{width:40px;height:40px;object-fit:contain;opacity:.9}
+.kt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kt-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px}
+.kt-c b{font-family:'Newsreader',serif;color:var(--f);font-size:1.2rem;display:block;margin-bottom:4px}
+.kt-c span{font-size:.82rem;color:#5b524a;line-height:1.4}
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--bd)}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:.9rem;background:#fff}
+.cmp-tbl th{background:var(--f);color:#fff;padding:10px 12px;text-align:left;font-weight:600}
+.cmp-tbl td{padding:10px 12px;border-bottom:1px solid var(--bd)}
+.cmp-tbl tr:nth-child(even) td{background:var(--cream)}
+.cmp-tbl .edge{color:var(--clay-ink);font-weight:600}
+.cap{font-size:.85rem;color:#7a6f64;font-style:italic}
+.author-card{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px;margin:0 0 16px}
+.author-card img{width:96px;height:96px;border-radius:12px;object-fit:cover;flex:none}
+.ac-name{font-family:'Newsreader',serif;font-size:1.15rem;margin:0}
+.ac-sub{font-size:.85rem;color:#7a6f64;margin:2px 0 8px}
+.ac-badges{margin:0;display:flex;gap:6px;flex-wrap:wrap}
+.ac-badges span{background:var(--f);color:#fff;border-radius:50px;padding:3px 11px;font-size:.72rem;font-weight:600}
+.size-inf{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;margin:6px 0 16px}
+.size-row{display:grid;grid-template-columns:70px 1fr auto;gap:12px;align-items:center;margin-bottom:8px;font-size:.85rem}
+.size-lbl{font-weight:600;color:var(--f)}
+.size-bar{height:14px;background:#eee4da;border-radius:50px;overflow:hidden}
+.size-bar i{display:block;height:100%;background:var(--f);border-radius:50px}
+.size-bar i.t{background:var(--clay)}
+.size-val{font-weight:600;font-size:.8rem}
+.inf-cap{font-size:.8rem;color:#7a6f64;margin:6px 0 0!important}
+@media(max-width:900px){
+  .cvt-body{grid-template-columns:1fr;gap:0}
+  .cvt-toc{display:none}
+  .cvt-rail{display:block}
+  .hero-imgs img{height:200px}
+  .counter-row{grid-template-columns:repeat(2,1fr)}
+  .kt-grid{grid-template-columns:1fr 1fr}
+  .cmp-tbl thead{display:none}
+  .cmp-tbl,.cmp-tbl tbody,.cmp-tbl tr,.cmp-tbl td{display:block;width:100%}
+  .cmp-tbl tr{border-bottom:2px solid var(--bd);padding:6px 0}
+  .cmp-tbl td{border:none;padding:4px 12px;display:flex;justify-content:space-between;gap:12px}
+  .cmp-tbl td::before{content:attr(data-l);font-weight:600;color:var(--f)}
+}
+@media(max-width:520px){.kt-grid{grid-template-columns:1fr}}
+
+/* S10 talking */
+.talk-inf{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:6px 0 16px}
+.talk-col{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px;text-align:center}
+.talk-tag{display:inline-block;border-radius:50px;padding:3px 12px;font-size:.72rem;font-weight:600;color:#fff;margin-bottom:6px}
+.talk-tag.c{background:var(--f)}.talk-tag.t{background:var(--clay-ink)}
+.talk-col b{font-family:'Newsreader',serif;font-size:1.15rem;display:block;color:#2a2622}
+.talk-col p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
+/* S11 noise */
+.noise-inf{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;margin:6px 0 16px}
+.noise-row{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;margin-bottom:8px;font-size:.82rem}
+.nbar{height:12px;background:#eee4da;border-radius:50px;overflow:hidden}
+.nbar i{display:block;height:100%;background:var(--clay);border-radius:50px}
+.noise-row:first-child .nbar i{background:var(--f)}
+/* S12 scorecard */
+.score-inf{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;margin:6px 0 16px}
+.score-block{margin-bottom:12px}
+.score-head{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:4px}
+.score-note{color:#7a6f64}
+.score-bar{height:9px;background:#eee4da;border-radius:50px;overflow:hidden;margin-bottom:3px}
+.score-bar i{display:block;height:100%;border-radius:50px}
+.score-bar.c i{background:var(--f)}.score-bar.t i{background:var(--clay)}
+.score-legend{font-size:.8rem;color:#5b524a;margin:8px 0 0!important}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle}
+.dot.c{background:var(--f)}.dot.t{background:var(--clay)}
+/* S13 lifestyle */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
+.match-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px}
+.match-c h4{margin-top:0!important}
+.match-c p{margin-bottom:0;font-size:.9rem}
+/* S14 cost */
+.cost-inf{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;margin:6px 0 16px}
+.cost-row{display:grid;grid-template-columns:130px 1fr auto;gap:12px;align-items:center;margin-bottom:8px;font-size:.82rem}
+.cbar{height:14px;background:#eee4da;border-radius:50px;overflow:hidden}
+.cbar i{display:block;height:100%;background:var(--f);border-radius:50px}
+.cbar i.t{background:var(--clay)}.cbar i.c{background:var(--f)}
+.cost-row b{font-size:.8rem;white-space:nowrap}
+/* S15 timeline */
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 8px}
+.tl-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px;position:relative}
+.tl-n{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--clay-ink);color:#fff;font-size:.75rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.tl-c b{font-family:'Newsreader',serif;display:block;margin:6px 0 6px;color:var(--f);font-size:.98rem}
+.tl-c p{font-size:.82rem;margin:0!important;max-width:none}
+/* S16 myths */
+.myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 8px}
+.myth-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px}
+.myth-x{display:inline-block;background:#f3d9d2;color:var(--clay-ink);border-radius:50px;padding:2px 12px;font-size:.72rem;font-weight:600;margin-bottom:8px}
+.myth-c p{margin:0;font-size:.9rem}
+/* S18 shipping + health */
+.ship-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:6px 0 14px}
+.ship-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px}
+.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:2px 11px;font-size:.7rem;font-weight:600}
+.ship-tier.clay{background:var(--clay-ink)}
+.ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.1rem}
+.ship-price{color:var(--clay-t);font-weight:700;font-size:1.1rem}
+.ship-c p{font-size:.8rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
+.health-card{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin:6px 0 14px;max-width:420px}
+.hc-head{background:var(--f);color:#fff;padding:8px 14px;font-family:'Newsreader',serif}
+.hc-list{list-style:none;margin:0;padding:12px 14px}
+.hc-list li{font-size:.85rem;padding:4px 0 4px 22px;position:relative}
+.hc-list li::before{content:"✔";position:absolute;left:0;color:var(--f);font-weight:700}
+.ship-line{font-size:.78rem;color:#7a6f64;font-weight:600;border-top:1px dashed var(--bd);padding-top:8px}
+/* S19 bird cards */
+.bird-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 14px}
+.bird-c{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;text-decoration:none!important;color:#2a2622;display:block}
+.bird-badge{background:var(--f);color:#fff;font-size:.7rem;font-weight:600;padding:5px 10px}
+.bird-body{padding:10px 12px}
+.bird-name{font-family:'Newsreader',serif;font-size:1rem;margin:0 0 2px}
+.bird-price{color:var(--clay-t);font-weight:700;display:block;font-size:.95rem}
+.ship-mini{font-size:.68rem;color:#7a6f64;display:block;margin-top:6px;border-top:1px dashed var(--bd);padding-top:5px}
+.pair-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
+.pair-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px}
+.pair-c b{font-family:'Newsreader',serif;font-size:1.05rem;display:block;margin-bottom:2px}
+.pair-sub{font-size:.8rem;color:#7a6f64;display:block;margin-bottom:8px}
+.btn-ghost.sm,.btn-clay.sm{padding:8px 16px;font-size:.82rem}
+.ctr{text-align:center}
+/* S20 quotes */
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
+.quote-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0}
+.stars{color:#c9a227;letter-spacing:2px;font-size:.9rem}
+.quote-c p{font-size:.9rem;font-style:italic;margin:8px 0}
+.quote-c cite{font-size:.78rem;color:#7a6f64;font-style:normal}
+/* S21 faq */
+.faq-open{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.faq-q{font-family:'Newsreader',serif;font-size:1rem;margin:0 0 6px;color:#2a2622}
+.faq-open p{margin:0;font-size:.9rem}
+.faq-d{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.faq-d summary{font-family:'Newsreader',serif;font-weight:600;cursor:pointer;font-size:1rem}
+.faq-d p{margin:8px 0 0;font-size:.9rem}
+/* S22 blog */
+.blog-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.blog-c{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;text-decoration:none!important;color:#2a2622}
+.blog-c img{width:100%;height:120px;object-fit:cover}
+.blog-body{padding:10px 12px}
+.blog-tag{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:2px 10px;font-size:.68rem;font-weight:600}
+.blog-t{font-family:'Newsreader',serif;font-size:.95rem;margin:6px 0 0}
+/* S23 cta + form + newsletter */
+.final-cta{background:var(--cream);border:1px solid var(--bd);border-radius:20px;padding:22px}
+.cta-form{display:grid;gap:10px;max-width:520px;margin:8px 0 0}
+.cta-form label{display:grid;gap:4px;font-size:.85rem;font-weight:600;color:#3a332c}
+.cta-form input,.cta-form textarea{border:1px solid var(--bd);border-radius:12px;padding:10px 12px;font:inherit;font-weight:400}
+.cta-form button{border:none;cursor:pointer;justify-self:start}
+.cta-form .btn-ghost{padding:11px 22px}
+.hp{position:absolute;left:-9999px}
+.nl-band{margin-top:18px;background:var(--f);color:#fff;border-radius:14px;padding:16px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.nl-band b{font-family:'Newsreader',serif;font-size:1.05rem}
+.nl-form{display:flex;gap:8px;flex-wrap:wrap}
+.nl-form input{border:none;border-radius:50px;padding:10px 16px;font:inherit;min-width:200px}
+.nl-form button{border:none;cursor:pointer}
+@media(max-width:900px){
+  .talk-inf,.match-grid,.myth-grid,.ship-cards,.quote-grid,.pair-row{grid-template-columns:1fr}
+  .timeline{grid-template-columns:1fr 1fr}
+  .bird-cards{grid-template-columns:1fr 1fr}
+  .blog-cards{grid-template-columns:1fr}
+  .cost-row{grid-template-columns:110px 1fr auto}
+  .noise-row{grid-template-columns:120px 1fr}
+}
+@media(max-width:520px){.timeline,.bird-cards{grid-template-columns:1fr}}
 </style>
