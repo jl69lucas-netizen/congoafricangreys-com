@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAG Comparison Component Lab — Screen 3: Section Cards (Set B)</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--forest:#2D6A4F;--clay:#e8604c;--clay-ink:#c8472f;--clay-text:#b04228;--cream:#faf7f4;--ink:#2a2622;--border:#e7ddd3}
+*{box-sizing:border-box;margin:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:#efe9e2;color:var(--ink);padding:32px 3vw 110px}
+h1,h2,h3,h4,h5,.serif{font-family:'Newsreader',serif}
+.lab-head{max-width:1280px;margin:0 auto 26px}
+.lab-head h1{font-size:1.9rem;color:var(--forest)}
+.lab-head p{max-width:75ch;margin-top:6px;color:#5b524a}
+.comp{max-width:1280px;margin:0 auto 40px}
+.comp>h2{font-size:1.25rem;color:var(--forest);margin-bottom:4px}
+.comp>.note{font-size:.85rem;color:#7a6f64;margin-bottom:12px}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1050px){.trio{grid-template-columns:1fr}}
+.v{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;box-shadow:0 4px 14px rgba(60,30,10,.06)}
+.v.selected{outline:4px solid var(--clay)}
+.v .bar{display:flex;gap:8px;align-items:center;padding:8px 14px;background:var(--forest);color:#fff;font-size:.78rem}
+.v .bar .t{background:#fff;color:var(--forest);border-radius:50px;padding:2px 10px;font-weight:600;white-space:nowrap}
+.v .bar .rec{background:var(--clay);border-radius:50px;padding:2px 10px;font-weight:600}
+.v .demo{padding:16px;background:var(--cream);min-height:170px}
+.pill{display:inline-block;background:var(--clay-ink);color:#fff;border-radius:50px;padding:8px 18px;font-weight:600;font-size:.8rem;text-decoration:none}
+.pill.ghost{background:transparent;color:var(--forest);border:2px solid var(--forest)}
+img{display:block;width:100%;object-fit:cover}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 3px 10px rgba(60,30,10,.05)}
+.card .pad{padding:12px}
+.card h5{color:var(--ink);font-size:1rem}
+.card .price{color:var(--clay-text);font-weight:600;font-size:.9rem}
+.card .ship{font-size:.7rem;color:#7a6f64;border-top:1px dashed var(--border);margin-top:8px;padding-top:6px}
+.badge{display:inline-block;background:var(--forest);color:#fff;border-radius:50px;padding:2px 9px;font-size:.66rem;font-weight:600}
+.badge.clay{background:var(--clay-ink)}
+.hrow{display:flex;gap:12px;align-items:center}
+.hrow img{width:110px;height:110px;border-radius:12px;flex:none}
+.strip{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:50px;padding:8px 14px;font-size:.8rem}
+.strip img{width:44px;height:44px;border-radius:50%;flex:none}
+.greenhead{background:var(--forest);color:#fff;padding:8px 12px;font-family:'Newsreader',serif}
+.checklist li{list-style:none;font-size:.8rem;padding:5px 0 5px 22px;position:relative}
+.checklist li::before{content:"✔";position:absolute;left:0;color:var(--forest);font-weight:700}
+.quote{background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;font-size:.83rem}
+.quote .stars{color:#c9a227;letter-spacing:2px}
+.quote .who{margin-top:8px;font-size:.75rem;color:#7a6f64}
+.stat{display:flex;justify-content:space-between;font-size:.78rem;padding:4px 0;border-bottom:1px dashed var(--border)}
+.picker{position:fixed;bottom:0;left:0;right:0;background:var(--forest);color:#fff;padding:11px 3vw;z-index:9;font-size:.85rem;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.picker b{font-family:'Newsreader',serif}
+.picker span{background:rgba(255,255,255,.15);border-radius:50px;padding:3px 12px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:3px;border-radius:12px;overflow:hidden}
+.duo img{height:95px}
+</style>
+</head>
+<body>
+<div class="lab-head">
+  <h1>Screen 3 of 3 — Section Cards (Set B) · Hero A + Screen 2 locked ✔</h1>
+  <p>Last selection round. Components 11–18: the cards used in sections 7 and 17–22 of the approved matrix. All prices shown are live from data/price-matrix.json + financial-entities.json. Click one per group; bottom bar collects the string.</p>
+</div>
+
+<section class="comp" data-c="11"><h2>11 · Breeder / E-E-A-T card (section 7 "Why Trust Us")</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'11','A')"><div class="bar"><span class="t">11A Photo-left author card</span><span class="rec">Recommended</span> strongest E-E-A-T signal — face + credentials + link; trade-off: needs the good Mark & Teri photo</div><div class="demo"><div class="card"><div class="hrow" style="padding:12px"><img src="https://congoafricangreys.com/about-mark-teri-benjamin-african-grey-breeders-midland-tx.webp" alt=""><div><h5>Mark & Teri Benjamin</h5><small style="color:#7a6f64">Breeding both variants in Midland, TX since 2014</small><br><span class="badge">USDA AWA</span> <span class="badge">CITES docs</span> <span class="badge">DNA sexing</span></div></div></div></div></div>
+  <div class="v" onclick="pick(this,'11','B')"><div class="bar"><span class="t">11B Forest credential band</span> full-width; trade-off: reads corporate, loses the faces</div><div class="demo"><div class="greenhead" style="border-radius:14px;padding:14px">We raise both variants ourselves — every claim on this page comes from our aviary.<br><small style="opacity:.8">— Mark & Teri, C.A.Gs · Midland, TX</small></div></div></div>
+  <div class="v" onclick="pick(this,'11','C')"><div class="bar"><span class="t">11C Compact byline chip</span> lightest; trade-off: weakest trust payload</div><div class="demo"><div class="strip"><img src="https://congoafricangreys.com/about-mark-teri-benjamin-african-grey-breeders-midland-tx.webp" alt=""><span>Written by <b>Mark & Teri Benjamin</b> — C.A.Gs, Midland TX · both variants since 2014</span></div></div></div>
+</div></section>
+
+<section class="comp" data-c="12"><h2>12 · Compare-birds cards (variant stat cards, sections 8–9 headers + hub reuse)</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'12','A')"><div class="bar"><span class="t">12A Image-top stat card</span><span class="rec">Recommended</span> matches blog-hub Option A idiom; trade-off: tallest</div><div class="demo"><div class="card" style="max-width:250px"><img src="https://congoafricangreys.com/congo-african-grey-talking-ability-500.webp" style="height:110px" alt=""><div class="pad"><span class="badge clay">Congo</span><h5 style="margin-top:6px">Congo African Grey</h5><div class="stat"><span>Weight</span><b>400–650 g</b></div><div class="stat"><span>Price</span><b>$1,700–$2,500</b></div></div></div></div></div>
+  <div class="v" onclick="pick(this,'12','B')"><div class="bar"><span class="t">12B Horizontal stat card</span> compact rows; trade-off: small image</div><div class="demo"><div class="card"><div class="hrow" style="padding:10px"><img src="https://congoafricangreys.com/evie-timneh-african-grey-female-6-months.webp" alt=""><div style="flex:1"><h5>Timneh African Grey</h5><div class="stat"><span>Weight</span><b>275–375 g</b></div><div class="stat"><span>Price</span><b>$1,500–$1,600</b></div></div></div></div></div></div>
+  <div class="v" onclick="pick(this,'12','C')"><div class="bar"><span class="t">12C Green-header info card</span> registry cag-bird-card feature idiom; trade-off: heavier chrome</div><div class="demo"><div class="card" style="max-width:250px"><div class="greenhead">Timneh African Grey</div><div class="pad"><div class="stat"><span>Tail</span><b>Maroon</b></div><div class="stat"><span>Maturity</span><b>2–3 yrs</b></div><div class="stat"><span>Price</span><b>$1,500–$1,600</b></div></div></div></div></div>
+</div></section>
+
+<section class="comp" data-c="13"><h2>13 · Available-birds cards (section 19 — link-out to /available/)</h2><div class="note">Shipping line is MANDATORY on every variant (site rule).</div>
+<div class="trio">
+  <div class="v" onclick="pick(this,'13','A')"><div class="bar"><span class="t">13A Classic BirdCard</span><span class="rec">Recommended</span> the proven /available/ hub card (h-72, chips, ship line); trade-off: none — consistency win</div><div class="demo"><div class="card" style="max-width:240px"><img src="https://congoafricangreys.com/elad-timneh-african-grey-male-5-months.webp" style="height:120px" alt=""><div class="pad"><span class="badge">Available</span><h5 style="margin-top:6px">Elad — Timneh male</h5><span class="price">$1,600</span><div class="ship">Ships nationwide · $185 airport · $350 home</div></div></div></div></div>
+  <div class="v" onclick="pick(this,'13','B')"><div class="bar"><span class="t">13B Horizontal mini-card</span> 3-up row fits section 19's 150 words; trade-off: smaller photos</div><div class="demo"><div class="card"><div class="hrow" style="padding:10px"><img src="https://congoafricangreys.com/evie-timneh-african-grey-female-6-months.webp" alt=""><div><h5>Evie — Timneh female</h5><span class="price">$1,500</span><div class="ship">Ships nationwide · $185 airport · $350 home</div></div></div></div></div></div>
+  <div class="v" onclick="pick(this,'13','C')"><div class="bar"><span class="t">13C CTA strip</span> single band, no per-bird cards; trade-off: no faces = weaker pull</div><div class="demo"><div class="card" style="padding:14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div><h5>Congo & Timneh chicks available now</h5><div class="ship" style="border:none;margin:0;padding:0">Ships nationwide · $185 airport · $350 home</div></div><a class="pill" href="#">See Available Greys</a></div></div></div>
+</div></section>
+
+<section class="comp" data-c="14"><h2>14 · Breeding Pair + Fertile Eggs cards (section 19 add-on row)</h2><div class="note">Bonded breeding pair $3,000 · eggs link-out to /african-grey-parrot-bird-eggs-for-sale-usa/ (no invented egg pricing).</div>
+<div class="trio">
+  <div class="v" onclick="pick(this,'14','A')"><div class="bar"><span class="t">14A Duo-image pair card + egg card</span><span class="rec">Recommended</span> visual parity with bird cards; trade-off: needs 3 photos</div><div class="demo" style="display:flex;gap:10px;flex-wrap:wrap"><div class="card" style="max-width:210px"><div class="duo"><img src="https://congoafricangreys.com/timneh-african-grey-breeding-pair.webp" alt=""><img src="https://congoafricangreys.com/male-and-female-congo-african-grey-parrots-680.webp" alt=""></div><div class="pad"><h5>Bonded Breeding Pair</h5><span class="price">$3,000</span><div class="ship">Ships nationwide · $185 airport · $350 home</div></div></div><div class="card" style="max-width:180px"><div class="pad"><span class="badge clay">Eggs</span><h5 style="margin-top:6px">Fertile Eggs</h5><small style="color:#7a6f64">Candled & documented — see the eggs page</small><br><a class="pill ghost" style="margin-top:8px" href="#">Learn More</a></div></div></div></div>
+  <div class="v" onclick="pick(this,'14','B')"><div class="bar"><span class="t">14B Combined banner split</span> one band, two halves; trade-off: cramped on mobile</div><div class="demo"><div class="card" style="display:grid;grid-template-columns:1fr 1fr"><div class="pad" style="border-right:1px solid var(--border)"><h5>Breeding Pair</h5><span class="price">$3,000</span><div class="ship">$185 airport · $350 home</div></div><div class="pad"><h5>Fertile Eggs</h5><small style="color:#7a6f64">Candled & documented</small><br><a class="pill ghost" style="margin-top:6px" href="#">Eggs Page</a></div></div></div></div>
+  <div class="v" onclick="pick(this,'14','C')"><div class="bar"><span class="t">14C Text list rows</span> quietest; trade-off: easy to scroll past</div><div class="demo"><div class="card"><div class="pad"><div class="stat"><span><b>Bonded Breeding Pair</b> — proven, documented</span><b class="price">$3,000</b></div><div class="stat"><span><b>Fertile Eggs</b> — candled, incubator-ready</span><a href="#" style="color:var(--clay-text);font-weight:600">Inquire →</a></div><div class="ship">Ships nationwide · $185 airport · $350 home</div></div></div></div></div>
+</div></section>
+
+<section class="comp" data-c="15"><h2>15 · Shipping section cards (section 18)</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'15','A')"><div class="bar"><span class="t">15A Two-tier cards</span><span class="rec">Recommended</span> the two decisions a buyer makes, priced; trade-off: needs both photos/icons</div><div class="demo" style="display:flex;gap:10px"><div class="card" style="flex:1"><div class="pad"><span class="badge">Tier 1</span><h5 style="margin-top:6px">Airport Pickup</h5><span class="price">$185</span><br><small style="color:#7a6f64">IATA live-animal cargo · Delta/United/American</small></div></div><div class="card" style="flex:1"><div class="pad"><span class="badge clay">Tier 2</span><h5 style="margin-top:6px">Home Delivery</h5><span class="price">$350</span><br><small style="color:#7a6f64">Courier to your door</small></div></div></div></div>
+  <div class="v" onclick="pick(this,'15','B')"><div class="bar"><span class="t">15B Journey timeline strip</span> reserve→ship→arrive; trade-off: pricing less prominent</div><div class="demo"><div class="card"><div class="pad" style="display:flex;justify-content:space-between;font-size:.78rem;text-align:center"><span><b>1</b><br>Reserve<br><small style="color:#7a6f64">$200 deposit</small></span><span>→</span><span><b>2</b><br>Health cert<br><small style="color:#7a6f64">avian vet</small></span><span>→</span><span><b>3</b><br>Ship<br><small style="color:#7a6f64">$185 / $350</small></span><span>→</span><span><b>4</b><br>Arrive</span></div></div></div></div>
+  <div class="v" onclick="pick(this,'15','C')"><div class="bar"><span class="t">15C Green info card</span> single card, both tiers listed; trade-off: least visual</div><div class="demo"><div class="card"><div class="greenhead">Shipping, nationwide</div><div class="pad"><div class="stat"><span>Airport Pickup — IATA cargo</span><b>$185</b></div><div class="stat"><span>Home Delivery — courier</span><b>$350</b></div></div></div></div></div>
+</div></section>
+
+<section class="comp" data-c="16"><h2>16 · Health section cards (section 18 pairing + sections 8/9 health H3s)</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'16','A')"><div class="bar"><span class="t">16A Screening checklist card</span><span class="rec">Recommended</span> mirrors the Verified-Claim Ledger 1:1; trade-off: text-only</div><div class="demo"><div class="card"><div class="greenhead">Every grey leaves with</div><div class="pad"><ul class="checklist"><li>PBFD PCR screening</li><li>Avian Polyomavirus PCR</li><li>DNA sexing certificate</li><li>Avian-vet health certificate</li><li>Hatch certificate + closed band</li></ul></div></div></div></div>
+  <div class="v" onclick="pick(this,'16','B')"><div class="bar"><span class="t">16B Per-risk mini cards</span> one card per condition; trade-off: can read alarmist</div><div class="demo" style="display:flex;gap:8px;flex-wrap:wrap"><div class="card" style="flex:1;min-width:120px"><div class="pad"><h5 style="font-size:.85rem">Hypocalcemia</h5><small style="color:#7a6f64">Diet + UV-B managed</small></div></div><div class="card" style="flex:1;min-width:120px"><div class="pad"><h5 style="font-size:.85rem">PBFD</h5><small style="color:#7a6f64">PCR-screened out</small></div></div></div></div>
+  <div class="v" onclick="pick(this,'16','C')"><div class="bar"><span class="t">16C Guarantee band</span> single reassurance band + link; trade-off: least detail</div><div class="demo"><div class="greenhead" style="border-radius:14px;padding:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><span>PCR-screened, vet-certified, guaranteed in writing.</span><a class="pill" href="#">Health Guarantee</a></div></div></div>
+</div></section>
+
+<section class="comp" data-c="17"><h2>17 · Review / testimonial cards (section 20)</h2><div class="note">REAL buyer reviews only — populated from the review-collection pipeline, never invented.</div>
+<div class="trio">
+  <div class="v" onclick="pick(this,'17','A')"><div class="bar"><span class="t">17A Grid quote cards</span><span class="rec">Recommended</span> 2–3-up, photo optional — flexible when review count is low; trade-off: generic shape</div><div class="demo"><div class="quote"><span class="stars">★★★★★</span><p>"[Real buyer quote pulled from collected reviews]"</p><div class="who">— Verified buyer · Congo chick, 2026</div></div></div></div>
+  <div class="v" onclick="pick(this,'17','B')"><div class="bar"><span class="t">17B Feature quote</span> one big serif pull-quote; trade-off: needs one exceptional review</div><div class="demo"><p class="serif" style="font-size:1.15rem;line-height:1.4">"[The single strongest real review, set large]"</p><div class="who" style="font-size:.75rem;color:#7a6f64;margin-top:8px">— Verified buyer · Timneh, 2026</div></div></div>
+  <div class="v" onclick="pick(this,'17','C')"><div class="bar"><span class="t">17C Compact strip row</span> horizontal scroll chips; trade-off: truncates quotes</div><div class="demo"><div class="strip"><span class="stars" style="color:#c9a227">★★★★★</span><span>"[Short real quote…]" — Verified buyer</span></div></div></div>
+</div></section>
+
+<section class="comp" data-c="18"><h2>18 · Blog cards (section 22 "Keep Learning")</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'18','A')"><div class="bar"><span class="t">18A Image-top card</span><span class="rec">Recommended</span> exact blog-hub Option A idiom (420×236 thumbs exist); trade-off: none — reuse</div><div class="demo"><div class="card" style="max-width:230px"><img src="https://congoafricangreys.com/african-grey-blog-hub-hero-480.webp" style="height:100px" alt=""><div class="pad"><span class="badge">Care</span><h5 style="margin-top:6px;font-size:.9rem">African Grey Cage Setup Guide</h5></div></div></div></div>
+  <div class="v" onclick="pick(this,'18','B')"><div class="bar"><span class="t">18B Horizontal row</span> thumbnail-left list; trade-off: less visual weight</div><div class="demo"><div class="card"><div class="hrow" style="padding:10px"><img src="https://congoafricangreys.com/african-grey-blog-hub-hero-480.webp" style="width:80px;height:60px" alt=""><div><span class="badge">Talking</span><h5 style="font-size:.9rem;margin-top:4px">When Do Greys Start Talking?</h5></div></div></div></div></div>
+  <div class="v" onclick="pick(this,'18','C')"><div class="bar"><span class="t">18C Text-only links</span> lightest; trade-off: breaks the H2-needs-image rule for that section — would need a section header image instead</div><div class="demo"><div class="card"><div class="pad"><div class="stat"><span>African Grey Cage Setup Guide</span><span>→</span></div><div class="stat"><span>When Do Greys Start Talking?</span><span>→</span></div><div class="stat"><span>African Grey Price Guide</span><span>→</span></div></div></div></div></div>
+</div></section>
+
+<div class="picker"><b>Picks:</b><span id="out">none yet</span><span style="background:var(--clay)">8 groups (11–18) — tell Claude the string when done</span></div>
+<script>
+const picks={};
+function pick(el,c,v){el.closest('.comp').querySelectorAll('.v').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');picks[c]=v;
+document.getElementById('out').textContent=Object.keys(picks).sort((a,b)=>a-b).map(k=>k+picks[k]).join(' ');
+localStorage.setItem('cag-cards-picks',JSON.stringify(picks));}
+const prev=JSON.parse(localStorage.getItem('cag-cards-picks')||'{}');
+Object.entries(prev).forEach(([c,v])=>{const s=document.querySelector(`.comp[data-c="${c}"]`);if(s){const i={'A':0,'B':1,'C':2}[v];pick(s.querySelectorAll('.v')[i],c,v)}});
+</script>
+</body>
+</html>
