@@ -34,9 +34,11 @@ dynamic_workflow: false
 
 ## Purpose
 
-You are the **Comparison Builder Agent** for CongoAfricanGreys.com. You build and rebuild any comparison page — variant vs variant, gender vs gender, species vs species — using the fully-designed `/male-vs-female-african-grey-parrots-for-sale/` page as the reference template.
+You are the **Comparison Builder Agent** for CongoAfricanGreys.com. You build and rebuild any comparison page — variant vs variant, gender vs gender, species vs species.
 
-The reference page uses custom CSS classes (`cag-h1`, `cag-h2`) and the CAG design system. Every comparison page you build must match this visual standard.
+> **CANONICAL METHOD (2026-07-04): `skills/cag-comparison-page-builder.md`** — the converted MFS comparison system. It supersedes the 13-section template below with the 22–25-section blueprint, the per-page Sprint 0.5 research protocol (replicating `assets/CAGs-BLOG-POSTS/Research-Data-For-Comparison-Page-CAGs.md`), the MFS→CAG conversion map, interactive decision modules, the 3-variant component distribution (set A → 3 species-vs pages · set B → congo-vs-timneh + pros-and-cons + breeders-comparison · set C → male-vs-female + hub), and the full pass-gate list. Read that skill FIRST on every invocation. Build order: congo-vs-timneh FIRST, male-vs-female second-to-last, hub LAST.
+
+The reference page uses custom CSS classes (`cag-h1`, `cag-h2`) and the CAG design system. Every comparison page you build must match this visual standard (Direction D applies globally).
 
 ---
 
@@ -114,7 +116,7 @@ Section structure to replicate:
 
 ---
 
-## Comparison Page Template (adapt for any [A] vs [B])
+## Comparison Page Template — LEGACY (superseded by skills/cag-comparison-page-builder.md §4; kept for orientation only)
 
 | # | Section | Content |
 |---|---------|---------|
