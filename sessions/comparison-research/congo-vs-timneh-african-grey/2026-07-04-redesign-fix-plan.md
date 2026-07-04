@@ -1,5 +1,10 @@
 # Redesign Fix Plan — /congo-vs-timneh-african-grey/ · 2026-07-04 breeder review
-Status: **AWAITING BREEDER APPROVAL** (per approve-everything rule). Every item below maps 1:1 to
+Status: **EXECUTED + LIVE 2026-07-04** (breeder approved via "continue"; commits 3524584 · 6e0e081 · cb3f8a9).
+Gates run with evidence: final_page_audit --comparison PASS-W-W · anti-AI 0 hits/0 em-dash violations ·
+humor policy clean · entities 28/29 + hand-raised forms · non-commodity 10/10 markers · keyword-verifier
+all core checks pass · Lighthouse (live, warm median-of-3 mobile): perf 70 · a11y **100** (was 97) · BP 100 · SEO 100.
+Still open: Gemini image generation (13 prompts ready), fresh Bing 30-competitor sweep, Rocket-Loader
+dashboard toggle (TBT ~790ms + unused-JS all trace to /70de/). Every item below maps 1:1 to
 the breeder's review. Build only after approval; hero + card designs go through visual-companion
 screens first (confirmed default workflow).
 
