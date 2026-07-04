@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAG Comparison Component Lab — Screen 2: Core Components (Set B)</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--forest:#2D6A4F;--clay:#e8604c;--clay-ink:#c8472f;--clay-text:#b04228;--cream:#faf7f4;--ink:#2a2622;--border:#e7ddd3}
+*{box-sizing:border-box;margin:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:#efe9e2;color:var(--ink);padding:32px 3vw 110px}
+h1,h2,h3,h4,.serif{font-family:'Newsreader',serif}
+.lab-head{max-width:1280px;margin:0 auto 26px}
+.lab-head h1{font-size:1.9rem;color:var(--forest)}
+.lab-head p{max-width:75ch;margin-top:6px;color:#5b524a}
+.comp{max-width:1280px;margin:0 auto 40px}
+.comp>h2{font-size:1.25rem;color:var(--forest);margin-bottom:4px}
+.comp>.note{font-size:.85rem;color:#7a6f64;margin-bottom:12px}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1050px){.trio{grid-template-columns:1fr}}
+.v{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;box-shadow:0 4px 14px rgba(60,30,10,.06)}
+.v.selected{outline:4px solid var(--clay)}
+.v .bar{display:flex;gap:8px;align-items:center;padding:8px 14px;background:var(--forest);color:#fff;font-size:.78rem}
+.v .bar .t{background:#fff;color:var(--forest);border-radius:50px;padding:2px 10px;font-weight:600}
+.v .bar .rec{background:var(--clay);border-radius:50px;padding:2px 10px;font-weight:600}
+.v .demo{padding:18px;background:var(--cream);min-height:150px}
+.pill{display:inline-block;background:var(--clay-ink);color:#fff;border-radius:50px;padding:10px 22px;font-weight:600;font-size:.88rem;text-decoration:none}
+.pill.ghost{background:transparent;color:var(--forest);border:2px solid var(--forest)}
+.pill.txt{background:none;color:var(--clay-text);padding:10px 4px}
+.eb{font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;color:var(--clay-text);font-weight:600}
+.eb::before{content:"";display:inline-block;width:12px;height:3px;background:var(--clay);margin-right:7px;vertical-align:middle}
+small.gray{color:#8a7f74}
+/* TOC */
+.toc a{display:block;color:var(--ink);text-decoration:none;font-size:.85rem;padding:6px 0;border-bottom:1px solid var(--border)}
+.toc a b{color:var(--clay-text);font-family:'Newsreader',serif;margin-right:8px}
+.tocgroup h5{font-family:'IBM Plex Sans';font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest);margin:10px 0 2px}
+.tocgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tocgrid a{border:1px solid var(--border);border-radius:10px;padding:8px 10px;background:#fff;font-size:.8rem;text-decoration:none;color:var(--ink)}
+/* jump rail */
+.rail{display:flex;gap:8px;overflow-x:auto;padding:8px;background:#fff;border-radius:50px;border:1px solid var(--border)}
+.rail a{white-space:nowrap;font-size:.78rem;padding:7px 14px;border-radius:50px;text-decoration:none;color:var(--forest);background:var(--cream);border:1px solid var(--border)}
+.rail a.on{background:var(--forest);color:#fff}
+.rail2 a{background:none;border:none;border-bottom:3px solid transparent;border-radius:0}
+.rail2 a.on{background:none;color:var(--clay-ink);border-bottom-color:var(--clay)}
+.rail3 a b{color:var(--clay-text);margin-right:5px}
+/* takeaways */
+.kt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kt-grid .c{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px}
+.kt-grid .c b{font-family:'Newsreader',serif;color:var(--forest);font-size:1.15rem;display:block}
+.kt-grid .c span{font-size:.78rem;color:#5b524a}
+.kt-list li{list-style:none;padding:8px 0 8px 34px;position:relative;font-size:.85rem;border-bottom:1px dashed var(--border)}
+.kt-list li::before{content:attr(data-n);position:absolute;left:0;top:8px;width:24px;height:24px;border-radius:50%;background:var(--forest);color:#fff;font-size:.72rem;display:flex;align-items:center;justify-content:center;font-weight:600}
+.kt-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kt-cols .col{background:#fff;border-radius:12px;border:1px solid var(--border);padding:12px}
+.kt-cols h5{color:var(--forest);margin-bottom:6px}
+.kt-cols li{list-style:none;font-size:.8rem;padding:4px 0 4px 20px;position:relative}
+.kt-cols li::before{content:"✔";position:absolute;left:0;color:var(--forest)}
+/* quick answer */
+.qa1{background:#fff;border:1px solid var(--border);border-left:5px solid var(--clay);border-radius:12px;padding:16px;font-size:.9rem}
+.qa2{background:var(--forest);color:#fff;border-radius:16px;padding:18px;font-size:.9rem}
+.qa2 b{color:#ffd6c9}
+.qa3{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px}
+.qa3 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.qa3 .row div{background:var(--cream);border-radius:10px;padding:10px;font-size:.8rem}
+.qa3 .row b{color:var(--forest)}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:.8rem;background:#fff;border-radius:12px;overflow:hidden}
+th{background:var(--forest);color:#fff;padding:8px;text-align:left;font-weight:600}
+td{padding:8px;border-bottom:1px solid var(--border)}
+tr:nth-child(even) td{background:var(--cream)}
+.win{color:var(--clay-ink);font-weight:600}
+.swipe{display:flex;gap:10px;overflow-x:auto}
+.swipe .card{min-width:150px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;font-size:.78rem}
+.swipe .card h5{color:var(--forest);margin-bottom:6px}
+/* scorecard */
+.meter{margin-bottom:10px;font-size:.78rem}
+.meter .lbl{display:flex;justify-content:space-between;margin-bottom:3px}
+.meter .trk{height:8px;background:#eee4da;border-radius:50px;position:relative}
+.meter .trk i{position:absolute;left:0;top:0;bottom:0;border-radius:50px}
+.meter .c i{background:var(--forest)}.meter .t i{background:var(--clay)}
+.dots span{display:inline-block;width:11px;height:11px;border-radius:50%;background:#eee4da;margin-right:3px}
+.dots span.f{background:var(--forest)}.dots.t span.f{background:var(--clay)}
+.chipscore{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:8px;font-size:.8rem}
+.chipscore b{font-family:'Newsreader',serif}
+.chipscore .n{background:var(--forest);color:#fff;border-radius:50px;padding:2px 10px;font-weight:600}
+.chipscore .n.t{background:var(--clay-ink)}
+/* faq */
+details{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;font-size:.85rem}
+summary{font-weight:600;cursor:pointer;font-family:'Newsreader',serif;font-size:.95rem}
+details p{margin-top:8px;color:#5b524a}
+.qab{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;font-size:.85rem}
+.qab h5{font-size:.95rem;margin-bottom:6px}
+.qab h5::before{content:"Q. ";color:var(--clay-text)}
+.qab p::before{content:"A. ";color:var(--forest);font-weight:600}
+/* seam */
+.seam{display:flex;align-items:center;gap:14px;padding:10px 0}
+.seam::before,.seam::after{content:"";flex:1;height:1px;background:var(--border)}
+.seam img{width:44px;height:44px;object-fit:contain}
+.seam2::before,.seam2::after{height:2px;background:linear-gradient(90deg,transparent,#d8cbbd)}
+.seam3{flex-direction:column;gap:6px}
+.seam3::before{width:60%;flex:none}
+.seam3::after{display:none}
+/* newsletter */
+.nl{border-radius:14px;padding:16px;font-size:.82rem}
+.nl input{border:1px solid var(--border);border-radius:50px;padding:9px 14px;font-size:.8rem;width:46%}
+.nl .pill{padding:9px 18px;font-size:.8rem}
+.nl1{background:var(--forest);color:#fff;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.nl2{background:#fff;border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center}
+.nl3{background:var(--cream);border:2px dashed var(--clay);text-align:center}
+.picker{position:fixed;bottom:0;left:0;right:0;background:var(--forest);color:#fff;padding:11px 3vw;z-index:9;font-size:.85rem;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.picker b{font-family:'Newsreader',serif}
+.picker span{background:rgba(255,255,255,.15);border-radius:50px;padding:3px 12px}
+</style>
+</head>
+<body>
+<div class="lab-head">
+  <h1>Screen 2 of 3 — Core Components (Set B) · Hero A locked ✔</h1>
+  <p>Click ONE variant per component (1–10). The bottom bar collects your picks — when done, tell Claude the string it shows (e.g. "2A 3B 4A…"). Recommended picks are tagged with why; every choice has a named trade-off in its header strip.</p>
+</div>
+
+<section class="comp" data-c="1"><h2>1 · TOC (desktop)</h2><div class="note">Long-form nav, sits under hero.</div>
+<div class="trio">
+  <div class="v" onclick="pick(this,'1','A')"><div class="bar"><span class="t">1A Minimal list</span><span class="rec">Recommended</span> cleanest at 23 sections; trade-off: no grouping</div><div class="demo toc">
+    <a href="#"><b>04</b> Quick Answer</a><a href="#"><b>08</b> Congo Deep Dive</a><a href="#"><b>12</b> Decision Scorecard</a><a href="#"><b>21</b> FAQ</a></div></div>
+  <div class="v" onclick="pick(this,'1','B')"><div class="bar"><span class="t">1B Grouped-by-part</span> homepage v3:02 idiom; trade-off: taller block</div><div class="demo toc tocgroup">
+    <h5>Meet the Birds</h5><a href="#"><b>08</b> Congo Deep Dive</a><a href="#"><b>09</b> Timneh Deep Dive</a><h5>Decide</h5><a href="#"><b>12</b> Scorecard</a><a href="#"><b>13</b> Lifestyle Match</a></div></div>
+  <div class="v" onclick="pick(this,'1','C')"><div class="bar"><span class="t">1C Bordered grid</span> scannable 2-col; trade-off: less editorial</div><div class="demo"><div class="tocgrid">
+    <a href="#">Quick Answer</a><a href="#">Side-by-Side</a><a href="#">Congo Deep Dive</a><a href="#">Timneh Deep Dive</a><a href="#">Scorecard</a><a href="#">FAQ</a></div></div></div>
+</div></section>
+
+<section class="comp" data-c="2"><h2>2 · Mobile sticky jump rail</h2><div class="note">375px, sticks below header (blog-hub pattern).</div>
+<div class="trio">
+  <div class="v" onclick="pick(this,'2','A')"><div class="bar"><span class="t">2A Pill scroller</span><span class="rec">Recommended</span> proven on blog hub; trade-off: pills clip at 23 sections (use 8 anchors)</div><div class="demo"><div class="rail"><a class="on" href="#">Quick Answer</a><a href="#">Congo</a><a href="#">Timneh</a><a href="#">Scorecard</a><a href="#">Cost</a><a href="#">FAQ</a></div></div></div>
+  <div class="v" onclick="pick(this,'2','B')"><div class="bar"><span class="t">2B Underline tabs</span> lighter; trade-off: weaker affordance</div><div class="demo"><div class="rail rail2"><a class="on" href="#">Quick Answer</a><a href="#">Congo</a><a href="#">Timneh</a><a href="#">Scorecard</a><a href="#">FAQ</a></div></div></div>
+  <div class="v" onclick="pick(this,'2','C')"><div class="bar"><span class="t">2C Numbered pills</span> maps to TOC numbers; trade-off: busier</div><div class="demo"><div class="rail rail3"><a class="on" href="#"><b>04</b>Answer</a><a href="#"><b>08</b>Congo</a><a href="#"><b>09</b>Timneh</a><a href="#"><b>12</b>Score</a></div></div></div>
+</div></section>
+
+<section class="comp" data-c="3"><h2>3 · Key Takeaways (8 items)</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'3','A')"><div class="bar"><span class="t">3A Stat-forward grid</span><span class="rec">Recommended</span> homepage-locked idiom (v2:02); trade-off: needs a number per item</div><div class="demo"><div class="kt-grid">
+    <div class="c"><b>400–650 g</b><span>Congo size vs 275–375 g Timneh</span></div><div class="c"><b>10/10</b><span>Congo mimicry precision</span></div><div class="c"><b>~2 yrs</b><span>earlier Timneh maturity</span></div><div class="c"><b>40–60 yrs</b><span>lifespan — both variants</span></div></div></div></div>
+  <div class="v" onclick="pick(this,'3','B')"><div class="bar"><span class="t">3B Numbered list</span> editorial; trade-off: slower scan</div><div class="demo"><ul class="kt-list">
+    <li data-n="1">Congos bond deepest with one person; Timnehs spread the love.</li><li data-n="2">Timnehs mature ~2 years earlier — steadier adolescence.</li><li data-n="3">Both live 40–60 years with proper care.</li></ul></div></div>
+  <div class="v" onclick="pick(this,'3','C')"><div class="bar"><span class="t">3C Congo/Timneh columns</span> comparison-native; trade-off: forces per-bird framing</div><div class="demo"><div class="kt-cols">
+    <div class="col"><h5>Congo</h5><ul><li>Precision talker</li><li>One-person bond</li></ul></div><div class="col"><h5>Timneh</h5><ul><li>Earlier maturity</li><li>Family bonder</li></ul></div></div></div></div>
+</div></section>
+
+<section class="comp" data-c="4"><h2>4 · Quick Answer block (AI-extractable)</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'4','A')"><div class="bar"><span class="t">4A Clay-edge callout</span><span class="rec">Recommended</span> reads as definition to crawlers, calm on page; trade-off: quietest visually</div><div class="demo"><div class="qa1"><b>Quick Answer:</b> Congo and Timneh African Greys differ mainly in size, tail color, maturity speed, and bonding style. Congos are larger with crimson tails and bond deeply with one person; Timnehs are smaller, maroon-tailed, mature earlier, and often bond with the whole family.</div></div></div>
+  <div class="v" onclick="pick(this,'4','B')"><div class="bar"><span class="t">4B Forest band</span> high contrast; trade-off: dark band this high competes with hero</div><div class="demo"><div class="qa2"><b>Quick Answer:</b> Congos are larger, crimson-tailed precision talkers with one-person bonds; Timnehs are smaller, earlier-maturing, family-bonding greys.</div></div></div>
+  <div class="v" onclick="pick(this,'4','C')"><div class="bar"><span class="t">4C Answer + choose-if cards</span> decision-forward; trade-off: overlaps Hero A CTAs</div><div class="demo"><div class="qa3"><b>Quick Answer:</b> the differences in one line…<div class="row"><div><b>Choose Congo if…</b> strongest talker</div><div><b>Choose Timneh if…</b> steadier starter</div></div></div></div></div>
+</div></section>
+
+<section class="comp" data-c="5"><h2>5 · Side-by-Side comparison table (10 attributes)</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'5','A')"><div class="bar"><span class="t">5A Classic striped</span> familiar; trade-off: no verdict signal</div><div class="demo"><table><tr><th>Attribute</th><th>Congo</th><th>Timneh</th></tr><tr><td>Weight</td><td>400–650 g</td><td>275–375 g</td></tr><tr><td>Tail</td><td>Crimson</td><td>Maroon</td></tr><tr><td>Maturity</td><td>4–6 yrs</td><td>2–3 yrs</td></tr></table></div></div>
+  <div class="v" onclick="pick(this,'5','B')"><div class="bar"><span class="t">5B Verdict column</span><span class="rec">Recommended</span> zero SERP tables have verdicts — snippet magnet; trade-off: verdicts must stay honest ("depends" allowed)</div><div class="demo"><table><tr><th>Attribute</th><th>Congo</th><th>Timneh</th><th>Edge</th></tr><tr><td>Talking</td><td>Precision</td><td>Earlier onset</td><td class="win">Congo</td></tr><tr><td>Beginner fit</td><td>Good</td><td>Steadier</td><td class="win">Timneh</td></tr><tr><td>Lifespan</td><td>40–60</td><td>40–60</td><td>Equal</td></tr></table></div></div>
+  <div class="v" onclick="pick(this,'5','C')"><div class="bar"><span class="t">5C Mobile swipe cards</span> best at 375px; trade-off: desktop still needs a table (pairs with A/B)</div><div class="demo"><div class="swipe"><div class="card"><h5>Weight</h5>Congo 400–650 g<br>Timneh 275–375 g</div><div class="card"><h5>Tail</h5>Congo crimson<br>Timneh maroon</div><div class="card"><h5>Maturity</h5>Congo 4–6 yrs<br>Timneh 2–3</div></div></div></div>
+</div></section>
+
+<section class="comp" data-c="6"><h2>6 · Decision Scorecard (6 traits, 0–10)</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'6','A')"><div class="bar"><span class="t">6A Paired bars</span><span class="rec">Recommended</span> AI-readable labels + instant visual delta; trade-off: taller than chips</div><div class="demo">
+    <div class="meter"><div class="lbl"><span>Talking precision</span><span>Congo 10 · Timneh 8</span></div><div class="trk c"><i style="width:100%"></i></div><div class="trk t" style="margin-top:3px"><i style="width:80%"></i></div></div>
+    <div class="meter"><div class="lbl"><span>Beginner suitability</span><span>Congo 7 · Timneh 9</span></div><div class="trk c"><i style="width:70%"></i></div><div class="trk t" style="margin-top:3px"><i style="width:90%"></i></div></div></div></div>
+  <div class="v" onclick="pick(this,'6','B')"><div class="bar"><span class="t">6B Dot scale</span> compact; trade-off: harder to read exact score</div><div class="demo"><div class="meter"><div class="lbl"><span>Talking — Congo</span></div><div class="dots"><span class="f"></span><span class="f"></span><span class="f"></span><span class="f"></span><span></span></div><div class="lbl" style="margin-top:8px"><span>Talking — Timneh</span></div><div class="dots t"><span class="f"></span><span class="f"></span><span class="f"></span><span></span><span></span></div></div></div></div>
+  <div class="v" onclick="pick(this,'6','C')"><div class="bar"><span class="t">6C Number chips</span> table-like; trade-off: least visual</div><div class="demo"><div class="chipscore"><b>Talking precision</b><span><span class="n">C 10</span> <span class="n t">T 8</span></span></div><div class="chipscore"><b>Beginner suitability</b><span><span class="n">C 7</span> <span class="n t">T 9</span></span></div></div></div>
+</div></section>
+
+<section class="comp" data-c="7"><h2>7 · FAQ (10 PAA questions)</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'7','A')"><div class="bar"><span class="t">7A Accordion</span> compact for 10 Qs; trade-off: answers hidden from skimmers (schema still visible-compliant)</div><div class="demo"><details open><summary>Which African Grey talks better?</summary><p>Congos are famous for mimicry precision; Timnehs often start earlier…</p></details><details><summary>Is a Timneh quieter than a Congo?</summary></details></div></div>
+  <div class="v" onclick="pick(this,'7','B')"><div class="bar"><span class="t">7B Open QAB list</span> all answers visible = strongest AEO; trade-off: long page gets longer</div><div class="demo"><div class="qab"><h5>Which African Grey talks better?</h5><p>Congos lead on precision; Timnehs on early onset…</p></div></div></div>
+  <div class="v" onclick="pick(this,'7','C')"><div class="bar"><span class="t">7C Hybrid</span><span class="rec">Recommended</span> top-3 questions open (AEO wins) + 7 collapsed (length control); trade-off: two visual states to style</div><div class="demo"><div class="qab"><h5>Which African Grey talks better?</h5><p>Congos lead on precision; Timnehs start earlier…</p></div><details><summary>Is a Timneh quieter than a Congo?</summary></details></div></div>
+</div></section>
+
+<section class="comp" data-c="8"><h2>8 · Section seam divider (with footer logo)</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'8','A')"><div class="bar"><span class="t">8A Hairline + centered logo</span><span class="rec">Recommended</span> the established .cag-seam idiom (blog/homepage) — consistency; trade-off: none new</div><div class="demo"><div class="seam"><img src="https://congoafricangreys.com/cag-footer-logo.webp" alt=""></div></div></div>
+  <div class="v" onclick="pick(this,'8','B')"><div class="bar"><span class="t">8B Gradient fade lines</span> softer; trade-off: diverges from site idiom</div><div class="demo"><div class="seam seam2"><img src="https://congoafricangreys.com/cag-footer-logo.webp" alt=""></div></div></div>
+  <div class="v" onclick="pick(this,'8','C')"><div class="bar"><span class="t">8C Logo over short rule</span> stacked; trade-off: taller, asymmetric</div><div class="demo"><div class="seam seam3"><img src="https://congoafricangreys.com/cag-footer-logo.webp" alt=""></div></div></div>
+</div></section>
+
+<section class="comp" data-c="9"><h2>9 · Buttons (two/three-word labels)</h2><div class="note">"Compare Now" · "See Available Greys" · "Match Me" · "Ask Us" · "Reserve Now"</div>
+<div class="trio">
+  <div class="v" onclick="pick(this,'9','A')"><div class="bar"><span class="t">9A Clay pill + forest outline</span><span class="rec">Recommended</span> brand-signature pair (DESIGN.md); trade-off: none — this is the locked system</div><div class="demo"><a class="pill" href="#">Compare Now</a> &nbsp;<a class="pill ghost" href="#">See Available Greys</a></div></div>
+  <div class="v" onclick="pick(this,'9','B')"><div class="bar"><span class="t">9B All-pill hierarchy</span> solid primary + tint secondary; trade-off: two solids compete</div><div class="demo"><a class="pill" href="#">Reserve Now</a> &nbsp;<a class="pill" style="background:#f3d9d2;color:var(--clay-ink)" href="#">Match Me</a></div></div>
+  <div class="v" onclick="pick(this,'9','C')"><div class="bar"><span class="t">9C Pill + arrow text-link</span> lightest secondary; trade-off: text links get missed mid-page</div><div class="demo"><a class="pill" href="#">Compare Now</a> &nbsp;<a class="pill txt" href="#">See Available Greys →</a></div></div>
+</div></section>
+
+<section class="comp" data-c="10"><h2>10 · Newsletter placement + style</h2>
+<div class="trio">
+  <div class="v" onclick="pick(this,'10','A')"><div class="bar"><span class="t">10A BOTTOM forest band</span><span class="rec">Recommended</span> after FAQ, pre-footer — blog-proven slot, no mid-read interruption; trade-off: fewest impressions</div><div class="demo"><div class="nl nl1"><b class="serif">Clutch updates, no spam.</b><span><input placeholder="Your email"> <a class="pill" href="#">Join Us</a></span></div></div></div>
+  <div class="v" onclick="pick(this,'10','B')"><div class="bar"><span class="t">10B MIDDLE split card</span> after scorecard; trade-off: interrupts the decision flow</div><div class="demo"><div class="nl nl2"><div><b class="serif">Get the full comparison PDF</b><br><small class="gray">+ monthly clutch notes</small></div><div><input placeholder="Your email"> <a class="pill" href="#">Send It</a></div></div></div></div>
+  <div class="v" onclick="pick(this,'10','C')"><div class="bar"><span class="t">10C TOP dashed banner</span> under TOC; trade-off: asks before value is delivered</div><div class="demo"><div class="nl nl3"><b class="serif">New clutches land quietly.</b> <input placeholder="Your email"> <a class="pill" href="#">Notify Me</a></div></div></div>
+</div></section>
+
+<div class="picker"><b>Picks:</b><span id="out">none yet</span><span style="background:var(--clay)">When all 10 are chosen, tell Claude the string</span></div>
+<script>
+const picks={};
+function pick(el,c,v){el.closest('.comp').querySelectorAll('.v').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');picks[c]=v;
+document.getElementById('out').textContent=Object.keys(picks).sort((a,b)=>a-b).map(k=>k+picks[k]).join(' ');
+localStorage.setItem('cag-core-picks',JSON.stringify(picks));}
+const prev=JSON.parse(localStorage.getItem('cag-core-picks')||'{}');
+Object.entries(prev).forEach(([c,v])=>{const s=document.querySelector(`.comp[data-c="${c}"]`);if(s){const i={'A':0,'B':1,'C':2}[v];pick(s.querySelectorAll('.v')[i],c,v)}});
+</script>
+</body>
+</html>
