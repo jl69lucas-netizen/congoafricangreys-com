@@ -159,3 +159,43 @@ After outline approval, mark every H2/H3 needing OG photo vs AI image vs HTML in
 ## 10. Pass Gates (page is NOT done until ALL pass)
 
 `npx astro build` → verify in `dist/` → `python3 scripts/final_page_audit.py` → then the full breeder gate list: **SEO · AIO · GEO · AEO · entity coverage · topical authority · anti-AI · non-commodity · humor policy · keyword variation · keyword-verifier · technical SEO · Lighthouse (warm median-of-3)**. Preview before apply. Commit + push after every approved build (work on `main` only). Sitemaps regenerate after any page change.
+
+## 11. Breeder-Review Component Standard (2026-07-04 — BINDING for all 8 pages)
+
+The congo-vs-timneh rebuild was rejected once and redone; these fixes are now the floor for every
+comparison page. Reference implementation: `src/pages/congo-vs-timneh-african-grey/index.astro`.
+
+1. **Hero** — full-bleed band (background spans viewport, content in `.container`), homepage height
+   (~380–480px desktop), copy LEFT / two staggered OG bird portraits CENTER-RIGHT with a small `vs`
+   roundel at the overlap; mobile stacks **images first**. Eyebrow is **sentence case** (never
+   uppercase), clay `#b04228`. H1 `clamp(1.75rem, 3vw, 2.25rem)`. Hero images get responsive
+   `srcset` (480w + 800w) + `heroPreload`/`heroPreloadSrcset` in BaseLayout.
+2. **No HTML/CSS infographics.** Every H2 + important H3 image slot is a real OG photo or a Gemini
+   image (distinct design style per section, same DESIGN.md palette, 16:9 1600×900 → 760×400 slot).
+   Prompt-pack template: `sessions/comparison-research/congo-vs-timneh-african-grey/2026-07-04-gemini-infographic-prompt-pack.md`.
+   The real `<table>` stays in the DOM for AIO — an image never replaces it.
+3. **Photo-first cards everywhere.** Bird cards = that bird's real photo + floating variant badge +
+   price + shipping line. Breeding-pair ($3,000) and fertile-eggs ($95, buy-5-free-shipping) cards
+   carry photos and **keyword variations not used elsewhere**. Shipping = two photo cards
+   (`african-grey-home-delivery-pet-van.webp` / `african-grey-airport-live-animal-shipping.webp`)
+   + a 7-place state/city pill row with FRESH anchors (each comparison page uses a different angle set).
+4. **Sticky offsets** — site header is `sticky` and **96px** tall: jump rail `top:96px`, desktop TOC
+   `top:calc(96px + 24px)`, every section `scroll-margin-top:calc(96px + 18px)`, `:global(html){scroll-behavior:smooth}`
+   (+ reduced-motion opt-out). TOC column 200px / gap 34px (not 230/40) to widen the article column.
+5. **Contrast floors** — buttons + solid chips fill `#b04228` with white (5.7:1); table verdict cells
+   `#2D6A4F` bold (≥6:1); never clay-on-clay: inside the article column add
+   `.cvt-main a.btn-clay{color:#fff;text-decoration:none}` or the generic link rule silently overrides it.
+6. **Form = what we sell** — short inquiry form with: interest select (Congo / Timneh / breeding pair /
+   fertile eggs / not sure, prices visible), first + last name, cell + confirm, email + confirm,
+   delivery select ($185 airport / $350 home / Midland pickup), optional home note. Pass
+   `hideGlobalCta` and ship NO page-level newsletter band (the form is the single closer).
+7. **Testimonials = real reviews only**, pulled from the verified homepage `bottomReviews[]` set with
+   real name + city; never the fabricated pair this page originally carried.
+8. **Blog cards** use each post's own `-card.webp` hub thumbnail, never a shared generic image.
+9. **Links start or middle of sentences, never the final words.** Seam dividers use
+   `cag-footer-logo-80.webp` (the 200×66 original wastes ~7KiB per Lighthouse).
+10. **Schema** — no page-level BreadcrumbList (the Breadcrumb component emits it; duplicates FAIL the
+    gate). Title = 4-part ending in `C.A.Gs – <LSI keyword>` (never "C.A.Gs – Midland, TX" again).
+11. **Gate** — `python3 scripts/final_page_audit.py --comparison` (profile added 2026-07-04) must
+    return PASS/PASS-WITH-WARNINGS; the old `no_userselect_none` site-wide FAIL was a Tailwind
+    `.select-none` false positive, fixed in the auditor.
