@@ -1,5 +1,5 @@
 # Section Matrix + H1–H6 Outline — /congo-vs-timneh-african-grey/ (2026-07-04)
-Status: **PENDING BREEDER APPROVAL** (Heading Hierarchy Outline Gate). H1 + canonical are sacred and unchanged. Target 5,200–5,600 words, 23 sections. Heading census: 1 H1 · 20 H2 · 14 H3 · 12 H4 · 7 H5 · 7 H6 — all six levels, no skips, ≥5 H5 and ≥5 H6. Every H2/H3 carries an image (OG = own photo, AI = Gemini/Nano-Banana per IMAGE-DESIGNS.md, INF = HTML/CSS infographic).
+Status: **APPROVED by breeder 2026-07-04** (Heading Hierarchy Outline Gate cleared). H1 + canonical are sacred and unchanged. Target 5,200–5,600 words, 23 sections. Heading census: 1 H1 · 20 H2 · 14 H3 · 12 H4 · 7 H5 · 7 H6 — all six levels, no skips, ≥5 H5 and ≥5 H6. Every H2/H3 carries an image (OG = own photo, AI = Gemini/Nano-Banana per IMAGE-DESIGNS.md, INF = HTML/CSS infographic).
 
 ## Distribution Matrix (A=mandatory core · B=competitor-match · C=our moat)
 
