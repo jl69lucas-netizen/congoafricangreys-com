@@ -81,6 +81,7 @@ PROFILES = {
         "no_aggregateoffer": "FAIL",     # comparison pages never carry Offer/AggregateOffer (variant pages own it)
         "no_pbfd_claim": "NA",
         "sold_not_instock": "NA",
+        "newsletter_present": "NA",      # §11.6 breeder-review standard: NO page-level newsletter band on comparison pages — the inquiry form is the single closer (2026-07-05; the old "pass" rode on the word inside an HTML comment)
         "shipping_line": "FAIL",         # shipping section must show $185 airport / $350 home
         "real_hero_image": "FAIL",
         "wordcount_in_band": "WARN",     # deep-standard band 3,000–8,000 incl. chrome (5.2k target)
