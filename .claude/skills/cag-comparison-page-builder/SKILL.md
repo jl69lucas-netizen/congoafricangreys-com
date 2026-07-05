@@ -199,3 +199,36 @@ comparison page. Reference implementation: `src/pages/congo-vs-timneh-african-gr
 11. **Gate** — `python3 scripts/final_page_audit.py --comparison` (profile added 2026-07-04) must
     return PASS/PASS-WITH-WARNINGS; the old `no_userselect_none` site-wide FAIL was a Tailwind
     `.select-none` false positive, fixed in the auditor.
+
+## 12. Final Polish-Pass Fixes (2026-07-05 — BINDING, from the congo-vs-timneh finishing pass)
+
+Every comparison page must clear these on its finishing pass, in addition to §11:
+
+1. **Counter snippet is page-specific, not the homepage set.** The homepage's `12+ / 100% CITES /
+   $1,500 floor / 24h` is generic. A comparison page leads with its own premise: for variant/species
+   pages use **`2` Grey species raised here · `12+` Years raising both** (the "we raise both" moat),
+   keeping `100%` CITES + `24h` reply as the two trust anchors. Never ship the verbatim homepage four.
+2. **Responsive infographics (Lighthouse "improve image delivery").** Every 1408×768 `inf-img` ships a
+   `-760.webp` sibling (Pillow LANCZOS, q82) + `srcset="/name-760.webp 760w, /name.webp 1408w"
+   sizes="(max-width:900px) 92vw, 760px"`. Cuts ~40–55% off each (the congo-vs-timneh set went
+   583→327 KiB). The 1408 stays as the retina/desktop candidate; the table stays in the DOM.
+3. **Square OG portraits get a `.portrait` modifier** (`aspect-ratio:1/1;max-width:420px;margin:auto`).
+   Bare `.sec-img` forces 760/400 cover and decapitates square close-ups — always check intrinsic
+   dims; if the file is square/portrait, add `.portrait` and fix the `width`/`height` attrs to match.
+4. **Non-primary data tables stack into cards on phones.** The mobile tab-toggle is ONLY for the main
+   side-by-side table. The 6-trait scorecard (and any other `<table>`) needs `data-label` on each `td`
+   + a `@media(max-width:640px)` block: `thead` offscreen, `tr`→bordered card, `td`→flex row with
+   `::before{content:attr(data-label)}`. Note td stacks column-wise for long text.
+5. **Internal links to the three money/authority hubs, mid-sentence, from their own sections:**
+   Reviews → `/african-grey-reviews/` (Owner Stories), FAQ → `/african-grey-parrot-faq/` (FAQ intro),
+   Shipping → `/buy-african-grey-parrots-with-shipping/` (shipping body copy).
+6. **Route pills carry a map-pin SVG + cream tint (`#f4efe9`), `inline-flex`; 2-col centered on
+   mobile** (`.pin` stays `flex:none`). Body copy above the pills links the shipping page.
+7. **Reversed head-term + American spelling coverage.** Weave "Timneh vs Congo" AND "African Gray"
+   (with an *a*) once, naturally, in the Quick-Answer close; add **"What is the difference between…"**
+   and **"How can you tell … apart"** FAQ objects (they feed both FAQPage schema and the open-3
+   featured block). Dedupe against existing copy first — ignore keywords already on the page.
+8. **Do NOT add Partytown for GA.** BaseLayout already interaction/idle-defers gtag.js off the critical
+   path. Lighthouse's `unused JavaScript` (~72 KiB `/70de/`), `forced reflow`, `render-blocking`,
+   `missing source maps`, and `cache TTL` flags are all **Cloudflare Rocket Loader** — a dashboard
+   toggle + cache purge, never a repo fix. Note this in the page's fix log; don't chase it in code.
