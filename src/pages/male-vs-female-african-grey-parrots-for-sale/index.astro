@@ -818,8 +818,12 @@ const stories = [
 .cvt-hero{background:linear-gradient(160deg,#f4efe9 0%,var(--cream) 55%,#eef4f0 100%);border-bottom:1px solid var(--bd);padding:34px 0 38px}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,560px);gap:clamp(24px,4vw,56px);align-items:center;min-height:380px}
 .hero-imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.hero-imgs figure{position:relative;margin:0}
-.hero-imgs img{display:block;width:100%;height:320px;object-fit:cover;object-position:center;border-radius:18px;box-shadow:0 8px 26px rgba(60,30,10,.14)}
+.hero-imgs figure{position:relative;margin:0;overflow:hidden;border-radius:18px;box-shadow:0 8px 26px rgba(60,30,10,.14)}
+.hero-imgs img{display:block;width:100%;height:320px;object-fit:cover;object-position:center}
+/* Kent's portrait fills the box width, so a slight zoom+shift pulls him left into
+   frame; Evie's landscape crop slides toward her (she sits left of frame). */
+.hero-imgs figure:first-child img{transform:scale(1.16) translateX(-6%)}
+.hero-imgs figure:last-child img{object-position:26% 45%}
 .hero-imgs figure:first-child{transform:translateY(14px)}
 .hero-imgs figure:last-child{transform:translateY(-14px)}
 .chip{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(255,255,255,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.5);border-radius:50px;padding:5px 14px;font-size:.78rem;font-weight:700;color:#1f4d39;white-space:nowrap}
