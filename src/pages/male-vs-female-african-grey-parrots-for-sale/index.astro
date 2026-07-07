@@ -1,313 +1,1085 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import Newsletter from '../../components/cag-library/NewsletterV2.astro';
+import clutch from '../../../data/clutch-inventory.json';
 
-const title = "Male vs Female African Grey Parrot | 8 Key Differences — C.A.Gs, Midland TX | Which Should You Choose?";
-const description = "DNA-sexed male & female African Grey parrots for sale. Discover 8 key differences in behavior, talking & bonding. Hand-raised, vet-checked. Ships nationwide.";
+const title = "Male vs. Female African Grey Parrots for Sale: Do the Sexes Really Differ in Talking, Temperament & Bonding? | C.A.Gs – DNA-Sexed African Greys";
+const description = "Male or female African Grey? The sexes barely differ — the bird decides talking & temperament. DNA-sexed, ships nationwide. C.A.Gs African Greys.";
 const canonical = "https://congoafricangreys.com/male-vs-female-african-grey-parrots-for-sale/";
 
-const schemaJson = JSON.stringify({
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "Comparisons", url: "/african-grey-comparison/" },
+  { name: "Male vs Female African Grey", url: "/male-vs-female-african-grey-parrots-for-sale/" },
+];
+
+// S19 — available birds, read live from clutch-inventory (never hardcoded status)
+const available = ((clutch as any).birds as any[])
+  .filter((b) => b.status === 'available')
+  .sort((a, b) => (a.variant === 'timneh_african_grey' ? -1 : 1));
+
+const faqs = [
+  { q: "Is a male or female African Grey better as a pet?", a: "Neither, and we say that as the people who raise both. Male and female African Greys are so close in temperament, talking and bonding that the individual bird outweighs its sex every time. What actually predicts a great companion is hand-rearing, early socialization and the time you put in — not whether it's a cock or a hen. Choose the bird whose personality clicks with your household; let DNA tell you the sex afterward." },
+  { q: "Do male or female African Greys talk better?", a: "There's no reliable talking difference between the sexes. Both males and females can become brilliant, precise talkers, and both can stay quiet — it comes down to the individual bird, how much you talk to it, and how hand-tame it is. Folklore that 'males talk more' isn't supported by how our clutches actually turn out. If a big vocabulary matters, pick the chatty individual in front of you, not a sex." },
+  { q: "How can you tell if an African Grey is male or female?", a: "You can't tell by looking — African Greys are a monomorphic species, meaning males and females are visually near-identical in size, color and markings. The head-shape, body-shape and eye 'tells' you'll read online are folklore and are wrong often enough to be useless. The only accurate method is a DNA test (a PCR test on a feather or a drop of blood). Every C.A.Gs bird leaves with a DNA-sexing certificate, so the guesswork is already done." },
+  { q: "Do male and female African Greys look different?", a: "No. Both sexes have the same light silver-grey body, red tail and pale face mask (Congo) or charcoal body, maroon tail and horn-colored beak (Timneh). There is no visible feature — not the head, not the 'squared-off' skull, not the wing tips — that reliably separates a male from a female. That visual sameness is exactly why DNA sexing exists." },
+  { q: "Are female African Greys calmer or quieter than males?", a: "On average, no more than the individual bird's own temperament dictates. We've raised placid males and spirited females and vice-versa. 'Hens are calmer, cocks are louder' is a generalization that falls apart across a real clutch. Both sexes have the same vocal range and the same capacity for calm — enrichment, routine and handling shape the noise far more than sex does." },
+  { q: "Do female African Greys lay eggs without a mate?", a: "A lone female can lay infertile eggs if she becomes hormonally stimulated, even with no male present. It's manageable — the risk to watch is chronic egg-laying, which draws down calcium and can cause hypocalcemia or egg-binding. A correct diet, calcium and UV-B/D3 exposure, and limiting nest-like spaces keep it in check. It's a real consideration if you specifically want a hen, not a dealbreaker." },
+  { q: "Is a male or female African Grey better for a first-time owner?", a: "Either. Sex isn't the variable a first-timer should optimize; temperament and hand-taming are. A calm, well-socialized bird of either sex is the right first grey. We match first-time buyers to the individual chick that suits their home, then hand them the DNA certificate — the sex is information, not the decision." },
+  { q: "Do African Greys bond better with a male or female owner?", a: "Hand-reared African Greys bond to their primary caregiver's time and calm handling, not to the owner's gender. The idea that Greys 'prefer women' or 'prefer men' is folklore — the bird bonds to whoever shows up consistently, reads its body language and doesn't rush it. Men and women both raise deeply bonded Greys here." },
+  { q: "Are male African Greys more aggressive or hormonal?", a: "Both sexes go through seasonal hormonal phases, and both can nip or get territorial during them — it's not a male-only trait. The folklore runs both ways (some call males 'aggressive,' others call females 'moody'), which is a good sign it's individual, not sex-linked. Consistent routine and reading your bird's signals matter far more than which sex you picked." },
+  { q: "What is DNA sexing and do your birds come sexed?", a: "DNA sexing is a lab PCR test — on a feather or a small blood sample — that reads the bird's chromosomes to confirm male or female with high accuracy. It's the only reliable method for a monomorphic species. Yes: every C.A.Gs African Grey is DNA-sexed and leaves with the certificate, so you know exactly what you're getting. You can read more on our DNA-tested African Greys page." },
+  { q: "Is it better to get two males or a male and female pair?", a: "For a talking companion bird, a single hand-reared grey bonds hardest to you regardless of sex — two birds often bond to each other and to you less. If you want a pair, a compatible male–female or same-sex pairing can both work; sex matters less than whether the two birds actually get along. A male–female pair can still learn to talk, though a bonded pair typically talks to each other more than to you." },
+  { q: "Do male and female African Greys cost the same?", a: "Yes. At C.A.Gs the price is set by variant and age, never by sex — a male and a female Congo of the same age cost the same, and so do our Timnehs. Any seller charging a premium for one sex is pricing on folklore, not on what the bird is worth." },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+
+const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Male vs Female African Grey Parrots for Sale – 8 Key Differences",
-  "description": description,
-  "url": canonical,
-  "author": { "@type": "Organization", "name": "C.A.Gs – Midland, TX" },
-  "publisher": { "@type": "Organization", "name": "C.A.Gs – Midland, TX", "alternateName": "Congo African Greys", "url": "https://congoafricangreys.com" }
-});
+  headline: "Male vs Female African Grey Parrots for Sale: Do the Sexes Really Differ?",
+  description: description,
+  author: { "@type": "Organization", name: "C.A.Gs – Congo African Greys, Midland TX" },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com" },
+  mainEntityOfPage: canonical,
+  datePublished: "2026-06-13",
+  dateModified: "2026-07-07",
+};
+
+// LocalBusiness + Person(founders) + Review/AggregateRating — real facts only
+// (NAP per credentials master; rating 4.9 / 52 real reviews per Verified-Claim Ledger).
+// Product schema is intentionally omitted: this is a comparison page, not a single
+// product/offer page — Product/Offer lives on the /available/<bird>/ pages.
+const bizSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://congoafricangreys.com/#business",
+  name: "C.A.Gs – Congo African Greys",
+  url: "https://congoafricangreys.com/",
+  telephone: "+1-281-545-3169",
+  address: { "@type": "PostalAddress", addressLocality: "Midland", addressRegion: "TX", addressCountry: "US" },
+  areaServed: "US",
+  founder: [
+    { "@type": "Person", name: "Mark Benjamin" },
+    { "@type": "Person", name: "Teri Benjamin" },
+  ],
+  aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "52" },
+  review: [
+    { "@type": "Review", author: { "@type": "Person", name: "Richard Woodard" }, reviewRating: { "@type": "Rating", ratingValue: "5" }, reviewBody: "C.A.Gs made the process stress-free. My Congo African Grey arrived in perfect condition and is now the star of our family." },
+    { "@type": "Review", author: { "@type": "Person", name: "Archie Obrien" }, reviewRating: { "@type": "Rating", ratingValue: "5" }, reviewBody: "Their birds are truly top-notch. My African Grey is affectionate, intelligent, and already picking up words. The shipping process was seamless." },
+  ],
+};
+
+// NOTE: no page-level BreadcrumbList schema — the <Breadcrumb> component already
+// emits it; a second copy trips the breadcrumb_one gate (found 2026-07-04).
+
+// verdict table (S6) — Length + Body shade rows added 2026-07-05 (competitor sweep:
+// the top-ranked info pages all lead with the charcoal shade / inches figures we lacked)
+const rows = [
+  { attr: "Appearance", male: "Monomorphic — identical", female: "Monomorphic — identical", edge: "Can't sex by sight" },
+  { attr: "Size & weight", male: "Same for the variant", female: "Same for the variant", edge: "No sex difference" },
+  { attr: "Talking ability", male: "Individual; can excel", female: "Individual; can excel", edge: "The bird, not the sex" },
+  { attr: "Temperament", male: "Full individual range", female: "Full individual range", edge: "The bird, not the sex" },
+  { attr: "Bonding", male: "Bonds to time & handling", female: "Bonds to time & handling", edge: "Not sex-linked" },
+  { attr: "Hormonal phase", male: "Seasonal display", female: "Seasonal; may lay infertile eggs", edge: "Both seasonal" },
+  { attr: "Egg-laying", male: "Not applicable", female: "Possible without a mate — manage calcium", edge: "Female-specific" },
+  { attr: "How you sex it", male: "DNA (PCR) only", female: "DNA (PCR) only", edge: "DNA, never looks" },
+  { attr: "Price at C.A.Gs", male: "Set by variant & age", female: "Same — set by variant & age", edge: "Identical" },
+  { attr: "Lifespan", male: "40–60 years", female: "40–60 years", edge: "Equal" },
+  { attr: "DNA certificate", male: "Included", female: "Included", edge: "Equal" },
+  { attr: "CITES documentation", male: "Appendix I — included", female: "Appendix I — included", edge: "Equal" },
+];
+
+const takeaways = [
+  { big: "Identical", sub: "males & females are monomorphic — no reliable visible sex difference" },
+  { big: "DNA only", sub: "a PCR test is the one accurate way to sex an African Grey" },
+  { big: "Same price", sub: "sex never changes our price — variant and age do" },
+  { big: "No talk gap", sub: "both sexes talk equally well; the individual bird decides" },
+  { big: "40–60 yrs", sub: "either sex is a retirement-length commitment" },
+  { big: "Bonds to you", sub: "to your time and handling, not to your gender" },
+  { big: "100%", sub: "every chick leaves DNA-sexed with its certificate + CITES docs" },
+  { big: "$185 / $350", sub: "airport pickup vs home delivery, nationwide" },
+];
+
+const scores = [
+  { trait: "Talking ability", m: 8, f: 8, note: "no reliable sex gap — it's the bird" },
+  { trait: "Temperament steadiness", m: 8, f: 8, note: "individual range, not sex-linked" },
+  { trait: "Noise level", m: 7, f: 7, note: "same vocal range" },
+  { trait: "Depth of bond to you", m: 9, f: 9, note: "driven by handling, not sex" },
+  { trait: "Beginner suitability", m: 8, f: 8, note: "pick temperament, not sex" },
+  { trait: "Hormonal ease", m: 8, f: 7, note: "hens can egg-lay; both go seasonal" },
+];
+
+// S19 — real photo per bird card (never a photo-less card); crops refreshed 2026-07-05
+const birdImg: Record<string, { src: string; alt: string }> = {
+  "bery": { src: "/bery-congo-african-grey-cuddly-tamed-card.webp", alt: "Bery, a cuddly tamed female Congo African Grey resting on her keeper's lap" },
+  "amie": { src: "/amie-congo-african-grey-handfed-baby-card.webp", alt: "Amie, a hand-fed baby female Congo African Grey snuggled against her keeper's shoulder" },
+  "roys": { src: "/roys-congo-african-grey-male-tame-card.webp", alt: "Roys, a tame young male Congo African Grey standing next to his toy ball" },
+  "jins-jeni": { src: "/congo-african-grey-companion-pair-card.webp", alt: "Jins and Jeni, Congo African Grey companion pair raised together" },
+  "elad": { src: "/elad-timneh-african-grey-male-wings-card.webp", alt: "Elad, a young male Timneh African Grey stretching his wings on a perch" },
+  "evie": { src: "/evie-timneh-african-grey-female-perched-card.webp", alt: "Evie, a female Timneh African Grey perched calmly, showing her horn-colored beak" },
+};
+
+// S19 — the documentation every bird leaves with (Verified-Claim Ledger)
+const docBadges = ["CITES Cert", "PCR DNA-Sexed", "Vet Certified", "PBFD & APV Screened", "Fully Weaned"];
+
+// S18 — top-7 delivery states/cities, fresh anchors not used on other shipping sections
+const shipPlaces = [
+  { href: "/african-grey-parrot-for-sale-texas/", label: "Texas greys, same-state pickup" },
+  { href: "/african-grey-parrot-for-sale-florida/", label: "Florida airport arrivals" },
+  { href: "/african-grey-parrot-for-sale-new-york/", label: "New York home delivery" },
+  { href: "/african-grey-parrot-for-sale-los-angeles/", label: "Los Angeles cargo route" },
+  { href: "/african-grey-parrot-for-sale-chicago/", label: "Chicago O'Hare live-animal desk" },
+  { href: "/african-grey-parrot-for-sale-georgia/", label: "Georgia weekend deliveries" },
+  { href: "/african-grey-parrot-for-sale-north-carolina/", label: "North Carolina courier runs" },
+];
+
+// S3 — single numbered section list drives BOTH the desktop TOC and the mobile
+// jump rail (sequential 01–20, no skips, every section present — fixed 2026-07-05)
+const tocItems = [
+  { id: "quick-answer", label: "Quick Answer" },
+  { id: "takeaways", label: "Key Takeaways" },
+  { id: "side-by-side", label: "Side-by-Side" },
+  { id: "trust", label: "Why Trust Us" },
+  { id: "behavior", label: "Does Sex Predict Behavior?" },
+  { id: "male", label: "The Male African Grey" },
+  { id: "female", label: "The Female African Grey" },
+  { id: "sexing", label: "How to Tell Them Apart" },
+  { id: "scorecard", label: "Decision Scorecard" },
+  { id: "household", label: "Which Fits Your Home" },
+  { id: "cost", label: "Cost" },
+  { id: "first30", label: "First 30 Days" },
+  { id: "myths", label: "Myths" },
+  { id: "pairs", label: "One, Pair or Same-Sex" },
+  { id: "cites", label: "CITES & Docs" },
+  { id: "shipping", label: "Shipping" },
+  { id: "available", label: "Available Now" },
+  { id: "stories", label: "Owner Stories" },
+  { id: "safe", label: "Buy Safely" },
+  { id: "faq", label: "FAQ" },
+  { id: "learn", label: "Keep Learning" },
+  { id: "reserve", label: "Reserve" },
+];
+const num = (i: number) => String(i + 1).padStart(2, "0");
+
+// S20 — real reviews only, from the verified homepage bottomReviews set (the
+// second quote was previously misattributed to "Clifford Hutter"; it belongs
+// to Archie Obrien — corrected 2026-07-05, avatars added)
+const stories = [
+  { name: "Richard Woodard", loc: "Winter Haven, FL", meta: "Congo African Grey",
+    avatar: "/richard-woodard-winter-haven-fl-review.webp",
+    quote: "At first I was hesitant about buying a bird online, but C.A.Gs made the process stress-free. They provided detailed care instructions and my parrot arrived in perfect condition. My Congo African Grey is now the star of our family, talking and entertaining us daily." },
+  { name: "Archie Obrien", loc: "Farmingdale, NY", meta: "Congo African Grey",
+    avatar: "/archie-obrien-farmingdale-ny-review.webp",
+    quote: "I searched for African Grey parrots for sale near me for months before finding C.A.Gs. Their birds are truly top-notch! My African Grey is affectionate, intelligent, and already picking up words. The shipping process was seamless, and they included a health guarantee." },
+];
 ---
 
-<BaseLayout {title} {description} {canonical} {schemaJson}>
+<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta
+  heroPreload="/Kent-playful-male-congo-african-grey.webp"
+  heroPreloadSrcset="/Kent-playful-male-congo-african-grey-450.webp 450w, /Kent-playful-male-congo-african-grey.webp 900w"
+  heroPreloadSizes="(max-width: 900px) 60vw, 300px">
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(bizSchema)} />
 
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={[
-      { name: "Home", url: "/" },
-      { name: "Compare", url: "/african-grey-comparison/" },
-      { name: "Male vs Female African Grey", url: "/male-vs-female-african-grey-parrots-for-sale/" }
-      ]} />
-  </div>
+  <div class="cvt">
+  <div class="container"><Breadcrumb items={breadcrumbs} /></div>
 
-  <section class="bg-logo-dark text-cream py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-4">DNA-Sexed · Hand-Raised · Ships Nationwide</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">Male vs. Female African Grey Parrots for Sale</h1>
-      <p class="text-cream/80 text-lg max-w-2xl mx-auto mb-8">8 Key Differences to Help You Choose the Right Bird — Expert guidance from C.A.Gs breeders in Midland, TX.</p>
-      <a href="/contact-us/" class="inline-block bg-clay text-white font-semibold px-8 py-3 rounded-full hover:bg-clay-dk transition-colors">
-        Inquire About Available Birds →
-      </a>
+  <!-- S1 HERO — full-bleed band; Kent (male, portrait) L / Evie (female, landscape) R -->
+  <section class="cvt-hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Hand-raised · DNA-sexed · Ships nationwide</p>
+        <h1 class="cag-h1">Male vs. Female African Grey Parrots for Sale</h1>
+        <p class="lead">Buyers ask us this almost daily: should I get a male or a female African Grey? Here's the honest answer from the breeders who DNA-sex every chick — the sexes barely differ, the individual bird is what matters, and we hand you the certificate so you never have to guess.</p>
+        <p class="hero-cta"><a class="btn-clay" href="#quick-answer">See the Honest Answer</a> <a class="btn-ghost" href="/available/">See Available Greys</a></p>
+      </div>
+      <div class="hero-imgs">
+        <figure>
+          <img src="/Kent-playful-male-congo-african-grey.webp"
+            srcset="/Kent-playful-male-congo-african-grey-450.webp 450w, /Kent-playful-male-congo-african-grey.webp 900w"
+            sizes="(max-width: 900px) 50vw, 280px" style="object-position:center 26%"
+            width="375" height="500" alt="Kent, a hand-raised male Congo African Grey at C.A.Gs, perched on a hand showing his light silver-grey plumage and dark beak" fetchpriority="high">
+          <figcaption class="chip">Male · Kent</figcaption>
+        </figure>
+        <span class="vs" aria-hidden="true">vs</span>
+        <figure>
+          <img src="/Evie-female-timneh-african-grey.webp"
+            width="640" height="427" alt="Evie, a hand-raised female Timneh African Grey at C.A.Gs, exploring a foraging toy, showing her darker charcoal plumage" loading="lazy">
+          <figcaption class="chip">Female · Evie</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
-  <!-- Trust bar -->
-  <div class="bg-green/10 border-y border-green/20 py-3 px-4">
-    <div class="max-w-4xl mx-auto flex flex-wrap justify-center gap-6 text-sm text-green font-sora font-semibold">
-      <span>✔ Certified Male &amp; Female African Greys</span>
-      <span>✔ Hand-Raised &amp; Fully Weaned</span>
-      <span>✔ DNA Sexing Included</span>
-      <span>✔ Health Guarantee</span>
+  <!-- S2 COUNTER SNIPPET — modernized 2026-07-05: icon chips, serif numerals, hairline separators -->
+  <section class="cvt-counter"><div class="container counter-row">
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 12 15 2 8.5 12 2"/><polyline points="2 15.5 12 22 22 15.5"/></svg></span>
+      <b>100%</b><span class="cs-l">DNA-sexed &amp; certified</span>
     </div>
-  </div>
-
-  <!-- Main article -->
-  <article class="max-w-4xl mx-auto px-4 py-12">
-
-    <!-- Intro -->
-    <div class="prose prose-lg max-w-none mb-10">
-      <p>Are you looking to buy a male or female African Grey parrot but unsure which one suits you best? Choosing between a male African Grey and a female African Grey is an important decision, as both genders have unique characteristics.</p>
-      <p>At Congo African Greys (<strong>C.A.Gs</strong>), we offer hand-raised, DNA-sexed African Grey parrots with full vet records. Whether you want a talkative male African Grey or a gentle, affectionate female, our parrots are socialized, fully weaned, and ready for their forever homes.</p>
-      <p>Wondering if an African Grey is the right choice for your home? Read our full breakdown: <a href="https://zupreem.com/do-african-grey-parrots-make-good-pets/" rel="noopener noreferrer" target="_blank">Do African Grey parrots make good pets?</a></p>
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3L8.5 13"/></svg></span>
+      <b>PCR</b><span class="cs-l">Sexing done for you</span>
     </div>
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 11.5 11.5 14 15.5 9.5"/></svg></span>
+      <b>100%</b><span class="cs-l">CITES documented</span>
+    </div>
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+      <b>24h</b><span class="cs-l">Reply to inquiries</span>
+    </div>
+  </div></section>
 
-    <!-- Table of Contents -->
-    <nav class="bg-cream border border-gold/30 rounded-xl p-6 mb-10" aria-label="Table of contents">
-      <h2 class="font-lora font-semibold text-green text-lg mb-3">Table of Contents</h2>
-      <ol class="space-y-1 text-sm text-green/80 list-decimal list-inside">
-        <li><a href="#physical-differences" class="hover:text-clay transition-colors">Physical Differences Between Male and Female African Grey Parrots</a></li>
-        <li><a href="#behavioral-differences" class="hover:text-clay transition-colors">Behavioral Differences Between Male and Female African Grey Parrots</a></li>
-        <li><a href="#vocalization" class="hover:text-clay transition-colors">Vocalization &amp; Speech Ability – Which Gender Talks More?</a></li>
-        <li><a href="#breeding" class="hover:text-clay transition-colors">Breeding &amp; Nesting Differences</a></li>
-        <li><a href="#dna-testing" class="hover:text-clay transition-colors">How to Identify Gender – DNA Testing</a></li>
-        <li><a href="#better-pet" class="hover:text-clay transition-colors">Is a Male or Female African Grey Better as a Pet?</a></li>
-        <li><a href="#pair" class="hover:text-clay transition-colors">Should I Get a Pair of African Grey Parrots?</a></li>
-        <li><a href="#final-thoughts" class="hover:text-clay transition-colors">Final Thoughts – Choosing Between Male &amp; Female</a></li>
-        <li><a href="#faqs" class="hover:text-clay transition-colors">FAQs – Male vs. Female African Grey Parrots</a></li>
-      </ol>
-    </nav>
+  <!-- S3 mobile jump rail — all 20 sections, sequential numbering, clear divider band (2026-07-05) -->
+  <nav class="cvt-rail" aria-label="Jump to section"><div class="container rail-row">
+    {tocItems.map((t, i) => (<a href={`#${t.id}`}><b>{num(i)}</b> {t.label}</a>))}
+  </div></nav>
 
-    <!-- Section 1: Physical Differences -->
-    <section id="physical-differences" class="mb-12">
-      <h2 class="font-lora font-bold text-2xl text-green mb-4">1. Physical Differences Between Male and Female African Grey Parrots</h2>
-      <div class="prose prose-lg max-w-none mb-6">
-        <p>Unlike some bird species, African Grey parrots (<em>Psittacus erithacus</em>) do not have highly visible gender differences. However, experienced Congo African grey breeders and avian experts note a few subtle physical distinctions between males and females.</p>
+  <div class="container cvt-body">
+
+  <!-- S3 desktop TOC — card treatment + ink title so it reads apart from the green counter band -->
+  <aside class="cvt-toc" aria-label="On this page">
+    <p class="toc-title"><span class="toc-tick" aria-hidden="true"></span>On this page</p>
+    {tocItems.map((t, i) => (<a href={`#${t.id}`}><b>{num(i)}</b> {t.label}</a>))}
+  </aside>
+
+  <div class="cvt-main">
+
+  <!-- S4 QUICK ANSWER (4A clay-edge) -->
+  <section id="quick-answer">
+    <h2 class="cag-h2">Is a Male or Female African Grey Better as a Pet?</h2>
+    <div class="qa-box">
+      <p><strong>Quick Answer:</strong> Neither — and we say that as the breeders who raise and DNA-sex both. Male and female African Greys are a <em>monomorphic</em> species: they look identical and behave within the same range, so the individual bird's temperament and how it was hand-raised matter far more than its sex. Pick a male African Grey if the cock in front of you is the one you connect with; pick a female if the hen is. The sex is confirmed by a DNA test, not by which bird talks or cuddles more.</p>
+    </div>
+    <img class="sec-img inf-img" src="/male-vs-female-african-grey-monomorphic-identical-infographic.webp" srcset="/male-vs-female-african-grey-monomorphic-identical-infographic-760.webp 760w, /male-vs-female-african-grey-monomorphic-identical-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Infographic showing a male and female African Grey in mirror symmetry with an equals sign, illustrating that the sexes are monomorphic and visually identical" loading="lazy">
+    <p>Buyers reach this page searching every phrasing of it — male or female African Grey, which is better male or female, even "African gray" with an <em>a</em> — and the answer holds across all of them. Whether you're after the best talker, the calmer companion, or simply the bird that bonds to you, the deciding factor is the individual grey and the hours you give it, not the chromosome. The rest of this page shows you exactly why, and hands you the <a href="/dna-tested-african-grey-for-sale/">DNA-sexed documentation</a> that settles the sex for certain.</p>
+    <h3 class="cag-h3">What Actually Differs Between a Male and Female African Grey?</h3>
+    <img class="sec-img" src="/male-vs-female-african-grey-chicks.webp" srcset="/male-vs-female-african-grey-chicks-760.webp 760w, /male-vs-female-african-grey-chicks.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Two young hand-raised African Grey chicks side by side at the C.A.Gs nursery in Midland, TX, visually identical regardless of sex" loading="lazy">
+    <p>What genuinely differs is narrower than most listings imply. The one reliable, real difference is reproductive — only a hen lays eggs, which brings a calcium consideration we cover further down. Everything else buyers ask about, from "do males talk more" to "are females calmer," sits inside a wide band of individual variation that swamps any sex average. We've weaned quiet cocks and motor-mouth hens out of the very same clutch. When a seller tells you a sex guarantees a personality, that's folklore doing the selling.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <Newsletter variant="top" action="https://formspree.io/f/xrejpnvn" heading="Still Deciding Male or Female? Get New-Clutch Alerts" sub="Join the list for first word when a DNA-sexed Congo or Timneh chick — cock or hen — is ready to reserve." cta="Join the list" />
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S5 KEY TAKEAWAYS — refined stat cards (2026-07-05 redesign: ink stats, clay tick, hairline) -->
+  <section id="takeaways">
+    <h2 class="cag-h2">What Should You Take Away Before You Choose?</h2>
+    <p>Short on time? These are the facts about male and female African Greys that buyers screenshot and text to their spouse — why the sexes look identical, how they're actually sexed, why price never depends on sex, and where the individual bird outweighs every generalization. Every number below comes from our own aviary records and the DNA certificates we hand out, not a rewritten listicle.</p>
+    <div class="kt-grid">
+      {takeaways.map((k) => (<div class="kt-c"><span class="kt-tick" aria-hidden="true"></span><b>{k.big}</b><span class="kt-sub">{k.sub}</span></div>))}
+    </div>
+    <img class="sec-img" src="/playful-african-grey-chicks.webp" srcset="/playful-african-grey-chicks-760.webp 760w, /playful-african-grey-chicks.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="760" height="500" alt="Playful hand-raised African Grey chicks at the C.A.Gs nursery in Midland, TX, males and females indistinguishable by sight" loading="lazy">
+  </section>
+
+  <!-- S6 SIDE-BY-SIDE — CompareTableE idiom (branded gradient headers + Edge column) with a mobile Male/Female tab toggle -->
+  <section id="side-by-side">
+    <h2 class="cag-h2">How Do Male and Female African Greys Compare Side by Side?</h2>
+    <img class="sec-img inf-img" src="/male-vs-female-african-grey-comparison-balance-infographic.webp" srcset="/male-vs-female-african-grey-comparison-balance-infographic-760.webp 760w, /male-vs-female-african-grey-comparison-balance-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Balance-scale infographic weighing a male against a female African Grey, both sides level, captioned that the individual bird matters more than the sex" loading="lazy">
+    <p>Twelve attributes, one honest verdict column — and notice how often that column reads "the bird, not the sex." We filled this in the way we'd answer at the aviary door, not the way a listicle would. The only rows where sex genuinely decides anything are the reproductive ones. On a phone, tap the sex you're weighing and the table follows you.</p>
+    <div class="cmpe">
+      <div class="cmpe-tabs" aria-label="Choose which sex's column to show">
+        <button type="button" class="cmpe-tab active" data-v="c" aria-pressed="true">Male</button>
+        <button type="button" class="cmpe-tab" data-v="t" aria-pressed="false">Female</button>
       </div>
-      <div class="overflow-x-auto rounded-xl border border-gold/30 mb-6">
-        <table class="w-full text-sm">
-          <thead class="bg-green text-cream">
-            <tr>
-              <th class="px-4 py-3 text-left font-sora">Feature</th>
-              <th class="px-4 py-3 text-left font-sora">Male African Grey</th>
-              <th class="px-4 py-3 text-left font-sora">Female African Grey</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gold/10">
-            <tr class="bg-cream/50"><td class="px-4 py-3 font-medium">Size</td><td class="px-4 py-3">Generally larger and bulkier</td><td class="px-4 py-3">Slightly smaller and slimmer</td></tr>
-            <tr><td class="px-4 py-3 font-medium">Head Shape</td><td class="px-4 py-3">Broader, flatter head</td><td class="px-4 py-3">More rounded head</td></tr>
-            <tr class="bg-cream/50"><td class="px-4 py-3 font-medium">Neck &amp; Body</td><td class="px-4 py-3">Thicker neck, broader chest</td><td class="px-4 py-3">More slender, elegant build</td></tr>
-            <tr><td class="px-4 py-3 font-medium">Tail Shape</td><td class="px-4 py-3">Slightly wider tail feathers</td><td class="px-4 py-3">Narrower, more pointed tail feathers</td></tr>
-            <tr class="bg-cream/50"><td class="px-4 py-3 font-medium">Feather Patterns</td><td class="px-4 py-3">Darker grey feathers</td><td class="px-4 py-3">Lighter grey feathers</td></tr>
-            <tr><td class="px-4 py-3 font-medium">Eye Color</td><td class="px-4 py-3" colspan="2">Same in both (black as juveniles, turning yellow by age 3–4)</td></tr>
-          </tbody>
-        </table>
+      <div class="tbl-wrap show-c"><table class="cmp-tbl">
+        <thead><tr>
+          <th class="th-f">Attribute</th>
+          <th class="th-c"><span class="th-flex"><span><span class="th-title">Male</span><span class="th-sub">A cock African Grey</span></span></span></th>
+          <th class="th-t2"><span class="th-flex"><span><span class="th-title">Female</span><span class="th-sub">A hen African Grey</span></span></span></th>
+          <th class="th-e">Verdict</th>
+        </tr></thead>
+        <tbody>{rows.map((r) => (<tr><td class="td-f">{r.attr}</td><td class="td-c">{r.male}</td><td class="td-t">{r.female}</td><td class="edge">{r.edge}</td></tr>))}</tbody>
+      </table></div>
+    </div>
+    <p class="cap">Every "Verdict" call above is ours, from raising and DNA-sexing both — not aggregated from other websites.</p>
+    <h3 class="cag-h3">What Does the Male vs Female Comparison Table Show?</h3>
+    <img class="sec-img inf-img" src="/male-vs-female-african-grey-side-by-side-comparison-chart.webp" srcset="/male-vs-female-african-grey-side-by-side-comparison-chart-760.webp 760w, /male-vs-female-african-grey-side-by-side-comparison-chart.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Field-guide comparison chart of a male versus female African Grey showing identical appearance, size, talking and temperament, with DNA as the only way to sex them" loading="lazy">
+    <p>Read down the verdict column and the story tells itself: appearance, size, talking, temperament and bonding all land on "the individual bird, not the sex." The two rows that actually break by sex are biological — a hen can lay eggs and carries the calcium consideration that comes with it, and hormonal seasons show up a little differently in each. For the question most buyers arrive with — which is better, male or female — the table's answer is that you're choosing between two versions of the same excellent companion.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S7 WHY TRUST US (11A author card) -->
+  <section id="trust">
+    <h2 class="cag-h2">Why Trust Our Male vs Female Comparison?</h2>
+    <div class="author-card">
+      <img class="ac-banner" src="/mac-letia-young-african-grey-parrot-with-midland-tx-image-real-trust.webp" srcset="/mac-letia-young-african-grey-parrot-with-midland-tx-image-real-trust-760.webp 760w, /mac-letia-young-african-grey-parrot-with-midland-tx-image-real-trust.webp 1376w" width="800" height="600" alt="Mac and Letia, two young hand-raised African Greys at the C.A.Gs aviary in Midland, TX, beside a hand-written sign" loading="lazy">
+      <div class="ac-row">
+        <img class="ac-avatar" src="/birds/bery/bery-grey-african-parrot-for-sale.webp" width="128" height="96" alt="Bery, a hand-raised African Grey at the C.A.Gs aviary in Midland, TX" loading="lazy">
+        <div><h3 class="ac-name">Mark &amp; Teri Benjamin</h3><p class="ac-sub">Hand-raising &amp; DNA-sexing African Greys in Midland, TX since 2014</p>
+          <p class="ac-badges"><span>USDA AWA</span><span>CITES docs</span><span>DNA sexing</span><span>PCR screened</span></p></div>
       </div>
-      <p class="text-sm text-gray-600 italic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Note: These differences are not always reliable for determining sex. The best way to confirm gender is through <a href="https://www.wikihow.com/Determine-the-Sex-of-African-Grey-Parrots" rel="noopener noreferrer" target="_blank" class="text-green hover:text-clay">DNA testing or surgical sexing by a veterinarian</a>.</p>
+    </div>
+    <p>Most "male vs female African Grey" articles are written by people who have never weighed a chick at 6 a.m. or opened a DNA result. We're Mark and Teri Benjamin, and here at C.A.Gs we've hand-raised both cocks and hens side by side since 2014 — same nursery, same hand-feeding schedule, same vet — and we sex every single bird by PCR before it leaves. So when we tell you the sexes barely differ, it's because we've watched whole clutches grow up before the certificate ever told us who was who.</p>
+    <p>That matters for this question, because most of the internet's answers come from single-bird owners generalizing from a sample of one. Someone's aggressive male becomes "males are aggressive"; someone's sweet hen becomes "females are calmer." Raising and sexing dozens of both, we get to see where a pattern is real and where it's just one bird's personality wearing a sex label.</p>
+    <h3 class="cag-h3">The C.A.Gs Philosophy: Health-Documentation ROI</h3>
+    <p>The cheapest part of a grey is the purchase price — the expensive part is the 40–60 years after it. So we front-load the paperwork that protects those years: PBFD and Avian Polyomavirus PCR screening, the DNA-sexing certificate that confirms male or female, an avian veterinarian's health certificate, a hatch certificate with closed band, and the CITES Appendix I documentation proving your bird was captive-bred in the USA. Whichever sex you choose, our <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a> spells out that stack in writing.</p>
+  </section>
 
-      <!-- Customer quote -->
-      <blockquote class="border-l-4 border-clay pl-6 py-4 my-8 bg-cream/50 rounded-r-xl">
-        <p class="text-gray-700 italic">"They say love is a song sung by two voices in perfect harmony. That's what I see in my Congo Grey pair — two souls, bonded by nature, entwined in laughter and play."</p>
-        <cite class="text-sm font-semibold text-green mt-2 block">— Daniel M., Erie, OH</cite>
-      </blockquote>
-    </section>
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
 
-    <!-- Section 2: Behavioral Differences -->
-    <section id="behavioral-differences" class="mb-12">
-      <h2 class="font-lora font-bold text-2xl text-green mb-4">2. Behavioral Differences Between Male and Female African Grey Parrots</h2>
-      <div class="overflow-x-auto rounded-xl border border-gold/30 mb-6">
-        <table class="w-full text-sm">
-          <thead class="bg-green text-cream">
-            <tr>
-              <th class="px-4 py-3 text-left font-sora">Behavior</th>
-              <th class="px-4 py-3 text-left font-sora">Male African Grey</th>
-              <th class="px-4 py-3 text-left font-sora">Female African Grey</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gold/10">
-            <tr class="bg-cream/50"><td class="px-4 py-3 font-medium">Talking Ability</td><td class="px-4 py-3">Often more talkative and better mimics</td><td class="px-4 py-3">Slightly quieter, but still excellent talkers</td></tr>
-            <tr><td class="px-4 py-3 font-medium">Aggression</td><td class="px-4 py-3">More noticeable aggression during breeding season</td><td class="px-4 py-3">Typically gentler, but can be moody</td></tr>
-            <tr class="bg-cream/50"><td class="px-4 py-3 font-medium">Affection Levels</td><td class="px-4 py-3">Bond closely but may prefer independence</td><td class="px-4 py-3">More likely to seek cuddles and attention</td></tr>
-            <tr><td class="px-4 py-3 font-medium">Socialization</td><td class="px-4 py-3">May be territorial and dominant</td><td class="px-4 py-3">May be shy or reserved around strangers</td></tr>
-            <tr class="bg-cream/50"><td class="px-4 py-3 font-medium">Hormonal Changes</td><td class="px-4 py-3">Aggression during breeding season</td><td class="px-4 py-3">May become broody and protective of nesting areas</td></tr>
-          </tbody>
-        </table>
+  <!-- S8 DOES SEX PREDICT BEHAVIOR — honesty core -->
+  <section id="behavior">
+    <h2 class="cag-h2">Does an African Grey's Sex Actually Predict Its Behavior?</h2>
+    <img class="sec-img inf-img" src="/african-grey-personality-is-individual-not-sex-infographic.webp" srcset="/african-grey-personality-is-individual-not-sex-infographic-760.webp 760w, /african-grey-personality-is-individual-not-sex-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Conceptual infographic of an African Grey over a fingerprint motif, captioned that personality is individual and shaped by hand-rearing, not by male or female sex" loading="lazy">
+    <p>Here's the question underneath every other question on this page: does buying a cock or a hen actually change what you get? In our experience raising both, the honest answer is barely. Sex is a weak predictor of African Grey behavior — hand-rearing, early socialization, daily interaction and the bird's own wiring do the heavy lifting, and they swamp any male-versus-female average. Below we take the three things buyers most often pin to sex — talking, owner bonding and temperament — and show you where the pattern is real and where it's just folklore.</p>
+
+    <h3 class="cag-h3">Do Male or Female African Greys Talk Better?</h3>
+    <img class="sec-img inf-img" src="/do-male-or-female-african-greys-talk-better-infographic.webp" srcset="/do-male-or-female-african-greys-talk-better-infographic-760.webp 760w, /do-male-or-female-african-greys-talk-better-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Infographic of two identical African Greys with equal speech bubbles on a level meter, showing that talking ability does not reliably differ by sex" loading="lazy">
+    <p>Do males talk more than females? Not reliably. Both sexes carry the same astonishing vocal apparatus, and both can become precise, context-aware talkers or stay comparatively quiet — it tracks the individual bird and how much you talk to it, not the sex. The old line that "cocks are the better talkers" doesn't survive contact with a real clutch: our chattiest bird last season was a hen, and we've raised silent-until-two-years males. If a big vocabulary is the dream, choose the demonstrably chatty individual in front of you and let the DNA test tell you its sex afterward. Our <a href="/blog/african-grey-parrot-talking-ability/">African Grey talking ability guide</a> breaks the timeline down further.</p>
+
+    <h3 class="cag-h3">Do African Greys Bond Better With a Male or Female Owner?</h3>
+    <img class="sec-img" src="/Mark-with-our-grey-congo-parrot-pair-and-our-amazon-parrot.webp" srcset="/Mark-with-our-grey-congo-parrot-pair-and-our-amazon-parrot-760.webp 760w, /Mark-with-our-grey-congo-parrot-pair-and-our-amazon-parrot.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="760" height="500" alt="Mark holding a bonded pair of Congo African Greys and an Amazon parrot at the C.A.Gs aviary in Midland, TX" loading="lazy">
+    <p>Will your Grey prefer a man or a woman? This one comes up constantly, and the folklore runs both directions — some swear Greys "prefer women," others insist the opposite. Neither holds up. A hand-reared African Grey bonds to whoever gives it consistent time, reads its body language and doesn't rush it. Mark and Teri both raise deeply bonded birds here, and the deciding factor is never gender — it's presence. The owner's calm, repeated attention is what the bird attaches to.</p>
+
+    <h4 class="cag-h4">Will a Hand-Raised Grey Prefer One Person?</h4>
+    <p>Often, yes — but that's a Grey trait, not a sex trait or an owner-gender trait. Many Greys of either sex quietly elect a favorite person over their first year, usually the one who handles them most patiently. You can widen that bond by having several household members share feeding, training and out-of-cage time early. The bird chooses its person the way it chooses its words: by who shows up.</p>
+
+    <h3 class="cag-h3">Is Temperament a Male or Female Trait, or an Individual One?</h3>
+    <img class="sec-img" src="/hand-raised-congo-african-grey-parrot-playing-with-our-cat.webp" srcset="/hand-raised-congo-african-grey-parrot-playing-with-our-cat-760.webp 760w, /hand-raised-congo-african-grey-parrot-playing-with-our-cat.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="760" height="500" alt="A hand-raised African Grey calmly interacting with the family cat at the C.A.Gs home aviary, showing an even, socialized temperament" loading="lazy">
+    <p>Are females more placid and males more spirited? Sometimes — and just as often the reverse. Temperament in African Greys spans a wide range within each sex, and the individual bird lands somewhere on it regardless of chromosome. We've raised bold, into-everything hens and gentle, cautious cocks in the same nursery. What shapes an even temperament is early handling and a stable routine, which is exactly why we socialize every chick to hands, household noise and even the family cat before it goes home.</p>
+
+    <h4 class="cag-h4">Are Male African Greys Gentle or Aggressive?</h4>
+    <p>Both labels get pinned on males — which is your clue that neither is a sex rule. A male African Grey can be a marshmallow or go territorial during a hormonal stretch, and so can a female. Aggression in Greys is nearly always situational: hormones, fear, a boundary being pushed, or a bird protecting a favored person. Read the body language and keep the routine steady and the "aggressive male" you were warned about usually never appears.</p>
+
+    <h5 class="cag-h5">Fact: Hormonal Display Is Seasonal in Both Sexes</h5>
+    <p>Every mature African Grey, cock or hen, goes through seasonal hormonal phases — more display, more nipping, shorter patience — typically in spring. It is not a male-only phenomenon and it passes. Limiting nest-like dark spaces, keeping handling low-key during the peak, and holding your routine steady carry both sexes through it without drama.</p>
+
+    <h6 class="cag-h6">Breeder note: what we see across our clutches</h6>
+    <p>After a decade of sexing every bird by DNA, the pattern we can actually confirm is that we <em>can't</em> pick the talkers, the cuddlers or the bold ones by sex before the certificate comes back. Individuals win, every clutch. That's not a hedge — it's the most useful thing we can tell a buyer choosing between a male and a female.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S9 MALE DEEP DIVE -->
+  <section id="male">
+    <h2 class="cag-h2">What Is a Male African Grey Like?</h2>
+    <img class="sec-img portrait" src="/Kent-playful-male-congo-african-grey.webp" srcset="/Kent-playful-male-congo-african-grey-450.webp 450w, /Kent-playful-male-congo-african-grey.webp 900w" sizes="(max-width:900px) 92vw, 400px" width="375" height="500" alt="Kent, a hand-raised male Congo African Grey at C.A.Gs, gently taking a treat from a hand, showing his light silver-grey plumage and red tail" loading="lazy">
+    <p>What can you actually expect from a male African Grey? The honest picture is: exactly what you'd expect from any well-raised Grey. A cock — that's the correct word for a male bird — is the same size, the same silver-grey with the red tail (Congo) or charcoal with the maroon tail (Timneh), and carries the same intelligence and 40–60 year lifespan as a hen. Kent, pictured here, is a playful young male Congo, and nothing about his looks announces his sex. If you've searched "male African Grey for sale" or "male baby African Grey parrot," this is the from-the-nursery reality — and you'll meet current cocks on our <a href="/congo-african-grey-for-sale/">Congo African Greys for sale</a> page.</p>
+
+    <h3 class="cag-h3">How Big Is a Male African Grey, and Does It Have a "Squared-Off" Head?</h3>
+    <img class="sec-img inf-img" src="/african-grey-head-shape-sexing-myth-debunk-infographic.webp" srcset="/african-grey-head-shape-sexing-myth-debunk-infographic-760.webp 760w, /african-grey-head-shape-sexing-myth-debunk-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Museum-style infographic with calipers on an African Grey head and a crossed-out squared-off skull, showing that head or body shape cannot sex the bird" loading="lazy">
+    <p>Is a male bigger, or does it have the "squared-off" head you've read about? No. A male African Grey is the same weight and length as a female of the same variant — Congos 400–600 g and 12–14 inches, Timnehs 275–375 g and 9–11 inches, for both sexes. The "males have a flatter, more squared head; females are rounder" claim is one of the most repeated sexing myths online, and it's wrong often enough to be useless. Head shape varies bird to bird, not sex to sex.</p>
+
+    <h4 class="cag-h4">Can You Sex an African Grey by Head or Body Shape?</h4>
+    <p>You cannot — reliably or otherwise. Body build, head shape, eye color, wing tips and the width of the "spectacles" all get cited as sex tells, and every one of them fails across a real population. Some breeders can improve their guess a little on birds they know well, but "a little better than a coin flip" is not identification. The only thing that separates a male from a female with confidence is a chromosome test, which is why we don't guess and neither should you.</p>
+
+    <h5 class="cag-h5">Example: The Visual-Sexing Folklore, and Why Each Cue Fails</h5>
+    <p>Run down the list owners trade in Facebook groups — squared head, rounder head, larger beak, slimmer body, darker "mask," a particular eye ring — and here's the problem: every one of those traits varies more <em>within</em> each sex than between the sexes. Line up ten of our cocks and ten hens and you couldn't sort them by any of these cues better than chance. That's the definition of a trait that can't sex a monomorphic bird.</p>
+
+    <h6 class="cag-h6">Citation: African Greys are a monomorphic species</h6>
+    <p>That the sexes are visually indistinguishable is standard avian reference, echoed in the <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener">World Parrot Trust's <em>Psittacus erithacus</em> profile ↗</a> and in the avian-medicine guidance at <a href="https://lafeber.com/vet/" target="_blank" rel="noopener">Lafeber's veterinary resources ↗</a> — both of which point to DNA as the reliable sexing method.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S10 FEMALE DEEP DIVE -->
+  <section id="female">
+    <h2 class="cag-h2">What Is a Female African Grey Like?</h2>
+    <img class="sec-img" src="/Evie-female-timneh-african-grey.webp" width="640" height="427" alt="Evie, a hand-raised female Timneh African Grey at C.A.Gs, foraging on a play stand, showing her charcoal-grey plumage" loading="lazy">
+    <p>Are female African Greys the calmer, sweeter choice? That's the reputation, but the reality is subtler. A female — a hen — is the same size, color and intelligence as a cock, with one genuine biological difference: she can lay eggs. Evie, our young female Timneh pictured here, is affectionate and observant, but plenty of our hens are bold and busy, so "females are the gentle ones" only holds for the individual hen who happens to be gentle. If you've searched "female African Grey for sale," here's the honest brief on hens, including the one consideration that is truly female-only.</p>
+
+    <h3 class="cag-h3">Are Female African Greys Calmer, More Placid, or More Independent?</h3>
+    <img class="sec-img inf-img" src="/female-african-grey-temperament-spectrum-infographic.webp" srcset="/female-african-grey-temperament-spectrum-infographic-760.webp 760w, /female-african-grey-temperament-spectrum-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Spectrum infographic showing female African Greys scattered across the full calm-to-spirited range rather than clustered at the calm end" loading="lazy">
+    <p>Sometimes, and sometimes not. Female temperament spans the whole calm-to-spirited range, exactly like the males' does — we've raised placid hens and hens with a strong independent streak from the same pairing. The idea that hens are categorically more placid or more independent is a generalization that dissolves across a real clutch. What makes any hen even-tempered is the same thing that makes any cock even-tempered: patient early handling and a predictable routine.</p>
+
+    <h3 class="cag-h3">Do Female African Greys Lay Eggs Without a Mate?</h3>
+    <img class="sec-img" src="/african-grey-pair-diet-maintenance.webp" srcset="/african-grey-pair-diet-maintenance-760.webp 760w, /african-grey-pair-diet-maintenance.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="760" height="500" alt="African Greys at a food bowl at the C.A.Gs aviary, illustrating the calcium-rich diet that supports a laying hen" loading="lazy">
+    <p>Yes — this is the one place sex genuinely matters. A lone hen can become hormonally stimulated and lay infertile eggs even with no male in the house. It doesn't mean something is wrong, and for many owners it's an occasional, manageable event. But it is the reason "which sex should I get" has a real answer for some households, and it deserves a clear-eyed look rather than a shrug.</p>
+
+    <h4 class="cag-h4">Is Chronic Egg-Laying Dangerous?</h4>
+    <p>It can be, if it becomes chronic. Repeated laying draws calcium out of a hen faster than diet replaces it, and that opens the door to hypocalcemia and, occasionally, egg-binding — a genuine emergency. The good news is that it's largely preventable with management, and the vast majority of pet hens never have a serious problem. You simply need to know it exists before you choose a female, not discover it afterward.</p>
+
+    <h5 class="cag-h5">Warning: Lone-Female Egg-Laying and the Calcium It Costs</h5>
+    <p>If you keep a hen, watch for repeated clutches and support her with a calcium-adequate diet and daily UV-B exposure so her body can make vitamin D3 and actually use that calcium. Discourage laying by limiting dark nest-like spaces, keeping her cage well-lit on a normal day-length, and not over-bonding to the point of hormonal stimulation. If a hen lays repeatedly, that's an avian-vet conversation, not a wait-and-see.</p>
+
+    <h6 class="cag-h6">Breeder note: how we set a hen up</h6>
+    <p>Every hen leaves us on a calcium-adequate pellet base with a UV-B lighting recommendation in writing, because we'd rather prevent a calcium problem than treat one — general owner-level guidance from <a href="https://vcahospitals.com/know-your-pet/african-grey-parrots-general" target="_blank" rel="noopener">VCA Animal Hospitals ↗</a> lines up with what we send home. Set a hen up right and egg-laying stays a footnote, not a crisis.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S11 HOW TO TELL THEM APART — DNA sexing -->
+  <section id="sexing">
+    <h2 class="cag-h2">How Do You Actually Tell a Male African Grey From a Female?</h2>
+    <img class="sec-img inf-img" src="/african-grey-dna-sexing-explained-infographic.webp" srcset="/african-grey-dna-sexing-explained-infographic-760.webp 760w, /african-grey-dna-sexing-explained-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Infographic showing a grey feather leading to a DNA helix and a certificate, explaining that African Greys are sexed by PCR DNA testing" loading="lazy">
+    <p>If the sexes look identical, how does anyone know which is which? The answer is a lab test, not a look. Because African Greys are monomorphic, the accurate way to sex one — the only way we trust — is DNA testing: a PCR analysis of the bird's chromosomes from a feather or a small blood sample. Every bird we place is DNA-sexed before it goes home, so you're never buying a guess. Here's how that works and what your certificate actually tells you.</p>
+
+    <h3 class="cag-h3">Why Can't You Sex an African Grey Visually?</h3>
+    <img class="sec-img inf-img" src="/why-you-cant-visually-sex-an-african-grey-infographic.webp" srcset="/why-you-cant-visually-sex-an-african-grey-infographic-760.webp 760w, /why-you-cant-visually-sex-an-african-grey-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Spot-the-difference infographic of two identical African Greys with an equals sign, showing there is no visible feature that separates the sexes" loading="lazy">
+    <p>Because there's nothing reliable to look at. As one owner on <a href="https://www.reddit.com/r/parrots/" target="_blank" rel="noopener">r/parrots ↗</a> put it bluntly, African Greys "look 100% identical — you need a blood test." No consistent difference in size, plumage, tail, beak or eye separates a cock from a hen, which is why vent sexing is unreliable and the old surgical method is outdated and invasive. Looking harder doesn't help; testing does.</p>
+
+    <h3 class="cag-h3">What Is DNA Sexing, and Do Your Birds Come Sexed?</h3>
+    <img class="sec-img" src="/male-female-african-grey-parrots-for-sale-vet-checked.webp" srcset="/male-female-african-grey-parrots-for-sale-vet-checked-760.webp 760w, /male-female-african-grey-parrots-for-sale-vet-checked.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="760" height="500" alt="A vet-checked hand-raised African Grey at C.A.Gs, the kind of bird that leaves with a DNA-sexing certificate" loading="lazy">
+    <p>DNA sexing is a laboratory PCR test that reads the bird's sex chromosomes and returns male or female with high accuracy — the industry standard for any monomorphic parrot. And yes: every C.A.Gs African Grey is DNA-sexed and leaves with the certificate in hand, so you know exactly what you're bringing home. We link the full method on our <a href="/dna-tested-african-grey-for-sale/">DNA-tested African Greys for sale</a> page rather than repeat it all here.</p>
+
+    <h4 class="cag-h4">What Does the C.A.Gs PCR DNA-Sexing Certificate Show?</h4>
+    <p>It names your bird, records the sample and lab, and states the result — male or female — as determined by the chromosome test. It's a document you can hand to your avian vet, and it's the piece a legitimate seller can always produce. If a seller can't show you a DNA certificate for a bird they're calling "a proven male" or "definitely a female," treat the claim as a guess.</p>
+
+    <h5 class="cag-h5">What the Lab Tests: Feather or Blood PCR</h5>
+    <p>The lab needs only a tiny sample — a freshly plucked chest feather with its follicle, or a drop of blood — and amplifies the DNA to read the sex chromosomes. It's minimally invasive, quick for the bird, and far more reliable than any physical exam. That's the whole reason the industry standardized on it.</p>
+
+    <h6 class="cag-h6">Citation: PCR sexing accuracy</h6>
+    <p>DNA sexing by PCR is the method avian-medicine references point to for monomorphic parrots; the client-level overview at <a href="https://vcahospitals.com/know-your-pet/african-grey-parrots-general" target="_blank" rel="noopener">VCA Animal Hospitals ↗</a> and the veterinary resources at <a href="https://lafeber.com/vet/" target="_blank" rel="noopener">Lafeber ↗</a> both treat it as the reliable standard.</p>
+
+    <h3 class="cag-h3">How Do You Determine a Congo African Grey's Gender?</h3>
+    <img class="sec-img inf-img" src="/how-to-determine-congo-african-grey-gender-infographic.webp" srcset="/how-to-determine-congo-african-grey-gender-infographic-760.webp 760w, /how-to-determine-congo-african-grey-gender-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Spotlight infographic of a Congo African Grey with a DNA-sexed tag, noting that Congo gender is confirmed by DNA rather than size or color" loading="lazy">
+    <p>Exactly the same way — by DNA. A Congo African Grey is monomorphic like every Grey, so its size, red tail and light plumage tell you it's a Congo, not whether it's a cock or a hen. People search "how to determine Congo African Grey gender" hoping for a size or color trick; there isn't one. Our Congos are PCR-sexed, and you'll find the sexed birds on the <a href="/congo-african-grey-for-sale/">Congo African Greys for sale</a> page. For the Congo-versus-Timneh distinction itself, that's a variant question we answer on our <a href="/congo-vs-timneh-african-grey/">Congo vs Timneh comparison</a>.</p>
+
+    <h3 class="cag-h3">Is Sexing a Timneh Any Different From a Congo?</h3>
+    <img class="sec-img inf-img" src="/male-vs-female-timneh-african-grey-difference-infographic.webp" srcset="/male-vs-female-timneh-african-grey-difference-infographic-760.webp 760w, /male-vs-female-timneh-african-grey-difference-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Spotlight infographic of a Timneh African Grey with a DNA-sexed tag, noting that male and female Timnehs also look identical" loading="lazy">
+    <p>No difference at all. A Timneh African Grey is just as monomorphic as a Congo, so male and female Timnehs are indistinguishable by sight and confirmed the same way — a PCR DNA test. The charcoal body, maroon tail and horn-colored beak identify the bird as a Timneh, not its sex. Sexed Timneh youngsters live on our <a href="/timneh-african-grey-for-sale/">Timneh African Greys for sale</a> page, each with its certificate.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S12 SCORECARD — Gemini scorecard image + real data table kept in DOM for AIO -->
+  <section id="scorecard">
+    <h2 class="cag-h2">Decision Scorecard: Male vs Female Across 6 Traits</h2>
+    <p>If you arrived here from a "is a male or female African Grey better as a pet" search, this is our answer in numbers. The scores are ours, 0–10, from raising cocks and hens side by side over a decade — editorial calls, not lab measurements. And notice the honest thing before you read a single row: the two columns land almost on top of each other, because sex is one of the weakest predictors of how an African Grey turns out.</p>
+    <img class="sec-img inf-img" src="/male-vs-female-african-grey-decision-scorecard-infographic.webp" srcset="/male-vs-female-african-grey-decision-scorecard-infographic-760.webp 760w, /male-vs-female-african-grey-decision-scorecard-infographic.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Scorecard infographic rating male and female African Greys 0–10 on talking, temperament, noise, bonding, beginner fit and hormonal ease — the two sexes scoring nearly identically" loading="lazy">
+    <div class="tbl-wrap plain"><table class="score-tbl">
+      <thead><tr><th>Trait</th><th>Male</th><th>Female</th><th>Our note</th></tr></thead>
+      <tbody>{scores.map((s) => (<tr><td class="sc-trait" data-label="Trait">{s.trait}</td><td class="sc" data-label="Male">{s.m}</td><td class="sc" data-label="Female">{s.f}</td><td class="sc-note" data-label="Our note">{s.note}</td></tr>))}</tbody>
+    </table></div>
+    <p>Read the pattern, not the totals: the only row where the sexes part ways at all is hormonal ease, and only because a lone hen can lay infertile eggs. Every other trait is a tie, because the variable that actually moves those numbers is the individual chick's temperament and how much time you put in — not whether it's a cock or a hen.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S13 HOUSEHOLD MATCH -->
+  <section id="household">
+    <h2 class="cag-h2">Which Grey Fits Your Home — and Does Sex Change the Answer?</h2>
+    <p>Scores are useful; households are specific. Whether you're weighing the best parrot for apartment living, a family-friendly parrot that tolerates a busy house, or a calm companion bird for retirement, the honest match depends on who's home, how much quiet you need, and who expects to handle the bird. Here's the part buyers don't expect us to say: for four of these five households, the bird's sex doesn't change our recommendation at all. Find yours below — this is the same walkthrough we do by email.</p>
+    <img class="sec-img inf-img" src="/which-african-grey-sex-fits-your-household-infographic.webp" srcset="/which-african-grey-sex-fits-your-household-infographic-760.webp 760w, /which-african-grey-sex-fits-your-household-infographic.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Infographic matching households to a male or female African Grey and showing that for most homes the sex does not change the recommendation — temperament and time do" loading="lazy">
+    <h3 class="cag-h3">Match by Household</h3>
+    <p>Five real household types, five honest answers — including the one where the sex genuinely does tip the scale, and the one where our answer is "maybe don't buy a grey this year."</p>
+    <div class="match-grid">
+      <div class="match-c"><h4 class="cag-h4">First-Time Bird Owner</h4><p>Pick the calmest, most hand-tame chick in the nursery — sex is not the variable to optimize. A steady, well-socialized bird forgives the mistakes every first-timer makes, and that steadiness is an individual trait, not a male or female one. We'll match you to the temperament that fits your home and hand you the DNA certificate afterward.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Family with Kids</h4><p>Choose for sociability, not sex. Some greys elect one person and treat the rest of the flock as furniture; others accept the whole household — and that's an individual disposition we can read in the chick, not a thing you get by ordering a hen over a cock. Either way, greys and toddlers need supervised distance — this is a 40-year bird, not a starter pet.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Apartment or Condo</h4><p>Sex doesn't decide this one either — both cocks and hens share the same vocal range. The non-negotiable is out-of-cage hours every day. What fails in apartments isn't decibels; it's a bored grey turning into a loud one. Budget time before you budget square footage.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Busy Professional</h4><p>Honest answer: think hard, then think again. A grey alone ten hours a day is how feather-destructive behavior starts, whichever sex you pick. If your schedule is genuinely full, consider whether an <a href="/african-grey-parrot-price/">adult bird with an established temperament</a> fits better than a chick — or whether this is the year to wait.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Set on a Hen? One Real Caveat</h4><p>This is the single household where sex earns a footnote: a lone female can become hormonal and lay infertile eggs, which draws down calcium. It's manageable with the right diet, calcium and UV-B/D3 — not a dealbreaker — but if you specifically want a hen, go in knowing that one job comes with the choice. A cock never lays.</p></div>
+    </div>
+    <p>Still torn after the breakdown? That's what we're for — the inquiry form at the bottom reaches Mark and Teri directly, and "which bird fits our house" is our favorite email to answer.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <Newsletter variant="middle" action="https://formspree.io/f/xrejpnvn" eyebrow="Cock or hen, DNA-confirmed" heading="The Sex Is Settled Before You Ever Pay a Balance" sub="Every chick we place is DNA-sexed with the certificate in hand. Join the list and we'll email you the moment a male or female Grey is ready to reserve." cta="Notify me of new chicks" img="/male-vs-female-african-grey-parrots-for-sale-companionship-choice.webp" imgAlt="A male and a female hand-raised African Grey together at C.A.Gs in Midland, TX, both DNA-sexed with certificates in hand" imgCaption="DNA-sexed cocks and hens, hand-raised in our home" note="We only email about new clutches, unsubscribe anytime." />
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S14 COST -->
+  <section id="cost">
+    <h2 class="cag-h2">Do Male and Female African Greys Cost the Same?</h2>
+    <p>Yes — and we'll put it in numbers so there's no ambiguity: at C.A.Gs a male and a female of the same variant and age cost exactly the same. Our Congos run $1,700–$3,500 (weaned chicks $1,700–$2,500, older or proven birds up to $3,500) and our Timnehs $1,500–$1,600, whether you reserve a cock or a hen. A $200 deposit reserves either. The <a href="/african-grey-parrot-price/">price guide</a> lists full current pricing per bird, updated as clutches wean.</p>
+    <img class="sec-img inf-img" src="/male-female-african-grey-same-price-infographic.webp" srcset="/male-female-african-grey-same-price-infographic-760.webp 760w, /male-female-african-grey-same-price-infographic.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Infographic showing a male and a female African Grey at identical prices, with price driven by variant and age rather than sex" loading="lazy">
+
+    <h3 class="cag-h3">Why Sex Doesn't Move Our Price</h3>
+    <p>Price tracks two things — variant (Congo vs Timneh) and age or training stage (weaned chick vs older, proven bird) — and nothing else. Sex isn't one of the levers, because the DNA test that tells us the sex costs the same whether the answer is male or female. If you ever see a seller charging a premium for "a talking male" or "a calmer female," that's a price built on folklore, not on what the bird actually is. We track competitor grey pricing weekly, and a sex surcharge is a small red flag that the bigger paperwork claims may be soft too.</p>
+
+    <h4 class="cag-h4">What's Included — for Either Sex</h4>
+    <p>Everything in the trust stack, at no line-item cost, identical for cocks and hens: CITES captive-bred documentation, the DNA sexing certificate (the one that actually tells you the sex), avian-vet health certificate, hatch certificate with closed band, and the PBFD/Polyomavirus PCR screening. The low-end $800–$900 "cheap grey" ads skip every one of those — that's not a discount, it's a different product. The only add-on is getting the bird to you: $185 airport, $350 home delivery.</p>
+
+    <h5 class="cag-h5">First-Year Budget Beyond the Bird</h5>
+    <p>Plan on $825–$2,000 in year one on top of purchase: a proper large cage ($300–$800 — this is not the place to economize), perches and first toys ($100–$300), the establishing avian-vet visit ($75–$200 — the <a href="https://www.aav.org/" target="_blank" rel="noopener">Association of Avian Veterinarians ↗</a> can point you to a certified avian vet near you), a year of quality pellets ($200–$400) and enrichment ($150–$300). Ongoing years run roughly $375–$1,350 depending on your vet luck and your bird's toy-destruction ethic.</p>
+
+    <h6 class="cag-h6">Breeder note: why we don't sell unweaned chicks</h6>
+    <p>You'll find unweaned grey chicks online for less. We don't sell them at any price — hand-feeding mistakes (crop burn, aspiration) kill chicks in inexperienced hands, and "save money by finishing the weaning yourself" is the worst trade in aviculture. Every C.A.Gs bird leaves fully weaned. That's included in the price too.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S15 FIRST 30 DAYS -->
+  <section id="first30">
+    <h2 class="cag-h2">What Do the First 30 Days Look Like?</h2>
+    <img class="sec-img" src="/male-vs-female-african-grey-inside-their-cage.webp" srcset="/male-vs-female-african-grey-inside-their-cage-760.webp 760w, /male-vs-female-african-grey-inside-their-cage.webp 640w" sizes="(max-width:900px) 92vw, 640px" width="640" height="480" alt="A young male and female African Grey settling in together inside their cage during the first weeks at home, both DNA-sexed captive-bred birds from C.A.Gs in Midland, TX" loading="lazy">
+    <p>The sex you choose changes almost nothing about the first month — the arc below is the same for a cock or a hen. Teri walks every buyer through the same four phases:</p>
+    <h3 class="cag-h3">The Four Adjustment Phases</h3>
+    <p>Print this — it's the difference between "my new grey hates me" panic and knowing your bird is exactly on schedule.</p>
+    <img class="sec-img" src="/male-vs-female-african-grey-parrots-for-sale-relationship-journey.webp" srcset="/male-vs-female-african-grey-parrots-for-sale-relationship-journey-760.webp 760w, /male-vs-female-african-grey-parrots-for-sale-relationship-journey.webp 640w" sizes="(max-width:900px) 92vw, 640px" width="640" height="480" alt="The relationship journey of a new African Grey and its owner over the first month — a hand-tame captive-bred Grey stepping up and bonding, sex making no difference to the adjustment arc" loading="lazy">
+    <div class="timeline">
+      <div class="tl-c"><span class="tl-n">1</span><b>Days 1–3 · Settling</b><p>Quiet, low perching, eating only when you're not staring. How chatty a bird is on day two is an individual trait, not a male-or-female one — some start test-chattering early, some stay reserved a week. Both normal.</p></div>
+      <div class="tl-c"><span class="tl-n">2</span><b>Week 1 · Mapping</b><p>The bird learns the household: who moves how, what sounds mean, when food happens. Keep the routine boring on purpose.</p></div>
+      <div class="tl-c"><span class="tl-n">3</span><b>Week 2 · Trust</b><p>Step-ups get voluntary, treats get taken gently, and you'll hear the first experimental sounds of <em>your</em> house.</p></div>
+      <div class="tl-c"><span class="tl-n">4</span><b>Weeks 3–4 · Stabilizing</b><p>The personality arrives — and we make our check-in call. Every buyer, cock or hen, gets our direct line for that whole first month.</p></div>
+    </div>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S16 MYTHS -->
+  <section id="myths">
+    <h2 class="cag-h2">Male vs Female African Grey Myths — What's Actually True?</h2>
+    <p>Every African Grey forum carries the same handful of confident, wrong claims about the sexes, and buyers arrive quoting them weekly. Even mainstream care guides like <a href="https://www.thesprucepets.com/facts-about-african-grey-parrots-390715" target="_blank" rel="noopener">The Spruce Pets' African Grey overview ↗</a> note that the species is monomorphic and behaviorally individual — so here's where the sex folklore parts ways with what our clutches actually do.</p>
+    <img class="sec-img inf-img" src="/male-vs-female-african-grey-myths-vs-reality-cards.webp" srcset="/male-vs-female-african-grey-myths-vs-reality-cards-760.webp 760w, /male-vs-female-african-grey-myths-vs-reality-cards.webp 1408w" sizes="(max-width:900px) 92vw, 768px" width="1408" height="768" alt="Myth versus reality cards debunking claims that female African Greys are always calmer, that Greys prefer one owner gender, and that males talk better" loading="lazy">
+    <h3 class="cag-h3">The Three Myths We Hear Most</h3>
+    <p>Two quick ones first, then the big one that deserves its own reality check.</p>
+    <div class="myth-grid">
+      <div class="myth-c"><span class="myth-x">Myth</span><p><strong>"Hens are always calmer."</strong> We've raised placid cocks and spirited hens and the reverse. Calm is an individual temperament with the same range in both sexes — routine, enrichment and handling shape it far more than chromosomes do.</p></div>
+      <div class="myth-c"><span class="myth-x">Myth</span><p><strong>"Greys prefer a man / a woman."</strong> A hand-reared grey bonds to whoever shows up consistently and reads its body language — not to the owner's gender. Men and women both raise deeply bonded birds here, with cocks and hens alike.</p></div>
+    </div>
+    <h4 class="cag-h4">The Big One: "Males Talk Better"</h4>
+    <p>The most repeated claim online, usually stated as law.</p>
+    <img class="sec-img inf-img" src="/myth-male-african-greys-talk-better-debunk-infographic.webp" srcset="/myth-male-african-greys-talk-better-debunk-infographic-760.webp 760w, /myth-male-african-greys-talk-better-debunk-infographic.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Infographic debunking the myth that male African Greys talk better than females, showing both sexes reach the same vocabulary with equal handling" loading="lazy">
+    <h5 class="cag-h5">The Reality: The Individual Bird Talks, Not the Sex</h5>
+    <p>Owners report brilliant hens and quiet cocks just as often as the reverse; how much you talk to the bird and how hand-tame it is drive vocabulary far more than sex does. Our honest version: there is no reliable talking gap between cocks and hens — pick the chatty individual in front of you, not a chromosome.</p>
+    <h6 class="cag-h6">Citation: owner reports across both sexes</h6>
+    <p>The pattern above matches owner discussions in the large African Grey communities (Reddit, the major Facebook groups) as well as what our own clutches do — no sex-linked talking advantage that survives contact with a real nursery.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S14b PAIRS — one bird, a male–female pair, or same-sex -->
+  <section id="pairs">
+    <h2 class="cag-h2">One Bird, a Male–Female Pair, or Same-Sex?</h2>
+    <p>Once buyers accept that sex barely predicts personality, the next question is usually about numbers rather than sex: should you bring home one grey, a male–female pair, or two of the same sex? Here's how we answer it honestly, because the right call depends entirely on what you want from the bird.</p>
+    <figure class="sec-fig">
+      <video class="sec-img sec-vid" width="760" height="428" controls muted playsinline preload="none" poster="/jins-jeni4-cong-african-grey-pair.webp" aria-label="Jins and Jeni, a male and female Congo African Grey companion pair raised together at C.A.Gs, perched and vocalizing side by side">
+        <source src="/Jins-and-jeni-male-female-congo-african-greys-for-sale.mp4" type="video/mp4">
+      </video>
+      <figcaption>Jins &amp; Jeni — our male-and-female Congo companion pair — showing what a bonded pair looks like day to day.</figcaption>
+    </figure>
+    <h3 class="cag-h3">If You Want a Talking Companion, Get One</h3>
+    <p>A single hand-reared African Grey bonds hardest to <em>you</em> — regardless of whether it's a cock or a hen — and that undivided bond is what produces the affectionate, chatty companion most families picture. Two birds housed together often bond to each other first and talk to each other more than to you. So if talking and cuddling are the goal, one bird beats any pairing, and the sex of that one bird is a detail.</p>
+    <h4 class="cag-h4">If You Want a Pair, Compatibility Beats Sex</h4>
+    <p>A compatible male–female pairing and a compatible same-sex pairing can both work; what matters is whether the two individual birds actually get along, not the chromosomes. A male–female pair can still learn words, but expect a bonded pair to talk to each other more than to you. If you're set on a pair for company rather than conversation, we'll help you read compatibility — that's the variable that decides it.</p>
+    <h3 class="cag-h3">Looking for a Bonded Breeding Pair or Hatching Eggs Instead?</h3>
+    <p>Not every inquiry here is for a single companion chick. Established aviaries write us about our bonded, proven-producing African Grey pair, and experienced incubator keepers ask about candled fertile African Grey hatching eggs — both live on their own pages, and both carry the same documentation stack as our companion birds.</p>
+    <div class="pair-row">
+      <div class="pair-c">
+        <img class="pimg-pair" src="/congo-african-grey-breeding-pair-aviary.webp" width="900" height="900" alt="Bonded proven-producer African Grey breeding pair perched together in the C.A.Gs aviary, DNA-certified" loading="lazy">
+        <div class="pair-body"><b>Bonded Proven-Producer Pair</b><span class="bird-price">$3,000</span>
+        <span class="pair-sub">DNA-certified, actively producing — for established aviaries, not first homes</span>
+        <a class="btn-ghost sm" href="/african-grey-breeding-pair-for-sale/">See the pair page</a>
+        <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span></div>
       </div>
-
-      <div class="prose prose-lg max-w-none">
-        <h3>Aggression and Vocalization Tendencies Between Genders</h3>
-        <p>Male African Grey parrots are often noted to exhibit more dominant and assertive behavior. Males tend to be slightly more prone to lunging and displaying aggressive tendencies, particularly during territorial disputes or when they feel threatened. These actions require experienced handling and positive reinforcement training to prevent escalation.</p>
-        <p>In terms of vocalization, male Greys are frequently more talkative and inclined to mimic a wider variety of sounds. While females are also excellent talkers, they may be less consistent unless they feel extremely comfortable in their surroundings.</p>
-
-        <h3>Training Differences: Flight Behavior and Independence</h3>
-        <p>Males often demonstrate a greater sense of independence and curiosity during training sessions. During free-flight exercises, male African Greys may be more inclined to explore unexpected areas without being cued. Females, while equally intelligent, often display a more measured and cautious approach — making them slightly easier to work with in structured training environments.</p>
-
-        <h3>Nest Box Dynamics and Protective Behavior</h3>
-        <p>Males generally take on the role of initial defender. When a potential threat approaches the nest box, the male is typically the first to emerge and investigate. The female is far more consistent in incubating eggs and providing warmth during the incubation period.</p>
-        <p>Understanding gender-specific health behaviors makes a big difference in long-term care. Refer to this comprehensive <a href="https://vcahospitals.com/know-your-pet/african-grey-feeding" rel="noopener noreferrer" target="_blank">veterinary guide on African Grey care</a> for expert tips on diet, hormonal changes, and behavioral management.</p>
-
-        <h3>Mating Behaviors and Sexual Displays</h3>
-        <p>Males often exhibit classic male mounting behaviors during mating season or when hormonal. In contrast, female African Greys may respond to petting by adopting a sexually receptive posture (drooped tail, slightly spread wings). Such behaviors should be carefully managed by limiting over-stimulation in sensitive areas.</p>
-
-        <h3>Begging and Submissive Displays</h3>
-        <p>Females are more inclined to display specific submissive gestures — the wings-hanging begging posture, where the female lowers her body and droops her wings, signals a desire for feeding or comfort. Females are also more likely to exhibit "covering" behavior — pressing their bodies flat against a surface while begging.</p>
-        <p><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg> <strong>Training Tip:</strong> Regardless of gender, daily socialization and training are crucial for a well-behaved African Grey.</p>
+      <div class="pair-c">
+        <img class="pimg-eggs" src="/african-grey-eggs-ready-to-hatch.webp" width="800" height="800" alt="Hen brooding candled fertile African Grey hatching eggs in the C.A.Gs nest box" loading="lazy">
+        <div class="pair-body"><b>Candled Fertile Hatching Eggs</b><span class="bird-price">$95 each</span>
+        <span class="pair-sub">Incubator-ready and candled before shipping — experienced breeders only; buy 5 and US shipping is free</span>
+        <a class="btn-ghost sm" href="/african-grey-parrot-bird-eggs-for-sale-usa/">See the eggs page</a></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Section 3: Vocalization -->
-    <section id="vocalization" class="mb-12">
-      <h2 class="font-lora font-bold text-2xl text-green mb-4">3. Vocalization &amp; Speech Ability – Which Gender Talks More?</h2>
-      <div class="prose prose-lg max-w-none">
-        <p>Both male and female African Grey parrots are exceptional talkers, capable of learning hundreds of words and phrases. However, some owners notice slight differences:</p>
-        <ul>
-          <li><strong>Males</strong> tend to be more frequent talkers and may develop a wider vocabulary faster.</li>
-          <li><strong>Females</strong> can be slightly quieter but may develop clearer, more deliberate speech patterns.</li>
-        </ul>
-        <p><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <strong>Fun Fact:</strong> African Grey parrots can understand the context in conversations, making them one of the most intelligent talking birds in the world!</p>
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S17 CITES -->
+  <section id="cites">
+    <h2 class="cag-h2">CITES Status &amp; Documentation</h2>
+    <figure class="sec-fig">
+      <video class="sec-img sec-vid" width="760" height="428" controls muted playsinline preload="none" poster="/male-female-african-grey-parrots-for-sale-vet-checked.webp" aria-label="Rony and Rose, C.A.Gs buyers in Midland, TX, holding the real CITES and health paperwork that came with their documented captive-bred African Grey">
+        <source src="/rony-and-rose-with-real-paper-midland-tx.mp4" type="video/mp4">
+      </video>
+      <figcaption>Rony &amp; Rose with the real paperwork folder — CITES captive-bred docs, DNA-sexing certificate and vet health certificate — that ships with every C.A.Gs Grey.</figcaption>
+    </figure>
+    <p>Every African Grey, male or female, sits on CITES Appendix I — the treaty's highest protection tier, applied to the species at CoP17 (effective January 2017) after wild-trapping devastated wild flocks, a history the species entry at <a href="https://www.britannica.com/animal/grey-parrot" target="_blank" rel="noopener">Encyclopaedia Britannica ↗</a> summarizes well. Appendix I doesn't mean ownership is illegal; it means the paperwork proving captive-bred origin is everything — and on this page, one document in that folder does double duty.</p>
+    <h3 class="cag-h3">What Paperwork Comes With Every Bird?</h3>
+    <img class="sec-img inf-img" src="/african-grey-cites-documentation-flatlay.webp" srcset="/african-grey-cites-documentation-flatlay-760.webp 760w, /african-grey-cites-documentation-flatlay.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Flat-lay of the C.A.Gs document folder: CITES captive-bred paperwork, hatch certificate with closed band number, DNA sexing certificate and avian vet health certificate" loading="lazy">
+    <p>The full stack, either sex, no exceptions: CITES captive-bred documentation, hatch certificate with closed leg band, the DNA sexing certificate — the one that actually settles whether your bird is a cock or a hen — and the avian-vet health certificate. If any grey seller anywhere hesitates on any of those four, that hesitation is your answer.</p>
+    <h4 class="cag-h4">Appendix I, in Plain English</h4>
+    <p>Wild-caught greys cannot legally enter the US pet trade — the <a href="https://www.fws.gov/law/wild-bird-conservation-act" target="_blank" rel="noopener">U.S. Fish &amp; Wildlife Service's Wild Bird Conservation Act page ↗</a> explains the import side of that wall. Captive-bred greys, documented, transfer legally within the country. The band on your bird's leg was closed when it was a chick — it physically cannot be added to a wild adult, which is why it matters more than any receipt.</p>
+    <h5 class="cag-h5">Congo (Endangered) vs Timneh (Vulnerable): The IUCN Line</h5>
+    <p>The wild Congo African Grey is IUCN-listed Endangered; the Timneh, Vulnerable. Neither status touches your captive-bred bird's legality — but it's why ethical sourcing isn't a marketing word on this page. Every documented captive-bred sale removes a reason for someone to trap a wild one.</p>
+    <h6 class="cag-h6">Citation: cites.org &amp; IUCN Red List</h6>
+    <p>Listing details: the <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">CITES species database ↗</a> and the <a href="https://www.iucnredlist.org/species/22724813/154068024" target="_blank" rel="noopener">IUCN Red List profiles ↗</a> for <em>Psittacus erithacus</em> and <em>Psittacus timneh</em>.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S18 SHIPPING & HEALTH (15A + 16A) -->
+  <section id="shipping">
+    <h2 class="cag-h2">How Do Shipping &amp; Our Health Guarantee Work?</h2>
+    <div class="ship-cards">
+      <div class="ship-c">
+        <img src="/affordable-african-grey-parrot-shipping.webp" srcset="/affordable-african-grey-parrot-shipping-760.webp 760w, /affordable-african-grey-parrot-shipping.webp 640w" sizes="(max-width:700px) 92vw, 320px" width="640" height="362" alt="Affordable African Grey parrot shipping — a documented captive-bred Grey in an IATA live-animal travel crate at the United PetSafe cargo desk, ready to fly to your nearest major airport" loading="lazy">
+        <div class="ship-body"><span class="ship-tier">Tier 1</span><b>Airport Pickup</b><span class="ship-price">$185</span>
+        <p>IATA live-animal cargo on United PetSafe, Delta Cargo or American — to DFW, DEN, LAX, MIA, ORD or your nearest major airport</p></div>
       </div>
-    </section>
-
-    <!-- Section 4: Breeding -->
-    <section id="breeding" class="mb-12">
-      <h2 class="font-lora font-bold text-2xl text-green mb-4">4. Breeding &amp; Nesting Differences Between Male and Female African Greys</h2>
-      <div class="prose prose-lg max-w-none">
-        <p>For breeders, understanding gender differences is crucial for successful breeding:</p>
-        <ul>
-          <li>Males display courtship by fluffing their feathers, bobbing their heads, and making soft sounds.</li>
-          <li>Females will choose a nesting spot and may become more protective and territorial during breeding season.</li>
-          <li><strong>Egg-Laying:</strong> Only females lay eggs, even without a male present. Unfertilized eggs may be laid if hormonal changes occur.</li>
-        </ul>
-        <p><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.1 14c.2-1 .7-1.7 1.4-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.2 1.5 1.4 2.5"/></svg> <strong>Breeding Tip:</strong> If you plan to breed African Grey parrots, ensure they are a DNA-tested, bonded pair with a healthy diet and proper nesting conditions.</p>
-        <p>Interested in a breeding pair? Visit our <a href="/african-grey-breeding-pair-for-sale/">African Grey Breeding Pair for Sale</a> page.</p>
+      <div class="ship-c">
+        <img src="/united-home-delivery-van-petsafe.webp" srcset="/united-home-delivery-van-petsafe-760.webp 760w, /united-home-delivery-van-petsafe.webp 1024w" sizes="(max-width:700px) 92vw, 320px" width="1024" height="185" alt="United PetSafe climate-controlled home-delivery van used to courier documented captive-bred African Greys door-to-door nationwide with the full CITES paperwork folder" loading="lazy">
+        <div class="ship-body"><span class="ship-tier clay">Tier 2</span><b>Home Delivery</b><span class="ship-price">$350</span>
+        <p>Climate-controlled van or a vetted Avian Flight Nanny, couriered to your door with the full document folder</p></div>
       </div>
-    </section>
+    </div>
+    <p>Two delivery tiers, nationwide, whichever sex you reserve. Airport pickup runs $185 through United PetSafe live-animal cargo into hubs like Denver (DEN), Los Angeles (LAX), Miami (MIA) and Chicago O'Hare (ORD); home delivery is $350 by climate-controlled van or a vetted Avian Flight Nanny who hand-carries your Grey in the cabin. Every shipment travels with the health certificate and full document folder.</p>
+    <h3 class="cag-h3">Where Do Our Greys Fly Most Often?</h3>
+    <p>These seven routes cover most of the birds that leave Midland in a given season, and our full <a href="/buy-african-grey-parrots-with-shipping/">African Grey shipping process</a> is written up on its own page. Each pill below goes to that area's own availability page:</p>
+    <ul class="ship-places">
+      {shipPlaces.map((s) => (<li><a href={s.href}><svg class="pin" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>{s.label}</span></a></li>))}
+    </ul>
+    <div class="health-card">
+      <div class="hc-head">Every grey leaves with</div>
+      <ul class="hc-list"><li>PBFD PCR screening</li><li>Avian Polyomavirus PCR</li><li>DNA sexing certificate</li><li>Avian-vet health certificate</li><li>Hatch certificate + closed band</li></ul>
+    </div>
+    <p>The written health guarantee covers cocks and hens identically — terms on the <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>. Reserve with a $200 deposit; the balance settles before shipping.</p>
+    <p>Before your Grey lands, line up a certified avian vet near you — the <a href="https://www.aav.org/search/custom.asp?id=1803" target="_blank" rel="noopener">Association of Avian Veterinarians directory ↗</a> lists board-certified avian hospitals by state, and we'll confirm whether your state requires an exotic-bird permit before delivery (most don't for a captive-bred, CITES-documented companion Grey, but a handful do).</p>
+    <p class="ship-line">Ships nationwide · $185 airport · $350 home</p>
+  </section>
 
-    <!-- Section 5: DNA Testing -->
-    <section id="dna-testing" class="mb-12">
-      <h2 class="font-lora font-bold text-2xl text-green mb-4">5. How to Identify an African Grey's Gender – DNA Testing</h2>
-      <div class="prose prose-lg max-w-none">
-        <p>The most accurate way to determine if your African Grey is male or female is through DNA testing.</p>
-        <ul>
-          <li>A small blood sample or feather sample is collected.</li>
-          <li>The sample is sent to a certified avian DNA testing lab.</li>
-          <li>Results are typically available within 1–2 weeks.</li>
-        </ul>
-        <p><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> <strong>Cost:</strong> DNA testing usually costs $20–$50, depending on the provider. Many breeders and veterinarians offer avian DNA testing services for African Greys.</p>
-        <p>All birds sold by C.A.Gs come with <strong>DNA sexing certification included</strong> — you'll know exactly what you're getting before your bird ships.</p>
-      </div>
-    </section>
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
 
-    <!-- Section 6: Better Pet -->
-    <section id="better-pet" class="mb-12">
-      <h2 class="font-lora font-bold text-2xl text-green mb-4">6. Is a Male or Female African Grey Better as a Pet?</h2>
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        <div class="bg-green/5 border border-green/20 rounded-xl p-5">
-          <h3 class="font-lora font-semibold text-green mb-3">Male African Grey</h3>
-          <ul class="space-y-2 text-sm">
-            <li>✔ Often more talkative &amp; wider vocabulary</li>
-            <li>✔ Playful &amp; energetic personality</li>
-            <li>✔ May adapt to new people more quickly</li>
-            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> More territorial during breeding season</li>
-          </ul>
+  <!-- S19 AVAILABLE — photo cards + per-bird CTA + documentation badges (2026-07-05) -->
+  <section id="available">
+    <h2 class="cag-h2">Which Males and Females Are Available Now?</h2>
+    <p>Reading this page usually means you've stopped worrying about sex and started looking for the individual bird that clicks. Here's who's actually in the nursery — DNA-sexed, so the badge on each card is fact, not a guess — and every card links to that bird's own page with its photos, parentage and documentation.</p>
+    <div class="bird-cards">
+      {available.map((b) => (
+        <div class="bird-c">
+          <a class="bird-photo" href={b.slug} aria-label={`Meet ${b.name}`}>
+            {birdImg[b.id] && <img src={birdImg[b.id].src} width="640" height="480" alt={birdImg[b.id].alt} loading="lazy">}
+            <span class="bird-badge">{b.sex === 'pair' ? 'Pair' : b.sex === 'male' ? 'Male' : 'Female'} {b.variant === 'timneh_african_grey' ? 'Timneh' : 'Congo'} · Available</span>
+          </a>
+          <div class="bird-body">
+            <div class="bird-top"><h3 class="bird-name"><a href={b.slug}>{b.name}</a></h3><span class="bird-price">{b.price_display}</span></div>
+            <ul class="bird-docs">{docBadges.map((d) => (<li>{d}</li>))}</ul>
+            <a class="btn-clay sm bird-cta" href={b.slug}>Meet {b.name}</a>
+            <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span>
+          </div>
         </div>
-        <div class="bg-clay/5 border border-clay/20 rounded-xl p-5">
-          <h3 class="font-lora font-semibold text-clay mb-3">Female African Grey</h3>
-          <ul class="space-y-2 text-sm">
-            <li>✔ More cuddly &amp; affectionate</li>
-            <li>✔ Calm &amp; steady temperament</li>
-            <li>✔ Consistent &amp; deliberate in speech</li>
-            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> May take longer to warm up to strangers</li>
-          </ul>
-        </div>
+      ))}
+    </div>
+    <p class="ctr"><a class="btn-clay" href="/available/">See All Available Greys</a></p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S20 OWNER STORIES — verified homepage bottomReviews only, with real buyer photos -->
+  <section id="stories">
+    <h2 class="cag-h2">How Two Families Chose</h2>
+    <p>We could summarize a decade of these decisions, but two of our verified buyers say it better than we can. Notice what neither of them agonized over: whether they were getting a cock or a hen. Each chose the bird whose temperament fit their home and let the DNA certificate fill in the sex — and their stories sit alongside dozens more on our <a href="/african-grey-reviews/">African Grey reviews</a> page.</p>
+    <div class="quote-grid">
+      {stories.map((s) => (
+        <blockquote class="quote-c">
+          <div class="q-head">
+            <img class="q-av" src={s.avatar} width="56" height="56" alt={`${s.name}, C.A.Gs buyer in ${s.loc}`} loading="lazy">
+            <div class="q-id"><b class="q-name">{s.name}</b><span class="q-loc">{s.loc} · {s.meta}</span></div>
+            <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+          </div>
+          <p>"{s.quote}"</p>
+        </blockquote>
+      ))}
+    </div>
+    <p>Notice what neither family mentions: the sex of their bird, or regretting the choice. Match the bird to the household and neither sentence ever gets written.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S20b SAFE BUYING — scam counter, sex-specific red flags -->
+  <section id="safe">
+    <h2 class="cag-h2">How Do You Buy a Male or Female African Grey Safely?</h2>
+    <p>The sex question has a scam attached to it, so this section earns its place. Because buyers <em>believe</em> the folklore — that males talk better, that hens are calmer — dishonest sellers price and pitch birds on it, and "guaranteed talking male" is one of the phrases we most often get asked to sanity-check. Here's how to buy the bird you actually want without getting worked.</p>
+    <img class="sec-img inf-img" src="/buy-an-african-grey-safely-checklist-infographic.webp" srcset="/buy-an-african-grey-safely-checklist-infographic-760.webp 760w, /buy-an-african-grey-safely-checklist-infographic.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Checklist infographic for buying an African Grey safely: demand the DNA sexing certificate, verify CITES paperwork, refuse a sex surcharge, and never wire money to an unverified seller" loading="lazy">
+    <h3 class="cag-h3">The Three Sex-Related Red Flags</h3>
+    <p>Two are specific to the male-vs-female question; the third is the universal one that sinks most buyers.</p>
+    <div class="myth-grid">
+      <div class="myth-c"><span class="myth-x">Red flag</span><p><strong>A surcharge for one sex.</strong> The DNA test costs the same whether the answer is male or female, so a "talking male premium" is a price built on folklore. Real breeders charge by variant and age.</p></div>
+      <div class="myth-c"><span class="myth-x">Red flag</span><p><strong>"Guaranteed" sex with no certificate.</strong> Greys are monomorphic — nobody can promise a sex by looking. If a seller states the sex but can't produce a PCR DNA certificate, they're guessing or lying. Ask to see the paperwork before any deposit.</p></div>
+    </div>
+    <h4 class="cag-h4">The Universal One: Payment Pressure</h4>
+    <p>Whichever sex you're after, the moment a seller pushes an irreversible payment (wire, gift cards, crypto) for a "rare" bird you haven't verified, stop. Our fuller <a href="/how-to-avoid-african-grey-parrot-scams/">guide to avoiding African Grey scams</a> walks through the pattern, and a documented breeder will always let the paperwork come first.</p>
+    <img class="sec-img inf-img" src="/african-grey-payment-red-flags-warning-infographic.webp" srcset="/african-grey-payment-red-flags-warning-infographic-760.webp 760w, /african-grey-payment-red-flags-warning-infographic.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Warning infographic listing African Grey payment red flags: wire transfers, gift cards, cryptocurrency, no DNA certificate and refusal to share CITES documentation" loading="lazy">
+    <h5 class="cag-h5">What a Safe Reservation Looks Like Here</h5>
+    <p>A refundable $200 deposit, the DNA-sexing certificate and full document folder shown before the balance is due, and a real conversation with Mark and Teri first. That's the whole process — no pressure, no sex surcharge, no paperwork that appears only after the money does.</p>
+    <h6 class="cag-h6">Breeder note: why we lead with the certificate</h6>
+    <p>We hand over the DNA certificate because it's the one document that ends the argument. You never have to take our word for a bird's sex — the lab already settled it, and the paper travels with the bird.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S21 FAQ (7C hybrid — first 3 open) -->
+  <section id="faq">
+    <h2 class="cag-h2">Male vs Female African Grey: FAQ</h2>
+    <p>These are the questions people also ask once the tables and scorecards are done — the same ones that land in our inbox from buyers deciding between a cock and a hen. Short, honest answers here; our fuller <a href="/african-grey-parrot-faq/">African Grey parrot FAQ</a> covers the care, diet and ownership questions that reach past the sex question.</p>
+    {faqs.map((f, i) => (
+      i < 3
+        ? (<div class="faq-open"><h3 class="faq-q">{f.q}</h3><p>{f.a}</p></div>)
+        : (<details class="faq-d"><summary>{f.q}</summary><p>{f.a}</p></details>)
+    ))}
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S22 KEEP LEARNING (18A blog cards) -->
+  <section id="learn">
+    <h2 class="cag-h2">Keep Learning Before You Decide</h2>
+    <p>A grey is a 40-year decision, so read like it. These three guides answer the questions that usually come next once sex is off the table — the species facts every owner should know, how to set up the cage before your bird lands, and how an African Grey stacks up against an Eclectus if you're still comparing parrots.</p>
+    <div class="blog-cards">
+      <a class="blog-c" href="/blog/african-grey-parrot-facts/"><img src="/african-grey-parrot-facts-hero-card.webp" width="230" height="120" alt="African Grey parrot facts guide — key species facts on the Congo and Timneh Grey" loading="lazy"><div class="blog-body"><span class="blog-tag">Facts</span><h3 class="blog-t">African Grey Parrot Facts Every Owner Should Know</h3></div></a>
+      <a class="blog-c" href="/blog/african-grey-parrot-cage-setup/"><img src="/african-grey-cage-size-dimensions-diagram-card.webp" width="230" height="120" alt="African Grey cage setup guide showing recommended cage size and dimensions" loading="lazy"><div class="blog-body"><span class="blog-tag">Cage Setup</span><h3 class="blog-t">How to Set Up an African Grey Cage</h3></div></a>
+      <a class="blog-c" href="/blog/african-grey-vs-eclectus/"><img src="/african-grey-vs-eclectus-hero-480w.webp" width="230" height="120" alt="African Grey vs Eclectus parrot comparison guide" loading="lazy"><div class="blog-body"><span class="blog-tag">Compare</span><h3 class="blog-t">African Grey vs Eclectus: Which Talks More?</h3></div></a>
+    </div>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <Newsletter variant="bottom" action="https://formspree.io/f/xrejpnvn" bottomText="Made your choice — or still weighing cock vs hen? Be first to know when our next DNA-sexed Grey is ready." cta="Notify me" />
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S23 FINAL CTA + FORM -->
+  <section id="reserve" class="final-cta">
+    <h2 class="cag-h2">Ready to Bring Home Your Grey?</h2>
+    <p>Whether you've landed on a cock, a hen, or "just the friendliest chick you've got," the next step is the same: tell us about your household and we'll tell you honestly which birds fit it — including "none right now" if that's the true answer. Every bird arrives DNA-sexed, so the sex is settled before you ever pay a balance.</p>
+    <form class="cta-form" name="compare-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="compare-inquiry" />
+      <p class="hp"><label>Don't fill this out: <input name="bot-field" /></label></p>
+      <label for="cvt-interest">I'm inquiring about
+        <select id="cvt-interest" name="interest" required>
+          <option value="">Choose one…</option>
+          <option>Male African Grey ($1,500–$3,500)</option>
+          <option>Female African Grey ($1,500–$3,500)</option>
+          <option>A companion pair</option>
+          <option>Proven breeding pair ($3,000)</option>
+          <option>Fertile eggs ($95 each)</option>
+          <option>Not sure yet — help me choose</option>
+        </select>
+      </label>
+      <div class="form-2col">
+        <label for="cvt-fname">First name<input id="cvt-fname" name="first_name" type="text" autocomplete="given-name" required></label>
+        <label for="cvt-lname">Last name<input id="cvt-lname" name="last_name" type="text" autocomplete="family-name" required></label>
       </div>
-      <div class="prose prose-lg max-w-none">
-        <p><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> <strong>Conclusion:</strong> Both male and female African Grey parrots make excellent pets. Your choice should depend more on individual personality, upbringing, and training rather than gender alone.</p>
-        <p>Before purchasing any parrot — especially African Greys — it's essential to be aware of international trade laws. Review the <a href="https://cites.org/eng/node/48684" rel="noopener noreferrer" target="_blank">CITES regulations for African Grey parrots</a> to ensure your parrot is ethically sourced and legally obtained. All C.A.Gs birds come with full <a href="/cites-african-grey-documentation/">CITES captive-bred documentation</a>.</p>
+      <div class="form-2col">
+        <label for="cvt-cell">Cell number<input id="cvt-cell" name="cell" type="tel" autocomplete="tel" required></label>
+        <label for="cvt-cell2">Confirm cell number<input id="cvt-cell2" name="cell_confirm" type="tel" required></label>
       </div>
-    </section>
-
-    <!-- Section 7: Pair -->
-    <section id="pair" class="mb-12">
-      <h2 class="font-lora font-bold text-2xl text-green mb-4">7. Should I Get a Pair of African Grey Parrots?</h2>
-      <div class="prose prose-lg max-w-none">
-        <p>If you're considering owning two African Grey parrots, here's what you should know:</p>
-        <ul>
-          <li>Two males or two females can get along if introduced properly.</li>
-          <li>A male and female pair may bond closely with each other instead of their owner.</li>
-          <li>African Greys require separate cages initially until they are comfortable with each other.</li>
-          <li>Breeding requires careful planning, proper housing, and expert guidance.</li>
-        </ul>
-        <p>View our <a href="/african-grey-breeding-pair-for-sale/">Congo African Grey Breeding Pair for Sale</a> — includes bonded pairs with CITES documentation.</p>
+      <div class="form-2col">
+        <label for="cvt-email">Email<input id="cvt-email" name="email" type="email" autocomplete="email" required></label>
+        <label for="cvt-email2">Confirm email<input id="cvt-email2" name="email_confirm" type="email" required></label>
       </div>
-    </section>
-
-    <!-- Section 8: Final Thoughts -->
-    <section id="final-thoughts" class="mb-12">
-      <h2 class="font-lora font-bold text-2xl text-green mb-4">8. Final Thoughts – Choosing Between a Male &amp; Female African Grey</h2>
-      <div class="prose prose-lg max-w-none">
-        <p>Regardless of whether you choose a male or female African Grey, the most important factors in having a happy, well-behaved parrot are:</p>
-        <ul>
-          <li>Proper socialization from an early age</li>
-          <li>Consistent training and enrichment</li>
-          <li>A balanced diet and regular health check-ups</li>
-          <li>A loving and attentive owner</li>
-        </ul>
+      <label for="cvt-delivery">Delivery preference
+        <select id="cvt-delivery" name="delivery" required>
+          <option value="">Choose one…</option>
+          <option>Airport pickup — $185</option>
+          <option>Home delivery — $350</option>
+          <option>I'll pick up in Midland, TX</option>
+        </select>
+      </label>
+      <label for="cvt-msg">Tell us about your home <span class="opt">(optional)</span><textarea id="cvt-msg" name="message" rows="3" placeholder="First bird? Apartment or house? Who'll be home during the day?"></textarea></label>
+      <div class="form-actions">
+        <button type="submit" class="btn-clay">Start My Inquiry</button>
+        <a class="btn-ghost" href="/contact-us/">Ask Us First</a>
       </div>
+      <p class="form-note">A $200 refundable deposit reserves any bird once we've matched you. We reply within 24 hours.</p>
+    </form>
+  </section>
 
-      <!-- How to choose factors -->
-      <div class="bg-green text-cream rounded-xl p-6 mt-6">
-        <h3 class="font-lora font-semibold text-gold mb-4">Key Factors When Choosing Your African Grey</h3>
-        <ul class="space-y-2 text-sm">
-          <li>✔ <strong>Talking Ability</strong> – Males often learn words more quickly, but both genders are great mimics.</li>
-          <li>✔ <strong>Temperament &amp; Personality</strong> – Males are playful &amp; energetic; females are calm &amp; affectionate.</li>
-          <li>✔ <strong>Size Differences</strong> – Males are often slightly larger than females.</li>
-          <li>✔ <strong>Hormonal Behavior</strong> – Males may show more territorial behavior; females may be more nurturing.</li>
-        </ul>
-      </div>
+  </div><!-- /cvt-main -->
+  </div><!-- /cvt-body -->
+  </div><!-- /cvt -->
 
-      <!-- Second customer quote -->
-      <blockquote class="border-l-4 border-clay pl-6 py-4 my-8 bg-cream/50 rounded-r-xl">
-        <p class="text-gray-700 italic">"The moment I heard his voice, mimicking mine with uncanny perfection, I knew I had found my soulmate in feathers. Choosing between male and female was daunting, but the wisdom shared in this guide led me to him — a silver-feathered poet with a heart that mirrors my own."</p>
-        <cite class="text-sm font-semibold text-green mt-2 block">— Alex H., Boston, MA</cite>
-      </blockquote>
-    </section>
-
-    <!-- FAQs -->
-    <section id="faqs" class="mb-12">
-      <h2 class="font-lora font-bold text-2xl text-green mb-6">FAQs – Male vs. Female African Grey Parrots</h2>
-      <div class="space-y-3">
-        <details class="border border-gold/30 rounded-xl overflow-hidden">
-          <summary class="px-5 py-4 font-sora font-semibold cursor-pointer bg-cream/50 hover:bg-cream transition-colors">How can I tell if my African Grey is male or female?</summary>
-          <div class="px-5 py-4 text-sm leading-relaxed">DNA testing is the most accurate method for determining gender. Physical traits can help, but they are not always reliable. C.A.Gs provides DNA sexing certificates with every bird purchase.</div>
-        </details>
-        <details class="border border-gold/30 rounded-xl overflow-hidden">
-          <summary class="px-5 py-4 font-sora font-semibold cursor-pointer bg-cream/50 hover:bg-cream transition-colors">Which is better – a male or female African Grey as a pet?</summary>
-          <div class="px-5 py-4 text-sm leading-relaxed">Both are great pets! Males tend to talk more, while females may be more affectionate. Choose based on personality and training rather than gender.</div>
-        </details>
-        <details class="border border-gold/30 rounded-xl overflow-hidden">
-          <summary class="px-5 py-4 font-sora font-semibold cursor-pointer bg-cream/50 hover:bg-cream transition-colors">Are male African Greys more aggressive?</summary>
-          <div class="px-5 py-4 text-sm leading-relaxed">Males can be more territorial, especially during breeding season. However, proper socialization and training can prevent aggression.</div>
-        </details>
-        <details class="border border-gold/30 rounded-xl overflow-hidden">
-          <summary class="px-5 py-4 font-sora font-semibold cursor-pointer bg-cream/50 hover:bg-cream transition-colors">Do female African Greys lay eggs without a male?</summary>
-          <div class="px-5 py-4 text-sm leading-relaxed">Yes! Female African Greys can lay unfertilized eggs if hormonal changes occur, even without a male present.</div>
-        </details>
-        <details class="border border-gold/30 rounded-xl overflow-hidden">
-          <summary class="px-5 py-4 font-sora font-semibold cursor-pointer bg-cream/50 hover:bg-cream transition-colors">Should I get a male and female pair?</summary>
-          <div class="px-5 py-4 text-sm leading-relaxed">If you're not planning to breed, same-sex pairs (two males or two females) often work better as pets. A male-female pair may bond more with each other than with their owner.</div>
-        </details>
-      </div>
-    </section>
-
-    <!-- Final CTA -->
-    <section class="bg-logo-dark text-cream rounded-2xl p-8 text-center">
-      <h2 class="font-lora font-bold text-2xl mb-3">Ready to Find Your Perfect African Grey?</h2>
-      <p class="text-cream/80 mb-6">Whether you choose a talkative male or a gentle, affectionate female — all C.A.Gs parrots come fully vet-checked, DNA-sexed, and CITES-documented.</p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="/contact-us/" class="bg-clay text-white font-semibold px-8 py-3 rounded-full hover:bg-clay-dk transition-colors">Inquire Now →</a>
-        <a href="/african-grey-parrot-for-sale/" class="border border-cream/40 text-cream font-semibold px-8 py-3 rounded-full hover:border-gold hover:text-gold transition-colors">View Available Birds</a>
-      </div>
-      <p class="text-xs text-cream/50 mt-4">Midland, Texas</p>
-    </section>
-
-  </article>
-
+  <script is:inline>
+    // Mobile variant tabs for the side-by-side table — class toggles only, no
+    // geometry reads (keeps the page free of forced reflows).
+    (function () {
+      var wrap = document.querySelector('.cmpe .tbl-wrap');
+      var tabs = document.querySelectorAll('.cmpe-tab');
+      if (!wrap || !tabs.length) return;
+      tabs.forEach(function (b) {
+        b.addEventListener('click', function () {
+          tabs.forEach(function (x) {
+            var on = x === b;
+            x.classList.toggle('active', on);
+            x.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          wrap.classList.toggle('show-c', b.dataset.v === 'c');
+          wrap.classList.toggle('show-t', b.dataset.v === 't');
+        });
+      });
+    })();
+  </script>
 </BaseLayout>
+
+<style>
+.cvt{--f:#2D6A4F;--clay:#e8604c;--clay-ink:#b04228;--clay-t:#b04228;--cream:#faf7f4;--bd:#e7ddd3;--hdr:96px;color:#2a2622}
+:global(html){scroll-behavior:smooth}
+.cvt .container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+/* HERO — full-bleed band, portraits center-right, whole bird visible */
+.cvt-hero{background:linear-gradient(160deg,#f4efe9 0%,var(--cream) 55%,#eef4f0 100%);border-bottom:1px solid var(--bd);padding:34px 0 38px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,560px);gap:clamp(24px,4vw,56px);align-items:center;min-height:380px}
+.hero-imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-imgs figure{position:relative;margin:0}
+.hero-imgs img{display:block;width:100%;height:320px;object-fit:cover;object-position:center;border-radius:18px;box-shadow:0 8px 26px rgba(60,30,10,.14)}
+.hero-imgs figure:first-child{transform:translateY(14px)}
+.hero-imgs figure:last-child{transform:translateY(-14px)}
+.chip{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(255,255,255,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.5);border-radius:50px;padding:5px 14px;font-size:.78rem;font-weight:700;color:#1f4d39;white-space:nowrap}
+.vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border:3px solid var(--clay);color:var(--clay-ink);font-family:'Newsreader',serif;font-weight:700;font-size:1.05rem;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(60,30,10,.22);z-index:2}
+.hero-copy{max-width:560px}
+.eyebrow{font-size:.85rem;letter-spacing:.02em;color:var(--clay-t);font-weight:600;margin:0 0 10px}
+.cvt .cag-h1{font-family:'Newsreader',serif;font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.15;margin:0 0 14px;color:#2a2622}
+.lead{font-size:1.05rem;line-height:1.65;color:#4c443c;max-width:58ch;margin:0 0 22px}
+.hero-cta{margin:0;display:flex;gap:12px;flex-wrap:wrap}
+.btn-clay,.btn-ghost{display:inline-block;border-radius:50px;padding:13px 28px;font-weight:600;text-decoration:none;font-size:.95rem;transition:background-color .2s,color .2s,transform .15s}
+.btn-clay{background:var(--clay-ink);color:#fff}
+.btn-clay:hover{background:#9c3a23;transform:translateY(-2px)}
+.btn-ghost{border:2px solid var(--f);color:var(--f)}
+.btn-ghost:hover{background:var(--f);color:#fff}
+/* COUNTER — modern band: gradient, icon chips, serif numerals, hairline separators */
+.cvt-counter{background:linear-gradient(135deg,#2D6A4F 0%,#1f4d39 100%);color:#fff}
+.counter-row{display:grid;grid-template-columns:repeat(4,1fr);padding-top:26px;padding-bottom:26px;text-align:center}
+.cs{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px}
+.cs+.cs{border-left:1px solid rgba(255,255,255,.16)}
+.cs-ic{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.12);font-size:1.05rem;margin-bottom:6px}
+.counter-row b{font-family:'Newsreader',serif;font-size:2.1rem;display:block;line-height:1.1;letter-spacing:-.01em}
+.cs-l{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;opacity:.88;font-weight:600}
+/* MOBILE JUMP RAIL — clear divider band above and below, all sections, no skipped numbers */
+.cvt-rail{position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.97);backdrop-filter:blur(6px);border-top:3px solid var(--clay-ink);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);display:none}
+.rail-row{display:flex;gap:8px;overflow-x:auto;padding-top:12px;padding-bottom:12px;scrollbar-width:none}
+.rail-row::-webkit-scrollbar{display:none}
+.rail-row a{white-space:nowrap;font-size:.78rem;padding:8px 14px;border-radius:50px;text-decoration:none;color:var(--f);background:#fff;border:1px solid var(--bd);transition:border-color .2s,color .2s}
+.rail-row a:hover{border-color:var(--clay-t);color:var(--clay-t)}
+.rail-row a b{color:var(--clay-t);margin-right:4px}
+.cvt-body{display:grid;grid-template-columns:200px minmax(0,1fr);gap:34px;padding-top:44px;padding-bottom:48px;align-items:start}
+/* DESKTOP TOC — card treatment; ink title with clay tick so it doesn't melt into the green band */
+.cvt-toc{position:sticky;top:calc(var(--hdr) + 24px);font-size:.85rem;max-height:calc(100vh - var(--hdr) - 48px);overflow-y:auto;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px 16px 10px;box-shadow:0 4px 14px rgba(60,30,10,.05)}
+.toc-title{display:flex;align-items:center;gap:8px;font-weight:700;color:#2a2622;font-family:'IBM Plex Sans',sans-serif;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px}
+.toc-tick{width:14px;height:4px;border-radius:2px;background:var(--clay-ink);display:inline-block}
+.cvt-toc a{display:block;color:#2a2622;text-decoration:none;padding:5px 0;border-bottom:1px solid var(--bd)}
+.cvt-toc a:last-child{border-bottom:none}
+.cvt-toc a b{color:var(--clay-t);margin-right:6px}
+.cvt-toc a:hover{color:var(--clay-t)}
+.cvt-main{min-width:0}
+.cvt-main section{margin-bottom:14px;scroll-margin-top:calc(var(--hdr) + 18px)}
+.cvt .cag-h2{font-family:'Newsreader',serif;font-size:var(--fs-h2,clamp(1.25rem,3.5vw,2rem));color:#2a2622;margin:14px 0 16px;line-height:1.18}
+.cvt .cag-h3{font-family:'Newsreader',serif;font-size:var(--fs-h3,clamp(1.0625rem,2.2vw,1.5rem));color:var(--f);margin:24px 0 10px;line-height:1.25}
+.cvt .cag-h4{font-family:'Newsreader',serif;font-size:var(--fs-h4,clamp(.9375rem,1.8vw,1.25rem));margin:20px 0 8px;line-height:1.3}
+.cvt .cag-h5{font-family:'Newsreader',serif;font-size:1rem;margin:16px 0 6px;color:#3a332c}
+.cvt .cag-h6{font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;color:var(--clay-t);margin:14px 0 4px}
+.cvt-main p{line-height:1.68;margin:0 0 15px;max-width:70ch}
+.cvt-main a{color:var(--clay-t);text-decoration:underline;text-underline-offset:2px}
+.cvt-main a.btn-clay{color:#fff;text-decoration:none}
+.cvt-main a.btn-ghost{color:var(--f);text-decoration:none}
+.cvt-main a.btn-ghost:hover{color:#fff}
+.cvt-main .bird-photo,.cvt-main .blog-c,.cvt-main .ship-places a{text-decoration:none}
+.sec-img{display:block;width:100%;max-width:760px;aspect-ratio:760/400;object-fit:cover;height:auto;border-radius:18px;margin:4px 0 18px;box-shadow:0 6px 20px rgba(60,30,10,.1)}
+.sec-img.inf-img{aspect-ratio:1408/768;box-shadow:0 4px 16px rgba(60,30,10,.08)}
+/* PORTRAIT — square OG photos (e.g. the Congo close-up) show whole, centered, not cover-cropped to the 1.9:1 band */
+.sec-img.portrait{max-width:400px;aspect-ratio:3/4;object-position:center top;margin-left:auto;margin-right:auto}
+/* Section video figures (Rony&Rose docs, Jins&Jeni pair) — inherit .sec-img sizing, styled caption */
+.sec-fig{margin:4px 0 18px;max-width:760px}
+.sec-fig .sec-img{margin:0 0 8px}
+.sec-vid{background:#0d1a14}
+.sec-fig figcaption{font-size:.85rem;line-height:1.55;color:#6b6258;font-style:italic;max-width:70ch}
+.qa-box{background:#eaf4ef;border:1px solid #cfe4da;border-radius:16px;padding:20px 22px;margin:0 0 15px}
+.qa-box p{margin:0;max-width:none}
+.qa-box strong{color:var(--f)}
+/* SEAM — logo medallion on hairlines (2026-07-05: chip treatment, no more flat strip) */
+.seam{display:flex;align-items:center;gap:14px;margin:40px 0}
+.seam::before{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#cdbfae)}
+.seam::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#cdbfae,transparent)}
+.seam img{width:46px;height:46px;object-fit:contain;background:#fff;border:1px solid var(--bd);border-radius:50%;padding:7px;box-shadow:0 3px 10px rgba(60,30,10,.08);opacity:1}
+/* KEY TAKEAWAYS — refined stat cards: clay tick, ink stat, hairline, quieter sub */
+.kt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 18px}
+.kt-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px 16px 14px}
+.kt-tick{display:block;width:22px;height:4px;border-radius:2px;background:var(--clay-ink);margin-bottom:10px}
+.kt-c b{font-family:'Newsreader',serif;color:#2a2622;font-size:1.4rem;display:block;line-height:1.15;letter-spacing:-.01em;padding-bottom:8px;border-bottom:1px solid var(--bd);margin-bottom:8px}
+.kt-sub{font-size:.86rem;color:#57534e;line-height:1.5;display:block}
+/* SIDE-BY-SIDE — CompareTableE idiom: branded gradient headers + Edge, mobile tabs */
+.cmpe-tabs{display:none;gap:8px;margin:0 0 10px}
+.cmpe-tab{display:inline-flex;align-items:center;gap:7px;border-radius:50px;padding:9px 18px;font:inherit;font-size:.88rem;font-weight:700;cursor:pointer;background:#fff;color:var(--f);border:2px solid var(--f)}
+.cmpe-tab img{width:20px;height:20px;object-fit:contain}
+.cmpe-tab.active{background:var(--f);color:#fff}
+.cmpe-tab[data-v="t"]{border-color:var(--clay-ink);color:var(--clay-ink)}
+.cmpe-tab[data-v="t"].active{background:var(--clay-ink);color:#fff}
+.tbl-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--bd);box-shadow:0 4px 20px rgba(60,30,10,.07)}
+.tbl-wrap.plain{box-shadow:none;border-radius:12px;max-width:640px}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:.9rem;background:#fff}
+.cmp-tbl th{padding:12px;text-align:left;font-weight:600;vertical-align:middle}
+.cmp-tbl .th-f,.cmp-tbl .th-e{background:#fff;color:#57534e;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;border-bottom:1px solid var(--bd)}
+.cmp-tbl .th-c{background:linear-gradient(135deg,#2D6A4F,#1f4d39);color:#fff}
+.cmp-tbl .th-t2{background:linear-gradient(135deg,#e8604c,#c8472f);color:#fff}
+.th-flex{display:flex;align-items:center;gap:10px}
+.th-flex img{width:30px;height:30px;object-fit:contain;flex:none}
+.th-title{display:block;font-family:'Newsreader',serif;font-weight:700;font-size:1.02rem;line-height:1.2}
+.th-sub{display:block;font-size:.72rem;font-weight:400;opacity:.9;margin-top:2px}
+.cmp-tbl td{padding:10px 12px;border-bottom:1px solid var(--bd)}
+.cmp-tbl tr:nth-child(even) td{background:var(--cream)}
+.cmp-tbl .td-f{font-weight:600}
+.cmp-tbl .edge{color:var(--f);font-weight:700}
+/* scorecard data table (real DOM data behind the infographic) */
+.score-tbl{width:100%;border-collapse:collapse;font-size:.86rem;background:#fff}
+.score-tbl th{background:var(--f);color:#fff;padding:9px 12px;text-align:left;font-weight:600}
+.score-tbl td{padding:8px 12px;border-bottom:1px solid var(--bd)}
+.score-tbl tr:last-child td{border-bottom:none}
+.score-tbl tr:nth-child(even) td{background:var(--cream)}
+.score-tbl .sc{font-weight:700;color:var(--f)}
+/* SCORECARD — stack into cards on phones so the 4 columns never cramp */
+@media(max-width:640px){
+  .tbl-wrap.plain{border:none;box-shadow:none;border-radius:0;max-width:none;overflow:visible}
+  .score-tbl,.score-tbl tbody,.score-tbl tr,.score-tbl td{display:block;width:auto}
+  .score-tbl thead{position:absolute;left:-9999px}
+  .score-tbl tr{background:#fff!important;border:1px solid var(--bd);border-radius:14px;padding:12px 15px;margin-bottom:11px;box-shadow:0 3px 12px rgba(60,30,10,.06)}
+  .score-tbl tr:nth-child(even) td{background:transparent}
+  .score-tbl td{border:none;padding:6px 0;display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+  .score-tbl td::before{content:attr(data-label);font-weight:600;color:#57534e;font-size:.78rem;letter-spacing:.02em}
+  .score-tbl .sc-trait{font-family:'Newsreader',serif;font-size:1.1rem;color:#2a2622;border-bottom:1px solid var(--bd);padding-bottom:9px;margin-bottom:3px}
+  .score-tbl .sc-trait::before{display:none}
+  .score-tbl .sc{color:var(--f);font-weight:700;font-size:1.02rem}
+  .score-tbl .sc-note{flex-direction:column;align-items:flex-start;gap:3px;color:#57534e;font-size:.88rem}
+}
+.cap{font-size:.85rem;color:#7a6f64;font-style:italic}
+.author-card{background:#fff;border:1px solid var(--bd);border-radius:20px;overflow:hidden;margin:0 0 18px;box-shadow:0 4px 16px rgba(60,30,10,.07)}
+.ac-banner{display:block;width:100%;height:240px;object-fit:cover}
+.ac-row{display:flex;gap:16px;align-items:center;padding:18px 20px}
+.ac-avatar{width:72px;height:54px;border-radius:12px;object-fit:cover;object-position:50% 32%;flex:none}
+.ac-name{font-family:'Newsreader',serif;font-size:1.2rem;margin:0}
+.ac-sub{font-size:.85rem;color:#7a6f64;margin:2px 0 8px}
+.ac-badges{margin:0;display:flex;gap:6px;flex-wrap:wrap}
+.ac-badges span{background:var(--f);color:#fff;border-radius:50px;padding:4px 12px;font-size:.72rem;font-weight:600}
+@media(max-width:900px){
+  .cvt-body{grid-template-columns:1fr;gap:0;padding-top:24px}
+  .cvt-toc{display:none}
+  .cvt-rail{display:block}
+  .hero-imgs img{height:220px}
+  .counter-row{grid-template-columns:repeat(2,1fr);gap:10px}
+  .cs+.cs{border-left:none}
+  .cs:nth-child(even){border-left:1px solid rgba(255,255,255,.16)}
+  .kt-grid{grid-template-columns:1fr 1fr}
+  .cmpe-tabs{display:flex}
+  .cmp-tbl{font-size:.84rem}
+  .cmp-tbl th,.cmp-tbl td{padding:9px 10px}
+  /* tab-click view: show attribute + the selected variant + edge */
+  .show-c .th-t2,.show-c .td-t{display:none}
+  .show-t .th-c,.show-t .td-c{display:none}
+}
+@media(max-width:520px){.kt-grid{grid-template-columns:1fr}}
+
+/* S13 lifestyle */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
+.match-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px}
+.match-c h4{margin-top:0!important}
+.match-c p{margin-bottom:0;font-size:.9rem}
+/* S15 timeline */
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 8px}
+.tl-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px;position:relative}
+.tl-n{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--clay-ink);color:#fff;font-size:.75rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.tl-c b{font-family:'Newsreader',serif;display:block;margin:6px 0 6px;color:var(--f);font-size:.98rem}
+.tl-c p{font-size:.82rem;margin:0!important;max-width:none}
+/* S16 myths */
+.myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 8px}
+.myth-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:18px}
+.myth-x{display:inline-block;background:var(--clay-ink);color:#fff;border-radius:50px;padding:3px 13px;font-size:.72rem;font-weight:600;margin-bottom:10px}
+.myth-c p{margin:0;font-size:.9rem}
+/* S18 shipping + health */
+.ship-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 16px}
+.ship-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.ship-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.ship-c>img{display:block;width:100%;height:200px;object-fit:cover}
+.ship-body{padding:16px 18px}
+.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 12px;font-size:.7rem;font-weight:600}
+.ship-tier.clay{background:var(--clay-ink)}
+.ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.15rem}
+.ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
+.ship-c p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
+.ship-places{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.ship-places a{display:inline-flex;align-items:center;gap:8px;background:#f4efe9;border:1px solid var(--bd);border-radius:50px;padding:9px 15px;font-size:.84rem;line-height:1.15;color:var(--f);text-decoration:none;transition:border-color .2s,color .2s,background-color .2s}
+.ship-places a:hover{border-color:var(--clay-t);color:var(--clay-t);background:#fff}
+.ship-places .pin{color:var(--clay-t);flex:none;width:15px;height:15px}
+.ship-places a:hover .pin{color:var(--clay-t)}
+.health-card{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin:6px 0 14px;max-width:420px}
+.hc-head{background:var(--f);color:#fff;padding:8px 14px;font-family:'Newsreader',serif}
+.hc-list{list-style:none;margin:0;padding:12px 14px}
+.hc-list li{font-size:.85rem;padding:4px 0 4px 22px;position:relative}
+.hc-list li::before{content:"✔";position:absolute;left:0;color:var(--f);font-weight:700}
+.ship-line{font-size:.78rem;color:#7a6f64;font-weight:600;border-top:1px dashed var(--bd);padding-top:8px}
+/* S19 bird cards — photo-first + doc badges + per-bird CTA */
+.bird-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:6px 0 18px}
+.bird-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;color:#2a2622;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
+.bird-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.12)}
+.bird-photo{position:relative;display:block}
+.bird-photo img{display:block;width:100%;height:200px;object-fit:cover;object-position:center}
+.bird-badge{position:absolute;top:10px;left:10px;background:rgba(45,106,79,.94);color:#fff;font-size:.68rem;font-weight:600;padding:4px 11px;border-radius:50px}
+.bird-body{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
+.bird-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.bird-name{font-family:'Newsreader',serif;font-size:1.08rem;margin:0}
+.bird-name a{color:#2a2622;text-decoration:none}
+.bird-name a:hover{color:var(--clay-t)}
+.bird-price{color:var(--clay-t);font-weight:700;font-size:1rem;white-space:nowrap}
+.bird-docs{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.bird-docs li{font-size:.66rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:3px 9px;white-space:nowrap}
+.bird-cta{text-align:center;margin-top:auto}
+.ship-mini{font-size:.68rem;color:#7a6f64;display:block;margin-top:10px;border-top:1px dashed var(--bd);padding-top:6px}
+.pair-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 16px}
+.pair-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.pair-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.pair-c>img{display:block;width:100%;height:210px;object-fit:cover;object-position:center}
+.pair-c>img.pimg-pair{object-position:50% 32%}
+.pair-c>img.pimg-eggs{object-position:50% 56%}
+.pair-body{padding:15px 17px}
+.pair-c b{font-family:'Newsreader',serif;font-size:1.1rem;display:block;margin-bottom:2px}
+.pair-sub{font-size:.82rem;color:#7a6f64;display:block;margin:2px 0 10px}
+.btn-ghost.sm,.btn-clay.sm{padding:8px 16px;font-size:.82rem}
+.ctr{text-align:center}
+/* S20 quotes — real buyer photos + name row */
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
+.quote-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0}
+.q-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.q-av{width:48px;height:48px;border-radius:50%;object-fit:cover;flex:none;border:2px solid #eaf4ef}
+.q-id{flex:1;min-width:0}
+.q-name{display:block;font-family:'Newsreader',serif;font-size:1rem;color:#2a2622;line-height:1.2}
+.q-loc{display:block;font-size:.75rem;color:#7a6f64;margin-top:1px}
+.stars{color:#c9a227;letter-spacing:2px;font-size:.85rem;flex:none}
+.quote-c p{font-size:.9rem;font-style:italic;margin:0}
+/* S21 faq */
+.faq-open{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.faq-q{font-family:'Newsreader',serif;font-size:1rem;margin:0 0 6px;color:#2a2622}
+.faq-open p{margin:0;font-size:.9rem}
+.faq-d{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.faq-d summary{font-family:'Newsreader',serif;font-weight:600;cursor:pointer;font-size:1rem}
+.faq-d p{margin:8px 0 0;font-size:.9rem}
+/* S22 blog */
+.blog-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.blog-c{background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;text-decoration:none!important;color:#2a2622;transition:transform .15s,box-shadow .2s}
+.blog-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.blog-c img{width:100%;height:140px;object-fit:cover}
+.blog-body{padding:12px 14px 14px}
+.blog-tag{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 11px;font-size:.68rem;font-weight:600}
+.blog-t{font-family:'Newsreader',serif;font-size:1rem;margin:7px 0 0}
+/* S23 cta + inquiry form (matches what we sell — no duplicate newsletter band) */
+.final-cta{background:var(--cream);border:1px solid var(--bd);border-radius:20px;padding:clamp(22px,4vw,36px)}
+.cta-form{display:grid;gap:12px;max-width:640px;margin:10px 0 0}
+.cta-form label{display:grid;gap:5px;font-size:.85rem;font-weight:600;color:#3a332c}
+.cta-form .opt{font-weight:400;color:#7a6f64}
+.cta-form input,.cta-form textarea,.cta-form select{border:1.5px solid var(--bd);border-radius:12px;padding:11px 13px;font:inherit;font-weight:400;background:#fff9f6;width:100%}
+.cta-form input:focus,.cta-form textarea:focus,.cta-form select:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.12)}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.cta-form button{border:none;cursor:pointer}
+.cta-form .btn-ghost{padding:11px 22px}
+.form-note{font-size:.8rem;color:#7a6f64;margin:2px 0 0!important}
+.hp{position:absolute;left:-9999px}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;min-height:0;gap:20px}
+  .hero-imgs{order:-1;max-width:560px;margin:0 auto;width:100%}
+  .hero-imgs figure:first-child{transform:translateY(8px)}
+  .hero-imgs figure:last-child{transform:translateY(-8px)}
+  .hero-copy{max-width:none;text-align:center}
+  .hero-cta{justify-content:center}
+  .lead{margin-left:auto;margin-right:auto}
+  .ac-banner{height:180px}
+  .match-grid,.myth-grid,.ship-cards,.quote-grid,.pair-row{grid-template-columns:1fr}
+  .timeline{grid-template-columns:1fr 1fr}
+  .bird-cards{grid-template-columns:1fr 1fr}
+  .blog-cards{grid-template-columns:1fr}
+  .ship-places{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ship-places a{justify-content:center;padding:10px 10px;font-size:.79rem}
+  .ship-places a span{text-align:center}
+  .form-2col{grid-template-columns:1fr}
+}
+@media(max-width:520px){.timeline,.bird-cards{grid-template-columns:1fr}.hero-imgs img{height:190px}.ship-places{grid-template-columns:1fr 1fr}.bird-photo img{height:auto;aspect-ratio:4/3;object-position:center top}}
+@media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}.cvt *{transition:none!important}}
+</style>
