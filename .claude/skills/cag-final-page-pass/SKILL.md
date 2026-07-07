@@ -22,6 +22,14 @@ USE — a page (or batch) is "done" and you're about to pass/deploy it; ANY type
 1. Mechanical: `npx astro build` then `python3 scripts/final_page_audit.py [--birds]`.
    Per-page PASS/WARN/FAIL + pre-triaged roll-up. Edit `BIRDS`/`SLUGS` or add a profile to
    retarget.
+   **1b. Dup-content gate (hard FAIL — breeder decision 2026-07-07):** run
+   `python3 scripts/dup_content_audit.py <slug> <sibling-slug(s)>` against every page the
+   build cloned structure from (same page family at minimum — e.g. any comparison page vs
+   the other comparison pages). Any shared word-for-word run ≥12 words = FAIL the pass;
+   rewrite the passage on the NEW page, rebuild, re-run until clean. Acceptable leftovers
+   only: TOC/counter nav labels, credential badges, real verified review quotes, inquiry-form
+   field labels. Also verify the page's 7-location pill set and variant-page anchor texts are
+   unique per the distribution registry (memory: project-dup-content-and-location-distribution).
 2. Strategic (low/failing only): route to the 5 owned scorers in `cags-comprehensive-page-
    audit-system` (AEO/entity/visual/backlink/verdict) + specialists; assemble, don't duplicate.
 3. Subjective (sample 1 transactional + 1 pillar + 1 trust, or lowest bird scorer + 1):
