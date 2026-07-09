@@ -18,6 +18,7 @@ export interface Props {
   imgCaption?: string;  // middle: caption over the photo
   note?: string;        // middle: small print under the form
   bottomText?: string;  // bottom: lead line
+  compact?: boolean;    // middle: slimmer band (shorter image, tighter padding, no 4xl headline)
 }
 const {
   variant = 'middle',
@@ -31,7 +32,17 @@ const {
   imgCaption = 'Amie, 3 months, joining a family soon',
   note = 'We email about new African Grey clutches only, unsubscribe in one click.',
   bottomText = 'New African Greys available, get notified first.',
+  compact = false,
 } = Astro.props;
+
+// compact middle band: trims the tall image + oversized 4xl headline so the
+// block reads slim on phone, tablet and desktop (opt-in; homepage stays default)
+const midOuter = compact ? 'px-4 py-8' : 'px-4 py-14';
+const midGrid = compact ? 'mx-auto grid items-center gap-7 md:grid-cols-[1fr_1.1fr]' : 'mx-auto grid items-center gap-10 md:grid-cols-[1fr_1.1fr]';
+const midMedia = compact ? 'relative h-[190px] overflow-hidden rounded-2xl md:h-[210px]' : 'relative h-[300px] overflow-hidden rounded-2xl md:h-[320px]';
+const midTitle = compact ? 'font-lora text-xl font-bold leading-tight sm:text-2xl' : 'font-lora text-lg font-bold leading-tight sm:text-2xl md:text-4xl';
+const midSubCls = compact ? 'mt-2 font-sora text-sm' : 'mt-3 font-sora text-[15px]';
+const midFormMt = compact ? 'mt-4' : 'mt-5';
 
 const topHeading = heading ?? 'Be First to Know When New African Grey Babies Are Available';
 const topSub = sub ?? "African Grey clutches are rare. Join our waitlist and hear about new Congo and Timneh chicks before they're listed publicly.";
@@ -63,9 +74,9 @@ const botCta = cta ?? 'Notify me';
 )}
 
 {variant === 'middle' && (
-  <div class="px-4 py-14" style="background:#241c18;">
-    <div class="mx-auto grid items-center gap-10 md:grid-cols-[1fr_1.1fr]" style="max-width:1100px;">
-      <div class="relative h-[300px] overflow-hidden rounded-2xl md:h-[320px]" style="background:linear-gradient(160deg,#3a2a22,#2a1f1a);">
+  <div class={midOuter} style="background:#241c18;">
+    <div class={midGrid} style="max-width:1100px;">
+      <div class={midMedia} style="background:linear-gradient(160deg,#3a2a22,#2a1f1a);">
         <img src={img} alt={imgAlt}
           width="520" height="320" loading="lazy" decoding="async"
           class="h-full w-full object-cover opacity-90" />
@@ -73,12 +84,12 @@ const botCta = cta ?? 'Notify me';
         <div class="absolute bottom-4 left-4 font-sora text-[13px] font-semibold text-white">{imgCaption}</div>
       </div>
       <div>
-        <span class="mb-3.5 inline-flex items-center gap-1.5 rounded-full bg-clay/15 px-3 py-1 font-sora text-[11px] font-bold uppercase tracking-[0.12em]" style="color:#f08070;">
+        <span class="mb-3 inline-flex items-center gap-1.5 rounded-full bg-clay/15 px-3 py-1 font-sora text-[11px] font-bold uppercase tracking-[0.12em]" style="color:#f08070;">
           <img src="/emoji/cag-congo.png" alt="" width="14" height="14" style="width:14px;height:14px;object-fit:contain;" loading="lazy" /> {eyebrow}
         </span>
-        <h2 class="font-lora text-lg font-bold leading-tight sm:text-2xl md:text-4xl" style="color:#faf7f4;">{midHeading}</h2>
-        <p class="mt-3 font-sora text-[15px]" style="color:#b0a59b;max-width:42ch;">{midSub}</p>
-        <form action={action} method="POST" class="mt-5" style="max-width:380px;">
+        <h2 class={midTitle} style="color:#faf7f4;">{midHeading}</h2>
+        <p class={midSubCls} style="color:#b0a59b;max-width:44ch;">{midSub}</p>
+        <form action={action} method="POST" class={midFormMt} style="max-width:380px;">
           <input type="hidden" name="_gotcha" style="display:none" />
           <input type="email" name="email" required placeholder="your@email.com"
             class="mb-2.5 w-full rounded-[10px] px-4 py-3 font-sora text-sm outline-none transition focus:ring-4 focus:ring-clay/25"
