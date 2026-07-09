@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import CTA from '../../components/CTA.astro';
+import Newsletter from '../../components/cag-library/NewsletterV2.astro';
+import clutch from '../../../data/clutch-inventory.json';
 
-const title = "African Grey vs Cockatoo | Talking Ability, Affection & Care Compared";
-const description = "African Grey vs Cockatoo compared: talking ability, affection level, noise, lifespan, price, and care demands. Which parrot fits your lifestyle?";
+const title = "African Grey vs Cockatoo: Talking, Noise, Affection, Cost & Every Cockatoo Species Compared by Breeders | C.A.Gs – Best-Talking Parrot vs Velcro Bird";
+const description = "African Grey vs Cockatoo, compared honestly by breeders who raise Greys: talking, noise, powder-down dander and allergies, bite force, temperament, lifespan and cost — plus the Grey vs Umbrella, Moluccan, Goffin, Galah and Citron cockatoo, with a decision scorecard and lifestyle flowchart.";
 const canonical = "https://congoafricangreys.com/african-grey-vs-cockatoo/";
 
 const breadcrumbs = [
@@ -13,378 +14,1079 @@ const breadcrumbs = [
   { name: "African Grey vs Cockatoo", url: "/african-grey-vs-cockatoo/" },
 ];
 
-const comparisonRows = [
-  { attr: "Body size", ag: "12–14 inches (Congo)", ctoo: "12–28 inches depending on species" },
-  { attr: "Weight", ag: "400–550 grams (Congo)", ctoo: "300–850 grams" },
-  { attr: "Noise level", ag: "Moderate", ctoo: "Very loud — Moluccan cockatoos are among the loudest birds" },
-  { attr: "Talking ability", ag: "Exceptional — top talking parrot", ctoo: "Limited — cockatoos talk less and with less clarity" },
-  { attr: "Affection level", ag: "Bonded but not velcro — independent", ctoo: "Extremely velcro — requires constant physical contact" },
-  { attr: "Dust production", ag: "Moderate", ctoo: "Very high — triggers allergies; serious concern for asthma sufferers" },
-  { attr: "Price range", ag: "$1,700 – $3,500", ctoo: "$1,500 – $3,500 depending on species" },
-  { attr: "Lifespan", ag: "40–60 years", ctoo: "40–80 years depending on species" },
-  { attr: "Feather destruction risk", ag: "Moderate risk if under-stimulated", ctoo: "High risk — severe feather destruction is common in cockatoos" },
-  { attr: "CITES status", ag: "Appendix I", ctoo: "Many species Appendix I (restricted) or Appendix II" },
+// 5 cockatoo species subsections (S10a–e) — each with its provided OG photo
+const species = [
+  { id: "umbrella", name: "Umbrella Cockatoo", sci: "Cacatua alba", img: "/african-grey-vs-umbrella-cockatoo.webp",
+    alt: "African Grey beside an Umbrella Cockatoo, comparing the grey's red-tailed body with the all-white cockatoo and its broad recurved crest",
+    size: "18 in · 400–650 g", noise: "Very loud", talk: "A few words", trait: "The classic velcro bird",
+    body: "The Umbrella is the cockatoo most people picture: all-white, a broad recurved crest, and an emotional need for contact that reads as devotion and behaves like dependency. Against a Grey the contrast is stark — the Umbrella wants to be on you, the Grey wants to be near you. Umbrellas are also among the most-surrendered parrots in the country precisely because that neediness overwhelms unprepared owners. Want a talker who entertains itself for stretches? The Grey wins on paper. Want a feathered barnacle? No Grey will ever cling like an Umbrella." },
+  { id: "moluccan", name: "Moluccan Cockatoo", sci: "Cacatua moluccensis", img: "/african-grey-vs-moluccan-cockatoo.webp",
+    alt: "African Grey next to a salmon-pink Moluccan Cockatoo, contrasting the grey's moderate size with the much larger cockatoo",
+    size: "20 in · 640–1,100 g", noise: "Among the loudest birds alive", talk: "Limited", trait: "Biggest, loudest, most demanding",
+    body: "The salmon-crested Moluccan is the largest white cockatoo and produces a scream ranked among the loudest sounds any companion bird makes — a contact call built to carry over a mile in the wild, and through several walls in an apartment. Beside a Grey's dawn-and-dusk chatter, a Moluccan's volume is a different category of decision. They bond intensely and grieve loudly. We raise Greys, not Moluccans, and we'll say why plainly: the Grey is the apartment-plausible bird here, and the Moluccan is not." },
+  { id: "goffin", name: "Goffin's Cockatoo", sci: "Cacatua goffiniana", img: "/african-grey-vs-goffin-cockatoo.webp",
+    alt: "African Grey beside a small white Goffin's Cockatoo, showing the goffin's compact size and short crest next to the grey",
+    size: "12 in · 250–350 g", noise: "Loud for its size", talk: "A few words", trait: "The tool-using escape artist",
+    body: "The Goffin's is the small, scrappy cockatoo — closest to the Grey in body size and, tellingly, the cockatoo with the best-documented problem-solving mind. Researchers under Alice Auersperg have watched Goffin's spontaneously make and use tools, a cognitive résumé that rivals the Grey's famous vocabulary. The trade is direction: the Grey aims its intelligence at language, the Goffin's aims it at lock-picking, foraging and escape. Both demand relentless enrichment; neither is a starter bird. But a Goffin's out-mischiefs a Grey by a wide margin." },
+  { id: "galah", name: "Galah (Rose-Breasted) Cockatoo", sci: "Eolophus roseicapilla", img: "/african-grey-vs-galah-cockatoo.webp",
+    alt: "African Grey next to a pink-and-grey Galah cockatoo, comparing the grey's silver plumage with the galah's rose-pink chest",
+    size: "14 in · 270–350 g", noise: "Moderate for a cockatoo", talk: "Modest", trait: "The calmest, most balanced cockatoo",
+    body: "The pink-and-grey Galah is the cockatoo we'd steer a cockatoo-set buyer toward: calmer than the big whites, quieter, smaller, and famously good-natured — owners describe them as affectionate without the crushing neediness of an Umbrella. Against a Grey the Galah gives up talking clarity and mimicry depth but asks for less emotional bandwidth than its larger cousins. If your heart is set on a cockatoo but your walls are thin, the Galah is the honest compromise. If talking is the dream, it's still the Grey." },
+  { id: "citron", name: "Citron-Crested Cockatoo", sci: "Cacatua sulphurea citrinocristata", img: "/african-grey-vs-citron-crested-cockatoo.webp",
+    alt: "African Grey beside a white Citron-Crested Cockatoo showing its distinctive orange crest",
+    size: "13 in · 350–420 g", noise: "Loud", talk: "Limited", trait: "The rarer sulphur-crested cousin",
+    body: "The Citron-crested is a subspecies of the lesser sulphur-crested cockatoo, set apart by its soft orange crest and orange cheek patch — and it stands in here for the sulphur-crested cockatoos generally, which share its loud voice and playful, demanding streak. Critically endangered in the wild, it's a bird for committed, experienced keepers. Beside a Grey the pattern holds one last time: the cockatoo trades the Grey's talking and independence for showmanship and contact-hunger. A Grey narrates your house; a Citron performs in it, at volume." },
 ];
 
+// S19 — available birds, read live from clutch-inventory (never hardcoded status)
+const available = ((clutch as any).birds as any[])
+  .filter((b) => b.status === 'available')
+  .sort((a, b) => (a.variant === 'congo_african_grey' ? -1 : 1));
+
 const faqs = [
-  {
-    q: "Do African Greys or cockatoos talk better?",
-    a: "African Greys are far superior talkers. They are widely regarded as the best-talking parrot species in the world, with vocabularies of 200–1,000+ words and near-human voice clarity. Cockatoos can learn a few words and phrases but are not known for talking ability.",
-  },
-  {
-    q: "Are cockatoos more affectionate than African Greys?",
-    a: "Yes — cockatoos are among the most physically affectionate parrots, requiring constant touch and contact. African Greys form deep bonds but are more independent and prefer interaction on their own terms. Neither is 'better' — it depends entirely on what type of bond you want.",
-  },
-  {
-    q: "Can people with allergies own a cockatoo?",
-    a: "Cockatoos produce extremely high levels of powder/dander that can trigger or worsen allergies and asthma. People with any respiratory sensitivities should avoid cockatoos. African Greys produce moderate dander — significantly less than cockatoos — making them a better choice for allergy-conscious households.",
-  },
+  { q: "Do African Greys or cockatoos talk better?", a: "African Greys talk far better. They are widely regarded as the best-talking parrots on earth, with vocabularies of 200 to 1,000-plus words and near-human clarity, and they use language in context — the trait that made Alex the Grey famous. Cockatoos can learn a handful of words and phrases but are prized for personality and cuddling, not speech. If a talking bird is the goal, the Grey wins this comparison outright." },
+  { q: "Are cockatoos more affectionate than African Greys?", a: "Cockatoos are more physically affectionate — they are 'velcro birds' that crave near-constant contact and will sit on you for hours. African Greys bond just as deeply but express it with proximity and interaction rather than cuddling; a Grey wants to be near you, not glued to you. Neither is more loving; they love differently. Choose a cockatoo for contact, a Grey for a more independent companion." },
+  { q: "Which is louder, an African Grey or a cockatoo?", a: "Cockatoos are dramatically louder. Large species like the Moluccan produce screams ranked among the loudest of any companion bird, easily carrying through apartment walls. African Greys are moderate — talkers, whistlers and appliance-mimics with predictable dawn and dusk vocal sessions. For thin walls or noise-sensitive households, the Grey is the far safer choice." },
+  { q: "Can people with allergies own an African Grey or a cockatoo?", a: "Both are 'powder-down' birds that produce fine feather dust, so neither is allergy-safe — a documented case of hypersensitivity pneumonitis in an owner was traced to an African Grey. Cockatoos produce even more dander than Greys. Anyone with asthma or bird allergies should spend time around adult birds and plan on an air purifier before buying either species." },
+  { q: "Which is easier for a first-time owner, an African Grey or a cockatoo?", a: "Neither is a true beginner's bird — both are intelligent, long-lived and demanding. Between the two, a Grey is generally more manageable than a large cockatoo, whose extreme emotional needs and volume overwhelm many owners (cockatoos are among the most-surrendered parrots). A well-researched first-timer can succeed with a Grey; a big cockatoo is better left to experienced keepers." },
+  { q: "Which is smarter, an African Grey or a cockatoo?", a: "There is no clean winner. African Greys are the benchmark for language and contextual reasoning, studied for decades by Dr. Irene Pepperberg. Cockatoos — especially Goffin's — are elite problem-solvers that spontaneously make and use tools. In Pepperberg's own contrafreeloading work, greys and cockatoos showed no significant overall difference. The Grey is the better talker; the cockatoo is the better tinkerer." },
+  { q: "Which bites harder, an African Grey or a cockatoo?", a: "Large cockatoos bite far harder. An African Grey's bite measures roughly 61 to 96 newtons — enough to snap a wooden popsicle stick and break skin, but manageable. Big cockatoos generate substantially more force and can cause serious injury, which is why they need close supervision around children. Neither should be provoked, but the Grey is the lower-risk bird by bite force." },
+  { q: "Can an African Grey and a cockatoo live together?", a: "Only with separate cages, careful supervision and never unsupervised free time together. The size, temperament and beak-strength mismatch makes cohabitation risky, and cockatoos can be pushy. Experienced multi-bird owners keep both successfully, but they manage introductions slowly and never leave them alone together. For most homes, one demanding parrot is already a full-time commitment." },
+  { q: "Which lives longer, an African Grey or a cockatoo?", a: "Both are lifetime commitments. African Greys typically live 40 to 60 years with proper diet, UV-B light and avian-vet care; large cockatoos can reach 40 to 80. Either bird may outlive its owner, so a written succession plan — naming who inherits and cares for the bird — is part of responsible ownership for both species." },
+  { q: "Why do so many cockatoos end up rehomed?", a: "Extreme emotional needs, high volume and feather-plucking drive it. A cockatoo denied constant attention can scream for hours and mutilate its own feathers, and owners describe the experience as years of intensity they weren't prepared for. African Greys are surrendered too — usually from boredom-driven plucking — but less often. Both species need a buyer who understands the decades-long reality before committing." },
+  { q: "African Grey vs Umbrella Cockatoo — which is better?", a: "It depends on the bond you want. The Umbrella is the archetypal velcro cockatoo: intensely affectionate, physically needy, loud, and large. The African Grey is the superior talker, more independent, quieter and more apartment-plausible. Choose the Umbrella for constant cuddling and accept the noise and neediness; choose the Grey for a talking, self-directed companion." },
+  { q: "How much does an African Grey cost compared to a cockatoo?", a: "Our documented African Greys run $1,700 to $3,500 (Congo) and $1,500 to $1,600 (Timneh). Cockatoos range roughly $1,000 to $4,000 depending on species, with Moluccans and Umbrellas at the top. On both sides, the price that matters is documentation — CITES paperwork, DNA sexing and disease screening — not the sticker. A cheap, undocumented bird of either species is a different, riskier product." },
+  { q: "Is an African Grey or a cockatoo better for an apartment?", a: "The African Grey, clearly. Greys keep to moderate, predictable noise, while large cockatoos produce sustained screams that carry through shared walls and end leases. Both need daily out-of-cage time and enrichment, but only the Grey is realistically apartment-compatible. Among cockatoos, a smaller Galah is the closest to apartment-workable — still louder than a Grey." },
 ];
 
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 };
 
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "African Grey vs Cockatoo: Talking, Noise, Affection & Cost Compared",
+  description: description,
+  author: { "@type": "Organization", name: "C.A.Gs – Congo African Greys, Midland TX" },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com" },
+  mainEntityOfPage: canonical,
+  datePublished: "2026-06-04",
+  dateModified: "2026-07-08",
+};
+
+// NOTE: no page-level BreadcrumbList schema — the <Breadcrumb> component already
+// emits it; a second copy trips the breadcrumb_one gate (found 2026-07-04).
+
+// verdict table (S6) — Length + Body shade rows added 2026-07-05 (competitor sweep:
+// the top-ranked info pages all lead with the charcoal shade / inches figures we lacked)
+// congo key = African Grey column, timneh key = Cockatoo column (keeps the CompareTableE markup unchanged)
+const rows = [
+  { attr: "Talking ability", congo: "Exceptional — 200–1,000+ words, clear", timneh: "Limited — a few words", edge: "African Grey" },
+  { attr: "Affection style", congo: "Deep bond, but independent", timneh: "Velcro — craves constant contact", edge: "Depends on you" },
+  { attr: "Noise level", congo: "Moderate", timneh: "Very loud (Moluccan among the loudest)", edge: "African Grey" },
+  { attr: "Body size", congo: "12–14 in · 400–600 g", timneh: "12–28 in · 300–1,100 g by species", edge: "Grey (apartment)" },
+  { attr: "Powder-down dander", congo: "High", timneh: "Very high", edge: "Grey, slightly" },
+  { attr: "Feather-plucking risk", congo: "Moderate if under-stimulated", timneh: "High — common in cockatoos", edge: "African Grey" },
+  { attr: "Bite force", congo: "61–96 N (70–220 PSI)", timneh: "Much higher in large species", edge: "Grey (safer)" },
+  { attr: "Beginner suitability", congo: "Demanding", timneh: "More demanding", edge: "Grey, marginally" },
+  { attr: "Apartment fit", congo: "Plausible with daily time", timneh: "Only the small Galah, and still loud", edge: "African Grey" },
+  { attr: "Lifespan", congo: "40–60 years", timneh: "40–80 years", edge: "Both lifelong" },
+  { attr: "Typical price", congo: "$1,700–$3,500 (our Greys)", timneh: "$1,000–$4,000 by species", edge: "Depends" },
+  { attr: "CITES documentation", congo: "Appendix I — included", timneh: "Many Appendix I or II", edge: "Grey (we document)" },
+];
+
+const takeaways = [
+  { big: "200–1,000+ words", sub: "an African Grey's talking range; cockatoos manage a few" },
+  { big: "Very loud", sub: "the cockatoo baseline — Moluccans rank among the loudest birds alive" },
+  { big: "Velcro vs near you", sub: "cockatoos crave constant contact; Greys bond deeply but independently" },
+  { big: "Both dusty", sub: "Greys and cockatoos are powder-down birds — neither is allergy-safe" },
+  { big: "40–80 yrs", sub: "either bird can outlive its owner; a caretaker plan matters" },
+  { big: "5 species", sub: "we compare the Grey to Umbrella, Moluccan, Goffin, Galah & Citron" },
+  { big: "100%", sub: "every Grey ships with CITES papers, a DNA sexing certificate and PBFD/APV PCR results" },
+  { big: "$185 / $350", sub: "airport pickup or door delivery, anywhere in the US" },
+];
+
+// c = African Grey, t = Cockatoo (keeps the score-table markup unchanged)
+const scores = [
+  { trait: "Talking & mimicry", c: 10, t: 4, note: "the Grey's signature" },
+  { trait: "Independent play", c: 8, t: 4, note: "cockatoos need constant contact" },
+  { trait: "Cuddliness / contact", c: 5, t: 10, note: "the cockatoo's signature" },
+  { trait: "Quietness", c: 7, t: 3, note: "cockatoos scream" },
+  { trait: "Beginner-friendliness", c: 5, t: 3, note: "neither is truly easy" },
+  { trait: "Low dander / mess", c: 5, t: 3, note: "both are powder birds" },
+  { trait: "Apartment fit", c: 7, t: 3, note: "the Grey is plausible; big 'toos aren't" },
+];
+
+// S19 — real photo per bird card (never a photo-less card); crops refreshed 2026-07-05
+const birdImg: Record<string, { src: string; alt: string }> = {
+  "bery": { src: "/bery-congo-african-grey-cuddly-tamed-card.webp", alt: "Bery, a cuddly tamed female Congo African Grey resting on her keeper's lap" },
+  "amie": { src: "/amie-congo-african-grey-handfed-baby-card.webp", alt: "Amie, a hand-fed baby female Congo African Grey snuggled against her keeper's shoulder" },
+  "roys": { src: "/roys-congo-african-grey-male-tame-card.webp", alt: "Roys, a tame young male Congo African Grey standing next to his toy ball" },
+  "jins-jeni": { src: "/congo-african-grey-companion-pair-card.webp", alt: "Jins and Jeni, Congo African Grey companion pair raised together" },
+  "elad": { src: "/elad-timneh-african-grey-male-wings-card.webp", alt: "Elad, a young male Timneh African Grey stretching his wings on a perch" },
+  "evie": { src: "/evie-timneh-african-grey-female-perched-card.webp", alt: "Evie, a female Timneh African Grey perched calmly, showing her horn-colored beak" },
+};
+
+// S19 — the documentation every bird leaves with (Verified-Claim Ledger)
+const docBadges = ["CITES Cert", "PCR DNA-Sexed", "Vet Certified", "PBFD & APV Screened", "Fully Weaned"];
+
+// S18 — top-7 delivery states/cities, fresh anchors not used on other shipping sections
+// Cockatoo page owns its own 7 delivery areas (Colorado/Virginia/Michigan/Tennessee/Minnesota/Missouri/Maryland) — distinct from the CvT and male-vs-female pill sets
+const shipPlaces = [
+  { href: "/african-grey-parrot-for-sale-colorado/", label: "Colorado front-range delivery" },
+  { href: "/african-grey-parrot-for-sale-virginia/", label: "Virginia door arrivals" },
+  { href: "/african-grey-parrot-for-sale-michigan/", label: "Michigan cargo route" },
+  { href: "/african-grey-parrot-for-sale-tennessee/", label: "Tennessee airport pickup" },
+  { href: "/african-grey-parrot-for-sale-minnesota/", label: "Minnesota home delivery" },
+  { href: "/african-grey-parrot-for-sale-missouri/", label: "Missouri courier runs" },
+  { href: "/african-grey-parrot-for-sale-maryland/", label: "Maryland weekend drop-offs" },
+];
+
+// S3 — single numbered section list drives BOTH the desktop TOC and the mobile
+// jump rail (sequential 01–20, no skips, every section present — fixed 2026-07-05)
+const tocItems = [
+  { id: "quick-answer", label: "Quick Answer" },
+  { id: "takeaways", label: "Fast Facts" },
+  { id: "side-by-side", label: "At a Glance" },
+  { id: "trust", label: "Why Trust Us" },
+  { id: "grey", label: "The African Grey" },
+  { id: "cockatoo", label: "The Cockatoo Family" },
+  { id: "species", label: "vs Each Species" },
+  { id: "talking", label: "Which Talks Better" },
+  { id: "noise", label: "Louder & Apartment" },
+  { id: "dander", label: "Dander & Allergies" },
+  { id: "safety", label: "Bite Force & Safety" },
+  { id: "scorecard", label: "Scorecard" },
+  { id: "household", label: "Which Fits You" },
+  { id: "cost", label: "Cost" },
+  { id: "first30", label: "First 30 Days" },
+  { id: "myths", label: "Myths" },
+  { id: "succession", label: "They Outlive You" },
+  { id: "cites", label: "CITES & Docs" },
+  { id: "shipping", label: "Shipping" },
+  { id: "available", label: "Available Greys" },
+  { id: "stories", label: "Owner Story" },
+  { id: "faq", label: "FAQ" },
+  { id: "learn", label: "Keep Learning" },
+  { id: "reserve", label: "Reserve" },
+];
+const num = (i: number) => String(i + 1).padStart(2, "0");
+
+// S20 — real reviews only, from the verified homepage bottomReviews set (the
+// second quote was previously misattributed to "Clifford Hutter"; it belongs
+// to Archie Obrien — corrected 2026-07-05, avatars added)
+// One featured pull-quote (17B). Only 3 verified review texts exist site-wide;
+// Catherine Kempf's is NOT used on congo-vs-timneh, minimizing the tolerated review-dup.
+const story = { name: "Catherine Kempf", loc: "Schaumburg, IL", meta: "Congo African Grey",
+  avatar: "/catherine-kempf-schaumburg-il-review.webp",
+  quote: "I ordered a Congo African Grey from C.A.Gs and the experience was flawless. My parrot is healthy, friendly, and well-trained. Watching it grow and bond with my family has been an absolute joy. I recommend C.A.Gs to anyone looking for a quality African Grey." };
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
+<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta
+  heroPreload="/congo-african-grey-vs-cockatoo-hero.webp"
+  heroPreloadSrcset="/congo-african-grey-vs-cockatoo-hero-760.webp 760w, /congo-african-grey-vs-cockatoo-hero.webp 900w"
+  heroPreloadSizes="(max-width: 900px) 50vw, 280px">
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
 
-  <!-- HERO -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
-  </div>
+  <div class="cvt">
+  <div class="container"><Breadcrumb items={breadcrumbs} /></div>
 
-  <section class="ctoo-hero">
-    <div class="page-container">
-      <h1 class="ctoo-h1">African Grey vs Cockatoo: Which Parrot Fits Your Life?</h1>
-      <p class="ctoo-sub">
-        Talking ability vs. physical affection. Intelligence vs. velcro bonding. Moderate dander
-        vs. allergy-triggering powder. The right answer depends entirely on what you want from a parrot.
-      </p>
-    </div>
-  </section>
-
-  <!-- DUST WARNING -->
-  <section class="ctoo-section ctoo-warn-section">
-    <div class="page-container text-wrap">
-      <div class="ctoo-warning">
-        <strong>Important for allergy sufferers:</strong> Cockatoos produce extremely high levels
-        of powder down (feather dust). This is a serious health concern for people with asthma,
-        bird allergies, or any respiratory sensitivity. If you or anyone in your household has
-        breathing sensitivities, an African Grey produces significantly less dander and is the
-        safer choice.
+  <!-- S1 HERO — full-bleed band, portraits show the whole bird (2026-07-05: Roys + Elad, face/beak/tail contrast) -->
+  <section class="cvt-hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Hand-raised Greys · CITES-documented · Midland, TX</p>
+        <h1 class="cag-h1">African Grey vs Cockatoo: Which Parrot Fits Your Life?</h1>
+        <p class="lead">We hand-raise African Greys here in Midland, and the question cockatoo-curious buyers ask us most is the same one every time — talker or cuddler? This is the honest side-by-side we give them: the Grey against the cockatoo, and against each cockatoo species by name.</p>
+        <p class="hero-cta"><a class="btn-clay" href="#side-by-side">Compare Now</a> <a class="btn-ghost" href="/available/">See Available Greys</a></p>
+      </div>
+      <div class="hero-imgs">
+        <figure class="hero-left">
+          <img src="/congo-african-grey-vs-cockatoo-hero.webp"
+            srcset="/congo-african-grey-vs-cockatoo-hero-760.webp 760w, /congo-african-grey-vs-cockatoo-hero.webp 900w"
+            sizes="(max-width: 900px) 50vw, 280px"
+            width="900" height="1001" alt="A Congo African Grey at C.A.Gs with silver-grey plumage and a bright red tail, the world's best-talking parrot species" fetchpriority="high">
+          <figcaption class="chip">Grey · talker</figcaption>
+        </figure>
+        <span class="vs" aria-hidden="true">vs</span>
+        <figure class="hero-right">
+          <img src="/goffin-cockatoo-vs-african-grey-hero.webp"
+            sizes="(max-width: 900px) 50vw, 280px"
+            width="500" height="495" alt="A white Goffin's cockatoo held beside an African Grey, showing the cockatoo's crest and the velcro-bird temperament" loading="lazy">
+          <figcaption class="chip">Cockatoo · cuddler</figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
-  <!-- COMPARISON TABLE -->
-  <section class="ctoo-section">
-    <div class="page-container">
-      <h2 class="ctoo-h2">African Grey vs Cockatoo: Side-by-Side</h2>
-      <div class="ctoo-table-wrap">
-        <table class="ctoo-table">
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>African Grey</th>
-              <th>Cockatoo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {comparisonRows.map((row) => (
-              <tr>
-                <th scope="row">{row.attr}</th>
-                <td>{row.ag}</td>
-                <td>{row.ctoo}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  <!-- S2 COUNTER SNIPPET — modernized 2026-07-05: icon chips, serif numerals, hairline separators -->
+  <section class="cvt-counter"><div class="container counter-row">
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 12 15 2 8.5 12 2"/><polyline points="2 15.5 12 22 22 15.5"/></svg></span>
+      <b>#1</b><span class="cs-l">Talking parrot species</span>
     </div>
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3L8.5 13"/></svg></span>
+      <b>40–60</b><span class="cs-l">Year companion</span>
+    </div>
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 11.5 11.5 14 15.5 9.5"/></svg></span>
+      <b>100%</b><span class="cs-l">CITES documented</span>
+    </div>
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+      <b>24h</b><span class="cs-l">Reply to inquiries</span>
+    </div>
+  </div></section>
+
+  <Newsletter variant="top" action="https://formspree.io/f/xrejpnvn" heading="Leaning Grey? Hear About New Chicks First" sub="Get on our list and we'll message you the moment a hand-raised, DNA-sexed African Grey is ready to reserve." cta="Add me to the list" />
+
+  <!-- S3 mobile jump rail — all 24 sections, sequential numbering, clear divider band -->
+  <nav class="cvt-rail" aria-label="Jump to section"><div class="container rail-row">
+    {tocItems.map((t, i) => (<a href={`#${t.id}`}><b>{num(i)}</b> {t.label}</a>))}
+  </div></nav>
+
+  <div class="container cvt-body">
+
+  <!-- S3 desktop TOC — card treatment + ink title so it reads apart from the green counter band -->
+  <aside class="cvt-toc" aria-label="On this page">
+    <p class="toc-title"><span class="toc-tick" aria-hidden="true"></span>On this page</p>
+    {tocItems.map((t, i) => (<a href={`#${t.id}`}><b>{num(i)}</b> {t.label}</a>))}
+  </aside>
+
+  <div class="cvt-main">
+
+  <!-- S4 QUICK ANSWER (4A clay-edge) -->
+  <section id="quick-answer">
+    <h2 class="cag-h2">African Grey vs Cockatoo: The 60-Second Answer</h2>
+    <div class="qa-box">
+      <p><strong>Quick Answer:</strong> Choose an African Grey if you want the world's best-talking parrot — 200 to 1,000-plus words with near-human clarity, and a deep but independent bond that suits a moderate-noise, apartment-plausible home. Choose a cockatoo if you want a physically affectionate "velcro bird" and can absorb serious volume, heavy dander and intense emotional needs. The Grey talks; the cockatoo cuddles — and no amount of training swaps those two wiring diagrams.</p>
+    </div>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-quick-answer-signpost.webp" srcset="/african-grey-vs-cockatoo-quick-answer-signpost-760.webp 760w, /african-grey-vs-cockatoo-quick-answer-signpost.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Signpost infographic summarizing the African Grey versus cockatoo decision: choose the Grey for talking and independence, choose a cockatoo for cuddling and accept the noise" loading="lazy">
+    <p>Buyers reach this page from every phrasing — cockatoo vs African grey, "African gray" with an <em>a</em>, or a specific matchup like African Grey vs Umbrella cockatoo — and the honest answer holds across all of them: neither bird is "better," they're wired for different owners. We raise Greys, so we'll name our bias up front and then hand you the cockatoo's real advantages anyway. The rest of this page settles which wiring fits your household, right down to a per-species breakdown of the Umbrella, Moluccan, Goffin's, Galah and Citron.</p>
   </section>
 
-  <!-- VERDICT CARDS -->
-  <section class="ctoo-section ctoo-alt">
-    <div class="page-container">
-      <h2 class="ctoo-h2">Which Bird Is Right for You?</h2>
-      <div class="ctoo-verdict-grid">
-        <div class="ctoo-verdict-card">
-          <h3 class="ctoo-verdict-title">Choose an African Grey if&hellip;</h3>
-          <ul class="ctoo-verdict-list">
-            <li>Talking ability is important to you</li>
-            <li>You want a more independent, less clingy bird</li>
-            <li>Anyone in your household has allergies or asthma</li>
-            <li>You want a bird that bonds deeply but on its own terms</li>
-            <li>Moderate noise levels are important in your home</li>
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S5 KEY TAKEAWAYS — refined stat cards (2026-07-05 redesign: ink stats, clay tick, hairline) -->
+  <section id="takeaways">
+    <h2 class="cag-h2">8 Things to Know Before You Choose</h2>
+    <p>Short on time? These are the facts cockatoo-versus-Grey shoppers screenshot and text to their partner — the talking gap, the noise reality, the powder-down dander both birds share, and the lifespan that outlasts most plans. Every line comes from raising Greys and answering these exact emails for years, not from a rewritten listicle.</p>
+    <div class="kt-grid">
+      {takeaways.map((k) => (<div class="kt-c"><span class="kt-tick" aria-hidden="true"></span><b>{k.big}</b><span class="kt-sub">{k.sub}</span></div>))}
+    </div>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-fast-facts.webp" srcset="/african-grey-vs-cockatoo-fast-facts-760.webp 760w, /african-grey-vs-cockatoo-fast-facts.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Fast-facts infographic comparing African Grey and cockatoo on talking, noise, affection style, dander, lifespan and price" loading="lazy">
+  </section>
+
+  <!-- S6 SIDE-BY-SIDE — CompareTableE idiom (branded gradient headers + Edge column) with a mobile Congo/Timneh tab toggle -->
+  <section id="side-by-side">
+    <h2 class="cag-h2">How Do the African Grey and Cockatoo Compare Side-by-Side?</h2>
+    <img class="sec-img portrait" src="/cockatoo-family-vs-african-grey.webp" width="375" height="500" alt="Cockatoos beside the African Grey comparison, showing the white crested cockatoos against the grey parrot's silver plumage" loading="lazy">
+    <p>Twelve attributes and a single honest verdict column — rows included where the truthful call is simply "depends on you." We answered it the way we would face to face at the aviary, not the way a listicle pads it out. On a phone, tap whichever bird you're weighing and the column comes with you.</p>
+    <div class="cmpe">
+      <div class="cmpe-tabs" aria-label="Choose which column to show">
+        <button type="button" class="cmpe-tab active" data-v="c" aria-pressed="true"><img src="/emoji/cag-congo.png" alt="" width="20" height="20" loading="lazy">Grey</button>
+        <button type="button" class="cmpe-tab" data-v="t" aria-pressed="false">Cockatoo</button>
+      </div>
+      <div class="tbl-wrap show-c"><table class="cmp-tbl">
+        <thead><tr>
+          <th class="th-f">Attribute</th>
+          <th class="th-c"><span class="th-flex"><img src="/emoji/cag-congo.png" alt="African Grey icon" width="30" height="30" loading="lazy"><span><span class="th-title">African Grey</span><span class="th-sub">The world's best talker</span></span></span></th>
+          <th class="th-t2"><span class="th-flex"><span><span class="th-title">Cockatoo</span><span class="th-sub">The affectionate velcro bird</span></span></span></th>
+          <th class="th-e">Edge</th>
+        </tr></thead>
+        <tbody>{rows.map((r) => (<tr><td class="td-f">{r.attr}</td><td class="td-c">{r.congo}</td><td class="td-t">{r.timneh}</td><td class="edge">{r.edge}</td></tr>))}</tbody>
+      </table></div>
+    </div>
+    <p class="cap">Every "Edge" call above is ours, from raising Greys and studying the cockatoos we're regularly asked about — not aggregated from other websites.</p>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-comparison-chart.webp" srcset="/african-grey-vs-cockatoo-comparison-chart-760.webp 760w, /african-grey-vs-cockatoo-comparison-chart.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Side-by-side comparison chart of the African Grey and cockatoo covering talking, noise, affection, size, dander and price" loading="lazy">
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S7 WHY TRUST US (11A author card) -->
+  <section id="trust">
+    <h2 class="cag-h2">Why Trust This African Grey vs Cockatoo Comparison?</h2>
+    <div class="author-card">
+      <img class="ac-banner" src="/african-grey-parrot-breeder-midland-tx-hero.webp" width="800" height="600" alt="Two of the C.A.Gs African Greys beside a hand-written Rony and Rose, Midland, Texas sign, one showing the Congo's bright red tail" loading="lazy">
+      <div class="ac-row">
+        <img class="ac-avatar" src="/birds/bery/bery-grey-african-parrot-for-sale.webp" width="128" height="96" alt="Bery, a hand-raised Congo African Grey at the C.A.Gs aviary in Midland, TX" loading="lazy">
+        <div><h3 class="ac-name">Mark &amp; Teri Benjamin</h3><p class="ac-sub">Raising African Greys in Midland, TX since 2014</p>
+          <p class="ac-badges"><span>USDA-licensed</span><span>CITES papers</span><span>DNA-sexed</span><span>PCR-screened</span></p></div>
+      </div>
+    </div>
+    <p>Most African-Grey-versus-cockatoo articles are written by people selling neither bird. We're Mark and Teri Benjamin, and we've hand-raised African Greys here at C.A.Gs since 2014 — weighing chicks at 6 a.m. and fielding the "should I get a cockatoo instead?" question year-round. When we describe a Grey trait on this page it comes from our own nursery; when we describe a cockatoo, it comes from the owners, rescues and avian vets we've spent a decade comparing notes with.</p>
+    <p>That honesty runs both ways. We'll tell you plainly that a cockatoo out-cuddles any Grey, and that a Goffin's may out-think one at raw problem-solving — because a comparison that only flatters the bird we sell is an ad, not a comparison. What we won't do is repeat the internet's confident folklore about either species without checking it against real birds first.</p>
+    <h3 class="cag-h3">The C.A.Gs Philosophy: Health-Documentation ROI</h3>
+    <p>For any parrot the purchase is the cheap part; the real expense is the four to eight decades that follow. So we load the unglamorous paperwork up front to guard those years: PBFD and Avian Polyomavirus PCR screening, a DNA sexing certificate, an avian vet's health certificate, a hatch record with closed band, and the CITES Appendix I documents establishing that your Grey was bred in captivity here in the States. Whichever bird wins you over, our <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a> puts that whole stack in writing.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S8 AFRICAN GREY DEEP DIVE -->
+  <section id="grey">
+    <h2 class="cag-h2">What Makes the African Grey the Talking Champion?</h2>
+    <img class="sec-img portrait" src="/bery-congo-african-grey-female-1-year.webp" width="760" height="760" alt="A hand-raised African Grey taking a seed from its keeper's hand, showing the silver-grey head, light eye and solid black beak" loading="lazy">
+    <p>The African Grey is the parrot that made "talking bird" mean something. Silver-grey body, dark beak, a bright red tail on the Congo — and behind that plain plumage, the vocabulary and contextual reasoning that put the species in psychology textbooks. Against a cockatoo, the Grey's whole case is the mind: it talks, it problem-solves, and it entertains itself for stretches instead of demanding to be worn like a scarf. If you've searched "are African Greys good pets" or "best talking parrot," this is the from-the-nursery answer. You can meet the chicks weaning now on our <a href="/congo-african-grey-for-sale/">available Congo Grey</a> and <a href="/timneh-african-grey-for-sale/">Timneh Grey</a> pages.</p>
+
+    <h3 class="cag-h3">How Big Is an African Grey, and How Long Does It Live?</h3>
+    <img class="sec-img inf-img" src="/african-grey-size-weight-vs-cockatoo.webp" srcset="/african-grey-size-weight-vs-cockatoo-760.webp 760w, /african-grey-size-weight-vs-cockatoo.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Infographic showing African Grey size of 12 to 14 inches and 400 to 600 grams against cockatoo species ranging from the small Goffin's to the large Moluccan" loading="lazy">
+    <p>A healthy Congo African Grey weighs 400–600 grams at 12–14 inches beak to tail; the Timneh runs smaller. That places the Grey below most cockatoos on the size chart — a Goffin's is close, but an Umbrella or Moluccan dwarfs it. Smaller bird, smaller cage footprint, and a bite that stops well short of a big cockatoo's. Lifespan is the sobering match: 40–60 years with proper diet, UV-B light and avian-vet care, which is squarely in cockatoo territory. Either bird is a decades-long promise.</p>
+
+    <h3 class="cag-h3">What Is an African Grey's Temperament Like?</h3>
+    <p>Watchful. A Grey clocks everything — new shoes, moved furniture, which mug you grabbed — and that vigilance is both the appeal and the maintenance bill: a bird that notices everything needs a home worth noticing. Where a cockatoo wears its heart on its crest and demands contact, the Grey is more reserved and observational, happier supervising you from a perch than riding your chest. It bonds hard, but on its own terms.</p>
+
+    <h4 class="cag-h4">Is an African Grey Right for an Apartment?</h4>
+    <p>Usually yes — and here the Grey pulls decisively ahead of a cockatoo. Greys aren't screamers by disposition; their signature sounds are whistles, talking and appliance mimicry, with real but predictable dawn and dusk peaks. A cockatoo's contact scream, by contrast, is an eviction risk through shared walls. Expect your microwave beep back at you forever, but expect it at a volume thin walls survive. A Moluccan they would not.</p>
+
+    <h4 class="cag-h4">How Does an African Grey Bond?</h4>
+    <p>Deeply, and often with one favorite person, after weeks of quietly deciding who's trustworthy — a pattern owners on <a href="https://www.reddit.com/r/parrots/" target="_blank" rel="noopener">r/parrots ↗</a> describe exactly as we see it in the nursery. It's a steadier devotion than a cockatoo's full-body clinginess: a Grey wants to be in the room with its person, not welded to them. If you want a bird that interacts more than it clings, that's the Grey. If the cuddle is the whole point, the cockatoo section below is about to sound good.</p>
+
+    <h5 class="cag-h5">What Grey Owners Notice in Week One</h5>
+    <p>A new Grey that looks "boring" in its first week is anything but — it's quietly sizing you up. It'll perch low, observe far more than it acts, and wait until you've left the room to eat. By the second week that assessment wraps up and the character starts showing through. Our line to every family: a hushed opening week is the mark of a well-adjusted Grey, not a disappointed one.</p>
+
+    <h6 class="cag-h6">Breeder note: Maxy's first words</h6>
+    <p>Maxy — the Grey you'll see in our homepage video — began exactly the way the species tends to, by seizing on the single handiest word around him. He picked up calling "Teri," and the moment that paid off, "bye bye" and "come here please" arrived close behind. That's not idle mimicry; it's vocabulary aimed at an outcome. We've yet to meet a cockatoo that does it, and it's the entire reason the Grey takes the talking round.</p>
+
+    <h3 class="cag-h3">Which Health Risks Do We Screen African Greys For?</h3>
+    <p>Two conditions deserve a spot on every Grey buyer's radar — and, tellingly, both trouble cockatoos as well. The first is hypocalcemia: Greys handle calcium unlike most parrots, and the veterinary literature summarized at <a href="https://lafeber.com/vet/" target="_blank" rel="noopener">Lafeber's avian resources ↗</a> flags low blood calcium as a well-documented grey-specific hazard, headed off with the right diet and UV-B light — the reason full-spectrum lighting appears in our care notes from day one. The second is feather-destructive behavior, where an unstimulated Grey grooms itself raw, precisely as a bored cockatoo will. Neither outcome is fated, and both are why we screen our buyers as closely as they screen us.</p>
+
+    <h4 class="cag-h4">Hypocalcemia &amp; Feather-Destructive Behavior, Plainly</h4>
+    <p>Low calcium presents as weakness or, at its worst, seizures — and it's largely headed off with a pellet-forward diet, calcium-rich fresh foods and UV-B exposure. Feather-destructive behavior is really an enrichment failure wearing a medical mask: a Grey with genuine work to do seldom shreds its plumage, and a cockatoo is no different. The owner guides at <a href="https://vcahospitals.com/know-your-pet/african-grey-parrots-general" target="_blank" rel="noopener">VCA Animal Hospitals ↗</a> walk through both in plain terms, and every buyer of ours receives our precise diet and lighting plan on paper.</p>
+
+    <h5 class="cag-h5">What Our PBFD and Polyomavirus Screen Catches</h5>
+    <p>Beak and Feather Disease and Avian Polyomavirus are the pair of viruses that turn a "cheap parrot" into an expensive mistake, and they strike cockatoos just as readily as Greys. We run a PCR panel on every Grey for both — an actual laboratory result on the individual bird, not a reassuring sentence on a listing. It's also why we urge buyers to leave any seller, of either species, who can't hand over the same lab work.</p>
+
+    <h6 class="cag-h6">Citation: World Parrot Trust species profile</h6>
+    <p>The species-level claims above line up with the <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener">World Parrot Trust profile of <em>Psittacus erithacus</em> ↗</a> — a group whose trade research helped break the wild-capture habit that once hung over Greys and cockatoos alike.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S9 COCKATOO FAMILY DEEP DIVE -->
+  <section id="cockatoo">
+    <h2 class="cag-h2">What Are Cockatoos Really Like to Live With?</h2>
+    <img class="sec-img inf-img" src="/cockatoo-family-traits-infographic.webp" srcset="/cockatoo-family-traits-infographic-760.webp 760w, /cockatoo-family-traits-infographic.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Infographic of the pet cockatoo species — Umbrella, Moluccan, Goffin's, Galah and Citron — with a one-word trait for each beside the African Grey" loading="lazy">
+    <p>Cockatoos are the white (and pink, and salmon) crested parrots of Australasia, and living with one is a different proposition from living with a Grey. Where the Grey leads with its mind, a cockatoo leads with its heart — enormous affection, enormous volume, and an emotional dependency that makes them the most rewarding and most surrendered parrots in the trade at the same time. The pet-kept species range from the pocket-sized Goffin's to the enormous Moluccan, and we'll take each by name further down. First, the traits they share.</p>
+
+    <h3 class="cag-h3">Why Are Cockatoos Called "Velcro Birds"?</h3>
+    <p>Because they attach. A well-bonded cockatoo wants physical contact for hours — on your shoulder, under your chin, tucked into your neck — in a way no African Grey ever asks for. For the right owner that constant cuddling is the entire appeal, the thing a reserved Grey will never give. The catch is that the need is not optional: a cockatoo denied contact doesn't become independent, it becomes distressed. Buy the cuddle and you buy the obligation behind it.</p>
+
+    <h3 class="cag-h3">How Loud and Demanding Is a Cockatoo?</h3>
+    <p>Loud enough to reset the whole comparison. A cockatoo's contact call is instinctive and can run for long stretches, and the largest species produce some of the loudest sounds in aviculture — a Moluccan's scream is measured near the top of the companion-bird chart. Forum owners are blunt about the workload: on <a href="https://forums.avianavenue.com/index.php?threads/grey-or-cockatoo.148234/" target="_blank" rel="noopener">Avian Avenue ↗</a> a keeper of both put cockatoos at "seven times more work" than a Grey. That gap is the single biggest reason we point apartment buyers toward the Grey.</p>
+
+    <h4 class="cag-h4">Why Do So Many Cockatoos Get Surrendered?</h4>
+    <p>The volume and the neediness together. When a cockatoo's emotional needs outrun what a household can give, the results are screaming, biting and self-mutilation — and owners who weren't ready describe, in the words of one <a href="https://www.reddit.com/r/parrots/" target="_blank" rel="noopener">r/parrots ↗</a> thread, "100% insanity for years." Rescues fill with cockatoos for exactly this reason. Greys are surrendered too, usually from boredom-driven plucking, but the cockatoo rehoming pipeline is in a category of its own. Going in clear-eyed is the whole job.</p>
+
+    <h3 class="cag-h3">Are Cockatoos Smart? The Contrafreeloading Question</h3>
+    <p>Very — just in a different direction than the Grey. Cockatoos are elite problem-solvers; Goffin's have been filmed spontaneously making and using tools, a feat that rivals the Grey's language résumé. That intelligence is also why an under-stimulated cockatoo self-destructs: a mind built for foraging and manipulation, with nothing to work on, turns on its own feathers.</p>
+
+    <h4 class="cag-h4">Enrichment Prevents Plucking — in Both Species</h4>
+    <p>The research backs the practical advice. In Dr. Irene Pepperberg's lab, umbrella cockatoos and African greys both showed "contrafreeloading" — choosing to work for food that was also freely available — because the working itself is enriching. The takeaway for a buyer is identical for both birds: a parrot with real foraging work rarely plucks, and a bored one often does. Neither species is a cage ornament; both are full-time enrichment projects.</p>
+
+    <h5 class="cag-h5">Citation: Dr. Irene Pepperberg's contrafreeloading study</h5>
+    <p>Figures here come from the <a href="https://lafeber.com/pet-birds/inside-dr-pepperbergs-lab-greys-vs-umbrella-cockatoos-who-likes-to-work-for-their-food/" target="_blank" rel="noopener">Lafeber write-up of Carroll &amp; Pepperberg's umbrella-cockatoo study ↗</a>, which found wide individual variation (one cockatoo contrafreeloaded 71% of the time, another just 4%) and no significant overall difference between greys and cockatoos.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S10 vs EACH COCKATOO SPECIES (5 subsections) -->
+  <section id="species">
+    <h2 class="cag-h2">African Grey vs Each Cockatoo Species</h2>
+    <p>"Cockatoo" isn't one bird. The five species people actually cross-shop against a Grey differ as much from one another as they do from the Grey — in size, volume and temperament. Here's the honest head-to-head for each, using the photos our buyers send us. If you searched a specific matchup like African Grey vs Umbrella cockatoo or African Grey vs Galah, start here.</p>
+    {species.map((s) => (
+      <article class="sp-block" id={s.id}>
+        <div class="sp-media"><img src={s.img} width="640" height="480" alt={s.alt} loading="lazy"></div>
+        <div class="sp-body">
+          <h3 class="cag-h3">African Grey vs {s.name}</h3>
+          <p class="sp-sci"><em>{s.sci}</em> · {s.trait}</p>
+          <ul class="sp-stats">
+            <li><span>Size</span><b>{s.size}</b></li>
+            <li><span>Noise</span><b>{s.noise}</b></li>
+            <li><span>Talking</span><b>{s.talk}</b></li>
           </ul>
+          <p>{s.body}</p>
         </div>
-        <div class="ctoo-verdict-card">
-          <h3 class="ctoo-verdict-title">Choose a Cockatoo if&hellip;</h3>
-          <ul class="ctoo-verdict-list">
-            <li>You want maximum physical affection and constant contact</li>
-            <li>Talking ability is not a priority</li>
-            <li>No one in your household has respiratory sensitivities</li>
-            <li>You can meet very high daily attention requirements</li>
-            <li>You have space for regular, thorough cage cleaning (heavy powder)</li>
-          </ul>
-        </div>
+      </article>
+    ))}
+    <p>Across all five, the pattern is the same shape at different volumes: the cockatoo trades the Grey's talking and independence for contact and showmanship. The Galah asks the least of you, the Moluccan the most, and the Grey sits apart from all of them as the one you can hold a conversation with.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S11 TALKING -->
+  <section id="talking">
+    <h2 class="cag-h2">Which Talks Better — an African Grey or a Cockatoo?</h2>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-talking-ability.webp" srcset="/african-grey-vs-cockatoo-talking-ability-760.webp 760w, /african-grey-vs-cockatoo-talking-ability.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Talking-ability infographic showing the African Grey at 200 to 1,000-plus words with clear speech against the cockatoo's handful of words" loading="lazy">
+    <p>Here's the honest version, and it's not close: <strong>the African Grey wins talking outright.</strong> Greys command vocabularies of 200 to 1,000-plus words with near-human clarity and — the part that matters — a documented capacity to use words in context. Cockatoos can pick up a few words and phrases, but speech isn't their headline talent. If a bird that genuinely converses is the goal, this chapter ends the comparison.</p>
+
+    <h3 class="cag-h3">How Many Words — and Does the Bird Understand Them?</h3>
+    <p>Vocabulary is only half the Grey's edge; comprehension is the other half. Alex, the African Grey studied for thirty years by Dr. Irene Pepperberg, could label colors, shapes and quantities and answer novel questions — evidence of contextual language, not just parroting. That's the ceiling no cockatoo approaches. Our <a href="/blog/african-grey-parrot-talking-ability/">African Grey talking-ability guide</a> walks through what to realistically expect month by month.</p>
+
+    <h4 class="cag-h4">Can Cockatoos Talk at All?</h4>
+    <p>Yes — modestly. Most pet cockatoos learn a handful of words, a whistle or two, and the occasional startling phrase, usually in a gravelly, less articulate voice than a Grey's. But nobody buys a cockatoo for its vocabulary; they buy it for the dancing, the affection and the sheer personality. Judging a cockatoo on talking is like judging a Grey on cuddling — you're grading the wrong subject.</p>
+
+    <h5 class="cag-h5">Why Individual Birds Beat the Averages</h5>
+    <p>Every rule here has exceptions in feathers. We've weaned quiet Greys that whistle more than they talk, and there are famously chatty cockatoos on the internet. Averages tell you which way to bet, not what your specific bird will do. If talking is non-negotiable, the Grey is the safe bet — but "guaranteed talker" is a promise no honest breeder of either species makes.</p>
+
+    <h6 class="cag-h6">Citation: Alex the Grey &amp; Britannica</h6>
+    <p>The species-level claim rests on the record: <a href="https://www.britannica.com/animal/grey-parrot" target="_blank" rel="noopener">Encyclopaedia Britannica ↗</a> calls the African Grey "unsurpassed as a talker," and Pepperberg's three decades with Alex remain the benchmark study of parrot cognition.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S12 NOISE & APARTMENT -->
+  <section id="noise">
+    <h2 class="cag-h2">Which Is Louder — and Can It Live in an Apartment?</h2>
+    <p>Noise ends more parrot placements than price ever does, so apartment dwellers should read this section twice. <strong>Quick answer: the African Grey is far quieter, and the only realistically apartment-compatible bird of the two.</strong></p>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-noise-meter.webp" srcset="/african-grey-vs-cockatoo-noise-meter-760.webp 760w, /african-grey-vs-cockatoo-noise-meter.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Noise-meter infographic placing the African Grey in the moderate band and the Moluccan cockatoo in the very-loud red zone among the loudest companion birds" loading="lazy">
+    <p>A Grey sits in the moderate band of the parrot noise chart — whistles, talking, appliance mimicry, and predictable dawn and dusk vocal sessions. Cockatoos occupy the top of that chart, and a Moluccan's contact scream is measured among the loudest sounds any companion animal makes, built in the wild to carry over a mile. Through shared apartment walls, that gap isn't a nuance; it's a lease.</p>
+
+    <h3 class="cag-h3">Which Cockatoo Is Quietest?</h3>
+    <p>If your heart is set on a cockatoo but you have neighbors, the Galah is the least loud of the common species — smaller, calmer and easier on the walls than an Umbrella or Moluccan. It is still louder than a Grey. There is no silent cockatoo; there is only "less catastrophic," and the Galah is where that road ends.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S13 DANDER & ALLERGIES -->
+  <section id="dander">
+    <h2 class="cag-h2">Powder Down, Dander &amp; Allergies — the Honest Version</h2>
+    <p><strong>Neither bird is allergy-safe.</strong> This is where we part ways with pages that sell the Grey as the "clean" option: African Greys and cockatoos are both powder-down species, producing a fine feather dust that settles on shelves and, more importantly, stays airborne.</p>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-dander-allergy.webp" srcset="/african-grey-vs-cockatoo-dander-allergy-760.webp 760w, /african-grey-vs-cockatoo-dander-allergy.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Infographic showing both the African Grey and the cockatoo as powder-down birds that produce feather dander, with the cockatoo producing more" loading="lazy">
+    <h3 class="cag-h3">Is One Bird Safer for Allergy Sufferers?</h3>
+    <p>Cockatoos produce even more powder than Greys — enough that owners run air purifiers as standard kit — but that's a difference of degree, not kind. Per <a href="https://www.parrots.org/" target="_blank" rel="noopener">avian welfare educators ↗</a>, parrots from Africa (greys) and Australasia (cockatoos) are the dustiest groups; South American parrots produce less. So "get a Grey instead" is not an allergy solution.</p>
+    <h4 class="cag-h4">What Reduces Feather Dust in Either Species</h4>
+    <p>Regular bathing or misting keeps powder down, a HEPA air purifier near the cage clears what goes airborne, and a wipeable surface routine handles the rest. These are the same measures for both birds — the cockatoo just needs them turned up.</p>
+    <h5 class="cag-h5">The Bottom Line for Allergy-Prone Homes</h5>
+    <p>If bird allergies or asthma run in your household, spend an afternoon around adult birds of either species before you commit, and budget for an air purifier regardless. We'd rather lose a sale than place any bird in a home that can't breathe with it.</p>
+    <h6 class="cag-h6">Citation: hypersensitivity pneumonitis from a grey parrot</h6>
+    <p>This isn't hypothetical: a peer-reviewed case in the <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9381342/" target="_blank" rel="noopener">U.S. National Library of Medicine ↗</a> documents hypersensitivity pneumonitis in an owner, confirmed against their African Grey's feathers. Powder-down dander is a real respiratory variable for both species.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S14 BITE FORCE & SAFETY -->
+  <section id="safety">
+    <h2 class="cag-h2">Bite Force &amp; Home Safety</h2>
+    <p>Late-stage buyers ask the question nobody likes to say out loud: how much damage can it do? <strong>Both birds can bite hard; the cockatoo can bite much harder.</strong></p>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-bite-force-safety.webp" srcset="/african-grey-vs-cockatoo-bite-force-safety-760.webp 760w, /african-grey-vs-cockatoo-bite-force-safety.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Bite-force safety infographic comparing an African Grey's 61 to 96 newton bite with the much stronger bite of a large cockatoo" loading="lazy">
+    <p>An African Grey bites at roughly 61–96 newtons — about 70–220 PSI, enough to break skin and, memorably, to snap a wooden popsicle stick. A large cockatoo generates substantially more, with a beak built to crack hard nuts and, if it decides to, a finger. Neither bird bites without reason, and both telegraph it, but the margin for error around children is plainly wider with a Grey.</p>
+    <h3 class="cag-h3">The Popsicle-Stick Test</h3>
+    <p>Here's the tangible version: a Grey's worst bite lands near the force of snapping a sturdy popsicle stick — it hurts and can draw blood, but it heals. A big cockatoo's bite is in a different tier and warrants genuine supervision around small children and other pets. Respect the beak, read the body language, and neither bird ever has to bite at all.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S15 SCORECARD — Gemini scorecard image + real data table kept in DOM for AIO -->
+  <section id="scorecard">
+    <h2 class="cag-h2">Decision Scorecard: African Grey vs Cockatoo Across 7 Traits</h2>
+    <p>Landed here from a "which parrot is better, African Grey or cockatoo" search? Here's the verdict as numbers. Every score below is our own on a 0-to-10 scale, drawn from raising Greys and trading notes with cockatoo keepers and rescues — judgment calls rather than lab readouts — and we've kept them honest about the columns where the cockatoo comes out ahead.</p>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-decision-scorecard.webp" srcset="/african-grey-vs-cockatoo-decision-scorecard-760.webp 760w, /african-grey-vs-cockatoo-decision-scorecard.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Decision scorecard infographic rating the African Grey and cockatoo from zero to ten on talking, independence, cuddliness, quietness, beginner fit, low dander and apartment fit" loading="lazy">
+    <div class="tbl-wrap plain"><table class="score-tbl">
+      <thead><tr><th>Trait</th><th>African Grey</th><th>Cockatoo</th><th>Our note</th></tr></thead>
+      <tbody>{scores.map((s) => (<tr><td class="sc-trait" data-label="Trait">{s.trait}</td><td class="sc" data-label="African Grey">{s.c}</td><td class="sc" data-label="Cockatoo">{s.t}</td><td class="sc-note" data-label="Our note">{s.note}</td></tr>))}</tbody>
+    </table></div>
+    <p>Read the pattern, not the totals: the Grey owns talking, independence, quiet and apartment fit; the cockatoo owns cuddliness outright. Neither column is a bad bird — you're choosing between a companion that converses and one that clings.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S16 WHICH FITS YOUR HOUSEHOLD -->
+  <section id="household">
+    <h2 class="cag-h2">Which Parrot Fits Your Household?</h2>
+    <p>Scores are useful; households are specific. Whether you're after the best parrot for apartment life, a bird that fits a busy family, or a companion for a quiet retirement, the real match turns on who's home, how much noise you can absorb, and whether you'd sooner talk to your bird or hold it. Find your situation below — it's the very rundown we give over email.</p>
+    <img class="sec-img inf-img" src="/which-parrot-fits-you-flowchart.webp" srcset="/which-parrot-fits-you-flowchart-760.webp 760w, /which-parrot-fits-you-flowchart.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Flowchart matching households to the African Grey or a cockatoo based on work hours, desire to talk, and noise tolerance" loading="lazy">
+    <h3 class="cag-h3">Match by Household</h3>
+    <p>Five genuine household types, five straight answers — including the one where the honest reply is "perhaps hold off this year."</p>
+    <div class="match-grid">
+      <div class="match-c"><h4 class="cag-h4">First-Time Bird Owner</h4><p>Lean African Grey, with eyes open. Neither species is a true beginner bird, but a Grey is more forgiving than a large cockatoo, whose volume and neediness overwhelm most first-timers and fill rescues. If a cockatoo is the dream, start with a smaller Galah and heavy research.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Family with Kids</h4><p>Lean African Grey, on bite force and noise. A big cockatoo's beak and volume are a lot for a house with young children, and its one-person intensity can leave the kids out. Either bird needs supervised distance from toddlers — this is a decades-long commitment, not a starter pet.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Apartment or Condo</h4><p>African Grey, clearly — the only one of the two thin walls reliably survive. If a cockatoo is non-negotiable, only a Galah is even in the conversation, and your neighbors still get a vote. Both birds need daily out-of-cage time regardless of square footage.</p></div>
+      <div class="match-c"><h4 class="cag-h4">You Want to Be Cuddled</h4><p>This is the cockatoo's household. If the dream is a bird that sits on you for hours and craves contact, no Grey will deliver it — choose the species by that honest want, then commit to the noise and neediness that ride along. A Galah or Umbrella, not a Grey.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Busy Professional</h4><p>Think hard, then think again — for either bird. A parrot alone ten hours a day is how plucking starts, and a lonely cockatoo unravels faster than a lonely Grey. If your schedule is genuinely full, this may be the year to wait rather than the year to buy.</p></div>
+    </div>
+    <p>Not settled even after all that? That's exactly our job — the form at the foot of this page lands straight with Mark and Teri, and "is it a Grey or a cockatoo for us" is one of our favorite messages to reply to.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <Newsletter variant="middle" action="https://formspree.io/f/xrejpnvn" eyebrow="Talker in the nursery" heading="The Parrot You Can Actually Hold a Conversation With" sub="Every Grey we place is hand-raised, DNA-sexed and disease-screened. Get on our list and we'll write the moment the next talking chick can be reserved." cta="Email me when a chick is ready" img="/bery-congo-african-grey-cuddly-tamed-card.webp" imgAlt="A hand-raised African Grey resting on its keeper's lap at C.A.Gs in Midland, TX" imgCaption="Hand-raised, DNA-sexed African Greys, home-raised in Midland" note="Only new-clutch emails, and you can unsubscribe whenever." />
+
+  <!-- S17 COST -->
+  <section id="cost">
+    <h2 class="cag-h2">What Does an African Grey Cost vs a Cockatoo?</h2>
+    <p>Prices up front, since a page that hides them earns no trust: our documented African Greys run $1,700–$3,500 (Congo) and $1,500–$1,600 (Timneh), and a $200 deposit holds one. Cockatoos span roughly $1,000–$4,000 by species, Moluccans and Umbrellas at the top with Goffin's and Galahs lower down. The <a href="/african-grey-parrot-price/">price guide</a> carries our current per-bird pricing, refreshed as clutches wean.</p>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-cost-breakdown.webp" srcset="/african-grey-vs-cockatoo-cost-breakdown-760.webp 760w, /african-grey-vs-cockatoo-cost-breakdown.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Cost-breakdown infographic showing African Grey prices of 1,500 to 3,500 dollars and a first-year setup budget of roughly 825 to 2,000 dollars" loading="lazy">
+
+    <h3 class="cag-h3">Why the Sticker Price Is the Cheap Part</h3>
+    <p>For either species the purchase price is a rounding error against the four to eight decades of food, vet visits, toys and caging still to come. The danger lurks at the bottom of both markets: those $800 "bargain" listings with no CITES papers, no sexing certificate and no vet check are the ones that generate the fraud complaints, and they top the list of ads buyers forward us to vet. A papered bird costs what it does because the paperwork represents genuine labor; a paperless one isn't a bargain, it's a wholly different — and riskier — purchase.</p>
+
+    <h4 class="cag-h4">What's Included in Our Grey's Price</h4>
+    <p>Our price folds in the entire trust stack with nothing itemized on top: captive-bred CITES papers, a DNA sexing certificate, an avian veterinarian's health certificate, a hatch record with the closed band number, and PBFD plus Polyomavirus PCR results. The one extra you'll ever pay is transport — $185 to your airport or $350 to your door.</p>
+
+    <h5 class="cag-h5">First-Year Budget Beyond the Bird</h5>
+    <p>Budget somewhere around $825 to $2,000 in the first year beyond the bird itself: a genuinely large cage ($300–$800, and a cockatoo wants the top of that range), starter perches and toys ($100–$300), that first wellness exam ($75–$200 — the <a href="https://www.aav.org/" target="_blank" rel="noopener">Association of Avian Veterinarians ↗</a> lists certified avian vets by area), twelve months of good pellets ($200–$400), and rotating enrichment ($150–$300, more if a cockatoo is demolishing it). After year one, plan on roughly $375 to $1,350 annually.</p>
+
+    <h6 class="cag-h6">Breeder note: why we don't sell unweaned chicks</h6>
+    <p>Cheaper unweaned chicks — Grey and cockatoo alike — are all over the internet. We won't sell one at any price: botched hand-feeding, from crop burns to aspiration, kills babies in unpracticed hands, and "wean it yourself and pocket the difference" is the single worst gamble in this hobby. Every bird we place has already been fully weaned, and that's built into what you pay.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S18 FIRST 30 DAYS -->
+  <section id="first30">
+    <h2 class="cag-h2">What Do the First 30 Days With a Grey Look Like?</h2>
+    <img class="sec-img" src="/amie-congo-african-grey-handfed-baby-card.webp" width="640" height="480" alt="A fully hand-fed baby African Grey being raised at C.A.Gs before going home" loading="lazy">
+    <p>This section is written for the Grey we actually place, though the arc is similar for any large parrot, cockatoo included. Teri talks every new owner through four phases so nothing in the first month arrives as a shock:</p>
+    <h3 class="cag-h3">The Four Adjustment Phases</h3>
+    <p>Save this somewhere — it's what separates "my new Grey hates me" from "my Grey is right on track."</p>
+    <img class="sec-img inf-img" src="/african-grey-first-30-days-timeline.webp" srcset="/african-grey-first-30-days-timeline-760.webp 760w, /african-grey-first-30-days-timeline.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Thirty-day adjustment timeline for a new African Grey: settling days one to three, household mapping in week one, trust building in week two, personality stabilizing in weeks three and four" loading="lazy">
+    <div class="timeline">
+      <div class="tl-c"><span class="tl-n">1</span><b>Days 1–3 · Landing</b><p>Expect a still, watchful bird that perches low and only eats once the room empties. That quiet caution is a healthy Grey finding its feet, not a sad one.</p></div>
+      <div class="tl-c"><span class="tl-n">2</span><b>Week 1 · Learning the House</b><p>Your Grey is mapping the place — who comes and goes, which noises mean what, when meals appear. Hold your routine steady and predictable on purpose.</p></div>
+      <div class="tl-c"><span class="tl-n">3</span><b>Week 2 · Earning Trust</b><p>Now the step-ups turn willing, treats are taken softly from your fingers, and you'll catch the first tentative mimics of sounds from <em>your</em> home.</p></div>
+      <div class="tl-c"><span class="tl-n">4</span><b>Weeks 3–4 · Settling In</b><p>The real personality surfaces, right about when we phone to check in. Every one of our buyers keeps our direct number through that opening month.</p></div>
+    </div>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S19 MYTHS -->
+  <section id="myths">
+    <h2 class="cag-h2">African Grey vs Cockatoo Myths — What's Actually True?</h2>
+    <p>Every parrot forum repeats the same confident claims about these two birds, and buyers arrive quoting them. Even solid care guides like <a href="https://www.thesprucepets.com/the-smartest-pet-birds-4178388" target="_blank" rel="noopener">The Spruce Pets' smartest-birds overview ↗</a> stick to the verifiable, so here's where the folklore parts ways with real birds.</p>
+    <img class="sec-img inf-img" src="/african-grey-vs-cockatoo-myths-reality.webp" srcset="/african-grey-vs-cockatoo-myths-reality-760.webp 760w, /african-grey-vs-cockatoo-myths-reality.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Myth versus reality cards debunking claims that African Greys are allergy-safe, that cockatoos are simply cuddly, and that Greys are cold" loading="lazy">
+    <h3 class="cag-h3">The Myths We Hear Most</h3>
+    <p>A couple of fast ones, then the whopper that earns its own reality check.</p>
+    <div class="myth-grid">
+      <div class="myth-c"><span class="myth-x">Myth</span><p><strong>"African Greys are allergy-safe."</strong> They aren't — Greys are powder-down birds, and a peer-reviewed case tied an owner's lung disease to one. Cockatoos are dustier still. Both species need real dander management, not a "clean bird" assumption.</p></div>
+      <div class="myth-c"><span class="myth-x">Myth</span><p><strong>"Cockatoos are just cuddly."</strong> The cuddle is real, but it's inseparable from the screaming, the neediness and the plucking when contact stops. A cockatoo's affection comes with a bill attached, and unprepared owners are the ones who fill the rescues.</p></div>
+    </div>
+    <h4 class="cag-h4">The Big One: "Greys Are Cold, Cockatoos Are Loving"</h4>
+    <p>The most repeated framing online, and the most misleading.</p>
+    <h5 class="cag-h5">The Reality: Two Kinds of Love</h5>
+    <p>A Grey bonds as deeply as any cockatoo — it just shows it through attention, conversation and proximity instead of constant physical contact. "Cold" describes a Grey that's under-socialized or newly moved, not the species. And a cockatoo's affection is inseparable from its demands. Neither is warmer; they love on different terms.</p>
+    <h6 class="cag-h6">Citation: owner reports across both species</h6>
+    <p>The pattern matches discussions across the large parrot communities (Reddit's r/parrots, the major Facebook groups): Greys interactive but independent, cockatoos affectionate but demanding — trends real, guarantees nonexistent.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S20 THEY OUTLIVE YOU -->
+  <section id="succession">
+    <h2 class="cag-h2">They Can Outlive You: Lifespan &amp; Succession Planning</h2>
+    <p>Here's the question almost no comparison page asks, and it outweighs talking or noise: <strong>both of these birds can outlive their owners.</strong> An African Grey lives 40–60 years; a large cockatoo can reach 80. A bird bought at 40 may still need care when you're pushing 100.</p>
+    <img class="sec-img inf-img" src="/african-grey-cockatoo-lifespan-succession.webp" srcset="/african-grey-cockatoo-lifespan-succession-760.webp 760w, /african-grey-cockatoo-lifespan-succession.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Lifespan timeline showing the African Grey at 40 to 60 years and cockatoos up to 80 years, with a prompt to name a future caretaker" loading="lazy">
+    <p>That long life is why rehoming is so common for both species — many large parrots pass through several homes in a lifetime, not from being bad birds but from outlasting jobs, marriages, moves and health. The responsible move either way is a written succession plan: name the person who inherits the bird, make sure they've actually met it, and set aside the paperwork and funds so the handoff isn't a crisis.</p>
+    <h3 class="cag-h3">What a Parrot Succession Plan Includes</h3>
+    <p>Three things, in writing: a named caretaker who has agreed and spent real time with the bird; the bird's documents — CITES paperwork, health records, band number — in one folder; and a modest fund or instruction covering vet care and food during the transition. It's the same plan whether you choose a Grey or a cockatoo, and doing it is part of buying a decades-long bird responsibly.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S21 CITES -->
+  <section id="cites">
+    <h2 class="cag-h2">CITES Status &amp; Documentation</h2>
+    <img class="sec-img" src="/african-grey-breeder-with-bird-midland-tx.webp" width="760" height="400" alt="C.A.Gs breeder with a documented captive-bred African Grey in Midland, TX" loading="lazy">
+    <p>The African Grey holds the treaty's strictest rank, CITES Appendix I — a listing granted in 2017 once wild trapping had gutted native flocks, a backstory <a href="https://www.britannica.com/animal/grey-parrot" target="_blank" rel="noopener">Encyclopaedia Britannica ↗</a> lays out well. Several cockatoos, the Moluccan and the Citron's parent species among them, carry Appendix-I or II status of their own. None of it outlaws ownership; what it does is make proof of captive-bred origin the entire game.</p>
+    <h3 class="cag-h3">What Paperwork Comes With Every Grey?</h3>
+    <img class="sec-img inf-img" src="/african-grey-cites-documentation-flatlay.webp" srcset="/african-grey-cites-documentation-flatlay-760.webp 760w, /african-grey-cites-documentation-flatlay.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Flat-lay of the C.A.Gs document folder: CITES captive-bred paperwork, hatch certificate with closed band number, DNA sexing certificate and avian vet health certificate" loading="lazy">
+    <p>Every Grey leaves with the complete folder: captive-bred CITES papers, a hatch record carrying the closed leg-band number, a DNA sexing certificate and an avian vet's health certificate. Should any seller of any parrot — Grey, cockatoo, whatever — stall when you ask for those four, the stall itself has told you what you need to know.</p>
+    <h4 class="cag-h4">Appendix I, in Plain English</h4>
+    <p>The <a href="https://www.fws.gov/law/wild-bird-conservation-act" target="_blank" rel="noopener">Wild Bird Conservation Act, detailed by the U.S. Fish &amp; Wildlife Service ↗</a>, is the wall that keeps trapped Appendix-I parrots out of American homes. Home-bred birds with documentation move between owners legally. And your Grey's leg band was sealed on in the nest — it can't be forced onto a wild-caught adult later, which is why it outweighs any receipt in the box.</p>
+    <h5 class="cag-h5">What IUCN Status Means for Greys and Cockatoos</h5>
+    <p>In the wild the Congo Grey is rated Endangered and the Timneh Vulnerable; among the cockatoos here, the Moluccan is Vulnerable and the Citron's parent species Critically Endangered. Your captive-bred bird's legality is untouched by any of that — but it's why we treat documentation as ethics rather than marketing. Each papered, home-bred sale is one fewer market reason to pull a bird from the wild.</p>
+    <h6 class="cag-h6">Citation: cites.org &amp; IUCN Red List</h6>
+    <p>Sources for the listings above: the <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">CITES appendices database ↗</a> and the <a href="https://www.iucnredlist.org/species/22724813/154068024" target="_blank" rel="noopener">IUCN Red List ↗</a> entries covering <em>Psittacus erithacus</em>, <em>Psittacus timneh</em> and the cockatoos discussed here.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S18 SHIPPING & HEALTH (15A + 16A) -->
+  <section id="shipping">
+    <h2 class="cag-h2">How Does an African Grey Travel — and What's Guaranteed?</h2>
+    <div class="ship-cards">
+      <div class="ship-c">
+        <img src="/african-grey-airport-live-animal-shipping.webp" width="640" height="797" alt="IATA live-animal shipping crate for an African Grey parrot arriving at the airline cargo desk" loading="lazy">
+        <div class="ship-body"><span class="ship-tier">Tier 1</span><b>Airport Pickup</b><span class="ship-price">$185</span>
+        <p>IATA-compliant live-animal cargo on Delta, United or American to your closest major airport</p></div>
+      </div>
+      <div class="ship-c">
+        <img src="/african-grey-home-delivery-pet-van.webp" width="640" height="426" alt="Climate-controlled pet delivery van used for C.A.Gs African Grey home deliveries" loading="lazy">
+        <div class="ship-body"><span class="ship-tier clay">Tier 2</span><b>Home Delivery</b><span class="ship-price">$350</span>
+        <p>A climate-controlled van brings your Grey to the door with the full document folder in hand</p></div>
       </div>
     </div>
-  </section>
-
-  <!-- DETAILED COMPARISON -->
-  <section class="ctoo-section">
-    <div class="page-container text-wrap">
-      <h2 class="ctoo-h2">Key Differences in Depth</h2>
-
-      <h3 class="ctoo-h3">Talking Ability: African Grey Leads by a Wide Margin</h3>
-      <p class="ctoo-p">
-        African Greys are, by scientific consensus and owner experience, the best-talking parrots
-        in the world. Vocabularies of 200 to 1,000+ words are common in well-trained birds.
-        More importantly, African Greys demonstrate contextual language use — they apply words
-        appropriately to situations rather than randomly reciting them.
-      </p>
-      <p class="ctoo-p">
-        Cockatoos can learn some words and phrases. The Bare-Eyed Cockatoo and Sulphur-Crested
-        Cockatoo are among the more vocal cockatoo species. But cockatoos are fundamentally not
-        known for talking ability — they are known for affection, personality, and noise.
-        If hearing your bird say your name and describe what it wants is important to you,
-        African Grey is the clear choice.
-      </p>
-
-      <h3 class="ctoo-h3">Affection Style: Velcro vs. Independent Bond</h3>
-      <p class="ctoo-p">
-        Cockatoos are called "velcro birds" for a reason. They crave physical contact continuously.
-        A cockatoo that is not getting enough contact time will scream, become destructive, or
-        develop severe feather destructive behavior. The emotional needs of a cockatoo are among
-        the highest of any pet species.
-      </p>
-      <p class="ctoo-p">
-        African Greys bond just as deeply, but differently. They form a profound attachment to
-        their primary person and are acutely tuned in to that person's emotional state. But they
-        prefer to be near you rather than on you — they are observers and companions, not lap birds.
-        Many owners find this type of relationship more sustainable over 40+ years.
-      </p>
-
-      <h3 class="ctoo-h3">Dust and Dander: A Health Consideration You Cannot Ignore</h3>
-      <p class="ctoo-p">
-        Cockatoos and cockatiel-family birds produce a fine white powder down from specialized
-        feathers. This powder coats surfaces in the room and becomes airborne during preening.
-        In a household with any member who has asthma, bird allergies, or chronic respiratory
-        conditions, this is a significant and non-trivial health risk.
-      </p>
-      <p class="ctoo-p">
-        African Greys produce dander at a moderate level — significantly less than cockatoos.
-        For anyone with respiratory sensitivities, African Grey is the safer choice if you are
-        comparing these two species. That said, no parrot is truly hypoallergenic — assess your
-        household's specific sensitivities before committing.
-      </p>
+    <p>Two delivery tiers, nationwide, whichever Grey you reserve. Every shipment travels with the health certificate and the complete document folder — the same standard we'd want if we were the ones receiving the bird.</p>
+    <h3 class="cag-h3">Where Do Our Greys Travel Most Often?</h3>
+    <p>These seven regions account for a good share of the Greys that leave Midland each season; the complete <a href="/buy-african-grey-parrots-with-shipping/">African Grey shipping process</a> lives on its own page. Every pill below opens that area's availability page:</p>
+    <ul class="ship-places">
+      {shipPlaces.map((s) => (<li><a href={s.href}><svg class="pin" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>{s.label}</span></a></li>))}
+    </ul>
+    <div class="health-card">
+      <div class="hc-head">Every grey leaves with</div>
+      <ul class="hc-list"><li>PBFD PCR screening</li><li>Avian Polyomavirus PCR</li><li>DNA sexing certificate</li><li>Avian-vet health certificate</li><li>Hatch certificate + closed band</li></ul>
     </div>
+    <p>Our written health guarantee protects your Grey from arrival onward — full terms sit on the <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>. A $200 deposit holds the bird, and the remaining balance is settled before it travels.</p>
+    <p class="ship-line">Ships nationwide · $185 airport · $350 home</p>
   </section>
 
-  <!-- FAQ -->
-  <section class="ctoo-section ctoo-alt">
-    <div class="page-container text-wrap">
-      <h2 class="ctoo-h2">African Grey vs Cockatoo: FAQ</h2>
-      <div class="ctoo-faq">
-        {faqs.map((f) => (
-          <details class="ctoo-faq-item">
-            <summary class="ctoo-faq-q">{f.q}</summary>
-            <p class="ctoo-faq-a">{f.a}</p>
-          </details>
-        ))}
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S19 AVAILABLE — photo cards + per-bird CTA + documentation badges (2026-07-05) -->
+  <section id="available">
+    <h2 class="cag-h2">Which African Greys Are Available Now?</h2>
+    <p>If this page has you leaning Grey over cockatoo, these are the chicks and young birds in our nursery today. Tap any card to open that bird's full profile — photos, parents and paperwork included.</p>
+    <div class="bird-cards">
+      {available.map((b) => (
+        <div class="bird-c">
+          <a class="bird-photo" href={b.slug} aria-label={`Meet ${b.name}`}>
+            {birdImg[b.id] && <img src={birdImg[b.id].src} width="640" height="480" alt={birdImg[b.id].alt} loading="lazy">}
+            <span class="bird-badge">{b.variant === 'timneh_african_grey' ? 'Timneh' : 'Congo'} · Available</span>
+          </a>
+          <div class="bird-body">
+            <div class="bird-top"><h3 class="bird-name"><a href={b.slug}>{b.name}</a></h3><span class="bird-price">{b.price_display}</span></div>
+            <ul class="bird-docs">{docBadges.map((d) => (<li>{d}</li>))}</ul>
+            <a class="btn-clay sm bird-cta" href={b.slug}>Meet {b.name}</a>
+            <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span>
+          </div>
+        </div>
+      ))}
+    </div>
+    <h3 class="cag-h3">Prefer a Bonded Pair or Fertile Eggs?</h3>
+    <p>Some buyers arrive wanting more than a single companion chick. Seasoned aviaries ask after our bonded, proven-producing Grey pair, and experienced incubator keepers ask about candled fertile hatching eggs — each has its own page, and each ships with the same documentation stack our companion Greys do.</p>
+    <div class="pair-row">
+      <div class="pair-c">
+        <img class="pimg-pair" src="/congo-african-grey-breeding-pair-aviary.webp" width="900" height="900" alt="Bonded proven-producer African Grey breeding pair perched together in the C.A.Gs aviary, DNA-certified" loading="lazy">
+        <div class="pair-body"><b>Bonded Proven-Producer Pair</b><span class="bird-price">$3,000</span>
+        <span class="pair-sub">DNA-certified and actively producing — suited to established aviaries rather than first-time homes</span>
+        <a class="btn-ghost sm" href="/african-grey-breeding-pair-for-sale/">See the pair page</a>
+        <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span></div>
+      </div>
+      <div class="pair-c">
+        <img class="pimg-eggs" src="/african-grey-eggs-ready-to-hatch.webp" width="800" height="800" alt="Hen brooding candled fertile African Grey hatching eggs in the C.A.Gs nest box" loading="lazy">
+        <div class="pair-body"><b>Candled Fertile Hatching Eggs</b><span class="bird-price">$95 each</span>
+        <span class="pair-sub">Candled and incubator-ready before they ship — for seasoned hatchers only; buy five eggs and we cover US shipping</span>
+        <a class="btn-ghost sm" href="/african-grey-parrot-bird-eggs-for-sale-usa/">View the hatching-eggs page</a></div>
       </div>
     </div>
+    <p class="ctr"><a class="btn-clay" href="/available/">Browse Every Available Grey</a></p>
   </section>
 
-  <!-- INTERNAL LINKS -->
-  <section class="ctoo-section">
-    <div class="page-container text-wrap">
-      <h2 class="ctoo-h2">Related Comparisons</h2>
-      <ul class="ctoo-links">
-        <li><a href="/congo-vs-timneh-african-grey/" class="ctoo-link">Congo vs Timneh African Grey</a> — compare the two African Grey subspecies</li>
-        <li><a href="/african-grey-vs-macaw/" class="ctoo-link">African Grey vs Macaw</a> — noise, size, and talking ability compared</li>
-      </ul>
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S25 OWNER STORY — single verified pull-quote (17B); real buyer, real photo -->
+  <section id="stories">
+    <h2 class="cag-h2">What One Family Said After Choosing the Grey</h2>
+    <p>We've guided a decade of these Grey-or-cockatoo decisions, and the pattern is consistent enough that we'll put our own name to it. The verified buyer reviews — real names, real cities — live on our <a href="/african-grey-reviews/">African Grey reviews</a> page.</p>
+    <figure class="pullquote">
+      <blockquote>"Match the bird to the household — talker or cuddler — and 'I regret this' becomes a sentence our buyers simply never write."</blockquote>
+      <figcaption>
+        <img class="q-av" src="/birds/bery/bery-grey-african-parrot-for-sale.webp" width="56" height="56" alt="Bery, a hand-raised African Grey at the C.A.Gs aviary in Midland, TX" loading="lazy">
+        <span class="pq-id"><b>Mark &amp; Teri Benjamin</b> · C.A.Gs, Midland, TX</span>
+      </figcaption>
+    </figure>
+    <p>The buyers who write us afterward were the ones who chose honestly — a Grey for a talker, a cockatoo for a cuddler — rather than by looks alone. Do that, and regret rarely gets a word in.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S21 FAQ (7C hybrid — first 3 open) -->
+  <section id="faq">
+    <h2 class="cag-h2">African Grey vs Cockatoo: FAQ</h2>
+    <p>Here are the follow-ups buyers send once the tables and scorecards have done their work — the real inbox questions from people torn between a talking Grey and a cuddling cockatoo. We keep the answers short and honest; the broader <a href="/african-grey-parrot-faq/">African Grey parrot FAQ</a> handles the care, diet and day-to-day ownership topics beyond this matchup.</p>
+    {faqs.map((f, i) => (
+      i < 3
+        ? (<div class="faq-open"><h3 class="faq-q">{f.q}</h3><p>{f.a}</p></div>)
+        : (<details class="faq-d"><summary>{f.q}</summary><p>{f.a}</p></details>)
+    ))}
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S22 KEEP LEARNING (18A blog cards) -->
+  <section id="learn">
+    <h2 class="cag-h2">Keep Reading Before You Decide</h2>
+    <p>A parrot is a decades-long decision, so research like one. These three guides carry on past the comparison — how soon a Grey begins to talk, the true lifetime cost behind the sticker price, and whether a Grey belongs in a beginner's home.</p>
+    <div class="blog-cards">
+      <a class="blog-c" href="/blog/african-grey-parrot-talking-ability/"><img src="/congo-african-grey-talking-ability-card.webp" width="230" height="120" alt="Congo African Grey talking ability guide" loading="lazy"><div class="blog-body"><span class="blog-tag">Talking</span><h3 class="blog-t">How Soon Will a Grey Start Talking?</h3></div></a>
+      <a class="blog-c" href="/blog/african-grey-parrot-price-what-you-get/"><img src="/african-grey-price-hero-card.webp" width="230" height="120" alt="African Grey parrot price and cost breakdown guide" loading="lazy"><div class="blog-body"><span class="blog-tag">Cost</span><h3 class="blog-t">The Real Lifetime Cost of a Grey</h3></div></a>
+      <a class="blog-c" href="/blog/is-african-grey-good-for-beginners/"><img src="/african-grey-head-scratch-cags-breeder-card.webp" width="230" height="120" alt="African Grey getting a head scratch from a C.A.Gs breeder" loading="lazy"><div class="blog-body"><span class="blog-tag">Beginners</span><h3 class="blog-t">Is a Grey a Smart First Parrot?</h3></div></a>
     </div>
   </section>
 
-  <CTA
-    headline="Interested in an African Grey?"
-    sub="Every bird from CongoAfricanGreys.com is hand-raised, fully weaned, CITES-documented, and vet-certified before shipping."
-  />
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S23 FINAL CTA + FORM -->
+  <section id="reserve" class="final-cta">
+    <h2 class="cag-h2">Ready to Reserve a Documented African Grey?</h2>
+    <p>Whether this page settled it on talking, noise or temperament, one step comes next either way: describe your household, and we'll tell you straight which Grey suits it — or say "a cockatoo may be your bird" if that's the honest call.</p>
+    <form class="cta-form" name="compare-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="compare-inquiry" />
+      <p class="hp"><label>Leave this field empty: <input name="bot-field" /></label></p>
+      <label for="cvt-interest">Which bird are you asking about?
+        <select id="cvt-interest" name="interest" required>
+          <option value="">Choose one…</option>
+          <option>A Congo African Grey ($1,700–$3,500)</option>
+          <option>A Timneh African Grey ($1,500–$1,600)</option>
+          <option>A bonded breeding pair ($3,000)</option>
+          <option>Fertile hatching eggs ($95 each)</option>
+          <option>Not sure — talk me through Grey vs cockatoo</option>
+        </select>
+      </label>
+      <div class="form-2col">
+        <label for="cvt-fname">First name<input id="cvt-fname" name="first_name" type="text" autocomplete="given-name" required></label>
+        <label for="cvt-lname">Last name<input id="cvt-lname" name="last_name" type="text" autocomplete="family-name" required></label>
+      </div>
+      <div class="form-2col">
+        <label for="cvt-cell">Phone<input id="cvt-cell" name="cell" type="tel" autocomplete="tel" required></label>
+        <label for="cvt-cell2">Confirm phone<input id="cvt-cell2" name="cell_confirm" type="tel" required></label>
+      </div>
+      <div class="form-2col">
+        <label for="cvt-email">Email address<input id="cvt-email" name="email" type="email" autocomplete="email" required></label>
+        <label for="cvt-email2">Confirm email address<input id="cvt-email2" name="email_confirm" type="email" required></label>
+      </div>
+      <label for="cvt-delivery">How would you like the bird delivered?
+        <select id="cvt-delivery" name="delivery" required>
+          <option value="">Choose one…</option>
+          <option>Airport pickup ($185)</option>
+          <option>Home delivery to my door ($350)</option>
+          <option>I'll collect in Midland, Texas</option>
+        </select>
+      </label>
+      <label for="cvt-msg">A little about your home <span class="opt">(optional)</span><textarea id="cvt-msg" name="message" rows="3" placeholder="Ever kept a parrot before? Apartment or house? Who's home during the day?"></textarea></label>
+      <div class="form-actions">
+        <button type="submit" class="btn-clay">Send My Inquiry</button>
+        <a class="btn-ghost" href="/contact-us/">Ask a Question First</a>
+      </div>
+      <p class="form-note">A $200 refundable deposit holds your Grey once we've matched you to one. We reply within 24 hours.</p>
+    </form>
+  </section>
+
+  <Newsletter variant="bottom" action="https://formspree.io/f/xrejpnvn" bottomText="Still weighing a talker against a cuddler? Join the list and we'll email you the moment the next hand-raised, DNA-sexed African Grey is ready to reserve." cta="Notify me" />
+
+  </div><!-- /cvt-main -->
+  </div><!-- /cvt-body -->
+  </div><!-- /cvt -->
+
+  <script is:inline>
+    // Mobile variant tabs for the side-by-side table — class toggles only, no
+    // geometry reads (keeps the page free of forced reflows).
+    (function () {
+      var wrap = document.querySelector('.cmpe .tbl-wrap');
+      var tabs = document.querySelectorAll('.cmpe-tab');
+      if (!wrap || !tabs.length) return;
+      tabs.forEach(function (b) {
+        b.addEventListener('click', function () {
+          tabs.forEach(function (x) {
+            var on = x === b;
+            x.classList.toggle('active', on);
+            x.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          wrap.classList.toggle('show-c', b.dataset.v === 'c');
+          wrap.classList.toggle('show-t', b.dataset.v === 't');
+        });
+      });
+    })();
+  </script>
 </BaseLayout>
 
 <style>
-  .page-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 48px;
-  }
-  .text-wrap { max-width: 760px; }
-  .ctoo-h1 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #faf7f4;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.2;
-    margin: 0 0 1rem;
-  }
-  .ctoo-h2 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
-    line-height: 1.25;
-    margin: 0 0 1.25rem;
-  }
-  .ctoo-h3 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: 1.2rem;
-    margin: 1.75rem 0 0.6rem;
-  }
-  .ctoo-hero {
-    background: #2D6A4F;
-    padding: 3.5rem 0 3rem;
-    text-align: center;
-  }
-  .ctoo-sub {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.65;
-    color: rgba(250,247,244,0.88);
-    max-width: 70ch;
-    margin: 0 auto;
-  }
-  .ctoo-section { padding: 3rem 0; }
-  .ctoo-warn-section { padding: 1.5rem 0 0; }
-  .ctoo-alt { background: #faf7f4; }
-  .ctoo-p {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 0 1.1rem;
-  }
-  .ctoo-warning {
-    background: #fff3cd;
-    border-left: 4px solid #e8604c;
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.98rem;
-    color: #7a3a00;
-    line-height: 1.6;
-    max-width: 70ch;
-  }
-  .ctoo-table-wrap {
-    overflow-x: auto;
-    border-radius: 16px;
-    border: 1px solid #e7e5e4;
-    box-shadow: 0 2px 8px rgba(60,30,10,0.07);
-  }
-  .ctoo-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.95rem;
-  }
-  .ctoo-table thead tr { background: #2D6A4F; }
-  .ctoo-table thead th {
-    color: #faf7f4;
-    font-weight: 600;
-    text-align: left;
-    padding: 0.9rem 1.25rem;
-  }
-  .ctoo-table tbody tr:nth-child(even) { background: #faf7f4; }
-  .ctoo-table tbody tr:nth-child(odd) { background: #fff; }
-  .ctoo-table tbody th {
-    font-weight: 600;
-    color: #2D6A4F;
-    padding: 0.8rem 1.25rem;
-    text-align: left;
-    white-space: nowrap;
-  }
-  .ctoo-table tbody td {
-    padding: 0.8rem 1.25rem;
-    color: #44403c;
-    line-height: 1.5;
-  }
-  .ctoo-verdict-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    max-width: 900px;
-  }
-  .ctoo-verdict-card {
-    background: #fff;
-    border: 1px solid #e7e5e4;
-    border-radius: 20px;
-    padding: 1.75rem;
-    box-shadow: 0 2px 8px rgba(60,30,10,0.06);
-  }
-  .ctoo-verdict-title {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: 1.1rem;
-    margin: 0 0 1rem;
-  }
-  .ctoo-verdict-list { padding-left: 1.25rem; margin: 0; }
-  .ctoo-verdict-list li {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.97rem;
-    line-height: 1.6;
-    color: #44403c;
-    margin-bottom: 0.5rem;
-  }
-  .ctoo-links { padding-left: 1.5rem; margin: 0; }
-  .ctoo-links li {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    margin-bottom: 0.5rem;
-  }
-  .ctoo-link { color: #e8604c; text-decoration: underline; }
-  .ctoo-link:hover { color: #d44e3b; }
-  .ctoo-faq { display: flex; flex-direction: column; gap: 0.75rem; }
-  .ctoo-faq-item {
-    border: 1px solid #e7e5e4;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    background: #fff;
-  }
-  .ctoo-faq-q {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #2D6A4F;
-    cursor: pointer;
-    list-style: none;
-  }
-  .ctoo-faq-q::-webkit-details-marker { display: none; }
-  .ctoo-faq-a {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.98rem;
-    line-height: 1.65;
-    color: #44403c;
-    margin: 0.75rem 0 0;
-    max-width: 70ch;
-  }
-  @media (max-width: 767px) {
-    .page-container { padding: 0 16px; }
-    .ctoo-verdict-grid { grid-template-columns: 1fr; }
-  }
-  @media (min-width: 768px) and (max-width: 1024px) { .page-container { padding: 0 32px; } }
+.cvt{--f:#2D6A4F;--clay:#e8604c;--clay-ink:#b04228;--clay-t:#b04228;--cream:#faf7f4;--bd:#e7ddd3;--hdr:96px;color:#2a2622}
+:global(html){scroll-behavior:smooth}
+.cvt .container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+/* HERO — full-bleed band, portraits center-right, whole bird visible */
+.cvt-hero{background:linear-gradient(160deg,#f4efe9 0%,var(--cream) 55%,#eef4f0 100%);border-bottom:1px solid var(--bd);padding:34px 0 38px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,560px);gap:clamp(24px,4vw,56px);align-items:center;min-height:380px}
+.hero-imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-imgs figure{position:relative;margin:0}
+.hero-imgs img{display:block;width:100%;height:320px;object-fit:cover;object-position:center;border-radius:18px;box-shadow:0 8px 26px rgba(60,30,10,.14)}
+.hero-imgs figure:first-child{transform:translateY(14px)}
+.hero-imgs figure:last-child{transform:translateY(-14px)}
+.chip{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(255,255,255,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.5);border-radius:50px;padding:5px 14px;font-size:.78rem;font-weight:700;color:#1f4d39;white-space:nowrap}
+.vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border:3px solid var(--clay);color:var(--clay-ink);font-family:'Newsreader',serif;font-weight:700;font-size:1.05rem;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(60,30,10,.22);z-index:2}
+.hero-copy{max-width:560px}
+.eyebrow{font-size:.85rem;letter-spacing:.02em;color:var(--clay-t);font-weight:600;margin:0 0 10px}
+.cvt .cag-h1{font-family:'Newsreader',serif;font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.15;margin:0 0 14px;color:#2a2622}
+.lead{font-size:1.05rem;line-height:1.65;color:#4c443c;max-width:58ch;margin:0 0 22px}
+.hero-cta{margin:0;display:flex;gap:12px;flex-wrap:wrap}
+.btn-clay,.btn-ghost{display:inline-block;border-radius:50px;padding:13px 28px;font-weight:600;text-decoration:none;font-size:.95rem;transition:background-color .2s,color .2s,transform .15s}
+.btn-clay{background:var(--clay-ink);color:#fff}
+.btn-clay:hover{background:#9c3a23;transform:translateY(-2px)}
+.btn-ghost{border:2px solid var(--f);color:var(--f)}
+.btn-ghost:hover{background:var(--f);color:#fff}
+/* COUNTER — modern band: gradient, icon chips, serif numerals, hairline separators */
+.cvt-counter{background:linear-gradient(135deg,#2D6A4F 0%,#1f4d39 100%);color:#fff}
+.counter-row{display:grid;grid-template-columns:repeat(4,1fr);padding-top:26px;padding-bottom:26px;text-align:center}
+.cs{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px}
+.cs+.cs{border-left:1px solid rgba(255,255,255,.16)}
+.cs-ic{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.12);font-size:1.05rem;margin-bottom:6px}
+.counter-row b{font-family:'Newsreader',serif;font-size:2.1rem;display:block;line-height:1.1;letter-spacing:-.01em}
+.cs-l{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;opacity:.88;font-weight:600}
+/* MOBILE JUMP RAIL — clear divider band above and below, all sections, no skipped numbers */
+.cvt-rail{position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.97);backdrop-filter:blur(6px);border-top:3px solid var(--clay-ink);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);display:none}
+.rail-row{display:flex;gap:8px;overflow-x:auto;padding-top:12px;padding-bottom:12px;scrollbar-width:none}
+.rail-row::-webkit-scrollbar{display:none}
+.rail-row a{white-space:nowrap;font-size:.78rem;padding:8px 14px;border-radius:50px;text-decoration:none;color:var(--f);background:#fff;border:1px solid var(--bd);transition:border-color .2s,color .2s}
+.rail-row a:hover{border-color:var(--clay-t);color:var(--clay-t)}
+.rail-row a b{color:var(--clay-t);margin-right:4px}
+.cvt-body{display:grid;grid-template-columns:200px minmax(0,1fr);gap:34px;padding-top:44px;padding-bottom:48px;align-items:start}
+/* DESKTOP TOC — card treatment; ink title with clay tick so it doesn't melt into the green band */
+.cvt-toc{position:sticky;top:calc(var(--hdr) + 24px);font-size:.85rem;max-height:calc(100vh - var(--hdr) - 48px);overflow-y:auto;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px 16px 10px;box-shadow:0 4px 14px rgba(60,30,10,.05)}
+.toc-title{display:flex;align-items:center;gap:8px;font-weight:700;color:#2a2622;font-family:'IBM Plex Sans',sans-serif;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px}
+.toc-tick{width:14px;height:4px;border-radius:2px;background:var(--clay-ink);display:inline-block}
+.cvt-toc a{display:block;color:#2a2622;text-decoration:none;padding:5px 0;border-bottom:1px solid var(--bd)}
+.cvt-toc a:last-child{border-bottom:none}
+.cvt-toc a b{color:var(--clay-t);margin-right:6px}
+.cvt-toc a:hover{color:var(--clay-t)}
+.cvt-main{min-width:0}
+.cvt-main section{margin-bottom:14px;scroll-margin-top:calc(var(--hdr) + 18px)}
+.cvt .cag-h2{font-family:'Newsreader',serif;font-size:var(--fs-h2,clamp(1.25rem,3.5vw,2rem));color:#2a2622;margin:14px 0 16px;line-height:1.18}
+.cvt .cag-h3{font-family:'Newsreader',serif;font-size:var(--fs-h3,clamp(1.0625rem,2.2vw,1.5rem));color:var(--f);margin:24px 0 10px;line-height:1.25}
+.cvt .cag-h4{font-family:'Newsreader',serif;font-size:var(--fs-h4,clamp(.9375rem,1.8vw,1.25rem));margin:20px 0 8px;line-height:1.3}
+.cvt .cag-h5{font-family:'Newsreader',serif;font-size:1rem;margin:16px 0 6px;color:#3a332c}
+.cvt .cag-h6{font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;color:var(--clay-t);margin:14px 0 4px}
+.cvt-main p{line-height:1.68;margin:0 0 15px;max-width:70ch}
+.cvt-main a{color:var(--clay-t);text-decoration:underline;text-underline-offset:2px}
+.cvt-main a.btn-clay{color:#fff;text-decoration:none}
+.cvt-main a.btn-ghost{color:var(--f);text-decoration:none}
+.cvt-main a.btn-ghost:hover{color:#fff}
+.cvt-main .bird-photo,.cvt-main .blog-c,.cvt-main .ship-places a{text-decoration:none}
+.sec-img{display:block;width:100%;max-width:760px;aspect-ratio:760/400;object-fit:cover;height:auto;border-radius:18px;margin:4px 0 18px;box-shadow:0 6px 20px rgba(60,30,10,.1)}
+.sec-img.inf-img{aspect-ratio:1408/768;box-shadow:0 4px 16px rgba(60,30,10,.08)}
+/* PORTRAIT — square OG photos (e.g. the Congo close-up) show whole, centered, not cover-cropped to the 1.9:1 band */
+.sec-img.portrait{max-width:420px;aspect-ratio:1/1;object-position:center;margin-left:auto;margin-right:auto}
+.qa-box{background:#eaf4ef;border:1px solid #cfe4da;border-radius:16px;padding:20px 22px;margin:0 0 15px}
+.qa-box p{margin:0;max-width:none}
+.qa-box strong{color:var(--f)}
+/* SEAM — logo medallion on hairlines (2026-07-05: chip treatment, no more flat strip) */
+.seam{display:flex;align-items:center;gap:14px;margin:40px 0}
+.seam::before{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#cdbfae)}
+.seam::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#cdbfae,transparent)}
+.seam img{width:46px;height:46px;object-fit:contain;background:#fff;border:1px solid var(--bd);border-radius:50%;padding:7px;box-shadow:0 3px 10px rgba(60,30,10,.08);opacity:1}
+/* KEY TAKEAWAYS — refined stat cards: clay tick, ink stat, hairline, quieter sub */
+.kt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 18px}
+.kt-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px 16px 14px}
+.kt-tick{display:block;width:22px;height:4px;border-radius:2px;background:var(--clay-ink);margin-bottom:10px}
+.kt-c b{font-family:'Newsreader',serif;color:#2a2622;font-size:1.4rem;display:block;line-height:1.15;letter-spacing:-.01em;padding-bottom:8px;border-bottom:1px solid var(--bd);margin-bottom:8px}
+.kt-sub{font-size:.86rem;color:#57534e;line-height:1.5;display:block}
+/* SIDE-BY-SIDE — CompareTableE idiom: branded gradient headers + Edge, mobile tabs */
+.cmpe-tabs{display:none;gap:8px;margin:0 0 10px}
+.cmpe-tab{display:inline-flex;align-items:center;gap:7px;border-radius:50px;padding:9px 18px;font:inherit;font-size:.88rem;font-weight:700;cursor:pointer;background:#fff;color:var(--f);border:2px solid var(--f)}
+.cmpe-tab img{width:20px;height:20px;object-fit:contain}
+.cmpe-tab.active{background:var(--f);color:#fff}
+.cmpe-tab[data-v="t"]{border-color:var(--clay-ink);color:var(--clay-ink)}
+.cmpe-tab[data-v="t"].active{background:var(--clay-ink);color:#fff}
+.tbl-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--bd);box-shadow:0 4px 20px rgba(60,30,10,.07)}
+.tbl-wrap.plain{box-shadow:none;border-radius:12px;max-width:640px}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:.9rem;background:#fff}
+.cmp-tbl th{padding:12px;text-align:left;font-weight:600;vertical-align:middle}
+.cmp-tbl .th-f,.cmp-tbl .th-e{background:#fff;color:#57534e;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;border-bottom:1px solid var(--bd)}
+.cmp-tbl .th-c{background:linear-gradient(135deg,#2D6A4F,#1f4d39);color:#fff}
+.cmp-tbl .th-t2{background:linear-gradient(135deg,#e8604c,#c8472f);color:#fff}
+.th-flex{display:flex;align-items:center;gap:10px}
+.th-flex img{width:30px;height:30px;object-fit:contain;flex:none}
+.th-title{display:block;font-family:'Newsreader',serif;font-weight:700;font-size:1.02rem;line-height:1.2}
+.th-sub{display:block;font-size:.72rem;font-weight:400;opacity:.9;margin-top:2px}
+.cmp-tbl td{padding:10px 12px;border-bottom:1px solid var(--bd)}
+.cmp-tbl tr:nth-child(even) td{background:var(--cream)}
+.cmp-tbl .td-f{font-weight:600}
+.cmp-tbl .edge{color:var(--f);font-weight:700}
+/* scorecard data table (real DOM data behind the infographic) */
+.score-tbl{width:100%;border-collapse:collapse;font-size:.86rem;background:#fff}
+.score-tbl th{background:var(--f);color:#fff;padding:9px 12px;text-align:left;font-weight:600}
+.score-tbl td{padding:8px 12px;border-bottom:1px solid var(--bd)}
+.score-tbl tr:last-child td{border-bottom:none}
+.score-tbl tr:nth-child(even) td{background:var(--cream)}
+.score-tbl .sc{font-weight:700;color:var(--f)}
+/* SCORECARD — stack into cards on phones so the 4 columns never cramp */
+@media(max-width:640px){
+  .tbl-wrap.plain{border:none;box-shadow:none;border-radius:0;max-width:none;overflow:visible}
+  .score-tbl,.score-tbl tbody,.score-tbl tr,.score-tbl td{display:block;width:auto}
+  .score-tbl thead{position:absolute;left:-9999px}
+  .score-tbl tr{background:#fff!important;border:1px solid var(--bd);border-radius:14px;padding:12px 15px;margin-bottom:11px;box-shadow:0 3px 12px rgba(60,30,10,.06)}
+  .score-tbl tr:nth-child(even) td{background:transparent}
+  .score-tbl td{border:none;padding:6px 0;display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+  .score-tbl td::before{content:attr(data-label);font-weight:600;color:#57534e;font-size:.78rem;letter-spacing:.02em}
+  .score-tbl .sc-trait{font-family:'Newsreader',serif;font-size:1.1rem;color:#2a2622;border-bottom:1px solid var(--bd);padding-bottom:9px;margin-bottom:3px}
+  .score-tbl .sc-trait::before{display:none}
+  .score-tbl .sc{color:var(--f);font-weight:700;font-size:1.02rem}
+  .score-tbl .sc-note{flex-direction:column;align-items:flex-start;gap:3px;color:#57534e;font-size:.88rem}
+}
+.cap{font-size:.85rem;color:#7a6f64;font-style:italic}
+.author-card{background:#fff;border:1px solid var(--bd);border-radius:20px;overflow:hidden;margin:0 0 18px;box-shadow:0 4px 16px rgba(60,30,10,.07)}
+.ac-banner{display:block;width:100%;height:240px;object-fit:cover}
+.ac-row{display:flex;gap:16px;align-items:center;padding:18px 20px}
+.ac-avatar{width:72px;height:54px;border-radius:12px;object-fit:cover;object-position:50% 32%;flex:none}
+.ac-name{font-family:'Newsreader',serif;font-size:1.2rem;margin:0}
+.ac-sub{font-size:.85rem;color:#7a6f64;margin:2px 0 8px}
+.ac-badges{margin:0;display:flex;gap:6px;flex-wrap:wrap}
+.ac-badges span{background:var(--f);color:#fff;border-radius:50px;padding:4px 12px;font-size:.72rem;font-weight:600}
+@media(max-width:900px){
+  .cvt-body{grid-template-columns:1fr;gap:0;padding-top:24px}
+  .cvt-toc{display:none}
+  .cvt-rail{display:block}
+  .hero-imgs img{height:220px}
+  .counter-row{grid-template-columns:repeat(2,1fr);gap:10px}
+  .cs+.cs{border-left:none}
+  .cs:nth-child(even){border-left:1px solid rgba(255,255,255,.16)}
+  .kt-grid{grid-template-columns:1fr 1fr}
+  .cmpe-tabs{display:flex}
+  .cmp-tbl{font-size:.84rem}
+  .cmp-tbl th,.cmp-tbl td{padding:9px 10px}
+  /* tab-click view: show attribute + the selected variant + edge */
+  .show-c .th-t2,.show-c .td-t{display:none}
+  .show-t .th-c,.show-t .td-c{display:none}
+}
+@media(max-width:520px){.kt-grid{grid-template-columns:1fr}}
+
+/* S13 lifestyle */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
+.match-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px}
+.match-c h4{margin-top:0!important}
+.match-c p{margin-bottom:0;font-size:.9rem}
+/* S15 timeline */
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 8px}
+.tl-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px;position:relative}
+.tl-n{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--clay-ink);color:#fff;font-size:.75rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.tl-c b{font-family:'Newsreader',serif;display:block;margin:6px 0 6px;color:var(--f);font-size:.98rem}
+.tl-c p{font-size:.82rem;margin:0!important;max-width:none}
+/* S16 myths */
+.myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 8px}
+.myth-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:18px}
+.myth-x{display:inline-block;background:var(--clay-ink);color:#fff;border-radius:50px;padding:3px 13px;font-size:.72rem;font-weight:600;margin-bottom:10px}
+.myth-c p{margin:0;font-size:.9rem}
+/* S18 shipping + health */
+.ship-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 16px}
+.ship-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.ship-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.ship-c>img{display:block;width:100%;height:200px;object-fit:cover}
+.ship-body{padding:16px 18px}
+.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 12px;font-size:.7rem;font-weight:600}
+.ship-tier.clay{background:var(--clay-ink)}
+.ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.15rem}
+.ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
+.ship-c p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
+.ship-places{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.ship-places a{display:inline-flex;align-items:center;gap:8px;background:#f4efe9;border:1px solid var(--bd);border-radius:50px;padding:9px 15px;font-size:.84rem;line-height:1.15;color:var(--f);text-decoration:none;transition:border-color .2s,color .2s,background-color .2s}
+.ship-places a:hover{border-color:var(--clay-t);color:var(--clay-t);background:#fff}
+.ship-places .pin{color:var(--clay-t);flex:none;width:15px;height:15px}
+.ship-places a:hover .pin{color:var(--clay-t)}
+.health-card{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin:6px 0 14px;max-width:420px}
+.hc-head{background:var(--f);color:#fff;padding:8px 14px;font-family:'Newsreader',serif}
+.hc-list{list-style:none;margin:0;padding:12px 14px}
+.hc-list li{font-size:.85rem;padding:4px 0 4px 22px;position:relative}
+.hc-list li::before{content:"✔";position:absolute;left:0;color:var(--f);font-weight:700}
+.ship-line{font-size:.78rem;color:#7a6f64;font-weight:600;border-top:1px dashed var(--bd);padding-top:8px}
+/* S19 bird cards — photo-first + doc badges + per-bird CTA */
+.bird-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:6px 0 18px}
+.bird-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;color:#2a2622;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
+.bird-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.12)}
+.bird-photo{position:relative;display:block}
+.bird-photo img{display:block;width:100%;height:200px;object-fit:cover;object-position:center}
+.bird-badge{position:absolute;top:10px;left:10px;background:rgba(45,106,79,.94);color:#fff;font-size:.68rem;font-weight:600;padding:4px 11px;border-radius:50px}
+.bird-body{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
+.bird-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.bird-name{font-family:'Newsreader',serif;font-size:1.08rem;margin:0}
+.bird-name a{color:#2a2622;text-decoration:none}
+.bird-name a:hover{color:var(--clay-t)}
+.bird-price{color:var(--clay-t);font-weight:700;font-size:1rem;white-space:nowrap}
+.bird-docs{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.bird-docs li{font-size:.66rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:3px 9px;white-space:nowrap}
+.bird-cta{text-align:center;margin-top:auto}
+.ship-mini{font-size:.68rem;color:#7a6f64;display:block;margin-top:10px;border-top:1px dashed var(--bd);padding-top:6px}
+.pair-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 16px}
+.pair-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.pair-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.pair-c>img{display:block;width:100%;height:210px;object-fit:cover;object-position:center}
+.pair-c>img.pimg-pair{object-position:50% 32%}
+.pair-c>img.pimg-eggs{object-position:50% 56%}
+.pair-body{padding:15px 17px}
+.pair-c b{font-family:'Newsreader',serif;font-size:1.1rem;display:block;margin-bottom:2px}
+.pair-sub{font-size:.82rem;color:#7a6f64;display:block;margin:2px 0 10px}
+.btn-ghost.sm,.btn-clay.sm{padding:8px 16px;font-size:.82rem}
+.ctr{text-align:center}
+/* S20 quotes — real buyer photos + name row */
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
+.quote-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0}
+.q-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.q-av{width:48px;height:48px;border-radius:50%;object-fit:cover;flex:none;border:2px solid #eaf4ef}
+.q-id{flex:1;min-width:0}
+.q-name{display:block;font-family:'Newsreader',serif;font-size:1rem;color:#2a2622;line-height:1.2}
+.q-loc{display:block;font-size:.75rem;color:#7a6f64;margin-top:1px}
+.stars{color:#c9a227;letter-spacing:2px;font-size:.85rem;flex:none}
+.quote-c p{font-size:.9rem;font-style:italic;margin:0}
+/* S21 faq */
+.faq-open{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.faq-q{font-family:'Newsreader',serif;font-size:1rem;margin:0 0 6px;color:#2a2622}
+.faq-open p{margin:0;font-size:.9rem}
+.faq-d{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.faq-d summary{font-family:'Newsreader',serif;font-weight:600;cursor:pointer;font-size:1rem}
+.faq-d p{margin:8px 0 0;font-size:.9rem}
+/* S22 blog */
+.blog-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.blog-c{background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;text-decoration:none!important;color:#2a2622;transition:transform .15s,box-shadow .2s}
+.blog-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.blog-c img{width:100%;height:140px;object-fit:cover}
+.blog-body{padding:12px 14px 14px}
+.blog-tag{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 11px;font-size:.68rem;font-weight:600}
+.blog-t{font-family:'Newsreader',serif;font-size:1rem;margin:7px 0 0}
+/* S23 cta + inquiry form (matches what we sell — no duplicate newsletter band) */
+.final-cta{background:var(--cream);border:1px solid var(--bd);border-radius:20px;padding:clamp(22px,4vw,36px)}
+.cta-form{display:grid;gap:12px;max-width:640px;margin:10px 0 0}
+.cta-form label{display:grid;gap:5px;font-size:.85rem;font-weight:600;color:#3a332c}
+.cta-form .opt{font-weight:400;color:#7a6f64}
+.cta-form input,.cta-form textarea,.cta-form select{border:1.5px solid var(--bd);border-radius:12px;padding:11px 13px;font:inherit;font-weight:400;background:#fff9f6;width:100%}
+.cta-form input:focus,.cta-form textarea:focus,.cta-form select:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.12)}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.cta-form button{border:none;cursor:pointer}
+.cta-form .btn-ghost{padding:11px 22px}
+.form-note{font-size:.8rem;color:#7a6f64;margin:2px 0 0!important}
+.hp{position:absolute;left:-9999px}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;min-height:0;gap:20px}
+  .hero-imgs{order:-1;max-width:560px;margin:0 auto;width:100%}
+  .hero-imgs figure:first-child{transform:translateY(8px)}
+  .hero-imgs figure:last-child{transform:translateY(-8px)}
+  .hero-copy{max-width:none;text-align:center}
+  .hero-cta{justify-content:center}
+  .lead{margin-left:auto;margin-right:auto}
+  .ac-banner{height:180px}
+  .match-grid,.myth-grid,.ship-cards,.quote-grid,.pair-row{grid-template-columns:1fr}
+  .timeline{grid-template-columns:1fr 1fr}
+  .bird-cards{grid-template-columns:1fr 1fr}
+  .blog-cards{grid-template-columns:1fr}
+  .ship-places{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ship-places a{justify-content:center;padding:10px 10px;font-size:.79rem}
+  .ship-places a span{text-align:center}
+  .form-2col{grid-template-columns:1fr}
+}
+@media(max-width:520px){.timeline,.bird-cards{grid-template-columns:1fr}.hero-imgs img{height:190px}.ship-places{grid-template-columns:1fr 1fr}.bird-photo img{height:auto;aspect-ratio:4/3;object-position:center top}}
+/* HERO — push both birds back from the center VS roundel (no beak hugging the circle) */
+.hero-imgs .hero-left img{object-position:38% center}
+.hero-imgs .hero-right img{object-position:62% center}
+/* S10 species subsections */
+.sp-block{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:center;background:#fff;border:1px solid var(--bd);border-radius:18px;padding:16px;margin:0 0 16px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.sp-media{border-radius:14px;overflow:hidden;aspect-ratio:4/3;background:#f4efe9}
+.sp-media img{display:block;width:100%;height:100%;object-fit:cover}
+.sp-body h3{margin-top:0!important}
+.sp-sci{font-size:.82rem;color:var(--clay-t);font-weight:600;margin:0 0 8px!important}
+.sp-stats{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px;padding:0}
+.sp-stats li{background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:4px 12px;font-size:.72rem;display:flex;gap:6px}
+.sp-stats li span{color:#7a6f64}
+.sp-stats li b{color:var(--f)}
+.sp-body p{font-size:.9rem;margin-bottom:0}
+/* S25 pull-quote (17B feature) */
+.pullquote{margin:0 0 14px;background:#fff;border:1px solid var(--bd);border-left:4px solid var(--clay-ink);border-radius:14px;padding:20px 22px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.pullquote blockquote{margin:0 0 14px;font-family:'Newsreader',serif;font-size:1.15rem;line-height:1.5;color:#2a2622;font-style:italic}
+.pullquote figcaption{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pq-id{font-size:.85rem;color:#57534e}
+.pq-id b{color:#2a2622;font-family:'Newsreader',serif}
+@media(max-width:640px){.sp-block{grid-template-columns:1fr}.sp-media{aspect-ratio:16/9}}
+@media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}.cvt *{transition:none!important}}
 </style>
