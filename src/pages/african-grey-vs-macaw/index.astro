@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import CTA from '../../components/CTA.astro';
+import Newsletter from '../../components/cag-library/NewsletterV2.astro';
+import clutch from '../../../data/clutch-inventory.json';
 
-const title = "African Grey vs Macaw | Which Parrot Is Right for You?";
-const description = "African Grey vs Macaw compared: size, noise, talking ability, lifespan, price, and temperament. Which species fits your home, schedule, and budget?";
+const title = "African Grey vs Macaw: Bite Force, Size, Talking Ability & 11 Species Compared by Breeders Who Raise Greys | C.A.Gs – Honest African Grey vs Macaw Guide";
+const description = "African Grey vs Macaw, compared honestly by breeders who raise Greys only: real bite-force data (61–96 N vs a Hyacinth's 540 N), talking ability, noise, cost and nutrition — plus all 11 macaw species, Mini to Hyacinth, and the succession question most comparison pages skip.";
 const canonical = "https://congoafricangreys.com/african-grey-vs-macaw/";
 
 const breadcrumbs = [
@@ -13,349 +14,1286 @@ const breadcrumbs = [
   { name: "African Grey vs Macaw", url: "/african-grey-vs-macaw/" },
 ];
 
-const comparisonRows = [
-  { attr: "Body size", ag: "12–14 inches (Congo) / 9–11 inches (Timneh)", macaw: "20–42 inches depending on species" },
-  { attr: "Weight", ag: "400–550 grams (Congo)", macaw: "900–1,700 grams (Blue & Gold)" },
-  { attr: "Noise level", ag: "Moderate — contact calls; much quieter than macaws", macaw: "Very loud — screaming is natural behavior" },
-  { attr: "Talking ability", ag: "Exceptional — best talker of all parrots", macaw: "Good — fewer words, less clarity" },
-  { attr: "Price range", ag: "$1,700 – $3,500", macaw: "$1,000 – $3,500 depending on species" },
-  { attr: "Temperament", ag: "Intelligent, sensitive, can be reserved", macaw: "Playful, bold, can be nippy" },
-  { attr: "Lifespan", ag: "40–60 years", macaw: "50–80+ years (Blue & Gold)" },
-  { attr: "Cage size", ag: "36\"W × 24\"D × 48\"H minimum", macaw: "48\"W × 36\"D × 60\"H minimum" },
-  { attr: "Apartment suitability", ag: "Good — quieter contact calls", macaw: "Poor — very loud, echoes in apartments" },
-  { attr: "CITES status", ag: "Appendix I — full documentation required", macaw: "Varies by species — many Appendix I or II" },
+// 11 macaw species subsections — every one has a real provided photo (2026-07-10 breeder set)
+const species = [
+  { id: "scarlet", name: "Scarlet Macaw", sci: "Ara macao", img: "/african-grey-vs-scarlet-macaw-comparison.webp",
+    alt: "A Scarlet Macaw held on a hand indoors, its vivid red, yellow and blue plumage contrasting with the African Grey's understated silver-grey",
+    size: "33–35 in · 900–1,100 g", noise: "Very loud", talk: "Moderate", trait: "Nature's brightest, not its best talker",
+    body: "The Scarlet is the macaw people draw as a child — blazing red body, a rainbow wingtip, a personality as loud as its plumage. Against a Grey the trade is stark: you're swapping vocabulary for volume. Scarlets can pick up words, but they're prized for color and boldness, not conversation. They're also among the higher-strung macaws, known for hormonal mood swings during breeding season that even experienced keepers plan around. If a bird that stops a room visually is the goal, nothing a Grey does competes. If the goal is a bird you can talk to, this is the wrong direction entirely." },
+  { id: "blue-and-gold", name: "Blue-and-Gold Macaw", sci: "Ara ararauna", img: "/african-grey-vs-blue-and-gold-macaw-comparison.webp",
+    alt: "A Blue-and-Gold Macaw in close portrait, cobalt-blue back and golden-yellow chest, the most commonly kept pet macaw species",
+    size: "33–35 in · 900–1,300 g", noise: "Very loud", talk: "Fair", trait: "The 'energizer bunny' of the macaw world",
+    body: "This is the macaw most buyers picture when they type just \"macaw\" into a search bar, and the one behind your highest-intent search: whether it beats a Grey for a house pet. It doesn't, on the metrics that make a house livable — the Blue-and-Gold's contact call carries well past 100 decibels, close to a chainsaw, and it needs a genuinely large flight cage plus hours of daily out-of-cage time to stay sane. What it offers instead is relentless, extroverted energy: acrobatic, food-motivated, and famously food-driven for training. Against the Grey's laid-back, chatty reserve, the Blue-and-Gold is the louder, more physical, less conversational bird — wonderful in the right dedicated bird room, a poor fit for an apartment." },
+  { id: "green-winged", name: "Green-winged Macaw", sci: "Ara chloropterus", img: "/african-grey-vs-green-winged-macaw-comparison.webp",
+    alt: "A Green-winged Macaw in profile showing its deep red body and green wing band, one of the largest macaw species by length",
+    size: "35–39 in · 1,000–1,700 g", noise: "Very loud", talk: "Limited", trait: "Among the largest macaws by length",
+    body: "Nose to tail, the Green-winged is one of the biggest parrots you can legally own — deep crimson body, a green-and-blue wing band, and a beak built to crack macadamia shells whole. Owners describe them as gentle giants, calmer and less nippy than their size suggests, but \"gentle\" doesn't mean small: the beak alone drives a real monthly toy-replacement budget, easily $200–$300 for a bird that treats wooden perches as a snack. Against a Grey, the Green-winged trades talking ability and apartment-plausibility for sheer physical presence. If your home has the room and the budget for that beak, it's a genuinely different kind of companion than a Grey — not better or worse, just built for a different life." },
+  { id: "hyacinth", name: "Hyacinth Macaw", sci: "Anodorhynchus hyacinthinus", img: "/african-grey-vs-hyacinth-macaw-comparison.webp",
+    alt: "A Hyacinth Macaw in close portrait, deep cobalt-blue plumage with a bright yellow eye-ring, the largest flying parrot species", loading_priority: false,
+    size: "40 in · 1,200–1,700 g", noise: "Very loud", talk: "Limited", trait: "The largest parrot alive, and the strongest bite ever measured in a bird",
+    body: "The Hyacinth is the giant of the parrot world — the longest flying parrot species, cobalt-blue from head to tail, with a beak engineered to crack palm nuts most animals can't touch. It's also the bird behind the biggest number on this page: a 2025 Journal of Anatomy study measured a Hyacinth's bite at nearly 540 newtons in vivo, the highest recorded for any bird species. Against a Grey's 61–96 newtons, that's roughly five to nine times the force. Temperamentally, Hyacinths are often described as gentle and affectionate despite that beak — but \"gentle\" in a 1,700-gram bird with the strongest measured bite in aviculture still demands real caution around children. The Grey wins on talking, apartment life and everyday manageability; the Hyacinth wins on sheer scale and specialist appeal for keepers with the space, budget and diet knowledge it needs." },
+  { id: "military", name: "Military Macaw", sci: "Ara militaris", img: "/african-grey-vs-military-macaw-comparison.webp",
+    alt: "A Military Macaw showing its olive-green body and red forehead patch, a mid-sized macaw named for its uniform-like coloring",
+    size: "28–33 in · 900–1,200 g", noise: "Loud", talk: "Moderate", trait: "Olive camouflage, not a camouflaged temperament",
+    body: "Named for its muted olive-green body against military dress uniforms, this macaw sits in the middle of the size chart — bigger than a Grey, smaller than a Green-winged or Hyacinth. Militaries are capable talkers by macaw standards and known for strong one-on-one bonds, sometimes rivaling a Grey's devotion to a favorite person. Where they diverge sharply is volume and space: a Military still needs a large flight cage and produces the sustained contact calls that make macaws, as a group, apartment-incompatible. If the appeal is a bird that bonds hard and talks some, and your home can absorb macaw-level noise, a Military splits the difference between the Grey's conversational style and a bigger macaw's physical presence." },
+  { id: "severe", name: "Severe Macaw", sci: "Ara severus", img: "/african-grey-vs-severe-macaw-comparison.webp",
+    alt: "A Severe Macaw, a compact green mini-macaw with a maroon-brown forehead, closer in body size to an African Grey than most macaws",
+    size: "18 in · 350–450 g", noise: "Loud for its size", talk: "Fair", trait: "A mini macaw close to the Grey's own size class",
+    body: "The Severe, also called the Chestnut-fronted Macaw, is one of the true \"mini macaws\" — green-bodied with a maroon forehead patch, and at 350–450 grams it's the closest any macaw gets to sharing a Grey's actual weight class. That size similarity makes it the fairest apples-to-apples comparison on this page: same rough footprint, very different bird. The Severe still carries a macaw's higher-pitched, carrying scream and a macaw's love of destructive chewing, just delivered from a body a Grey owner would recognize the size of. It's a reasonable entry point for someone drawn to macaw personality who's nervous about macaw scale — though the noise gap with a Grey remains real regardless of the bird's size." },
+  { id: "hahns", name: "Hahn's Macaw", sci: "Diopsittaca nobilis", img: "/african-grey-vs-hahns-macaw-comparison.webp",
+    alt: "A Hahn's Macaw perched on a hand, the smallest true macaw species, green-bodied with a red shoulder patch",
+    size: "12–14 in · 130–170 g", noise: "Moderate for a macaw", talk: "Fair", trait: "The smallest macaw — lighter than most Greys",
+    body: "Hahn's Macaw, sometimes sold as the Red-shouldered Macaw, is the smallest macaw species that exists — smaller and lighter than a Timneh Grey, let alone a Congo. It's the macaw most often floated as \"macaw-curious apartment dwellers, start here,\" and there's real logic to that: its contact calls, while still a macaw's call, carry noticeably less raw power than a Blue-and-Gold's or Green-winged's. It won't out-talk a Grey and it still packs full macaw energy — bold, busy, food-driven — into a small package, which surprises owners expecting a quiet bird because of its size. Think of it as a macaw personality with the Grey's footprint, not a quiet macaw." },
+  { id: "mini-macaw", name: "Mini Macaw (Miniature Species)", sci: "Diopsittaca & Primolius spp.", img: "/african-grey-vs-mini-macaw-comparison.webp",
+    alt: "A small mini macaw species perched indoors, representative of the miniature macaw group that includes Hahn's and the Yellow-collared",
+    size: "12–20 in · 130–300 g", noise: "Moderate for a macaw", talk: "Fair", trait: "The umbrella term for every small macaw",
+    body: "\"Mini macaw\" isn't one species — it's the umbrella term for the smaller macaws (Hahn's, Yellow-collared, Red-bellied and a few others) that share a compact frame and a big-macaw personality. Buyers who search this term are usually asking the same question our apartment/house GSC query implies: is there a small-enough macaw for a smaller home? The honest answer is size helps with cage footprint and beak-driven destruction, but it doesn't fix the volume gap with a Grey — even the mini macaws are louder and more insistent than a Grey's dawn-and-dusk chatter. If the draw is genuinely macaw temperament in the smallest legal package, this category is where to start researching by name, species by species." },
+  { id: "camelot", name: "Camelot Macaw (Hybrid)", sci: "Ara macao × Catalina hybrid", img: "/african-grey-vs-camelot-macaw-comparison.webp",
+    alt: "A Camelot Macaw hybrid showing vivid orange-red plumage with blue wing tips, a deliberate cross between Scarlet and Catalina macaw lines",
+    size: "34–36 in · 1,000–1,200 g", noise: "Very loud", talk: "Moderate", trait: "A deliberately bred hybrid, not a wild species",
+    body: "The Camelot is a purpose-bred hybrid — a Catalina Macaw (itself a Blue-and-Gold × Scarlet cross) bred back to a Scarlet, aimed at concentrating the Scarlet's fire-orange color with a Catalina's build. It's not found in the wild; it exists because aviculturists selected for it. Almost every competitor page treats \"macaw\" as one bird and skips hybrids entirely, which is exactly the gap this section fills. Temperament tracks its parent species — bold, food-driven, macaw-loud — with breeders reporting hybrid vigor claims that, honestly, aren't independently studied the way the Grey's cognition research is. Against a Grey, a Camelot offers striking, camera-ready color and zero talking-ability edge." },
+  { id: "catalina", name: "Catalina Macaw (Hybrid)", sci: "Ara ararauna × Ara macao", img: "/african-grey-vs-catalina-macaw-comparison.webp",
+    alt: "A Catalina Macaw hybrid displaying a blend of blue, gold and red plumage from its Blue-and-Gold and Scarlet parent species",
+    size: "30–35 in · 900–1,100 g", noise: "Very loud", talk: "Moderate", trait: "The original Blue-and-Gold × Scarlet cross",
+    body: "The Catalina is the first-generation cross behind the Camelot — a Blue-and-Gold bred to a Scarlet, producing a bird with patchwork blue, gold and red plumage no two individuals wear quite the same way. Breeders and owner forums frequently describe Catalinas as unusually outgoing even by macaw standards, though that's anecdotal rather than a controlled finding, and we won't dress it up as more than that. What's not anecdotal is the noise and space math: a Catalina inherits full Blue-and-Gold-scale volume and cage requirements. If a one-of-a-kind color pattern matters more to you than a documented talking bird, the Catalina is the more honest hybrid pick than pretending any macaw closes the conversation gap with a Grey." },
+  { id: "ruby", name: "Ruby Macaw (Hybrid)", sci: "Ara chloropterus hybrid", img: "/african-grey-vs-ruby-macaw-comparison.webp",
+    alt: "A Ruby Macaw hybrid showing deep ruby-red plumage derived from Green-winged Macaw lineage, a less common aviculture cross",
+    size: "32–37 in · 1,000–1,500 g", noise: "Very loud", talk: "Limited", trait: "A rarer Green-winged-line hybrid",
+    body: "The Ruby is the least standardized name on this list — different aviaries use it for slightly different Green-winged-line crosses, which is itself worth knowing before you go shopping: \"Ruby Macaw\" isn't a fixed, documented bloodline the way Camelot and Catalina increasingly are. What's consistent across the crosses is scale — Green-winged genetics mean a large, powerful bird with the beak strength and space needs to match. We include it here because it rounds out the 11-macaw breakdown almost no competitor attempts, and because a buyer who's seen the name deserves an honest answer instead of silence: expect Green-winged-level size and noise, a striking red-toned coat, and the same talking-ability gap against a Grey that runs through every macaw on this page." },
 ];
 
+// available birds, read live from clutch-inventory (never hardcoded status)
+const available = ((clutch as any).birds as any[])
+  .filter((b) => b.status === 'available' && b.sex !== 'pair')
+  .sort((a, b) => (a.variant === 'congo_african_grey' ? -1 : 1));
+const availablePair = ((clutch as any).birds as any[]).find((b) => b.sex === 'pair' && b.status === 'available');
+
 const faqs = [
-  {
-    q: "Do African Greys or macaws talk better?",
-    a: "African Greys are the superior talkers. They develop vocabularies of 200–1,000+ words, mimic voices with near-human clarity, and use words in context. Macaws can learn words and phrases but typically have smaller vocabularies and less precise enunciation than African Greys.",
-  },
-  {
-    q: "Are African Greys or macaws better for apartments?",
-    a: "African Greys are significantly better apartment birds. Their contact calls are moderate in volume. Macaws produce loud, piercing screams that carry through walls — they are poorly suited to apartment living and may violate noise ordinances.",
-  },
-  {
-    q: "Which is more expensive to own, an African Grey or a macaw?",
-    a: "Purchase prices are comparable ($1,700–$3,500 for both). Ongoing costs differ: macaws need much larger cages and consume more food daily due to their size. Veterinary costs are similar. Both are 40–80 year commitments with significant lifetime expenses.",
-  },
+  { q: "Which is bigger, an African Grey or a macaw?", a: "Almost every macaw is bigger. A Congo African Grey runs 400–600 grams and 12–14 inches; a Timneh is smaller still at 275–375 grams. Even the smallest true macaw, Hahn's, is lighter than a Timneh at 130–170 grams, but most pet macaws — Blue-and-Gold, Scarlet, Green-winged, Hyacinth — run 900 grams to 1.7 kilograms and 28 to 40 inches. The one exception worth knowing: several \"mini macaw\" species are actually closer to a Grey's size than to a Blue-and-Gold's." },
+  { q: "Is a blue macaw or an African Grey better for a house pet?", a: "For most houses, the African Grey. A Blue-and-Gold Macaw's contact call runs well past 100 decibels — close to a chainsaw — and it needs a large dedicated flight cage plus hours of daily exercise to stay mentally healthy. A Grey's vocalizations are moderate and its footprint is a third the size. The Blue-and-Gold wins on visual drama and playful, physical energy; the Grey wins on almost everything that makes a house livable day to day." },
+  { q: "Is an African Grey, a Macaw, or a Cockatoo the better parrot?", a: "There's no single winner — each is built differently. The African Grey is the best talker and the most apartment-plausible of the three. Macaws are the boldest, most colorful and generally the loudest and largest. Cockatoos are the most physically affectionate \"velcro birds,\" trading talking ability for near-constant contact. See our full African Grey vs Cockatoo comparison for that half of the triangle." },
+  { q: "Do African Greys or macaws talk better?", a: "African Greys, clearly. A Grey's word count can run into the hundreds or beyond, spoken with a clarity that fools people over a phone line, backed by decades of contextual-use research centered on Alex the Grey. Macaws pick up words and phrases — Blue-and-Gold and Military are the strongest talkers of the group — but none touch a Grey's precision or range." },
+  { q: "How much stronger is a macaw's bite than an African Grey's?", a: "It depends entirely on the species. A Grey bites at roughly 61–96 newtons. A 2025 in-vivo study in the Journal of Anatomy measured a Hyacinth Macaw's bite at nearly 540 newtons — about five to nine times a Grey's force, and the highest bite force recorded for any bird. Smaller macaws like Hahn's or Severe bite considerably softer than a Hyacinth, though still harder than a Grey pound for pound." },
+  { q: "Are macaws and African Greys similar birds?", a: "They're both intelligent, long-lived parrots that need serious daily enrichment, but they diverge sharply in practice. Greys are the quieter, more conversational, more independent bird; macaws are louder, larger-bodied (with a few mini exceptions), and lead with bold physicality over language. Housing, noise tolerance and cage-size needs differ enough that \"similar\" undersells the real gap a new owner will feel." },
+  { q: "Which is louder, a macaw or an African Grey?", a: "Macaws, by a wide margin. Large macaw species produce contact-call screams that rank among the loudest sounds any companion bird makes, built in the wild to carry for miles through rainforest canopy. A Grey's vocal signature is whistles, talking and appliance mimicry, with real but far more moderate dawn-and-dusk peaks." },
+  { q: "Can an African Grey and a macaw live in the same house?", a: "With separate, appropriately sized cages and careful supervision, yes — many multi-bird households manage it. The bite-force and size mismatch means unsupervised contact is never advisable, and the macaw's volume will be a daily reality for both birds and owners regardless of how well they otherwise coexist." },
+  { q: "Which lives longer, an African Grey or a macaw?", a: "Both outlast most other pets by decades. A well-cared-for Grey reaches 40–60 years; Blue-and-Gold and Hyacinth Macaws are frequently cited at 50–80 in good captive conditions. Either one may still be alive when you're not, which is exactly why this page has a dedicated succession-planning section." },
+  { q: "Which is more expensive to own, an African Grey or a macaw?", a: "Purchase prices can be comparable, but ongoing costs diverge: macaws need dramatically larger cages, eat more by volume, and — thanks to that stronger beak — go through toys and perches faster, often $200–$300 a month for the biggest species. A Grey's smaller footprint keeps first-year and annual costs meaningfully lower across the board." },
+  { q: "Do macaws or African Greys need more space?", a: "Macaws, without exception. Even the smallest mini macaws need a substantial flight cage, and large species like the Green-winged or Hyacinth need dedicated bird-room-scale space plus daily out-of-cage flight time. A Grey's minimum cage footprint is meaningfully smaller, which is a major reason it's the more apartment-plausible of the two." },
+  { q: "Is an African Grey or a macaw better for a first-time owner?", a: "Neither is a true beginner's bird — both are intelligent, decades-long commitments that punish neglect with plucking or screaming. Between the two, a Grey is generally the more forgiving first parrot: quieter, smaller, and less physically demanding than a large macaw, whose volume and space needs overwhelm many first-time owners." },
 ];
 
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 };
 
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "African Grey vs Macaw: Bite Force, Size, Talking Ability & 11 Species Compared",
+  description: description,
+  author: { "@type": "Organization", name: "C.A.Gs – Congo African Greys, Midland TX" },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com" },
+  mainEntityOfPage: canonical,
+  datePublished: "2026-06-04",
+  dateModified: "2026-07-10",
+};
+
+// NOTE: no page-level BreadcrumbList schema — <Breadcrumb> already emits it.
+
+const rows = [
+  { attr: "Adult weight", ag: "400–600 g (Congo) / 275–375 g (Timneh)", mc: "130 g (Hahn's) to 1,700 g (Hyacinth)", edge: "Depends on species" },
+  { attr: "Length", ag: "9–14 in beak to tail", mc: "12–40 in depending on species", edge: "Grey (compact)" },
+  { attr: "Measured bite force", ag: "61–96 N (70–220 PSI)", mc: "Up to ~540 N in vivo (Hyacinth)", edge: "Grey (safer)" },
+  { attr: "Noise level", ag: "Moderate — talking, whistles, mimicry", mc: "Very loud — sustained contact screams", edge: "African Grey" },
+  { attr: "Talking ability", ag: "Exceptional — 200–1,000+ words, clear", mc: "Fair to limited — fewer, less precise words", edge: "African Grey" },
+  { attr: "Apartment fit", ag: "Plausible with daily out-of-cage time", mc: "Poor for almost every species", edge: "African Grey" },
+  { attr: "Minimum cage footprint", ag: "36\"W × 24\"D × 48\"H", mc: "48\"W × 36\"D × 60\"H and up", edge: "African Grey" },
+  { attr: "Diet emphasis", ag: "Calcium + UV-B light for bone health", mc: "Higher fat — Brazil nuts, macadamias", edge: "Species-specific need" },
+  { attr: "Lifespan", ag: "40–60 years", mc: "50–80 years (large species)", edge: "Both lifelong" },
+  { attr: "Typical price", ag: "$1,700–$3,500 (our Greys)", mc: "$1,000–$15,000+ by species", edge: "Depends" },
+  { attr: "CITES status", ag: "Appendix I — every bird, every time", mc: "Mostly Appendix II; Hyacinth is Appendix I", edge: "Both regulated" },
+  { attr: "Powder-down dander", ag: "High", mc: "Low — macaws are not powder-down birds", edge: "Macaw, slightly" },
+];
+
+const takeaways = [
+  { big: "540 N", sub: "a Hyacinth Macaw's measured bite — up to 9× a Grey's 61–96 N" },
+  { big: "100+ dB", sub: "a large macaw's contact scream, close to a chainsaw" },
+  { big: "11 species", sub: "we compare the Grey to every macaw we could source real photos for" },
+  { big: "40–80 yrs", sub: "a lifespan long enough that a written succession plan isn't optional" },
+  { big: "1/3 the size", sub: "a Congo Grey's weight against a typical Blue-and-Gold Macaw" },
+  { big: "$200–$300/mo", sub: "realistic toy-replacement budget for a large macaw's beak" },
+  { big: "100%", sub: "every Grey ships with CITES papers, DNA sexing and PBFD/APV PCR results" },
+  { big: "$185 / $350", sub: "the two ways a C.A.Gs Grey reaches your door, coast to coast" },
+];
+
+const scores = [
+  { trait: "Talking & mimicry", c: 10, m: 4, note: "no macaw closes this gap" },
+  { trait: "Apartment / noise fit", c: 9, m: 2, note: "macaws are built to carry for miles" },
+  { trait: "Visual drama / color", c: 4, m: 10, note: "the macaw's signature" },
+  { trait: "Beginner suitability", c: 6, m: 3, note: "neither is truly easy" },
+  { trait: "Space efficiency", c: 9, m: 3, note: "most macaws need a bird room" },
+  { trait: "Physical safety margin", c: 8, m: 4, note: "bite force gap, species-dependent" },
+  { trait: "Independent play", c: 8, m: 6, note: "both need daily enrichment" },
+];
+
+const birdImg: Record<string, { src: string; alt: string }> = {
+  "bery": { src: "/bery-congo-african-grey-cuddly-tamed-card.webp", alt: "Bery, a cuddly tamed female Congo African Grey resting on her keeper's lap" },
+  "amie": { src: "/amie-congo-african-grey-handfed-baby-card.webp", alt: "Amie, a hand-fed baby female Congo African Grey snuggled against her keeper's shoulder" },
+  "roys": { src: "/roys-congo-african-grey-male-tame-card.webp", alt: "Roys, a tame young male Congo African Grey standing next to his toy ball" },
+  "jins-jeni": { src: "/jins-jeni-congo-african-grey-pair-card.webp", alt: "Jins and Jeni, Congo African Grey companion pair raised together" },
+  "elad": { src: "/elad-timneh-african-grey-male-wings-card.webp", alt: "Elad, a young male Timneh African Grey stretching his wings on a perch" },
+  "evie": { src: "/evie-timneh-african-grey-female-perched-card.webp", alt: "Evie, a female Timneh African Grey perched calmly, showing her horn-colored beak" },
+};
+const docBadges = ["CITES Cert", "PCR DNA-Sexed", "Vet Certified", "PBFD & APV Screened", "Fully Weaned"];
+
+// fresh 7-location set — never used by CvT (TX/FL/NY/LA/Chicago/GA/NC), MvF
+// (AZ/PA/OH/Miami/Dallas/WA/NJ) or cockatoo (CO/VA/MI/TN/MN/MO/MD)
+const shipPlaces = [
+  { href: "/african-grey-parrot-for-sale-illinois/", label: "Illinois home delivery" },
+  { href: "/african-grey-parrot-for-sale-massachusetts/", label: "Massachusetts airport pickup" },
+  { href: "/african-grey-parrot-for-sale-wisconsin/", label: "Wisconsin courier routes" },
+  { href: "/african-grey-parrot-for-sale-indiana/", label: "Indiana door arrivals" },
+  { href: "/african-grey-parrot-for-sale-iowa/", label: "Iowa cargo connections" },
+  { href: "/african-grey-parrot-for-sale-kentucky/", label: "Kentucky weekend deliveries" },
+  { href: "/african-grey-parrot-for-sale-oregon/", label: "Oregon Pacific Northwest shipping" },
+];
+
+const tocItems = [
+  { id: "quick-answer", label: "Quick Answer" },
+  { id: "takeaways", label: "Key Takeaways" },
+  { id: "side-by-side", label: "At a Glance" },
+  { id: "trust", label: "Why Trust Us" },
+  { id: "grey", label: "The African Grey" },
+  { id: "macaw", label: "The Macaw Family" },
+  { id: "species", label: "vs Each Species" },
+  { id: "size", label: "Which Is Bigger" },
+  { id: "talking", label: "Which Talks Better" },
+  { id: "bite-force", label: "Bite Force" },
+  { id: "noise", label: "Noise & Apartments" },
+  { id: "dander", label: "Dander & Allergies" },
+  { id: "nutrition", label: "Diet Differences" },
+  { id: "scorecard", label: "Scorecard" },
+  { id: "household", label: "Which Fits You" },
+  { id: "cost", label: "Cost" },
+  { id: "first30", label: "First 30 Days" },
+  { id: "myths", label: "Myths" },
+  { id: "succession", label: "They Outlive You" },
+  { id: "cites", label: "CITES & Docs" },
+  { id: "shipping", label: "Shipping" },
+  { id: "available", label: "Available Greys" },
+  { id: "stories", label: "Owner Story" },
+  { id: "faq", label: "FAQ" },
+  { id: "learn", label: "Keep Learning" },
+  { id: "reserve", label: "Reserve" },
+];
+const num = (i: number) => String(i + 1).padStart(2, "0");
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
+<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta
+  heroPreload="/congo-african-grey-red-tail-comparison-hero.webp"
+  heroPreloadSrcset="/congo-african-grey-red-tail-comparison-hero-480.webp 480w, /congo-african-grey-red-tail-comparison-hero.webp 760w"
+  heroPreloadSizes="(max-width: 900px) 50vw, 280px">
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
 
-  <!-- HERO -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
+  <div class="cvt">
+  <div class="container"><Breadcrumb items={breadcrumbs} /></div>
+
+  <!-- S1 HERO -->
+  <section class="cvt-hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Hand-raised African Greys · CITES-documented · Midland, TX</p>
+        <h1 class="cag-h1">African Grey vs Macaw: Which Parrot Truly Fits Your Life?</h1>
+        <p class="lead">We raise African Greys, not macaws, so we have nothing to gain by talking you into either one. What follows is the comparison we'd want if we were shopping — real bite-force numbers, real noise reality, and a species-by-species breakdown against all 11 macaws we could get honest photos for.</p>
+        <p class="hero-cta"><a class="btn-clay" href="#side-by-side">Compare Now</a> <a class="btn-ghost" href="/available/">See Available Greys</a></p>
+      </div>
+      <div class="hero-imgs">
+        <figure class="hero-left">
+          <img src="/congo-african-grey-red-tail-comparison-hero.webp"
+            srcset="/congo-african-grey-red-tail-comparison-hero-480.webp 480w, /congo-african-grey-red-tail-comparison-hero.webp 760w"
+            sizes="(max-width: 900px) 50vw, 280px"
+            width="760" height="825" alt="A Congo African Grey at C.A.Gs, full body with bright red tail, solid black beak and silver-grey plumage" fetchpriority="high">
+          <figcaption class="chip">Grey · talker</figcaption>
+        </figure>
+        <span class="vs" aria-hidden="true">vs</span>
+        <figure class="hero-right">
+          <img src="/african-grey-vs-blue-and-gold-macaw-comparison.webp"
+            sizes="(max-width: 900px) 50vw, 280px"
+            width="639" height="428" alt="A Blue-and-Gold Macaw in close portrait, the macaw species buyers most often cross-shop against an African Grey" loading="lazy">
+          <figcaption class="chip">Macaw · bold</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- S2 COUNTER SNIPPET — page-specific, never the homepage four -->
+  <section class="cvt-counter"><div class="container counter-row">
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 12 15 2 8.5 12 2"/><polyline points="2 15.5 12 22 22 15.5"/></svg></span>
+      <b>11</b><span class="cs-l">Macaw species compared</span>
+    </div>
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3L8.5 13"/></svg></span>
+      <b>12+</b><span class="cs-l">Years raising Greys</span>
+    </div>
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 11.5 11.5 14 15.5 9.5"/></svg></span>
+      <b>100%</b><span class="cs-l">CITES documented</span>
+    </div>
+    <div class="cs">
+      <span class="cs-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+      <b>24h</b><span class="cs-l">Reply to inquiries</span>
+    </div>
+  </div></section>
+
+  <!-- S3 mobile jump rail -->
+  <nav class="cvt-rail" aria-label="Jump to section"><div class="container rail-row">
+    {tocItems.map((t, i) => (<a href={`#${t.id}`}><b>{num(i)}</b> {t.label}</a>))}
+  </div></nav>
+
+  <div class="container cvt-body">
+  <aside class="cvt-toc" aria-label="On this page">
+    <p class="toc-title"><span class="toc-tick" aria-hidden="true"></span>On this page</p>
+    {tocItems.map((t, i) => (<a href={`#${t.id}`}><b>{num(i)}</b> {t.label}</a>))}
+  </aside>
+
+  <div class="cvt-main">
+
+  <!-- S4 QUICK ANSWER (4B clay-recolored) -->
+  <section id="quick-answer">
+    <h2 class="cag-h2">What's the 60-Second Answer — African Grey or Macaw?</h2>
+    <div class="qa-snip">
+      <span class="qa-pin" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
+      <p><strong>Quick answer:</strong> The African Grey is the smaller, quieter, far-better-talking parrot of the two — moderate noise, an apartment-plausible footprint, and a bite that measures 61–96 newtons. "Macaw" isn't one bird; it's 11-plus species ranging from a 130-gram Hahn's to a 1,700-gram Hyacinth whose bite was recently measured near 540 newtons, the strongest ever recorded in a bird. Macaws trade the Grey's conversation for color, size and volume most homes aren't built to absorb.</p>
+    </div>
+    <div class="choose-grid">
+      <div class="choose-c grey">
+        <span class="choose-h">Choose an African Grey if…</span>
+        <ul>
+          <li>conversation matters more to you than color or scale</li>
+          <li>your walls are thin, or your neighbors have a vote</li>
+          <li>a smaller, lower-bite-force bird fits your household better</li>
+        </ul>
+      </div>
+      <div class="choose-c too">
+        <span class="choose-h">Choose a Macaw if…</span>
+        <ul>
+          <li>bold visual presence outweighs vocabulary on your priority list</li>
+          <li>you've got a dedicated room and neighbors who won't mind</li>
+          <li>you're drawn to the physicality more than the personality-through-language angle</li>
+        </ul>
+      </div>
+    </div>
+    <img class="sec-img" src="/macaw-family-general-comparison.webp" width="640" height="427" alt="A Military Macaw representing the broader macaw family compared against the smaller, quieter African Grey" loading="lazy">
+    <p>Buyers reach this page from every phrasing — macaw parrot vs African grey, African grey parrot vs macaw, even "african gray" with an <em>a</em> — and a fair number arrive already comparing all three big parrot camps at once, African Grey vs Macaw vs Cockatoo. We raise Greys, so we'll name that bias up front: everything below is still the honest version, including every place a macaw genuinely wins. The rest of this page settles which bird fits your specific household, species by species.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S5 KEY TAKEAWAYS -->
+  <section id="takeaways">
+    <h2 class="cag-h2">What Should You Take Away Before Choosing?</h2>
+    <p>Eight numbers, screenshot-ready: the bite-force gap, the noise reality, and the size range hiding inside the single word "macaw." Every figure traces to either our own aviary or a cited external source — nothing here is a guess wearing a fact's clothing.</p>
+    <div class="kt-grid">
+      {takeaways.map((k) => (<div class="kt-c"><span class="kt-tick" aria-hidden="true"></span><b>{k.big}</b><span class="kt-sub">{k.sub}</span></div>))}
+    </div>
+  </section>
+
+  <!-- S6 SIDE-BY-SIDE -->
+  <section id="side-by-side">
+    <h2 class="cag-h2">How Do the African Grey and Macaw Compare Side-by-Side?</h2>
+    <img class="sec-img portrait-tall" src="/african-grey-vs-hyacinth-macaw-comparison.webp" width="499" height="333" alt="A Hyacinth Macaw, the largest macaw species, whose measured bite force anchors the safety comparison on this page" loading="lazy">
+    <p>Twelve attributes, one honest verdict column — the fact-dense table AI Overviews and search engines pull from first, so we lead with it rather than bury it in prose. On a phone, tap whichever bird you're weighing and the column follows you.</p>
+    <div class="cmpe">
+      <div class="cmpe-tabs" aria-label="Choose which column to show">
+        <button type="button" class="cmpe-tab active" data-v="c" aria-pressed="true"><img src="/emoji/cag-congo.png" alt="" width="20" height="20" loading="lazy">Grey</button>
+        <button type="button" class="cmpe-tab" data-v="t" aria-pressed="false">Macaw</button>
+      </div>
+      <div class="tbl-wrap show-c"><table class="cmp-tbl">
+        <thead><tr>
+          <th class="th-f">Attribute</th>
+          <th class="th-c"><span class="th-flex"><img src="/emoji/cag-congo.png" alt="African Grey icon" width="30" height="30" loading="lazy"><span><span class="th-title">African Grey</span><span class="th-sub">Smaller, quieter, the best talker</span></span></span></th>
+          <th class="th-t2"><span class="th-flex"><span><span class="th-title">Macaw</span><span class="th-sub">Bigger, louder, boldest color</span></span></span></th>
+          <th class="th-e">Edge</th>
+        </tr></thead>
+        <tbody>{rows.map((r) => (<tr><td class="td-f">{r.attr}</td><td class="td-c">{r.ag}</td><td class="td-t">{r.mc}</td><td class="edge">{r.edge}</td></tr>))}</tbody>
+      </table></div>
+    </div>
+    <p class="cap">Bite-force figures are cited (Grey: established veterinary literature; Hyacinth: Harrison et al., <em>Journal of Anatomy</em>, 2025) — not our own measurement, and not a claim about every macaw species equally.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S7 WHY TRUST US -->
+  <section id="trust">
+    <h2 class="cag-h2">Why Trust This African Grey vs Macaw Comparison?</h2>
+    <div class="author-card">
+      <img class="ac-banner" src="/african-grey-parrot-breeder-midland-tx-hero.webp" width="800" height="600" alt="Two of the C.A.Gs African Greys beside a hand-written Rony and Rose, Midland, Texas sign" loading="lazy">
+      <div class="ac-row">
+        <img class="ac-avatar" src="/birds/bery/bery-grey-african-parrot-for-sale.webp" width="128" height="96" alt="Bery, a hand-raised Congo African Grey at the C.A.Gs aviary in Midland, TX" loading="lazy">
+        <div><h3 class="ac-name">Mark &amp; Teri Benjamin</h3><p class="ac-sub">Midland, TX · hand-raising Greys since 2014</p>
+          <p class="ac-badges"><span>USDA-licensed</span><span>CITES papers</span><span>DNA-sexed</span><span>PCR-screened</span></p></div>
+      </div>
+    </div>
+    <p>A lot of Grey-versus-macaw content online comes from sites that sell neither bird, or from macaw breeders with an obvious thumb on the scale. Mark and Teri Benjamin have hand-raised African Greys at C.A.Gs since 2014, and fielded "why not a macaw instead?" from prospective buyers for nearly that long. Every Grey claim below traces to our own aviary; every macaw claim traces to a cited study, an avian veterinary source, or conversations with macaw breeders and rescues we've built relationships with over a decade — not a guess dressed up as expertise.</p>
+    <p>Fair warning cuts both ways here. We'll say outright that a macaw beats any Grey on visual drama, and that a Blue-and-Gold can bond to its person just as fiercely. What we refuse to do is borrow another site's uncited bite-force figure or unverified macaw claim because it sounds confident — every specific number on this page has a source we can point to.</p>
+    <h3 class="cag-h3">The C.A.Gs Philosophy: Health-Documentation ROI</h3>
+    <p>Sticker price is a rounding error next to the decades that follow — so we spend the effort upfront, on the paperwork that actually protects a bird for that long: viral PCR screening, a sexing certificate, a vet exam, a hatch record with a permanent leg band, and the captive-bred CITES filing that keeps everything above-board. Full terms sit on our <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>, regardless of which bird this page ultimately points you toward.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S8 DEEP DIVE: AFRICAN GREY (kept lean — full depth lives on the CvT/cockatoo pages; this page's word count belongs to the macaw side) -->
+  <section id="grey">
+    <h2 class="cag-h2">What Makes the African Grey the Talking Champion?</h2>
+    <img class="sec-img portrait" src="/bery-congo-african-grey-female-1-year.webp" width="760" height="760" alt="A hand-raised Congo African Grey taking a seed from its keeper's hand, showing the silver-grey head, light eye and solid black beak" loading="lazy">
+    <p>Plain silver-grey plumage hides the trait that actually decides this comparison: a working vocabulary and contextual reasoning that no macaw species has matched in any published study. We go deep on Grey biology on our <a href="/congo-vs-timneh-african-grey/">Congo vs Timneh comparison</a>, so this section stays brief on purpose — the word count on this page belongs to the macaw half of the equation. Current Congo and Timneh chicks are posted on their own <a href="/congo-african-grey-for-sale/">Congo</a> and <a href="/timneh-african-grey-for-sale/">Timneh</a> availability pages.</p>
+
+    <h3 class="cag-h3">How Does a Grey's Size Stack Up Against a Macaw's?</h3>
+    <p>A Congo weighs 400–600 grams at 12–14 inches; a Timneh runs smaller, 275–375 grams. Both live 40–60 years with proper care — squarely inside macaw territory, so neither bird wins on "shorter commitment."</p>
+
+    <h3 class="cag-h3">What Is an African Grey's Temperament Like?</h3>
+    <p>Reserved rather than performative. A Grey reads a room before it joins in, and it shows attachment through proximity and conversation instead of constant physical contact — nearly the opposite instinct from most macaws, covered later on this page.</p>
+
+    <h4 class="cag-h4">Is an African Grey Right for an Apartment?</h4>
+    <p>Generally, yes. A Grey's vocal habits — talking, whistling, appliance mimicry — stay in a range thin walls survive, which is the single biggest reason we steer apartment shoppers toward a Grey over nearly any macaw. The decibel gap gets its own section further down this page.</p>
+
+    <h4 class="cag-h4">How Does an African Grey Bond?</h4>
+    <p>Slowly, then completely, usually landing on one household member who earns it. It reads as a quieter devotion than a macaw's full-body physicality — a Grey wants to share the room with you, not climb you.</p>
+
+    <h5 class="cag-h5">What Grey Owners Notice in Week One</h5>
+    <p>A subdued opening week is normal, not a warning sign — a new Grey is auditing its household before it relaxes into one. Families expecting an instant performer sometimes worry for nothing; the character arrives on the bird's own schedule.</p>
+
+    <h6 class="cag-h6">Breeder note: Maxy's first words</h6>
+    <p>Maxy, our homepage video's talking Grey, chose "Teri" as his first functional word, then added "bye bye" once he'd clocked that it worked — vocabulary picked for outcome, not just repeated for its own sake. It's the single anecdote we point to when someone doubts a Grey actually reasons about language.</p>
+
+    <h3 class="cag-h3">Which Health Risks Do We Screen African Greys For?</h3>
+    <p>Two conditions matter most: hypocalcemia, a documented grey-specific risk tied to calcium handling and managed with diet plus real UV-B light, and feather-destructive plucking, which tracks boredom far more reliably than genetics. Our full symptom-by-symptom breakdown — including the exact lighting protocol every buyer takes home — lives on the <a href="/african-grey-vs-cockatoo/#grey">African Grey vs Cockatoo health section</a>, since it's identical screening regardless of which comparison page brought you here.</p>
+
+    <h4 class="cag-h4">Hypocalcemia &amp; Feather-Destructive Behavior, Plainly</h4>
+    <p>Untreated low calcium shows up as weakness or, in severe cases, seizures. Plucking is nearly always an enrichment gap dressed as a medical problem. Every buyer leaves with our written diet and lighting plan, not a generic pellet suggestion.</p>
+
+    <h5 class="cag-h5">What Our PBFD and Polyomavirus Screen Catches</h5>
+    <p>A lab-verified PCR result on the individual bird for both viral diseases — not a sentence on a listing promising the seller "screens for everything."</p>
+
+    <h6 class="cag-h6">Citation: World Parrot Trust species profile</h6>
+    <p>Species facts above track the <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener">World Parrot Trust's <em>Psittacus erithacus</em> profile ↗</a>.</p>
+  </section>
+
+  <div class="nl-inflow">
+  <Newsletter variant="top" action="https://formspree.io/f/xrejpnvn" heading="Deciding Between a Grey and a Macaw?" sub="We'll email you the moment a documented, hand-raised African Grey chick is ready — no obligation while you finish weighing the decision." cta="Keep me posted" />
   </div>
 
-  <section class="cmp-hero">
-    <div class="page-container">
-      <h1 class="cmp-h1">African Grey vs Macaw: Which Parrot Is Right for You?</h1>
-      <p class="cmp-sub">
-        Two of the most popular large parrots — compared side-by-side on size, noise, talking
-        ability, lifespan, cost, and temperament so you can make the right choice for your home.
-      </p>
+  <!-- S9 DEEP DIVE: MACAW FAMILY -->
+  <section id="macaw">
+    <h2 class="cag-h2">What Are Macaws Really Like to Live With?</h2>
+    <img class="sec-img" src="/macaw-family-general-comparison.webp" width="640" height="427" alt="A Military Macaw, representative of the broader macaw family's size, color and volume compared to the smaller African Grey" loading="lazy">
+    <p>"Macaw" isn't a species — it's a whole genus spread across a 130-gram Hahn's on one end and a 1,700-gram Hyacinth on the other, and daily life with one bears little resemblance to daily life with a Grey. A Grey's currency is intellect; a macaw's is spectacle — saturated color, outsized personality, and a volume most houses simply weren't designed to absorb. All 11 species get their own spotlight further down; first, what unites them.</p>
+
+    <h3 class="cag-h3">How Big Do Macaws Get — From Mini to Hyacinth?</h3>
+    <p>The range is the whole story. A Hahn's Macaw at 130–170 grams is lighter than a Timneh Grey. A Blue-and-Gold runs 900–1,300 grams. A Hyacinth tops the entire parrot world at up to 1,700 grams and 40 inches nose to tail. Anyone who says "macaws are big birds" without naming a species is skipping the size chart's most useful line — the species section below exists precisely to fill that gap.</p>
+
+    <h3 class="cag-h3">Why Do Owners Call Macaws "Velcro Birds" With an Attitude?</h3>
+    <p>Because a well-bonded macaw wants physical contact and involvement — on your shoulder, chewing your buttons, narrating its opinions at volume — in a way a reserved Grey never asks for. For the right owner, that constant, boisterous engagement is the entire appeal. The catch is the flip side of that same energy: a macaw denied stimulation doesn't quiet down, it escalates into screaming or feather destruction.</p>
+
+    <h4 class="cag-h4">How Loud and Demanding Is a Macaw, Really?</h4>
+    <p>Loud enough to reset the whole comparison. A macaw's contact call is instinctive, built in the wild to carry over a mile of rainforest canopy, and large species produce some of the loudest sounds in aviculture. Through shared apartment walls, that isn't a nuance — it's a lease violation waiting to happen. This is the single biggest reason we point apartment buyers toward a Grey.</p>
+
+    <h5 class="cag-h5">Why Macaws Fill So Many Rescues</h5>
+    <p>The volume and the space demands together. A macaw kept in a too-small cage with too little flight time doesn't adapt quietly — it screams, chews destructively, or plucks. Rescues report large macaws among their most common intake, usually from owners who underestimated the sustained commitment. Greys get surrendered too, typically from boredom-driven plucking, but macaw rehoming runs on a different scale entirely.</p>
+
+    <h6 class="cag-h6">Citation: species-appropriate housing standards</h6>
+    <p>Minimum cage and flight-time guidance here reflects standard avicultural practice published by avian veterinary and rescue organizations; we've kept the figures conservative rather than aspirational.</p>
+
+    <h3 class="cag-h3">Are Macaws as Smart as African Greys?</h3>
+    <p>Genuinely intelligent, just aimed differently. Dr. Irene Pepperberg's decades of work with Alex the Grey established language and contextual reasoning as the species' signature; macaw intelligence shows up more in problem-solving, foraging persistence and social learning than in vocabulary. Neither bird is the "dumb" one — they're solving different problems.</p>
+
+    <h4 class="cag-h4">Enrichment Prevents Plucking — in Both Genera</h4>
+    <p>The behavioral principle holds for macaws exactly as it does for Greys: a parrot with real foraging work to do rarely turns on its own feathers, and a bored one often does. A macaw's bigger beak just means bigger, tougher enrichment — a reason the toy budget for large species runs $200–$300 a month.</p>
+
+    <h5 class="cag-h5">Citation: contrafreeloading research context</h5>
+    <p>The contrafreeloading principle — that parrots choose to work for food even when it's freely available — comes from studies on Greys and cockatoos summarized by <a href="https://lafeber.com/pet-birds/inside-dr-pepperbergs-lab-greys-vs-umbrella-cockatoos-who-likes-to-work-for-their-food/" target="_blank" rel="noopener">Lafeber ↗</a>; we apply the same enrichment logic to macaws as sound general parrot-care practice, not as a claim that macaws were part of that specific study.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S10 vs EACH MACAW SPECIES (11 subsections) -->
+  <section id="species">
+    <h2 class="cag-h2">African Grey vs Each Macaw Species: Which "Ara" Fits You?</h2>
+    <p>Almost every comparison page treats "macaw" as a single bird. It isn't — the 11 species and hybrids below differ from each other as much as they differ from a Grey, in size, volume and temperament. This is the section most competitors skip entirely; here's the honest head-to-head for each, using real photos rather than stock art.</p>
+    <div class="macaw-species-grid">
+      {species.map((s) => (
+        <article class="msp-card" id={s.id}>
+          <div class="msp-media"><img src={s.img} width="640" height="480" alt={s.alt} loading="lazy"></div>
+          <div class="msp-body">
+            <h3 class="cag-h3">African Grey vs {s.name}</h3>
+            <p class="sp-sci"><em>{s.sci}</em> · {s.trait}</p>
+            <ul class="sp-stats">
+              <li><span>Size</span><b>{s.size}</b></li>
+              <li><span>Noise</span><b>{s.noise}</b></li>
+              <li><span>Talking</span><b>{s.talk}</b></li>
+            </ul>
+            <p>{s.body}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+    <p>Across all 11, the pattern repeats at different volumes and scales: every macaw trades the Grey's talking ability and apartment-plausibility for color, physical presence and sheer personality. The mini species narrow the size gap; none of them narrow the conversation gap.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S11 SIZE (direct GSC query, interactive comparator) -->
+  <section id="size">
+    <h2 class="cag-h2">Which Bird Is Bigger — an African Grey or a Macaw?</h2>
+    <p><strong>Quick answer: almost every macaw is bigger, but "almost" is doing real work.</strong> A Congo African Grey runs 400–600 grams; a Timneh runs smaller still. The smallest true macaw, Hahn's, is actually lighter than a Timneh at 130–170 grams — but a Hyacinth Macaw outweighs a Congo Grey by nearly three times, at up to 1,700 grams and 40 inches nose to tail.</p>
+    <h3 class="cag-h3">Size &amp; Weight, Side-by-Side — Try the Comparator</h3>
+    <p>Pick a macaw species below to see it scaled against a Congo African Grey by weight. The bars are proportional, not to scale in pixels-to-inches, but the ratio is accurate.</p>
+    <div class="size-tool" data-tool="size">
+      <label for="size-select">Compare a Grey to</label>
+      <select id="size-select">
+        <option value="130" data-name="Hahn's Macaw">Hahn's Macaw (130 g)</option>
+        <option value="400" data-name="Severe Macaw">Severe Macaw (400 g)</option>
+        <option value="1100" data-name="Blue-and-Gold Macaw" selected>Blue-and-Gold Macaw (1,100 g)</option>
+        <option value="1050" data-name="Scarlet Macaw">Scarlet Macaw (1,050 g)</option>
+        <option value="1350" data-name="Green-winged Macaw">Green-winged Macaw (1,350 g)</option>
+        <option value="1700" data-name="Hyacinth Macaw">Hyacinth Macaw (1,700 g)</option>
+      </select>
+      <div class="size-bars">
+        <div class="size-row"><span class="size-label">African Grey (Congo)</span><div class="size-track"><div class="size-fill grey-fill" style="width:29%"></div></div><span class="size-val">500 g</span></div>
+        <div class="size-row"><span class="size-label" id="size-macaw-label">Blue-and-Gold Macaw</span><div class="size-track"><div class="size-fill macaw-fill" id="size-macaw-fill" style="width:65%"></div></div><span class="size-val" id="size-macaw-val">1,100 g</span></div>
+      </div>
+      <p class="size-out" id="size-out">A Blue-and-Gold Macaw weighs roughly <strong>2.2×</strong> a Congo African Grey.</p>
     </div>
   </section>
 
-  <!-- COMPARISON TABLE -->
-  <section class="cmp-section">
-    <div class="page-container">
-      <h2 class="cmp-h2">African Grey vs Macaw: Side-by-Side</h2>
-      <div class="cmp-table-wrap">
-        <table class="cmp-table">
-          <thead>
-            <tr>
-              <th>Attribute</th>
-              <th>African Grey</th>
-              <th>Macaw</th>
-            </tr>
-          </thead>
-          <tbody>
-            {comparisonRows.map((row) => (
-              <tr>
-                <th scope="row">{row.attr}</th>
-                <td>{row.ag}</td>
-                <td>{row.macaw}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S12 TALKING -->
+  <section id="talking">
+    <h2 class="cag-h2">Which Talks Better — an African Grey or a Macaw?</h2>
+    <p>No real contest here. <strong>The Grey is the better talker, by a wide margin.</strong> A 200-to-1,000-plus-word vocabulary with near-human clarity, deployed with documented contextual understanding, is simply a different category than what any macaw species offers. Macaws pick up words and phrases — Blue-and-Gold and Military macaws are the strongest talkers among them — but speech was never the genus's headline trait.</p>
+    <h3 class="cag-h3">How Many Words — and Does the Bird Understand Them?</h3>
+    <p>Raw word count is only part of the Grey's advantage; understanding what those words mean is the other, larger part. Alex, the subject of Dr. Irene Pepperberg's three-decade research program, could name colors, shapes and quantities and answer questions he'd never heard before — genuine contextual language, not lookup-and-repeat mimicry. No macaw study has produced anything close. Our <a href="/blog/african-grey-parrot-talking-ability/">African Grey talking-ability guide</a> breaks down what to expect month by month.</p>
+    <h4 class="cag-h4">Can Macaws Talk at All?</h4>
+    <p>Yes — modestly, and it varies sharply by species. A Blue-and-Gold or Military Macaw can pick up a genuine phrase or two in a gravelly, less precise voice than a Grey's; a Hyacinth or Green-winged rarely gets past a handful of sounds. Nobody buys a macaw for its vocabulary; they buy it for the color, the size and the personality.</p>
+    <h5 class="cag-h5">Averages Aren't Guarantees</h5>
+    <p>We've raised Greys content to whistle rather than chat, and the internet has no shortage of macaw videos that seem to break every rule above. Bet on the Grey if talking is the deciding factor — but no ethical breeder of either species will promise you a guaranteed talker.</p>
+    <h6 class="cag-h6">Citation: Alex the Grey &amp; Britannica</h6>
+    <p>Backing this up: <a href="https://www.britannica.com/animal/grey-parrot" target="_blank" rel="noopener">Encyclopaedia Britannica ↗</a> describes the African Grey as "unsurpassed as a talker" among parrots, and Pepperberg's Alex remains parrot cognition's most-cited case study.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S13 BITE FORCE -->
+  <section id="bite-force">
+    <h2 class="cag-h2">How Strong Is a Macaw's Bite Compared to an African Grey?</h2>
+    <p>This is the question that comes up once someone's genuinely serious about buying, and rarely out loud until then. <strong>Short answer: a Grey's bite is manageable; several macaw species can do real damage.</strong></p>
+    <h3 class="cag-h3">The Popsicle-Stick vs Walnut-and-Pliers Test</h3>
+    <p>Picture it this way: a Grey at full force is roughly a wooden popsicle stick snapping between your fingers — painful, occasionally bloody, over quickly. A Hyacinth is closer to a nutcracker's pliers closing on a walnut, sustained crushing power from a beak evolved to open the hardest palm nuts in its native range.</p>
+    <h4 class="cag-h4">Measured Newtons vs Estimated PSI — the Real Numbers</h4>
+    <div class="bite-tbl-wrap"><table class="bite-tbl">
+      <thead><tr><th>Subject</th><th>Measured force</th><th>Estimated PSI</th></tr></thead>
+      <tbody>
+        <tr><td>African Grey</td><td>61–96 N</td><td>~70–220 PSI</td></tr>
+        <tr><td>Human molar bite</td><td>~300–500 N</td><td>~150–200 PSI</td></tr>
+        <tr><td>Hyacinth Macaw</td><td>~540 N (in vivo)</td><td>~600–1,200 PSI</td></tr>
+      </tbody>
+    </table></div>
+    <h5 class="cag-h5">How Human Bite Force Compares</h5>
+    <p>Put in context, a Hyacinth's measured bite exceeds even a typical human molar bite — which is why an animal that size, however gentle its reputation, demands real supervision around children and other pets. Smaller macaw species bite considerably softer than a Hyacinth, but every macaw on this page out-bites a Grey by a meaningful margin.</p>
+    <h6 class="cag-h6">Citation: Harrison et al., Journal of Anatomy, 2025</h6>
+    <p>The 540 N figure comes from a 2025 study, <a href="https://onlinelibrary.wiley.com/doi/10.1111/joa.14144" target="_blank" rel="noopener">"Estimated and in vivo measurements of bite force demonstrate exceptionally large bite forces in parrots" ↗</a> (also on <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11737312/" target="_blank" rel="noopener">PMC ↗</a>), which used force transducers and jaw-muscle modeling and found macaw bite forces the highest yet recorded for any bird species. It measures the Hyacinth specifically — not a claim we extend to every macaw equally.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S14 NOISE / APARTMENT -->
+  <section id="noise">
+    <h2 class="cag-h2">Which Is Louder — and Can a Macaw Live in an Apartment?</h2>
+    <p>More placements fail over noise than over price. <strong>Short version: the Grey is dramatically quieter, and close to the only one of the two that genuinely works in shared housing.</strong></p>
+    <p>Picture a volume dial: a Grey sits in the middle, cycling through whistles, talking and mimicked appliance beeps at fairly predictable times of day. Large macaws max the dial out — a Blue-and-Gold alone can clear 100 decibels, chainsaw territory, a call shaped by evolution to travel a mile through dense canopy. Your neighbors will notice which bird you chose.</p>
+    <h3 class="cag-h3">Which Macaw Species Is Quietest?</h3>
+    <p>If your heart is set on a macaw but you have neighbors, the mini species — Hahn's, Severe — are the least loud of the group, simply by having smaller lungs and a smaller resonating chamber. They're still a macaw's scream, not a Grey's chatter. There's no silent macaw; there's only "less catastrophic," and the mini species are where that road ends.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S15 DANDER -->
+  <section id="dander">
+    <h2 class="cag-h2">Powder Down, Dander &amp; Allergies — the Honest Version</h2>
+    <p>Here's a genuine point in the macaw's favor that few Grey-focused pages admit: <strong>macaws are not powder-down birds, and typically produce less feather dust than a Grey.</strong></p>
+    <h3 class="cag-h3">Is One Bird Safer for Allergy Sufferers?</h3>
+    <p>African Greys rank among the dustiest parrots kept as pets; a case report indexed by the <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9381342/" target="_blank" rel="noopener">U.S. National Library of Medicine ↗</a> traced one owner's hypersensitivity pneumonitis directly to their Grey's feather dust. Macaws skip true powder down entirely and generally throw off less airborne particulate — real, but not the same claim as "safe for allergy sufferers," since droppings and dried food dust can still trigger sensitivity regardless of species.</p>
+    <h4 class="cag-h4">What This Means in Practice</h4>
+    <p>If dander is your deciding factor and you're set on a bird with real talking ability, that combination doesn't exist cleanly in either direction — a macaw's lower dust comes bundled with the noise and space tradeoffs covered above. Anyone with asthma or bird allergies should spend real time around adult birds of either kind before committing, and budget for an air purifier regardless.</p>
+    <h5 class="cag-h5">The Bottom Line for Allergy-Prone Homes</h5>
+    <p>Regular bathing or misting reduces a Grey's feather dust; a HEPA purifier near the cage clears what goes airborne. Neither measure is optional if allergies run in your household — for either species.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S16 NUTRITION (macaw-unique section) -->
+  <section id="nutrition">
+    <h2 class="cag-h2">What Should a Grey Eat vs What Should a Macaw Eat?</h2>
+    <p>This is the section almost no comparison page runs, and it matters: <strong>Greys and macaws have genuinely different nutritional pressure points.</strong></p>
+    <h3 class="cag-h3">Why African Greys Need Calcium and UV-B Light</h3>
+    <p>Greys regulate calcium differently than most parrots, and a diet or lighting shortfall shows up as a medical emergency, not a slow decline. A pellet-forward diet, calcium-bearing fresh vegetables, and genuine UV-B exposure — full-spectrum lighting or safe supervised sun — are non-negotiable parts of a Grey's care plan from day one.</p>
+    <h4 class="cag-h4">What Happens Without Enough Vitamin D</h4>
+    <p>Without adequate UV-B, a Grey can't properly synthesize the vitamin D it needs to absorb dietary calcium, regardless of how much calcium is on the plate. The chain breaks at the light, not the food bowl — a detail plenty of care sheets skip.</p>
+    <h5 class="cag-h5">Hypocalcemia Warning Signs</h5>
+    <p>Weakness, tremors, and in severe cases seizures — hypocalcemia is preventable but not automatically prevented, which is why we send every buyer home with our exact lighting and diet plan rather than a generic pellet recommendation.</p>
+    <h3 class="cag-h3">Why Macaws Need More Fat — Brazil Nuts and Macadamias</h3>
+    <p>Macaws evolved cracking oil-rich palm nuts, and their digestive systems expect a higher fat intake than a Grey's — Brazil nuts and macadamias in moderation are a standard part of a healthy macaw diet, not a treat-only indulgence. Get this wrong in either direction — too little fat, or too much as the whole diet — and macaw-specific health problems follow.</p>
+    <h4 class="cag-h4">How Beak Size Drives Your Toy Budget</h4>
+    <p>The same beak strength that lets a macaw crack a Brazil nut also demolishes wooden toys and perches on a schedule — realistically $200–$300 a month for the larger species, since an under-enriched macaw redirects that same cracking instinct toward cage bars, furniture, or its own feathers.</p>
+    <h5 class="cag-h5">The $200–$300 Monthly Reality for Large Macaws</h5>
+    <p>Budget for destruction, not just nutrition, when a large macaw is the plan — it's a recurring cost most first-time macaw shoppers underestimate, and one a Grey's smaller beak simply doesn't generate at the same scale.</p>
+    <h6 class="cag-h6">Citation: avian nutrition sources</h6>
+    <p>Species-specific dietary needs above reflect established avian veterinary nutrition guidance, including the resources at <a href="https://www.aav.org/" target="_blank" rel="noopener">the Association of Avian Veterinarians ↗</a>.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S17 SCORECARD -->
+  <section id="scorecard">
+    <h2 class="cag-h2">Decision Scorecard: African Grey vs Macaw Across 7 Traits</h2>
+    <p>Landed here from a "which parrot is better" search? Here's the verdict as numbers — our own 0-to-10 judgment calls from raising Greys and studying macaws closely, kept honest about the columns where the macaw wins outright.</p>
+    <div class="tbl-wrap plain"><table class="score-tbl">
+      <thead><tr><th>Trait</th><th>African Grey</th><th>Macaw</th><th>Our note</th></tr></thead>
+      <tbody>{scores.map((s) => (<tr><td class="sc-trait" data-label="Trait">{s.trait}</td><td class="sc" data-label="African Grey">{s.c}</td><td class="sc" data-label="Macaw">{s.m}</td><td class="sc-note" data-label="Our note">{s.note}</td></tr>))}</tbody>
+    </table></div>
+    <p>The pattern matters more than the totals: the Grey sweeps talking, apartment fit and space efficiency; the macaw takes visual drama and nothing else contests it. Both columns describe a genuinely good bird — the question is just which trade-off your household can actually live with.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S18 WHICH FITS + QUIZ -->
+  <section id="household">
+    <h2 class="cag-h2">Which Parrot Fits Your Household?</h2>
+    <p>Scores are useful; households are specific. Find your situation below, then try the quiz for a direct read on your particular case — it's the same rundown we give over email.</p>
+    <h3 class="cag-h3">Match by Household</h3>
+    <div class="match-grid">
+      <div class="match-c"><h4 class="cag-h4">First-Time Bird Owner</h4><p>Start with a Grey. A macaw's noise and space demands blindside most newcomers within the first year, and neither bird forgives casual research — but the Grey's learning curve is survivable for a first-timer in a way a Blue-and-Gold's usually isn't. Set on a macaw regardless? A mini species and months of reading first.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Family with Kids</h4><p>The bite-force math alone points to the Grey. A large macaw's beak strength is a real supervision burden around small children, on top of the volume. Neither bird belongs unsupervised near toddlers — this is a decades-long relationship, not a trial pet.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Apartment or Condo</h4><p>Grey, without much debate — it's nearly the only one of the two that shared walls tolerate. A mini macaw species is the sole exception worth researching, and even then, your neighbors are part of the decision.</p></div>
+      <div class="match-c"><h4 class="cag-h4">You Want Bold Color &amp; Presence</h4><p>That's a macaw's household to win. No Grey will visually dominate a room the way a Scarlet or Hyacinth does — choose honestly by that want, then plan around the volume and square footage it demands.</p></div>
+      <div class="match-c"><h4 class="cag-h4">Busy Professional</h4><p>Pause before either. A parrot left alone most of the day is how plucking starts in a Grey and screaming escalates in a macaw — the macaw usually unravels faster. If your schedule is genuinely tight, waiting a year may beat buying now.</p></div>
+    </div>
+
+    <h3 class="cag-h3">Try It: Which Parrot Fits You?</h3>
+    <p>Four quick questions, one honest read on your household — nothing saved, nothing submitted.</p>
+    <div class="quiz-tool" data-tool="quiz">
+      <div class="quiz-q" data-q="1">
+        <p class="quiz-question">1. Where do you live?</p>
+        <label><input type="radio" name="q1" value="2" checked> Apartment or attached housing</label>
+        <label><input type="radio" name="q1" value="0"> Detached house with distance from neighbors</label>
+      </div>
+      <div class="quiz-q" data-q="2">
+        <p class="quiz-question">2. What matters more to you?</p>
+        <label><input type="radio" name="q2" value="2" checked> A bird I can talk to and reason with</label>
+        <label><input type="radio" name="q2" value="0"> A bird with bold color and big personality</label>
+      </div>
+      <div class="quiz-q" data-q="3">
+        <p class="quiz-question">3. How much noise can your household absorb?</p>
+        <label><input type="radio" name="q3" value="2" checked> Moderate — talking and whistles are fine, screaming isn't</label>
+        <label><input type="radio" name="q3" value="0"> High — I can handle sustained, loud vocalizing</label>
+      </div>
+      <div class="quiz-q" data-q="4">
+        <p class="quiz-question">4. Have you kept a large parrot before?</p>
+        <label><input type="radio" name="q4" value="1" checked> No, this would be my first</label>
+        <label><input type="radio" name="q4" value="0"> Yes, I have real hands-on experience</label>
+      </div>
+      <button type="button" class="btn-clay sm quiz-btn" id="quiz-submit">See My Match</button>
+      <div class="quiz-result" id="quiz-result" hidden></div>
+    </div>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <div class="nl-inflow">
+  <Newsletter variant="middle" compact action="https://formspree.io/f/xrejpnvn" eyebrow="Still weighing the options" heading="Curious Which Chicks Are Weaning Right Now?" sub="We'll drop you a short note the moment a documented Congo or Timneh Grey clears weaning and opens up for reservation." cta="Add my email" img="/bery-congo-african-grey-cuddly-tamed-card.webp" imgAlt="A hand-raised African Grey resting on its keeper's lap at C.A.Gs in Midland, TX" imgCaption="Midland, TX aviary" note="Clutch updates only — nothing else." />
+  </div>
+
+  <!-- S19 COST -->
+  <section id="cost">
+    <h2 class="cag-h2">What Does an African Grey Cost vs a Macaw?</h2>
+    <p>Our Greys run $1,700–$3,500 for a Congo and $1,500–$1,600 for a Timneh, deposit $200. Macaw prices swing wildly by species — a few hundred for a mini species, five figures for a rare Hyacinth — numbers we're citing from the wider breeder and marketplace world, not selling ourselves, since C.A.Gs raises African Greys exclusively. Current Grey pricing by bird lives on the <a href="/african-grey-parrot-price/">price guide</a>.</p>
+    <h3 class="cag-h3">Why the Sticker Price Is the Cheap Part</h3>
+    <p>Whichever bird you pick, the purchase is a rounding error next to what feeds, vets, toys and cages cost over 40-plus years — and a macaw's bigger footprint plus faster beak-driven destruction stack its ongoing bill well above a Grey's. Watch the cheap end of either market especially closely: a listing with no CITES paperwork or sexing certificate is where fraud complaints concentrate.</p>
+    <h4 class="cag-h4">What's Included in Our Grey's Price</h4>
+    <p>Nothing gets itemized separately: CITES papers, DNA sexing certificate, avian-vet health certificate, hatch record with the closed band number, and clean PBFD/Polyomavirus PCR results all ride inside the sticker price. Shipping is the only add-on — $185 airport, $350 door.</p>
+    <h5 class="cag-h5">First-Year Budget Beyond the Bird</h5>
+    <p>Plan on roughly $825–$2,000 beyond the purchase price in year one for a Grey: cage, starter perches and toys, an initial wellness exam, a year of pellets, and enrichment rotation. A comparable macaw budget runs noticeably higher across nearly every one of those same categories.</p>
+    <h6 class="cag-h6">Breeder note: why we don't sell unweaned chicks</h6>
+    <p>Discount unweaned chicks show up constantly online, Grey and macaw both. We won't touch that market: hand-feeding mistakes kill babies, and every bird leaving C.A.Gs is already fully weaned before a buyer ever meets it.</p>
+
+    <h3 class="cag-h3">Try It: First-Year Budget Estimator</h3>
+    <p>Check the items you'll need, and watch the running total — figures are our own aviary-sourced Grey ranges, not macaw prices, since that's the bird we actually sell.</p>
+    <div class="budget-tool" data-tool="budget">
+      <label class="budget-row"><input type="checkbox" checked data-min="1700" data-max="3500"> African Grey chick ($1,700–$3,500)</label>
+      <label class="budget-row"><input type="checkbox" checked data-min="300" data-max="800"> Large cage ($300–$800)</label>
+      <label class="budget-row"><input type="checkbox" checked data-min="100" data-max="300"> Perches &amp; toys ($100–$300)</label>
+      <label class="budget-row"><input type="checkbox" checked data-min="75" data-max="200"> Initial avian-vet visit ($75–$200)</label>
+      <label class="budget-row"><input type="checkbox" checked data-min="200" data-max="400"> First year of pellets ($200–$400)</label>
+      <label class="budget-row"><input type="checkbox" checked data-min="150" data-max="300"> Enrichment &amp; foraging toys ($150–$300)</label>
+      <label class="budget-row"><input type="checkbox" data-min="185" data-max="350"> Shipping — airport to home delivery ($185–$350)</label>
+      <div class="budget-total"><span>Estimated first-year total</span><b id="budget-out">$2,710–$5,850</b></div>
+    </div>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S20 FIRST 30 DAYS -->
+  <section id="first30">
+    <h2 class="cag-h2">What Do the First 30 Days With a Grey Look Like?</h2>
+    <img class="sec-img" src="/amie-congo-african-grey-handfed-baby-card.webp" width="640" height="480" alt="A fully hand-fed baby African Grey being raised at C.A.Gs before going home" loading="lazy">
+    <p>What follows describes a Grey specifically, since that's the bird we place — the general shape holds for any large parrot brought home for the first time. Teri walks every buyer through this timeline before pickup, precisely so week two doesn't feel like a step backward.</p>
+    <h3 class="cag-h3">The Four Adjustment Phases</h3>
+    <div class="timeline">
+      <div class="tl-c"><span class="tl-n">1</span><b>Days 1–3 · Landing</b><p>A quiet, low-perched bird that eats only once the room clears isn't stressed — it's a Grey doing exactly what a Grey does when it lands somewhere new.</p></div>
+      <div class="tl-c"><span class="tl-n">2</span><b>Week 1 · Reading the Room</b><p>Your Grey is cataloging the household — voices, footsteps, meal timing. Give it a routine boring enough to memorize; predictability is the whole point right now.</p></div>
+      <div class="tl-c"><span class="tl-n">3</span><b>Week 2 · Building Trust</b><p>Step-ups stop being a negotiation, fingers get trusted with treats, and you'll likely hear the first attempted echo of something specific to your house.</p></div>
+      <div class="tl-c"><span class="tl-n">4</span><b>Weeks 3–4 · The Real Bird Shows Up</b><p>Personality arrives in earnest around the time we call to check in — every buyer keeps our direct line through this whole first month.</p></div>
+    </div>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S21 MYTHS -->
+  <section id="myths">
+    <h2 class="cag-h2">African Grey vs Macaw Myths — What's Actually True?</h2>
+    <p>Parrot forums recycle the same handful of confident claims, and new buyers show up repeating them as settled fact. A few deserve a closer look.</p>
+    <h3 class="cag-h3">The Myths We Hear Most</h3>
+    <div class="myth-grid">
+      <div class="myth-c"><span class="myth-x">Myth</span><p><strong>"Macaws are all roughly the same volume."</strong> Not remotely — a Hahn's scream and a Blue-and-Gold's scream aren't in the same league, even though both outpace a Grey. The species name inside "macaw" carries more weight than the umbrella term.</p></div>
+      <div class="myth-c"><span class="myth-x">Myth</span><p><strong>"A cuddly macaw is a low-maintenance macaw."</strong> The physical affection is genuine, but it comes bundled with screaming, chewed-through furniture, and distress the moment contact stops. There's no version of macaw temperament without the demands attached.</p></div>
+    </div>
+    <h4 class="cag-h4">The Big One: "Macaws Are Friendlier, Greys Are Cold"</h4>
+    <h5 class="cag-h5">The Reality: Two Kinds of Love</h5>
+    <p>Grey attachment runs just as deep — it simply reads differently, expressed through watching, talking and staying close rather than through touch. Call a Grey "cold" and you're usually describing a bird that's newly arrived or under-socialized, not describing the species. Macaw affection, meanwhile, always ships with its demands attached. Warmth isn't the variable; the delivery method is.</p>
+    <h6 class="cag-h6">Citation: owner reports across both groups</h6>
+    <p>This tracks what large-parrot communities report consistently: Greys engaged but self-contained, macaws affectionate but exacting — a real trend, never a guarantee for any individual bird.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S22 SUCCESSION -->
+  <section id="succession">
+    <h2 class="cag-h2">They Can Outlive You: Lifespan &amp; Succession Planning</h2>
+    <p>Most comparison pages skip this entirely, and it matters more than the talking gap or the noise gap: <strong>you may not outlive either bird.</strong> A Grey runs 40–60 years; a large macaw can push toward 80. Buy at 40 and you could still be arranging care at 100 — and a parrot without a plan often passes through a dozen or more homes before it dies.</p>
+    <h3 class="cag-h3">What a Parrot Succession Plan Includes</h3>
+    <p>Nothing complicated, just documented: someone who's agreed to take the bird and actually spent time with it, one folder holding the CITES paperwork, health records and band number, and a small set-aside fund or clear instructions for the handoff itself.</p>
+    <h4 class="cag-h4">Why Some Parrots See 20 Homes in a Lifetime</h4>
+    <p>A 40-to-80-year lifespan will outlast marriages, careers, health, and eventually the owner — that's just the math, not a pessimistic take. Skip the successor plan and someone else inherits a crisis instead of a companion.</p>
+    <h5 class="cag-h5">Starting Your Own Plan Today</h5>
+    <p>One conversation is the entire cost of entry: pick the person, let them get to know the bird, file the paperwork somewhere they'll actually find it. Grey or macaw, this step belongs in every decades-long parrot purchase, not an afterthought for later.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S23 CITES -->
+  <section id="cites">
+    <h2 class="cag-h2">CITES Status &amp; Documentation — What Paperwork Comes With Every Bird?</h2>
+    <img class="sec-img photo43" src="/Mark-with-our-grey-congo-parrot-pair-and-our-amazon-parrot.webp" srcset="/Mark-with-our-grey-congo-parrot-pair-and-our-amazon-parrot-760.webp 760w, /Mark-with-our-grey-congo-parrot-pair-and-our-amazon-parrot.webp 800w" sizes="(max-width:900px) 92vw, 480px" width="800" height="600" alt="Mark hand-feeding at the C.A.Gs aviary in Midland, TX, with one of our documented Congo African Greys" loading="lazy">
+    <p>Every African Grey, Congo or Timneh, sits at CITES Appendix I — the treaty's tightest category, applied in 2017 after wild trapping had thinned native populations severely. Macaws split: most commonly kept species land at Appendix II, while the Hyacinth carries Appendix I status alongside the Grey. Ownership stays legal either way — what changes is how hard you have to work to prove the bird was captive-bred.</p>
+    <h3 class="cag-h3">Appendix I, in Plain English</h3>
+    <p>Per the <a href="https://www.fws.gov/law/wild-bird-conservation-act" target="_blank" rel="noopener">Wild Bird Conservation Act, as enforced by the U.S. Fish &amp; Wildlife Service ↗</a>, wild-trapped Appendix-I birds cannot legally enter the country as pets. A documented, home-bred bird moves between owners without issue, and the closed band on a Grey's leg — sealed on in the nest, physically impossible to add later to a wild adult — is the proof that outlasts any sales receipt.</p>
+    <h4 class="cag-h4">What IUCN Status Means for Greys and Macaws</h4>
+    <p>Wild population status runs separately from legal trade status: the Congo Grey is IUCN-rated Endangered, the Timneh Vulnerable, and among macaws the Hyacinth is Vulnerable with several smaller species facing their own habitat pressure. None of it affects your captive-bred bird's legality — it's simply why we frame documentation as a conservation stance, not a sales feature.</p>
+    <h5 class="cag-h5">Why Captive-Bred Documentation Matters More Than Ever</h5>
+    <p>Every documented, home-bred sale removes one financial incentive to pull a bird from a wild population — a Grey or any macaw, whichever paper trail you're checking before you buy.</p>
+    <h6 class="cag-h6">Citation: cites.org &amp; IUCN Red List</h6>
+    <p>Source data: the <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">CITES appendices database ↗</a> and <a href="https://www.iucnredlist.org/species/22724813/154068024" target="_blank" rel="noopener">IUCN Red List ↗</a> listings for <em>Psittacus erithacus</em>, <em>Psittacus timneh</em>, and the macaw species named on this page.</p>
+  </section>
+
+  <div class="nl-inflow">
+  <Newsletter variant="bottom" action="https://formspree.io/f/xrejpnvn" bottomText="Whichever way this page has you leaning, our current clutch list is one email away — documented, hand-raised African Grey chicks, no pressure to decide today." cta="Send me the list" />
+  </div>
+
+  <!-- S24 SHIPPING -->
+  <section id="shipping">
+    <h2 class="cag-h2">How Does an African Grey Travel — and What's Guaranteed?</h2>
+    <div class="ship-cards">
+      <div class="ship-c">
+        <img src="/african-grey-airport-live-animal-shipping.webp" width="640" height="797" alt="IATA live-animal shipping crate for an African Grey parrot arriving at the airline cargo desk" loading="lazy">
+        <div class="ship-body"><span class="ship-tier">Option 1</span><b>Airport Pickup</b><span class="ship-price">$185</span>
+        <p>Live-animal cargo, IATA rules followed, on a Delta, United or American route to the airport nearest you</p></div>
+      </div>
+      <div class="ship-c">
+        <img src="/african-grey-home-delivery-pet-van.webp" width="640" height="426" alt="Climate-controlled pet delivery van used for C.A.Gs African Grey home deliveries" loading="lazy">
+        <div class="ship-body"><span class="ship-tier clay">Option 2</span><b>Home Delivery</b><span class="ship-price">$350</span>
+        <p>Climate-controlled ground transport straight to your address, paperwork folder handed over on arrival</p></div>
       </div>
     </div>
+    <p>Two ways to receive your bird, nationwide, and the document folder rides along with either one.</p>
+    <h3 class="cag-h3">Where Do Our Greys Travel Most Often?</h3>
+    <p>This fresh set of seven states covers a real slice of where Midland clutches end up each season — full logistics on the <a href="/buy-african-grey-parrots-with-shipping/">shipping process page</a>. Tap a pill to see that area's availability:</p>
+    <ul class="ship-places">
+      {shipPlaces.map((s) => (<li><a href={s.href}><svg class="pin" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>{s.label}</span></a></li>))}
+    </ul>
+    <div class="health-card">
+      <div class="hc-head">Every grey leaves with</div>
+      <ul class="hc-list"><li>PBFD PCR screening</li><li>Avian Polyomavirus PCR</li><li>DNA sexing certificate</li><li>Avian-vet health certificate</li><li>Hatch certificate + closed band</li></ul>
+    </div>
+    <p>Our written health guarantee protects your Grey from arrival onward — full terms on the <a href="/african-grey-parrot-health-guarantee/">health guarantee page</a>. A $200 deposit holds the bird.</p>
+    <p class="ship-line">Ships nationwide · $185 airport · $350 home</p>
   </section>
 
-  <!-- VERDICT CARDS -->
-  <section class="cmp-section cmp-alt">
-    <div class="page-container">
-      <h2 class="cmp-h2">Which Bird Should You Choose?</h2>
-      <div class="cmp-verdict-grid">
-        <div class="cmp-verdict-card">
-          <h3 class="cmp-verdict-title">Choose an African Grey if&hellip;</h3>
-          <ul class="cmp-verdict-list">
-            <li>Talking ability is your top priority</li>
-            <li>You live in an apartment or shared housing</li>
-            <li>You want a smaller, lighter bird</li>
-            <li>You value a deep, quiet intelligent bond over bold personality</li>
-            <li>You prefer moderate noise levels</li>
-          </ul>
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S25 AVAILABLE -->
+  <section id="available">
+    <h2 class="cag-h2">Which African Greys Are Available Now?</h2>
+    <p>Talked yourself into the Grey side of this comparison? Here's who's actually in the nursery right now — click through to any bird's page for the full photo set, parentage and documentation.</p>
+    <div class="bird-cards">
+      {available.map((b) => (
+        <div class="bird-c">
+          <a class="bird-photo" href={b.slug} aria-label={`Meet ${b.name}`}>
+            {birdImg[b.id] && <img src={birdImg[b.id].src} width="640" height="480" alt={birdImg[b.id].alt} loading="lazy">}
+            <span class="bird-badge">{b.variant === 'timneh_african_grey' ? 'Timneh' : 'Congo'} · Available</span>
+          </a>
+          <div class="bird-body">
+            <div class="bird-top"><h3 class="bird-name"><a href={b.slug}>{b.name}</a></h3><span class="bird-price">{b.price_display}</span></div>
+            <ul class="bird-docs">{docBadges.map((d) => (<li>{d}</li>))}</ul>
+            <a class="btn-clay sm bird-cta" href={b.slug}>Meet {b.name}</a>
+            <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span>
+          </div>
         </div>
-        <div class="cmp-verdict-card">
-          <h3 class="cmp-verdict-title">Choose a Macaw if&hellip;</h3>
-          <ul class="cmp-verdict-list">
-            <li>You want a bold, colorful, visually striking bird</li>
-            <li>You have a large dedicated bird room with noise insulation</li>
-            <li>You prefer playful, physically active bird interaction</li>
-            <li>Talking ability is less important than personality</li>
-            <li>You have outdoor space where noise is not an issue</li>
-          </ul>
-        </div>
+      ))}
+    </div>
+    <h3 class="cag-h3">Prefer a Bonded Pair or Fertile Eggs Instead?</h3>
+    <p>Not every household wants one bird. Households wanting two companions from the start ask about our unrelated pair, and experienced incubator owners occasionally ask about our candled fertile eggs — separate pages, same paperwork standard on either.</p>
+    <div class="pair-row">
+      <div class="pair-c">
+        {availablePair && birdImg["jins-jeni"] && <img class="pimg-pair" src={birdImg["jins-jeni"].src} width="900" height="900" alt={birdImg["jins-jeni"].alt} loading="lazy">}
+        <div class="pair-body"><b>Jins &amp; Jeni — Companion Pair</b><span class="bird-price">$3,500</span>
+        <span class="pair-sub">An unrelated Congo pair raised together, sold as a set — suited to a household wanting two companions from day one</span>
+        <a class="btn-ghost sm" href="/available/jins-jeni/">Meet Jins &amp; Jeni</a>
+        <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span></div>
+      </div>
+      <div class="pair-c">
+        <img class="pimg-eggs" src="/african-grey-eggs-ready-to-hatch.webp" width="800" height="800" alt="Hen brooding candled fertile African Grey hatching eggs in the C.A.Gs nest box" loading="lazy">
+        <div class="pair-body"><b>Candled Fertile Hatching Eggs</b><span class="bird-price">$95 each</span>
+        <span class="pair-sub">Every egg is candled for viability before it leaves Midland — a job for experienced hatchers, not a first attempt. Order five and US shipping is on us.</span>
+        <a class="btn-ghost sm" href="/african-grey-parrot-bird-eggs-for-sale-usa/">View the hatching-eggs page</a></div>
       </div>
     </div>
+    <p class="ctr"><a class="btn-clay" href="/available/">Browse Every Available Grey</a></p>
   </section>
 
-  <!-- DEEPER COMPARISON PROSE -->
-  <section class="cmp-section">
-    <div class="page-container text-wrap">
-      <h2 class="cmp-h2">The Key Differences That Matter Most</h2>
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
 
-      <h3 class="cmp-h3">Noise: The Most Practical Difference</h3>
-      <p class="cmp-p">
-        Macaws scream. This is not a training failure — it is natural macaw behavior. Contact
-        calls in Blue and Gold Macaws can exceed 105 decibels, comparable to a chainsaw at close
-        range. In an apartment or townhouse, this will affect your neighbors, your lease, and
-        possibly your hearing.
-      </p>
-      <p class="cmp-p">
-        African Greys produce contact calls too, but at significantly lower volume. Their natural
-        vocalizations are conversational rather than piercing. Most apartment dwellers can manage
-        an African Grey without neighbor complaints; macaw ownership in dense housing is genuinely
-        difficult to manage humanely.
-      </p>
+  <!-- S26 OWNER STORY -->
+  <section id="stories">
+    <h2 class="cag-h2">What Did Mark &amp; Teri Learn Raising Greys Near Macaw Owners?</h2>
+    <p>Enough buyers have walked us through this exact decision that a clear pattern emerged, one we're comfortable standing behind publicly. Real, verified purchase reviews — actual names and cities — sit on our separate <a href="/african-grey-reviews/">African Grey reviews</a> page.</p>
+    <figure class="pullquote">
+      <blockquote>"Every macaw-curious buyer who does the math on noise and space honestly ends up one of two ways — genuinely ready for a macaw, or grateful they asked before they bought one. Either answer beats finding out after."</blockquote>
+      <figcaption>
+        <img class="q-av" src="/birds/bery/bery-grey-african-parrot-for-sale.webp" width="56" height="56" alt="Bery, a hand-raised African Grey at the C.A.Gs aviary in Midland, TX" loading="lazy">
+        <span class="pq-id"><b>Mark &amp; Teri Benjamin</b> · C.A.Gs, Midland, TX</span>
+      </figcaption>
+    </figure>
+    <p>Every satisfied follow-up we've gotten shares the same root cause: the buyer picked based on their actual daily life, not on which bird photographed better. Get that part right and the rest tends to sort itself out.</p>
+  </section>
 
-      <h3 class="cmp-h3">Talking: African Grey Wins Decisively</h3>
-      <p class="cmp-p">
-        Both species can talk. The comparison ends there. African Greys develop vocabularies of
-        200 to 1,000+ words, reproduce voices with human-like clarity, and in well-documented
-        cases use language contextually — using words appropriately in situations rather than
-        randomly reciting them. Dr. Irene Pepperberg's work with Alex established that African
-        Grey language comprehension is not mere mimicry.
-      </p>
-      <p class="cmp-p">
-        Macaws can learn words and phrases. Blue and Golds and Military Macaws are the talkers of
-        the macaw world. But their vocabularies are typically smaller and their enunciation less
-        precise. If talking ability is your primary interest, African Grey is the correct choice.
-      </p>
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
 
-      <h3 class="cmp-h3">CITES and Legal Status</h3>
-      <p class="cmp-p">
-        Both African Greys and most macaw species are CITES-listed. African Greys are uniformly
-        CITES Appendix I. Macaws vary: some popular species like the Blue and Gold are Appendix
-        II; others like the Hyacinth Macaw are Appendix I (more restricted). Research the specific
-        species before purchase and demand captive-bred documentation regardless of species.
-      </p>
+  <!-- S27 FAQ -->
+  <section id="faq">
+    <h2 class="cag-h2">African Grey vs Macaw: FAQ</h2>
+    <p>These are the exact follow-up emails this comparison generates once someone's narrowed it down. For everything outside this specific matchup — care, diet, day-to-day ownership — see the full <a href="/african-grey-parrot-faq/">African Grey parrot FAQ</a>.</p>
+    {faqs.map((f, i) => (
+      i < 3
+        ? (<div class="faq-open"><h3 class="faq-q">{f.q}</h3><p>{f.a}</p></div>)
+        : (<details class="faq-d"><summary>{f.q}</summary><p>{f.a}</p></details>)
+    ))}
+  </section>
+
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S28 KEEP LEARNING -->
+  <section id="learn">
+    <h2 class="cag-h2">Keep Reading Before You Decide</h2>
+    <p>Give a 40-plus-year decision more than one page. These three go deeper than this comparison could: talking timelines, the real lifetime price tag, and how a Grey holds up against the other major parrot camp entirely.</p>
+    <div class="blog-cards">
+      <a class="blog-c" href="/blog/african-grey-parrot-talking-ability/"><img src="/congo-african-grey-talking-ability-card.webp" width="230" height="120" alt="Congo African Grey talking ability guide" loading="lazy"><div class="blog-body"><span class="blog-tag">Talking</span><h3 class="blog-t">The Talking Timeline, Month by Month</h3></div></a>
+      <a class="blog-c" href="/blog/african-grey-parrot-price-what-you-get/"><img src="/african-grey-price-hero-card.webp" width="230" height="120" alt="African Grey parrot price and cost breakdown guide" loading="lazy"><div class="blog-body"><span class="blog-tag">Cost</span><h3 class="blog-t">The Real Lifetime Cost of a Grey</h3></div></a>
+      <a class="blog-c" href="/african-grey-vs-cockatoo/"><img src="/congo-african-grey-vs-cockatoo-hero-760.webp" width="230" height="120" alt="African Grey vs Cockatoo comparison guide" loading="lazy"><div class="blog-body"><span class="blog-tag">Comparison</span><h3 class="blog-t">African Grey vs Cockatoo — the Other Big Parrot</h3></div></a>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="cmp-section cmp-alt">
-    <div class="page-container text-wrap">
-      <h2 class="cmp-h2">African Grey vs Macaw: FAQ</h2>
-      <div class="cmp-faq">
-        {faqs.map((f) => (
-          <details class="cmp-faq-item">
-            <summary class="cmp-faq-q">{f.q}</summary>
-            <p class="cmp-faq-a">{f.a}</p>
-          </details>
-        ))}
+  <div class="seam"><img src="/cag-footer-logo-80.webp" width="40" height="40" alt="" loading="lazy"></div>
+
+  <!-- S29 FINAL CTA + FORM -->
+  <section id="reserve" class="final-cta">
+    <h2 class="cag-h2">Ready to Reserve a Documented African Grey?</h2>
+    <p>If the bite-force numbers, the noise reality or the talking gap tipped you toward a Grey, here's the next move: tell us about your home and we'll match you to a specific bird — or tell you honestly that a macaw fits your situation better, if that's genuinely the case.</p>
+    <form class="cta-form" name="macaw-compare-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="macaw-compare-inquiry" />
+      <p class="hp"><label>Leave this field empty: <input name="bot-field" /></label></p>
+      <label for="agm-interest">Which bird are you asking about?
+        <select id="agm-interest" name="interest" required>
+          <option value="">Choose one…</option>
+          <option>A Congo African Grey ($1,700–$3,500)</option>
+          <option>A Timneh African Grey ($1,500–$1,600)</option>
+          <option>Jins &amp; Jeni, companion pair ($3,500)</option>
+          <option>Fertile hatching eggs ($95 each)</option>
+          <option>Not sure — talk me through Grey vs macaw</option>
+        </select>
+      </label>
+      <div class="form-2col">
+        <label for="agm-fname">First name<input id="agm-fname" name="first_name" type="text" autocomplete="given-name" required></label>
+        <label for="agm-lname">Last name<input id="agm-lname" name="last_name" type="text" autocomplete="family-name" required></label>
       </div>
-    </div>
+      <div class="form-2col">
+        <label for="agm-cell">Phone<input id="agm-cell" name="cell" type="tel" autocomplete="tel" required></label>
+        <label for="agm-cell2">Confirm phone<input id="agm-cell2" name="cell_confirm" type="tel" required></label>
+      </div>
+      <div class="form-2col">
+        <label for="agm-email">Email address<input id="agm-email" name="email" type="email" autocomplete="email" required></label>
+        <label for="agm-email2">Confirm email address<input id="agm-email2" name="email_confirm" type="email" required></label>
+      </div>
+      <label for="agm-delivery">How would you like the bird delivered?
+        <select id="agm-delivery" name="delivery" required>
+          <option value="">Choose one…</option>
+          <option>Airport pickup ($185)</option>
+          <option>Home delivery to my door ($350)</option>
+          <option>I'll collect in Midland, Texas</option>
+        </select>
+      </label>
+      <label for="agm-msg">A little about your home <span class="opt">(optional)</span><textarea id="agm-msg" name="message" rows="3" placeholder="Ever kept a parrot before? Apartment or house? Who's home during the day?"></textarea></label>
+      <div class="form-actions">
+        <button type="submit" class="btn-clay">Send My Inquiry</button>
+        <a class="btn-ghost" href="/contact-us/">Ask a Question First</a>
+      </div>
+      <p class="form-note">A $200 refundable deposit holds your Grey once we've matched you to one. We reply within 24 hours.</p>
+    </form>
   </section>
 
-  <!-- INTERNAL LINKS -->
-  <section class="cmp-section">
-    <div class="page-container text-wrap">
-      <h2 class="cmp-h2">Related Comparisons</h2>
-      <ul class="cmp-links">
-        <li><a href="/congo-vs-timneh-african-grey/" class="cmp-link">Congo vs Timneh African Grey</a> — comparing the two subspecies</li>
-        <li><a href="/african-grey-vs-cockatoo/" class="cmp-link">African Grey vs Cockatoo</a> — talking ability, affection, and dust compared</li>
-      </ul>
-    </div>
-  </section>
+  </div><!-- /cvt-main -->
+  </div><!-- /cvt-body -->
+  </div><!-- /cvt -->
 
-  <CTA
-    headline="Interested in an African Grey?"
-    sub="Every bird from CongoAfricanGreys.com is hand-raised, CITES-documented, and vet-certified. We ship IATA-compliant to all 50 states."
-  />
+  <script is:inline>
+    (function () {
+      // mobile compare-table tabs
+      var wrap = document.querySelector('.cmpe .tbl-wrap');
+      var tabs = document.querySelectorAll('.cmpe-tab');
+      if (wrap && tabs.length) {
+        tabs.forEach(function (b) {
+          b.addEventListener('click', function () {
+            tabs.forEach(function (x) {
+              var on = x === b;
+              x.classList.toggle('active', on);
+              x.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+            wrap.classList.toggle('show-c', b.dataset.v === 'c');
+            wrap.classList.toggle('show-t', b.dataset.v === 't');
+          });
+        });
+      }
+
+      // size comparator
+      var sizeSelect = document.getElementById('size-select');
+      var GREY_G = 500;
+      var MAX_G = 1700;
+      function updateSize() {
+        if (!sizeSelect) return;
+        var opt = sizeSelect.options[sizeSelect.selectedIndex];
+        var g = parseInt(opt.value, 10);
+        var name = opt.getAttribute('data-name');
+        var greyFill = document.querySelector('.grey-fill');
+        var macawFill = document.getElementById('size-macaw-fill');
+        var macawVal = document.getElementById('size-macaw-val');
+        var macawLabel = document.getElementById('size-macaw-label');
+        var out = document.getElementById('size-out');
+        if (greyFill) greyFill.style.width = Math.round((GREY_G / MAX_G) * 100) + '%';
+        if (macawFill) macawFill.style.width = Math.round((g / MAX_G) * 100) + '%';
+        if (macawVal) macawVal.textContent = g.toLocaleString() + ' g';
+        if (macawLabel) macawLabel.textContent = name;
+        if (out) {
+          var ratio = (g / GREY_G).toFixed(1);
+          if (g < GREY_G) {
+            var inv = (GREY_G / g).toFixed(1);
+            out.innerHTML = 'A ' + name + ' weighs roughly <strong>' + inv + '× lighter</strong> than a Congo African Grey.';
+          } else {
+            out.innerHTML = 'A ' + name + ' weighs roughly <strong>' + ratio + '×</strong> a Congo African Grey.';
+          }
+        }
+      }
+      if (sizeSelect) {
+        sizeSelect.addEventListener('change', updateSize);
+        updateSize();
+      }
+
+      // budget estimator
+      var budgetTool = document.querySelector('.budget-tool');
+      function updateBudget() {
+        if (!budgetTool) return;
+        var boxes = budgetTool.querySelectorAll('input[type="checkbox"]');
+        var min = 0, max = 0;
+        boxes.forEach(function (b) {
+          if (b.checked) {
+            min += parseInt(b.getAttribute('data-min'), 10);
+            max += parseInt(b.getAttribute('data-max'), 10);
+          }
+        });
+        var out = document.getElementById('budget-out');
+        if (out) out.textContent = '$' + min.toLocaleString() + '–$' + max.toLocaleString();
+      }
+      if (budgetTool) {
+        budgetTool.querySelectorAll('input[type="checkbox"]').forEach(function (b) {
+          b.addEventListener('change', updateBudget);
+        });
+        updateBudget();
+      }
+
+      // lifestyle quiz
+      var quizBtn = document.getElementById('quiz-submit');
+      if (quizBtn) {
+        quizBtn.addEventListener('click', function () {
+          var total = 0;
+          ['q1', 'q2', 'q3', 'q4'].forEach(function (name) {
+            var checked = document.querySelector('input[name="' + name + '"]:checked');
+            if (checked) total += parseInt(checked.value, 10);
+          });
+          var result = document.getElementById('quiz-result');
+          if (!result) return;
+          var html = '';
+          if (total >= 6) {
+            html = '<strong>Your match: African Grey.</strong> Apartment-friendly noise, room for a smaller footprint, and you value conversation over spectacle — every signal points toward a Grey. <a href="/available/">See available Greys →</a>';
+          } else if (total >= 3) {
+            html = '<strong>Your match: a smaller "mini" macaw species, or a Grey.</strong> You can absorb more noise than a strict apartment allows, but you\'re newer to large parrots — a Hahn\'s or Severe Macaw narrows the size gap, or a Grey stays the safer first bird either way. <a href="/african-grey-vs-macaw/#species">Compare mini macaw species ↑</a>';
+          } else {
+            html = '<strong>Your match: a large macaw species may genuinely fit.</strong> You have the space, the noise tolerance and some experience already — a Blue-and-Gold, Green-winged or Hyacinth is worth serious research. We don\'t breed macaws, so from here we\'d point you to a reputable macaw breeder or rescue rather than sell you something we don\'t raise.';
+          }
+          result.innerHTML = html;
+          result.hidden = false;
+          result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      }
+    })();
+  </script>
 </BaseLayout>
 
 <style>
-  .page-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 48px;
-  }
-  .text-wrap { max-width: 760px; }
-  .cmp-h1 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #faf7f4;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.2;
-    margin: 0 0 1rem;
-  }
-  .cmp-h2 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
-    line-height: 1.25;
-    margin: 0 0 1.25rem;
-  }
-  .cmp-h3 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: 1.2rem;
-    margin: 1.75rem 0 0.6rem;
-  }
-  .cmp-hero {
-    background: #2D6A4F;
-    padding: 3.5rem 0 3rem;
-    text-align: center;
-  }
-  .cmp-sub {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.65;
-    color: rgba(250,247,244,0.88);
-    max-width: 70ch;
-    margin: 0 auto;
-  }
-  .cmp-section { padding: 3rem 0; }
-  .cmp-alt { background: #faf7f4; }
-  .cmp-p {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 0 1.1rem;
-  }
-  .cmp-table-wrap {
-    overflow-x: auto;
-    border-radius: 16px;
-    border: 1px solid #e7e5e4;
-    box-shadow: 0 2px 8px rgba(60,30,10,0.07);
-  }
-  .cmp-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.95rem;
-  }
-  .cmp-table thead tr { background: #2D6A4F; }
-  .cmp-table thead th {
-    color: #faf7f4;
-    font-weight: 600;
-    text-align: left;
-    padding: 0.9rem 1.25rem;
-  }
-  .cmp-table tbody tr:nth-child(even) { background: #faf7f4; }
-  .cmp-table tbody tr:nth-child(odd) { background: #fff; }
-  .cmp-table tbody th {
-    font-weight: 600;
-    color: #2D6A4F;
-    padding: 0.8rem 1.25rem;
-    text-align: left;
-    white-space: nowrap;
-  }
-  .cmp-table tbody td {
-    padding: 0.8rem 1.25rem;
-    color: #44403c;
-    line-height: 1.5;
-  }
-  .cmp-verdict-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    max-width: 900px;
-  }
-  .cmp-verdict-card {
-    background: #fff;
-    border: 1px solid #e7e5e4;
-    border-radius: 20px;
-    padding: 1.75rem;
-    box-shadow: 0 2px 8px rgba(60,30,10,0.06);
-  }
-  .cmp-verdict-title {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: 1.1rem;
-    margin: 0 0 1rem;
-  }
-  .cmp-verdict-list {
-    padding-left: 1.25rem;
-    margin: 0;
-  }
-  .cmp-verdict-list li {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.97rem;
-    line-height: 1.6;
-    color: #44403c;
-    margin-bottom: 0.5rem;
-  }
-  .cmp-links { padding-left: 1.5rem; margin: 0; }
-  .cmp-links li {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    margin-bottom: 0.5rem;
-  }
-  .cmp-link { color: #e8604c; text-decoration: underline; }
-  .cmp-link:hover { color: #d44e3b; }
-  .cmp-faq { display: flex; flex-direction: column; gap: 0.75rem; }
-  .cmp-faq-item {
-    border: 1px solid #e7e5e4;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    background: #fff;
-  }
-  .cmp-faq-q {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #2D6A4F;
-    cursor: pointer;
-    list-style: none;
-  }
-  .cmp-faq-q::-webkit-details-marker { display: none; }
-  .cmp-faq-a {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.98rem;
-    line-height: 1.65;
-    color: #44403c;
-    margin: 0.75rem 0 0;
-    max-width: 70ch;
-  }
-  @media (max-width: 767px) {
-    .page-container { padding: 0 16px; }
-    .cmp-verdict-grid { grid-template-columns: 1fr; }
-  }
-  @media (min-width: 768px) and (max-width: 1024px) { .page-container { padding: 0 32px; } }
+.cvt{--f:#2D6A4F;--clay:#e8604c;--clay-ink:#b04228;--clay-t:#b04228;--cream:#faf7f4;--bd:#e7ddd3;--hdr:96px;color:#2a2622}
+:global(html){scroll-behavior:smooth}
+.cvt .container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+.cvt-hero{background:linear-gradient(160deg,#f4efe9 0%,var(--cream) 55%,#eef4f0 100%);border-bottom:1px solid var(--bd);padding:34px 0 38px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,560px);gap:clamp(24px,4vw,56px);align-items:center;min-height:380px}
+.hero-imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-imgs figure{position:relative;margin:0}
+.hero-imgs img{display:block;width:100%;height:320px;object-fit:cover;object-position:center;border-radius:18px;box-shadow:0 8px 26px rgba(60,30,10,.14)}
+.hero-imgs figure:first-child{transform:translateY(14px)}
+.hero-imgs figure:last-child{transform:translateY(-14px)}
+.chip{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(255,255,255,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.5);border-radius:50px;padding:5px 14px;font-size:.78rem;font-weight:700;color:#1f4d39;white-space:nowrap}
+.vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border:3px solid var(--clay);color:var(--clay-ink);font-family:'Newsreader',serif;font-weight:700;font-size:1.05rem;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(60,30,10,.22);z-index:2}
+.hero-copy{max-width:560px}
+.eyebrow{font-size:.85rem;letter-spacing:.02em;color:var(--clay-t);font-weight:600;margin:0 0 10px}
+.cvt .cag-h1{font-family:'Newsreader',serif;font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.15;margin:0 0 14px;color:#2a2622}
+.lead{font-size:1.05rem;line-height:1.65;color:#4c443c;max-width:58ch;margin:0 0 22px}
+.hero-cta{margin:0;display:flex;gap:12px;flex-wrap:wrap}
+.btn-clay,.btn-ghost{display:inline-block;border-radius:50px;padding:13px 28px;font-weight:600;text-decoration:none;font-size:.95rem;transition:background-color .2s,color .2s,transform .15s}
+.btn-clay{background:var(--clay-ink);color:#fff;border:none;cursor:pointer;font:inherit}
+.btn-clay:hover{background:#9c3a23;transform:translateY(-2px)}
+.btn-ghost{border:2px solid var(--f);color:var(--f)}
+.btn-ghost:hover{background:var(--f);color:#fff}
+.cvt-counter{background:linear-gradient(135deg,#2D6A4F 0%,#1f4d39 100%);color:#fff}
+.counter-row{display:grid;grid-template-columns:repeat(4,1fr);padding-top:26px;padding-bottom:26px;text-align:center}
+.cs{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px}
+.cs+.cs{border-left:1px solid rgba(255,255,255,.16)}
+.cs-ic{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.12);font-size:1.05rem;margin-bottom:6px}
+.counter-row b{font-family:'Newsreader',serif;font-size:2.1rem;display:block;line-height:1.1;letter-spacing:-.01em}
+.cs-l{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;opacity:.88;font-weight:600}
+.cvt-rail{position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.97);backdrop-filter:blur(6px);border-top:3px solid var(--clay-ink);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);display:none}
+.rail-row{display:flex;gap:8px;overflow-x:auto;padding-top:12px;padding-bottom:12px;scrollbar-width:none}
+.rail-row::-webkit-scrollbar{display:none}
+.rail-row a{display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap;font-size:.78rem;padding:8px 14px;border-radius:50px;text-decoration:none;color:var(--f);background:#fff;border:1px solid var(--bd);transition:border-color .2s,color .2s}
+.rail-row a:hover{border-color:var(--clay-t);color:var(--clay-t)}
+.rail-row a b{color:var(--clay-t);font-variant-numeric:tabular-nums;font-weight:700}
+.cvt-body{display:grid;grid-template-columns:200px minmax(0,1fr);gap:34px;padding-top:34px;padding-bottom:40px;align-items:start}
+.cvt-toc{position:sticky;top:calc(var(--hdr) + 24px);max-height:calc(100vh - var(--hdr) - 48px);overflow-y:auto;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:15px 15px 9px;box-shadow:0 4px 14px rgba(60,30,10,.05)}
+.toc-title{display:flex;align-items:center;gap:8px;font-weight:700;color:#2a2622;font-family:'IBM Plex Sans',sans-serif;font-size:.7rem;letter-spacing:.11em;text-transform:uppercase;margin:0 0 8px}
+.toc-tick{width:14px;height:4px;border-radius:2px;background:var(--clay-ink);display:inline-block}
+.cvt-toc a{display:flex;gap:9px;align-items:baseline;color:#3a332c;text-decoration:none;padding:6px 2px;border-bottom:1px solid var(--bd);font-size:.8rem;line-height:1.3;transition:color .15s,padding-left .15s}
+.cvt-toc a:last-child{border-bottom:none}
+.cvt-toc a b{color:var(--clay-t);font-size:.7rem;font-weight:700;font-variant-numeric:tabular-nums;min-width:16px;flex:none}
+.cvt-toc a:hover{color:var(--clay-t);padding-left:5px}
+.cvt-main{min-width:0}
+.cvt-main section{margin-bottom:14px;scroll-margin-top:calc(var(--hdr) + 18px)}
+.cvt .cag-h2{font-family:'Newsreader',serif;font-size:clamp(1.25rem,3.5vw,2rem);color:#2a2622;margin:14px 0 16px;line-height:1.18}
+.cvt .cag-h3{font-family:'Newsreader',serif;font-size:clamp(1.0625rem,2.2vw,1.5rem);color:var(--f);margin:24px 0 10px;line-height:1.25}
+.cvt .cag-h4{font-family:'Newsreader',serif;font-size:clamp(.9375rem,1.8vw,1.25rem);margin:20px 0 8px;line-height:1.3}
+.cvt .cag-h5{font-family:'Newsreader',serif;font-size:1rem;margin:16px 0 6px;color:#3a332c}
+.cvt .cag-h6{font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;color:var(--clay-t);margin:14px 0 4px}
+.cvt-main p{line-height:1.68;margin:0 0 15px;max-width:70ch}
+.cvt-main a{color:var(--clay-t);text-decoration:underline;text-underline-offset:2px}
+.cvt-main a.btn-clay{color:#fff;text-decoration:none}
+.cvt-main a.btn-ghost{color:var(--f);text-decoration:none}
+.cvt-main a.btn-ghost:hover{color:#fff}
+.cvt-main .bird-photo,.cvt-main .blog-c,.cvt-main .ship-places a{text-decoration:none}
+.sec-img{display:block;width:100%;max-width:760px;aspect-ratio:760/400;object-fit:cover;height:auto;border-radius:18px;margin:4px 0 18px;box-shadow:0 6px 20px rgba(60,30,10,.1)}
+.sec-img.portrait{max-width:420px;aspect-ratio:1/1;object-position:center;margin-left:auto;margin-right:auto}
+.sec-img.portrait-tall{max-width:340px;aspect-ratio:3/4;object-position:center;margin-left:auto;margin-right:auto}
+.sec-img.photo43{max-width:480px;aspect-ratio:4/3;object-position:center 42%;margin-left:auto;margin-right:auto}
+.nl-inflow{margin:24px 0;border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.nl-inflow>*{max-width:none}
+.qa-snip{position:relative;background:linear-gradient(180deg,#fdf2ef,#fbeae4);border:1px solid #f0c4b7;border-radius:16px;padding:18px 20px 18px 50px;margin:0 0 14px}
+.qa-snip .qa-pin{position:absolute;left:17px;top:17px;display:flex;color:var(--clay-ink);font-size:1.35rem}
+.qa-snip p{margin:0;max-width:none;line-height:1.62}
+.qa-snip strong{color:var(--clay-ink)}
+.choose-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 16px}
+.choose-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:15px 17px}
+.choose-c.grey{border-top:3px solid var(--f)}
+.choose-c.too{border-top:3px solid var(--clay-ink)}
+.choose-h{display:block;font-family:'Newsreader',serif;font-weight:700;font-size:1.02rem;margin-bottom:9px}
+.choose-c.grey .choose-h{color:var(--f)}
+.choose-c.too .choose-h{color:var(--clay-ink)}
+.choose-c ul{margin:0;padding-left:18px}
+.choose-c li{font-size:.86rem;line-height:1.5;margin-bottom:6px;color:#4c443c}
+@media(max-width:640px){.choose-grid{grid-template-columns:1fr}}
+.seam{display:flex;align-items:center;gap:14px;margin:28px 0}
+.seam::before{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#cdbfae)}
+.seam::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#cdbfae,transparent)}
+.seam img{width:46px;height:46px;object-fit:contain;background:#fff;border:1px solid var(--bd);border-radius:50%;padding:7px;box-shadow:0 3px 10px rgba(60,30,10,.08)}
+.kt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 18px}
+.kt-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px 16px 14px}
+.kt-tick{display:block;width:22px;height:4px;border-radius:2px;background:var(--clay-ink);margin-bottom:10px}
+.kt-c b{font-family:'Newsreader',serif;color:#2a2622;font-size:1.3rem;display:block;line-height:1.15;letter-spacing:-.01em;padding-bottom:8px;border-bottom:1px solid var(--bd);margin-bottom:8px}
+.kt-sub{font-size:.86rem;color:#57534e;line-height:1.5;display:block}
+.cmpe-tabs{display:none;gap:8px;margin:0 0 10px}
+.cmpe-tab{display:inline-flex;align-items:center;gap:7px;border-radius:50px;padding:9px 18px;font:inherit;font-size:.88rem;font-weight:700;cursor:pointer;background:#fff;color:var(--f);border:2px solid var(--f)}
+.cmpe-tab img{width:20px;height:20px;object-fit:contain}
+.cmpe-tab.active{background:var(--f);color:#fff}
+.cmpe-tab[data-v="t"]{border-color:var(--clay-ink);color:var(--clay-ink)}
+.cmpe-tab[data-v="t"].active{background:var(--clay-ink);color:#fff}
+.tbl-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--bd);box-shadow:0 4px 20px rgba(60,30,10,.07)}
+.tbl-wrap.plain{box-shadow:none;border-radius:12px;max-width:640px}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:.9rem;background:#fff}
+.cmp-tbl th{padding:12px;text-align:left;font-weight:600;vertical-align:middle}
+.cmp-tbl .th-f,.cmp-tbl .th-e{background:#fff;color:#57534e;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;border-bottom:1px solid var(--bd)}
+.cmp-tbl .th-c{background:linear-gradient(135deg,#2D6A4F,#1f4d39);color:#fff}
+.cmp-tbl .th-t2{background:linear-gradient(135deg,#e8604c,#c8472f);color:#fff}
+.th-flex{display:flex;align-items:center;gap:10px}
+.th-flex img{width:30px;height:30px;object-fit:contain;flex:none}
+.th-title{display:block;font-family:'Newsreader',serif;font-weight:700;font-size:1.02rem;line-height:1.2}
+.th-sub{display:block;font-size:.72rem;font-weight:400;opacity:.9;margin-top:2px}
+.cmp-tbl td{padding:10px 12px;border-bottom:1px solid var(--bd)}
+.cmp-tbl tr:nth-child(even) td{background:var(--cream)}
+.cmp-tbl .td-f{font-weight:600}
+.cmp-tbl .edge{color:var(--f);font-weight:700}
+.score-tbl{width:100%;border-collapse:collapse;font-size:.86rem;background:#fff}
+.score-tbl th{background:var(--f);color:#fff;padding:9px 12px;text-align:left;font-weight:600}
+.score-tbl td{padding:8px 12px;border-bottom:1px solid var(--bd)}
+.score-tbl tr:last-child td{border-bottom:none}
+.score-tbl tr:nth-child(even) td{background:var(--cream)}
+.score-tbl .sc{font-weight:700;color:var(--f)}
+@media(max-width:640px){
+  .tbl-wrap.plain{border:none;box-shadow:none;border-radius:0;max-width:none;overflow:visible}
+  .score-tbl,.score-tbl tbody,.score-tbl tr,.score-tbl td{display:block;width:auto}
+  .score-tbl thead{position:absolute;left:-9999px}
+  .score-tbl tr{background:#fff!important;border:1px solid var(--bd);border-radius:14px;padding:12px 15px;margin-bottom:11px;box-shadow:0 3px 12px rgba(60,30,10,.06)}
+  .score-tbl tr:nth-child(even) td{background:transparent}
+  .score-tbl td{border:none;padding:6px 0;display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+  .score-tbl td::before{content:attr(data-label);font-weight:600;color:#57534e;font-size:.78rem;letter-spacing:.02em}
+  .score-tbl .sc-trait{font-family:'Newsreader',serif;font-size:1.1rem;color:#2a2622;border-bottom:1px solid var(--bd);padding-bottom:9px;margin-bottom:3px}
+  .score-tbl .sc-trait::before{display:none}
+  .score-tbl .sc{color:var(--f);font-weight:700;font-size:1.02rem}
+  .score-tbl .sc-note{flex-direction:column;align-items:flex-start;gap:3px;color:#57534e;font-size:.88rem}
+}
+.cap{font-size:.85rem;color:#7a6f64;font-style:italic}
+.author-card{background:#fff;border:1px solid var(--bd);border-radius:20px;overflow:hidden;margin:0 0 18px;box-shadow:0 4px 16px rgba(60,30,10,.07)}
+.ac-banner{display:block;width:100%;height:240px;object-fit:cover}
+.ac-row{display:flex;gap:16px;align-items:center;padding:18px 20px}
+.ac-avatar{width:72px;height:54px;border-radius:12px;object-fit:cover;object-position:50% 32%;flex:none}
+.ac-name{font-family:'Newsreader',serif;font-size:1.2rem;margin:0}
+.ac-sub{font-size:.85rem;color:#7a6f64;margin:2px 0 8px}
+.ac-badges{margin:0;display:flex;gap:6px;flex-wrap:wrap}
+.ac-badges span{background:var(--f);color:#fff;border-radius:50px;padding:4px 12px;font-size:.72rem;font-weight:600}
+@media(max-width:900px){
+  .cvt-body{grid-template-columns:1fr;gap:0;padding-top:24px}
+  .cvt-toc{display:none}
+  .cvt-rail{display:block}
+  .hero-imgs img{height:220px}
+  .counter-row{grid-template-columns:repeat(2,1fr);gap:10px}
+  .cs+.cs{border-left:none}
+  .cs:nth-child(even){border-left:1px solid rgba(255,255,255,.16)}
+  .kt-grid{grid-template-columns:1fr 1fr}
+  .cmpe-tabs{display:flex}
+  .cmp-tbl{font-size:.84rem}
+  .cmp-tbl th,.cmp-tbl td{padding:9px 10px}
+  .show-c .th-t2,.show-c .td-t{display:none}
+  .show-t .th-c,.show-t .td-c{display:none}
+}
+@media(max-width:520px){.kt-grid{grid-template-columns:1fr}}
+.hero-imgs .hero-left img{object-position:38% center}
+.hero-imgs .hero-right img{object-position:62% center}
+/* macaw species card grid — distinct from the 5-item row layout used on the cockatoo page */
+.macaw-species-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:6px 0 14px}
+.msp-card{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.06);display:flex;flex-direction:column}
+.msp-media{aspect-ratio:4/3;background:#f4efe9}
+.msp-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 22%}
+.msp-body{padding:15px 17px 17px}
+.msp-body h3{margin-top:0!important}
+.sp-sci{font-size:.8rem;color:var(--clay-t);font-weight:600;margin:0 0 8px!important}
+.sp-stats{list-style:none;display:flex;flex-wrap:wrap;gap:7px;margin:0 0 10px;padding:0}
+.sp-stats li{background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:4px 11px;font-size:.7rem;display:flex;gap:5px}
+.sp-stats li span{color:#7a6f64}
+.sp-stats li b{color:var(--f)}
+.msp-body p{font-size:.87rem;margin-bottom:0;line-height:1.6}
+@media(max-width:760px){.macaw-species-grid{grid-template-columns:1fr}}
+/* bite-force data table */
+.bite-tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--bd);margin:6px 0 14px;max-width:560px}
+.bite-tbl{width:100%;border-collapse:collapse;font-size:.88rem;background:#fff}
+.bite-tbl th{background:var(--f);color:#fff;padding:9px 14px;text-align:left;font-weight:600}
+.bite-tbl td{padding:9px 14px;border-bottom:1px solid var(--bd)}
+.bite-tbl tr:last-child td{border-bottom:none}
+.bite-tbl tr:last-child{background:#fdf2ef}
+.bite-tbl tr:last-child td{font-weight:700;color:var(--clay-ink)}
+/* interactive tools — size comparator, budget estimator, quiz */
+.size-tool,.budget-tool,.quiz-tool{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:20px 22px;margin:10px 0 16px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.size-tool label,.budget-row{display:block;font-size:.85rem;font-weight:600;color:#3a332c;margin-bottom:8px}
+.size-tool select{width:100%;max-width:360px;border:1.5px solid var(--bd);border-radius:12px;padding:10px 13px;font:inherit;background:#fff9f6;margin-bottom:16px}
+.size-bars{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
+.size-row{display:grid;grid-template-columns:150px 1fr 70px;align-items:center;gap:10px}
+.size-label{font-size:.82rem;color:#3a332c;font-weight:600}
+.size-track{background:var(--cream);border-radius:50px;height:22px;overflow:hidden;border:1px solid var(--bd)}
+.size-fill{height:100%;border-radius:50px;transition:width .3s ease}
+.grey-fill{background:var(--f)}
+.macaw-fill{background:var(--clay-ink)}
+.size-val{font-size:.8rem;font-weight:700;color:#3a332c;text-align:right;font-variant-numeric:tabular-nums}
+.size-out{background:var(--cream);border-radius:12px;padding:11px 14px;font-size:.88rem;margin:0!important}
+.budget-row{display:flex;align-items:center;gap:10px;font-weight:400;cursor:pointer;padding:6px 0}
+.budget-row input{width:17px;height:17px;flex:none;accent-color:var(--clay-ink)}
+.budget-total{display:flex;justify-content:space-between;align-items:center;background:var(--cream);border-radius:12px;padding:13px 16px;margin-top:12px}
+.budget-total span{font-size:.85rem;font-weight:600;color:#3a332c}
+.budget-total b{font-family:'Newsreader',serif;font-size:1.4rem;color:var(--f)}
+.quiz-q{margin-bottom:14px}
+.quiz-question{font-weight:700;font-size:.9rem;color:#2a2622;margin:0 0 8px!important}
+.quiz-q label{display:block;font-size:.86rem;font-weight:400;color:#4c443c;padding:5px 0;cursor:pointer}
+.quiz-q input{margin-right:8px;accent-color:var(--clay-ink)}
+.quiz-btn{margin-top:6px}
+.quiz-result{margin-top:16px;background:var(--cream);border-radius:14px;padding:16px 18px;font-size:.9rem;line-height:1.6;border-left:4px solid var(--clay-ink)}
+.quiz-result a{font-weight:600}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
+.match-c{position:relative;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:15px 16px;transition:transform .15s,box-shadow .2s}
+.match-c::before{content:"";display:block;width:24px;height:3px;border-radius:2px;background:var(--clay-ink);margin-bottom:10px}
+.match-c:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(60,30,10,.09)}
+.match-c h4{margin:0 0 6px!important;color:var(--f)}
+.match-c p{margin-bottom:0;font-size:.9rem}
+.match-c:nth-child(5){grid-column:1/-1}
+.match-c:nth-child(5)::before{background:var(--f)}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 8px}
+.tl-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px;position:relative}
+.tl-n{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--clay-ink);color:#fff;font-size:.75rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.tl-c b{font-family:'Newsreader',serif;display:block;margin:6px 0 6px;color:var(--f);font-size:.98rem}
+.tl-c p{font-size:.82rem;margin:0!important;max-width:none}
+.myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 8px}
+.myth-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:18px}
+.myth-x{display:inline-block;background:var(--clay-ink);color:#fff;border-radius:50px;padding:3px 13px;font-size:.72rem;font-weight:600;margin-bottom:10px}
+.myth-c p{margin:0;font-size:.9rem}
+.ship-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 16px}
+.ship-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.ship-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.ship-c>img{display:block;width:100%;height:200px;object-fit:cover}
+.ship-body{padding:16px 18px}
+.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 12px;font-size:.7rem;font-weight:600}
+.ship-tier.clay{background:var(--clay-ink)}
+.ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.15rem}
+.ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
+.ship-c p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
+.ship-places{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.ship-places a{display:inline-flex;align-items:center;gap:8px;background:#f4efe9;border:1px solid var(--bd);border-radius:50px;padding:9px 15px;font-size:.84rem;line-height:1.15;color:var(--f);text-decoration:none;transition:border-color .2s,color .2s,background-color .2s}
+.ship-places a:hover{border-color:var(--clay-t);color:var(--clay-t);background:#fff}
+.ship-places .pin{color:var(--clay-t);flex:none;width:15px;height:15px}
+.health-card{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin:6px 0 14px;max-width:420px}
+.hc-head{background:var(--f);color:#fff;padding:8px 14px;font-family:'Newsreader',serif}
+.hc-list{list-style:none;margin:0;padding:12px 14px}
+.hc-list li{font-size:.85rem;padding:4px 0 4px 22px;position:relative}
+.hc-list li::before{content:"✔";position:absolute;left:0;color:var(--f);font-weight:700}
+.ship-line{font-size:.78rem;color:#7a6f64;font-weight:600;border-top:1px dashed var(--bd);padding-top:8px}
+.bird-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:6px 0 18px}
+.bird-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;color:#2a2622;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
+.bird-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.12)}
+.bird-photo{position:relative;display:block}
+.bird-photo img{display:block;width:100%;height:224px;object-fit:cover;object-position:center 28%}
+.bird-badge{position:absolute;top:10px;left:10px;background:rgba(45,106,79,.94);color:#fff;font-size:.68rem;font-weight:600;padding:4px 11px;border-radius:50px}
+.bird-body{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
+.bird-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.bird-name{font-family:'Newsreader',serif;font-size:1.08rem;margin:0}
+.bird-name a{color:#2a2622;text-decoration:none}
+.bird-name a:hover{color:var(--clay-t)}
+.bird-price{color:var(--clay-t);font-weight:700;font-size:1rem;white-space:nowrap}
+.bird-docs{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.bird-docs li{font-size:.66rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:3px 9px;white-space:nowrap}
+.bird-cta{text-align:center;margin-top:auto}
+.ship-mini{font-size:.68rem;color:#7a6f64;display:block;margin-top:10px;border-top:1px dashed var(--bd);padding-top:6px}
+.pair-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 16px}
+.pair-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.pair-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.pair-c>img{display:block;width:100%;height:250px;object-fit:cover;object-position:center}
+.pair-c>img.pimg-pair{object-position:50% 24%}
+.pair-c>img.pimg-eggs{object-position:50% 62%}
+.pair-body{padding:15px 17px}
+.pair-c b{font-family:'Newsreader',serif;font-size:1.1rem;display:block;margin-bottom:2px}
+.pair-sub{font-size:.82rem;color:#7a6f64;display:block;margin:2px 0 10px}
+.btn-ghost.sm,.btn-clay.sm{padding:8px 16px;font-size:.82rem}
+.ctr{text-align:center}
+.pullquote{margin:0 0 14px;background:#fff;border:1px solid var(--bd);border-left:4px solid var(--clay-ink);border-radius:14px;padding:20px 22px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.pullquote blockquote{margin:0 0 14px;font-family:'Newsreader',serif;font-size:1.1rem;line-height:1.5;color:#2a2622;font-style:italic}
+.pullquote figcaption{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pq-id{font-size:.85rem;color:#57534e}
+.pq-id b{color:#2a2622;font-family:'Newsreader',serif}
+.faq-open{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.faq-q{font-family:'Newsreader',serif;font-size:1rem;margin:0 0 6px;color:#2a2622}
+.faq-open p{margin:0;font-size:.9rem}
+.faq-d{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.faq-d summary{font-family:'Newsreader',serif;font-weight:600;cursor:pointer;font-size:1rem}
+.faq-d p{margin:8px 0 0;font-size:.9rem}
+.blog-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.blog-c{background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;text-decoration:none!important;color:#2a2622;transition:transform .15s,box-shadow .2s}
+.blog-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.blog-c img{width:100%;height:140px;object-fit:cover}
+.blog-body{padding:12px 14px 14px}
+.blog-tag{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 11px;font-size:.68rem;font-weight:600}
+.blog-t{font-family:'Newsreader',serif;font-size:1rem;margin:7px 0 0}
+.final-cta{background:var(--cream);border:1px solid var(--bd);border-radius:20px;padding:clamp(22px,4vw,36px)}
+.cta-form{display:grid;gap:12px;max-width:640px;margin:10px 0 0}
+.cta-form label{display:grid;gap:5px;font-size:.85rem;font-weight:600;color:#3a332c}
+.cta-form .opt{font-weight:400;color:#7a6f64}
+.cta-form input,.cta-form textarea,.cta-form select{border:1.5px solid var(--bd);border-radius:12px;padding:11px 13px;font:inherit;font-weight:400;background:#fff9f6;width:100%}
+.cta-form input:focus,.cta-form textarea:focus,.cta-form select:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.12)}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.cta-form button{border:none;cursor:pointer}
+.cta-form .btn-ghost{padding:11px 22px}
+.form-note{font-size:.8rem;color:#7a6f64;margin:2px 0 0!important}
+.hp{position:absolute;left:-9999px}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;min-height:0;gap:20px}
+  .hero-imgs{order:-1;max-width:560px;margin:0 auto;width:100%}
+  .hero-imgs figure:first-child{transform:translateY(8px)}
+  .hero-imgs figure:last-child{transform:translateY(-8px)}
+  .hero-copy{max-width:none;text-align:center}
+  .hero-cta{justify-content:center}
+  .lead{margin-left:auto;margin-right:auto}
+  .ac-banner{height:180px}
+  .match-grid,.myth-grid,.ship-cards,.pair-row{grid-template-columns:1fr}
+  .timeline{grid-template-columns:1fr 1fr}
+  .bird-cards{grid-template-columns:1fr 1fr}
+  .blog-cards{grid-template-columns:1fr}
+  .ship-places{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ship-places a{justify-content:center;padding:10px 10px;font-size:.79rem}
+  .form-2col{grid-template-columns:1fr}
+  .size-row{grid-template-columns:110px 1fr 60px}
+}
+@media(max-width:520px){.timeline,.bird-cards{grid-template-columns:1fr}.hero-imgs img{height:190px}.ship-places{grid-template-columns:1fr 1fr}.bird-photo img{height:auto;aspect-ratio:4/3;object-position:center top}}
+@media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}.cvt *{transition:none!important}}
 </style>
