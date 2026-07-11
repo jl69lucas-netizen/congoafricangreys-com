@@ -1,6 +1,6 @@
 ---
 name: internal-link-agent
-description: Audits and improves internal link structure across CAG pages. Finds orphan pages (no inbound links), missing hub-to-spoke links, missing spoke-to-hub links, and anchor text opportunities. Produces a prioritized fix list with exact HTML insertions. Never modifies H1 or canonical.
+description: Audits and improves internal link structure across CAG pages. ALWAYS starts from the sitemap (the canonical page universe), then finds orphan pages (no inbound links), missing hub-to-spoke links, missing spoke-to-hub links, and anchor text opportunities — enforcing the Anchor Diversity Ledger (no repeated anchors; exact/partial/LSI/natural variation) and the Link-First placement rule. Produces a prioritized fix list with exact HTML insertions. Never modifies H1 or canonical.
 tools: [Read, Write, Bash]
 ---
 
@@ -43,7 +43,7 @@ All pages → Contact/Inquiry (via CTA — check this exists)
 - Spokes: `/congo-vs-timneh-african-grey/`, `/male-vs-female-african-grey-parrots-for-sale/`, `/african-grey-vs-macaw/`, `/african-grey-vs-cockatoo/`, `/african-grey-vs-amazon-parrot/`, `/african-grey-parrot-breeders-comparison/`, `/african-grey-parrot-lifespan/`
 
 **Location cluster:**
-- Hub: `/usa-locations/african grey parrot-parrots-usa/`
+- Hub: `/african-grey-parrots-for-sale/`
 - Spokes: all 22 state pages in `/usa-locations/`
 
 **Variant cluster:**
@@ -57,6 +57,24 @@ All pages → Contact/Inquiry (via CTA — check this exists)
 ---
 
 ## Audit Protocol
+
+### Step 0 — Sitemap Inventory (REQUIRED FIRST — added 2026-07-11)
+
+The sitemap is the canonical page universe. Every audit and every link strategy starts here — never from ad-hoc greps or memory of what pages exist.
+
+```bash
+# Canonical page list from the generated sitemap shards (source: scripts/generate_sitemaps.py)
+grep -oh '<loc>[^<]*</loc>' public/*sitemap*.xml | sed 's/<[^>]*>//g' | sort -u > /tmp/sitemap_pages.txt
+wc -l /tmp/sitemap_pages.txt   # should match the live URL count (100+); if 0, run: python3 scripts/generate_sitemaps.py
+```
+
+Use `/tmp/sitemap_pages.txt` as the master list for:
+- **Orphan detection** — every sitemap URL must have ≥1 contextual inbound link (nav/footer don't count)
+- **Cluster completeness** — map every sitemap URL into a hub/spoke cluster; a URL in no cluster is a strategy gap
+- **Link-target validation** — never propose a link to a URL not in the sitemap (phantom-target guard)
+- **The site-wide Anchor Diversity Ledger** (below) — one ledger row per sitemap URL
+
+> Note: `src/pages/` is the deployed source of truth; `site/content/` greps below are the legacy/staging path. When both exist, run link extraction against `dist/` (built output) or `src/pages/` — per the Verify-Rendered-Not-Source rule.
 
 ### Step 1 — Find All Internal Links
 
@@ -97,10 +115,10 @@ comm -23 /tmp/all_pages.txt /tmp/linked_pages.txt
 ### Step 3 — Check Hub-to-Spoke Links
 ```bash
 # Example: check comparison hub links to all spokes
-grep -o 'href="/african grey parrot-vs[^"]*"' site/content/african grey parrot-vs-other-breeds/index.html
+grep -o 'href="/african-grey-vs[^"]*"\|href="/congo-vs-timneh[^"]*"\|href="/male-vs-female[^"]*"' dist/african-grey-comparison/index.html
 
 # Check each spoke links back to hub
-grep -l 'href="/african grey parrot-vs-other-breeds/"' site/content/african grey parrot-vs-*/index.html
+grep -l 'href="/african-grey-comparison/"' dist/african-grey-vs-*/index.html dist/congo-vs-timneh-african-grey/index.html
 ```
 
 ### Step 4 — Anchor Text Audit
@@ -135,9 +153,31 @@ Score each missing link 1–3:
 - Over-optimized: exact match keyword repeated identically across 20 links
 - Empty: `<a href="/page/"></a>`
 
+### Anchor Diversity Ledger (site-wide — added 2026-07-11)
+
+Repeated identical anchors to the same target are the #1 over-optimization signal. Before adding ANY link, build the ledger for its target and pick an unused variation.
+
+```bash
+# All anchors currently pointing at a target, site-wide (run on dist/ or src/pages/)
+target="/congo-african-grey-for-sale/"
+grep -roh "href=\"$target\"[^>]*>[^<]*" dist/ | sed 's/.*>//' | sort | uniq -c | sort -rn
+```
+
+**Ledger format (include in every audit output):**
+
+| Target URL | Anchors in use (count) | Next variation to use |
+|---|---|---|
+| /congo-african-grey-for-sale/ | "Congo African Grey for sale" (1), "our available Congo Greys" (1) | "hand-raised Congo African Grey parrots" (LSI) |
+
+**Variation rules:**
+1. **Never repeat an anchor** — not twice on a page, and not for the same target across the site. Every new link gets a fresh variation.
+2. **Rotate the 4 anchor types** per target: exact match (≤1 site-wide per target beyond the hub) → partial match → LSI/synonym ("Grey parrot pricing", "what a Congo costs") → natural language / first-person ("compare our two Grey variants").
+3. **Mine variations from real data** — GSC query variants, PAA phrasing, and the keyword-cluster tiers (`skills/keyword-cluster.md`) — not invented synonyms.
+4. **No stop-word-only anchors** — anchors are meaningful content words ("Congo African Grey diet plan"), never filler ("more about this", "the page on diet").
+
 ### Anchor Position Rule (Internal + External)
 
-Links must appear at the **beginning or middle** of a sentence — never at the end.
+**Link-First rule (2026-07-11):** links must appear at the **START** of the sentence — inside the opening words (first clause). Never mid-sentence, never at the end.
 
 ✅ **Good — link in subject/predicate position:**
 - `"Our <a href="/congo-african-grey-for-sale/">Congo African Grey parrot guide</a> covers adult weight, pricing, and care requirements."`
@@ -165,7 +205,7 @@ Links must appear at the **beginning or middle** of a sentence — never at the 
 **How to apply it everywhere:**
 1. **Inventory section IDs first:** `grep -n 'id="' <page>` — every major section should have a stable `id` + `scroll-mt-20` (so the jump doesn't hide under a sticky header).
 2. **Link teaser → deep-dive in the same page.** FAQ answers, "still deciding?" lines, and pros/cons sections are prime spots to jump **up** to a comparison/spec table or **down** to the available-birds grid / contact form.
-3. **First-person + descriptive anchor, mid-sentence** — e.g. `you can <a href="#compare-species">compare our Congo and Timneh Greys side by side</a> in the table above`. Never a bare "click here," never parked at the end.
+3. **First-person + descriptive anchor at the sentence start** — e.g. `<a href="#compare-species">Compare our Congo and Timneh Greys side by side</a> in the table above to see which fits your home.` Never a bare "click here," never mid-sentence, never parked at the end.
 4. **Schema-safe caveat (critical):** if a section's text is rendered from a data array that also feeds JSON-LD (e.g. `faqItems` → `FAQPage` `acceptedAnswer.text`, rendered via `{item.a}` = HTML-escaped), you **cannot** put an `<a>` inside that string — it will show as literal text and pollute the schema. Instead add the jump-link in a **separate prose `<p>`** outside the array (the homepage adds a "Still weighing it up?" line under the FAQ accordion).
 5. Cap ~1–2 jump links per section; they supplement, not replace, contextual links to other pages.
 
@@ -173,7 +213,7 @@ Links must appear at the **beginning or middle** of a sentence — never at the 
 | ✅ Good | ❌ Bad |
 |---|---|
 | `#anchor` jump from a teaser to the in-depth section it summarizes | Linking to a section that doesn't exist / has no `id` |
-| Descriptive first-person anchor mid-sentence | "see above", "click here", anchor at sentence end |
+| Descriptive first-person anchor at sentence START (Link-First) | "see above", "click here", anchor mid-sentence or at sentence end |
 | Jump-link added in standalone prose when the source is schema-bound | `<a>` injected into a `{item.a}`/schema-bound string (renders as literal text) |
 | 1–2 jumps per section | 5+ jumps stuffed into one paragraph (over-optimization) |
 
@@ -212,8 +252,8 @@ All internal link operations use Claude Code file reads and Bash grep for speed 
 ```html
 <!-- Add in body prose or navigation section -->
 <p class="cag-body">
-  Compare all breed options in our 
-  <a href="/african grey parrot-vs-other-breeds/">complete African Grey parrot comparison guide</a>.
+  <a href="/african-grey-comparison/">Our complete African Grey comparison guide</a> lines up
+  every alternative species side by side. <!-- Link-First: anchor opens the sentence -->
 </p>
 ```
 
@@ -259,8 +299,9 @@ Date: [YYYY-MM-DD]
 2. **Descriptive anchor text required** — reject generic text
 3. **Orphan check on every full audit** — no page without inbound links
 4. **Hub/spoke architecture takes priority** — fix cluster links before cross-links
-5. **Max ~3 new links per edit session** per page — avoid over-optimization signals. **Intent clarified (2026-06-04):** the real risk is *clustered exact-match anchors* or *many links to the same target*, not a handful of distinct contextual links spread across a long page. On a large page (e.g. the 1000-line homepage), more than 3 is acceptable **if** each link has a different target, a descriptive non-duplicated anchor, sits mid-sentence, and is distributed one-per-section — and the user has approved the set. State the trade-off when exceeding 3.
+5. **Max ~3 new links per edit session** per page — avoid over-optimization signals. **Intent clarified (2026-06-04):** the real risk is *clustered exact-match anchors* or *many links to the same target*, not a handful of distinct contextual links spread across a long page. On a large page (e.g. the 1000-line homepage), more than 3 is acceptable **if** each link has a different target, a descriptive non-duplicated anchor, sits at the sentence start (Link-First), and is distributed one-per-section — and the user has approved the set. State the trade-off when exceeding 3.
 6. **Save audit** — write to `docs/research/internal-link-audit-[date].md`
 7. **Internal = same tab, external = new tab + ↗ cue** — never `target="_blank"` on an internal link (see Open-in-New-Tab Policy)
 8. **Use the jump-link technique** — cross-reference earlier in-depth sections from later teaser prose via `#id`; respect the schema-safe caveat (no `<a>` inside `{item.a}`/JSON-LD-bound strings)
 9. **Duplicate-slug check before redirecting** — confirm two similar slugs are truly the same *intent* before proposing a 301; hub vs guide, availability vs cost, etc. are distinct pages → link them, don't redirect (and use **301** for permanent consolidation, never 302)
+10. **Sitemap first, ledger always** — Step 0 sitemap inventory is mandatory before any strategy; every proposed link must pass the Anchor Diversity Ledger (unused variation, correct type rotation) and the Link-First placement rule

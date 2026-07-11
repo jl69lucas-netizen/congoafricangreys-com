@@ -30,7 +30,7 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 - **PART C** — Section Build Order (Hero → CTA) + the Seam-Logo Divider
 - **PART D** — Voice · Two-Keyword Headers · "Honesty Policy" Humor
 - **PART E** — Entity 4-Move Loop + Verified-Claim Ledger
-- **PART F** — Internal + External Links (woven mid-sentence)
+- **PART F** — Internal + External Links (Link-First: anchors at sentence START)
 - **PART G** — Non-Commodity Pass (audit-then-rewrite)
 - **PART H** — GEO / AEO (be the cited source)
 - **PART I** — Schema Set per page
@@ -181,9 +181,9 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 
 ---
 
-## PART F — INTERNAL + EXTERNAL LINKS (woven mid-sentence)
+## PART F — INTERNAL + EXTERNAL LINKS (Link-First: anchors at sentence START)
 
-- ⬜ **Placement:** beginning or middle of a sentence — **NEVER at the end.**
+- ⬜ **Placement (Link-First, 2026-07-11):** anchor at the START of the sentence — inside the opening words. **NEVER mid-sentence, NEVER at the end.**
 - ⬜ Internal links open **same tab**; external open **new tab** + `rel="noopener noreferrer"` + an ↗ affordance.
 - ⬜ **Cap:** max 2 external / 300 words, max 1 / paragraph. Verify **200** before inserting (retry `-A "Mozilla/5.0"` — `cites.org` 403s to curl ≠ dead). Add any new URL to `docs/reference/external-link-library.md` first.
 - ⬜ Proven authority targets: World Parrot Trust (`parrots.org/encyclopedia/grey-parrot/`), IUCN Red List, CITES.org, USDA APHIS, Alex Foundation, AAV (`aav.org`), Cornell/AllAboutBirds.
@@ -293,7 +293,7 @@ The manual mirrors the page itself: **Part C is the build order, Hero first, CTA
 - ⬜ A declarative ≤320-char answer block under each H2.
 
 **Linking quality:**
-- ⬜ Contextual internal links (beginning/middle of sentence, varied anchors); all targets verified to exist.
+- ⬜ Contextual internal links (Link-First: anchor at sentence START, varied anchors — no anchor repeated site-wide for the same target); all targets verified to exist.
 - ⬜ External authority links (.gov/.edu/.org) verified 200; in `external-link-library.md`.
 - ⬜ TOC (if >1,500 words) with working jump links.
 

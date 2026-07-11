@@ -62,6 +62,17 @@ Apply to **any CAG prose** — especially the high-tell surfaces:
 - **Cut any sentence that survives deletion** without losing meaning — if the paragraph still makes sense without it, it was padding.
 - **Break up tricolon adjective stacks** — three balanced adjectives in a row is the loudest tell; keep one, or swap the stack for a fact.
 
+## Meaningful Words — No Stop-Word Filler (added 2026-07-11, breeder rule)
+
+Applies to every NAMING surface when working on, rebuilding, creating, or editing CAG pages: URL slugs, anchor text, headings, image filenames, image alt text, meta titles, button labels, section IDs.
+
+- **Content words only where grammar allows** — drop `of / the / and / for / with / a / an / to / in / on` fillers when the phrase still reads naturally without them.
+- ✅ `congo-african-grey-diet-plan` · ❌ `the-diet-plan-for-a-congo-african-grey`
+- ✅ anchor "Congo African Grey shipping costs" · ❌ anchor "more about the costs of shipping"
+- ✅ H3 "Congo vs Timneh Temperament Differences" · ❌ H3 "A Look at the Differences in the Temperament"
+- **Body prose is exempt** — sentences stay natural, grammatical, first-person. This rule targets naming/labeling surfaces, not paragraphs. A heading may keep a stop word when the conversational Quora-style question format needs it ("Is a Congo or a Timneh Right for You?" is fine — question headers are a locked pattern).
+- **Every kept word must carry meaning** — if a word can be deleted from a slug/anchor/label without losing meaning, delete it.
+
 ## CAG-Specific
 
 - **Keep the first-person breeder voice** — stripping slop never means stripping "we / our / here at C.A.Gs." Humanizing without the POV is a different failure.

@@ -28,7 +28,7 @@ These informational/secondary pages use the **homepage design + method**. The hu
 verify-each-step build guide is **`MANUAL INTERIOR-PAGE CHECKLIST.md`** (repo root, Hero → CTA).
 
 **Same as the homepage:** first-person C.A.Gs voice · two-keyword conversational headers (Rule 28b) ·
-full H1–H6 band · the 4-Move entity loop + Verified-Claim Ledger · woven mid-sentence links ·
+full H1–H6 band · the 4-Move entity loop + Verified-Claim Ledger · Link-First anchors (links at sentence START) ·
 "Honesty Policy" humor · GEO/AEO declarative ≤320-char answer blocks · seam-logo dividers
 (`.cag-seam` + `/cag-footer-logo.png`) · AA contrast + Lighthouse perf gates · 5-element image SEO.
 
@@ -634,7 +634,7 @@ TIER 5: QUALITY CONTROL
 15. Final Section Checklist:
     ☐ Word count within target range
     ☐ Primary keyword used 2–3× naturally
-    ☐ 5–8 internal links included (beginning/middle of sentences)
+    ☐ 5–8 internal links included (Link-First: anchor at sentence start)
     ☐ 1–2 external authority links included
     ☐ 3–5 geographic entities mentioned
     ☐ Headers use question format where natural
@@ -1159,7 +1159,7 @@ Before final submission, verify all items:
 - ☐ 150+ named entities naturally integrated (people, locations, medical, brands, stats, credentials)
 
 **Linking Quality:**
-- ☐ 50+ contextual internal links (beginning/middle of sentences, varied anchor text)
+- ☐ 50+ contextual internal links (Link-First: anchors at sentence start; varied anchor text, no repeats per target)
 - ☐ 50+ external authority links (.gov, .edu, .org, avicultural authorities)
 - ☐ All anchor targets verified to exist on the site
 - ☐ Table of Contents at top with all section jump links
