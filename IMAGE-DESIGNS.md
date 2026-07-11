@@ -100,6 +100,10 @@ Every generated image flows through the same pipeline:
 1. **`cag-image-pipeline`** — SEO filename rename + WebP conversion + correct on-page placement.
 2. **image-metadata** — the **5-element set**: filename, **alt ≤190 chars**, title, caption + CTA,
    and a **250+ word description**.
+3. **Keyword distribution (seo-rules Rule 50b, 2026-07-11):** the page's PRIMARY keyword goes in
+   the PRIMARY image's alt only; every other image rotates a different keyword type (secondary /
+   LSI / NLP variation / long-tail). No two images on a page share an alt. No stop-word filler in
+   filenames or alts.
 
 ---
 

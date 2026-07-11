@@ -70,7 +70,7 @@ Replicate the Congo-vs-Timneh research file set for each page, saved to `session
 7. **Content Gap** — what's missing from ALL competitors.
 8. **Recommended Page Structure** — full H1→H6, optimized for SEO + AEO + AI Overview + snippets.
 9. **Schema / Technical** — FAQPage, Article/WebPage, BreadcrumbList; Product/Offer ONLY on the for-sale page; ItemList on hub.
-10. **Internal Linking** — up to hub, sideways to sibling comparisons, down to `/congo-african-grey-for-sale/`, `/timneh-african-grey-for-sale/`, `/available/` birds, contextual to care/health/price pages. Anchors mid-sentence, never at end.
+10. **Internal Linking** — up to hub, sideways to sibling comparisons, down to `/congo-african-grey-for-sale/`, `/timneh-african-grey-for-sale/`, `/available/` birds, contextual to care/health/price pages. Anchors at sentence START (Link-First rule), never mid-sentence or end.
 11. **Backlink Strategy** — avian blogs, breeders, rescue/education orgs, Reddit resources, pet journalists.
 12. **Page Sections & Outline** — mandatory sections + competitor-derived sections + our-moat sections, **A/B/C categorized** (A=mandatory core, B=competitor-match, C=moat), total **22–25 sections**.
 
@@ -133,7 +133,7 @@ Snippet Box (📌 Quick Answer) opens every section — 1–2 sentence AI-extrac
 
 - **Author box** near top: Mark & Teri, C.A.Gs – Midland, TX, linking to `/trusted-african-grey-parrot-breeders/`.
 - **Original breeder data signals** — real, non-obvious observations from OUR aviary (Teri/Mark voice); NEVER invented statistics. If we don't have the number, we don't print a number.
-- **External authority links** in health sections — World Parrot Trust, Lafeber, VCA, AAV, cites.org (curl 403 = bot-block, retry with UA, not dead). 6–8 diverse outbound links per page, mid-sentence.
+- **External authority links** in health sections — World Parrot Trust, Lafeber, VCA, AAV, cites.org (curl 403 = bot-block, retry with UA, not dead). 6–8 diverse outbound links per page, anchored at sentence start (Link-First).
 - First-person plural brand voice throughout; encyclopedic exceptions for taxonomy/research.
 - Anti-AI writing filter + Style-2 gated humor (≤1 beat/section, never on health/legal).
 - Negative keyword counter-positioning: wild-caught, scam, cheap unweaned chicks.
@@ -192,7 +192,7 @@ comparison page. Reference implementation: `src/pages/congo-vs-timneh-african-gr
 7. **Testimonials = real reviews only**, pulled from the verified homepage `bottomReviews[]` set with
    real name + city; never the fabricated pair this page originally carried.
 8. **Blog cards** use each post's own `-card.webp` hub thumbnail, never a shared generic image.
-9. **Links start or middle of sentences, never the final words.** Seam dividers use
+9. **Links at the START of sentences only (Link-First rule) — never mid-sentence, never the final words.** Seam dividers use
    `cag-footer-logo-80.webp` (the 200×66 original wastes ~7KiB per Lighthouse).
 10. **Schema** — no page-level BreadcrumbList (the Breadcrumb component emits it; duplicates FAIL the
     gate). Title = 4-part ending in `C.A.Gs – <LSI keyword>` (never "C.A.Gs – Midland, TX" again).
@@ -219,7 +219,7 @@ Every comparison page must clear these on its finishing pass, in addition to §1
    side-by-side table. The 6-trait scorecard (and any other `<table>`) needs `data-label` on each `td`
    + a `@media(max-width:640px)` block: `thead` offscreen, `tr`→bordered card, `td`→flex row with
    `::before{content:attr(data-label)}`. Note td stacks column-wise for long text.
-5. **Internal links to the three money/authority hubs, mid-sentence, from their own sections:**
+5. **Internal links to the three money/authority hubs, anchored at sentence start (Link-First), from their own sections:**
    Reviews → `/african-grey-reviews/` (Owner Stories), FAQ → `/african-grey-parrot-faq/` (FAQ intro),
    Shipping → `/buy-african-grey-parrots-with-shipping/` (shipping body copy).
 6. **Route pills carry a map-pin SVG + cream tint (`#f4efe9`), `inline-flex`; 2-col centered on

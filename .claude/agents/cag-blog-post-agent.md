@@ -15,6 +15,7 @@ dynamic_workflow: false
 # CAG Blog Post Agent
 
 ## Golden Rule
+> **Link-First (ALWAYS):** For ALL internal and external links, the anchor sits at the START of the sentence/paragraph — inside the opening words (first clause). Never mid-sentence, never at the end. ✅ `Our <a>Congo African Grey care guide</a> covers diet in depth…` · ❌ `…diet is covered in our <a>care guide</a>.` (Supersedes the old beginning-or-middle rule, 2026-07-11. Sole exception: branded ACTION anchors on CTAs per skills/cag-branded-hybrid-keywords.md.)
 > **Clarification Checkpoint (ALWAYS):** Below the ≥97% Confidence Gate, do NOT dead-stop the whole job. First write finished work to disk (cleared sections to the page; in-progress notes + the open question to the live session brief's `## Open Flags`), then ask the user ONE narrow question, then keep building every part that isn't blocked. Only the uncertain unit waits for the answer. A stop must never cost more than that one piece, and the question must survive session teardown (it's on disk, not just in chat).
 > **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > **Anti-AI Writing (ALWAYS):** Before shipping any prose, filter against `skills/anti-ai-writing.md` — ban its blacklisted openers, transitions, inflated verbs, padding tricolons, and generic conclusions. This is phrasing/rhythm; it stacks with First-Person Voice (POV) and the Verified-Claim Ledger (substance).
@@ -250,7 +251,7 @@ Every post must link to at least 3 CAG pages. Priority targets:
 | `/cites-documentation/` | "CITES captive-bred documentation", "legal documentation guide" |
 | `/about/` | "[BREEDER_NAME]", "our breeding story" |
 
-**Anchor position rule:** Link text must appear at the beginning or middle of a sentence — never at the end. Bad: `"learn more [here](url)."` Good: `"Our [complete species guide](url) covers everything from..."`)
+**Anchor position rule (Link-First, 2026-07-11):** Link text must appear at the START of the sentence — inside the opening words. Never mid-sentence, never at the end. Bad: `"learn more [here](url)."` Good: `"Our [complete species guide](url) covers everything from..."`)
 
 ---
 

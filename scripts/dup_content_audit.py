@@ -10,10 +10,15 @@ Usage:
   python3 scripts/dup_content_audit.py                 # audit all dist pages
   python3 scripts/dup_content_audit.py slugA slugB ... # audit only these slugs
   python3 scripts/dup_content_audit.py --min-words 15  # change shingle length
+  python3 scripts/dup_content_audit.py --headers       # heading-crossover mode:
+      flags any H1-H6 whose exact text (or template with species names swapped)
+      appears on 2+ pages — catches the "29 crossover headers" failure that the
+      12-word shingle check is blind to (most headings are < 12 words).
 
-Exit 1 if any duplicate run >= MIN_WORDS is found between two different pages.
-Boilerplate that legitimately repeats (nav, footer, the canonical shipping
-cost line, doc-badge lists) is whitelisted below.
+Exit 1 if any duplicate run >= MIN_WORDS (or duplicate heading in --headers
+mode) is found between two different pages. Boilerplate that legitimately
+repeats (nav, footer, the canonical shipping cost line, doc-badge lists,
+site-standard section headers) is whitelisted below.
 """
 import re, sys, itertools
 from pathlib import Path
@@ -43,6 +48,46 @@ def words(path: Path):
 
 def norm(ws): return " ".join(ws)
 
+# Headings allowed to repeat on every page (site-standard sections).
+HEADER_WHITELIST = [
+    "frequently asked questions",
+    "shipping & delivery",
+    "reserve your bird",
+    "get in touch",
+    "join our newsletter",
+]
+# Species/variant tokens normalized in --headers mode so that templated
+# headers ("Is a Macaw Right for You?" vs "Is a Cockatoo Right for You?")
+# are caught as template-for-template crossovers, not just exact matches.
+SPECIES_TOKENS = re.compile(
+    r"\b(congo|timneh|macaw|cockatoo|amazon(?: parrot)?|eclectus|african grey|grey)\b")
+
+def headers_mode(pages):
+    """Flag exact + templated H1-H6 crossovers between pages."""
+    hpat = re.compile(r"<h([1-6])[^>]*>(.*?)</h\1>", re.S | re.I)
+    strip = re.compile(r"<[^>]+>")
+    exact, templ = {}, {}
+    for slug, p in pages.items():
+        html = p.read_text(errors="ignore")
+        for lvl, raw in hpat.findall(html):
+            text = re.sub(r"\s+", " ", strip.sub("", raw)).strip().lower()
+            if not text or any(w in text for w in HEADER_WHITELIST):
+                continue
+            exact.setdefault(text, set()).add(slug)
+            templ.setdefault(SPECIES_TOKENS.sub("{species}", text), set()).add(slug)
+    bad = 0
+    for text, slugs in sorted(exact.items()):
+        if len(slugs) > 1:
+            bad += 1
+            print(f"EXACT header crossover on {sorted(slugs)}:\n  \"{text}\"\n")
+    for text, slugs in sorted(templ.items()):
+        if len(slugs) > 1 and text not in exact:
+            bad += 1
+            print(f"TEMPLATE header crossover on {sorted(slugs)}:\n  \"{text}\"\n")
+    if bad:
+        print(f"FAIL — {bad} crossover headers across {len(pages)} pages."); sys.exit(1)
+    print(f"PASS — no crossover headers in {len(pages)} pages.")
+
 def main():
     args=[a for a in sys.argv[1:] if not a.startswith("--")]
     global MIN_WORDS
@@ -51,6 +96,8 @@ def main():
     dist=Path("dist")
     pages={p.parent.name or "home": p for p in dist.rglob("index.html")}
     if args: pages={k:v for k,v in pages.items() if k in args}
+    if "--headers" in sys.argv:
+        headers_mode(pages); return
     shingled={}
     for slug,p in pages.items():
         ws=words(p)

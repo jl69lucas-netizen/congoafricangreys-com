@@ -60,7 +60,7 @@ Use the brand name or a direct CTA as the anchor text on **final buttons and lin
 - Inline: *"…talk to Mark & Teri directly — [contact C.A.Gs in Midland, TX](/contact-us/)."*
 - Home link: `[C.A.Gs – Midland, TX](/)`
 
-**Rule:** Action anchors are the ONLY place the brand belongs at the END of a sentence/element (everything else: links woven mid-sentence per Rule 49 / homepage contract).
+**Rule:** Action anchors are the ONLY place the brand belongs at the END of a sentence/element (everything else follows the Link-First rule — anchors at sentence START, per seo-rules.md internal-linking rule / homepage contract).
 
 ---
 

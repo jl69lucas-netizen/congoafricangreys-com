@@ -34,6 +34,14 @@ You are the **Image Metadata Skill** for CongoAfricanGreys.com. You write and au
 4. **Caption** (conversational, with a CTA)
 5. **Description** (250+ words, comprehensive — for media library / structured data / on-page figure text)
 
+### Keyword Distribution Across a Page's Images (seo-rules Rule 50b — added 2026-07-11)
+
+- **Primary image (hero / first content image): alt text carries the page's PRIMARY keyword.**
+- **Every other image rotates a different keyword type** — secondary, LSI, NLP variation, long-tail/PAA phrasing — one type per image, so the image set covers a diverse spread.
+- **No two images on a page share the same alt text.** Ever.
+- **No stop-word filler** in filenames or alt text (`of/the/and/for/with`) where grammar allows dropping them — meaningful content words only.
+- Applies to ALL image sources: photos, AI-generated (Nano Banana / Higgsfield / DALL-E), and infographics.
+
 ### 1. Filename (SEO-optimized)
 - **Format:** `[descriptor]-[keyword]-[location]-[number].jpg`
 - **Example:** `congo-african-grey-parrot-midland-tx-01.jpg`

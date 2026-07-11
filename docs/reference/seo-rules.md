@@ -333,7 +333,10 @@ Image agent must determine:
 - Intelligent placement throughout
 - Leave labeled placeholders when images are not yet available
 
-Alt text must exceed **250 characters**. Image descriptions must exceed **300 words**.
+Alt text is **≤190 characters, entity-rich** (per the confirmed 5-element C.A.Gs image metadata set in `skills/image-metadata.md` — the older "exceed 250 characters" figure is RETIRED, corrected 2026-07-11). Image descriptions must exceed **250 words**.
+
+**Rule 50b — Image Keyword Distribution (added 2026-07-11)**
+The page's PRIMARY keyword goes in the alt text of the page's PRIMARY image only (hero / first content image). Every other image on the page rotates a DIFFERENT keyword type — secondary keywords, LSI terms, NLP variations, long-tail/PAA phrasings — so the page's image set covers a diverse keyword spread instead of stuffing one term. No two images on a page may share the same alt text. Applies equally to AI-generated images, infographics, and photos. Filenames and alt text use meaningful content words only — no stop-word filler (`of`, `the`, `and`, `for`, `with`) where grammar allows dropping them.
 
 ---
 
@@ -491,7 +494,7 @@ All pages must use all three anchor text types across internal links:
 1. **Exact Match** — anchor text = target page's exact primary keyword; use sparingly (1–2 per page) for hub/category pages
 2. **Conversational/Descriptive** — longer phrase that describes the destination naturally within a sentence; Google's preferred NLP pattern; use for most links
 3. **Branded** — "C.A.Gs", "Mark & Teri Benjamin's aviary", "CongoAfricanGreys.com"; builds brand authority
-Never repeat the same anchor text twice on a page. Position all internal links at the BEGINNING or MIDDLE of sentences/paragraphs — never at the END of a sentence or paragraph.
+Never repeat the same anchor text twice on a page — and never reuse the same anchor for the same target across the site (rotate exact/partial/LSI/natural variants; see skills/internal-link-agent.md Anchor Diversity Ledger). **Link-First rule (2026-07-11):** position ALL internal and external links at the START of the sentence/paragraph — inside the opening words (first clause). Never mid-sentence, never at the end. Sole exception: branded ACTION anchors on CTAs (skills/cag-branded-hybrid-keywords.md).
 
 **Rule 59 — 5-Tier Section Creation Form**
 Every section of a 22+ section page must complete the 5-tier form BEFORE writing copy:

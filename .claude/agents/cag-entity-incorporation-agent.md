@@ -13,6 +13,7 @@ dynamic_workflow: false
 
 
 ## Golden Rule
+> **Link-First (ALWAYS):** For ALL internal and external links, the anchor sits at the START of the sentence/paragraph — inside the opening words (first clause). Never mid-sentence, never at the end. ✅ `Our <a>Congo African Grey care guide</a> covers diet in depth…` · ❌ `…diet is covered in our <a>care guide</a>.` (Supersedes the old beginning-or-middle rule, 2026-07-11. Sole exception: branded ACTION anchors on CTAs per skills/cag-branded-hybrid-keywords.md.)
 > **Clarification Checkpoint (ALWAYS):** Below the ≥97% Confidence Gate, do NOT dead-stop the whole job. First write finished work to disk (cleared sections to the page; in-progress notes + the open question to the live session brief's `## Open Flags`), then ask the user ONE narrow question, then keep building every part that isn't blocked. Only the uncertain unit waits for the answer. A stop must never cost more than that one piece, and the question must survive session teardown (it's on disk, not just in chat).
 > **First-Person Brand Voice (ALWAYS):** Write as the breeder — "we / our / here at C.A.Gs." Frame our birds, credentials, and process as *ours*, not from the outside. Exceptions (stay neutral): encyclopedic species/taxonomy facts and cited research. Never fabricate — every claim is bounded by the Verified-Claim Ledger and real CAG data (GSC/competitors/codebase), never invented.
 > Use Claude Code and Playwright CLI to solve problems first. Only call MCPs/APIs if the task genuinely cannot be done with Claude Code alone.
@@ -77,14 +78,14 @@ Read the live section. State plainly what is entity-thin: narrative-only prose, 
 Rules: prefer the high-authority parent (Psittaciformes, *binomial*, IATA LAR, hypocalcemia, PBFD). Every entity must be in the Verified-Claim Ledger OR be a neutral factual/taxonomic entity. Mark the single highest-leverage entity **(Recommended)**.
 
 ### Move 3 — Optimized Draft
-Rewrite the section embedding the entities, in the C.A.Gs voice, grounded ONLY in verified facts. Weave internal/external links mid-sentence (never at the end). Apply EBP (Entity → Benefit → Purpose) from the catalog skill. Respect the design system + Direction D theme — build normal markup, don't re-theme. Density cap: no single entity >2% of section word count.
+Rewrite the section embedding the entities, in the C.A.Gs voice, grounded ONLY in verified facts. Anchor internal/external links at the START of the sentence (Link-First rule — never mid-sentence, never at the end). Apply EBP (Entity → Benefit → Purpose) from the catalog skill. Respect the design system + Direction D theme — build normal markup, don't re-theme. Density cap: no single entity >2% of section word count.
 
 ### Move 4 — Topical-Cluster Strategy
 List the internal-link anchors (hub ↔ spoke) and the schema to emit (`Product`/`Offer`, `FAQPage`, `HowTo`, `BreadcrumbList`). **Schema rules:** extend existing JSON-LD, never duplicate a `@type` already on the page (esp. FAQPage); FAQ schema Q/A MUST be visible on the page; **verify rendered schema in `dist/`**, not source.
 
 **Linking rules baked into this move (confirmed 2026-06-03):**
 - **Internal links = same tab; external authority links = new tab** (`target="_blank" rel="noopener noreferrer"` + a subtle ↗ affordance). Never `target="_blank"` on an internal link — zero SEO value, breaks UX.
-- **Jump-link / anchor cross-reference technique:** when a section *teases* a topic that another on-page section *answers in depth*, link the prose to that section's `#id` (every section carries `id` + `scroll-mt-20`). Model example: the homepage FAQ "Congo vs Timneh" answer jumps **up** to `#compare-species` ("compare our Congo and Timneh Greys side by side in the table above"). Teaser → deep-dive, mid-sentence, descriptive, first-person.
+- **Jump-link / anchor cross-reference technique:** when a section *teases* a topic that another on-page section *answers in depth*, link the prose to that section's `#id` (every section carries `id` + `scroll-mt-20`). Model example: the homepage FAQ "Congo vs Timneh" answer jumps **up** to `#compare-species` ("compare our Congo and Timneh Greys side by side in the table above"). Teaser → deep-dive, anchor at sentence start (Link-First), descriptive, first-person.
 - **Schema-safe caveat:** if the section text is rendered from a data array that also feeds JSON-LD (e.g. `faqItems` → `acceptedAnswer.text`, rendered as `{item.a}` = HTML-escaped), do **NOT** put an `<a>` inside that string — it renders as literal text and pollutes the schema. Add the jump-link in a separate prose `<p>` outside the array.
 
 ---
