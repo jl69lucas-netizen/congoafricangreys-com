@@ -29,17 +29,38 @@ WHITELIST_SNIPPETS = [
     "ships nationwide $185 airport $350 home",
     "pbfd pcr screening avian polyomavirus pcr dna sexing certificate avian vet health certificate hatch certificate closed band",
     "cites cert pcr dna sexed vet certified pbfd apv screened fully weaned",
+    # canonical price-matrix data repeated in comparison-table Grey columns
+    "typical price $1 700 $3 500 our greys",
+    # mandated CTA-band trust bullets (deposit / guarantee / IATA — CLAUDE.md)
+    "$200 deposit reserves your bird 3 day health guarantee iata compliant shipping nationwide",
+    # canonical inquiry invitation line above the CTA band
+    "hand raised cites documented and dna sexed reach out to start the conversation we reply within 24 hours",
+    # credential badge strip (NAP + trust set — mandated identical)
+    "since 2014 usda awa cites docs dna sexing pcr screened",
 ]
+
+SKIP_TAGS = {"script", "style", "noscript", "header", "footer", "nav", "form"}
+VOID_TAGS = {"br", "img", "hr", "input", "meta", "link", "source", "track", "wbr", "area", "base", "col", "embed"}
+# chrome elements not wrapped in a semantic tag: jump rails, TOC card grids,
+# section-directory blocks, breadcrumbs
+CHROME_RE = re.compile(r"jump|toc|rail|msp-|crumb", re.I)
 
 class Text(HTMLParser):
     def __init__(self):
-        super().__init__(); self.parts=[]; self.skip=0
-    def handle_starttag(self,t,a):
-        if t in ("script","style","noscript","header","footer","nav"): self.skip+=1
+        super().__init__(); self.parts=[]; self.stack=[]
+    def handle_starttag(self,t,attrs):
+        if t in VOID_TAGS: return
+        skipping = bool(self.stack and self.stack[-1][1])
+        if not skipping:
+            blob = " ".join(v for k,v in attrs if v and k in ("class","id","aria-label"))
+            skipping = t in SKIP_TAGS or bool(CHROME_RE.search(blob))
+        self.stack.append((t, skipping))
     def handle_endtag(self,t):
-        if t in ("script","style","noscript","header","footer","nav") and self.skip: self.skip-=1
+        for i in range(len(self.stack)-1, -1, -1):
+            if self.stack[i][0] == t:
+                del self.stack[i:]; break
     def handle_data(self,d):
-        if not self.skip: self.parts.append(d)
+        if not (self.stack and self.stack[-1][1]): self.parts.append(d)
 
 def words(path: Path):
     p=Text(); p.feed(path.read_text(errors="ignore"))
@@ -55,6 +76,17 @@ HEADER_WHITELIST = [
     "reserve your bird",
     "get in touch",
     "join our newsletter",
+    # Footer.astro 5-column headings (site chrome not wrapped in <footer>)
+    "shop african greys",
+    "by location",
+    "resources & trust",
+    "contact",
+    # Owner card (the breeder's name is the breeder's name)
+    "mark & teri benjamin",
+    # Bird-name card headings — sync with data/clutch-inventory.json when
+    # inventory changes; a bird's name legitimately repeats wherever its
+    # card renders.
+    "amie", "bery", "roys", "elad", "evie", "jins", "jeni",
 ]
 # Species/variant tokens normalized in --headers mode so that templated
 # headers ("Is a Macaw Right for You?" vs "Is a Cockatoo Right for You?")
@@ -70,7 +102,8 @@ def headers_mode(pages):
     for slug, p in pages.items():
         html = p.read_text(errors="ignore")
         for lvl, raw in hpat.findall(html):
-            text = re.sub(r"\s+", " ", strip.sub("", raw)).strip().lower()
+            import html as _h
+            text = _h.unescape(re.sub(r"\s+", " ", strip.sub("", raw)).strip().lower())
             if not text or any(w in text for w in HEADER_WHITELIST):
                 continue
             exact.setdefault(text, set()).add(slug)
