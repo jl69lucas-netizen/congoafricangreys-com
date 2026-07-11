@@ -232,3 +232,54 @@ Every comparison page must clear these on its finishing pass, in addition to §1
    path. Lighthouse's `unused JavaScript` (~72 KiB `/70de/`), `forced reflow`, `render-blocking`,
    `missing source maps`, and `cache TTL` flags are all **Cloudflare Rocket Loader** — a dashboard
    toggle + cache purge, never a repo fix. Note this in the page's fix log; don't chase it in code.
+
+## §13 Component Polish Contract (2026-07-12 breeder pass — binding on every spoke, new or rebuilt)
+
+Every fix below came from a breeder complaint on the live cluster (CvM screenshot session). They are
+now the shipped baseline on CvT / CvM / CvC / MvF — new spokes copy these patterns, never the older ones.
+
+1. **NEVER `scroll-behavior:smooth` on `html`.** On 60k-px comparison pages Chrome cancels the smooth
+   fragment scroll at frame zero (lazy-image layout shifts), so every jump-rail tap looks dead: hash
+   updates, page never moves. `scrollIntoView`/`scrollTo` still work, which misdirects debugging.
+   Homepage baseline is `auto`; `scroll-margin-top` on targets does the offset work. Diagnostic: set
+   `document.documentElement.style.scrollBehavior='auto'` and re-tap — if it jumps, that was the bug.
+2. **Jump rail must be sticky — never re-`position` it.** `.cvt-rail{position:sticky;top:var(--hdr)}`
+   is the contract. Adding `position:relative` later (e.g. "for the ::after fade gradient") silently
+   kills sticky — a sticky element is already a containing block for absolute children. CvM shipped
+   broken this way while its 3 siblings worked.
+3. **Counter snippet = slim inline credential STRIP, not the hero-metric template.** The old design
+   (40px circle icon chips + 2.1–2.2rem serif numbers + uppercase tracked labels + 4 stacked columns)
+   is the exact "big number, small label" cliché DESIGN.md bans, and it rendered ~330px tall on
+   phones. The shipped pattern: no icon chips at all; number and sentence-case label inline on one
+   baseline (`display:flex;align-items:baseline;gap:9px`); numbers `1.4rem` Newsreader desktop /
+   `1.2rem` tablet / `1.1rem` phone; labels `.8rem`→`.74rem` `font-weight:500`, NO uppercase, NO
+   letter-spacing games; desktop one flex row with `1px rgba(255,255,255,.18)` hairlines (~54px
+   band), ≤900px a 2×2 grid (~115–140px). Content stays page-specific per §12-1.
+4. **`.container` eats vertical padding — pad the SECTION.** `.cvt .container` sets
+   `padding:0 clamp(16px,4vw,48px)` at higher specificity, so `padding-top/bottom` on any
+   `.container counter-row`-style element computes to 0 (the old counter never had its intended
+   padding — that was the "rushed" look). Put band padding on the section: `.cvt-counter{padding:14px
+   0}` desktop, `9px 0` mobile.
+5. **Hero eyebrow (prefix) is UNIQUE per spoke, drawn from the page's own premise.** Never reuse the
+   "Hand-raised · CITES-documented · Midland, TX" trust string across spokes — trust tokens live in
+   the hero-meta pills. Shipped set: CvM "11 macaw species sized against one quiet genius" · CvC "The
+   cuddler and the talker, weighed honestly" · CvT "Two Grey subspecies, raised side by side since
+   2014" · MvF "Cock or hen · DNA-certain before you ever pay". A new spoke writes its own from the
+   comparison premise; duplicate eyebrows across siblings FAIL the pass.
+6. **Seam divider = brand medallion + light-orange fading hairlines.** `img
+   src="/cag-header-logo-160.webp"` (the ONLY square logo asset — every `cag-footer-logo*` /
+   `cag-seam-logo` / `cag-logo-badge*` file is a wide wordmark that letterboxes into a smudge inside
+   the circle), `width/height=54`, CSS `object-fit:cover;padding:2px;border:2px solid
+   rgba(232,96,76,.35);border-radius:50%`. Lines: `height:2px;border-radius:1px` fading gradients to
+   `rgba(240,128,112,.6)` (--clay-lt), replacing the old faint 1px `#cdbfae`.
+7. **Middle newsletter is ALWAYS `NewsletterV2 variant="middle" compact`.** The full-height variant's
+   36px H2 overtakes the page H1 in the 768–860px band (MvF shipped that inversion). `compact` is not
+   optional on comparison spokes. (CvT currently has no middle newsletter — decision pending.)
+8. **H1 must outrank every H2 at EVERY width, including one-off hero H1 classes.** The
+   breeders-comparison `bc-h1` clamp `(1.8rem, 3.5vw, 2.75rem)` sat on its floor through the whole
+   375–860px band underneath a static 36px CTA H2. Fixed form: `clamp(1.9rem, 0.5rem + 4.5vw,
+   2.75rem)`. Sweep rule: resolve the clamp at 375/640/768/860/1280 and compare against the largest
+   H2 (usually the CTA/newsletter component) before shipping.
+9. **Image budget <100KB per delivered file.** Recompress with Pillow WebP `method=6`, walk quality
+   78→54 until <95KB (cites-flatlay 101→94KB q66, vs-eclectus-hero 122→89KB q66 — certificate text
+   still crisp). Masters in `assets/brand/` untouched.
