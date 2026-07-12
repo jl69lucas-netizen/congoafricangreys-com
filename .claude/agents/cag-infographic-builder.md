@@ -7,6 +7,8 @@ effort: high
 dynamic_workflow: false
 ---
 
+> **Uniform sizing (IMAGE-DESIGNS §1a — binding):** on comparison/long-form pages, EVERY in-body image (OG photo AND infographic) ships in the identical `.sec-img.inf-img` box — 1408×768 cover, WebP `method=6` `<95 KB`, `-760.webp` sibling, `srcset`/`sizes` as the infographics, per-image `object-position`. Same on mobile/tablet/desktop. Differentiate sibling pages with `skills/cag-component-refresh`.
+
 <!-- EFFORT:START -->
 > **Reasoning effort: HIGH.** Think through the key decisions and tradeoffs before producing output. Do not answer reflexively on non-trivial steps.
 <!-- EFFORT:END -->

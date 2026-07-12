@@ -7,6 +7,8 @@ effort: medium
 dynamic_workflow: false
 ---
 
+> **Uniform sizing (IMAGE-DESIGNS §1a — binding):** on comparison/long-form pages, EVERY in-body image (OG photo AND infographic) ships in the identical `.sec-img.inf-img` box — `PIL.ImageOps.fit(src,(1408,768),LANCZOS,centering=per-image)` → WebP `method=6` quality-walk to `<95 KB` → `-760.webp` sibling → `srcset`/`sizes` as the infographics. Low-res OG masters upscale to the box on purpose (uniform sizing beats sharpness). Never place an OG in `.portrait`/`.photo43` on these pages.
+
 ## Golden Rule
 > **Link-First (ALWAYS):** For ALL internal and external links, the anchor sits at the START of the sentence/paragraph — inside the opening words (first clause). Never mid-sentence, never at the end. ✅ `Our <a>Congo African Grey care guide</a> covers diet in depth…` · ❌ `…diet is covered in our <a>care guide</a>.` (Supersedes the old beginning-or-middle rule, 2026-07-11. Sole exception: branded ACTION anchors on CTAs per skills/cag-branded-hybrid-keywords.md.)
 > **Image art-direction:** Read `IMAGE-DESIGNS.md` (repo root) BEFORE generating, editing, or placing any image — crop ratios, style wrapper, negative list, lighting, focal length, and scene-type-per-page. It is the image source of truth; it wins over any stale value here.

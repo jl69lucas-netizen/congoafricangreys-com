@@ -5,6 +5,7 @@ description: Generates context-aware images for CongoAfricanGreys.com pages. Fou
 
 # CAG Image Generation Skill
 > **Image art-direction:** Read `IMAGE-DESIGNS.md` (repo root) BEFORE generating, editing, or placing any image — crop ratios, style wrapper, negative list, lighting, focal length, and scene-type-per-page. It is the image source of truth; it wins over any stale value here.
+> **Uniform sizing (IMAGE-DESIGNS §1a, ALWAYS on comparison/long-form pages):** every in-body image — OG photo AND infographic — ships in the identical `.sec-img.inf-img` box (1408×768 cover, `<95 KB` WebP + `-760.webp` sibling, per-image `object-position`), same on mobile/tablet/desktop. Follow §1a's exact `ImageOps.fit` recipe.
 
 **Announce at start:** "Using cag-image-generation skill to generate and optimize images for [page/section]."
 
