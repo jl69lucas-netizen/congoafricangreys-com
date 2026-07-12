@@ -46,6 +46,10 @@
 | Social vertical | 9:16 | 1080×1920 | Reels / TikTok / Shorts |
 | Infographic | per page-width rules | **760px** (guide/blog) · **1100px** (home/location) wide | height **400px** desktop, auto on mobile |
 
+### 1a. Uniform In-Body Image Sizing (ALWAYS — locked by breeder 2026-07-12)
+
+**On comparison and long-form content pages, EVERY in-body section image — OG photo AND infographic — renders in the SAME box as an infographic:** `.sec-img.inf-img` = `max-width:760px; aspect-ratio:1408/768 (16:9); object-fit:cover; height:auto`, **identical on mobile / tablet / desktop**. Do NOT give OG photos the smaller/variable boxes (`.portrait` 420px 1:1, `.portrait-tall` 340px 3:4, `.photo43` 480px 4:3) on these pages — match the infographic size so every image is one uniform rectangle down the page. Tune **`object-position` per OG photo** (e.g. `center 30%` for a portrait bird) so the subject isn't cropped out of the 16:9 strip; the box size never changes, only the focal point. Ship each file **<100 KB WebP + a `-760.webp` sibling** with `srcset`/`sizes` exactly as the infographics do. Reference implementations: `/congo-vs-timneh-african-grey/`, `/african-grey-vs-macaw/`, `/african-grey-vs-cockatoo/`, `/male-vs-female-african-grey-parrots-for-sale/`. (The hero's staggered-portrait component keeps its own `.hero-imgs` sizing — this rule governs in-body `.sec-img` slots only.)
+
 ---
 
 ## 2. Reusable Style Wrapper
