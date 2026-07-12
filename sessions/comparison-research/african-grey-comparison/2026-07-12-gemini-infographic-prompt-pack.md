@@ -100,3 +100,37 @@ exist as real `<table>`/text in the DOM. Ship sized placeholder slots (`.sec-img
 - INF-1 → *African Grey vs parrots matrix* · INF-2 → *best talking parrot ranking* · INF-3 → *which
   African Grey comparison* · INF-4 → *best parrot by use case* · rival OG reuses keep their spoke alts
   varied · shipping → *nationwide African Grey shipping* · owner → *C.A.Gs owner review*.
+
+---
+
+# PART C — Full H2 coverage via REUSE (the hub generates only INF-0…4)
+
+**Reuse-first is the hub's rule.** Every H2 that maps to a spoke uses that spoke's *signature
+infographic* as its section image — this visually ties the hub to its spokes and avoids regenerating
+concepts already shot. Only INF-0…4 are net-new. Every H2 is covered:
+
+| § | H2 | Image (reuse unless marked NEW) |
+|---|---|---|
+| 1 | Quick Answer / HERO | **NEW INF-0** grey-vs-field motif *(OG fallback: `assets/brand/hero-available-grey-parrots.webp`)* |
+| 2 | Master matrix | **NEW INF-1** multi-species matrix |
+| 3 | Best talking parrot | **NEW INF-2** ranked talking chart |
+| 4 | African Grey vs Macaw | REUSE `…/GREY-vs-MACAW/african-grey-vs-macaw-side-by-side-chart.webp` |
+| 5 | African Grey vs Cockatoo | REUSE `…/GREY-vs-COCKATOO/african-grey-vs-cockatoo-comparison-chart.webp` |
+| 6 | African Grey vs Amazon | REUSE `…/CONGO-vs-AMAZON/african-grey-vs-amazon-parrot-comparison-chart.png.webp` |
+| 7 | Congo vs Timneh | REUSE `…/CONGO-vs-TIMNEH/congo-vs-timneh-side-by-side-comparison-chart.webp` |
+| 8 | Male vs Female | REUSE `…/MALE-vs-FEMALE-…/male-vs-female-african-grey-side-by-side-comparison-chart.webp` |
+| 9 | Which comparison (selector) | **NEW INF-3** decision-flow selector |
+| 10 | Best parrot by use case | **NEW INF-4** four-quadrant grid |
+| 11 | Pros & cons in brief → spoke | REUSE `…/pros-and-cons/african-grey-pros-and-cons-balance-scale` (spoke INF-1) |
+| 12 | How to choose a breeder → spoke | REUSE `…/breeders-comparison/african-grey-breeder-red-flags-vs-green-flags` (spoke INF-9) |
+| 13 | What a grey costs | REUSE `…/CONGO-vs-TIMNEH/congo-vs-timneh-price-cost-breakdown-infographic.webp` |
+| 14 | 40–60 year commitment | REUSE `…/pros-and-cons/african-grey-40-60-year-lifespan-timeline` (spoke INF-6) |
+| 15 | Health / doc / shipping | REUSE cluster shipping photos (`petsvans5.jpeg` + ` live-animal-…-shipping.webp`) |
+| 16 | Owner story / reviews | `bottomReviews[]` real buyer images |
+| 17 | See available birds | real `/available/` bird photos |
+| 18 | FAQ | accordion, no image (matches spokes) |
+| 19 | Explore every comparison | ItemList grid of the 7 spokes' own `-card`/chart thumbnails + inquiry form |
+
+**Note:** §11/§12/§14 reuse spoke infographics that are themselves NEW generations on their spoke pages —
+so the hub build must come LAST (after breeders + pros-cons ship), which matches the build order. No
+hub-only image beyond INF-0…4 needs generating.
