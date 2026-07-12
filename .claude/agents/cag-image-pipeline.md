@@ -302,3 +302,8 @@ grep -rn 'src="[^"]*\.\(jpg\|jpeg\|png\)"' site/content/ --include="*.html" | wc
 8. **200KB limit** — flag and skip any image over 200KB; document in report
 9. **WebP preferred** — flag all JPG/PNG images as WebP conversion candidates; batch convert when user approves
 10. **Lazy loading** — add `loading="lazy"` to all below-fold `<img>` tags; never on hero/first image
+
+
+## Uniform In-Body Image Sizing (locked 2026-07-12)
+
+On comparison + long-form content pages, every in-body section image — OG photo AND infographic — uses the SAME box: `.sec-img.inf-img` (`max-width:760px; aspect-ratio:1408/768; object-fit:cover; height:auto`), identical on mobile/tablet/desktop. Never give OG photos smaller boxes (`.portrait`/`.portrait-tall`/`.photo43`) on these pages; match the infographic size and tune `object-position` per photo. Ship `<100KB WebP + -760.webp` sibling. Canonical spec: `IMAGE-DESIGNS.md §1a` + CLAUDE.md.

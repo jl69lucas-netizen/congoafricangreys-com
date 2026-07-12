@@ -133,3 +133,8 @@ Date: [YYYY-MM-DD]
 3. **No prompt over 300 words** — AI tools work better with focused prompts
 4. **Brand colors referenced** — always tie back to CAG clay/forest-green/cream palette (#e8604c / #2D6A4F / #faf7f4)
 5. **Realistic expectations** — don't prompt for things AI tools consistently fail at (accurate text on signs, realistic human faces)
+
+
+## Uniform In-Body Image Sizing (locked 2026-07-12)
+
+On comparison + long-form content pages, every in-body section image — OG photo AND infographic — uses the SAME box: `.sec-img.inf-img` (`max-width:760px; aspect-ratio:1408/768; object-fit:cover; height:auto`), identical on mobile/tablet/desktop. Never give OG photos smaller boxes (`.portrait`/`.portrait-tall`/`.photo43`) on these pages; match the infographic size and tune `object-position` per photo. Ship `<100KB WebP + -760.webp` sibling. Canonical spec: `IMAGE-DESIGNS.md §1a` + CLAUDE.md.

@@ -155,3 +155,8 @@ Priority: [top 3 fixes]
 3. **Location in alt text on location pages** — always include state/city
 4. **Audit before writing new** — always check what exists first
 5. **File rename requires git tracking** — note if file name changes will break existing references
+
+
+## Uniform In-Body Image Sizing (locked 2026-07-12)
+
+On comparison + long-form content pages, every in-body section image — OG photo AND infographic — uses the SAME box: `.sec-img.inf-img` (`max-width:760px; aspect-ratio:1408/768; object-fit:cover; height:auto`), identical on mobile/tablet/desktop. Never give OG photos smaller boxes (`.portrait`/`.portrait-tall`/`.photo43`) on these pages; match the infographic size and tune `object-position` per photo. Ship `<100KB WebP + -760.webp` sibling. Canonical spec: `IMAGE-DESIGNS.md §1a` + CLAUDE.md.

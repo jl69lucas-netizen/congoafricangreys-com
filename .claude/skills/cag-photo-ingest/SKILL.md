@@ -127,3 +127,8 @@ Read `data/clutch-inventory.json` for current availability status before referen
 | ELAD | Timneh | Male, 5 months |
 | EVIE | Timneh | Female, 6 months |
 | JINS+JENI | Congo pair | Unrelated bonded pair, $3,500 |
+
+
+## Uniform In-Body Image Sizing (locked 2026-07-12)
+
+On comparison + long-form content pages, every in-body section image — OG photo AND infographic — uses the SAME box: `.sec-img.inf-img` (`max-width:760px; aspect-ratio:1408/768; object-fit:cover; height:auto`), identical on mobile/tablet/desktop. Never give OG photos smaller boxes (`.portrait`/`.portrait-tall`/`.photo43`) on these pages; match the infographic size and tune `object-position` per photo. Ship `<100KB WebP + -760.webp` sibling. Canonical spec: `IMAGE-DESIGNS.md §1a` + CLAUDE.md.

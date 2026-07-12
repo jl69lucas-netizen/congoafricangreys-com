@@ -372,3 +372,8 @@ Always include from `data/parrot-image-schema.json` `prompt_safety`:
 7. WebP target: under 200KB for square, under 400KB for landscape/portrait
 8. Always hand off to cag-image-pipeline after optimization — never modify site/ directly from this skill
 9. If buyer persona is "first-time parrot owner," ensure imagery is warm and approachable — not intimidating beak close-ups
+
+
+## Uniform In-Body Image Sizing (locked 2026-07-12)
+
+On comparison + long-form content pages, every in-body section image — OG photo AND infographic — uses the SAME box: `.sec-img.inf-img` (`max-width:760px; aspect-ratio:1408/768; object-fit:cover; height:auto`), identical on mobile/tablet/desktop. Never give OG photos smaller boxes (`.portrait`/`.portrait-tall`/`.photo43`) on these pages; match the infographic size and tune `object-position` per photo. Ship `<100KB WebP + -760.webp` sibling. Canonical spec: `IMAGE-DESIGNS.md §1a` + CLAUDE.md.
