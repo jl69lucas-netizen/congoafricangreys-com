@@ -118,3 +118,48 @@ reused real OG photos immediately.
   African Grey right for you* · INF-4 → *captive-bred vs wild-caught African Grey* · INF-5 → *African
   Grey cost of ownership* · INF-6 → *African Grey lifespan* · shipping → *nationwide African Grey
   shipping* · owner → *C.A.Gs owner review* · pros photo → *African Grey talking ability*.
+
+---
+
+# PART C — H2 coverage completion (every H2 gets a distinct image) + exact OG files
+
+**Every data/decision H2 carries a UNIQUE image; FAQ / available-birds / keep-reading H2s use OG cards
+(matches shipped spokes).** Slots below close the §12 / §13 / §16 gaps INF-1…6 left open.
+
+### Exact OG assignments (distinct hero — `cags-tame-…-with-owner` is the trust page's hero, not reused here)
+| § | H2 | Exact file | Box / focal point |
+|---|---|---|---|
+| 1 | HERO (thoughtful single grey, copy LEFT) | `assets/brand/talking-african-grey-hand-close-bond.jpg.webp` | `.hero-imgs` |
+| 3–6 | Biggest pros (engaged, exploring grey) | `assets/brand/african-grey-parrot-free-exploration.webp` | `.sec-img.inf-img`, `object-position:center 30%` |
+| 13 | Who actually thrives (owner + bonded grey) | `assets/brand/african-grey-parrot-head-scratch.webp` | `.sec-img.inf-img` |
+| 17 | Documented bird (hand-raised chick + docs) | `assets/brand/hand-fed-african-grey-chick.jpg.webp` | `.sec-img.inf-img` |
+| 18 | Shipping — home delivery | `assets/COMPARE-PAGES/petsvans5.jpeg` (→ `african-grey-home-delivery-pet-van.webp`) | photo card |
+| 18 | Shipping — airport cargo | `assets/COMPARE-PAGES/ live-animal-african-grey-parrot-shipping.webp` | photo card |
+| 19 | Owner story / reviews | `bottomReviews[]` real buyer images (`assets/brand/Roys/` set) | testimonial |
+| 20 | See a documented grey — available cards | real `/available/` bird photos | bird cards |
+
+### Added infographics (fill the missing H2s)
+
+## INF-7 · §12 Who Should NOT Get an African Grey?  →  `who-should-not-get-african-grey.png`
+**Style:** **"not-a-fit" checklist with clay ✗ marks** (honest disqualifiers), mirrors INF-3 but inverted. **Links to:** `/african-grey-parrot-care-guide/`.
+**Prompt:**
+> Warm honest checklist card on cream `#faf7f4`: header "This bird is not for you if…" in clay
+> `#e8604c`, six rows each with a clay ✗: "You travel most weeks", "You want a quiet apartment bird",
+> "Small children are the main handlers", "You want low-maintenance", "It's an impulse gift", "You can't
+> plan 40–60 years". Forest-green `#2D6A4F` label text, spec-sheet feel, empathetic not harsh, short
+> labels only, no parrot needed. [+NEGATIVE]
+
+## INF-8 · §16 Are African Greys Good for Beginners? (verdict gauge)  →  `is-african-grey-good-for-beginners-verdict.png`
+**Style:** **horizontal readiness gauge, needle at "intermediate"** — a verdict meter, not a card. **Links to:** `/is-african-grey-good-for-beginners/`.
+**Prompt:**
+> Warm gauge strip on cream `#faf7f4`: a horizontal scale "Beginner → Intermediate → Advanced", a
+> forest-green `#2D6A4F` needle resting on "Intermediate", the clay `#e8604c` "with the right prep"
+> band highlighted under it. Small note "not a first bird for most". Clean dashboard feel, short labels
+> only, no parrot needed. [+NEGATIVE]
+
+### H2s intentionally on OG/text only (NOT a gap)
+§9 Who should NOT is INF-7; §10 Who thrives is OG head-scratch (above) · §18 FAQ → accordion, no image ·
+§20 Keep-Reading → blog `-card.webp` thumbnails + inquiry form.
+
+### Added-slot image-SEO (Rule 50b — unique keyword each)
+INF-7 → *who should not own an African Grey* · INF-8 → *African Grey for beginners verdict*.

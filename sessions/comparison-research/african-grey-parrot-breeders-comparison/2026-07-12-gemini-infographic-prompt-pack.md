@@ -140,3 +140,69 @@ block in the DOM carrying the same figures. Ship with sized placeholder slots (c
   audit data* · INF-6 → *African Grey price range* · INF-7 → *breeder verification checklist* ·
   shipping → *nationwide African Grey shipping* · reviews → *C.A.Gs buyer reviews* · owner → *Midland
   TX family aviary*.
+
+---
+
+# PART C — H2 coverage completion (every H2 gets a distinct image) + exact OG files
+
+**Rule applied (breeder 2026-07-12): every H2 carries a UNIQUE backlink-magnet image.** The FAQ /
+"see available birds" / "keep reading" H2s use OG cards, matching shipped spokes; every data/decision
+H2 gets its own infographic. Slots added below close the gaps INF-1…7 left open.
+
+### Exact OG assignments (pin these — no vague "brand photo")
+| § | H2 | Exact file | On-page box |
+|---|---|---|---|
+| 1 | HERO (breeder/aviary trust, copy LEFT) | `assets/brand/hero-image-african-grey-parrot-breeder-midland-tx.webp` | `.hero-imgs` |
+| 4 | What a documented direct breeder looks like | `assets/brand/certified-breeders-african-grey-near-me.jpg` | `.sec-img.inf-img`, `object-position:center 35%` |
+| 7 | Is adopting/rescuing a good option (calm rehome-mood grey) | `assets/brand/hand-reared-grey african parrot.webp` | `.sec-img.inf-img` |
+| 14 | Shipping — home delivery | `assets/COMPARE-PAGES/petsvans5.jpeg` (→ `african-grey-home-delivery-pet-van.webp`) | photo card |
+| 14 | Shipping — airport cargo | `assets/COMPARE-PAGES/ live-animal-african-grey-parrot-shipping.webp` | photo card |
+| 15 | Is C.A.Gs legit — reviews | `bottomReviews[]` real buyer images (Ida-Brim, Sandra Soliz, Lawrence Brunner from `assets/brand/Roys/`) | testimonial |
+| 16 | Owner story — Mark & Teri | `assets/COMPARE-PAGES/MALE-vs-FEMALE-afrrican-grey-parrots-for-sale/Mark-with-our-grey-congo-parrot-pair-and-our-amazon-parrot.webp` | `.sec-img.inf-img`, `object-position:center 30%` |
+| 17 | See a documented grey — available cards | real `/available/` bird photos | bird cards |
+
+### Added infographics (fill the missing H2s)
+
+## INF-8 · §6 How Facebook/Marketplace Parrot Scams Work  →  `african-grey-facebook-marketplace-scam-anatomy.png`
+**Style:** **numbered "anatomy of the scam" flow** (4 downward steps), the tell circled in clay. **Links to:** `/how-to-avoid-african-grey-parrot-scams/`.
+**Prompt:**
+> Warm flat editorial flow on cream `#faf7f4`: four numbered steps connected top-to-bottom by a
+> forest-green `#2D6A4F` dotted line — "1 Too-cheap listing", "2 Deposit by Zelle/crypto", "3 Surprise
+> 'shipping insurance' fee", "4 Seller vanishes". A clay `#e8604c` warning ring around step 1's price
+> tag. Small line-icons per step (tag, phone, dollar-with-warning, empty crate). No parrot needed,
+> generous negative space, short labels only. [+NEGATIVE]
+
+## INF-9 · §10 Red Flags vs Green Flags at a Glance  →  `african-grey-breeder-red-flags-vs-green-flags.png`
+**Style:** **two-column ledger — clay "red flags" vs forest-green "green flags"** (the single strongest
+linkable asset on the page). **Links to:** `/how-to-avoid-african-grey-parrot-scams/`.
+**Prompt:**
+> Two-column ledger infographic on cream `#faf7f4`, thin center rule. LEFT column header clay `#e8604c`
+> "Red flags" with a small warning-triangle: rows "No USDA license", "Won't video the bird", "Wire /
+> Zelle only", "Price under $1,500", "Pressure to pay fast", "No documents". RIGHT column header
+> forest-green `#2D6A4F` "Green flags" with a check-shield: rows "USDA licensed", "Live video of your
+> bird", "Card / PayPal G&S", "Genuine $1,700–$3,500", "Answers every question", "Full paperwork".
+> Clean line-icons, spec-sheet feel, short labels only. [+NEGATIVE]
+
+## INF-10 · §9 Questions to Ask Any African Grey Breeder  →  `questions-to-ask-african-grey-breeder.png`
+**Style:** **buyer↔breeder speech-bubble Q&A card** (distinct from the checklist ribbon). **Links to:** `/trusted-african-grey-parrot-breeders/`.
+**Prompt:**
+> Warm conversational card on cream `#faf7f4`: a stack of alternating speech bubbles — clay `#e8604c`
+> buyer bubbles asking short questions ("Can I see this bird on video?", "USDA license number?", "PBFD/
+> APV screened?", "What paperwork ships with it?") and forest-green `#2D6A4F` breeder reply bubbles
+> each with a small check. Friendly editorial line work, no parrot needed, short labels only. [+NEGATIVE]
+
+## INF-11 · §19 How to Report an African Grey Parrot Scam  →  `report-african-grey-parrot-scam-where-to-go.png`
+**Style:** **three-destination signpost** (recovery routes). **Links to:** `/how-to-avoid-african-grey-parrot-scams/` (external refs IC3 / USDA APHIS / state AG in the DOM list).
+**Prompt:**
+> Warm signpost illustration on cream `#faf7f4`: a single post with three forest-green `#2D6A4F` arrow
+> boards pointing to labels "IC3 · report online fraud", "USDA APHIS · report a breeder", "State
+> Attorney General". A small clay `#e8604c` shield-with-check at the base. Clean, calm, reassuring,
+> short labels only, no parrot needed. [+NEGATIVE]
+
+### H2s intentionally on OG/text only (matches shipped spokes — NOT a gap)
+§11 "Never pay in advance?" → shares INF-7 payment footer + a documented-reservation line in the DOM ·
+§18 FAQ → accordion, no image · §20 Keep-Reading → blog `-card.webp` thumbnails + inquiry form.
+
+### Added-slot image-SEO (Rule 50b — unique keyword each)
+INF-8 → *African Grey marketplace scam* · INF-9 → *African Grey breeder red flags* · INF-10 → *questions
+to ask an African Grey breeder* · INF-11 → *report an African Grey scam*.
