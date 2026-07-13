@@ -1,506 +1,1215 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import CTA from '../../components/CTA.astro';
+import Newsletter from '../../components/cag-library/NewsletterV2.astro';
+import clutch from '../../../data/clutch-inventory.json';
 import breederData from '../../../data/breeder-comparison.json';
 
-const title = "African Grey Parrot Breeders Comparison | Honest Buyer's Guide";
-const description = "Compare African Grey parrot breeders honestly: direct breeders, classified listings, and adoption — what each publicly states about CITES docs, health guarantees, and pricing.";
+const title = "African Grey Parrot Breeders Comparison: Choosing a Reputable, USDA-Documented Breeder & Avoiding Scams | C.A.Gs – Honest Breeder Buyer's Guide";
+const description = "African Grey parrot breeders compared honestly by breeders who document every bird: direct licensed breeder vs classified site vs rescue, the paperwork a reputable breeder actually shows (USDA license, CITES, PBFD/APV PCR, DNA sexing), red flags, safe payment, and what our 30-breeder audit found.";
 const canonical = "https://congoafricangreys.com/african-grey-parrot-breeders-comparison/";
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
-  { name: "Breeder Comparison", url: "/african-grey-parrot-breeders-comparison/" },
+  { name: "Comparisons", url: "/african-grey-comparison/" },
+  { name: "African Grey Breeders Comparison", url: "/african-grey-parrot-breeders-comparison/" },
 ];
 
-const { cag, competitors, aggregators, confirmed_scams } = breederData;
+const bd = breederData as any;
+const cag = bd.cag;
+const competitors = (bd.competitors as any[]) || [];
+const accessibleCompetitors = competitors.filter((c) => c.site_accessible === true || c.site_accessible === "true");
+const inaccessibleCompetitors = competitors.filter((c) => c.site_accessible === false || c.site_accessible === "false");
+function yesNo(v:any){ if(v===true||v==="true")return "Yes — stated"; if(v===false||v==="false")return "Not on site"; return String(v ?? "Verify"); }
+function yesCls(v:any){ if(v===true||v==="true")return "bc-yes"; if(v===false||v==="false")return "bc-no"; return "bc-verify"; }
 
-const accessibleCompetitors = competitors.filter(
-  (c: any) => c.site_accessible === true || c.site_accessible === "true"
-);
-const inaccessibleCompetitors = competitors.filter(
-  (c: any) => c.site_accessible === false || c.site_accessible === "false"
-);
-
-const verificationChecklist = [
-  "Ask for the breeder's USDA AWA license number — verify at the USDA APHIS Animal Care public database",
-  "Request documentation for the specific bird you're purchasing, not a generic certificate",
-  "Confirm the bird is captive-bred — documentation should reference a band or microchip number from the breeding pair",
-  "Be cautious of prices below $1,500 for Congo African Greys or $1,200 for Timnehs",
-  "Safe payment methods only: credit card or PayPal Goods & Services. Wire transfer, Zelle, and cryptocurrency are red flags",
-  "Ask for the avian veterinarian's name and contact who issued the health certificate",
-  "Request photos or video of the specific bird in its current environment before paying",
-  "Search the seller's name and website on Google with the word 'scam' or 'review' before sending any money",
+const channels = [
+  { ic: "M3 21V7l9-4 9 4v14M3 21h18M9 21v-6h6v6", name: "Direct licensed breeder", desc: "You buy the bird from the person who hatched it — the only channel that can hand you a USDA license number, per-bird PCR results and a CITES paper trail.", tag: "Safest — documents at source", best: true },
+  { ic: "M4 5h16v4H4zM4 11h16v8H4zM8 15h8", name: "Classified listing site", desc: "A directory that lists other people's birds. A green “verified” badge means the listing paid a fee, not that anyone checked a credential.", tag: "Verify each seller yourself", best: false },
+  { ic: "M3 9l1-4h16l1 4M4 9v10h16V9M9 13h6", name: "Online marketplace / Facebook", desc: "Facebook Marketplace, Hoobly and Craigslist mix a few real sellers with the bulk of reported parrot scams — deposit-and-vanish is the pattern buyers describe most.", tag: "Highest scam risk", best: false },
+  { ic: "M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z", name: "Rescue / adoption", desc: "A legitimate, meaningful route for experienced owners — a Petfinder-listed rescue rehomes greys for a documented $200–$600 fee, history disclosed as far as it is known.", tag: "Great for experienced owners", best: false },
 ];
 
-const buyerFaqs = [
-  {
-    q: "Is it safe to buy an African Grey from a classified listing site?",
-    a: "Classified listing sites like BirdsNow and BirdBreeders aggregate listings from individual sellers. The platform does not verify seller credentials, CITES documentation, or health claims. Some individual sellers on these platforms are legitimate breeders; others are not. Buying from a classified listing requires more buyer due diligence than purchasing from a licensed breeder directly. Always request CITES documentation, a health certificate, and a USDA AWA license number regardless of where you find the seller.",
-  },
-  {
-    q: "What should I do if a breeder cannot show CITES documentation?",
-    a: "Do not purchase the bird. Inability to produce CITES documentation for a captive-bred African Grey indicates either that the bird is wild-caught (illegal) or that the seller is fraudulent. There is no legitimate explanation for a legally sold African Grey to lack captive-bred documentation. Walk away and report the seller to the USDA APHIS Animal Care reporting line at 1-844-820-2234.",
-  },
-  {
-    q: "Are adopted or rescued African Greys a good option?",
-    a: "Adopting an African Grey through a legitimate parrot rescue organization is a valid and meaningful option, particularly for experienced bird owners who can manage uncertainty about a bird's history or potential behavioral issues from prior neglect. Adoption fees are typically $200–$600. Petfinder.com lists African Grey parrots available for adoption through rescue organizations — filter by species and distance. Documentation requirements differ for adopted birds, but any legitimate rescue provides what paperwork they have.",
-  },
-  {
-    q: "How do I report a suspected African Grey parrot scam?",
-    a: "Report to: (1) USDA APHIS Animal Care at 1-844-820-2234 for CITES and animal welfare violations; (2) your state attorney general's consumer protection office for financial fraud; (3) the IC3 (Internet Crime Complaint Center) at ic3.gov if money was sent online; and (4) your bank or PayPal to attempt a chargeback. Document all seller communication before reporting.",
-  },
+// 4-tier documentation VERDICT CARDS (refresh delta #3) — matrix stays in DOM below too
+const tiers = [
+  { name: "Direct licensed breeder", verdict: "Documented at source", win: true, docs: [["y","USDA AWA license number"],["y","CITES captive-bred paperwork"],["y","DNA-sexing certificate"],["y","PBFD & APV PCR results"],["y","Written health guarantee"],["y","Card / PayPal G&S accepted"]], strip: "Every document traces to the bird you are buying" },
+  { name: "Classified listing site", verdict: "Depends on the seller", win: false, docs: [["p","USDA license"],["p","CITES paperwork"],["p","DNA certificate"],["n","PBFD & APV PCR"],["p","Health guarantee"],["p","Safe payment"]], strip: "The platform verifies payment, not credentials" },
+  { name: "Online marketplace / Facebook", verdict: "Buyer beware", win: false, docs: [["n","USDA license"],["n","CITES paperwork"],["n","DNA certificate"],["n","PBFD & APV PCR"],["n","Health guarantee"],["n","Safe payment"]], strip: "Where most reported parrot scams concentrate" },
+  { name: "Rescue / adoption", verdict: "Honest, history-limited", win: false, docs: [["p","Prior USDA history"],["y","Legal transfer paperwork"],["p","DNA certificate"],["p","Health screening"],["y","Adoption contract"],["y","Documented adoption fee"]], strip: "What paperwork exists is disclosed openly" },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: buyerFaqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
+const auditStats = [
+  { big: "30", sub: "African Grey breeder and listing sites we audited on 2026-07-12" },
+  { big: "0", sub: "surfaced a USDA license number anywhere on the homepage we could scan" },
+  { big: "4 of 11", sub: "sites listed as “direct breeders” were offline the day we checked" },
+];
+
+// verification checklist — breeder-SELECTION framing (worded apart from the scam page)
+const checklist = [
+  "Ask for the USDA AWA license number, then confirm it yourself in the USDA APHIS Animal Care public search — a real breeder gives the number without flinching.",
+  "Request paperwork for the exact bird you are buying, band or microchip number included, not a generic certificate that could belong to any chick.",
+  "Confirm the bird is captive-bred with CITES documentation — for an Appendix I species there is no legitimate sale without it.",
+  "Ask which lab ran the DNA sexing and the PBFD/Avian Polyomavirus PCR, and to see the individual result.",
+  "Get the written health guarantee terms in advance, including the window you have for an independent avian-vet exam.",
+  "Ask for a live video call with the specific bird moving in its current room — a stolen listing photo cannot do that.",
+  "Keep payment on a credit card or PayPal Goods & Services; treat wire, Zelle, Venmo, gift cards and crypto as the deal-breakers they are.",
+  "Search the seller name, phone number and website with the words review and scam before any money moves.",
+];
+
+const redFlags = [
+  "No USDA license, or a refusal to give the number",
+  "Won't video-call you with the specific bird",
+  "Wire transfer, Zelle, gift cards or crypto only",
+  "A Congo priced far under $1,500",
+  "Pressure to pay a deposit before you can verify anything",
+  "No CITES, DNA or health paperwork on offer",
+];
+const greenFlags = [
+  "USDA AWA license number you can confirm at APHIS",
+  "A live video call with your actual bird, any time",
+  "Credit card or PayPal Goods & Services accepted",
+  "A genuine $1,700–$3,500 Congo range",
+  "A documented, refundable reservation with terms in writing",
+  "Full CITES, DNA-sexing and PCR paperwork per bird",
+];
+
+const qSpecific = [
+  "May I video-call to see this exact bird move around its room today?",
+  "How old is it, and is it fully weaned onto solid food?",
+  "Who are the parents, and can I see them?",
+  "What is the band or microchip number on this bird?",
+];
+const qDocs = [
+  "What is your USDA AWA license number?",
+  "Which lab did the DNA sexing and the PBFD / APV PCR?",
+  "What exactly does your written health guarantee cover, and for how long?",
+  "What paperwork travels home with the bird, and how is it shipped?",
+];
+
+const takeaways = [
+  { big: "1 axis", sub: "we judge every breeder on the same thing — the documents they can produce" },
+  { big: "USDA", sub: "an AWA license number you can verify yourself at APHIS is the fastest legitimacy test" },
+  { big: "Appendix I", sub: "African Greys are CITES Appendix I — no captive-bred paperwork, no legal sale" },
+  { big: "PBFD + APV", sub: "per-bird PCR screening is the health entity almost no competitor names" },
+  { big: "$1,700–$3,500", sub: "our Congo range; a price far below the floor is a scam signal, not a bargain" },
+  { big: "$800 grey", sub: "the classic too-good-to-be-true bait behind deposit-and-vanish scams" },
+  { big: "$185 / $350", sub: "airport pickup or home delivery, the paperwork folder travels either way" },
+  { big: "4.9 / 52", sub: "our verified review rating and count — real names and cities on our reviews page" },
+];
+
+const faqs = [
+  { q: "How do I find a reputable African Grey breeder?", a: "Judge every candidate on documentation, not vibes. A reputable African Grey breeder gives you a USDA AWA license number you can verify in the USDA APHIS public search, produces CITES captive-bred paperwork, a DNA-sexing certificate and PBFD/Avian Polyomavirus PCR results for the specific bird, offers a written health guarantee, and takes payment by card or PayPal Goods & Services. If any of those is missing or waved away, keep looking." },
+  { q: "How can you tell if a bird breeder is legit?", a: "Ask for the USDA license number and confirm it yourself, request a live video call with the exact bird in its current room, and insist on per-bird paperwork rather than a generic certificate. A legitimate breeder answers detailed questions happily and never pressures you to pay by wire, Zelle or crypto before you can verify anything. Refusal on any of those points is the tell." },
+  { q: "Is it safe to buy an African Grey from a classified listing site?", a: "Classified sites like BirdBreeders, BirdsNow and Hoobly aggregate other people's listings; the platform verifies that a listing fee was paid, not that the seller holds a single credential. A green “verified” badge is not a verified USDA license or CITES paperwork. Some sellers there are genuine breeders, but the due-diligence burden is entirely on you — request the same documents you would from any direct breeder before sending money." },
+  { q: "How much should an African Grey parrot cost from a real breeder?", a: "Expect roughly $1,700–$3,500 for a documented Congo African Grey and $1,500–$1,600 for a Timneh from a licensed U.S. breeder, plus $185 airport or $350 home-delivery shipping. A Congo advertised at $800 is not a bargain — it is the single most common scam signal, because a real breeder cannot cover a decade of raising, PCR screening, DNA sexing and veterinary care at that price." },
+  { q: "What questions should I ask an African Grey breeder before buying?", a: "Ask for the USDA license number, a live video call with the specific bird, the band or microchip number, which lab ran the DNA and PCR tests, exactly what the written health guarantee covers, and what paperwork ships with the bird. A genuine breeder gives full, specific answers; evasion or one-word replies are your answer." },
+  { q: "What documents should a captive-bred African Grey come with?", a: "CITES captive-bred documentation, a DNA-sexing certificate, PBFD and Avian Polyomavirus PCR results, an avian-veterinarian health certificate, and a hatch record with a closed leg-band or microchip number. Because the African Grey is CITES Appendix I, that paper trail is what makes a domestic sale legal — there is no legitimate reason for it to be missing." },
+  { q: "What should I do if a breeder cannot show CITES documentation?", a: "Do not buy the bird. For an Appendix I species, inability to produce captive-bred CITES paperwork means the bird is either wild-caught (illegal) or the seller is not who they claim. Walk away and, if money already changed hands, report it to the USDA APHIS Animal Care line and to IC3.gov." },
+  { q: "Are adopted or rescued African Greys a good option?", a: "Yes, particularly for experienced owners who can handle uncertainty about a bird's past. A legitimate parrot rescue rehomes African Greys for a documented $200–$600 fee and discloses what history it has. Petfinder lists greys available through vetted rescues — filter by species and distance. Documentation differs from a breeder purchase, but a real rescue is transparent about exactly what it can and cannot confirm." },
+  { q: "How do I report a suspected African Grey parrot scam?", a: "Report to the USDA APHIS Animal Care line for CITES and animal-welfare concerns, to IC3.gov (the FBI's Internet Crime Complaint Center) if money was sent online, and to your state attorney general's consumer-protection office. Then contact your card issuer or PayPal to attempt a chargeback. Save every message and screenshot before you file." },
+  { q: "What payment methods are safe when buying a parrot online?", a: "A credit card or PayPal Goods & Services — both give you a dispute and chargeback path if the bird or the seller turns out to be fake. Wire transfer, Zelle, Venmo, Cash App, gift cards and cryptocurrency are effectively irreversible, which is exactly why scammers insist on them. A documented, refundable reservation paid by card is normal; a demand for untraceable payment is the deal-breaker." },
+];
+
+const available = ((clutch as any).birds as any[]).filter((b) => b.status === 'available' && b.sex !== 'pair').sort((a, b) => (a.variant === 'congo_african_grey' ? -1 : 1));
+const availablePair = ((clutch as any).birds as any[]).find((b) => b.sex === 'pair' && b.status === 'available');
+const birdImg: Record<string, { src: string; alt: string }> = {
+  "bery": { src: "/bery-congo-african-grey-cuddly-tamed-card.webp", alt: "Bery, a documented female Congo African Grey at the C.A.Gs aviary, resting on her keeper's lap" },
+  "amie": { src: "/amie-congo-african-grey-handfed-baby-card.webp", alt: "Amie, a hand-fed female Congo African Grey with full captive-bred paperwork" },
+  "roys": { src: "/roys-congo-african-grey-male-tame-card.webp", alt: "Roys, a tame young male Congo African Grey documented from hatch at C.A.Gs" },
+  "jins-jeni": { src: "/jins-jeni-congo-african-grey-pair-card.webp", alt: "Jins and Jeni, a documented Congo African Grey companion pair raised together" },
+  "elad": { src: "/elad-timneh-african-grey-male-wings-card.webp", alt: "Elad, a documented young male Timneh African Grey stretching his wings" },
+  "evie": { src: "/evie-timneh-african-grey-female-perched-card.webp", alt: "Evie, a documented female Timneh African Grey with her CITES paperwork folder" },
 };
+const docBadges = ["CITES Cert", "PCR DNA-Sexed", "Vet Certified", "PBFD & APV Screened", "Fully Weaned"];
 
-function yesNo(val: any): string {
-  if (val === true || val === "true") return "Yes — stated";
-  if (val === false || val === "false") return "Not found on site";
-  return String(val ?? "Verify directly");
-}
-function yesClass(val: any): string {
-  if (val === true || val === "true") return "bc-yes";
-  if (val === false || val === "false") return "bc-no";
-  return "bc-verify";
-}
+// grouped-by-mode metros (refresh delta #5) — 5 fresh location slugs unused by any sibling spoke
+const shipAirport = [
+  { href: "/african-grey-parrot-for-sale-cleveland/", label: "Cleveland" },
+  { href: "/african-grey-parrot-for-sale-jacksonville/", label: "Jacksonville" },
+];
+const shipHome = [
+  { href: "/african-grey-parrot-for-sale-sacramento/", label: "Sacramento" },
+  { href: "/african-grey-parrot-for-sale-nyc/", label: "New York City metro" },
+];
+const shipCourier = [
+  { href: "/african-grey-parrot-for-sale-near-me/", label: "Find your nearest route" },
+];
+
+const tocItems = [
+  { id: "quick-answer", label: "Where to Buy" },
+  { id: "takeaways", label: "Key Takeaways" },
+  { id: "documentation", label: "What a Breeder Shows" },
+  { id: "tiers", label: "Breeder Types" },
+  { id: "direct", label: "Direct Breeders" },
+  { id: "classified", label: "Classified Sites" },
+  { id: "scams", label: "How Scams Work" },
+  { id: "rescue", label: "Rescue & Adoption" },
+  { id: "audit", label: "Our 30-Breeder Audit" },
+  { id: "questions", label: "Questions to Ask" },
+  { id: "flags", label: "Red vs Green Flags" },
+  { id: "payment", label: "Paying in Advance" },
+  { id: "price", label: "What It Should Cost" },
+  { id: "checklist", label: "Verification Checklist" },
+  { id: "shipping", label: "Documented & Shipped" },
+  { id: "legit", label: "Is C.A.Gs Legit?" },
+  { id: "owners", label: "Mark & Teri" },
+  { id: "available", label: "Documented Birds" },
+  { id: "faq", label: "FAQ" },
+  { id: "report", label: "Report a Scam" },
+  { id: "learn", label: "Keep Reading" },
+];
+const num = (i: number) => String(i + 1).padStart(2, "0");
+
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
+const articleSchema = {
+  "@context": "https://schema.org", "@type": "Article",
+  headline: "African Grey Parrot Breeders: An Honest, Documented Comparison",
+  description: description,
+  author: { "@type": "Organization", name: "C.A.Gs – Congo African Greys, Midland TX" },
+  publisher: { "@type": "Organization", name: "CongoAfricanGreys.com" },
+  mainEntityOfPage: canonical, datePublished: "2026-06-02", dateModified: "2026-07-13",
+};
+const orgSchema = {
+  "@context": "https://schema.org", "@type": "Organization",
+  name: "C.A.Gs – Congo African Greys", url: "https://congoafricangreys.com/",
+  address: { "@type": "PostalAddress", addressLocality: "Midland", addressRegion: "TX", postalCode: "79707", addressCountry: "US" },
+  aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "52", bestRating: "5" },
+};
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
+<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta
+  heroPreload="/african-grey-breeder-comparison-hero.webp"
+  heroPreloadSrcset="/african-grey-breeder-comparison-hero-480.webp 480w, /african-grey-breeder-comparison-hero.webp 900w"
+  heroPreloadSizes="(max-width: 900px) 60vw, 300px">
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
 
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
-  </div>
+  <div class="cvt">
+  <div class="container"><Breadcrumb items={breadcrumbs} /></div>
 
-  <!-- HERO -->
-  <section class="bc-hero">
-    <div class="bc-container">
-      <h1 class="bc-h1">African Grey Parrot Breeders: An Honest Comparison</h1>
-      <p class="bc-sub">
-        Where can you get an African Grey parrot — and what does each option actually offer?
-        This guide compares direct breeders, classified listing sites, and adoption based on
-        verified, publicly available information. No sales pitch. No bias.
-      </p>
-      <p class="bc-meta">Research date: {breederData.research_date}</p>
-    </div>
-  </section>
-
-  <!-- WHAT TO LOOK FOR -->
-  <section class="bc-section">
-    <div class="bc-container bc-text-wrap">
-      <h2 class="bc-h2">Five Things to Verify Before Buying Any African Grey</h2>
-      <p class="bc-p">
-        African Greys are CITES Appendix I. Any legal captive-bred sale requires documentation.
-        Apply these five checks to every seller — including this one.
-      </p>
-      <div class="bc-criteria-list">
-        {[
-          ["CITES Documentation", "Written proof the bird is captive-bred, with a band or microchip number tracing back to the breeding pair or aviary of origin."],
-          ["Avian Vet Health Certificate", "A health certificate from a licensed avian veterinarian issued within 10 days of transport — required by most airlines for live bird shipping."],
-          ["USDA AWA License", "Commercial breeders selling across state lines are typically required to hold an Animal Welfare Act license. Ask for the number and verify at USDA APHIS."],
-          ["DNA Sex Certificate", "African Greys are not visually sexable. DNA sexing from a certified lab is the only reliable method. A certificate should accompany every bird."],
-          ["Written Health Guarantee", "Terms documented in writing covering at minimum congenital and genetic conditions, with a defined window for veterinary examination."],
-        ].map(([title, desc]) => (
-          <div class="bc-criterion">
-            <span class="bc-check-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg></span>
-            <div>
-              <strong class="bc-criterion-title">{title}</strong>
-              <p class="bc-criterion-desc">{desc}</p>
-            </div>
-          </div>
-        ))}
+  <!-- S1 HERO — single trust hero + credential pill-row -->
+  <section class="cvt-hero hero-trust">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eb-tick" aria-hidden="true"></span>Every breeder here judged on one axis — the paperwork</p>
+        <h1 class="cag-h1">African Grey Parrot Breeders: An Honest, Documented Comparison</h1>
+        <p class="lead">Where can you actually buy an African Grey, and which route is safe? We are a USDA-licensed African Grey breeder, so we will name our bias up front — then compare direct breeders, classified sites, marketplaces and rescue on the one thing that separates them: the documents each can put in your hands.</p>
+        <ul class="cred-pills">
+          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>USDA-licensed</li>
+          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>CITES-documented</li>
+          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>PBFD/APV PCR</li>
+          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>DNA-sexed</li>
+        </ul>
+        <p class="hero-cta"><a class="btn-clay" href="#tiers">Compare Breeder Types</a> <a class="btn-ghost" href="#checklist">Verification Checklist</a></p>
+        <p class="hero-meta"><span>30 breeders audited</span><span>0 posted a USDA license</span><span>Breeder-written</span></p>
+      </div>
+      <div class="hero-imgs">
+        <figure class="hero-single">
+          <img src="/african-grey-breeder-comparison-hero.webp"
+            srcset="/african-grey-breeder-comparison-hero-480.webp 480w, /african-grey-breeder-comparison-hero.webp 900w"
+            sizes="(max-width: 900px) 60vw, 300px"
+            width="900" height="675" alt="A reputable African Grey parrot breeder comparison scene at the C.A.Gs aviary in Midland, Texas, a documented Congo grey beside its paperwork" fetchpriority="high">
+          <figcaption class="chip">Documented · Midland, TX</figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
-  <!-- COMPARISON TABLE -->
-  <section class="bc-section bc-alt">
-    <div class="bc-container">
-      <h2 class="bc-h2">Direct Breeder Comparison</h2>
-      <p class="bc-intro-p">
-        Comparison based on publicly available information from each breeder's website as of {breederData.research_date}.
-        {breederData.methodology}
-      </p>
-      <div class="bc-table-wrap">
-        <table class="bc-table">
-          <thead>
-            <tr>
-              <th scope="col">Breeder</th>
-              <th scope="col">Location</th>
-              <th scope="col">Price Range</th>
-              <th scope="col">Ships Nationally</th>
-              <th scope="col">CITES Mentioned</th>
-              <th scope="col">DNA Sexed</th>
-              <th scope="col">Health Guarantee</th>
-              <th scope="col">USDA License</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- CAG row — highlighted as this site -->
-            <tr class="bc-row-cag">
-              <th scope="row">
-                <a href={cag.url} class="bc-breeder-link">{cag.name}</a>
-                <span class="bc-this-badge">This site</span>
-              </th>
-              <td>{cag.location}</td>
-              <td>{cag.price_congo} (Congo)<br />{cag.price_timneh} (Timneh)</td>
-              <td class="bc-yes">Yes — all 50 states</td>
-              <td class="bc-yes">Yes — documented</td>
-              <td class="bc-yes">Yes — certified</td>
-              <td class="bc-yes">Yes — written</td>
-              <td class="bc-yes">Yes — licensed</td>
-            </tr>
-            <!-- Accessible competitors -->
-            {accessibleCompetitors.map((c: any) => (
-              <tr>
-                <th scope="row">
-                  <a href={c.url} class="bc-breeder-link" target="_blank" rel="noopener noreferrer">
-                    {c.name}
-                  </a>
-                </th>
-                <td>{c.location || "Not stated"}</td>
-                <td>{c.price_range || "Not displayed"}</td>
-                <td class={yesClass(c.ships_nationally)}>{yesNo(c.ships_nationally)}</td>
-                <td class={yesClass(c.cites_mentioned)}>{yesNo(c.cites_mentioned)}</td>
-                <td class={yesClass(c.dna_sexed_mentioned)}>{yesNo(c.dna_sexed_mentioned)}</td>
-                <td class={yesClass(c.health_guarantee_mentioned)}>{yesNo(c.health_guarantee_mentioned)}</td>
-                <td class={c.usda_license && c.usda_license !== "not found" ? "bc-yes" : "bc-verify"}>
-                  {c.usda_license && c.usda_license !== "not found" ? c.usda_license : "Verify directly"}
-                </td>
-              </tr>
-            ))}
-            <!-- Inaccessible sites -->
-            {inaccessibleCompetitors.map((c: any) => (
-              <tr class="bc-row-inactive">
-                <th scope="row">{c.name}</th>
-                <td colspan="7" class="bc-inactive-note">
-                  Website was not accessible as of {breederData.research_date}. Cannot verify current status.
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p class="bc-disclaimer">
-        "Not found on site" means this information was not present on the breeder's public pages at time of research — not a judgment about whether the breeder has it. Contact each seller directly to verify before purchasing.
-      </p>
-    </div>
-  </section>
+  <!-- S2 COUNTER — page-specific -->
+  <section class="cvt-counter"><div class="container counter-row">
+    <div class="cs"><b>30</b><span class="cs-l">Breeders we audited</span></div>
+    <div class="cs"><b>0</b><span class="cs-l">Posted a USDA license</span></div>
+    <div class="cs"><b>100%</b><span class="cs-l">CITES documented (ours)</span></div>
+    <div class="cs"><b>24h</b><span class="cs-l">Reply to inquiries</span></div>
+  </div></section>
 
-  <!-- AGGREGATORS -->
-  <section class="bc-section">
-    <div class="bc-container bc-text-wrap">
-      <h2 class="bc-h2">Classified Listing Sites</h2>
-      <p class="bc-p">
-        Classified bird listing sites connect buyers with individual sellers. The platform itself
-        does not typically verify seller credentials, CITES documentation, or health practices.
-        They are useful for discovering sellers but require more buyer diligence than a licensed
-        breeder with a verifiable track record.
-      </p>
-      <div class="bc-agg-grid">
-        {aggregators.map((agg: any) => (
-          <div class="bc-agg-card">
-            <h3 class="bc-agg-name">
-              <a href={agg.url} target="_blank" rel="noopener noreferrer">{agg.name}</a>
-            </h3>
-            <p class="bc-agg-type">{agg.type}</p>
-            {agg.cites_policy && (
-              <p class="bc-agg-detail"><strong>CITES policy:</strong> {agg.cites_policy}</p>
-            )}
-            {agg.verified_seller_program && (
-              <p class="bc-agg-detail"><strong>Seller verification:</strong> {agg.verified_seller_program}</p>
-            )}
-          </div>
-        ))}
-      </div>
-      <p class="bc-p">
-        Apply the five-point verification checklist above to any individual seller found on these platforms. A platform's general reputation does not transfer to its individual listings.
-      </p>
-    </div>
-  </section>
+  <!-- S3 mobile jump rail -->
+  <nav class="cvt-rail" aria-label="Jump to section"><div class="container rail-row">
+    {tocItems.map((t, i) => (<a href={`#${t.id}`}><b>{num(i)}</b> {t.label}</a>))}
+  </div></nav>
 
-  <!-- ADOPTION -->
-  <section class="bc-section bc-alt">
-    <div class="bc-container bc-text-wrap">
-      <h2 class="bc-h2">Parrot Adoption: A Legitimate Alternative</h2>
-      <p class="bc-p">
-        African Greys are frequently surrendered to rescue organizations due to owner illness, death, or behavioral challenges from prior neglect. Adopting a surrendered African Grey is a genuine and meaningful option, particularly for experienced bird owners.
-      </p>
-      <ul class="bc-adopt-list">
-        <li><strong>Cost:</strong> Adoption fees typically $200–$600, significantly below breeder prices</li>
-        <li><strong>Age:</strong> Often adult birds with established, observable personalities</li>
-        <li><strong>History:</strong> May be unknown; behavioral issues from previous neglect are possible</li>
-        <li><strong>Documentation:</strong> Varies by rescue — CITES paperwork may or may not transfer</li>
-        <li><strong>Best for:</strong> Experienced bird owners comfortable with behavioral rehabilitation if needed</li>
-      </ul>
-      <p class="bc-p">
-        <a href="https://www.petfinder.com" class="bc-link" target="_blank" rel="noopener noreferrer">Petfinder.com</a> lists African Grey parrots available for adoption through registered rescue organizations. Filter by species and your zip code.
-      </p>
-    </div>
-  </section>
+  <div class="container cvt-body">
+  <aside class="cvt-toc" aria-label="On this page">
+    <p class="toc-title"><span class="toc-tick" aria-hidden="true"></span>On this page</p>
+    {tocItems.map((t, i) => (<a href={`#${t.id}`}><b>{num(i)}</b> {t.label}</a>))}
+  </aside>
 
-  <!-- SCAM WARNING -->
-  <section class="bc-section bc-scam-section">
-    <div class="bc-container bc-text-wrap">
-      <h2 class="bc-h2">Sites to Avoid</h2>
-      <p class="bc-p">
-        The following were flagged during competitor research as confirmed scam operations.
-        This is documented evidence, not opinion.
-      </p>
-      {confirmed_scams.map((scam: any) => (
-        <div class="bc-scam-card">
-          <h3 class="bc-scam-name">{scam.name}</h3>
-          <p class="bc-scam-reason">{scam.reason}</p>
+  <div class="cvt-main">
+
+  <!-- S4 QUICK ANSWER — four channels -->
+  <section id="quick-answer">
+    <h2 class="cag-h2">Where Can You Actually Buy an African Grey, and Which Is Safe?</h2>
+    <div class="qa-cream">
+      <p><strong>Quick answer:</strong> There are four places people buy an African Grey — a direct licensed breeder, a classified listing site, an online marketplace, and a rescue. Only the first can hand you a USDA license number, per-bird CITES paperwork and PCR health results at the source. Everything else on this page follows from that single difference, because the African Grey is a CITES Appendix I bird and its documentation is what makes a sale legal.</p>
+    </div>
+    <div class="door-grid">
+      {channels.map((c) => (
+        <div class={c.best ? "door-c best" : "door-c"}>
+          <svg class="door-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={c.ic}/></svg>
+          <span class="door-t">{c.name}</span>
+          <p>{c.desc}</p>
+          <span class="door-tag">{c.tag}</span>
         </div>
       ))}
-      <p class="bc-p">
-        Any site offering African Grey parrots at $400–$800, demanding wire transfer or gift card payment, or unable to produce CITES documentation is almost certainly a scam. See our <a href="/how-to-avoid-african-grey-parrot-scams/" class="bc-link">full scam identification guide</a> for complete red flags and reporting instructions.
-      </p>
+    </div>
+    <a class="inf" href="/african-grey-comparison/"><img class="sec-img inf-img" src="/where-to-buy-african-grey-four-channels.webp" srcset="/where-to-buy-african-grey-four-channels-760.webp 760w, /where-to-buy-african-grey-four-channels.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Four buying channels for an African Grey shown as labelled doorways, the direct licensed breeder highlighted as the documented route" loading="lazy"></a>
+    <p>Our full African Grey comparison hub maps how this breeder-selection page fits alongside the species and variant guides, if you are still deciding which grey — or whether a grey at all — suits your home. The rest of this page settles the harder question: once you know you want an African Grey, how do you tell a real breeder from a good-looking listing?</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S5 KEY TAKEAWAYS -->
+  <section id="takeaways">
+    <h2 class="cag-h2">The Numbers That Should Drive Your Breeder Choice</h2>
+    <p>Eight figures, screenshot-ready — the documentation axis this whole comparison turns on. Every number below traces to our own aviary, our 30-breeder audit, or a public source we name; nothing here is a guess wearing a fact's clothing.</p>
+    <div class="kt-grid">
+      {takeaways.map((k) => (<div class="kt-c"><span class="kt-tick" aria-hidden="true"></span><b>{k.big}</b><span class="kt-sub">{k.sub}</span></div>))}
     </div>
   </section>
 
-  <!-- VERIFICATION CHECKLIST -->
-  <section class="bc-section">
-    <div class="bc-container bc-text-wrap">
-      <h2 class="bc-h2">Before You Buy: Verification Checklist</h2>
-      <p class="bc-p">Apply this to any seller — including us. Documentation protects you legally and ensures your bird is what the seller claims.</p>
-      <ul class="bc-checklist">
-        {verificationChecklist.map((item) => (
-          <li class="bc-checklist-item">
-            <span class="bc-check-mark"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg></span>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S6 DOCUMENTATION -->
+  <section id="documentation">
+    <h2 class="cag-h2">What Does a Reputable African Grey Breeder Actually Show You?</h2>
+    <a class="inf" href="/cites-african-grey-documentation/"><img class="sec-img inf-img" src="/african-grey-breeder-documentation-flat-lay.webp" srcset="/african-grey-breeder-documentation-flat-lay-760.webp 760w, /african-grey-breeder-documentation-flat-lay.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Flat-lay of captive-bred African Grey documentation, a DNA sexing certificate, health certificate, CITES paperwork and a closed leg band" loading="lazy"></a>
+    <h3 class="cag-h3">The Documentation a Real Breeder Can Produce</h3>
+    <p>Facilities photograph well and say little. What separates a reputable African Grey breeder from a confident listing is the paper trail — and it is a short, specific list you can ask any seller to produce on the spot.</p>
+    <h4 class="cag-h4">How Do You Verify a USDA Breeder License?</h4>
+    <p>Ask for the number, then check it yourself. Commercial breeders selling across state lines are generally required to hold an Animal Welfare Act license, and the fastest legitimacy test in this entire comparison is a name that matches a live record.</p>
+    <h5 class="cag-h5">Using the USDA APHIS Public Search</h5>
+    <p><a href="https://aphis.usda.gov/aphis/ourfocus/animalwelfare" target="_blank" rel="noopener">The USDA APHIS Animal Care public search ↗</a> lets anyone look up a licensee by name or number. When we audited 30 African Grey sellers, not one surfaced a license number on its homepage — a gap you can close in thirty seconds by simply asking.</p>
+    <h4 class="cag-h4">What Paperwork Proves the Bird Is Captive-Bred?</h4>
+    <p>Because the African Grey sits at CITES Appendix I, captive-bred documentation is not a nicety — it is the thing that makes a domestic sale legal at all.</p>
+    <h5 class="cag-h5">CITES Appendix I Documentation</h5>
+    <p>Our CITES documentation page details exactly what an Appendix I paper trail contains and why wild-caught birds cannot legally enter the pet trade. A closed leg band, sealed on in the nest and impossible to add to a wild adult, is the physical proof that outlasts any receipt — the heart of a genuinely <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey</a> claim.</p>
+    <h5 class="cag-h5">DNA-Sexing Certificate and Closed Leg Band</h5>
+    <p>African Greys are not visually sexable, so a lab DNA-sexing certificate is the only honest way to state a bird's sex — the same standard behind our <a href="/dna-tested-african-grey-for-sale/">DNA-tested African Greys</a>, and the reason a listing that promises a sex without a certificate is guessing.</p>
+    <h4 class="cag-h4">What Health Screening Should Be Documented?</h4>
+    <p>Two viral PCR tests separate a documented aviary from a hopeful one, and they are the health entities almost no competitor page names.</p>
+    <h5 class="cag-h5">PBFD and Avian Polyomavirus PCR Screening</h5>
+    <p>Per-bird PCR results for Psittacine Beak and Feather Disease and Avian Polyomavirus are the difference between a lab-verified result and a sentence promising a seller screens for everything. Every <a href="/hand-raised-african-grey-parrot-for-sale/">hand-raised African Grey we place</a> ships with both.</p>
+    <h6 class="cag-h6">Breeder note: how we screen each C.A.Gs chick</h6>
+    <p>Every chick is PCR-tested individually, not sampled as a clutch — the result on the certificate belongs to the bird in the photo, and it goes into that bird's own file the day it comes back from the lab.</p>
+    <h5 class="cag-h5">The Avian-Vet Health Certificate</h5>
+    <p>A health certificate from a licensed avian veterinarian, issued shortly before transport, is required by most airlines for live-bird shipping anyway — so its absence tells you a seller either is not shipping legally or is not shipping at all.</p>
+    <h6 class="cag-h6">Citation: Association of Avian Veterinarians</h6>
+    <p><a href="https://www.aav.org/" target="_blank" rel="noopener">The Association of Avian Veterinarians ↗</a> maintains find-a-vet and health-standard resources worth using to confirm the certifying vet is real and licensed.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S7 TIERS — verdict cards + matrix in DOM -->
+  <section id="tiers">
+    <h2 class="cag-h2">How Do the Breeder Types Compare Side by Side?</h2>
+    <a class="inf" href="/african-grey-comparison/"><img class="sec-img inf-img" src="/african-grey-breeder-types-documentation-matrix.webp" srcset="/african-grey-breeder-types-documentation-matrix-760.webp 760w, /african-grey-breeder-types-documentation-matrix.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Documentation matrix comparing direct breeder, classified site, marketplace and rescue across USDA licence, CITES, DNA and PCR screening" loading="lazy"></a>
+    <h3 class="cag-h3">Reading the Comparison Table</h3>
+    <p>Same six documents, four channels, one honest read on each. The cards below are the fast version; the audited breeder-by-breeder table further down is the detailed one search engines pull from.</p>
+    <div class="tier-grid">
+      {tiers.map((t) => (
+        <div class={t.win ? "tier-c win" : "tier-c"}>
+          <div class="tier-head"><span class="tier-name">{t.name}</span><span class="tier-verdict">{t.verdict}</span></div>
+          <ul class="tier-docs">
+            {t.docs.map((d) => (<li><span class={`mk ${d[0]}`}>{d[0] === "y" ? "✓" : d[0] === "n" ? "✗" : "~"}</span>{d[1]}</li>))}
+          </ul>
+          <div class="tier-strip">{t.strip}</div>
+        </div>
+      ))}
+    </div>
+    <h4 class="cag-h4">Why Documentation Is the Axis That Matters</h4>
+    <p>You cannot judge a breeder on how tidy the aviary looks in a photo. You can judge one on whether a USDA number checks out, whether the CITES paperwork names the bird in front of you, and whether the PCR result has a lab on it.</p>
+    <h5 class="cag-h5">What the Table Does Not Measure</h5>
+    <p>Warmth, patience, the willingness to answer a nervous first-time owner's fifth email — none of it fits in a grid, and all of it matters. The documentation is the floor a breeder has to clear before any of the softer virtues count.</p>
+    <h6 class="cag-h6">Breeder note: a nice facility is not verification</h6>
+    <p>We have seen buyers reassured by a spotless aviary photo that turned out to be a stock image. A clean room is easy to fake; a verifiable license number and a per-bird PCR result are not.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S8 DIRECT BREEDER -->
+  <section id="direct">
+    <h2 class="cag-h2">What Should You Verify With a Direct Licensed Breeder?</h2>
+    <img class="sec-img inf-img" src="/certified-breeders-african-grey-near-me.webp" srcset="/certified-breeders-african-grey-near-me-760.webp 760w, /certified-breeders-african-grey-near-me.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="A licensed African Grey breeder holding a documented hand-raised grey chick, the direct-from-source buying channel" loading="lazy" style="object-position:center 35%">
+    <h3 class="cag-h3">What a Documented Direct Breeder Looks Like</h3>
+    <p>Buying direct means the person answering your questions is the person who hatched, hand-fed and screened the bird — so the paperwork has nowhere to hide. Our Congo chicks are posted on the <a href="/congo-african-grey-for-sale/">Congo African Grey page</a> and our Timnehs on the <a href="/timneh-african-grey-for-sale/">Timneh page</a>, each with its own documentation.</p>
+    <h4 class="cag-h4">What We Document on Every C.A.Gs Bird</h4>
+    <p>Nothing is itemized as an upsell. The CITES paperwork, DNA-sexing certificate, PBFD and Avian Polyomavirus PCR results, avian-vet health certificate and hatch record with the band number all ride inside the price — the same standard behind our written <a href="/african-grey-parrot-health-guarantee/">health guarantee</a>.</p>
+    <h5 class="cag-h5">Example: the Papers That Ship With Your Grey</h5>
+    <p>The folder that travels with the bird holds the CITES captive-bred document, the DNA certificate, both PCR results, the vet certificate and the hatch record — the same folder whether the bird flies as airport cargo or arrives by our home-delivery van.</p>
+    <h6 class="cag-h6">Breeder note: Mark &amp; Teri's per-bird file</h6>
+    <p>Every bird that has ever left our aviary has a file we keep — band number, parents, test dates, buyer. It is how we answer a health-guarantee question years later without guessing, and it is what a documented breeder relationship actually looks like.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S9 CLASSIFIED -->
+  <section id="classified">
+    <h2 class="cag-h2">Are Classified Listing Sites Like BirdBreeders Legit?</h2>
+    <a class="inf" href="/how-to-avoid-african-grey-parrot-scams/"><img class="sec-img inf-img" src="/classified-verified-breeder-myth-vs-reality.webp" srcset="/classified-verified-breeder-myth-vs-reality-760.webp 760w, /classified-verified-breeder-myth-vs-reality.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="A verified breeder web badge shown next to the same badge under a magnifying glass revealing no credential behind it" loading="lazy"></a>
+    <h3 class="cag-h3">Why "Verified Breeder" on a Directory Is Misleading</h3>
+    <p>Classified platforms like BirdBreeders, BirdsNow and Hoobly are directories: they list other people's birds and collect a fee. A green verified badge confirms a payment cleared, not that anyone checked a USDA license, a CITES document or a health record.</p>
+    <h4 class="cag-h4">What These Platforms Actually Verify</h4>
+    <p>Read the fine print and the same pattern appears — the platform verifies an email, a phone number, or a paid subscription, and disclaims responsibility for the transaction itself. Some sellers listed there are genuine breeders; the burden of proving it falls entirely on you.</p>
+    <h5 class="cag-h5">What Our Audit Found on the Big Directories</h5>
+    <p>On the aggregator sites in our sweep, visible Congo prices ran from roughly $2,000 to $6,800 with no license numbers attached, and the largest directory carried tens of thousands of listings no human could vet individually. Treat any directory seller exactly like an unknown direct breeder: ask for every document before money moves.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S10 SCAMS -->
+  <section id="scams">
+    <h2 class="cag-h2">How Do Facebook and Marketplace Parrot Scams Work?</h2>
+    <a class="inf" href="/how-to-avoid-african-grey-parrot-scams/"><img class="sec-img inf-img" src="/african-grey-facebook-marketplace-scam-anatomy.webp" srcset="/african-grey-facebook-marketplace-scam-anatomy-760.webp 760w, /african-grey-facebook-marketplace-scam-anatomy.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Anatomy of an African Grey Facebook Marketplace scam shown as four steps from a too-cheap listing to a vanished seller" loading="lazy"></a>
+    <h3 class="cag-h3">The Loss Pattern Buyers Describe</h3>
+    <p>Our scam-defense guide walks the full playbook, but the shape is always the same: a too-cheap listing with a stolen photo, a request to move off-platform, a deposit demanded by an untraceable method, then a surprise crate or insurance fee, then silence. The bird never existed.</p>
+    <h4 class="cag-h4">Why the "$800 African Grey" Is the Tell</h4>
+    <p>A real breeder cannot recover a decade of raising, PCR screening, DNA sexing and vet care on an $800 Congo — so the price itself is the bait. When a listing undercuts the genuine floor by a thousand dollars, the discount is the scam.</p>
+    <h5 class="cag-h5">Real Recovery Routes If You Have Already Paid</h5>
+    <p>If money moved by card or PayPal Goods &amp; Services, open a dispute immediately; if it went by wire, Zelle or crypto, it is likely gone, but still report it — the reporting section at the end of this page lists exactly where.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S11 RESCUE -->
+  <section id="rescue">
+    <h2 class="cag-h2">Is Adopting or Rescuing an African Grey a Good Option?</h2>
+    <img class="sec-img inf-img" src="/african-grey-rescue-adoption-documented-handoff.webp" srcset="/african-grey-rescue-adoption-documented-handoff-760.webp 760w, /african-grey-rescue-adoption-documented-handoff.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="A settled adult African Grey with a keeper, illustrating the rescue and adoption route for experienced owners" loading="lazy" style="object-position:center 40%">
+    <h3 class="cag-h3">When Adoption Is the Right Route</h3>
+    <p>Adopting is a genuinely good option, especially for experienced owners who can absorb uncertainty about a bird's past and the behaviour that sometimes comes with prior neglect. Our African Grey adoption page frames the honest trade-offs; a rehomed adult can be the most rewarding grey of all, in the right hands.</p>
+    <h4 class="cag-h4">Where to Find Adoptable Greys</h4>
+    <p><a href="https://www.petfinder.com/" target="_blank" rel="noopener">Petfinder ↗</a> lists African Greys through vetted rescues — filter by species and distance. A legitimate rescue charges a documented $200–$600 adoption fee, not a suspiciously casual rehoming fee collected by wire.</p>
+    <h5 class="cag-h5">What Documentation to Expect From a Rescue</h5>
+    <p>A rescue will not always have a hatch record or a DNA certificate for a bird whose history is partial — and a good one says so plainly. What it will have is a legal transfer, an adoption contract, and honesty about exactly what it can and cannot confirm.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S12 AUDIT -->
+  <section id="audit">
+    <h2 class="cag-h2">What Did We Find When We Audited 30 Breeders?</h2>
+    <a class="inf" href="/trusted-african-grey-parrot-breeders/"><img class="sec-img inf-img" src="/african-grey-breeder-audit-30-findings.webp" srcset="/african-grey-breeder-audit-30-findings-760.webp 760w, /african-grey-breeder-audit-30-findings.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Three findings from an audit of thirty African Grey breeder sites, zero USDA licences posted and four of eleven direct-breeder sites offline" loading="lazy"></a>
+    <h3 class="cag-h3">The Three Numbers That Surprised Us</h3>
+    <p>On 2026-07-12 we ran a reproducible sweep of thirty African Grey breeder and listing sites — a homepage keyword scan plus a sitemap probe, the script and results saved for anyone to re-run.</p>
+    <div class="kt-grid three">
+      {auditStats.map((k) => (<div class="kt-c"><span class="kt-tick" aria-hidden="true"></span><b>{k.big}</b><span class="kt-sub">{k.sub}</span></div>))}
+    </div>
+    <h4 class="cag-h4">Licenses, Guarantees, and Vanishing Sites</h4>
+    <p>Health-guarantee and CITES language appeared on a handful of sites; a USDA license number appeared on essentially none. And of eleven sites presenting themselves as direct breeders, four would not load the day we checked — a reminder that a website is not a business.</p>
+    <h5 class="cag-h5">The USDA-License Gap Across the Field</h5>
+    <p>The gap is the opportunity: the single credential easiest for a buyer to verify is the one almost no seller volunteers. Ask for it, and you have already sorted most of the field.</p>
+    <h6 class="cag-h6">Data note: what we could and could not verify</h6>
+    <p>A homepage scan cannot see a license a breeder holds but does not publish, so "not found" means exactly that — not a verdict. Reddit thread bodies were blocked to our crawler, so their language is paraphrased from search snippets, not quoted.</p>
+
+    <div class="bc-table-wrap" style="margin-top:22px">
+      <table class="bc-table">
+        <caption class="fs-cap" style="text-align:left"><span class="fs-tick" aria-hidden="true"></span>Publicly stated information as of {bd.research_date}. "Not on site" is not a judgment — ask each seller directly.</caption>
+        <thead><tr><th scope="col">Breeder</th><th scope="col">Location</th><th scope="col">Price</th><th scope="col">Ships</th><th scope="col">CITES</th><th scope="col">DNA</th><th scope="col">Guarantee</th><th scope="col">USDA</th></tr></thead>
+        <tbody>
+          <tr class="bc-row-cag">
+            <th scope="row"><a href="/" class="bc-breeder-link">{cag.name}</a> <span class="bc-this-badge">This site</span></th>
+            <td data-label="Location">{cag.location}</td>
+            <td data-label="Price">{cag.price_congo}</td>
+            <td class="bc-yes" data-label="Ships">Yes — 50 states</td>
+            <td class="bc-yes" data-label="CITES">Yes</td>
+            <td class="bc-yes" data-label="DNA">Yes</td>
+            <td class="bc-yes" data-label="Guarantee">Yes</td>
+            <td class="bc-yes" data-label="USDA">Yes — licensed</td>
+          </tr>
+          {accessibleCompetitors.map((c: any) => (
+            <tr>
+              <th scope="row"><a href={c.url} class="bc-breeder-link" target="_blank" rel="noopener noreferrer">{c.name}</a></th>
+              <td data-label="Location">{c.location || "Not stated"}</td>
+              <td data-label="Price">{c.price_range || "Not shown"}</td>
+              <td class={yesCls(c.ships_nationally)} data-label="Ships">{yesNo(c.ships_nationally)}</td>
+              <td class={yesCls(c.cites_mentioned)} data-label="CITES">{yesNo(c.cites_mentioned)}</td>
+              <td class={yesCls(c.dna_sexed_mentioned)} data-label="DNA">{yesNo(c.dna_sexed_mentioned)}</td>
+              <td class={yesCls(c.health_guarantee_mentioned)} data-label="Guarantee">{yesNo(c.health_guarantee_mentioned)}</td>
+              <td class={c.usda_license && c.usda_license !== "not found" ? "bc-yes" : "bc-verify"} data-label="USDA">{c.usda_license && c.usda_license !== "not found" ? c.usda_license : "Verify"}</td>
+            </tr>
+          ))}
+          {inaccessibleCompetitors.map((c: any) => (
+            <tr class="bc-row-inactive"><th scope="row">{c.name}</th><td colspan="7" class="bc-inactive-note">Website not accessible as of {bd.research_date} — status unverifiable.</td></tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="bc-section bc-alt">
-    <div class="bc-container bc-text-wrap">
-      <h2 class="bc-h2">Buyer FAQ</h2>
-      <div class="bc-faq-list">
-        {buyerFaqs.map((f) => (
-          <details class="bc-faq-item">
-            <summary class="bc-faq-q">{f.q}</summary>
-            <p class="bc-faq-a">{f.a}</p>
-          </details>
-        ))}
+  <div class="nl-inflow">
+  <Newsletter variant="top" action="https://formspree.io/f/xrejpnvn" heading="Want the Clutch List Before It Goes Public?" sub="One short note when a documented, hand-raised Grey opens for reservation." cta="Keep me posted" />
+  </div>
+
+  <!-- S13 QUESTIONS -->
+  <section id="questions">
+    <h2 class="cag-h2">What Questions Should You Ask Any African Grey Breeder?</h2>
+    <a class="inf" href="/trusted-african-grey-parrot-breeders/"><img class="sec-img inf-img" src="/questions-to-ask-african-grey-breeder.webp" srcset="/questions-to-ask-african-grey-breeder-760.webp 760w, /questions-to-ask-african-grey-breeder.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Buyer and breeder speech bubbles showing the questions a legitimate African Grey breeder answers happily" loading="lazy"></a>
+    <h3 class="cag-h3">The Questions a Legitimate Breeder Answers Happily</h3>
+    <p>The parrot-forum wisdom holds up: decent, honest people do not hesitate to give detail. Evasion, one-word answers, or irritation at a fair question is itself the answer.</p>
+    <div class="q-cards">
+      <div class="q-card"><h4 class="cag-h4">Questions About the Specific Bird</h4><ul>{qSpecific.map((q) => (<li>{q}</li>))}</ul></div>
+      <div class="q-card"><h4 class="cag-h4">Questions About Documentation and Health</h4><ul>{qDocs.map((q) => (<li>{q}</li>))}</ul></div>
+    </div>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S14 FLAGS -->
+  <section id="flags">
+    <h2 class="cag-h2">Red Flags vs Green Flags at a Glance</h2>
+    <a class="inf" href="/how-to-avoid-african-grey-parrot-scams/"><img class="sec-img inf-img" src="/african-grey-breeder-red-flags-vs-green-flags.webp" srcset="/african-grey-breeder-red-flags-vs-green-flags-760.webp 760w, /african-grey-breeder-red-flags-vs-green-flags.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Two-column ledger of African Grey breeder red flags in clay against green flags in forest green" loading="lazy"></a>
+    <h3 class="cag-h3">Turning Every Scam Tell Into a Green Flag</h3>
+    <p>Every red flag has a mirror image — the same question that exposes a scammer is the one a real breeder welcomes. Read them as a pair.</p>
+    <div class="flag-cols">
+      <div class="flag-c red"><p class="flag-h"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>Red flags</p><ul>{redFlags.map((f) => (<li>{f}</li>))}</ul></div>
+      <div class="flag-c green"><p class="flag-h"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>Green flags</p><ul>{greenFlags.map((f) => (<li>{f}</li>))}</ul></div>
+    </div>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S15 PAYMENT -->
+  <section id="payment">
+    <h2 class="cag-h2">Is "Never Pay a Breeder in Advance" Actually True?</h2>
+    <h3 class="cag-h3">A Documented Reservation vs Paying a Stranger</h3>
+    <p>Not quite. A refundable, documented deposit that holds a specific bird while it finishes weaning is normal and reasonable — our own reservation is a $200 deposit with written terms. What the advice really means is: never send untraceable money to someone you cannot verify. The method matters more than the timing.</p>
+    <h4 class="cag-h4">Which Payment Methods Are Safe</h4>
+    <p>Keep it to a credit card or PayPal Goods &amp; Services — both give you a chargeback path if the bird or the seller turns out to be fake. Wire transfer, Zelle, Venmo, Cash App, gift cards and cryptocurrency are irreversible by design, which is precisely why scammers insist on them.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S16 PRICE -->
+  <section id="price">
+    <h2 class="cag-h2">How Much Should a Real African Grey Cost?</h2>
+    <a class="inf" href="/african-grey-parrot-price/"><img class="sec-img inf-img" src="/african-grey-real-price-vs-scam-price-gauge.webp" srcset="/african-grey-real-price-vs-scam-price-gauge-760.webp 760w, /african-grey-real-price-vs-scam-price-gauge.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="A price gauge with a clay too-good-to-be-true danger zone below fifteen hundred dollars and a genuine African Grey range above it" loading="lazy"></a>
+    <h3 class="cag-h3">Congo and Timneh Price Ranges</h3>
+    <p>Our African Grey price guide breaks the numbers down bird by bird, but the ranges are simple: a documented Congo runs $1,700–$3,500 and a Timneh $1,500–$1,600 from a licensed U.S. breeder, before $185 airport or $350 home-delivery shipping.</p>
+    <h4 class="cag-h4">Why a Price Far Below the Floor Is a Warning</h4>
+    <p>Price is a signal, not just a cost. A Congo advertised at $800 is not a deal a real aviary can offer and stay in business — it is the number that makes the deposit-and-vanish math work for a scammer. When the discount looks impossible, it is.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S17 CHECKLIST -->
+  <section id="checklist">
+    <h2 class="cag-h2">Your Pre-Purchase Verification Checklist</h2>
+    <a class="inf" href="/buy-african-grey-parrots-with-shipping/"><img class="sec-img inf-img" src="/african-grey-breeder-verification-checklist.webp" srcset="/african-grey-breeder-verification-checklist-760.webp 760w, /african-grey-breeder-verification-checklist.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="A vertical checklist of steps to verify an African Grey breeder before paying, with a safe versus unsafe payment footer" loading="lazy"></a>
+    <h3 class="cag-h3">Eight Things to Confirm Before You Pay</h3>
+    <ol class="checklist-ol">
+      {checklist.map((c) => (<li>{c}</li>))}
+    </ol>
+    <p>Run this list against every seller, this one included. A breeder who clears all eight has earned your deposit; one who stalls on even a couple has told you what you need to know.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S18 SHIPPING -->
+  <section id="shipping">
+    <h2 class="cag-h2">How Are C.A.Gs Birds Documented and Shipped?</h2>
+    <div class="ship-cards">
+      <div class="ship-c">
+        <img src="/african-grey-airport-live-animal-shipping.webp" width="640" height="797" alt="IATA live-animal shipping crate for a documented African Grey at the airline cargo desk" loading="lazy">
+        <div class="ship-body"><span class="ship-tier">Option 1</span><b>Airport Pickup</b><span class="ship-price">$185</span>
+        <p>Live-animal cargo under IATA rules, on a Delta, United or American route to the airport nearest you, paperwork folder included</p></div>
+      </div>
+      <div class="ship-c">
+        <img src="/african-grey-home-delivery-pet-van.webp" width="640" height="426" alt="Climate-controlled pet delivery van used for documented African Grey home deliveries" loading="lazy">
+        <div class="ship-body"><span class="ship-tier clay">Option 2</span><b>Home Delivery</b><span class="ship-price">$350</span>
+        <p>Climate-controlled ground transport to your door, the documentation folder handed over on arrival</p></div>
       </div>
     </div>
-  </section>
-
-  <!-- INTERNAL LINKS -->
-  <section class="bc-section">
-    <div class="bc-container bc-text-wrap">
-      <h2 class="bc-h2">Related Reading</h2>
-      <ul class="bc-links">
-        <li><a href="/african-grey-parrot-faq/" class="bc-link">African Grey Parrot FAQ</a> — 22 buyer questions answered</li>
-        <li><a href="/how-to-avoid-african-grey-parrot-scams/" class="bc-link">How to Avoid African Grey Parrot Scams</a> — full guide to red flags and reporting</li>
-        <li><a href="/african-grey-parrot-price/" class="bc-link">African Grey Parrot Price Guide</a> — first-year and lifetime cost breakdown</li>
-        <li><a href="/congo-vs-timneh-african-grey/" class="bc-link">Congo vs Timneh African Grey</a> — which subspecies fits your situation</li>
-      </ul>
+    <h3 class="cag-h3">Nationwide Shipping and Two Delivery Tiers</h3>
+    <p>The full African Grey shipping process — crate standards, timing and what arrival day looks like — has its own page. Wherever the bird lands, the CITES, DNA, PCR and vet paperwork travels with it. Tap a route to see that area's availability:</p>
+    <div class="metro-cols">
+      <div class="metro-col"><h4>Airport pickup</h4><ul>{shipAirport.map((s) => (<li><a href={s.href}><svg class="pin" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>{s.label}</span></a></li>))}</ul></div>
+      <div class="metro-col"><h4>Home delivery</h4><ul>{shipHome.map((s) => (<li><a href={s.href}><svg class="pin" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>{s.label}</span></a></li>))}</ul></div>
+      <div class="metro-col"><h4>Anywhere else</h4><ul>{shipCourier.map((s) => (<li><a href={s.href}><svg class="pin" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>{s.label}</span></a></li>))}</ul></div>
     </div>
+    <div class="health-card">
+      <div class="hc-head">Every grey leaves with</div>
+      <ul class="hc-list"><li>PBFD PCR screening</li><li>Avian Polyomavirus PCR</li><li>DNA sexing certificate</li><li>Avian-vet health certificate</li><li>Hatch certificate + closed band</li></ul>
+    </div>
+    <p>The nearest-airport option and door delivery both run through our <a href="/buy-african-grey-parrot-near-me/">buy-near-me guide</a>; a $200 refundable deposit holds the bird.</p>
+    <p class="ship-line">Ships nationwide · $185 airport · $350 home</p>
   </section>
 
-  <CTA
-    headline="Questions About Our Documentation or Birds?"
-    sub="Every bird from CongoAfricanGreys.com is hand-raised, CITES-documented, DNA-sexed, and vet-certified. We're happy to answer any question before you commit."
-  />
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S19 IS C.A.Gs LEGIT -->
+  <section id="legit">
+    <h2 class="cag-h2">Is C.A.Gs a Legit African Grey Breeder?</h2>
+    <h3 class="cag-h3">What Our Documented Buyers Say</h3>
+    <p>It is a fair question to type into a search bar, and third-party checkers give mixed automated scores — one rates us "legit and safe," another flags us as merely unproven. Automated trust scores read domain age and traffic, not paperwork, so here is the verifiable version: we are USDA-licensed (confirm it at APHIS), every bird is CITES-documented and PCR-screened, and our reviews carry a 4.9 rating across 52 real, named buyers.</p>
+    <p>Our documented C.A.Gs reviews name actual owners and their cities, the opposite of an anonymous badge — read them, then hold us to the same eight-point checklist this page asks you to run on everyone else.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S20 OWNERS — author pull-quote refresh -->
+  <section id="owners">
+    <h2 class="cag-h2">Who Are Mark &amp; Teri Benjamin?</h2>
+    <img class="sec-img inf-img" src="/mark-teri-benjamin-family-aviary-midland-tx.webp" srcset="/mark-teri-benjamin-family-aviary-midland-tx-760.webp 760w, /mark-teri-benjamin-family-aviary-midland-tx.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Mark Benjamin with the family's documented African Greys at the C.A.Gs aviary in Midland, Texas" loading="lazy" style="object-position:center 30%">
+    <h3 class="cag-h3">A Family Aviary in Midland, Texas Since 2014</h3>
+    <figure class="pullquote">
+      <blockquote>"We wrote this comparison the way we answer the phone — if the paperwork does not check out, we would rather you walk away, even from us. A documented bird is the only kind worth a forty-year commitment."</blockquote>
+      <figcaption>
+        <img class="q-av" src="/roys-congo-african-grey-male-tame-card.webp" width="56" height="56" alt="A hand-raised African Grey at the C.A.Gs aviary in Midland, TX" loading="lazy">
+        <span class="pq-id"><b>Mark &amp; Teri Benjamin</b> · C.A.Gs, Midland, TX</span>
+      </figcaption>
+    </figure>
+    <p>Mark and Teri have hand-raised African Greys in Midland since 2014, and answered the "how do I know you are legit?" question for nearly as long. The full story, credentials and USDA framing live on our <a href="/trusted-african-grey-parrot-breeders/">about the breeders page</a> — the same standard of proof this comparison asks of every seller.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S21 AVAILABLE -->
+  <section id="available">
+    <h2 class="cag-h2">See a Documented African Grey You Can Verify</h2>
+    <p>Talk is cheap; a band number is not. Here is who is actually in the nursery right now — click any bird for its full photo set, parentage and the documentation described above.</p>
+    <div class="bird-cards">
+      {available.map((b) => (
+        <div class="bird-c">
+          <a class="bird-photo" href={b.slug} aria-label={`Meet ${b.name}`}>
+            {birdImg[b.id] && <img src={birdImg[b.id].src} width="640" height="480" alt={birdImg[b.id].alt} loading="lazy">}
+            <span class="bird-badge">{b.variant === 'timneh_african_grey' ? 'Timneh' : 'Congo'} · Available</span>
+          </a>
+          <div class="bird-body">
+            <div class="bird-top"><h3 class="bird-name"><a href={b.slug}>{b.name}</a></h3><span class="bird-price">{b.price_display}</span></div>
+            <ul class="bird-docs">{docBadges.map((d) => (<li>{d}</li>))}</ul>
+            <a class="btn-clay sm bird-cta" href={b.slug}>Meet {b.name}</a>
+            <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span>
+          </div>
+        </div>
+      ))}
+    </div>
+    <p class="ctr"><a class="btn-clay" href="/available/">Browse Every Available Grey</a></p>
+  </section>
+
+  <div class="nl-inflow">
+  <Newsletter variant="middle" compact action="https://formspree.io/f/xrejpnvn" eyebrow="Clutch alerts" heading="Which Documented Chicks Are Weaning Now?" sub="One short note when a fully documented Grey opens for reservation." cta="Add my email" img="/bery-congo-african-grey-cuddly-tamed-card.webp" imgAlt="A documented hand-raised African Grey at C.A.Gs in Midland, TX" imgCaption="Midland, TX aviary" note="Clutch updates only." />
+  </div>
+
+  <!-- S22 FAQ -->
+  <section id="faq">
+    <h2 class="cag-h2">African Grey Breeder Questions, Answered</h2>
+    <p>These are the exact follow-ups this comparison generates. Our complete African Grey parrot FAQ covers care and ownership beyond the buying decision — start there for anything past choosing a breeder.</p>
+    {faqs.map((f, i) => (
+      i < 3
+        ? (<div class="faq-open"><h3 class="faq-q">{f.q}</h3><p>{f.a}</p></div>)
+        : (<details class="faq-d"><summary>{f.q}</summary><p>{f.a}</p></details>)
+    ))}
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S23 REPORT -->
+  <section id="report">
+    <h2 class="cag-h2">How Do You Report an African Grey Parrot Scam?</h2>
+    <a class="inf" href="/how-to-avoid-african-grey-parrot-scams/"><img class="sec-img inf-img" src="/report-african-grey-parrot-scam-where-to-go.webp" srcset="/report-african-grey-parrot-scam-where-to-go-760.webp 760w, /report-african-grey-parrot-scam-where-to-go.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="A signpost to three places to report an African Grey scam, the USDA APHIS line, IC3 and a state attorney general" loading="lazy"></a>
+    <p>If a sale went wrong, report it in three places and save every message first. <a href="https://www.ic3.gov/" target="_blank" rel="noopener">IC3.gov, the FBI's Internet Crime Complaint Center ↗</a>, handles online fraud; <a href="https://aphis.usda.gov/aphis/ourfocus/animalwelfare" target="_blank" rel="noopener">the USDA APHIS Animal Care program ↗</a> takes CITES and welfare concerns; and your state attorney general's consumer-protection office handles the financial side. Then call your card issuer or PayPal to open a dispute.</p>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S24 KEEP READING + FINAL CTA -->
+  <section id="learn" class="final-cta">
+    <h2 class="cag-h2">Keep Reading and Talk to Us</h2>
+    <p>Choosing a breeder is one decision inside a forty-year one. These go deeper — the scam-defense playbook, the CITES paper trail, and the full price breakdown — and then, if a documented grey is what you want, tell us about your home.</p>
+    <div class="blog-cards">
+      <a class="blog-c" href="/how-to-avoid-african-grey-parrot-scams/"><div class="blog-body"><span class="blog-tag">Scams</span><h3 class="blog-t">Spotting a Parrot Scam Before You Pay</h3></div></a>
+      <a class="blog-c" href="/cites-african-grey-documentation/"><div class="blog-body"><span class="blog-tag">Documents</span><h3 class="blog-t">Inside the CITES Paper Trail</h3></div></a>
+      <a class="blog-c" href="/african-grey-parrot-price/"><div class="blog-body"><span class="blog-tag">Cost</span><h3 class="blog-t">What a Documented Grey Actually Costs</h3></div></a>
+    </div>
+    <form class="cta-form" name="breeder-compare-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="breeder-compare-inquiry" />
+      <p class="hp"><label>Leave this field empty: <input name="bot-field" /></label></p>
+      <label for="agb-interest">Which bird are you asking about?
+        <select id="agb-interest" name="interest" required>
+          <option value="">Choose one…</option>
+          <option>A Congo African Grey ($1,700–$3,500)</option>
+          <option>A Timneh African Grey ($1,500–$1,600)</option>
+          <option>Jins &amp; Jeni, companion pair ($3,500)</option>
+          <option>Fertile hatching eggs ($95 each)</option>
+          <option>Not sure — help me verify a breeder</option>
+        </select>
+      </label>
+      <div class="form-2col">
+        <label for="agb-fname">First name<input id="agb-fname" name="first_name" type="text" autocomplete="given-name" required></label>
+        <label for="agb-lname">Last name<input id="agb-lname" name="last_name" type="text" autocomplete="family-name" required></label>
+      </div>
+      <div class="form-2col">
+        <label for="agb-cell">Phone<input id="agb-cell" name="cell" type="tel" autocomplete="tel" required></label>
+        <label for="agb-cell2">Confirm phone<input id="agb-cell2" name="cell_confirm" type="tel" required></label>
+      </div>
+      <div class="form-2col">
+        <label for="agb-email">Email address<input id="agb-email" name="email" type="email" autocomplete="email" required></label>
+        <label for="agb-email2">Confirm email address<input id="agb-email2" name="email_confirm" type="email" required></label>
+      </div>
+      <label for="agb-delivery">How would you like the bird delivered?
+        <select id="agb-delivery" name="delivery" required>
+          <option value="">Choose one…</option>
+          <option>Airport pickup ($185)</option>
+          <option>Home delivery to my door ($350)</option>
+          <option>I'll collect in Midland, Texas</option>
+        </select>
+      </label>
+      <label for="agb-msg">A little about your home <span class="opt">(optional)</span><textarea id="agb-msg" name="message" rows="3" placeholder="First parrot? Apartment or house? What documentation matters most to you?"></textarea></label>
+      <div class="form-actions">
+        <button type="submit" class="btn-clay">Send My Inquiry</button>
+        <a class="btn-ghost" href="/contact-us/">Ask a Question First</a>
+      </div>
+      <p class="form-note">A $200 refundable deposit holds your Grey once we've matched you to one. We reply within 24 hours.</p>
+    </form>
+  </section>
+
+  </div><!-- /cvt-main -->
+  </div><!-- /cvt-body -->
+  </div><!-- /cvt -->
+
+  <script is:inline>
+    (function () {
+      var navLinks = document.querySelectorAll('.cvt-toc a, .rail-row a');
+      var sections = [].slice.call(document.querySelectorAll('.cvt-main section[id]'));
+      if (navLinks.length && sections.length && 'IntersectionObserver' in window) {
+        var current = '';
+        var spy = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) current = e.target.id; });
+          navLinks.forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + current); });
+        }, { rootMargin: '-25% 0px -65% 0px' });
+        sections.forEach(function (sec) { spy.observe(sec); });
+      }
+    })();
+  </script>
 </BaseLayout>
 
 <style>
-  .bc-container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
-  .bc-text-wrap { max-width: 760px; }
-  .bc-hero { background: #2D6A4F; padding: 3.5rem 0 3rem; text-align: center; }
-  .bc-h1 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #faf7f4;
-    font-size: clamp(1.9rem, 0.5rem + 4.5vw, 2.75rem);
-    line-height: 1.2;
-    margin: 0 0 1rem;
-  }
-  .bc-sub {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1.05rem;
-    line-height: 1.65;
-    color: rgba(250,247,244,0.88);
-    max-width: 70ch;
-    margin: 0 auto 0.75rem;
-  }
-  .bc-meta {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.82rem;
-    color: rgba(250,247,244,0.55);
-    margin: 0;
-  }
-  .bc-section { padding: 3rem 0; }
-  .bc-alt { background: #faf7f4; }
-  .bc-scam-section { background: #fff8f7; border-top: 3px solid #e8604c; border-bottom: 3px solid #e8604c; }
-  .bc-h2 {
-    font-family: 'Lora', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
-    margin: 0 0 1.25rem;
-  }
-  .bc-p, .bc-intro-p {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 0 1.1rem;
-  }
-  .bc-intro-p { font-size: 0.9rem; color: #57534e; }
-  .bc-criteria-list { display: flex; flex-direction: column; gap: 0.85rem; }
-  .bc-criterion {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    background: #fff;
-    border: 1px solid #e7e5e4;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-  }
-  .bc-check-icon { font-size: 1.1rem; flex-shrink: 0; }
-  .bc-criterion-title {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #2D6A4F;
-    display: block;
-    margin-bottom: 0.2rem;
-  }
-  .bc-criterion-desc {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.9rem;
-    line-height: 1.55;
-    color: #57534e;
-    margin: 0;
-  }
-  .bc-table-wrap {
-    overflow-x: auto;
-    border-radius: 16px;
-    border: 1px solid #e7e5e4;
-    box-shadow: 0 2px 8px rgba(60,30,10,0.07);
-    margin-bottom: 1rem;
-  }
-  .bc-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.85rem;
-    min-width: 820px;
-  }
-  .bc-table thead tr { background: #2D6A4F; }
-  .bc-table thead th {
-    color: #faf7f4;
-    font-weight: 600;
-    text-align: left;
-    padding: 0.85rem 1rem;
-    white-space: nowrap;
-  }
-  .bc-table tbody tr:nth-child(even) { background: #faf7f4; }
-  .bc-table tbody tr:nth-child(odd) { background: #fff; }
-  .bc-table tbody th { font-weight: 600; color: #2D6A4F; padding: 0.75rem 1rem; text-align: left; }
-  .bc-table tbody td { padding: 0.75rem 1rem; color: #44403c; line-height: 1.45; }
-  .bc-row-cag th, .bc-row-cag td { background: #f0fdf4 !important; }
-  .bc-row-inactive { opacity: 0.65; }
-  .bc-inactive-note { font-style: italic; color: #78716c; }
-  .bc-yes { color: #2D6A4F; font-weight: 600; }
-  .bc-no { color: #78716c; }
-  .bc-verify { color: #78716c; font-style: italic; }
-  .bc-this-badge {
-    display: inline-block;
-    margin-left: 0.5rem;
-    font-size: 0.7rem;
-    font-weight: 700;
-    background: #2D6A4F;
-    color: #fff;
-    padding: 0.1rem 0.45rem;
-    border-radius: 50px;
-    vertical-align: middle;
-  }
-  .bc-breeder-link { color: #e8604c; text-decoration: underline; }
-  .bc-breeder-link:hover { color: #d44e3b; }
-  .bc-disclaimer {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.83rem;
-    color: #78716c;
-    font-style: italic;
-  }
-  .bc-agg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.25rem 0; }
-  .bc-agg-card { background: #fff; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.25rem; }
-  .bc-agg-name { font-family: 'Lora', Georgia, serif; font-size: 1rem; font-weight: 700; color: #2D6A4F; margin: 0 0 0.35rem; }
-  .bc-agg-name a { color: inherit; text-decoration: none; }
-  .bc-agg-name a:hover { text-decoration: underline; }
-  .bc-agg-type { font-family: 'Sora', system-ui, sans-serif; font-size: 0.88rem; color: #57534e; line-height: 1.5; margin: 0 0 0.5rem; }
-  .bc-agg-detail { font-family: 'Sora', system-ui, sans-serif; font-size: 0.85rem; color: #44403c; margin: 0.25rem 0 0; }
-  .bc-adopt-list { padding-left: 1.5rem; margin: 0 0 1.1rem; }
-  .bc-adopt-list li {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.97rem;
-    line-height: 1.65;
-    color: #44403c;
-    margin-bottom: 0.45rem;
-  }
-  .bc-scam-card {
-    background: #fff;
-    border: 1px solid #f5c6c0;
-    border-left: 4px solid #e8604c;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1rem;
-  }
-  .bc-scam-name {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.97rem;
-    font-weight: 700;
-    color: #c0392b;
-    margin: 0 0 0.35rem;
-  }
-  .bc-scam-reason { font-family: 'Sora', system-ui, sans-serif; font-size: 0.92rem; line-height: 1.55; color: #44403c; margin: 0; }
-  .bc-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
-  .bc-checklist-item {
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-    font-family: 'Sora', system-ui, sans-serif;
-    font-size: 0.97rem;
-    line-height: 1.6;
-    color: #44403c;
-  }
-  .bc-check-mark { flex-shrink: 0; }
-  .bc-faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
-  .bc-faq-item { border: 1px solid #e7e5e4; border-radius: 12px; padding: 1rem 1.25rem; background: #fff; }
-  .bc-faq-q {
-    font-family: 'Sora', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #2D6A4F;
-    cursor: pointer;
-    list-style: none;
-  }
-  .bc-faq-q::-webkit-details-marker { display: none; }
-  .bc-faq-a { font-family: 'Sora', system-ui, sans-serif; font-size: 0.98rem; line-height: 1.7; color: #44403c; margin: 0.75rem 0 0; max-width: 70ch; }
-  .bc-links { padding-left: 1.5rem; margin: 0; }
-  .bc-links li { font-family: 'Sora', system-ui, sans-serif; font-size: 1rem; line-height: 1.7; color: #44403c; margin-bottom: 0.5rem; }
-  .bc-link { color: #e8604c; text-decoration: underline; }
-  .bc-link:hover { color: #d44e3b; }
-  @media (max-width: 767px) {
-    .bc-container { padding: 0 16px; }
-    .bc-agg-grid { grid-template-columns: 1fr; }
-  }
-  @media (min-width: 768px) and (max-width: 1024px) { .bc-container { padding: 0 32px; } }
+.cvt{--f:#2D6A4F;--clay:#e8604c;--clay-ink:#b04228;--clay-t:#b04228;--cream:#faf7f4;--bd:#e7ddd3;--hdr:96px;color:#2a2622}
+
+.cvt .container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+.cvt-hero{background:linear-gradient(160deg,#f4efe9 0%,var(--cream) 55%,#eef4f0 100%);border-bottom:1px solid var(--bd);padding:34px 0 38px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,560px);gap:clamp(24px,4vw,56px);align-items:center;min-height:380px}
+.hero-imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-imgs figure{position:relative;margin:0}
+.hero-imgs img{display:block;width:100%;height:360px;object-fit:cover;object-position:center;border-radius:20px;box-shadow:0 10px 30px rgba(60,30,10,.15)}
+.hero-imgs figure:first-child{transform:translateY(16px)}
+.hero-imgs figure:last-child{transform:translateY(-16px)}
+.chip{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;background:rgba(255,255,255,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.5);border-radius:50px;padding:5px 14px;font-size:.78rem;font-weight:700;color:#1f4d39;white-space:nowrap}
+.vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border:3px solid var(--clay);color:var(--clay-ink);font-family:'Newsreader',serif;font-weight:700;font-size:1.05rem;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(60,30,10,.22);z-index:2}
+.hero-copy{max-width:560px}
+.eyebrow{display:flex;align-items:center;gap:9px;font-size:.82rem;letter-spacing:.02em;color:var(--clay-t);font-weight:600;margin:0 0 12px}
+.eb-tick{width:20px;height:3px;border-radius:2px;background:var(--clay-ink);flex:none}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+.hero-meta span{font-size:.74rem;font-weight:600;letter-spacing:.02em;color:#4c443c;background:rgba(255,255,255,.72);border:1px solid var(--bd);border-radius:50px;padding:6px 13px}
+/* H1 grows at 4.1vw so H2's 3.5vw never overtakes it in the 800-930px band */
+.cvt .cag-h1{font-family:'Newsreader',serif;font-size:clamp(1.75rem,4.1vw,2.25rem);line-height:1.15;margin:0 0 14px;color:#2a2622}
+.lead{font-size:1.05rem;line-height:1.65;color:#4c443c;max-width:58ch;margin:0 0 22px}
+.hero-cta{margin:0;display:flex;gap:12px;flex-wrap:wrap}
+.btn-clay,.btn-ghost{display:inline-block;border-radius:50px;padding:13px 28px;font-weight:600;text-decoration:none;font-size:.95rem;transition:background-color .2s,color .2s,transform .15s}
+.btn-clay{background:var(--clay-ink);color:#fff;border:none;cursor:pointer;font:inherit}
+.btn-clay:hover{background:#9c3a23;transform:translateY(-2px)}
+.btn-ghost{border:2px solid var(--f);color:var(--f)}
+.btn-ghost:hover{background:var(--f);color:#fff}
+.cvt-counter{background:linear-gradient(135deg,#2D6A4F 0%,#1f4d39 100%);color:#fff;padding:14px 0}
+.counter-row{display:flex;flex-wrap:wrap;justify-content:center;row-gap:6px}
+.cs{display:flex;align-items:baseline;gap:9px;padding:2px 24px}
+.cs+.cs{border-left:1px solid rgba(255,255,255,.18)}
+.counter-row b{font-family:'Newsreader',serif;font-size:1.4rem;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.cs-l{font-size:.8rem;font-weight:500;opacity:.9;line-height:1.3;letter-spacing:.01em}
+.cvt-rail{position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.97);backdrop-filter:blur(6px);border-top:3px solid var(--clay-ink);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);display:none}
+.rail-row{display:flex;gap:8px;overflow-x:auto;padding-top:12px;padding-bottom:12px;scrollbar-width:none}
+.rail-row::-webkit-scrollbar{display:none}
+.rail-row a{display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap;font-size:.78rem;padding:8px 14px;border-radius:50px;text-decoration:none;color:var(--f);background:#fff;border:1px solid var(--bd);transition:border-color .2s,color .2s}
+.rail-row a:hover{border-color:var(--clay-t);color:var(--clay-t)}
+.rail-row a b{color:var(--clay-t);font-variant-numeric:tabular-nums;font-weight:700}
+.rail-row a.on{background:var(--f);border-color:var(--f);color:#fff}
+.rail-row a.on b{color:#fff;opacity:.75}
+.cvt-rail::after{content:"";position:absolute;right:0;top:0;bottom:0;width:44px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(250,247,244,.97))}
+.cvt-body{display:grid;grid-template-columns:200px minmax(0,1fr);gap:34px;padding-top:34px;padding-bottom:40px;align-items:start}
+.cvt-toc{position:sticky;top:calc(var(--hdr) + 24px);max-height:calc(100vh - var(--hdr) - 48px);overflow-y:auto;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:15px 15px 9px;box-shadow:0 4px 14px rgba(60,30,10,.05)}
+.toc-title{display:flex;align-items:center;gap:8px;font-weight:700;color:#2a2622;font-family:'IBM Plex Sans',sans-serif;font-size:.7rem;letter-spacing:.11em;text-transform:uppercase;margin:0 0 8px}
+.toc-tick{width:14px;height:4px;border-radius:2px;background:var(--clay-ink);display:inline-block}
+.cvt-toc a{display:flex;gap:9px;align-items:baseline;color:#3a332c;text-decoration:none;padding:6px 2px;border-bottom:1px solid var(--bd);font-size:.8rem;line-height:1.3;transition:color .15s,padding-left .15s}
+.cvt-toc a:last-child{border-bottom:none}
+.cvt-toc a b{color:var(--clay-t);font-size:.7rem;font-weight:700;font-variant-numeric:tabular-nums;min-width:16px;flex:none}
+.cvt-toc a:hover{color:var(--clay-t);padding-left:5px}
+.cvt-toc a.on{color:var(--f);font-weight:600}
+.cvt-toc a.on b{color:var(--f)}
+.cvt-toc a:focus-visible,.rail-row a:focus-visible{outline:2px solid var(--clay-ink);outline-offset:2px;border-radius:4px}
+.cvt-main{min-width:0}
+.cvt-main section{margin-bottom:14px;scroll-margin-top:calc(var(--hdr) + 18px)}
+/* one heading scale, monotonic at every viewport: the old clamps let H5
+   (fixed 1rem) overtake H4 (0.9375rem) on phones */
+.cvt .cag-h2{font-family:'Newsreader',serif;font-size:clamp(1.375rem,3.5vw,2rem);color:#2a2622;margin:14px 0 16px;line-height:1.18;letter-spacing:-.005em}
+.cvt .cag-h3{font-family:'Newsreader',serif;font-size:clamp(1.125rem,2.2vw,1.5rem);color:var(--f);margin:26px 0 10px;line-height:1.25}
+.cvt .cag-h4{font-family:'Newsreader',serif;font-size:clamp(1rem,1.8vw,1.25rem);margin:22px 0 8px;line-height:1.32}
+.cvt .cag-h5{font-family:'Newsreader',serif;font-size:clamp(.95rem,1.25vw,1.05rem);font-weight:600;margin:18px 0 6px;color:#3a332c;line-height:1.4}
+.cvt .cag-h6{font-family:'IBM Plex Sans',sans-serif;font-size:clamp(.75rem,.95vw,.82rem);font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--clay-t);margin:16px 0 4px;line-height:1.45}
+.cvt-main p{font-size:clamp(.9688rem,1.05vw,1rem);line-height:1.68;margin:0 0 15px;max-width:70ch}
+.cvt-main a{color:var(--clay-t);text-decoration:underline;text-underline-offset:2px}
+.cvt-main a.btn-clay{color:#fff;text-decoration:none}
+.cvt-main a.btn-ghost{color:var(--f);text-decoration:none}
+.cvt-main a.btn-ghost:hover{color:#fff}
+.cvt-main .bird-photo,.cvt-main .blog-c,.cvt-main .ship-places a{text-decoration:none}
+/* image system — every class carries its asset's true aspect ratio, so
+   object-fit:cover has nothing left to crop off a bird's head */
+.sec-img{display:block;width:100%;max-width:760px;height:auto;object-fit:cover;border-radius:18px;margin:6px auto 20px;box-shadow:0 6px 20px rgba(60,30,10,.1);background:#f4efe9}
+.sec-img.inf-img{aspect-ratio:1376/768;background:var(--cream)}
+.sec-img.photo169{max-width:700px;aspect-ratio:1000/547;object-position:50% 42%}
+.sec-img.photo32{max-width:640px;aspect-ratio:1000/665;object-position:50% 50%}
+.sec-img.photo43{max-width:560px;aspect-ratio:4/3;object-position:50% 40%}
+.sec-img.portrait34{max-width:280px;aspect-ratio:3/4;object-position:50% 26%}
+.sec-img.portrait916{max-width:252px;aspect-ratio:768/1376;object-position:50% 40%}
+.cvt-main a.inf{display:block;text-decoration:none;border-radius:18px}
+.cvt-main a.inf .sec-img{transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s}
+.cvt-main a.inf:hover .sec-img{transform:translateY(-2px);box-shadow:0 12px 30px rgba(60,30,10,.14)}
+.cvt-main a.inf:focus-visible{outline:3px solid var(--clay-ink);outline-offset:3px}
+.nl-inflow{margin:24px 0;border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.nl-inflow>*{max-width:none}
+.qa-snip{position:relative;background:linear-gradient(180deg,#fdf2ef,#fbeae4);border:1px solid #f0c4b7;border-radius:16px;padding:18px 20px 18px 50px;margin:0 0 14px}
+.qa-snip .qa-pin{position:absolute;left:17px;top:17px;display:flex;color:var(--clay-ink);font-size:1.35rem}
+.qa-snip p{margin:0;max-width:none;line-height:1.62}
+.qa-snip strong{color:var(--clay-ink)}
+.choose-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 16px}
+.choose-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px 18px 15px}
+.choose-c.grey{border-top:3px solid var(--f)}
+.choose-c.too{border-top:3px solid var(--clay-ink)}
+.choose-h{display:flex;align-items:center;gap:9px;font-family:'Newsreader',serif;font-weight:700;font-size:1.02rem;margin-bottom:11px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+.choose-h img{width:24px;height:24px;object-fit:contain;flex:none}
+.choose-h svg{flex:none}
+.choose-c.grey .choose-h{color:var(--f)}
+.choose-c.too .choose-h{color:var(--clay-ink)}
+/* marker language is this page's own — the cockatoo page runs plain discs */
+.choose-list{list-style:none;margin:0;padding:0}
+.choose-list li{position:relative;font-size:.86rem;line-height:1.5;margin-bottom:9px;padding-left:26px;color:#4c443c}
+.choose-list li:last-child{margin-bottom:0}
+.choose-list.tick li::before{content:"";position:absolute;left:0;top:2px;width:17px;height:17px;border-radius:50%;background:var(--f)}
+.choose-list.tick li::after{content:"";position:absolute;left:5.5px;top:6px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.choose-list.chev li::before{content:"";position:absolute;left:1px;top:5px;width:7px;height:7px;border:solid var(--clay-ink);border-width:2px 2px 0 0;transform:rotate(45deg)}
+.choose-list.chev li::after{content:"";position:absolute;left:0;top:11px;width:15px;height:1px;background:linear-gradient(90deg,var(--clay-ink),transparent)}
+@media(max-width:640px){.choose-grid{grid-template-columns:1fr}}
+.seam{display:flex;align-items:center;gap:14px;margin:28px 0}
+.seam::before{content:"";flex:1;height:2px;border-radius:1px;background:linear-gradient(90deg,transparent,rgba(240,128,112,.6))}
+.seam::after{content:"";flex:1;height:2px;border-radius:1px;background:linear-gradient(90deg,rgba(240,128,112,.6),transparent)}
+.seam img{width:54px;height:54px;object-fit:cover;background:#fff;border:2px solid rgba(232,96,76,.35);border-radius:50%;padding:2px;box-shadow:0 4px 14px rgba(60,30,10,.14)}
+.kt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 18px}
+.kt-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px 16px 14px}
+.kt-tick{display:block;width:22px;height:4px;border-radius:2px;background:var(--clay-ink);margin-bottom:10px}
+.kt-c b{font-family:'Newsreader',serif;color:#2a2622;font-size:1.3rem;display:block;line-height:1.15;letter-spacing:-.01em;padding-bottom:8px;border-bottom:1px solid var(--bd);margin-bottom:8px}
+.kt-sub{font-size:.86rem;color:#57534e;line-height:1.5;display:block}
+.cmpe-tabs{display:none;gap:8px;margin:0 0 10px}
+.cmpe-tab{display:inline-flex;align-items:center;gap:7px;border-radius:50px;padding:9px 18px;font:inherit;font-size:.88rem;font-weight:700;cursor:pointer;background:#fff;color:var(--f);border:2px solid var(--f)}
+.cmpe-tab img{width:20px;height:20px;object-fit:contain}
+.cmpe-tab.active{background:var(--f);color:#fff}
+.cmpe-tab[data-v="t"]{border-color:var(--clay-ink);color:var(--clay-ink)}
+.cmpe-tab[data-v="t"].active{background:var(--clay-ink);color:#fff}
+.tbl-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--bd);box-shadow:0 4px 20px rgba(60,30,10,.07)}
+.tbl-wrap.plain{box-shadow:none;border-radius:12px;max-width:640px}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:.9rem;background:#fff}
+.cmp-tbl th{padding:12px;text-align:left;font-weight:600;vertical-align:middle}
+.cmp-tbl .th-f,.cmp-tbl .th-e{background:#fff;color:#57534e;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;border-bottom:1px solid var(--bd)}
+.cmp-tbl .th-c{background:linear-gradient(135deg,#2D6A4F,#1f4d39);color:#fff}
+.cmp-tbl .th-t2{background:linear-gradient(135deg,#e8604c,#c8472f);color:#fff}
+.th-flex{display:flex;align-items:center;gap:10px}
+.th-flex img{width:30px;height:30px;object-fit:contain;flex:none}
+.th-title{display:block;font-family:'Newsreader',serif;font-weight:700;font-size:1.02rem;line-height:1.2}
+.th-sub{display:block;font-size:.72rem;font-weight:400;opacity:.9;margin-top:2px}
+.cmp-tbl td{padding:10px 12px;border-bottom:1px solid var(--bd)}
+.cmp-tbl tr:nth-child(even) td{background:var(--cream)}
+.cmp-tbl .td-f{font-weight:600}
+.cmp-tbl .edge{color:var(--f);font-weight:700}
+.score-tbl{width:100%;border-collapse:collapse;font-size:.86rem;background:#fff}
+.score-tbl th{background:var(--f);color:#fff;padding:9px 12px;text-align:left;font-weight:600}
+.score-tbl td{padding:8px 12px;border-bottom:1px solid var(--bd)}
+.score-tbl tr:last-child td{border-bottom:none}
+.score-tbl tr:nth-child(even) td{background:var(--cream)}
+.score-tbl .sc{font-weight:700;color:var(--f)}
+@media(max-width:640px){
+  .tbl-wrap.plain{border:none;box-shadow:none;border-radius:0;max-width:none;overflow:visible}
+  .score-tbl,.score-tbl tbody,.score-tbl tr,.score-tbl td{display:block;width:auto}
+  .score-tbl thead{position:absolute;left:-9999px}
+  .score-tbl tr{background:#fff!important;border:1px solid var(--bd);border-radius:14px;padding:12px 15px;margin-bottom:11px;box-shadow:0 3px 12px rgba(60,30,10,.06)}
+  .score-tbl tr:nth-child(even) td{background:transparent}
+  .score-tbl td{border:none;padding:6px 0;display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+  .score-tbl td::before{content:attr(data-label);font-weight:600;color:#57534e;font-size:.78rem;letter-spacing:.02em}
+  .score-tbl .sc-trait{font-family:'Newsreader',serif;font-size:1.1rem;color:#2a2622;border-bottom:1px solid var(--bd);padding-bottom:9px;margin-bottom:3px}
+  .score-tbl .sc-trait::before{display:none}
+  .score-tbl .sc{color:var(--f);font-weight:700;font-size:1.02rem}
+  .score-tbl .sc-note{flex-direction:column;align-items:flex-start;gap:3px;color:#57534e;font-size:.88rem}
+}
+.cap{font-size:.85rem;color:#7a6f64;font-style:italic}
+.author-card{background:#fff;border:1px solid var(--bd);border-radius:20px;overflow:hidden;margin:0 0 18px;box-shadow:0 4px 16px rgba(60,30,10,.07)}
+.ac-banner{display:block;width:100%;height:240px;object-fit:cover}
+.ac-row{display:flex;gap:16px;align-items:center;padding:18px 20px}
+.ac-avatar{width:72px;height:54px;border-radius:12px;object-fit:cover;object-position:50% 32%;flex:none}
+.ac-name{font-family:'Newsreader',serif;font-size:1.2rem;margin:0}
+.ac-sub{font-size:.85rem;color:#7a6f64;margin:2px 0 8px}
+.ac-badges{margin:0;display:flex;gap:6px;flex-wrap:wrap}
+.ac-badges span{background:var(--f);color:#fff;border-radius:50px;padding:4px 12px;font-size:.72rem;font-weight:600}
+@media(max-width:900px){
+  .cvt-body{grid-template-columns:1fr;gap:0;padding-top:24px}
+  .cvt-toc{display:none}
+  .cvt-rail{display:block}
+  .hero-imgs img{height:280px}
+  .cvt-counter{padding:9px 0}
+  .counter-row{display:grid;grid-template-columns:1fr 1fr;gap:2px 0}
+  .cs{padding:7px 14px;gap:8px}
+  .counter-row b{font-size:1.2rem}
+  .cs-l{font-size:.74rem}
+  .cs+.cs{border-left:none}
+  .cs:nth-child(even){border-left:1px solid rgba(255,255,255,.16)}
+  .kt-grid{grid-template-columns:1fr 1fr}
+  .cmpe-tabs{display:flex}
+  .cmp-tbl{font-size:.84rem}
+  .cmp-tbl th,.cmp-tbl td{padding:9px 10px}
+  .show-c .th-t2,.show-c .td-t{display:none}
+  .show-t .th-c,.show-t .td-c{display:none}
+}
+@media(max-width:520px){.kt-grid{grid-template-columns:1fr}}
+.hero-imgs .hero-left img{object-position:38% center}
+.hero-imgs .hero-right img{object-position:62% center}
+/* macaw species cards — masonry columns, not a grid: a CSS grid stretched
+   every card to its tallest row sibling, leaving the dead white space the
+   breeder flagged. Columns let each card end exactly where its text ends. */
+.macaw-species-grid{columns:2;column-gap:16px;margin:6px 0 16px}
+.msp-card{break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid;display:inline-block;width:100%;background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;box-shadow:0 3px 14px rgba(60,30,10,.055);margin:0 0 16px;scroll-margin-top:calc(var(--hdr) + 18px);transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s}
+.msp-card:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(60,30,10,.1)}
+.msp-media{position:relative;aspect-ratio:3/2;background:#f4efe9;overflow:hidden}
+.msp-media img{display:block;width:100%;height:100%;object-fit:cover}
+.msp-num{position:absolute;top:10px;left:10px;min-width:26px;height:26px;padding:0 7px;border-radius:50px;background:rgba(31,77,57,.92);color:#fff;font-size:.68rem;font-weight:700;font-variant-numeric:tabular-nums;display:flex;align-items:center;justify-content:center;letter-spacing:.02em}
+.msp-body{padding:14px 16px 16px}
+.msp-body h3{margin:0 0 3px!important;font-size:1.08rem!important;line-height:1.25}
+.sp-sci{font-size:.76rem;color:#7a6f64;margin:0 0 7px!important;max-width:none}
+.sp-trait{font-size:.8rem;color:var(--clay-t);font-weight:600;line-height:1.4;margin:0 0 11px!important;padding-bottom:11px;border-bottom:1px solid var(--bd);max-width:none}
+.sp-stats{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:0 0 11px;padding:0}
+.sp-stats li{background:#eaf4ef;border:1px solid #cfe4da;border-radius:8px;padding:5px 9px;font-size:.68rem;display:flex;flex-direction:column;gap:1px;line-height:1.25}
+.sp-stats li span{color:#57534e;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.sp-stats li b{color:var(--f);font-size:.74rem}
+.msp-body p:last-child{font-size:.85rem;margin-bottom:0!important;line-height:1.62;color:#4c443c;max-width:none}
+@media(max-width:760px){.macaw-species-grid{columns:1}}
+
+/* bite force — the shared table lives on 3 other pages, so this one gets its
+   own treatment: proportional force bars behind the measured-newton column */
+.force-scale{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:4px 0 0;margin:10px 0 18px;max-width:600px;box-shadow:0 4px 16px rgba(60,30,10,.06);overflow:hidden}
+.bite-tbl{width:100%;border-collapse:collapse;font-size:.87rem;background:transparent;table-layout:fixed}
+/* a ::before on a <tr> becomes an anonymous table-cell and shifts every
+   column across — the proportional bar hangs off a <td> instead */
+.fs-cap{caption-side:top;text-align:left;padding:14px 18px 13px;font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:#7a6f64;font-weight:600;line-height:1.4}
+.fs-tick{display:inline-block;vertical-align:middle;width:18px;height:3px;border-radius:2px;background:var(--clay-ink);margin-right:9px}
+.bite-tbl th{padding:0 18px 9px;text-align:left;font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;color:#7a6f64;font-weight:600;border-bottom:1px solid var(--bd);white-space:nowrap}
+.bite-tbl th:first-child{width:40%}
+.bite-tbl th:last-child,.bite-tbl td:last-child{text-align:right}
+.bite-tbl tbody tr{position:relative}
+.bite-tbl td{padding:16px 18px 20px;border-bottom:1px solid var(--bd);vertical-align:baseline}
+.bite-tbl td:first-child::after{content:"";position:absolute;left:18px;right:18px;bottom:8px;height:4px;border-radius:2px;background:linear-gradient(90deg,currentColor 0,currentColor var(--w-pct,0%),transparent var(--w-pct,0%));opacity:.32}
+.bite-tbl tbody tr:last-child td{border-bottom:none}
+.bite-tbl td:first-child{font-family:'Newsreader',serif;font-size:1.05rem;color:#2a2622;line-height:1.3}
+.bite-tbl td:nth-child(2){font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bite-tbl td:last-child{color:#7a6f64;font-size:.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fs-grey{color:var(--f);--w-pct:18%}
+.fs-grey td:nth-child(2){color:var(--f)}
+.fs-human{color:#b3a58e;--w-pct:93%}
+.fs-human td:nth-child(2){color:#7a6f64}
+.fs-macaw{color:var(--clay-ink);background:#fdf6f3;--w-pct:100%}
+.fs-macaw td:nth-child(2){color:var(--clay-ink)}
+.fs-macaw td:first-child{font-weight:600;color:var(--clay-ink)}
+@media(max-width:560px){
+  .force-scale{max-width:none}
+  .bite-tbl,.bite-tbl tbody,.bite-tbl tr,.bite-tbl td{display:block;width:auto}
+  .bite-tbl thead{position:absolute;left:-9999px}
+  .fs-cap{padding:14px 16px 10px}
+  .bite-tbl tbody tr{padding:14px 16px 18px;border-bottom:1px solid var(--bd)}
+  .bite-tbl tbody tr:last-child{border-bottom:none}
+  .bite-tbl td{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border:none;padding:4px 0;text-align:left!important}
+  .bite-tbl td::before{content:attr(data-label);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:#7a6f64;font-weight:600}
+  .bite-tbl td:first-child{display:block;font-size:1.08rem;padding:0 0 9px}
+  .bite-tbl td:first-child::before{display:none}
+  .bite-tbl td:first-child::after{left:16px;right:16px;bottom:8px}
+}
+/* interactive tools — size comparator, budget estimator, quiz.
+   These are instruments, not forms: a labelled header band, generous
+   internal rhythm, tabular figures, and one clay result surface each. */
+.size-tool,.budget-tool,.quiz-tool{position:relative;background:linear-gradient(180deg,#fff 0%,#fffdfc 100%);border:1px solid var(--bd);border-radius:20px;padding:46px 22px 22px;margin:14px 0 18px;box-shadow:0 6px 24px rgba(60,30,10,.07)}
+.size-tool::before,.budget-tool::before,.quiz-tool::before{content:attr(data-label);position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;padding:0 20px;background:linear-gradient(135deg,#2D6A4F,#1f4d39);color:#fff;border-radius:19px 19px 0 0;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.size-tool{--tool-accent:var(--f)}
+.size-tool>label{display:block;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:#7a6f64;margin-bottom:9px}
+.tool-select{position:relative;max-width:380px;margin-bottom:22px}
+.tool-select::after{content:"";position:absolute;right:16px;top:50%;width:8px;height:8px;border-right:2px solid var(--f);border-bottom:2px solid var(--f);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.size-tool select{width:100%;appearance:none;-webkit-appearance:none;border:1.5px solid var(--bd);border-radius:14px;padding:13px 42px 13px 15px;font:inherit;font-weight:600;color:#2a2622;background:#fff;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.size-tool select:hover{border-color:var(--f)}
+.size-tool select:focus-visible{outline:none;border-color:var(--f);box-shadow:0 0 0 3px rgba(45,106,79,.14)}
+.size-bars{display:flex;flex-direction:column;gap:18px;margin-bottom:18px}
+.size-row{display:grid;grid-template-columns:1fr;gap:7px}
+.size-label{font-size:.78rem;color:#3a332c;font-weight:700;letter-spacing:.01em}
+.size-track{position:relative;background:#f4efe9;border-radius:50px;height:16px;overflow:hidden;border:1px solid var(--bd)}
+.size-fill{height:100%;border-radius:50px;transition:width .55s cubic-bezier(.22,1,.36,1)}
+.grey-fill{background:linear-gradient(90deg,#2D6A4F,#3d8462)}
+.macaw-fill{background:linear-gradient(90deg,#c8472f,#e8604c)}
+.size-val{font-size:.78rem;font-weight:700;color:#57534e;font-variant-numeric:tabular-nums}
+.size-row .size-label,.size-row .size-val{grid-column:1}
+.size-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.size-out{background:linear-gradient(180deg,#fdf2ef,#fbeae4);border:1px solid #f0c4b7;border-radius:14px;padding:14px 16px;font-size:.88rem;margin:0!important;max-width:none;color:#3a332c}
+.size-out :global(strong){color:var(--clay-ink);font-variant-numeric:tabular-nums}
+.budget-row{display:flex;align-items:center;gap:12px;font-weight:400;font-size:.87rem;color:#3a332c;cursor:pointer;padding:11px 13px;margin-bottom:6px;border:1px solid transparent;border-radius:12px;transition:background-color .18s,border-color .18s}
+.budget-row:hover{background:#fffaf8;border-color:var(--bd)}
+.budget-row:has(input:checked){background:#f7fbf9;border-color:#cfe4da}
+.budget-row input{width:19px;height:19px;flex:none;accent-color:var(--f);cursor:pointer}
+.budget-total{display:flex;justify-content:space-between;align-items:center;gap:14px;background:linear-gradient(135deg,#2D6A4F,#1f4d39);color:#fff;border-radius:14px;padding:16px 18px;margin-top:16px}
+.budget-total span{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;opacity:.85;color:#fff}
+.budget-total b{font-family:'Newsreader',serif;font-size:1.55rem;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.quiz-q{margin-bottom:20px}
+.quiz-q:last-of-type{margin-bottom:22px}
+.quiz-question{font-weight:700;font-size:.9rem;color:#2a2622;margin:0 0 10px!important;max-width:none}
+.quiz-q label{display:flex;align-items:flex-start;gap:11px;font-size:.86rem;font-weight:400;color:#4c443c;padding:10px 13px;margin-bottom:6px;border:1px solid var(--bd);border-radius:12px;cursor:pointer;transition:background-color .18s,border-color .18s}
+.quiz-q label:hover{background:#fffaf8;border-color:#e0cfc0}
+.quiz-q label:has(input:checked){background:#f7fbf9;border-color:#cfe4da}
+.quiz-q input{margin:2px 0 0;accent-color:var(--f);flex:none;width:17px;height:17px}
+.quiz-btn{margin-top:2px;width:100%;max-width:260px}
+.quiz-result{margin-top:20px;background:linear-gradient(180deg,#fdf2ef,#fbeae4);border:1px solid #f0c4b7;border-radius:16px;padding:18px 20px;font-size:.9rem;line-height:1.65;color:#3a332c}
+.quiz-result :global(strong){color:var(--clay-ink);display:block;margin-bottom:5px;font-size:.98rem}
+.quiz-result :global(a){color:var(--clay-t);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.quiz-result[data-in]{animation:toolIn .4s cubic-bezier(.22,1,.36,1)}}
+@keyframes toolIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
+.match-c{position:relative;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:15px 16px;transition:transform .15s,box-shadow .2s}
+.match-c::before{content:"";display:block;width:24px;height:3px;border-radius:2px;background:var(--clay-ink);margin-bottom:10px}
+.match-c:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(60,30,10,.09)}
+.match-c h4{margin:0 0 6px!important;color:var(--f)}
+.match-c p{margin-bottom:0;font-size:.9rem}
+.match-c:nth-child(5){grid-column:1/-1}
+.match-c:nth-child(5)::before{background:var(--f)}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 8px}
+.tl-c{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px;position:relative}
+.tl-n{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--clay-ink);color:#fff;font-size:.75rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.tl-c b{font-family:'Newsreader',serif;display:block;margin:6px 0 6px;color:var(--f);font-size:.98rem}
+.tl-c p{font-size:.82rem;margin:0!important;max-width:none}
+.myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 8px}
+.myth-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:18px}
+.myth-x{display:inline-block;background:var(--clay-ink);color:#fff;border-radius:50px;padding:3px 13px;font-size:.72rem;font-weight:600;margin-bottom:10px}
+.myth-c p{margin:0;font-size:.9rem}
+.ship-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 16px}
+.ship-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.ship-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.ship-c>img{display:block;width:100%;height:250px;object-fit:cover;object-position:center 40%;background:#f4efe9}
+.ship-body{padding:16px 18px}
+.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 12px;font-size:.7rem;font-weight:600}
+.ship-tier.clay{background:var(--clay-ink)}
+.ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.15rem}
+.ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
+.ship-c p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
+.ship-places{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.ship-places a{display:inline-flex;align-items:center;gap:8px;background:#f4efe9;border:1px solid var(--bd);border-radius:50px;padding:9px 15px;font-size:.84rem;line-height:1.15;color:var(--f);text-decoration:none;transition:border-color .2s,color .2s,background-color .2s}
+.ship-places a:hover{border-color:var(--clay-t);color:var(--clay-t);background:#fff}
+.ship-places .pin{color:var(--clay-t);flex:none;width:15px;height:15px}
+.health-card{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin:6px 0 14px;max-width:420px}
+.hc-head{background:var(--f);color:#fff;padding:8px 14px;font-family:'Newsreader',serif}
+.hc-list{list-style:none;margin:0;padding:12px 14px}
+.hc-list li{font-size:.85rem;padding:4px 0 4px 22px;position:relative}
+.hc-list li::before{content:"✔";position:absolute;left:0;color:var(--f);font-weight:700}
+.ship-line{font-size:.78rem;color:#7a6f64;font-weight:600;border-top:1px dashed var(--bd);padding-top:8px}
+.bird-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:6px 0 18px}
+.bird-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;color:#2a2622;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
+.bird-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.12)}
+.bird-photo{position:relative;display:block}
+.bird-photo img{display:block;width:100%;height:250px;object-fit:cover;object-position:center 26%;background:#f4efe9}
+.bird-badge{position:absolute;top:10px;left:10px;background:rgba(45,106,79,.94);color:#fff;font-size:.68rem;font-weight:600;padding:4px 11px;border-radius:50px}
+.bird-body{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
+.bird-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.bird-name{font-family:'Newsreader',serif;font-size:1.08rem;margin:0}
+.bird-name a{color:#2a2622;text-decoration:none}
+.bird-name a:hover{color:var(--clay-t)}
+.bird-price{color:var(--clay-t);font-weight:700;font-size:1rem;white-space:nowrap}
+.bird-docs{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.bird-docs li{font-size:.66rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:3px 9px;white-space:nowrap}
+.bird-cta{text-align:center;margin-top:auto}
+.ship-mini{font-size:.68rem;color:#7a6f64;display:block;margin-top:10px;border-top:1px dashed var(--bd);padding-top:6px}
+.pair-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 16px}
+.pair-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.pair-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.pair-c>img{display:block;width:100%;height:340px;object-fit:cover;object-position:center;background:#f4efe9}
+.pair-c>img.pimg-pair{object-position:50% 24%}
+.pair-c>img.pimg-eggs{object-position:50% 100%}
+.pair-body{padding:15px 17px}
+.pair-c b{font-family:'Newsreader',serif;font-size:1.1rem;display:block;margin-bottom:2px}
+.pair-sub{font-size:.82rem;color:#7a6f64;display:block;margin:2px 0 10px}
+.btn-ghost.sm,.btn-clay.sm{padding:8px 16px;font-size:.82rem}
+.ctr{text-align:center}
+.pullquote{margin:0 0 14px;background:#fff;border:1px solid var(--bd);border-left:4px solid var(--clay-ink);border-radius:14px;padding:20px 22px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.pullquote blockquote{margin:0 0 14px;font-family:'Newsreader',serif;font-size:1.1rem;line-height:1.5;color:#2a2622;font-style:italic}
+.pullquote figcaption{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pq-id{font-size:.85rem;color:#57534e}
+.pq-id b{color:#2a2622;font-family:'Newsreader',serif}
+.faq-open{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.faq-q{font-family:'Newsreader',serif;font-size:1rem;margin:0 0 6px;color:#2a2622}
+.faq-open p{margin:0;font-size:.9rem}
+.faq-d{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.faq-d summary{font-family:'Newsreader',serif;font-weight:600;cursor:pointer;font-size:1rem}
+.faq-d p{margin:8px 0 0;font-size:.9rem}
+.blog-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.blog-c{background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;text-decoration:none!important;color:#2a2622;transition:transform .15s,box-shadow .2s}
+.blog-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.blog-c img{display:block;width:100%;height:auto;aspect-ratio:420/236;object-fit:cover;object-position:50% 40%;background:#f4efe9}
+.blog-body{padding:12px 14px 14px}
+.blog-tag{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 11px;font-size:.68rem;font-weight:600}
+.blog-t{font-family:'Newsreader',serif;font-size:1rem;margin:7px 0 0}
+
+/* inline action CTAs — four along the page, each routed to the on-page form */
+.cta-strip{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:linear-gradient(135deg,#2D6A4F 0%,#1f4d39 100%);border-radius:18px;padding:20px 24px;margin:18px 0 6px;box-shadow:0 6px 22px rgba(31,77,57,.18)}
+.cta-strip .cs-copy{min-width:0;flex:1 1 340px}
+.cta-strip .cs-kick{display:block;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:#f3d9cf;margin-bottom:6px}
+.cta-strip p{margin:0!important;color:#fff;font-size:.92rem;line-height:1.55;max-width:56ch}
+/* a clay pill on forest green clears only 2:1 against its own background —
+   the cream pill keeps both the label and the button boundary AA-legible */
+.cvt-main a.btn-strip{flex:none;display:inline-block;background:#faf7f4;color:#1f4d39;border-radius:50px;padding:12px 24px;font-size:.88rem;font-weight:700;text-decoration:none;box-shadow:0 3px 12px rgba(0,0,0,.16);transition:background-color .2s,transform .15s,box-shadow .2s}
+.cvt-main a.btn-strip:hover{background:#fff;transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.22)}
+.cvt-main a.btn-strip:focus-visible{outline:3px solid #f3d9cf;outline-offset:3px}
+@media(max-width:640px){.cta-strip{padding:18px 18px 20px;gap:14px}.cvt-main a.btn-strip{width:100%;text-align:center}}
+.final-cta{background:var(--cream);border:1px solid var(--bd);border-radius:20px;padding:clamp(22px,4vw,36px)}
+.cta-form{display:grid;gap:12px;max-width:640px;margin:10px 0 0}
+.cta-form label{display:grid;gap:5px;font-size:.85rem;font-weight:600;color:#3a332c}
+.cta-form .opt{font-weight:400;color:#7a6f64}
+.cta-form input,.cta-form textarea,.cta-form select{border:1.5px solid var(--bd);border-radius:12px;padding:11px 13px;font:inherit;font-weight:400;background:#fff9f6;width:100%}
+.cta-form input:focus,.cta-form textarea:focus,.cta-form select:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.12)}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.cta-form button{border:none;cursor:pointer}
+.cta-form .btn-ghost{padding:11px 22px}
+.form-note{font-size:.8rem;color:#7a6f64;margin:2px 0 0!important}
+.hp{position:absolute;left:-9999px}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;min-height:0;gap:20px}
+  .hero-imgs{order:-1;max-width:560px;margin:0 auto;width:100%}
+  .hero-imgs figure:first-child{transform:translateY(8px)}
+  .hero-imgs figure:last-child{transform:translateY(-8px)}
+  .hero-copy{max-width:none;text-align:center}
+  .hero-cta{justify-content:center}
+  .eyebrow{justify-content:center}
+  .hero-meta{justify-content:center}
+  .lead{margin-left:auto;margin-right:auto}
+  .ac-banner{height:180px}
+  .match-grid,.myth-grid,.ship-cards,.pair-row{grid-template-columns:1fr}
+  .timeline{grid-template-columns:1fr 1fr}
+  .bird-cards{grid-template-columns:1fr 1fr}
+  .blog-cards{grid-template-columns:1fr}
+  .ship-places{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ship-places a{justify-content:center;padding:10px 10px;font-size:.79rem}
+  .form-2col{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .timeline,.bird-cards{grid-template-columns:1fr}
+  .hero-imgs img{height:260px}
+  .ship-places{grid-template-columns:1fr 1fr}
+  .bird-photo img{height:auto;aspect-ratio:4/3;min-height:260px;object-position:center 22%}
+  .counter-row{gap:0}
+  .cs{padding:14px 8px}
+  .counter-row b{font-size:1.1rem}
+}
+
+/* ── mobile image floor ───────────────────────────────────────────────────
+   Photos never render shorter than 250px (the old 230px was slicing heads
+   off). Infographics keep every pixel of their 16:9 art: they letterbox
+   inside a taller box on the infographic's own cream, so the band is
+   invisible while the box still clears the 250px floor.                    */
+@media(max-width:760px){
+  .sec-img{margin-bottom:18px}
+  .sec-img.inf-img{aspect-ratio:4/3;object-fit:contain;min-height:250px;background:var(--cream);border:1px solid var(--bd)}
+  .sec-img.photo169{max-width:none;min-height:250px}
+  .sec-img.photo32{max-width:none;min-height:250px}
+  .sec-img.photo43{max-width:none;min-height:280px}
+  .sec-img.portrait34{max-width:320px;min-height:340px}
+  .sec-img.portrait916{max-width:280px;min-height:400px}
+  .ac-banner{min-height:250px}
+  .pair-c>img{height:300px}
+  .ship-c>img{height:260px}
+  .msp-media{aspect-ratio:16/10;min-height:250px}
+}
+@media(max-width:480px){
+  .sec-img.inf-img{aspect-ratio:5/4}
+  .sec-img.portrait34{max-width:280px}
+  .sec-img.portrait916{max-width:250px;min-height:380px}
+}
+@media(prefers-reduced-motion:reduce){.cvt *{transition:none!important}}
+
+/* ---- breeders-comparison refresh deltas (2026-07-13) ---- */
+.cvt .cred-pills{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px;padding:0;list-style:none}
+.cvt .cred-pills li{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:#2D6A4F;background:#eef4ef;border:1px solid #d6e3d9;border-radius:50px;padding:5px 12px}
+.cvt .cred-pills svg{color:#2D6A4F;flex:none}
+.cvt .hero-trust .hero-imgs{grid-template-columns:1fr;max-width:340px}
+.cvt .hero-trust .hero-single figcaption{margin-top:8px}
+/* cream quick-answer (refresh vs green panel) */
+.cvt .qa-cream{background:#faf7f4;border:1px solid #ece3d8;border-left:5px solid #b04228;border-radius:14px;padding:20px 22px;margin:16px 0}
+.cvt .qa-cream p{margin:0;color:#3a3128}
+/* four-doorway fork */
+.cvt .door-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+.cvt .door-c{background:#fff;border:1px solid #ece3d8;border-radius:16px;padding:16px 14px;box-shadow:0 2px 10px rgba(60,30,10,.05)}
+.cvt .door-c.best{border-color:#c8472f;box-shadow:0 4px 16px rgba(200,71,47,.16)}
+.cvt .door-ic{width:34px;height:34px;color:#2D6A4F;margin-bottom:8px}
+.cvt .door-c.best .door-ic{color:#c8472f}
+.cvt .door-t{display:block;font-family:Newsreader,Georgia,serif;font-size:1.02rem;font-weight:600;color:#22302a;margin-bottom:4px}
+.cvt .door-c p{font-size:.86rem;color:#5c5346;margin:0}
+.cvt .door-tag{display:inline-block;margin-top:8px;font-size:.72rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:#b04228}
+.cvt .door-c:not(.best) .door-tag{color:#7a7266}
+/* tier verdict cards */
+.cvt .tier-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:18px 0}
+.cvt .tier-c{background:#fff;border:1px solid #ece3d8;border-radius:16px;overflow:hidden;box-shadow:0 2px 10px rgba(60,30,10,.05)}
+.cvt .tier-c.win{border-color:#2D6A4F}
+.cvt .tier-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:12px 16px;background:#f4efe9}
+.cvt .tier-c.win .tier-head{background:#2D6A4F;color:#fff}
+.cvt .tier-name{font-family:Newsreader,Georgia,serif;font-weight:600;font-size:1.04rem}
+.cvt .tier-verdict{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.cvt .tier-docs{list-style:none;margin:0;padding:12px 16px;display:grid;gap:7px}
+.cvt .tier-docs li{display:flex;align-items:center;gap:9px;font-size:.87rem;color:#4a4136}
+.cvt .tier-docs .mk{flex:none;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:.7rem;font-weight:800}
+.cvt .mk.y{background:#e3efe6;color:#2D6A4F}
+.cvt .mk.n{background:#f3e6e2;color:#b04228}
+.cvt .mk.p{background:#f2ecdd;color:#8a6d1f}
+.cvt .tier-strip{padding:9px 16px;font-size:.8rem;font-weight:600;background:#eef4ef;color:#2D6A4F;border-top:1px solid #e2ece4}
+/* red vs green flags */
+.cvt .flag-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.cvt .flag-c{border-radius:16px;padding:16px 18px;border:1px solid #ece3d8;background:#fff}
+.cvt .flag-c.red{border-top:4px solid #c8472f}
+.cvt .flag-c.green{border-top:4px solid #2D6A4F}
+.cvt .flag-h{display:flex;align-items:center;gap:8px;font-family:Newsreader,Georgia,serif;font-weight:600;font-size:1.05rem;margin:0 0 10px}
+.cvt .flag-c.red .flag-h{color:#b04228}
+.cvt .flag-c.green .flag-h{color:#2D6A4F}
+.cvt .flag-c ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.cvt .flag-c li{position:relative;padding-left:22px;font-size:.88rem;color:#4a4136}
+.cvt .flag-c.red li::before{content:"\2717";position:absolute;left:0;color:#c8472f;font-weight:800}
+.cvt .flag-c.green li::before{content:"\2713";position:absolute;left:0;color:#2D6A4F;font-weight:800}
+/* questions cards */
+.cvt .q-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.cvt .q-card{background:#fff;border:1px solid #ece3d8;border-radius:16px;padding:16px 18px}
+.cvt .q-card h4{margin:0 0 10px}
+.cvt .q-card ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.cvt .q-card li{position:relative;padding-left:20px;font-size:.88rem;color:#4a4136}
+.cvt .q-card li::before{content:"?";position:absolute;left:0;color:#b04228;font-weight:800}
+/* grouped-by-mode metros */
+.cvt .metro-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0}
+.cvt .metro-col{background:#f4efe9;border:1px solid #e7ded1;border-radius:14px;padding:12px 14px}
+.cvt .metro-col h4{margin:0 0 8px;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:#2D6A4F}
+.cvt .metro-col ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.cvt .metro-col a{display:inline-flex;align-items:center;gap:6px;font-size:.86rem;color:#3a3128;text-decoration:none}
+.cvt .metro-col a:hover{color:#b04228}
+.cvt .metro-col .pin{color:#b04228;flex:none}
+@media(max-width:760px){
+  .cvt .door-grid,.cvt .tier-grid,.cvt .flag-cols,.cvt .q-cards,.cvt .metro-cols{grid-template-columns:1fr}
+}
+/* audit table (was on the old page's own CSS; donor lacks it) */
+.cvt .bc-table-wrap{overflow-x:auto;border:1px solid #ece3d8;border-radius:14px;margin:6px 0}
+.cvt .bc-table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:660px}
+.cvt .bc-table th,.cvt .bc-table td{padding:8px 10px;border-bottom:1px solid #f0e9df;text-align:left;vertical-align:top}
+.cvt .bc-table thead th{background:#2D6A4F;color:#fff;font-weight:600}
+.cvt .bc-table tbody th{font-weight:600;color:#22302a}
+.cvt .bc-row-cag{background:#eef4ef}
+.cvt .bc-this-badge{display:inline-block;font-size:.64rem;font-weight:700;background:#c8472f;color:#fff;border-radius:50px;padding:1px 7px;margin-left:4px}
+.cvt .bc-breeder-link{color:#b04228;text-decoration:none;font-weight:600}
+.cvt .bc-yes{color:#2D6A4F;font-weight:600}
+.cvt .bc-no{color:#b04228}
+.cvt .bc-verify{color:#8a6d1f}
+.cvt .bc-row-inactive td,.cvt .bc-inactive-note{font-style:italic;color:#9a9184}
+.cvt .checklist-ol{margin:14px 0;padding-left:0;list-style:none;counter-reset:ck;display:grid;gap:10px}
+.cvt .checklist-ol li{position:relative;padding:12px 14px 12px 46px;background:#fff;border:1px solid #ece3d8;border-radius:12px;font-size:.9rem;color:#4a4136;counter-increment:ck}
+.cvt .checklist-ol li::before{content:counter(ck);position:absolute;left:12px;top:11px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:#2D6A4F;color:#fff;border-radius:50%;font-size:.78rem;font-weight:700}
+.cvt .kt-grid.three{grid-template-columns:repeat(3,1fr)}
+@media(max-width:640px){.cvt .kt-grid.three{grid-template-columns:1fr}}
 </style>
