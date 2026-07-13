@@ -158,12 +158,8 @@ const orgSchema = {
         <p class="eyebrow"><span class="eb-tick" aria-hidden="true"></span>The talker, the mess and the 40-year promise — weighed honestly</p>
         <h1 class="cag-h1">African Grey Parrot Pros and Cons: An Honest Owner's Decision Guide</h1>
         <p class="lead">For the right home, few birds come close; for the wrong one, few cost more heartache. We raise and place these parrots — so instead of the dream, here are the real trade-offs, side by side.</p>
-        <ul class="cred-pills">
-          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Breeder-written</li>
-          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>No hype, both sides</li>
-          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Self-assessment inside</li>
-        </ul>
         <p class="hero-cta"><a class="btn-clay" href="#glance">See Pros vs Cons</a> <a class="btn-ghost" href="#fit-you">Is a Grey Right for You?</a></p>
+        <p class="hero-micro"><span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Breeder-written</span><span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>No hype, both sides</span><span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Self-assessment inside</span></p>
       </div>
       <div class="hero-imgs">
         <figure class="hero-single">
@@ -1115,7 +1111,6 @@ const orgSchema = {
 .cvt .cred-pills{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px;padding:0;list-style:none}
 .cvt .cred-pills li{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:#2D6A4F;background:#eef4ef;border:1px solid #d6e3d9;border-radius:50px;padding:5px 12px}
 .cvt .cred-pills svg{color:#2D6A4F;flex:none}
-.cvt .hero-trust .hero-imgs{grid-template-columns:1fr;max-width:340px}
 .cvt .hero-trust .hero-single figcaption{margin-top:8px}
 /* cream quick-answer (refresh vs green panel) */
 .cvt .qa-cream{background:#faf7f4;border:1px solid #ece3d8;border-left:5px solid #b04228;border-radius:14px;padding:20px 22px;margin:16px 0}
@@ -1196,17 +1191,12 @@ const orgSchema = {
 
 /* ---- pros-and-cons page overrides ---- */
 /* compact hero (~350-400px total desktop) */
-.cvt .pnc-hero{padding:20px 0 22px}
-.cvt .pnc-hero .hero-grid{min-height:300px;align-items:center}
-.cvt .pnc-hero .hero-trust .hero-imgs,.cvt .pnc-hero .hero-imgs{max-width:300px}
-.cvt .pnc-hero .hero-imgs img{height:300px}
+.cvt .pnc-hero{padding:0}
 .cvt .pnc-hero .eyebrow{margin:0 0 8px}
 .cvt .pnc-hero .cag-h1{margin:0 0 8px;line-height:1.12}
 .cvt .pnc-hero .lead{font-size:1rem;line-height:1.5;margin:0 0 14px;max-width:52ch}
 .cvt .pnc-hero .cred-pills{margin:0 0 14px}
 .cvt .pnc-hero .hero-cta{margin:0}
-@media(max-width:900px){.cvt .pnc-hero .hero-imgs img{height:260px}.cvt .pnc-hero .hero-imgs{max-width:280px}}
-@media(max-width:520px){.cvt .pnc-hero .hero-imgs img{height:230px}}
 /* real-review quote grid */
 .cvt .quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
 .cvt .quote-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0}
@@ -1228,4 +1218,24 @@ const orgSchema = {
    with cream side-bands. `.og` keeps photos edge-to-edge on phones. */
 .cvt .sec-img.inf-img.og{object-fit:cover}
 @media(max-width:760px){.cvt .sec-img.inf-img.og{aspect-ratio:4/3;object-fit:cover;border:none;background:#f4efe9;min-height:250px}}
+
+/* === HERO A — Edge-Bleed Split (breeder pick 2026-07-13): 400px band, photo
+   flush to the viewport's right edge, slim copy column, stat pills demoted to
+   the counter strip. Mobile stacks image-first, full-bleed. === */
+.cvt-hero{padding:0;overflow:hidden}
+.cvt-hero .hero-grid{grid-template-columns:minmax(0,1fr) minmax(320px,530px);align-items:center;min-height:400px;gap:clamp(24px,4vw,48px)}
+.cvt-hero .hero-copy{padding:26px 0}
+.cvt-hero .hero-imgs{display:block;align-self:stretch;margin-right:calc(-1 * (max((100vw - 1200px) / 2, 0px) + clamp(16px, 4vw, 48px)))}
+.cvt-hero .hero-single{position:relative;height:100%;min-height:400px;margin:0;transform:none}
+.cvt-hero .hero-single img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0;box-shadow:none;transform:none}
+.hero-micro{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0 0;font-size:.78rem;font-weight:500;color:#5a5248}
+.hero-micro span{display:inline-flex;align-items:center;gap:6px}
+.hero-micro svg{color:var(--f);flex:none}
+@media(max-width:900px){
+  .cvt-hero .hero-grid{grid-template-columns:1fr;min-height:0;gap:0}
+  .cvt-hero .hero-imgs{order:-1;margin:0 calc(-1 * clamp(16px, 4vw, 48px))}
+  .cvt-hero .hero-single{height:232px;min-height:232px}
+  .cvt-hero .hero-copy{padding:20px 0 26px}
+}
+.cvt-hero .hero-single img{object-position:50% 25%}
 </style>

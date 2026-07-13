@@ -196,14 +196,8 @@ const orgSchema = {
         <p class="eyebrow"><span class="eb-tick" aria-hidden="true"></span>Documents first, promises second — how to judge any Grey seller</p>
         <h1 class="cag-h1">African Grey Parrot Breeders: An Honest, Documented Comparison</h1>
         <p class="lead">Where can you actually buy an African Grey, and which route is safe? We are a USDA-licensed African Grey breeder, so we will name our bias up front — then compare direct breeders, classified sites, marketplaces and rescue on the one thing that separates them: the documents each can put in your hands.</p>
-        <ul class="cred-pills">
-          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>USDA-licensed</li>
-          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>CITES-documented</li>
-          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>PBFD/APV PCR</li>
-          <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>DNA-sexed</li>
-        </ul>
         <p class="hero-cta"><a class="btn-clay" href="#tiers">Compare Breeder Types</a> <a class="btn-ghost" href="#checklist">Verification Checklist</a></p>
-        <p class="hero-meta"><span>30 breeders audited</span><span>0 posted a USDA license</span><span>Breeder-written</span></p>
+        <p class="hero-micro"><span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>USDA-licensed</span><span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>CITES-documented</span><span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>PBFD/APV PCR</span><span><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>DNA-sexed</span></p>
       </div>
       <div class="hero-imgs">
         <figure class="hero-single">
@@ -1159,7 +1153,6 @@ const orgSchema = {
 .cvt .cred-pills{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px;padding:0;list-style:none}
 .cvt .cred-pills li{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:#2D6A4F;background:#eef4ef;border:1px solid #d6e3d9;border-radius:50px;padding:5px 12px}
 .cvt .cred-pills svg{color:#2D6A4F;flex:none}
-.cvt .hero-trust .hero-imgs{grid-template-columns:1fr;max-width:340px}
 .cvt .hero-trust .hero-single figcaption{margin-top:8px}
 /* cream quick-answer (refresh vs green panel) */
 .cvt .qa-cream{background:#faf7f4;border:1px solid #ece3d8;border-left:5px solid #b04228;border-radius:14px;padding:20px 22px;margin:16px 0}
@@ -1258,4 +1251,24 @@ const orgSchema = {
 .cvt .checklist-ol li::before{content:counter(ck);position:absolute;left:12px;top:11px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:#2D6A4F;color:#fff;border-radius:50%;font-size:.78rem;font-weight:700}
 .cvt .kt-grid.three{grid-template-columns:repeat(3,1fr)}
 @media(max-width:640px){.cvt .kt-grid.three{grid-template-columns:1fr}}
+
+/* === HERO A — Edge-Bleed Split (breeder pick 2026-07-13): 400px band, photo
+   flush to the viewport's right edge, slim copy column, stat pills demoted to
+   the counter strip. Mobile stacks image-first, full-bleed. === */
+.cvt-hero{padding:0;overflow:hidden}
+.cvt-hero .hero-grid{grid-template-columns:minmax(0,1fr) minmax(320px,530px);align-items:center;min-height:400px;gap:clamp(24px,4vw,48px)}
+.cvt-hero .hero-copy{padding:26px 0}
+.cvt-hero .hero-imgs{display:block;align-self:stretch;margin-right:calc(-1 * (max((100vw - 1200px) / 2, 0px) + clamp(16px, 4vw, 48px)))}
+.cvt-hero .hero-single{position:relative;height:100%;min-height:400px;margin:0;transform:none}
+.cvt-hero .hero-single img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0;box-shadow:none;transform:none}
+.hero-micro{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0 0;font-size:.78rem;font-weight:500;color:#5a5248}
+.hero-micro span{display:inline-flex;align-items:center;gap:6px}
+.hero-micro svg{color:var(--f);flex:none}
+@media(max-width:900px){
+  .cvt-hero .hero-grid{grid-template-columns:1fr;min-height:0;gap:0}
+  .cvt-hero .hero-imgs{order:-1;margin:0 calc(-1 * clamp(16px, 4vw, 48px))}
+  .cvt-hero .hero-single{height:232px;min-height:232px}
+  .cvt-hero .hero-copy{padding:20px 0 26px}
+}
+.cvt-hero .hero-single img{object-position:50% 40%}
 </style>
