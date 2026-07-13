@@ -13,22 +13,24 @@ const breadcrumbs = [
   { name: "Comparisons", url: "/african-grey-comparison/" },
 ];
 
-// §2 master matrix — fresh one-line cells (never copied spoke rows)
+// §2 master matrix — fresh one-line cells (never copied spoke rows).
+// icon: real emoji asset where we have one; species without a supplied emoji
+// render the neutral line-icon fallback until the breeder's files land.
 const matrixRows = [
-  { species: "Congo African Grey", link: "/congo-african-grey-for-sale/", talk: "Exceptional (~1,000 words)", noise: "Moderate", size: "400–650 g", beginner: "Intermediate", best: "Talking and problem-solving" },
-  { species: "Timneh African Grey", link: "/timneh-african-grey-for-sale/", talk: "Exceptional, earlier onset", noise: "Low–moderate", size: "275–375 g", beginner: "Intermediate", best: "A calmer grey, apartments" },
-  { species: "Macaw", link: "/african-grey-vs-macaw/", talk: "Good", noise: "Very loud", size: "900 g+", beginner: "Advanced", best: "Big, bold, space-rich homes" },
-  { species: "Cockatoo", link: "/african-grey-vs-cockatoo/", talk: "Fair", noise: "Extremely loud", size: "Medium–large", beginner: "Advanced", best: "Cuddle-seekers who accept demand" },
-  { species: "Amazon Parrot", link: "/african-grey-vs-amazon-parrot/", talk: "Good, loves to sing", noise: "Loud, seasonal", size: "Medium", beginner: "Intermediate", best: "Outgoing, musical households" },
+  { species: "Congo African Grey", sub: "The classic red-tail", icon: "/emoji/cag-congo-64.webp", link: "/congo-african-grey-for-sale/", talk: "Exceptional", talkNote: "~1,000 words", talkTier: "top", noise: "Moderate", noiseTier: "mid", size: "400–650 g", beginner: "Intermediate", begTier: "mid", best: "Talking and problem-solving" },
+  { species: "Timneh African Grey", sub: "The calmer, earlier talker", icon: "/emoji/cag-timneh-64.webp", link: "/timneh-african-grey-for-sale/", talk: "Exceptional", talkNote: "earlier onset", talkTier: "top", noise: "Low–moderate", noiseTier: "low", size: "275–375 g", beginner: "Intermediate", begTier: "mid", best: "A calmer grey, apartments" },
+  { species: "Macaw", sub: "The showstopper", icon: "", link: "/african-grey-vs-macaw/", talk: "Good", talkNote: "", talkTier: "good", noise: "Very loud", noiseTier: "loud", size: "900 g+", beginner: "Advanced", begTier: "adv", best: "Big, bold, space-rich homes" },
+  { species: "Cockatoo", sub: "The velcro cuddler", icon: "", link: "/african-grey-vs-cockatoo/", talk: "Fair", talkNote: "", talkTier: "fair", noise: "Extremely loud", noiseTier: "loud", size: "Medium–large", beginner: "Advanced", begTier: "adv", best: "Cuddle-seekers who accept demand" },
+  { species: "Amazon Parrot", sub: "The stage performer", icon: "", link: "/african-grey-vs-amazon-parrot/", talk: "Good", talkNote: "loves to sing", talkTier: "good", noise: "Loud, seasonal", noiseTier: "loud", size: "Medium", beginner: "Intermediate", begTier: "mid", best: "Outgoing, musical households" },
 ];
 
 // §3 best-talker ranked list (cited synthesis, not spoke prose)
 const talkerRank = [
-  { rank: "01", bird: "African Grey", note: "Largest working vocabularies and the clearest contextual use — the benchmark talker" },
-  { rank: "02", bird: "Amazon Parrot", note: "Strong talker with a musical, sing-song delivery" },
-  { rank: "03", bird: "Eclectus", note: "Clear speech, calmer volume, smaller vocabulary" },
-  { rank: "04", bird: "Quaker Parakeet", note: "Chatty and clear for its size, a budget talker" },
-  { rank: "05", bird: "Budgie", note: "Can out-word a Grey in count, but mumbled and hard to parse" },
+  { rank: "01", bird: "African Grey", icon: "/emoji/cag-congo-64.webp", badge: "The benchmark", note: "Largest working vocabularies and the clearest contextual use — every published ranking's number one" },
+  { rank: "02", bird: "Amazon Parrot", icon: "", badge: "", note: "Strong talker with a musical, sing-song delivery" },
+  { rank: "03", bird: "Eclectus", icon: "", badge: "", note: "Clear speech, calmer volume, smaller vocabulary" },
+  { rank: "04", bird: "Quaker Parakeet", icon: "", badge: "", note: "Chatty and clear for its size, a budget talker" },
+  { rank: "05", bird: "Budgie", icon: "", badge: "", note: "Can out-word a Grey in count, but mumbled and hard to parse" },
 ];
 
 // §10 use-case grid → spokes/blogs
@@ -52,9 +54,9 @@ const spokes = [
 
 // §16 owner reviews — verified set (Catherine's quote is not used on the pros/cons spoke)
 const stories = [
-  { name: "Catherine Kempf", loc: "Schaumburg, IL", meta: "Congo African Grey", avatar: "/catherine-kempf-schaumburg-il-review.webp",
+  { name: "Catherine Kempf", loc: "Schaumburg, IL", meta: "Congo African Grey", avatar: "/catherine-kempf-schaumburg-il-review-112.webp",
     highlight: "the experience was flawless", tail: "Her documented Congo arrived healthy and well-trained, and now bonds with her whole household." },
-  { name: "Richard Woodard", loc: "Winter Haven, FL", meta: "Congo African Grey", avatar: "/richard-woodard-winter-haven-fl-review.webp",
+  { name: "Richard Woodard", loc: "Winter Haven, FL", meta: "Congo African Grey", avatar: "/richard-woodard-winter-haven-fl-review-112.webp",
     highlight: "made the process stress-free", tail: "Unsure about ordering a bird online at first, he now calls his Congo the daily star of the family." },
 ];
 
@@ -122,6 +124,8 @@ const tocItems = [
   { id: "available", label: "Meet a Documented Grey" },
   { id: "faq", label: "FAQ" },
   { id: "explore", label: "Every Comparison" },
+  { id: "reading", label: "Further Reading" },
+  { id: "reserve", label: "Reserve a Grey" },
 ];
 const num = (i: number) => String(i + 1).padStart(2, "0");
 
@@ -147,7 +151,8 @@ const orgSchema = {
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta
-  heroPreload="/hero-available-african-greys-for-sale.webp"
+  heroPreload="/hero-available-african-greys-for-sale-720.webp"
+  heroPreloadSrcset="/hero-available-african-greys-for-sale-720.webp 720w, /hero-available-african-greys-for-sale.webp 1376w"
   heroPreloadSizes="(max-width: 900px) 92vw, 560px">
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
@@ -173,7 +178,9 @@ const orgSchema = {
       </div>
       <div class="hero-imgs solo">
         <figure class="hero-single">
-          <img src="/hero-available-african-greys-for-sale.webp"
+          <img src="/hero-available-african-greys-for-sale-720.webp"
+            srcset="/hero-available-african-greys-for-sale-720.webp 720w, /hero-available-african-greys-for-sale.webp 1376w"
+            sizes="(max-width: 900px) 92vw, 560px"
             width="560" height="360" alt="African Grey parrot comparison hub, documented Congo and Timneh Greys raised at C.A.Gs in Midland, TX" fetchpriority="high">
           <figcaption class="chip">Documented · Midland, TX</figcaption>
         </figure>
@@ -228,11 +235,20 @@ const orgSchema = {
         <tbody>
           {matrixRows.map((r) => (
             <tr>
-              <td class="sc-trait" data-label="Parrot"><a href={r.link}>{r.species}</a></td>
-              <td data-label="Talking">{r.talk}</td>
-              <td data-label="Noise">{r.noise}</td>
-              <td data-label="Adult size">{r.size}</td>
-              <td data-label="Owner level">{r.beginner}</td>
+              <td class="sc-trait" data-label="Parrot">
+                <a class="sp-cell" href={r.link}>
+                  <span class="sp-ic" aria-hidden="true">
+                    {r.icon
+                      ? <img src={r.icon} width="26" height="26" alt="" loading="lazy" />
+                      : <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></svg>}
+                  </span>
+                  <span class="sp-id"><b>{r.species}</b><small>{r.sub}</small></span>
+                </a>
+              </td>
+              <td data-label="Talking"><span class={`tier t-${r.talkTier}`}>{r.talk}</span>{r.talkNote && <small class="tier-note">{r.talkNote}</small>}</td>
+              <td data-label="Noise"><span class={`tier n-${r.noiseTier}`}>{r.noise}</span></td>
+              <td class="num" data-label="Adult size">{r.size}</td>
+              <td data-label="Owner level"><span class={`tier b-${r.begTier}`}>{r.beginner}</span></td>
               <td class="sc-note" data-label="Best for">{r.best}</td>
             </tr>
           ))}
@@ -256,20 +272,19 @@ const orgSchema = {
     <h2 class="cag-h2">Is the African Grey the Best Talking Parrot?</h2>
     <a class="inf" href="/blog/african-grey-parrot-facts/"><img class="sec-img inf-img" src="/best-talking-parrot-ranking-grey-number-one.webp" srcset="/best-talking-parrot-ranking-grey-number-one-760.webp 760w, /best-talking-parrot-ranking-grey-number-one.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Best talking parrot ranking with the African Grey at number one ahead of Amazon and Eclectus" loading="lazy"></a>
     <p>Short answer: yes, and it is not especially close. The African Grey heads essentially every published best-talking-parrot list, and the reason is not raw word count but clarity and context — a Grey uses words in the right moment in a way no other companion parrot reliably does.</p>
-    <div class="tbl-wrap plain">
-      <table class="score-tbl">
-        <thead><tr><th scope="col">Rank</th><th scope="col">Parrot</th><th scope="col">Why it lands here</th></tr></thead>
-        <tbody>
-          {talkerRank.map((r) => (
-            <tr>
-              <td class="sc-trait" data-label="Rank">{r.rank}</td>
-              <td data-label="Parrot"><b>{r.bird}</b></td>
-              <td class="sc-note" data-label="Why it lands here">{r.note}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ol class="rank-list">
+      {talkerRank.map((r) => (
+        <li class={r.rank === "01" ? "rk rk-top" : "rk"}>
+          <span class="rk-n" aria-hidden="true">{r.rank}</span>
+          <span class="rk-ic" aria-hidden="true">
+            {r.icon
+              ? <img src={r.icon} width="26" height="26" alt="" loading="lazy" />
+              : <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></svg>}
+          </span>
+          <span class="rk-id"><b class="rk-bird">{r.bird}{r.badge && <em class="rk-badge">{r.badge}</em>}</b><span class="rk-note">{r.note}</span></span>
+        </li>
+      ))}
+    </ol>
     <h3 class="cag-h3">Where the Grey Ranks Against Every Talker</h3>
     <p>Above the Grey there is nothing; below it, Amazons talk well with a musical delivery, Eclectus stay clear but quieter, and a budgie can technically bank more words in a mumble no one can parse. For usable, contextual speech, the Grey is the ceiling.</p>
     <h4 class="cag-h4">Why Clarity Beats Raw Vocabulary</h4>
@@ -286,6 +301,7 @@ const orgSchema = {
   <section id="vs-macaw">
     <h2 class="cag-h2">African Grey vs Macaw</h2>
     <a class="inf" href="/african-grey-vs-macaw/"><img class="sec-img inf-img" src="/african-grey-vs-macaw-side-by-side-chart.webp" srcset="/african-grey-vs-macaw-side-by-side-chart-760.webp 760w, /african-grey-vs-macaw-side-by-side-chart.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="African Grey vs macaw comparison of talking clarity against wingspan and volume" loading="lazy"></a>
+    <p>Wondering whether an African Grey or a macaw makes the better companion parrot? This is the honest shape of that match-up — the quiet thinker against aviculture's biggest personality — with the full head-to-head one click away.</p>
     <div class="vs-metrics">
       <div class="vs-m"><span>Talking</span><b>Grey wins</b></div>
       <div class="vs-m"><span>Size</span><b>Macaw ~2×</b></div>
@@ -307,6 +323,7 @@ const orgSchema = {
   <section id="vs-cockatoo">
     <h2 class="cag-h2">African Grey vs Cockatoo</h2>
     <a class="inf" href="/african-grey-vs-cockatoo/"><img class="sec-img inf-img" src="/african-grey-vs-cockatoo-comparison-chart.webp" srcset="/african-grey-vs-cockatoo-comparison-chart-760.webp 760w, /african-grey-vs-cockatoo-comparison-chart.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="African Grey vs cockatoo comparison of independent bonding against velcro cuddliness and noise" loading="lazy"></a>
+    <p>People ask us whether cockatoos are more affectionate than African Greys almost weekly, and the truthful answer starts with what each bird demands from you, not what it gives. Here is the short version of the cuddler-versus-talker decision.</p>
     <div class="vs-metrics">
       <div class="vs-m"><span>Bond</span><b>Grey independent</b></div>
       <div class="vs-m"><span>Cuddles</span><b>Cockatoo wins</b></div>
@@ -324,6 +341,7 @@ const orgSchema = {
   <section id="vs-amazon">
     <h2 class="cag-h2">African Grey vs Amazon Parrot</h2>
     <a class="inf" href="/african-grey-vs-amazon-parrot/"><img class="sec-img inf-img" src="/african-grey-vs-amazon-parrot-comparison-chart.webp" srcset="/african-grey-vs-amazon-parrot-comparison-chart-760.webp 760w, /african-grey-vs-amazon-parrot-comparison-chart.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="African Grey vs Amazon parrot comparison of contextual talking against singing and seasonal temperament" loading="lazy"></a>
+    <p>Torn between an African Grey and an Amazon parrot? That choice nearly always comes down to talking versus singing — contextual words from the Grey, confident performance from the Amazon — plus a dust difference nobody mentions.</p>
     <div class="vs-metrics">
       <div class="vs-m"><span>Speech</span><b>Grey: context</b></div>
       <div class="vs-m"><span>Amazon</span><b>Sings, performs</b></div>
@@ -341,6 +359,7 @@ const orgSchema = {
   <section id="vs-timneh">
     <h2 class="cag-h2">Congo vs Timneh African Grey</h2>
     <a class="inf" href="/congo-vs-timneh-african-grey/"><img class="sec-img inf-img" src="/congo-vs-timneh-side-by-side-comparison-chart.webp" srcset="/congo-vs-timneh-side-by-side-comparison-chart-760.webp 760w, /congo-vs-timneh-side-by-side-comparison-chart.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Congo vs Timneh African Grey comparison of size, tail colour, price and talking onset" loading="lazy"></a>
+    <p>Choosing between a Congo and a Timneh African Grey is less about better and more about fit: the two subspecies share the same intelligence, but size, price, tail colour and talking onset all differ enough to matter.</p>
     <div class="vs-metrics">
       <div class="vs-m"><span>Size</span><b>Congo larger</b></div>
       <div class="vs-m"><span>Tail</span><b>Red vs maroon</b></div>
@@ -362,6 +381,7 @@ const orgSchema = {
   <section id="vs-sex">
     <h2 class="cag-h2">Male vs Female African Grey</h2>
     <a class="inf" href="/male-vs-female-african-grey-parrots-for-sale/"><img class="sec-img inf-img" src="/male-vs-female-african-grey-side-by-side-comparison-chart.webp" srcset="/male-vs-female-african-grey-side-by-side-comparison-chart-760.webp 760w, /male-vs-female-african-grey-side-by-side-comparison-chart.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Male vs female African Grey comparison showing identical monomorphic appearance and DNA sexing" loading="lazy"></a>
+    <p>Should you get a male or a female African Grey parrot? Buyers ask this every week, and the honest answer surprises most of them — you cannot tell the sexes apart by eye, and personality does not follow sex.</p>
     <div class="vs-metrics">
       <div class="vs-m"><span>Looks</span><b>Identical</b></div>
       <div class="vs-m"><span>Behaviour</span><b>Individual</b></div>
@@ -383,6 +403,7 @@ const orgSchema = {
   <section id="selector">
     <h2 class="cag-h2">Which African Grey Comparison Is Right for You?</h2>
     <a class="inf" href="#selector"><img class="sec-img inf-img" src="/which-african-grey-comparison-selector.webp" srcset="/which-african-grey-comparison-selector-760.webp 760w, /which-african-grey-comparison-selector.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="Which African Grey comparison decision flow routing talking, quiet and cuddle priorities to the right guide" loading="lazy"></a>
+    <p>Not sure which parrot comparison actually answers your question? Instead of reading all seven head-to-heads, let the selector below weigh what matters most to you — talking, quiet, cuddles, size or song — and route you straight to the right guide.</p>
     <h3 class="cag-h3">Answer Three Quick Questions</h3>
     <p>Rather than read all seven comparisons, tell the selector what matters most and it will route you to the one that answers your decision. No email, no sign-up — just a signpost.</p>
     <div class="quiz-tool" data-label="Selector · find your comparison">
@@ -426,6 +447,7 @@ const orgSchema = {
   <section id="use-case">
     <h2 class="cag-h2">The Best Parrot by Use Case</h2>
     <a class="inf" href="/african-grey-pros-and-cons/"><img class="sec-img inf-img" src="/best-parrot-by-use-case-grid.webp" srcset="/best-parrot-by-use-case-grid-760.webp 760w, /best-parrot-by-use-case-grid.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="Best parrot by use case grid for talking, apartments, families and first-time owners" loading="lazy"></a>
+    <p>Search for the best talking parrot, the best apartment parrot or the best first bird and you get a different winner every time — because the right parrot depends entirely on the job you are hiring it for. Here is the honest pick per goal.</p>
     <h3 class="cag-h3">The Honest Pick for Each Goal</h3>
     <p>If you are shopping by need rather than by species, here is the honest pick for each common goal — and the one case where the answer is usually not a Grey at all.</p>
     <div class="use-grid">
@@ -453,6 +475,7 @@ const orgSchema = {
   <section id="pros-cons">
     <h2 class="cag-h2">African Grey Pros and Cons, in Brief</h2>
     <a class="inf" href="/african-grey-pros-and-cons/"><img class="sec-img inf-img" src="/african-grey-pros-and-cons-balance-scale.webp" srcset="/african-grey-pros-and-cons-balance-scale-760.webp 760w, /african-grey-pros-and-cons-balance-scale.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="African Grey owner trade-offs balance weighing talking and bond against time, cost and dander" loading="lazy"></a>
+    <p>Every African Grey we place is a trade: the clearest-talking, most intelligent companion parrot in aviculture, in exchange for real daily demands and a commitment measured in decades. Here is that ledger at its shortest.</p>
     <h3 class="cag-h3">The Honest Trade-Off in Three Lines</h3>
     <p>On the pro side: unmatched talking, child-level intelligence, and a bond that can last decades. On the con side: a 40–60 year commitment, hours of daily attention, powder-down dander, and a bird that plucks or bites when its needs go unmet. Our honest African Grey pros and cons guide weighs both columns in full, with a self-assessment to tell if a Grey actually fits your home.</p>
   </section>
@@ -463,6 +486,7 @@ const orgSchema = {
   <section id="breeder">
     <h2 class="cag-h2">How Do You Choose an African Grey Breeder?</h2>
     <a class="inf" href="/african-grey-parrot-breeders-comparison/"><img class="sec-img inf-img" src="/african-grey-breeder-red-flags-vs-green-flags.webp" srcset="/african-grey-breeder-red-flags-vs-green-flags-760.webp 760w, /african-grey-breeder-red-flags-vs-green-flags.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="African Grey breeder red flags versus green flags for verifying a documented seller" loading="lazy"></a>
+    <p>Picking the breeder is the step where an African Grey purchase goes right or wrong — the bird follows from it. One minute of document-checking separates a licensed aviary from a deposit scam, and this is that minute.</p>
     <h3 class="cag-h3">Verification in One Minute</h3>
     <p>Whichever bird wins your comparison, the seller decides whether you get a healthy, documented parrot or a deposit-and-vanish scam. Ask for the CITES paperwork, a closed leg band, DNA-sexing and PBFD results, and a live video call with the bird — a real breeder produces all four without hesitation. Our guide on how to compare African Grey breeders turns that into a checklist and names the red flags to walk away from.</p>
   </section>
@@ -473,6 +497,7 @@ const orgSchema = {
   <section id="cost">
     <h2 class="cag-h2">What Does an African Grey Cost?</h2>
     <a class="inf" href="/african-grey-parrot-price/"><img class="sec-img inf-img" src="/congo-vs-timneh-price-cost-breakdown-infographic.webp" srcset="/congo-vs-timneh-price-cost-breakdown-infographic-760.webp 760w, /congo-vs-timneh-price-cost-breakdown-infographic.webp 1408w" sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" alt="African Grey price and cost breakdown for Congo and Timneh with shipping tiers" loading="lazy"></a>
+    <p>African Grey prices confuse buyers because scam listings sit in the same search results as real aviaries. These are the honest figures — what a documented Congo or Timneh actually costs from a licensed U.S. breeder, and what a too-good price really means.</p>
     <h3 class="cag-h3">Congo and Timneh Price Ranges</h3>
     <p><a href="/african-grey-parrot-price/">Our full price guide</a> itemizes it bird by bird, but the band is steady: expect $1,700–$3,500 for a documented Congo and $1,500–$1,600 for a Timneh from a licensed U.S. breeder, plus $185 airport or $350 home-delivery shipping, then annual cage, food, enrichment and avian-vet costs. On every species here, a figure that looks impossibly cheap signals a scam rather than a deal.</p>
   </section>
@@ -483,6 +508,7 @@ const orgSchema = {
   <section id="commitment">
     <h2 class="cag-h2">The 40 to 60 Year Commitment</h2>
     <a class="inf" href="/african-grey-parrot-lifespan/"><img class="sec-img inf-img" src="/african-grey-40-60-year-lifespan-timeline.webp" srcset="/african-grey-40-60-year-lifespan-timeline-760.webp 760w, /african-grey-40-60-year-lifespan-timeline.webp 1376w" sizes="(max-width:900px) 92vw, 760px" width="1376" height="768" alt="African Grey lifespan timeline from weaning to sixty years with life-stage milestones" loading="lazy"></a>
+    <p>A healthy African Grey routinely lives forty to sixty years — long enough to outlast careers, homes and sometimes owners. Before any comparison crowns a winner, this is the commitment every one of these parrots asks for.</p>
     <h3 class="cag-h3">Planning Honestly for a Lifetime Bird</h3>
     <p>Every parrot compared here is a long-lived bird, and the Grey is squarely a lifetime commitment — a healthy Grey commonly reaches 40 to 60 years, sometimes beyond. That single line reshapes the decision: it means naming a caretaker, budgeting for decades, and treating the choice as a multi-decade relationship rather than a purchase. Our African Grey lifespan guide covers the succession planning most buyers never think to do.</p>
   </section>
@@ -494,12 +520,12 @@ const orgSchema = {
     <h2 class="cag-h2">Health, Documentation and Shipping</h2>
     <div class="ship-cards">
       <div class="ship-c">
-        <img src="/african-grey-airport-live-animal-shipping.webp" width="640" height="797" alt="Nationwide African Grey shipping by IATA live-animal cargo at the airline cargo desk" loading="lazy">
+        <img src="/african-grey-airport-live-animal-shipping-480.webp" srcset="/african-grey-airport-live-animal-shipping-480.webp 480w, /african-grey-airport-live-animal-shipping.webp 640w" sizes="(max-width:900px) 92vw, 426px" width="640" height="797" alt="Nationwide African Grey shipping by IATA live-animal cargo at the airline cargo desk" loading="lazy">
         <div class="ship-body"><span class="ship-tier">Option 1</span><b>Airport Pickup</b><span class="ship-price">$185</span>
         <p>IATA live-animal cargo on a Delta, United or American flight into your closest airport, documentation folder travelling with the bird</p></div>
       </div>
       <div class="ship-c">
-        <img src="/african-grey-home-delivery-pet-van.webp" width="640" height="426" alt="Climate-controlled African Grey home delivery van for documented nationwide shipping" loading="lazy">
+        <img src="/african-grey-home-delivery-pet-van-480.webp" srcset="/african-grey-home-delivery-pet-van-480.webp 480w, /african-grey-home-delivery-pet-van.webp 640w" sizes="(max-width:900px) 92vw, 426px" width="640" height="426" alt="Climate-controlled African Grey home delivery van for documented nationwide shipping" loading="lazy">
         <div class="ship-body"><span class="ship-tier clay">Option 2</span><b>Home Delivery</b><span class="ship-price">$350</span>
         <p>Door-to-door climate-controlled ground transport, with the paperwork handed to you on arrival</p></div>
       </div>
@@ -551,7 +577,7 @@ const orgSchema = {
       {available.map((b) => (
         <div class="bird-c">
           <a class="bird-photo" href={b.slug} aria-label={`Meet ${b.name}`}>
-            {birdImg[b.id] && <img src={birdImg[b.id].src} width="640" height="480" alt={birdImg[b.id].alt} loading="lazy">}
+            {birdImg[b.id] && <img src={birdImg[b.id].src} srcset={`${birdImg[b.id].src.replace('.webp','-400.webp')} 400w, ${birdImg[b.id].src} 640w`} sizes="(max-width:640px) 92vw, 333px" width="640" height="480" alt={birdImg[b.id].alt} loading="lazy">}
             <span class="bird-badge">{b.variant === 'timneh_african_grey' ? 'Timneh' : 'Congo'} · Available</span>
           </a>
           <div class="bird-body">
@@ -567,7 +593,7 @@ const orgSchema = {
   </section>
 
   <div class="nl-inflow">
-  <Newsletter variant="middle" compact action="https://formspree.io/f/xrejpnvn" eyebrow="Clutch alerts" heading="See Which Greys Open Next" sub="A short heads-up whenever a new documented Grey is ready to reserve." cta="Add my email" img="/bery-congo-african-grey-cuddly-tamed-card.webp" imgAlt="A documented hand-raised African Grey at C.A.Gs in Midland, TX" imgCaption="Midland, TX aviary" note="Clutch updates only." />
+  <Newsletter variant="middle" compact action="https://formspree.io/f/xrejpnvn" eyebrow="Clutch alerts" heading="See Which Greys Open Next" sub="A short heads-up whenever a new documented Grey is ready to reserve." cta="Add my email" img="/spoonfed-african-grey-parrot-baby.webp" imgAlt="Spoon-fed African Grey parrot baby at the C.A.Gs weaning nursery" imgCaption="Spoon-feeding week at the nursery" note="Clutch updates only." />
   </div>
 
   <!-- S21 FAQ -->
@@ -583,23 +609,39 @@ const orgSchema = {
 
   <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
 
-  <!-- S22 EXPLORE EVERY COMPARISON — ItemList grid + CTA + form -->
-  <section id="explore" class="final-cta">
+  <!-- S22 EXPLORE EVERY COMPARISON — ItemList grid -->
+  <section id="explore">
     <h2 class="cag-h2">Explore Every African Grey Comparison</h2>
-    <p>The full cluster, in one place — seven honest head-to-heads, each raising the Grey against a real alternative. Open the one your decision needs; when you are ready to reserve, the form below reaches us directly.</p>
+    <p>The full cluster, in one place — seven honest head-to-heads, each raising the Grey against a real alternative. Whether you searched "African Grey vs macaw", "Congo or Timneh", or "should I get a male or female Grey", one of these cards answers the exact question you brought here. Open the one your decision needs.</p>
     <div class="spoke-grid">
       {spokes.map((s) => (
         <a class="spoke-c" href={s.href}>
-          <img src={s.img} width="480" height="270" alt={s.alt} loading="lazy">
+          <img src={s.img} srcset={`${s.img.replace('.webp','-260.webp')} 260w, ${s.img} 480w`} sizes="(max-width:640px) 92vw, 253px" width="480" height="270" alt={s.alt} loading="lazy">
           <div class="spoke-body"><h3 class="spoke-t">{s.title}</h3><p class="spoke-b">{s.blurb}</p><span class="spoke-go">Open comparison →</span></div>
         </a>
       ))}
     </div>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S23 FURTHER READING — own H2, no longer welded to the form -->
+  <section id="reading">
+    <h2 class="cag-h2">Where Should You Read Deeper After Comparing?</h2>
+    <p>Our aviary library carries the answers a head-to-head can't hold. Once a comparison points you at a Grey, these three guides cover what owning one actually looks like — how smart the species really is, what daily care involves across a 40–60 year life, and what a documented bird truly costs beyond the sticker price.</p>
     <div class="blog-cards read-cards">
       {readCards.map((c) => (
-        <a class="blog-c" href={c.href}><img src={c.img} width="420" height="236" alt={c.alt} loading="lazy"><div class="blog-body"><span class="blog-tag">{c.tag}</span><h3 class="blog-t">{c.title}</h3></div></a>
+        <a class="blog-c" href={c.href}><img src={c.img} srcset={`${c.img.replace('.webp','-260.webp')} 260w, ${c.img} 420w`} sizes="(max-width:640px) 92vw, 253px" width="420" height="236" alt={c.alt} loading="lazy"><div class="blog-body"><span class="blog-tag">{c.tag}</span><h3 class="blog-t">{c.title}</h3></div></a>
       ))}
     </div>
+  </section>
+
+  <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy"></div>
+
+  <!-- S24 INQUIRY — own H2 + opening paragraph, separate from the reading cards -->
+  <section id="reserve" class="final-cta">
+    <h2 class="cag-h2">Ready to Reserve the Grey Your Comparison Chose?</h2>
+    <p>Here at C.A.Gs, every inquiry lands with Mark or Teri directly — no call centre, no auto-responder. Tell us which Grey your comparison pointed to (or that you're still weighing the field) and we'll reply within 24 hours with current availability, the full documentation folder, and honest guidance if a different bird actually fits your home better.</p>
     <form class="cta-form" name="comparison-hub-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
       <input type="hidden" name="form-name" value="comparison-hub-inquiry" />
       <p class="hp"><label>Leave this field empty: <input name="bot-field" /></label></p>
@@ -725,7 +767,7 @@ const orgSchema = {
 .cs+.cs{border-left:1px solid rgba(255,255,255,.18)}
 .counter-row b{font-family:'Newsreader',serif;font-size:1.4rem;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
 .cs-l{font-size:.8rem;font-weight:500;opacity:.9;line-height:1.3;letter-spacing:.01em}
-.cvt-rail{position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.97);backdrop-filter:blur(6px);border-top:3px solid var(--clay-ink);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);display:none}
+.cvt-rail{position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.985);border-top:3px solid var(--clay-ink);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);display:none}
 .rail-row{display:flex;gap:8px;overflow-x:auto;padding-top:12px;padding-bottom:12px;scrollbar-width:none}
 .rail-row::-webkit-scrollbar{display:none}
 .rail-row a{display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap;font-size:.78rem;padding:8px 14px;border-radius:50px;text-decoration:none;color:var(--f);background:#fff;border:1px solid var(--bd);transition:border-color .2s,color .2s}
@@ -833,6 +875,44 @@ const orgSchema = {
 .score-tbl tr:last-child td{border-bottom:none}
 .score-tbl tr:nth-child(even) td{background:var(--cream)}
 .score-tbl .sc{font-weight:700;color:var(--f)}
+/* — master matrix v2: icon lockups + tier chips — */
+.matrix-tbl td{vertical-align:middle;padding:11px 12px}
+.matrix-tbl .num{font-variant-numeric:tabular-nums;white-space:nowrap;color:#3a332c}
+.sp-cell{display:flex;align-items:center;gap:10px;text-decoration:none!important;color:inherit}
+.sp-ic{flex:none;width:34px;height:34px;border-radius:50%;background:var(--cream);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--f)}
+.sp-ic img{width:24px;height:24px;object-fit:contain}
+.sp-id{display:flex;flex-direction:column;gap:1px;min-width:0}
+.sp-id b{font-family:'Newsreader',serif;font-size:.98rem;line-height:1.2;color:#2a2622}
+.sp-id small{font-size:.72rem;color:#7a6f64;line-height:1.25}
+tr:hover .sp-id b{color:var(--clay-t)}
+.tier{display:inline-block;border-radius:50px;padding:3px 11px;font-size:.76rem;font-weight:600;line-height:1.35;white-space:nowrap;border:1px solid transparent}
+.tier-note{display:block;margin-top:3px;font-size:.72rem;color:#7a6f64}
+.t-top{background:#eaf4ef;color:#1f4d39;border-color:#cfe4d9}
+.t-good{background:#fff;color:#3a332c;border-color:var(--bd)}
+.t-fair{background:#f4efe9;color:#57534e;border-color:#e7ddd3}
+.n-low{background:#eaf4ef;color:#1f4d39;border-color:#cfe4d9}
+.n-mid{background:#fff;color:#3a332c;border-color:var(--bd)}
+.n-loud{background:#fdeeea;color:#b04228;border-color:#f0c4b7}
+.b-mid{background:#fff;color:#3a332c;border-color:var(--bd)}
+.b-adv{background:#fdeeea;color:#b04228;border-color:#f0c4b7}
+/* — best-talker rank list — */
+.rank-list{list-style:none;margin:0 0 16px;padding:0;max-width:680px}
+.rk{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:12px 16px;margin-bottom:9px;box-shadow:0 3px 12px rgba(60,30,10,.05)}
+.rk-n{flex:none;font-family:'Newsreader',serif;font-weight:700;font-size:1.25rem;color:#c9beb2;font-variant-numeric:tabular-nums;width:34px;text-align:center}
+.rk-ic{flex:none;width:36px;height:36px;border-radius:50%;background:var(--cream);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:#7a6f64}
+.rk-ic img{width:25px;height:25px;object-fit:contain}
+.rk-id{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rk-bird{font-family:'Newsreader',serif;font-size:1.05rem;color:#2a2622;line-height:1.25;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rk-badge{font-style:normal;font-family:'IBM Plex Sans',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:var(--f);color:#fff;border-radius:50px;padding:3px 10px}
+.rk-note{font-size:.85rem;color:#57534e;line-height:1.45}
+.rk-top{border-color:#cfe4d9;background:linear-gradient(135deg,#f4faf7,#fff 60%);box-shadow:0 6px 18px rgba(45,106,79,.1)}
+.rk-top .rk-n{color:var(--f)}
+.rk-top .rk-ic{background:#eaf4ef;border-color:#cfe4d9}
+@media(max-width:640px){
+  .rk{gap:10px;padding:11px 13px}
+  .rk-n{width:24px;font-size:1.05rem}
+  .rk-ic{width:32px;height:32px}
+}
 @media(max-width:640px){
   .tbl-wrap.plain{border:none;box-shadow:none;border-radius:0;max-width:none;overflow:visible}
   .score-tbl,.score-tbl tbody,.score-tbl tr,.score-tbl td{display:block;width:auto}
