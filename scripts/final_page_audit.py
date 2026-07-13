@@ -313,7 +313,7 @@ BIRDS = ["available/bery","available/amie","available/roys",
 COMPARISONS = ["african-grey-comparison","congo-vs-timneh-african-grey",
                "male-vs-female-african-grey-parrots-for-sale","african-grey-vs-macaw",
                "african-grey-vs-cockatoo","african-grey-vs-amazon-parrot",
-               "african-grey-parrot-breeders-comparison"]
+               "african-grey-parrot-breeders-comparison","african-grey-pros-and-cons"]
 
 def blog_targets():
     """Discover the /blog/ hub (dist/blog/index.html) + every dist/blog/<slug>/ post."""
