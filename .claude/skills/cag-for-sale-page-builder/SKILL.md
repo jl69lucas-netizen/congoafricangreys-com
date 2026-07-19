@@ -82,6 +82,7 @@ Link-First anchors (sentence START, never mid/end; branded ACTION anchors on CTA
 
 ## 5. Component map (for-sale set — approved via visual companion, Task 5 of the plan)
 
+- **LOCKED 2026-07-19:** ALL Task-5 designs approved — recommended picks are defaults, alternates rotate per page; full assignment table + rotation rules + per-page tuple ledger live in `sessions/2026-07-19-for-sale-component-map.md` (binding).
 - **5 Heroes** (assign per cluster, breeder-approved table in `sessions/2026-07-19-for-sale-component-map.md`): Hero-A Scattered Flock (Polaroid scatter) · Hero-C Mosaic Metrics (stats strip + mosaic) · Split-Hero A (image left + trust ribbon) · Split-Hero B (full-bleed warm gradient) · Split-Hero C (dark + photo grid). ~400px-class heights, hero staggered sizing rules apply.
 - **Dial TOC (desktop) + jump-rail (mobile)** — same mechanics as comparison pages, NEW for-sale style (distinct accent/motif; scroll-margin offset for the mobile rail; `scroll-behavior: auto`).
 - **TOC + KeyTakeaway** — 3 breeder-approved NEW designs each (picked from 5), completely different from cag-toc-v1/v2/v3 + cag-key-takeaway-v2.
