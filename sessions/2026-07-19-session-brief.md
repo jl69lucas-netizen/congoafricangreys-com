@@ -26,7 +26,8 @@
 - Q2 specifics still needed at OUTLINE stage (not blocking): exact replacement-vs-refund wording · carrier + promised transit window · eggs-per-season count for honest availability line. Draft uses safe true phrasing; exact terms confirmed before publish (Ledger).
 - Scam-module flag #04 rewording (site-wide) must ship with or before the egg page
 - Bing Webmaster Queries export still missing (two supplied CSVs were date-series charts)
-- Hero images/infographics for egg page not yet dropped by breeder
+- Hero images/infographics for egg page not yet dropped by breeder — PROMPT SHEET DELIVERED: docs/research/for-sale-egg-image-prompts-2026-07.md (10 images: 5 infographic + 5 OG). Build gate: breeder generates + drops ALL 10, then says 'start'.
+- H1 pick still pending (5 variants offered; V1 recommended)
 
 ---
 <!-- Synthesized fields below are filled in at finalization, from the Q&A Log above. -->
