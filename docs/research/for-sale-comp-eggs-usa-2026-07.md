@@ -33,7 +33,11 @@ The entire legitimate-aviculture layer of this SERP (25-yr breeder cpbirds, Redd
 How do C.A.Gs egg sales actually work?
 - **A (Recommended): Local/serious-buyer model** — eggs go only to local pickup (Midland 2–3 hr radius) and/or experienced/licensed breeders, no parcel-shipped eggs to first-time hobbyists, honest fertility disclosure (candling at day X, no "100% hatch" claims). WHY: it's the only version that beats the SERP *because* it's verifiably different from the 9 scam results, keeps the scam-module consistent (we can say "shipped-egg listings are the scam — here's how real egg transfer works"), and is CITES/Ledger-safe. Trade-off: turns away parcel-egg buyers (who are the scam victims anyway).
 - B: We do ship eggs nationwide — then the page must document the exact packaging/viability method, honest hatch-rate expectations, and refund terms, and we must reconcile the scam module's flag #04 wording.
-The section matrix below is built for A; §6 notes the deltas if B.
+**RESOLVED by breeder 2026-07-19: Model B — C.A.Gs ships fertile eggs nationwide.** Binding consequences for the build:
+1. The page MUST document the real packaging/shipping method (insulated carton, temperature control, transit window), the candling-verification step before dispatch, **honest hatch-rate expectations (never "100% fertile" / "guaranteed hatch" — those are the scam tells we call out)**, and the written refund/replacement terms.
+2. **Cross-site reconciliation task:** the live 12-red-flags scam module (flag #04 "'Parrot eggs for sale' — virtually always a scam") must be reworded to target the fake-farm pattern specifically (anonymous farms, flat multi-species pricing, free-cage offers, no verifiable license) so the site doesn't contradict itself. Applies wherever that module ships (comparison/scam cluster). Add to the egg-page build checklist.
+3. Differentiation stays the moat: we are the documented, verifiable exception — USDA lookup walkthrough, dated candling video on request, named breeding pairs.
+Matrix below updated for Model B.
 
 ## 5. Keyword universe (GSC-real + model doc)
 - **GSC bucket (74 queries, all pos 60–92, 0 CTR = pure upside):** african grey parrot egg price (41 impr) · african gray parrot eggs price (28) · african grey eggs for sale near me (17) · fertilized african grey eggs for sale (17) · african grey parrot eggs for sale (17) · fertile exotic bird eggs for sale · hatching parrot eggs for sale · +67 more in `docs/research/for-sale-keywords-2026-07.md`.
@@ -45,8 +49,9 @@ The section matrix below is built for A; §6 notes the deltas if B.
 ## 6. Section matrix (A/B/C — for breeder approval; built for offer-model A)
 **MANDATORY CORE (A):**
 1. Hero (Split-Hero C dark — trust register) with honest offer statement + price
-2. The offer: what we actually sell + who qualifies + price + Midland pickup line
-3. Why most "eggs for sale" listings are scams — and how we're verifiably different (bridges scam cluster; our moat)
+2. The offer: fertile eggs shipped nationwide — price, what's included, candling-before-dispatch, honest hatch expectations, refund/replacement terms, + Midland pickup line
+3. How to tell a real egg program from a fake farm — and how to verify ours (bridges scam cluster; our moat; replaces the old blanket "eggs = scam" framing per Model B reconciliation)
+3b. How we pack & ship eggs (insulated packaging, transit window, what arrival day looks like)
 4. Our breeding pairs behind the eggs (real pairs, Ledger-bounded)
 5. Fertility verification: candling proof, dated video on request
 6. Incubation reality: 28–30 days, temp/humidity/turning, honest difficulty
