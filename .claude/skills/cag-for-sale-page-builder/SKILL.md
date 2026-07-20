@@ -100,6 +100,32 @@ Link-First anchors (sentence START, never mid/end; branded ACTION anchors on CTA
 4. First-person voice sweep + anti-ai-writing pass + non-commodity check.
 5. Verify in `dist/`, never source greps. Commit + push = deploy; work on `main` only.
 
+## 6a. Component fidelity — the recurring mistake (LOCKED 2026-07-20, egg-page v3)
+
+The breeder caught v2 of the egg page shipping **homepage/comparison components** instead of the for-sale kit. Binding rules so it never repeats:
+
+- **The for-sale cluster has its OWN kit** at `assets/1WORKING-ON/FOR-SALE-PAGES/`. Read `FOR-SALE-PAGES:components-NAMES.md` (full text of every component) + inspect the PNGs in `component-designs/` before building. NEVER import `NewsletterV2` / the comparison hero / green counter strip / comparison small-logo seam on a for-sale page.
+- **Hero** = the cluster's assigned kit hero (egg page = **Split-Hero C dark charcoal card + 2×2 photo grid**; small clay eyebrow like the homepage, serif headline with clay `<em>` accent, clay pill + dark ghost CTAs, green-check trust chips). Not a light green split.
+- **Counter** = for-sale **outlined stat cards** on cream (Newsreader clay numbers), NOT the green comparison strip.
+- **Bird listing** = **Avail-B sticky sidebar filter** (`.availB` = `grid 200px 1fr`; browse-by rail with live counts from `clutch-inventory.json` + `$185/$350` mini; 3-col cards: category badge top-left color-keyed, green avail dot top-right, serif UPPERCASE name, clay price, full-width "Inquire about X"; JS filter toggles `.hide`). Stacks to a chip strip ≤980px.
+- **FAQ** = one of the 3 kit styles (egg page = **FAQ-C dark badge-numbered** `.faqC`, doubles as anti-scam "if a seller can't answer these, walk away").
+- **Newsletter** = for-sale `.fs-nl` (banner + split variants), placed **contextually** (egg page: egg-list banner after the candling/proof section, chick-alert split after egg-vs-chick) — never a NewsletterV2 top+bottom bookend.
+- **Contact form** = kit two-column: dark `.form-side` panel listing EVERY reservable bird/egg/pair + price (from inventory) beside a modern form (interest select, first/last name, cell, email, delivery select incl. Midland pickup, message).
+- **Video** = `.fs-video` framed component (aviary tag + caption), not a bare `<video>`.
+- **Dial** must WORK: conic ring uses `--p` var updated by an IntersectionObserver scroll-spy that also highlights the active dial/rail item + updates the `x of N` counter. A static ring reads as "broken."
+- **Seam** = new for-sale wordmark divider from `assets/brand/NEW-FOOTER-LOGO copy.png` (→ `public/cag-fs-seam-emblem.webp`): two clay gradient rules + centered wordmark + tiny "Midland, TX" tag. NOT the comparison circular-emblem seam.
+- **Mobile images** = full-bleed edge-to-edge (`width:100vw; margin-left:calc(50% - 50vw)`), with `overflow-x:clip` on the page root so no horizontal scroll. Desktop keeps the uniform 16:9 `.sec-img` box.
+- **Mandatory sections** beyond TOC/KeyTakeaway/shipping: a **blog/resources "Keep reading" section** (`.read-cards`, real thumbnails cut from infographics, 2-up) picking the contextually-relevant blog/resource pages, AND a location-aware shipping block linking real `/african-grey-parrot-for-sale-<state>/` pages.
+- **Every header** gets a conversational opening paragraph (long-form question / LSI). **GEO fact tables** (Markdown-style `.otA` tables — e.g. incubation metrics 99.5°F/humidity/turning + incubation-day→milestone) signal authority to answer engines.
+
+### Meta — extended 3-part format (ALL for-sale pages, ≤280 char title)
+- **Title:** `Primary Keyword | Related Conversational Query | Number + Positive Word | Brand — LSI/NLP Keywords` (extend toward 280, never past).
+- **Description:** `Primary Benefit | Secondary Benefit | Trust Signal + CTA` (≤300).
+
+### Two shipping image-gen prompts (reusable across for-sale pages)
+- **Airport (Tier 1 · $185):** "Photoreal IATA-approved live-animal airline cargo crate holding a calm captive-bred African Grey, at a Delta/United cargo counter under warm terminal light; ventilated door, water cup, C.A.Gs handling label; shallow depth of field, no logos of other brands, no text overlay, 16:9."
+- **Home delivery (Tier 2 · $350):** "Photoreal climate-controlled pet courier van at a suburban front door, a uniformed handler passing a soft-sided African Grey carrier + a document folder to a smiling family; golden-hour light, warm terracotta grade, no visible brand logos, no text overlay, 16:9."
+
 ## 7. Egg Rule (page 1 special mode — breeder-flagged)
 
 `/african-grey-parrot-bird-eggs-for-sale-usa/` builds as a **truth-forward hybrid**, never a literal egg-sales page: rank for the full egg keyword universe incl. `psittacus erithacus egg`; open with the honest breeder position (why we don't ship loose fertile eggs to hobby incubators; why ~all egg listings are fraud — our own scam module says so); demonstrate real incubation/candling expertise as EEAT; convert to hatching-reservation/weaned-chick inquiries. Keeps rankings + anti-scam authority; consistent with CITES Appendix I framing and the Verified-Claim Ledger.
