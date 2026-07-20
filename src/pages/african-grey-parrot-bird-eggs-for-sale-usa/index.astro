@@ -33,14 +33,27 @@ const birdImg: Record<string, { src: string; alt: string }> = {
 };
 const docBadges = ["CITES Cert", "PCR DNA-Sexed", "Vet Certified", "PBFD & APV Screened", "Fully Weaned"];
 
-// Egg-page ship anchors — unique labels, distinct from the comparison cluster's set
+// Short per-bird card blurbs + trust chips (real, Ledger-safe facts only)
+const birdBlurb: Record<string, string> = {
+  "bery": "Cuddly, fully tamed young hen who settles on a lap within minutes.",
+  "amie": "Hand-fed baby hen, gently socialized on our shoulders since hatch.",
+  "roys": "Confident, playful young male who thrives in busy family homes.",
+  "jins-jeni": "Companion pair raised side by side — they rehome together.",
+  "elad": "Steady young Timneh male, already easy to handle and harness-curious.",
+  "evie": "Calm, sweet Timneh hen with the classic horn-colored beak.",
+};
+const cardChips = ["DNA-sexed", "Vet certificate", "PCR screened"];
+
+// Egg-page ship anchors — every label ENDS with the state/city; each href is a live location page
 const shipPlaces = [
-  { href: "/african-grey-parrot-for-sale-florida/", label: "Florida egg buyers" },
-  { href: "/african-grey-parrot-for-sale-north-carolina/", label: "North Carolina hatching-egg keepers" },
-  { href: "/african-grey-parrot-for-sale-texas/", label: "Texas local egg pickup" },
-  { href: "/african-grey-parrot-for-sale-georgia/", label: "Georgia incubator homes" },
-  { href: "/african-grey-parrot-for-sale-ohio/", label: "Ohio breeder shipments" },
-  { href: "/african-grey-parrot-for-sale-pennsylvania/", label: "Pennsylvania cargo route" },
+  { href: "/african-grey-parrot-for-sale-texas/", label: "African Grey eggs for sale Texas", note: "Local pickup near Midland" },
+  { href: "/african-grey-parrot-for-sale-florida/", label: "Fertile parrot eggs shipped to Florida", note: "Our busiest egg route" },
+  { href: "/african-grey-parrot-for-sale-north-carolina/", label: "African Grey hatching eggs North Carolina", note: "Insulated carton + heat pack" },
+  { href: "/african-grey-parrot-for-sale-georgia/", label: "Parrot egg delivery Georgia", note: "Overnight-priority routing" },
+  { href: "/african-grey-parrot-for-sale-ohio/", label: "Fertile African Grey eggs Ohio", note: "Cold-season heat packs" },
+  { href: "/african-grey-parrot-for-sale-pennsylvania/", label: "African Grey egg shipping Pennsylvania", note: "Carrier confirmed pre-dispatch" },
+  { href: "/african-grey-parrot-for-sale-houston/", label: "African Grey parrot eggs Houston", note: "Same-state, shortest transit" },
+  { href: "/african-grey-parrot-for-sale-new-york/", label: "Fertile grey eggs to New York", note: "Airport cargo hub route" },
 ];
 
 // Real reviews only (verified homepage bottomReviews set)
@@ -78,12 +91,12 @@ const filterCats = [
 ];
 const catFor = (b: any) => (b.sex === "pair" ? "bonded" : b.variant === "timneh_african_grey" ? "timneh" : "congo");
 
-// Hero 2×2 photo grid (Split-Hero C) — 4 distinct egg/chick photos
+// Hero 2×2 photo grid (Split-Hero C) — 4 distinct egg/chick photos, per-image focal point so nothing crops out
 const heroGrid = [
-  { src: IMG + "real-african-grey-eggs-for-sale-hen-nest.webp", alt: "Fertile African Grey parrot eggs under a brooding hen in our Texas nest box" },
-  { src: IMG + "candling-african-grey-egg-fertility-stages.webp", alt: "Candling an African Grey egg reveals veins and the developing embryo" },
-  { src: IMG + "african-grey-hatchlings-nest-box-aviary.webp", alt: "African Grey hatchlings feathering out in the aviary nest box" },
-  { src: IMG + "cuddly-hand-raised-african-grey-baby.webp", alt: "A cuddly hand-raised African Grey baby, the outcome behind every fertile egg" },
+  { src: IMG + "real-african-grey-eggs-for-sale-hen-nest.webp", pos: "center 45%", alt: "Fertile African Grey parrot eggs under a brooding hen in our Texas nest box" },
+  { src: IMG + "candling-african-grey-egg-fertility-stages.webp", pos: "center", alt: "Candling an African Grey egg reveals veins and the developing embryo" },
+  { src: IMG + "african-grey-hatchlings-nest-box-aviary.webp", pos: "center 35%", alt: "African Grey hatchlings feathering out in the aviary nest box" },
+  { src: IMG + "cuddly-hand-raised-african-grey-baby.webp", pos: "center 30%", alt: "A cuddly hand-raised African Grey baby, the outcome behind every fertile egg" },
 ];
 
 // GEO fact tables (AI/answer-engine dense) — incubation metrics + day→milestone
@@ -175,7 +188,7 @@ const seam = "/cag-fs-seam-emblem.webp";
       <div class="hero-card">
         <p class="eyebrow">Est. 2014 · Midland, TX · USDA-licensed</p>
         <h1 class="cag-h1">Can I <em>safely</em> buy fertile African Grey parrot eggs for sale in the USA?</h1>
-        <p class="lead">Here at C.A.Gs we ship fertile African Grey parrot eggs nationwide for $95 each — candled before they leave, traced to named breeding pairs we photograph on this page, and sold on honest hatch terms. No "guaranteed hatch," no anonymous farm, just a USDA-licensed breeder you can verify in a minute.</p>
+        <p class="lead">Here at C.A.Gs we ship fertile African Grey parrot eggs nationwide for $95 each — candled before they leave, traced to named breeding pairs, and sold on honest hatch terms. No "guaranteed hatch," no anonymous farm — a USDA-licensed breeder you can verify in a minute.</p>
         <div class="hero-cta">
           <a class="btn-clay" href="#reserve">Reserve fertile eggs &rarr;</a>
           <a class="btn-ghost" href="#scam">Is this a scam? Read first</a>
@@ -185,11 +198,12 @@ const seam = "/cag-fs-seam-emblem.webp";
         </ul>
       </div>
       <div class="hero-imgs">
-        {heroGrid.map((g, i) => (
+        {heroGrid.map((g) => (
           <img src={g.src}
             srcset={g.src.replace('.webp', '-760.webp') + " 760w, " + g.src + " 1408w"}
             sizes="(max-width:900px) 46vw, 300px" width="704" height="384"
-            fetchpriority={i === 0 ? "high" : undefined} loading={i === 0 ? "eager" : "lazy"} decoding="async" alt={g.alt} />
+            style={`object-position:${g.pos}`}
+            fetchpriority="high" loading="eager" decoding="async" alt={g.alt} />
         ))}
       </div>
     </div>
@@ -268,7 +282,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>We are C.A.Gs (Congo African Greys), owned by Mark &amp; Teri Benjamin, a family aviary in Midland, TX 79707, operating since 2014. That NAP is the one on our USDA record and our <a href="/contact-us/">contact page</a> — if a listing's details don't match its paperwork, that's your answer.</p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 2 · COST -->
       <section id="cost">
@@ -303,7 +317,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <img class="sec-img inf-img" src={IMG + "fertile-african-grey-eggs-ready-for-incubator.webp"} srcset={IMG + "fertile-african-grey-eggs-ready-for-incubator-760.webp 760w, " + IMG + "fertile-african-grey-eggs-ready-for-incubator.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="A small 2–4 egg clutch of cream fertile African Grey eggs ready for the incubator" />
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 3 · NURSERY + VIDEO -->
       <section id="nursery">
@@ -315,7 +329,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>Press play on our own aviary footage — no narration, no stock clips, just our African Grey chicks during hand-rearing. It's the clearest answer to "are these real birds?" that we can give you before you ever reach out.</p>
         <figure class="fs-video">
           <div class="fs-video-frame">
-            <video controls preload="none" width="1408" height="768" poster={IMG + "cags-african-grey-chicks-video-poster.webp"}>
+            <video controls preload="none" width="1408" height="768" poster={IMG + "cags-african-grey-chicks-video-poster-760.webp"}>
               <source src={IMG + "cags-african-grey-chicks-hand-rearing.mp4"} type="video/mp4" />
               Your browser doesn't support embedded video — the clip shows our African Grey chicks being hand-reared at C.A.Gs.
             </video>
@@ -332,7 +346,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>If an incubator isn't your world, our African Grey hatchlings grow into the weaned chicks listed further down this page. Buyers searching for hatchlings for sale usually want the outcome of an egg without the risk — and that outcome already lives in our nursery.</p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 4 · BREEDING PAIRS -->
       <section id="pairs">
@@ -350,7 +364,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>Our breeding birds are PCR-screened for PBFD (Psittacine Beak and Feather Disease) and Avian Polyomavirus, with negatives required before placement, so the genetics behind your egg come from a health-tested foundation. It's the same screening standard behind every hand-raised chick we place.</p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 5 · CANDLING -->
       <section id="candling">
@@ -371,7 +385,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>In Teri's words, she candles in a darkened room, blunt-end up, and re-checks anything ambiguous a few days later rather than guessing — patience beats optimism with a developing egg. It's the same careful eye she brings to every clutch we hatch here.</p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <aside class="fs-nl banner" aria-label="Fertile egg clutch signup">
         <div class="fs-nl-inner">
@@ -385,7 +399,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         </div>
       </aside>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 6 · INCUBATION -->
       <section id="incubation">
@@ -403,17 +417,20 @@ const seam = "/cag-fs-seam-emblem.webp";
           </table>
         </div>
 
-        <!-- Hatching Success Checklist -->
-        <div class="k4" role="note" aria-label="Hatching success checklist">
-          <p class="k4-title">Hatching-success checklist — what a fertile clutch needs</p>
-          <ul>
-            <li>Calibrated forced-air incubator holding 99.5°F before the eggs go in</li>
-            <li>Humidity 45–50% through day 25, raised to 65–70% for hatch</li>
-            <li>Automatic turning 5–7× daily until day 25, then turning off</li>
-            <li>Candle at day 5, 10 and 18 — pull any clear eggs, never guess</li>
-            <li>Hands-off at pip: let the chick zip over 24–72 hours on its own</li>
-            <li>Brooder + hand-feeding formula ready for a round-the-clock day-one chick</li>
-          </ul>
+        <!-- Hatching Success Checklist — modern numbered grid -->
+        <div class="chkB" role="note" aria-label="Hatching success checklist">
+          <div class="chkB-head">
+            <p class="chkB-eyebrow">Before you set a single egg</p>
+            <p class="chkB-title">Hatching-success checklist — what a fertile clutch needs</p>
+          </div>
+          <ol class="chkB-grid">
+            <li><b>Calibrated incubator</b><span>Forced-air, holding a stable 99.5°F before the eggs go in</span></li>
+            <li><b>Managed humidity</b><span>45–50% through day 25, raised to 65–70% for hatch</span></li>
+            <li><b>Automatic turning</b><span>5–7× daily until day 25, then turning off completely</span></li>
+            <li><b>Candling schedule</b><span>Check day 5, 10 and 18 — pull any clear eggs, never guess</span></li>
+            <li><b>Hands-off at pip</b><span>Let the chick zip over 24–72 hours on its own</span></li>
+            <li><b>Brooder standing by</b><span>Formula + heat ready for a round-the-clock day-one chick</span></li>
+          </ol>
         </div>
 
         <h3 class="cag-h3">The 28–30 day reality — incubation day by developmental milestone</h3>
@@ -437,7 +454,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>Our timeline figures track published avian sources such as <a href="https://birdsoftheworld.org/" target="_blank" rel="noopener">Cornell's Birds of the World</a> and peer-reviewed breeding-biology literature, not marketing copy. We cite them so you can check the numbers against science rather than take our word.</p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 7 · SHIPPING -->
       <section id="shipping">
@@ -469,14 +486,20 @@ const seam = "/cag-fs-seam-emblem.webp";
           </div>
         </div>
         <h4 class="cag-h4">Where do our greys and eggs go most often?</h4>
-        <p>These routes cover much of what leaves Midland in a season, and our full <a href="/buy-african-grey-parrots-with-shipping/">African Grey shipping process</a> lives on its own page. Each pill goes to that area's availability page:</p>
-        <ul class="ship-places">
-          {shipPlaces.map((s) => (<li><a href={s.href}><svg class="pin" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>{s.label}</span></a></li>))}
-        </ul>
+        <p>These routes cover much of what leaves Midland in a season, and our full <a href="/buy-african-grey-parrots-with-shipping/">African Grey shipping process</a> lives on its own page. Each route card opens that area's availability page:</p>
+        <div class="geo-cards">
+          {shipPlaces.map((s) => (
+            <a class="geo-c" href={s.href}>
+              <span class="geo-pin" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+              <span class="geo-body"><span class="geo-kw">{s.label}</span><span class="geo-note">{s.note}</span></span>
+              <span class="geo-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          ))}
+        </div>
         <p class="ship-line">Ships nationwide · $185 airport · $350 home</p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 8 · EGG VS CHICK -->
       <section id="egg-vs-chick">
@@ -532,9 +555,15 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">What does every C.A.Gs bird leave with?</h3>
         <p>The document folder is the same across every companion bird we place, and it's exactly what a fake listing can't assemble. Here's the stack that travels with a reserved chick:</p>
-        <div class="health-card">
-          <div class="hc-head">Every grey leaves with</div>
-          <ul class="hc-list"><li>PBFD (Beak &amp; Feather Disease) PCR screening</li><li>Avian Polyomavirus PCR screening</li><li>DNA sexing certificate</li><li>Avian-vet health certificate</li><li>Hatch certificate + closed leg band</li></ul>
+        <div class="doc-stack" role="group" aria-label="Documents every C.A.Gs grey leaves with">
+          <p class="ds-title">Every grey leaves with</p>
+          <ol class="ds-list">
+            <li><b>PBFD PCR screening</b><span>Psittacine Beak &amp; Feather Disease — negative required</span></li>
+            <li><b>Avian Polyomavirus PCR</b><span>Second core psittacine screen, same lab standard</span></li>
+            <li><b>DNA sexing certificate</b><span>Lab-confirmed male or female, in writing</span></li>
+            <li><b>Avian-vet health certificate</b><span>Issued just before travel day</span></li>
+            <li><b>Hatch certificate + closed band</b><span>Traceable to our aviary and clutch</span></li>
+          </ol>
         </div>
 
         <h4 class="cag-h4">PBFD &amp; Polyomavirus PCR screening</h4>
@@ -544,7 +573,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>Reserved chicks carry a written health guarantee — full terms live on our <a href="/african-greys-for-sale-with-health-guarantee/">African Grey health guarantee page</a>. It covers the bird you can hold and vet-check; an egg's outcome depends on your incubator, which is the honest reason eggs are sold as-is to experienced breeders.</p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 10 · LEGAL -->
       <section id="legal">
@@ -565,7 +594,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>The species moved up to <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">CITES Appendix I</a> at CoP17 — effective January 2017, a tightening from its former Appendix II listing — per the Convention's own records. We reference the source so the status is verifiable, not just stated.</p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 11 · AVAILABLE -->
       <section id="available">
@@ -603,6 +632,8 @@ const seam = "/cag-fs-seam-emblem.webp";
                   <div class="availB-body">
                     <h3 class="availB-name"><a href={b.slug}>{b.name}</a></h3>
                     <p class="availB-meta">{meta}</p>
+                    {birdBlurb[b.id] && <p class="availB-blurb">{birdBlurb[b.id]}</p>}
+                    <ul class="availB-chips">{cardChips.map((c) => (<li>{c}</li>))}</ul>
                     <span class="availB-price">{b.price_display}</span>
                     <a class="btn-clay availB-btn" href="#reserve">Inquire about {b.name}</a>
                   </div>
@@ -612,12 +643,14 @@ const seam = "/cag-fs-seam-emblem.webp";
 
             <article class="availB-c" data-cat="breeding">
               <a class="availB-photo" href="/african-grey-breeding-pair-for-sale/" tabindex="-1">
-                <img src={IMG + "congo-african-grey-breeding-pair-nest-box.webp"} width="400" height="300" loading="lazy" decoding="async" alt="Bonded proven-producer Congo African Grey breeding pair at the nest box" />
+                <img src={IMG + "african-grey-breeding-pair-sale-nearby-cage.jpg.webp"} width="400" height="300" loading="lazy" decoding="async" alt="Proven-producer African Grey breeding pair perched beside their cage" />
                 <span class="availB-badge breeding">Breeding Pair</span><span class="availB-dot" title="Available"></span>
               </a>
               <div class="availB-body">
                 <h3 class="availB-name"><a href="/african-grey-breeding-pair-for-sale/">Proven-Producer Pair</a></h3>
                 <p class="availB-meta">DNA-certified · actively producing</p>
+                <p class="availB-blurb">Bonded, mature pair with a real clutch history in our aviary.</p>
+                <ul class="availB-chips"><li>DNA-certified</li><li>Proven clutches</li><li>PCR screened</li></ul>
                 <span class="availB-price">$3,000</span>
                 <a class="btn-clay availB-btn" href="/african-grey-breeding-pair-for-sale/">See the pair</a>
               </div>
@@ -631,6 +664,8 @@ const seam = "/cag-fs-seam-emblem.webp";
               <div class="availB-body">
                 <h3 class="availB-name"><a href="#reserve">Candled Fertile Eggs</a></h3>
                 <p class="availB-meta">Confirmed developing · free US ship on 5</p>
+                <p class="availB-blurb">Candled before dispatch, from our named Congo lines.</p>
+                <ul class="availB-chips"><li>Candled proof</li><li>Named pairs</li><li>CITES App. I</li></ul>
                 <span class="availB-price">$95 each</span>
                 <a class="btn-clay availB-btn" href="#reserve">Reserve eggs</a>
               </div>
@@ -644,7 +679,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="ctr"><a class="btn-clay" href="/available/">See all available African Greys</a></p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 12 · STORIES -->
       <section id="stories">
@@ -664,7 +699,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         </div>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 13 · HOW WE COMPARE -->
       <section id="compare">
@@ -685,7 +720,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>Strip away the marketing and it comes down to a single sentence: we can be verified and they cannot. A named USDA-licensed breeder in Midland, Texas, with candling proof, CITES paperwork and our own nursery video is the opposite of an anonymous flat-priced egg farm — and that gap is the entire reason this page exists.</p>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 14 · RESOURCES / BLOG -->
       <section id="resources">
@@ -706,7 +741,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         </div>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 15 · FAQ -->
       <section id="faq">
@@ -726,7 +761,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         </div>
       </section>
 
-      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"><span class="seam-tag">Midland, TX</span></div>
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 16 · RESERVE / FORM — kit ContactForm two-column -->
       <section id="reserve" class="final-cta">
@@ -795,19 +830,21 @@ const seam = "/cag-fs-seam-emblem.webp";
 .egg{--f:#2D6A4F;--clay:#e8604c;--clay-ink:#c8472f;--clay-t:#b04228;--cream:#faf7f4;--bd:#e7ddd3;--mid:#6b625a;--hdr:96px;color:#2a2622;overflow-x:clip}
 .egg .container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
 /* HERO — Split-Hero C · dark charcoal card + 2×2 photo grid */
-.egg-hero{background:var(--cream);padding:22px 0 26px}
+.egg-hero{background:var(--cream);padding:16px 0 20px}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(300px,1fr);gap:clamp(16px,2.4vw,28px);align-items:stretch}
-.hero-card{background:#221f1d;color:#fff;border-radius:22px;padding:clamp(24px,3.2vw,44px);display:flex;flex-direction:column;justify-content:center;box-shadow:0 14px 40px rgba(34,20,10,.18)}
-.egg-hero .eyebrow{color:#f08070;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0 0 14px}
-.egg .cag-h1{font-family:'Newsreader',serif;font-size:clamp(1.85rem,4vw,2.85rem);line-height:1.1;margin:0 0 16px;color:#fff;letter-spacing:-.01em;font-weight:600}
+@media(min-width:901px){.hero-grid{min-height:350px;max-height:420px}}
+.hero-card{background:#221f1d;color:#fff;border-radius:22px;padding:clamp(18px,2vw,26px) clamp(20px,2.4vw,30px);display:flex;flex-direction:column;justify-content:center;box-shadow:0 14px 40px rgba(34,20,10,.18)}
+.egg-hero .eyebrow{color:#f08070;font-size:.78rem;font-weight:600;letter-spacing:.02em;margin:0 0 8px}
+.egg .cag-h1{font-family:'Newsreader',serif;font-size:clamp(1.45rem,2.6vw,1.95rem);line-height:1.12;margin:0 0 10px;color:#fff;letter-spacing:-.01em;font-weight:600}
 .egg .cag-h1 em{color:#f08070;font-style:italic}
-.egg .egg-hero .lead{font-size:1.02rem;line-height:1.62;color:rgba(255,255,255,.82)!important;max-width:56ch;margin:0 0 22px}
-.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
-.hero-chips{list-style:none;display:flex;flex-wrap:wrap;gap:8px 20px;margin:22px 0 0;padding:20px 0 0;border-top:1px solid rgba(255,255,255,.14)}
-.hero-chips li{font-size:.8rem;color:rgba(255,255,255,.9);padding-left:20px;position:relative}
+.egg .egg-hero .lead{font-size:.88rem;line-height:1.5;color:rgba(255,255,255,.82)!important;max-width:60ch;margin:0 0 14px}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+.hero-cta .btn-clay,.hero-cta .btn-ghost{padding:11px 22px;font-size:.88rem}
+.hero-chips{list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;margin:14px 0 0;padding:12px 0 0;border-top:1px solid rgba(255,255,255,.14)}
+.hero-chips li{font-size:.76rem;color:rgba(255,255,255,.9);padding-left:18px;position:relative}
 .hero-chips li:before{content:"✓";position:absolute;left:0;top:0;color:#4ade80;font-weight:700}
-.hero-imgs{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;border-radius:22px;overflow:hidden}
-.hero-imgs img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:1;background:#e7ddd4}
+.hero-imgs{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;border-radius:22px;overflow:hidden;min-height:0}
+.hero-imgs img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;background:#e7ddd4;min-height:0}
 .btn-clay,.btn-ghost{display:inline-block;border-radius:50px;padding:13px 28px;font-weight:600;text-decoration:none;font-size:.95rem;transition:background-color .2s,color .2s,transform .15s}
 .btn-clay{background:var(--clay-ink);color:#fff}
 .btn-clay:hover{background:#9c3a23;transform:translateY(-2px)}
@@ -816,8 +853,10 @@ const seam = "/cag-fs-seam-emblem.webp";
 .btn-clay.sm,.btn-ghost.sm{padding:9px 18px;font-size:.83rem}
 /* COUNTER — for-sale outlined stat cards */
 .egg-counter{background:var(--cream);padding:4px 0 18px}
-.counter-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px}
-.cs{display:flex;flex-direction:column;gap:3px;align-items:flex-start;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:13px 15px;box-shadow:0 3px 12px rgba(60,30,10,.05)}
+.counter-row{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.cs{display:flex;flex-direction:column;gap:3px;align-items:flex-start;justify-content:center;min-height:74px;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:12px 14px;box-shadow:0 3px 12px rgba(60,30,10,.05)}
+@media(max-width:1050px){.counter-row{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:640px){.counter-row{grid-template-columns:repeat(2,1fr)}.cs{min-height:66px}}
 .counter-row b{font-family:'Newsreader',serif;font-size:1.5rem;line-height:1;color:var(--clay-ink);font-variant-numeric:tabular-nums}
 .cs-l{font-size:.71rem;font-weight:600;color:var(--mid);line-height:1.25}
 /* MOBILE RAIL A */
@@ -837,8 +876,8 @@ const seam = "/cag-fs-seam-emblem.webp";
 .dial-list a{display:flex;gap:9px;align-items:center;color:#2a2622;text-decoration:none;font-size:.85rem;padding:6px 6px;border-radius:10px}
 .dial-list a:hover{background:#faece7}
 .dial-list a.on{background:#faece7;font-weight:600}
-.dial-list a.on .num{color:var(--clay-ink)}
-.dial-list .num{font-family:'Newsreader',serif;font-weight:700;color:var(--clay-t);width:22px}
+.dial-list a.on .num{color:#9c3a23}
+.dial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#9c3a23;width:22px}
 .dial-list .tag{margin-left:auto;font-size:.58rem;font-weight:700;letter-spacing:.03em;color:var(--f);background:#e7f1ec;border-radius:50px;padding:2px 8px;white-space:nowrap}
 /* K4 / K1 */
 .k4{max-width:600px;background:#fff;border:1px solid var(--bd);border-radius:16px;box-shadow:0 4px 16px rgba(60,30,10,.06);padding:34px 26px 20px;position:relative;margin:22px 0 8px}
@@ -877,8 +916,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 .seam::before,.seam::after{content:"";flex:1;max-width:220px;height:2px;border-radius:1px}
 .seam::before{background:linear-gradient(90deg,transparent,rgba(200,71,47,.5))}
 .seam::after{background:linear-gradient(90deg,rgba(200,71,47,.5),transparent)}
-.seam img{width:auto;height:32px;object-fit:contain;opacity:.95}
-.seam-tag{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--clay-t);white-space:nowrap}
+.seam img{width:auto;height:30px;object-fit:contain;opacity:.95}
 .nl-inflow{margin:24px 0;border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.06)}
 .nl-inflow>*{max-width:none}
 /* TABLE A */
@@ -900,16 +938,36 @@ const seam = "/cag-fs-seam-emblem.webp";
 .ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.15rem}
 .ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
 .ship-c p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
-.ship-places{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:10px}
-.ship-places a{display:inline-flex;align-items:center;gap:8px;background:#f4efe9;border:1px solid var(--bd);border-radius:50px;padding:9px 15px;font-size:.84rem;line-height:1.15;color:var(--f);transition:border-color .2s,color .2s,background-color .2s}
-.ship-places a:hover{border-color:var(--clay-t);color:var(--clay-t);background:#fff}
-.ship-places .pin{color:var(--clay-t);flex:none;width:15px;height:15px}
 .ship-line{font-size:.78rem;color:#7a6f64;font-weight:600;border-top:1px dashed var(--bd);padding-top:8px}
-.health-card{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin:6px 0 14px;max-width:440px}
-.hc-head{background:var(--f);color:#fff;padding:8px 14px;font-family:'Newsreader',serif}
-.hc-list{list-style:none;margin:0;padding:12px 14px}
-.hc-list li{font-size:.85rem;padding:4px 0 4px 22px;position:relative}
-.hc-list li::before{content:"✔";position:absolute;left:0;color:var(--f);font-weight:700}
+/* GEO ROUTE CARDS — for-sale shipping component (replaces comparison-style pills) */
+.geo-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 16px}
+.geo-c{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:12px 14px;text-decoration:none!important;transition:transform .15s,box-shadow .2s,border-color .2s}
+.geo-c:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(60,30,10,.1);border-color:var(--clay)}
+.geo-pin{flex:none;width:34px;height:34px;border-radius:10px;background:#fdf0eb;color:#9c3a23;display:grid;place-items:center}
+.geo-pin svg{width:17px;height:17px}
+.geo-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.geo-kw{font-size:.87rem;font-weight:600;color:#2a2622;line-height:1.3}
+.geo-note{font-size:.72rem;color:#7a6f64}
+.geo-arrow{flex:none;color:#9c3a23;font-weight:700}
+/* DOC STACK — "Every grey leaves with" (modernized) */
+.doc-stack{background:linear-gradient(135deg,#fff,#fdf4ef);border:1px solid var(--bd);border-radius:18px;padding:20px 22px;margin:6px 0 16px;max-width:560px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.ds-title{font-family:'Newsreader',serif;font-size:1.15rem;margin:0 0 12px;color:#2a2622;padding-bottom:10px;border-bottom:2px solid var(--f)}
+.ds-list{list-style:none;margin:0;padding:0;counter-reset:ds}
+.ds-list li{counter-increment:ds;display:flex;flex-direction:column;gap:1px;padding:9px 0 9px 40px;position:relative;border-bottom:1px dashed var(--bd)}
+.ds-list li:last-child{border-bottom:none}
+.ds-list li::before{content:counter(ds,decimal-leading-zero);position:absolute;left:0;top:10px;font-family:'Newsreader',serif;font-weight:700;font-size:.85rem;color:#fff;background:var(--f);width:28px;height:28px;border-radius:9px;display:grid;place-items:center}
+.ds-list b{font-size:.9rem;color:#2a2622}
+.ds-list span{font-size:.76rem;color:#6b625a}
+/* CHECKLIST B — modern hatching checklist */
+.chkB{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;margin:6px 0 18px;box-shadow:0 4px 16px rgba(60,30,10,.07)}
+.chkB-head{background:#221f1d;padding:16px 22px}
+.chkB-eyebrow{color:#f08070;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0 0 3px}
+.chkB-title{font-family:'Newsreader',serif;font-size:1.15rem;color:#fff;margin:0;line-height:1.25;max-width:none}
+.chkB-grid{list-style:none;margin:0;padding:14px 22px 18px;display:grid;grid-template-columns:1fr 1fr;gap:2px 26px;counter-reset:chk}
+.chkB-grid li{counter-increment:chk;display:flex;flex-direction:column;gap:1px;padding:10px 0 10px 36px;position:relative;border-bottom:1px dashed var(--bd)}
+.chkB-grid li::before{content:"✓";position:absolute;left:0;top:11px;width:24px;height:24px;border-radius:8px;background:#e7f1ec;color:var(--f);font-weight:700;font-size:.8rem;display:grid;place-items:center}
+.chkB-grid b{font-size:.88rem;color:#2a2622}
+.chkB-grid span{font-size:.76rem;color:#6b625a;line-height:1.45}
 /* BIRD CARDS */
 .bird-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:6px 0 8px}
 .bird-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
@@ -970,7 +1028,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 /* NEWSLETTER — for-sale */
 .fs-nl{margin:24px 0;border-radius:20px;overflow:hidden;box-shadow:0 6px 22px rgba(60,30,10,.08)}
 .fs-nl.banner{background:linear-gradient(135deg,#221f1d,#2f2926);color:#fff}
-.fs-nl.banner .fs-nl-inner{padding:clamp(22px,3.4vw,34px);max-width:760px}
+.fs-nl.banner .fs-nl-inner{padding:clamp(18px,3vw,28px) clamp(18px,3.4vw,34px);max-width:820px}
 .fs-nl.split{display:grid;grid-template-columns:minmax(0,320px) 1fr;background:#fff;border:1px solid var(--bd)}
 .fs-nl-media{position:relative}
 .fs-nl-media img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:1408/768}
@@ -978,9 +1036,9 @@ const seam = "/cag-fs-seam-emblem.webp";
 .fs-nl-body{padding:clamp(20px,3vw,30px)}
 .fs-nl-eyebrow{color:var(--clay-t);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px}
 .fs-nl.banner .fs-nl-eyebrow{color:#f08070}
-.fs-nl-h{font-family:'Newsreader',serif;font-size:clamp(1.2rem,2.4vw,1.6rem);line-height:1.18;margin:0 0 8px;color:#2a2622}
+.fs-nl-h{font-family:'Newsreader',serif;font-size:clamp(1.15rem,2.2vw,1.45rem);line-height:1.2;margin:0 0 6px;color:#2a2622}
 .fs-nl.banner .fs-nl-h{color:#fff}
-.fs-nl-sub{font-size:.9rem;margin:0 0 16px!important;max-width:56ch;color:#5b524a}
+.fs-nl-sub{font-size:.86rem;line-height:1.55;margin:0 0 14px!important;max-width:62ch;color:#5b524a}
 .fs-nl.banner .fs-nl-sub{color:rgba(255,255,255,.82)}
 .fs-nl-form{display:flex;gap:10px;flex-wrap:wrap}
 .fs-nl-form input{flex:1;min-width:200px;border:1.5px solid var(--bd);border-radius:50px;padding:12px 18px;font:inherit;background:#fff;color:#2a2622}
@@ -1014,18 +1072,21 @@ const seam = "/cag-fs-seam-emblem.webp";
 .availB-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
 .availB-c:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(60,30,10,.13)}
 .availB-photo{position:relative;display:block}
-.availB-photo img{display:block;width:100%;height:190px;object-fit:cover;object-position:center top}
-.availB-badge{position:absolute;top:10px;left:10px;font-size:.62rem;font-weight:700;letter-spacing:.03em;padding:4px 11px;border-radius:50px;text-transform:uppercase}
-.availB-badge.congo{background:#e7f1ec;color:#256349}
-.availB-badge.timneh{background:#fbe4dd;color:var(--clay-ink)}
-.availB-badge.bonded,.availB-badge.breeding{background:#f6ecc9;color:#7d6210}
-.availB-badge.eggs{background:#eae3f2;color:#63437f}
+.availB-photo img{display:block;width:100%;height:210px;object-fit:cover;object-position:center 28%}
+.availB-badge{position:absolute;top:10px;left:10px;font-size:.58rem;font-weight:600;letter-spacing:.02em;padding:3px 9px;border-radius:50px;background:rgba(255,255,255,.82);backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.availB-badge.congo{color:#1e5038}
+.availB-badge.timneh{color:#9c3a23}
+.availB-badge.bonded,.availB-badge.breeding{color:#6d5510}
+.availB-badge.eggs{color:#533a68}
 .availB-dot{position:absolute;top:12px;right:12px;width:12px;height:12px;border-radius:50%;background:#3fbf6a;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
 .availB-body{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
 .availB-name{font-family:'Newsreader',serif;font-size:1.15rem;margin:0 0 3px;text-transform:uppercase;letter-spacing:.01em;line-height:1.1}
 .availB-name a{color:#2a2622;text-decoration:none}
 .availB-name a:hover{color:var(--clay-t)}
-.availB-meta{font-size:.8rem;color:#7a6f64;margin:0 0 8px!important;max-width:none}
+.availB-meta{font-size:.78rem;color:#7a6f64;margin:0 0 6px!important;max-width:none}
+.availB-blurb{font-size:.8rem;color:#5b524a;line-height:1.45;margin:0 0 8px!important;max-width:none}
+.availB-chips{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.availB-chips li{font-size:.6rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:2px 8px;white-space:nowrap}
 .availB-price{font-family:'Newsreader',serif;color:var(--clay-ink);font-weight:700;font-size:1.3rem;margin-bottom:12px}
 .availB-btn{margin-top:auto;text-align:center;font-size:.85rem;padding:11px 14px}
 .availB-c.hide{display:none}
@@ -1047,13 +1108,15 @@ const seam = "/cag-fs-seam-emblem.webp";
 .read-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:8px 0 6px}
 .read-c{display:flex;gap:0;background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;text-decoration:none;transition:transform .15s,box-shadow .2s}
 .read-c:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(60,30,10,.12)}
-.read-img{flex:0 0 120px;display:block}
-.read-img img{display:block;width:120px;height:100%;min-height:130px;object-fit:cover}
-.read-body{display:flex;flex-direction:column;padding:14px 16px}
-.read-kicker{font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--clay-t)}
-.read-title{font-family:'Newsreader',serif;font-size:1.05rem;color:#2a2622;margin:3px 0 4px;line-height:1.25}
-.read-sub{font-size:.82rem;color:#6b625a;line-height:1.4}
-.read-more{font-size:.78rem;font-weight:600;color:var(--f);margin-top:auto;padding-top:8px}
+.read-img{flex:0 0 148px;display:block;position:relative;overflow:hidden}
+.read-img img{display:block;width:148px;height:100%;min-height:140px;object-fit:cover;transition:transform .2s}
+.read-c:hover .read-img img{transform:scale(1.04)}
+.read-body{display:flex;flex-direction:column;padding:14px 16px;min-width:0}
+.read-kicker{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9c3a23}
+.read-title{font-family:'Newsreader',serif;font-size:1.08rem;color:#2a2622;margin:4px 0 4px;line-height:1.25}
+.read-c:hover .read-title{color:#9c3a23}
+.read-sub{font-size:.8rem;color:#6b625a;line-height:1.45}
+.read-more{font-size:.76rem;font-weight:700;color:var(--f);margin-top:auto;padding-top:10px}
 /* CONTACT FORM — kit two-column */
 .form-head{max-width:640px}
 .form-eyebrow{color:var(--clay-t);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px}
@@ -1074,22 +1137,29 @@ const seam = "/cag-fs-seam-emblem.webp";
   .side-ship{border-top:none;border-left:1px solid var(--bd);margin:0;padding:0 0 0 14px;flex-direction:column}
 }
 @media(max-width:900px){
-  .hero-grid{grid-template-columns:1fr;gap:16px}
-  .hero-imgs{order:-1;aspect-ratio:16/10}
+  .hero-grid{grid-template-columns:1fr;gap:14px}
+  .hero-imgs{order:-1;aspect-ratio:16/10;grid-template-rows:1fr 1fr}
+  .hero-card{padding:20px 18px}
   .desk-only{display:none}
   .egg-rail{display:block}
   .fs-nl.split{grid-template-columns:1fr}
-  .fs-nl-media img{aspect-ratio:16/9;max-height:220px}
+  .fs-nl-media img{aspect-ratio:16/9;max-height:200px}
+  .fs-nl-body{padding:18px 16px}
+  .fs-nl.banner .fs-nl-inner{padding:18px 16px}
   .form-wrap{grid-template-columns:1fr}
   .form-side{order:2}
   .read-cards{grid-template-columns:1fr}
+  .read-img{flex-basis:120px}
+  .read-img img{width:120px}
   .availB-grid{grid-template-columns:1fr 1fr}
+  .availB-photo img{height:230px;object-position:center 22%}
   .ship-cards,.quote-grid{grid-template-columns:1fr}
-  .ship-places{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .ship-places a{justify-content:center}
+  .geo-cards{grid-template-columns:1fr}
+  .chkB-grid{grid-template-columns:1fr;padding:10px 16px 14px}
+  .chkB-head{padding:14px 16px}
   .form-2col{grid-template-columns:1fr}
-  /* Full-bleed, crisp mobile images (approved) */
-  .egg-main .sec-img{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);border-radius:0;aspect-ratio:4/3}
+  /* In-body images: container width, original 16:9 infographic box (reverted from full-bleed) */
+  .egg-main .sec-img{width:100%;max-width:100%;margin-left:0;border-radius:14px;aspect-ratio:1408/768}
   .fs-video{max-width:none}
   /* TABLE A stacking */
   .otA table,.otA thead,.otA tbody,.otA tr,.otA th,.otA td{display:block}
