@@ -93,6 +93,22 @@ PROFILES = {
         "single_canonical": "FAIL",
         "no_emoji": "FAIL",
     },
+    "for-sale": {                        # 22-page transactional for-sale cluster (2026-07-20)
+        "no_aggregateoffer": "WARN",     # egg/single pages carry one Product+Offer; AggregateOffer only on group/hub
+        "no_pbfd_claim": "NA",           # PBFD/APV PCR screening is in the Verified-Claim Ledger
+        "sold_not_instock": "FAIL",      # sold ≠ InStock, ever
+        "newsletter_present": "NA",      # inquiry form is the single closer, no page-level newsletter band
+        "shipping_line": "FAIL",         # $185 airport / $350 home must appear
+        "real_hero_image": "FAIL",
+        "wordcount_in_band": "WARN",
+        "house_method": "WARN",
+        "cites_captive_usda_early": "WARN",
+        "lifespan_40_60": "WARN",
+        "breadcrumb_one": "FAIL",
+        "faqpage_present": "FAIL",
+        "single_canonical": "FAIL",
+        "no_emoji": "FAIL",
+    },
     "blog": {                            # /blog/ hub + dist/blog/<slug>/ posts (spec 2026-06-27)
         # Blog gate = ONLY the checks the cluster spec defines; everything else is
         # NA so a post is judged on what the program actually requires. The FAIL
@@ -315,6 +331,8 @@ COMPARISONS = ["african-grey-comparison","congo-vs-timneh-african-grey",
                "african-grey-vs-cockatoo","african-grey-vs-amazon-parrot",
                "african-grey-parrot-breeders-comparison","african-grey-pros-and-cons"]
 
+FORSALE = ["african-grey-parrot-bird-eggs-for-sale-usa"]  # for-sale cluster, expanded as pages rebuild
+
 def blog_targets():
     """Discover the /blog/ hub (dist/blog/index.html) + every dist/blog/<slug>/ post."""
     targets = []
@@ -332,9 +350,12 @@ def main():
         targets = blog_targets()
     elif "--comparison" in sys.argv:
         targets = [(s, "comparison") for s in COMPARISONS]
+    elif "--for-sale" in sys.argv:
+        targets = [(s, "for-sale") for s in FORSALE]
     else:
         targets = ([(s, "interior") for s in SLUGS] + blog_targets()
-                   + [(s, "comparison") for s in COMPARISONS])
+                   + [(s, "comparison") for s in COMPARISONS]
+                   + [(s, "for-sale") for s in FORSALE])
     rows = {s: audit(s, t) for s, t in targets}
     print("\n=== C.A.Gs FINAL PAGE PASS ===  (verdict per page)\n")
     for s, r in rows.items():
