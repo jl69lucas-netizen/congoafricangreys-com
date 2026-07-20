@@ -23,11 +23,13 @@
 - Framework: PAS opening → FAB offer → QAB FAQ (Sprint 0 §8)
 
 ## Open Flags
-- Q2 specifics still needed at OUTLINE stage (not blocking): exact replacement-vs-refund wording · carrier + promised transit window · eggs-per-season count for honest availability line. Draft uses safe true phrasing; exact terms confirmed before publish (Ledger).
-- Scam-module flag #04 rewording (site-wide) must ship with or before the egg page
-- Bing Webmaster Queries export still missing (two supplied CSVs were date-series charts)
-- Hero images/infographics for egg page not yet dropped by breeder — PROMPT SHEET DELIVERED: docs/research/for-sale-egg-image-prompts-2026-07.md (10 images: 5 infographic + 5 OG). Build gate: breeder generates + drops ALL 10, then says 'start'.
-- H1 pick still pending (5 variants offered; V1 recommended)
+- **BUILT + LIVE 2026-07-20 (commit 9d31b7d).** Page rebuilt to for-sale standard; verified in browser; final_page_audit for-sale profile PASS-WITH-WARNINGS; 0 dup crossovers; deployed to main.
+- ✅ RESOLVED: H1 pick = V1 (breeder-approved). Outline approved (H1:1 H2:10 H3:13 H4:9 H5:9 H6:5).
+- ✅ RESOLVED: all 10 images dropped + processed to uniform boxes. LESSON: 4 OG-photo drops had a baked spec panel (right ~28%) — cropped to left 73.5%. See [[project_egg_page_build]].
+- ✅ RESOLVED: scam-module flag #04 reworded site-wide (fake-farm pattern, not "eggs always scam") — shipped with the page.
+- STILL OPEN (breeder, non-blocking — copy uses safe true phrasing pending): exact replacement-vs-refund wording · carrier + promised transit window · eggs-per-season count.
+- STILL OPEN: Bing Webmaster Queries export missing (supplied CSVs were date-series charts). verify-60s infographic shows an illustrative fake license "AWA-12556-9021".
+- NEXT: cluster-1 remainder — congo-for-sale, timneh-for-sale, hand-raised, health-guarantee, dna-tested.
 
 ---
 <!-- Synthesized fields below are filled in at finalization, from the Q&A Log above. -->
