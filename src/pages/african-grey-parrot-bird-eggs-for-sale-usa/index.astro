@@ -231,14 +231,6 @@ const seam = "/cag-fs-seam-emblem.webp";
 
   <div class="container">
 
-    <!-- DESKTOP DIAL TOC — working scroll-progress dial -->
-    <nav class="dial desk-only" aria-label="Contents" id="eggDial" style="--p:6">
-      <div class="dial-ring"><div><b id="dialNum">1</b><span>of 16</span></div></div>
-      <div class="dial-list">
-        {sections.map((s, i) => (<a href={`#${s.id}`} data-i={i} class={i === 0 ? "on" : ""}><span class="num">{s.n}</span>{s.label}{s.tag && <span class="tag">{s.tag}</span>}</a>))}
-      </div>
-    </nav>
-
     <!-- V-FLAGS — green-flag verification ledger (redesigned proof takeaway) -->
     <div class="vflags" role="note" aria-label="What makes our egg program verifiable">
       <div class="vflags-head">
@@ -253,6 +245,16 @@ const seam = "/cag-fs-seam-emblem.webp";
         <li><span class="vf-badge" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="vf-txt"><b>Honest hatch odds</b><span>we never claim "100% fertile" or a guaranteed hatch</span></span></li>
       </ol>
     </div>
+
+    <div class="egg-body">
+
+    <!-- DESKTOP DIAL TOC — sticky LEFT-hand scroll-progress dial (egg-page variant of the comparison-cluster sidebar TOC) -->
+    <nav class="dial desk-only" aria-label="Contents" id="eggDial" style="--p:6">
+      <div class="dial-ring"><div><b id="dialNum">1</b><span>of 16</span></div></div>
+      <div class="dial-list">
+        {sections.map((s, i) => (<a href={`#${s.id}`} data-i={i} class={i === 0 ? "on" : ""}><span class="num">{s.n}</span>{s.label}{s.tag && <span class="tag">{s.tag}</span>}</a>))}
+      </div>
+    </nav>
 
     <main class="egg-main">
 
@@ -847,6 +849,7 @@ const seam = "/cag-fs-seam-emblem.webp";
       </section>
 
     </main>
+    </div><!-- /egg-body -->
   </div><!-- /container -->
 
   </div><!-- /egg -->
@@ -893,19 +896,21 @@ const seam = "/cag-fs-seam-emblem.webp";
 .railA a{flex:0 0 auto;font-size:.78rem;font-weight:600;color:var(--clay-t);border:1.5px solid var(--clay);border-radius:50px;padding:7px 14px;text-decoration:none;background:#fff;white-space:nowrap}
 .railA a.on{background:var(--clay-ink);border-color:var(--clay-ink);color:#fff}
 .railA a .p{font-weight:700}
-/* DIAL TOC */
-.dial{display:flex;gap:26px;align-items:center;background:linear-gradient(135deg,#fff,#fdf1ec);border:1px solid var(--bd);border-radius:20px;padding:24px;margin:26px 0 8px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
-.dial-ring{flex:0 0 132px;width:132px;height:132px;border-radius:50%;background:conic-gradient(var(--clay-ink) calc(var(--p,6) * 1%),#f3d9d1 0);display:grid;place-items:center}
-.dial-ring>div{width:100px;height:100px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-family:'Newsreader',serif}
-.dial-ring b{font-size:28px;color:var(--clay-ink);display:block;line-height:1}
-.dial-ring span{font-size:10px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase}
-.dial-list{flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 22px}
-.dial-list a{display:flex;gap:9px;align-items:center;color:#2a2622;text-decoration:none;font-size:.85rem;padding:6px 6px;border-radius:10px}
+/* EGG BODY — two-column grid: sticky left-hand dial + main content (egg-page variant of the comparison-cluster .cvt-toc sidebar) */
+.egg-body{display:grid;grid-template-columns:222px minmax(0,1fr);gap:30px;align-items:start}
+/* DIAL TOC — sticky left rail, vertical stack (ring on top, single-column list below), distinct from the comparison pages' plain-list .cvt-toc */
+.dial{display:flex;flex-direction:column;gap:16px;align-items:stretch;background:linear-gradient(160deg,#fff,#fdf1ec);border:1px solid var(--bd);border-radius:20px;padding:20px 16px;box-shadow:0 4px 16px rgba(60,30,10,.06);position:sticky;top:calc(var(--hdr) + 20px);max-height:calc(100vh - var(--hdr) - 40px);overflow-y:auto}
+.dial-ring{margin:0 auto;flex:none;width:92px;height:92px;border-radius:50%;background:conic-gradient(var(--clay-ink) calc(var(--p,6) * 1%),#f3d9d1 0);display:grid;place-items:center}
+.dial-ring>div{width:70px;height:70px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-family:'Newsreader',serif}
+.dial-ring b{font-size:20px;color:var(--clay-ink);display:block;line-height:1}
+.dial-ring span{font-size:8px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase}
+.dial-list{display:grid;grid-template-columns:1fr;gap:2px}
+.dial-list a{display:flex;gap:8px;align-items:baseline;color:#2a2622;text-decoration:none;font-size:.78rem;line-height:1.3;padding:7px 8px;border-radius:10px}
 .dial-list a:hover{background:#faece7}
 .dial-list a.on{background:#faece7;font-weight:600}
 .dial-list a.on .num{color:#9c3a23}
-.dial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#9c3a23;width:22px}
-.dial-list .tag{margin-left:auto;font-size:.58rem;font-weight:700;letter-spacing:.03em;color:var(--f);background:#e7f1ec;border-radius:50px;padding:2px 8px;white-space:nowrap}
+.dial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#9c3a23;width:18px;flex:none}
+.dial-list .tag{margin-left:auto;font-size:.55rem;font-weight:700;letter-spacing:.03em;color:var(--f);background:#e7f1ec;border-radius:50px;padding:2px 7px;white-space:nowrap}
 /* V-FLAGS — green-flag verification ledger */
 .vflags{max-width:680px;background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(60,30,10,.09);margin:22px 0 10px}
 .vflags-head{background:#221f1d;padding:16px 22px}
@@ -933,7 +938,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 .k1 .tot{display:flex;justify-content:space-between;font-weight:700;padding-top:12px;font-size:.98rem}
 .k1 .tot span:last-child{color:var(--f)}
 /* MAIN type scale */
-.egg-main{max-width:880px;margin:0 auto}
+.egg-main{max-width:880px;min-width:0}
 .egg-main section{margin-bottom:14px;scroll-margin-top:calc(var(--hdr) + 18px);padding-top:20px}
 .egg .cag-h2{font-family:'Newsreader',serif;font-size:clamp(1.375rem,3.5vw,2rem);color:#2a2622;margin:8px 0 16px;line-height:1.18}
 .egg .cag-h3{font-family:'Newsreader',serif;font-size:clamp(1.125rem,2.2vw,1.5rem);color:var(--f);margin:24px 0 10px;line-height:1.25}
@@ -1181,6 +1186,7 @@ const seam = "/cag-fs-seam-emblem.webp";
   .hero-card{padding:20px 18px}
   .desk-only{display:none}
   .egg-rail{display:block}
+  .egg-body{grid-template-columns:1fr;gap:0}
   .fs-nl.split{grid-template-columns:1fr}
   .fs-nl-media img{aspect-ratio:16/9;max-height:200px}
   .fs-nl-body{padding:18px 16px}
