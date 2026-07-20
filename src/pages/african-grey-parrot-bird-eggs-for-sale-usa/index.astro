@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import Newsletter from '../../components/cag-library/NewsletterV2.astro';
 import clutch from '../../../data/clutch-inventory.json';
 
 const title = "Fertile African Grey Parrot Eggs for Sale in the USA — Candled, Documented, Shipped | C.A.Gs, Midland TX";
@@ -16,99 +17,101 @@ const breadcrumbs = [
   { name: "African Grey Eggs for Sale", url: "/african-grey-parrot-bird-eggs-for-sale-usa/" },
 ];
 
-// Real inventory for the reserve form + cross-sell (never hardcoded).
-const available = clutch.birds.filter((b) => b.status === "available");
+// Real inventory — never hardcoded status
+const available = ((clutch as any).birds as any[])
+  .filter((b) => b.status === "available")
+  .sort((a, b) => (a.variant === "timneh_african_grey" ? 1 : -1));
+
+const birdImg: Record<string, { src: string; alt: string }> = {
+  "bery": { src: "/bery-congo-african-grey-cuddly-tamed-card.webp", alt: "Bery, a cuddly tamed female Congo African Grey resting on her keeper's lap" },
+  "amie": { src: "/amie-congo-african-grey-handfed-baby-card.webp", alt: "Amie, a hand-fed baby female Congo African Grey snuggled against a shoulder" },
+  "roys": { src: "/roys-congo-african-grey-male-tame-card.webp", alt: "Roys, a tame young male Congo African Grey beside his toy ball" },
+  "jins-jeni": { src: "/congo-african-grey-companion-pair-card.webp", alt: "Jins and Jeni, a Congo African Grey companion pair raised together" },
+  "elad": { src: "/elad-timneh-african-grey-male-wings-card.webp", alt: "Elad, a young male Timneh African Grey stretching his wings on a perch" },
+  "evie": { src: "/evie-timneh-african-grey-female-perched-card.webp", alt: "Evie, a female Timneh African Grey perched calmly, showing her horn-colored beak" },
+};
+const docBadges = ["CITES Cert", "PCR DNA-Sexed", "Vet Certified", "PBFD & APV Screened", "Fully Weaned"];
+
+// Egg-page ship anchors — unique labels, distinct from the comparison cluster's set
+const shipPlaces = [
+  { href: "/african-grey-parrot-for-sale-florida/", label: "Florida egg buyers" },
+  { href: "/african-grey-parrot-for-sale-north-carolina/", label: "North Carolina hatching-egg keepers" },
+  { href: "/african-grey-parrot-for-sale-texas/", label: "Texas local egg pickup" },
+  { href: "/african-grey-parrot-for-sale-georgia/", label: "Georgia incubator homes" },
+  { href: "/african-grey-parrot-for-sale-ohio/", label: "Ohio breeder shipments" },
+  { href: "/african-grey-parrot-for-sale-pennsylvania/", label: "Pennsylvania cargo route" },
+];
+
+// Real reviews only (verified homepage bottomReviews set)
+const stories = [
+  { name: "Richard Woodard", loc: "Winter Haven, FL", meta: "Congo African Grey",
+    avatar: "/richard-woodard-winter-haven-fl-review-112.webp",
+    quote: "At first I was hesitant about buying a bird online, but C.A.Gs made the process stress-free. They provided detailed care instructions and my parrot arrived in perfect condition. My Congo African Grey is now the star of our family, talking and entertaining us daily." },
+  { name: "Archie Obrien", loc: "Farmingdale, NY", meta: "Congo African Grey",
+    avatar: "/archie-obrien-farmingdale-ny-review.webp",
+    quote: "I searched for African Grey parrots for sale near me for months before finding C.A.Gs. Their birds are truly top-notch! My African Grey is affectionate, intelligent, and already picking up words. The shipping process was seamless, and they included a health guarantee." },
+];
+
+// Competitor comparison — grounded in Sprint 0 §3 (the scam-dominated egg SERP)
+const compareRows = [
+  { axis: "Seller identity", them: "Anonymous, keyword-named website", us: "Named breeders — Mark & Teri Benjamin, Midland, TX" },
+  { axis: "USDA license", them: "None you can verify", us: "Active USDA AWA, lookup-able on APHIS" },
+  { axis: "Fertility proof", them: '"100% fertile guaranteed"', us: "Candled before dispatch + dated video on request" },
+  { axis: "Pricing", them: "One flat price across every species", us: "$95, honest, from named Congo lines" },
+  { axis: "Hatch promise", them: '"Guaranteed hatch rate"', us: "Honest odds — no hatch is ever guaranteed" },
+  { axis: "CITES paperwork", them: "Never mentioned", us: "Appendix I captive-bred documentation" },
+  { axis: "Photos & video", them: "Stock or stolen images", us: "Our own nursery photos and hand-rearing video" },
+];
+
+const faqs = [
+  { q: "How much does a fertile African Grey parrot egg cost?", a: "Our fertile African Grey parrot eggs are $95 each, and if you buy 5 eggs US shipping is free. A $200 deposit reserves a clutch. We price every egg the same across our Congo lines — flat pricing that changes by species is one of the scam tells we warn buyers about, so an honest African Grey egg price stays consistent." },
+  { q: "How long do African Grey eggs take to hatch?", a: "Under correct incubation, African Grey eggs hatch in about 28–30 days, with the pip-to-hatch window running roughly 24–72 hours. That figure comes from published avian breeding data, not a marketing promise, and it assumes a stable incubator near 99°F with managed humidity and daily turning." },
+  { q: "How many eggs do African Grey parrots lay?", a: "A hen typically lays a clutch of 2–4 eggs, one every other day, and begins full incubation after the second or third. That small clutch size is exactly why real fertile African Grey eggs are limited and why any listing offering unlimited flat-rate eggs across every species should raise your guard." },
+  { q: "Are the parrot eggs for sale online real, or a scam?", a: "Most are a scam — our own scam guide flags the pattern. What separates a real egg program is verifiable identity: a USDA license you can look up, named breeding pairs, CITES Appendix I documentation, and candling proof. We publish all four, which is exactly what the fake egg farms cannot do." },
+  { q: "How can you tell if an African Grey egg is fertile?", a: "Candling is how we tell — shining a light through the egg reveals veins by about day 5, a spider-web of vessels and an air cell by day 10, and a dark embryo shadow by day 18. We candle before dispatch and can send a dated photo or short video, so you see the fertility signs on your own clutch." },
+  { q: "What incubator humidity do African Grey eggs need?", a: "Most keepers hold roughly 45–50% relative humidity for the main incubation stretch, then raise it for the final days before hatch to help the chick pip — while keeping temperature near 99°F and turning several times a day. Exact numbers vary by incubator and altitude, which is one more reason these eggs are sold for experienced breeders only, with no incubation support included." },
+  { q: "Do you ship fertilized African Grey eggs near me?", a: "We ship fertile, fertilized African Grey parrot eggs nationwide from Midland, Texas — to Florida, North Carolina, South Carolina, California and every other state — in an insulated carton with a heat pack. If you live within 2–3 hours of Midland, local pickup is the gentlest option for live eggs." },
+  { q: "Do you sell Congo African Grey eggs, or hatchlings, too?", a: "Yes. Our fertile eggs trace to Congo African Grey lines (Psittacus erithacus), and if you'd rather skip the incubator we also raise hatchlings through to fully weaned chicks. Most families are better served reserving a hand-raised African Grey baby than hatching an egg — and we will tell you so honestly." },
+  { q: "Can I incubate African Grey parrot eggs at home?", a: "You can, but it is genuinely hard, expert work — which is why our eggs are sold for experienced breeders and no incubation support is included. A day-one chick needs round-the-clock hand-feeding. If that isn't your world yet, reserving a weaned chick is the honest, higher-success path." },
+  { q: "Are captive-bred African Grey eggs legal to buy in the USA?", a: "Yes. African Greys are CITES Appendix I, and captive-bred birds and their eggs are legal to own and transfer within the United States with proper paperwork. Every egg traces to our USDA-licensed, captive-bred pairs — never wild-caught — and CITES captive-bred documentation follows the birds." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
+
+const productSchema = {
+  "@context": "https://schema.org", "@type": "Product",
+  name: "Fertile Congo African Grey Parrot Egg (Psittacus erithacus)",
+  image: [ site + IMG + "real-african-grey-eggs-for-sale-hen-nest.webp", site + IMG + "candling-african-grey-egg-fertility-stages.webp" ],
+  description: "A single fertile African Grey parrot egg from a named C.A.Gs breeding pair, candled before dispatch and shipped in an insulated carton. Sold to experienced breeders on honest hatch terms — no guaranteed-hatch claims.",
+  category: "Fertile parrot hatching eggs",
+  brand: { "@type": "Organization", name: "C.A.Gs – Midland, TX" },
+  offers: { "@type": "Offer", price: "95", priceCurrency: "USD", availability: "https://schema.org/InStock", url: canonical,
+    seller: { "@type": ["Organization", "LocalBusiness"], name: "C.A.Gs – Midland, TX", alternateName: "Congo African Greys" } },
+};
 
 const sections = [
   { n: "01", id: "scam", label: "Scam vs. real program", tag: "Start here" },
   { n: "02", id: "cost", label: "Price & what's included", tag: "$95" },
-  { n: "03", id: "shipping", label: "How we pack & ship", tag: "Nationwide" },
+  { n: "03", id: "nursery", label: "Inside our nursery", tag: "Video" },
   { n: "04", id: "pairs", label: "Our breeding pairs", tag: "Named" },
   { n: "05", id: "candling", label: "Fertility, candled", tag: "Proof" },
   { n: "06", id: "incubation", label: "Incubation reality", tag: "28–30 days" },
-  { n: "07", id: "egg-vs-chick", label: "Egg or weaned chick", tag: "The math" },
-  { n: "08", id: "legal", label: "Legal to buy?", tag: "CITES I" },
-  { n: "09", id: "faq", label: "Egg FAQs", tag: "" },
-  { n: "10", id: "reserve", label: "Reserve yours", tag: "24h reply" },
+  { n: "07", id: "shipping", label: "Packing & shipping", tag: "$185 / $350" },
+  { n: "08", id: "egg-vs-chick", label: "Egg or weaned chick", tag: "The math" },
+  { n: "09", id: "health", label: "Health & guarantee", tag: "PCR" },
+  { n: "10", id: "legal", label: "Legal to buy?", tag: "CITES I" },
+  { n: "11", id: "available", label: "Available now", tag: "Birds + eggs" },
+  { n: "12", id: "stories", label: "Buyer stories", tag: "" },
+  { n: "13", id: "compare", label: "How we compare", tag: "vs sellers" },
+  { n: "14", id: "faq", label: "Egg FAQs", tag: "" },
+  { n: "15", id: "reserve", label: "Reserve yours", tag: "24h reply" },
 ];
-
-// Product + Offer (the egg is the primary product) — honest availability, no fabricated rating.
-const productSchema = {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  name: "Fertile Congo African Grey Parrot Egg (Psittacus erithacus)",
-  image: [
-    site + IMG + "fertile-african-grey-parrot-eggs-for-sale-usa.webp",
-    site + IMG + "candling-african-grey-egg-fertility-stages.webp",
-  ],
-  description:
-    "A single fertile African Grey parrot egg from a named C.A.Gs breeding pair, candled before dispatch and shipped in an insulated carton. Sold to experienced breeders on honest hatch terms — no guaranteed-hatch claims.",
-  category: "Fertile parrot hatching eggs",
-  brand: { "@type": "Organization", name: "C.A.Gs – Midland, TX" },
-  offers: {
-    "@type": "Offer",
-    price: "95",
-    priceCurrency: "USD",
-    availability: "https://schema.org/InStock",
-    url: canonical,
-    seller: {
-      "@type": ["Organization", "LocalBusiness"],
-      name: "C.A.Gs – Midland, TX",
-      alternateName: "Congo African Greys",
-    },
-  },
-};
-
-const faqs = [
-  {
-    q: "How much does a fertile African Grey parrot egg cost?",
-    a: "Our fertile African Grey parrot eggs are $95 each, and if you buy 5 eggs US shipping is free. A $200 deposit reserves a clutch. We price every egg the same across our Congo lines — flat pricing that changes by species is one of the scam tells we warn buyers about.",
-  },
-  {
-    q: "How long do African Grey eggs take to hatch?",
-    a: "Under correct incubation, African Grey eggs hatch in about 28–30 days, with the pip-to-hatch window running roughly 24–72 hours. That figure comes from published avian breeding data, not a marketing promise, and it assumes a stable incubator at ~99°F with managed humidity and daily turning.",
-  },
-  {
-    q: "Are the parrot eggs for sale online real, or a scam?",
-    a: "Most of them are a scam — our own scam guide flags the pattern. What separates a real egg program is verifiable identity: a USDA license you can look up, named breeding pairs, CITES Appendix I documentation, and candling proof. We publish all four, which is exactly what the fake egg farms cannot do.",
-  },
-  {
-    q: "How can you tell if an African Grey egg is fertile?",
-    a: "Candling is how we tell — shining a light through the egg reveals veins by about day 5, a spider-web of vessels and an air cell by day 10, and a dark embryo shadow by day 18. We candle before dispatch and can send a dated photo or short video on request, so you see the fertility signs yourself.",
-  },
-  {
-    q: "Do you ship fertilized African Grey eggs near me?",
-    a: "We ship fertile, fertilized African Grey parrot eggs nationwide from Midland, Texas — to Florida, California, New York, North Carolina and every other state — in an insulated carton with a heat pack. If you live within 2–3 hours of Midland, local pickup is the gentlest option for live eggs.",
-  },
-  {
-    q: "Can I incubate African Grey parrot eggs at home?",
-    a: "You can, but it is genuinely hard, expert work — which is why our eggs are sold for experienced breeders and no incubation support is included. A day-one chick needs round-the-clock hand-feeding. If that isn't your world yet, reserving a weaned chick is the honest, higher-success path, and we'll say so.",
-  },
-  {
-    q: "Are captive-bred African Grey eggs legal to buy in the USA?",
-    a: "Yes. African Greys are CITES Appendix I, and captive-bred birds and their eggs are legal to own and transfer within the United States with proper paperwork. Every egg traces to our USDA-licensed, captive-bred pairs — never wild-caught — and CITES captive-bred documentation follows the birds.",
-  },
-];
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
-
-const crossSell = [
-  { name: "Bery", photo: "bery-congo-african-grey-female-1-year-card.webp", price: "$1,700", sub: "Congo hen · 1 yr", slug: "/available/bery/", alt: "Bery, a hand-raised Congo African Grey hen available as a weaned chick" },
-  { name: "Roys", photo: "roys-congo-african-grey-male-tame-card.webp", price: "$2,300", sub: "Congo cock · 4 mo", slug: "/available/roys/", alt: "Roys, a hand-raised Congo African Grey cock ready to reserve" },
-  { name: "Evie", photo: "evie-timneh-african-grey-female-6-months.webp", price: "$1,500", sub: "Timneh hen · 6 mo", slug: "/available/evie/", alt: "Evie, a hand-raised Timneh African Grey hen available now" },
-];
+const seam = "/cag-header-logo-160.webp";
 ---
 
 <BaseLayout {title} {description} {canonical} ogType="product" hideGlobalCta
-  heroPreload={IMG + "fertile-african-grey-parrot-eggs-for-sale-usa.webp"}
-  heroPreloadSrcset={IMG + "fertile-african-grey-parrot-eggs-for-sale-usa-760.webp 760w, " + IMG + "fertile-african-grey-parrot-eggs-for-sale-usa.webp 1408w"}
+  heroPreload={IMG + "real-african-grey-eggs-for-sale-hen-nest.webp"}
+  heroPreloadSrcset={IMG + "real-african-grey-eggs-for-sale-hen-nest-760.webp 760w, " + IMG + "real-african-grey-eggs-for-sale-hen-nest.webp 1408w"}
   heroPreloadSizes="(max-width:900px) 92vw, 520px">
 
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
@@ -117,13 +120,13 @@ const crossSell = [
   <div class="egg">
   <div class="container"><Breadcrumb items={breadcrumbs} /></div>
 
-  <!-- HERO — Split-Hero C (dark + photo grid) -->
+  <!-- HERO — Split-Hero C dark + real nest photo -->
   <header class="egg-hero">
     <div class="container hero-grid">
       <div class="hero-copy">
         <p class="eyebrow">Candled before dispatch · CITES Appendix I · USDA-licensed aviary</p>
         <h1 class="cag-h1">Fertile African Grey Parrot Eggs for Sale in the USA — Candled, Documented, Shipped From Our Texas Aviary</h1>
-        <p class="lead">Here at C.A.Gs in Midland, Texas, we ship fertile African Grey parrot eggs nationwide for $95 each — candled before they leave, traced to named breeding pairs, and sold on honest hatch terms. No "guaranteed hatch," no anonymous farm, just a USDA-licensed breeder you can verify in a minute.</p>
+        <p class="lead">Here at C.A.Gs in Midland, Texas, we ship fertile African Grey parrot eggs nationwide for $95 each — candled before they leave, traced to named breeding pairs we photograph on this page, and sold on honest hatch terms. No "guaranteed hatch," no anonymous farm, just a USDA-licensed breeder you can verify in a minute.</p>
         <div class="hero-cta">
           <a class="btn-clay" href="#reserve">Reserve fertile eggs &rarr;</a>
           <a class="btn-ghost" href="#scam">Is this a scam? Read first</a>
@@ -131,11 +134,10 @@ const crossSell = [
       </div>
       <div class="hero-media">
         <img class="hero-photo"
-          src={IMG + "fertile-african-grey-parrot-eggs-for-sale-usa.webp"}
-          srcset={IMG + "fertile-african-grey-parrot-eggs-for-sale-usa-760.webp 760w, " + IMG + "fertile-african-grey-parrot-eggs-for-sale-usa.webp 1408w"}
-          sizes="(max-width:900px) 92vw, 520px"
-          width="1408" height="768" fetchpriority="high" decoding="async"
-          alt="Fertile African Grey parrot eggs for sale in the USA in a breeder nest box" />
+          src={IMG + "real-african-grey-eggs-for-sale-hen-nest.webp"}
+          srcset={IMG + "real-african-grey-eggs-for-sale-hen-nest-760.webp 760w, " + IMG + "real-african-grey-eggs-for-sale-hen-nest.webp 1408w"}
+          sizes="(max-width:900px) 92vw, 520px" width="1408" height="768" fetchpriority="high" decoding="async"
+          alt="Fertile African Grey parrot eggs for sale in the USA under a brooding hen with a newly hatched chick in our nest box" />
       </div>
     </div>
   </header>
@@ -153,12 +155,16 @@ const crossSell = [
     </div>
   </div>
 
+  <!-- NEWSLETTER — TOP -->
+  <Newsletter variant="top" action="https://formspree.io/f/xrejpnvn"
+    heading="Get First Word on Our Next Fertile Egg Clutch"
+    sub="African Grey clutches are small and seasonal. Join the list and hear the moment candled fertile eggs — or a new weaned chick — open for reservation."
+    cta="Join the egg list" />
+
   <!-- MOBILE JUMP RAIL — Rail A price-chip -->
   <nav class="egg-rail" aria-label="On this page">
     <div class="container railA">
-      {sections.map((s, i) => (
-        <a href={`#${s.id}`} class={i === 0 ? "on" : ""}><span class="p">{s.n}</span> {s.label}</a>
-      ))}
+      {sections.map((s, i) => (<a href={`#${s.id}`} class={i === 0 ? "on" : ""}><span class="p">{s.n}</span> {s.label}</a>))}
     </div>
   </nav>
 
@@ -166,11 +172,9 @@ const crossSell = [
 
     <!-- DESKTOP DIAL TOC -->
     <nav class="dial desk-only" aria-label="Contents">
-      <div class="dial-ring"><div><b>10</b><span>Sections</span></div></div>
+      <div class="dial-ring"><div><b>15</b><span>Sections</span></div></div>
       <div class="dial-list">
-        {sections.map((s) => (
-          <a href={`#${s.id}`}><span class="num">{s.n}</span>{s.label}{s.tag && <span class="tag">{s.tag}</span>}</a>
-        ))}
+        {sections.map((s) => (<a href={`#${s.id}`}><span class="num">{s.n}</span>{s.label}{s.tag && <span class="tag">{s.tag}</span>}</a>))}
       </div>
     </nav>
 
@@ -181,7 +185,7 @@ const crossSell = [
         <li>USDA Animal Welfare Act license you can look up yourself</li>
         <li>Named Congo &amp; Timneh breeding pairs — not an anonymous "farm"</li>
         <li>Candled before dispatch, with a dated photo or video on request</li>
-        <li>CITES Appendix I captive-bred documentation on every bird</li>
+        <li>Our own nursery photos and a hand-rearing video, not stock images</li>
         <li>Honest hatch odds — we never claim "100% fertile" or a guaranteed hatch</li>
       </ul>
     </div>
@@ -192,28 +196,20 @@ const crossSell = [
       <section id="scam">
         <h2 class="cag-h2">Why are almost all "African Grey eggs for sale" listings a scam — and how are we different?</h2>
         <p>Buying fertile African Grey parrot eggs online is a minefield, and we'd rather lose a sale than pretend otherwise: nearly every egg listing you'll find is a fake-farm scam, a fact our own <a href="/how-to-avoid-african-grey-parrot-scams/">scam-prevention guide documents in detail</a>. The whole point of this page is to show you what a real, verifiable egg program looks like — because "different from those listings" is the only claim worth making here.</p>
-        <img class="sec-img inf-img"
-          src={IMG + "real-vs-fake-african-grey-egg-breeder-comparison.webp"}
-          srcset={IMG + "real-vs-fake-african-grey-egg-breeder-comparison-760.webp 760w, " + IMG + "real-vs-fake-african-grey-egg-breeder-comparison.webp 1408w"}
-          sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
-          alt="Comparison of real African Grey egg breeders versus fake egg-farm scam patterns" />
+        <img class="sec-img inf-img" src={IMG + "real-vs-fake-african-grey-egg-breeder-comparison.webp"} srcset={IMG + "real-vs-fake-african-grey-egg-breeder-comparison-760.webp 760w, " + IMG + "real-vs-fake-african-grey-egg-breeder-comparison.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Comparison of real African Grey egg breeders versus fake egg-farm scam patterns" />
 
         <h3 class="cag-h3">What does a fake egg farm actually look like?</h3>
-        <p>A fake egg farm is a keyword-stuffed website with no human behind it, and once you know the shape it's easy to spot: flat pricing across wildly different species, "free cage" bundled with an egg, and a promise no biologist would make. We call these out so you can walk past them, even the ones we don't run.</p>
+        <p>A fake egg farm is a keyword-stuffed website with no human behind it, and once you know the shape it's easy to spot: flat pricing across wildly different species, "free cage" bundled with an egg, and a promise no biologist would make. We call these out so you can walk past them — even the ones we don't run.</p>
 
         <h4 class="cag-h4">The five red flags every fake listing shares</h4>
-        <p>These five tells — an anonymous seller, one flat price for Greys and macaws alike, a "100% fertile / guaranteed hatch" promise, a free-cage or gift hook, and no verifiable license — travel together on the scam pages. Real breeders fail at least one of them on purpose, because reality doesn't come with guarantees.</p>
+        <p>These five tells — an anonymous seller, one flat price for greys and macaws alike, a "100% fertile / guaranteed hatch" promise, a free-cage or gift hook, and no verifiable license — travel together on the scam pages. Real breeders fail at least one of them on purpose, because reality doesn't come with guarantees.</p>
 
         <h5 class="cag-h5">Why no honest breeder promises "100% fertile"</h5>
         <p>No honest breeder promises "100% fertile," and here's the biology: fertility is confirmed by candling days into incubation, not at the moment of sale, and even a fertile egg can quit. When a listing guarantees a hatch, it's guaranteeing something nature doesn't — which is why that phrase is a scam tell, not a selling point.</p>
 
         <h3 class="cag-h3" id="verify">How can you verify C.A.Gs in 60 seconds?</h3>
         <p>Verification is the antidote to egg-scam anxiety, and ours takes about a minute. Because we are a USDA Animal Welfare Act–licensed aviary in Midland, Texas, you can confirm we exist before you send a cent — something no fake farm can survive.</p>
-        <img class="sec-img inf-img"
-          src={IMG + "verify-usda-bird-breeder-license-steps.webp"}
-          srcset={IMG + "verify-usda-bird-breeder-license-steps-760.webp 760w, " + IMG + "verify-usda-bird-breeder-license-steps.webp 1408w"}
-          sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
-          alt="Three steps to verify a USDA bird breeder license before buying eggs" />
+        <img class="sec-img inf-img" src={IMG + "verify-usda-bird-breeder-license-steps.webp"} srcset={IMG + "verify-usda-bird-breeder-license-steps-760.webp 760w, " + IMG + "verify-usda-bird-breeder-license-steps.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Three steps to verify a USDA bird breeder license before buying eggs" />
 
         <h4 class="cag-h4">Look up our USDA license yourself</h4>
         <p><a href="https://aphis.usda.gov/aphis/ourfocus/animalwelfare" target="_blank" rel="noopener">The USDA APHIS public search</a> is where you start: open the Animal Welfare Act license lookup, search our aviary, and match the name and active status. It's the fastest legitimacy check in the hobby, and we invite it.</p>
@@ -225,17 +221,13 @@ const crossSell = [
         <p>We are C.A.Gs (Congo African Greys), owned by Mark &amp; Teri Benjamin, a family aviary in Midland, TX 79707, operating since 2014. That NAP is the one on our USDA record and our <a href="/contact-us/">contact page</a> — if a listing's details don't match its paperwork, that's your answer.</p>
       </section>
 
-      <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 2 · COST -->
       <section id="cost">
         <h2 class="cag-h2">How much do fertile African Grey eggs cost, and what's included?</h2>
-        <p>Our fertile African Grey parrot eggs are $95 each — a single, honest, same-across-our-Congo-lines price, because flat pricing that jumps by species is itself a scam tell. That $95 buys a candled egg from a named pair, packed for transit; it does not buy a hatch guarantee, and we'd rather say that plainly than sell you a fantasy.</p>
-        <img class="sec-img inf-img"
-          src={IMG + "african-grey-egg-clutch-price-candling.webp"}
-          srcset={IMG + "african-grey-egg-clutch-price-candling-760.webp 760w, " + IMG + "african-grey-egg-clutch-price-candling.webp 1408w"}
-          sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
-          alt="African Grey egg clutch priced at $95 each with a candling torch" />
+        <p>Our fertile African Grey parrot eggs are $95 each — a single, honest, same-across-our-Congo-lines African Grey egg price, because flat pricing that jumps by species is itself a scam tell. That $95 buys a candled egg from a named pair, packed for transit; it does not buy a hatch guarantee, and we'd rather say that plainly than sell you a fantasy.</p>
+        <img class="sec-img inf-img" src={IMG + "fertile-african-grey-eggs-ready-for-incubator.webp"} srcset={IMG + "fertile-african-grey-eggs-ready-for-incubator-760.webp 760w, " + IMG + "fertile-african-grey-eggs-ready-for-incubator.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Nine cream fertile African Grey eggs packed and ready for the incubator" />
 
         <div class="k1" role="note" aria-label="African Grey egg pricing summary">
           <p class="k1-title">African Grey egg pricing</p>
@@ -258,41 +250,43 @@ const crossSell = [
 
         <h6 class="cag-h6">Citation — figures from our live price list</h6>
         <p>Every number here is pulled from our current C.A.Gs price list, the same source behind our <a href="/african-grey-parrot-price/">full African Grey pricing guide</a>. If a figure ever differs between pages, the price list governs and we correct the page.</p>
+
+        <h4 class="cag-h4">How many eggs are in a clutch?</h4>
+        <p>An African Grey hen lays a small clutch of 2–4 eggs, one every other day, which is exactly why real fertile eggs are limited and seasonal. Any listing offering unlimited flat-rate eggs across every parrot species is describing a farm that biology doesn't allow.</p>
       </section>
 
-      <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
 
-      <!-- 3 · SHIPPING -->
-      <section id="shipping">
-        <h2 class="cag-h2">How do we pack and ship African Grey eggs nationwide?</h2>
-        <p>Shipping live eggs is the part scammers gloss over and we don't, because packaging is where hatchability is won or lost: we cradle each fertile egg in a foam-lined insulated carton with a heat pack and a handling card, then move it on the fastest honest transit we can. Even done right, shipped eggs carry more risk than local pickup — and you deserve to hear that before you order.</p>
-        <img class="sec-img inf-img"
-          src={IMG + "insulated-carton-parrot-egg-nationwide-shipping.webp"}
-          srcset={IMG + "insulated-carton-parrot-egg-nationwide-shipping-760.webp 760w, " + IMG + "insulated-carton-parrot-egg-nationwide-shipping.webp 1408w"}
-          sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
-          alt="Insulated carton packing fertile parrot eggs for safe nationwide shipping" />
+      <!-- 3 · NURSERY + VIDEO -->
+      <section id="nursery">
+        <h2 class="cag-h2">What does it look like inside our African Grey nursery?</h2>
+        <p>Real proof beats any promise, so instead of describing our aviary we'll show it: these are our own African Grey hatchlings and chicks in Midland, photographed and filmed here — the kind of evidence a stock-photo egg farm can never produce. Watching a clutch move from egg to fledgling is the honest picture behind every fertile egg we sell.</p>
+        <img class="sec-img inf-img" src={IMG + "african-grey-hatchlings-nest-box-aviary.webp"} srcset={IMG + "african-grey-hatchlings-nest-box-aviary-760.webp 760w, " + IMG + "african-grey-hatchlings-nest-box-aviary.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="African Grey hatchlings feathering out in the nest box at our Texas aviary" />
 
-        <h3 class="cag-h3">What does arrival day look like?</h3>
-        <p>Arrival day is a rest-and-settle day, not an incubate-immediately scramble: we tell buyers to let shipped eggs sit pointed-end-up at room temperature for several hours so the air cell restabilizes before setting. That single instruction — which the fake farms never send — protects the clutch you paid for.</p>
+        <h3 class="cag-h3">Watch our African Grey chicks being hand-reared</h3>
+        <p>Press play on our own aviary footage — no narration, no stock clips, just our African Grey chicks during hand-rearing. It's the clearest answer to "are these real birds?" that we can give you before you ever reach out.</p>
+        <div class="video-wrap">
+          <video controls preload="none" width="1408" height="768" poster={IMG + "cags-african-grey-chicks-video-poster.webp"}>
+            <source src={IMG + "cags-african-grey-chicks-hand-rearing.mp4"} type="video/mp4" />
+            Your browser doesn't support embedded video — the clip shows our African Grey chicks being hand-reared at C.A.Gs.
+          </video>
+        </div>
 
-        <h4 class="cag-h4">Insulated carton, heat pack, and transit window</h4>
-        <p>The carton pairs foam egg cradles with a warming pack sized to the season, and we aim for the shortest realistic transit window because time in transit is the enemy of a viable egg. We confirm the carrier and the promised window with you before dispatch, so nothing about delivery is a surprise.</p>
+        <h4 class="cag-h4">From hatch to weaning, in our hands</h4>
+        <p>Every chick we place is hand-raised here from hatch to fully weaned at 12–16 weeks, which is why our birds arrive tame and socialized. That same nursery is where fertile eggs come from — so when you buy an egg, you're buying into a line we raise ourselves, not a shipment we flip.</p>
+        <img class="sec-img inf-img" src={IMG + "congo-african-grey-chicks-brooder-hand-reared.webp"} srcset={IMG + "congo-african-grey-chicks-brooder-hand-reared-760.webp 760w, " + IMG + "congo-african-grey-chicks-brooder-hand-reared.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Downy Congo African Grey chicks hand-reared in the C.A.Gs brooder" />
 
-        <h5 class="cag-h5">An honest word on shipping risk to live eggs</h5>
-        <p>Here's the honest warning: parrot eggs are fragile cargo, and jostling, cold, or delay can end development even with perfect packing. If you live within 2–3 hours of Midland, TX, we'll steer you to <a href="/contact-us/">local pickup</a> instead — the gentlest handoff a fertile egg can get.</p>
+        <h5 class="cag-h5">Hatchlings and fledglings, not just eggs</h5>
+        <p>If an incubator isn't your world, our African Grey hatchlings grow into the weaned chicks listed further down this page. Buyers searching for hatchlings for sale usually want the outcome of an egg without the risk — and that outcome already lives in our nursery.</p>
       </section>
 
-      <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 4 · BREEDING PAIRS -->
       <section id="pairs">
         <h2 class="cag-h2">Which breeding pairs do our fertile eggs come from?</h2>
         <p>Named parents are the difference between a real egg program and a photo library, so we tell you whose clutch you're buying: our fertile eggs come from established Congo pairs like James &amp; Lois and our Timneh pair Levi &amp; Rily, birds we raise and health-screen ourselves. Traceable parentage is exactly what an anonymous farm can never offer.</p>
-        <img class="sec-img inf-img"
-          src={IMG + "congo-african-grey-breeding-pair-nest-box.webp"}
-          srcset={IMG + "congo-african-grey-breeding-pair-nest-box-760.webp 760w, " + IMG + "congo-african-grey-breeding-pair-nest-box.webp 1408w"}
-          sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
-          alt="Congo African Grey breeding pair whose clutch produces our fertile eggs" />
+        <img class="sec-img inf-img" src={IMG + "candled-african-grey-eggs-nest-warm-light.webp"} srcset={IMG + "candled-african-grey-eggs-nest-warm-light-760.webp 760w, " + IMG + "candled-african-grey-eggs-nest-warm-light.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Candled African Grey eggs beside downy chicks under a warm brooding light in our nest box" />
 
         <h3 class="cag-h3">Our named Congo &amp; Timneh pairs</h3>
         <p>Each producing pair in our aviary is a known quantity — bonded, mature adults with a track record we can speak to, not rotating stock. Because we breed both variants, an egg can trace to a Congo line (Psittacus erithacus) or a Timneh line (Psittacus timneh), and we tell you which.</p>
@@ -304,48 +298,40 @@ const crossSell = [
         <p>Our breeding birds are PCR-screened for PBFD (Psittacine Beak and Feather Disease) and Avian Polyomavirus, with negatives required before placement, so the genetics behind your egg come from a health-tested foundation. It's the same screening standard behind every hand-raised chick we place.</p>
       </section>
 
-      <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 5 · CANDLING -->
       <section id="candling">
         <h2 class="cag-h2">How do we prove an African Grey egg is fertile before it ships?</h2>
         <p>Candling is our proof of fertility, and we do it before an egg ever leaves the aviary: passing a bright light through the shell reveals the developing embryo, so "fertile" is something we've seen, not something we've asserted. On request we'll send you a dated candling photo or short video of your own clutch — the transparency the scam farms structurally can't provide.</p>
-        <img class="sec-img inf-img"
-          src={IMG + "candling-african-grey-egg-fertility-stages.webp"}
-          srcset={IMG + "candling-african-grey-egg-fertility-stages-760.webp 760w, " + IMG + "candling-african-grey-egg-fertility-stages.webp 1408w"}
-          sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
-          alt="Candling an African Grey egg shows veins, air cell and embryo development by day" />
+        <img class="sec-img inf-img" src={IMG + "candling-african-grey-egg-fertility-stages.webp"} srcset={IMG + "candling-african-grey-egg-fertility-stages-760.webp 760w, " + IMG + "candling-african-grey-egg-fertility-stages.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Candling an African Grey egg shows veins, air cell and embryo development by day" />
 
         <h3 class="cag-h3">What does candling reveal by day 5, 10 and 18?</h3>
-        <p>Candling tells a developmental story on a schedule: fine veins appear around day 5, a web of vessels and a defined air cell by day 10, and a dark embryo shadow with a large air cell by day 18. Reading those stages is how we confirm an egg is truly progressing before we pack it.</p>
+        <p>Candling tells a developmental story on a schedule: fine veins appear around day 5, a web of vessels and a defined air cell by day 10, and a dark embryo shadow by day 18. Reading those stages is how we confirm an egg is truly progressing before we pack it.</p>
 
         <h4 class="cag-h4">Dated candling photo or video on request</h4>
         <p>Ask and we'll document it: a timestamped candling image or clip of your clutch, so your first fertility check happens before shipping, not after a loss. That single file resolves most egg-scam fear on its own, which is precisely why we offer it up front.</p>
 
         <h5 class="cag-h5">Veins, air cell and embryo — what we look for</h5>
-        <p>Under the light we're reading three things — branching blood vessels, a clean air cell at the blunt end, and embryo movement or shadow — and a clear or "candle-through" egg with none of these is one we pull, not ship. Honest candling means some eggs don't make the cut.</p>
+        <p>Under the light we're reading three things — branching blood vessels, a clean air cell at the blunt end, and embryo movement or shadow — and a clear "candle-through" egg with none of these is one we pull, not ship. Honest candling means some eggs don't make the cut.</p>
 
         <h6 class="cag-h6">Breeder note — Teri's candling routine</h6>
         <p>In Teri's words, she candles in a darkened room, blunt-end up, and re-checks anything ambiguous a few days later rather than guessing — patience beats optimism with a developing egg. It's the same careful eye she brings to every clutch we hatch here.</p>
       </section>
 
-      <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
 
       <!-- 6 · INCUBATION -->
       <section id="incubation">
         <h2 class="cag-h2">What does incubating an African Grey egg actually take?</h2>
         <p>Incubating a Psittacus erithacus egg is demanding, precise work, and we'd rather you walk in clear-eyed: it means holding roughly 99°F and managed humidity for 28–30 days, turning several times a day, then hand-feeding a helpless chick around the clock. We publish the real requirements because every fake farm promises a PDF and none of them tell you the truth.</p>
-        <img class="sec-img inf-img"
-          src={IMG + "african-grey-egg-incubation-timeline-28-30-days.webp"}
-          srcset={IMG + "african-grey-egg-incubation-timeline-28-30-days-760.webp 760w, " + IMG + "african-grey-egg-incubation-timeline-28-30-days.webp 1408w"}
-          sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
-          alt="African Grey egg incubation timeline from set to hatch over 28 to 30 days" />
+        <img class="sec-img inf-img" src={IMG + "african-grey-egg-incubation-timeline-28-30-days.webp"} srcset={IMG + "african-grey-egg-incubation-timeline-28-30-days-760.webp 760w, " + IMG + "african-grey-egg-incubation-timeline-28-30-days.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="African Grey egg incubation timeline from set to hatch over 28 to 30 days" />
 
         <h3 class="cag-h3">The 28–30 day reality</h3>
         <p>From set to pip runs about 28–30 days for an African Grey, with hatching itself unfolding over roughly 24–72 hours once the chick breaks through. Those are biological windows, not delivery estimates, and rushing or "helping" a hatch is a common way to lose a chick that would have made it.</p>
 
         <h4 class="cag-h4">Temperature, humidity and the turning schedule</h4>
-        <p>Stable incubation lives on three dials — a temperature near 99°F, humidity managed to control moisture loss, and turning several times daily until roughly day 25 — and drift on any one can end development. This is why our eggs are sold to breeders who already own and trust their equipment.</p>
+        <p>Stable incubation lives on three dials — a temperature near 99°F, incubator humidity managed around 45–50% and raised for the final days, and turning several times daily until roughly day 25 — and drift on any one can end development. This is why our eggs are sold to breeders who already own and trust their equipment.</p>
 
         <h5 class="cag-h5">The mistakes that cost first-timers a clutch</h5>
         <p>The classic first-timer losses are avoidable and heartbreaking: an unstable incubator, skipped turning, wrong humidity, or assisting a pip too early. If reading that list makes an incubator feel like a leap, that's useful information — it may mean a weaned chick is the better call for you.</p>
@@ -354,72 +340,109 @@ const crossSell = [
         <p>Our timeline figures track published avian sources such as <a href="https://birdsoftheworld.org/" target="_blank" rel="noopener">Cornell's Birds of the World</a> and peer-reviewed breeding-biology literature, not marketing copy. We cite them so you can check the numbers against science rather than take our word.</p>
       </section>
 
-      <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
 
-      <!-- 7 · EGG VS CHICK -->
+      <!-- 7 · SHIPPING -->
+      <section id="shipping">
+        <h2 class="cag-h2">How do we pack and ship African Grey eggs — and birds — nationwide?</h2>
+        <p>Shipping live cargo is the part scammers gloss over and we don't: fertile eggs travel cradled in a foam-lined insulated carton with a heat pack, while a reserved chick flies IATA live-animal cargo on the two delivery tiers below. Even done right, shipped eggs carry more risk than local pickup — and you deserve to hear that before you order.</p>
+        <img class="sec-img inf-img" src={IMG + "congo-african-grey-egg-shipping-flats-box.webp"} srcset={IMG + "congo-african-grey-egg-shipping-flats-box-760.webp 760w, " + IMG + "congo-african-grey-egg-shipping-flats-box.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Protective egg-carton flats packed in a shipping box for parrot eggs" />
+
+        <h3 class="cag-h3">How do fertile eggs travel to you?</h3>
+        <p>Eggs ship in a rigid insulated carton with foam cradles, a season-sized heat pack, and a handling card, on the shortest honest transit we can book. We confirm the carrier and the promised window with you before dispatch, so nothing about delivery is a surprise.</p>
+
+        <h4 class="cag-h4">What arrival day looks like</h4>
+        <p>Arrival day is a rest-and-settle day, not an incubate-immediately scramble: we tell buyers to let shipped eggs sit pointed-end-up at room temperature for several hours so the air cell restabilizes before setting. That single instruction — which the fake farms never send — protects the clutch you paid for.</p>
+
+        <h5 class="cag-h5">An honest word on shipping risk to live eggs</h5>
+        <p>Here's the honest warning: parrot eggs are fragile cargo, and jostling, cold, or delay can end development even with perfect packing. If you live within 2–3 hours of Midland, TX, we'll steer you to <a href="/contact-us/">local pickup</a> instead — the gentlest handoff a fertile egg can get.</p>
+
+        <h3 class="cag-h3">How does a reserved chick ship — and what does it cost?</h3>
+        <p>Reserve a weaned chick instead of an egg and it travels on one of two tiers, nationwide, whichever variant you choose. Every shipment leaves with the full document folder and health certificate.</p>
+        <div class="ship-cards">
+          <div class="ship-c">
+            <img src="/african-grey-airport-live-animal-shipping.webp" width="640" height="797" loading="lazy" decoding="async" alt="IATA live-animal shipping crate for an African Grey arriving at the airline cargo desk" />
+            <div class="ship-body"><span class="ship-tier">Tier 1</span><b>Airport Pickup</b><span class="ship-price">$185</span>
+            <p>Live-animal cargo on Delta, United or American into the major airport nearest you</p></div>
+          </div>
+          <div class="ship-c">
+            <img src="/african-grey-home-delivery-pet-van.webp" width="640" height="426" loading="lazy" decoding="async" alt="Climate-controlled pet delivery van used for C.A.Gs African Grey home deliveries" />
+            <div class="ship-body"><span class="ship-tier clay">Tier 2</span><b>Home Delivery</b><span class="ship-price">$350</span>
+            <p>A climate-controlled courier van brings the bird — and its full paperwork — to your door</p></div>
+          </div>
+        </div>
+        <h4 class="cag-h4">Where do our greys and eggs go most often?</h4>
+        <p>These routes cover much of what leaves Midland in a season, and our full <a href="/buy-african-grey-parrots-with-shipping/">African Grey shipping process</a> lives on its own page. Each pill goes to that area's availability page:</p>
+        <ul class="ship-places">
+          {shipPlaces.map((s) => (<li><a href={s.href}><svg class="pin" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>{s.label}</span></a></li>))}
+        </ul>
+        <p class="ship-line">Ships nationwide · $185 airport · $350 home</p>
+      </section>
+
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 8 · EGG VS CHICK -->
       <section id="egg-vs-chick">
         <h2 class="cag-h2">Egg or weaned chick — which should you really buy?</h2>
         <p>Choosing between an egg and a weaned chick is really a choice about risk and skill, and we'll give you the honest math instead of the upsell: an egg is cheaper up front but adds an incubator, a brooder, hand-feeding hours, and real odds of loss, while a weaned chick is one fixed price and a bird that's already eating on its own. For most families, the chick is the higher-success path — and we'll tell you so even though the egg is the cheaper line item.</p>
-        <img class="sec-img inf-img"
-          src={IMG + "egg-vs-weaned-chick-cost-success-comparison.webp"}
-          srcset={IMG + "egg-vs-weaned-chick-cost-success-comparison-760.webp 760w, " + IMG + "egg-vs-weaned-chick-cost-success-comparison.webp 1408w"}
-          sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
-          alt="True cost and success-rate comparison of hatching an egg versus reserving a weaned chick" />
+        <img class="sec-img inf-img" src={IMG + "egg-vs-weaned-chick-cost-success-comparison.webp"} srcset={IMG + "egg-vs-weaned-chick-cost-success-comparison-760.webp 760w, " + IMG + "egg-vs-weaned-chick-cost-success-comparison.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="True cost and success-rate comparison of hatching an egg versus reserving a weaned chick" />
 
         <h3 class="cag-h3">The true cost &amp; success-rate math</h3>
         <p>On paper an egg starts at $95 while a weaned Congo chick runs $1,700–$2,500, but the egg's real cost includes equipment, weeks of labor, and a success rate that depends entirely on your skill. When you price the whole path rather than the sticker, the "cheap" egg and the "expensive" chick are much closer than they look.</p>
+        <img class="sec-img inf-img" src={IMG + "day-old-african-grey-hatchling-palm.webp"} srcset={IMG + "day-old-african-grey-hatchling-palm-760.webp 760w, " + IMG + "day-old-african-grey-hatchling-palm.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="A day-old African Grey hatchling cradled in a palm at our aviary" />
 
-        <div class="otA" role="table" aria-label="Egg versus weaned chick versus adult">
+        <div class="otA">
           <table>
             <thead><tr><th>Path</th><th>Starting price</th><th>Extra gear</th><th>Skill / labor</th><th>Best for</th></tr></thead>
             <tbody>
               <tr><td data-label="Path"><b>Fertile egg</b><span class="sub">Psittacus erithacus</span></td><td data-label="Starting price">$95 each</td><td data-label="Extra gear">Incubator + brooder</td><td data-label="Skill / labor">Expert · high</td><td data-label="Best for">Experienced breeders</td></tr>
-              <tr><td data-label="Path"><b>Weaned chick</b><span class="sub">Congo, hand-raised</span></td><td data-label="Starting price">$1,700–$2,500</td><td data-label="Extra gear">Cage &amp; toys only</td><td data-label="Skill / labor">Beginner-friendly</td><td data-label="Best for">Most families</td></tr>
-              <tr><td data-label="Path"><b>Timneh chick</b><span class="sub">Hand-raised</span></td><td data-label="Starting price">$1,500–$1,600</td><td data-label="Extra gear">Cage &amp; toys only</td><td data-label="Skill / labor">Beginner-friendly</td><td data-label="Best for">Calmer, earlier talker</td></tr>
+              <tr><td data-label="Path"><b>Weaned Congo chick</b><span class="sub">Hand-raised</span></td><td data-label="Starting price">$1,700–$2,500</td><td data-label="Extra gear">Cage &amp; toys only</td><td data-label="Skill / labor">Beginner-friendly</td><td data-label="Best for">Most families</td></tr>
+              <tr><td data-label="Path"><b>Weaned Timneh chick</b><span class="sub">Hand-raised</span></td><td data-label="Starting price">$1,500–$1,600</td><td data-label="Extra gear">Cage &amp; toys only</td><td data-label="Skill / labor">Beginner-friendly</td><td data-label="Best for">Calmer, earlier talker</td></tr>
             </tbody>
           </table>
         </div>
 
         <h4 class="cag-h4">Why most buyers should reserve a weaned chick instead</h4>
         <p>If your goal is a talking companion rather than a breeding project, reserving a <a href="/baby-african-grey-parrot-for-sale/">hand-raised weaned baby</a> skips every failure point between egg and fledgling. We hand-raise ours to 12–16 weeks, so you get a socialized bird — not a gamble — and we're glad to point you there.</p>
+        <img class="sec-img inf-img" src={IMG + "curious-baby-african-grey-weaning.webp"} srcset={IMG + "curious-baby-african-grey-weaning-760.webp 760w, " + IMG + "curious-baby-african-grey-weaning.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="A curious baby African Grey held in hand during weaning at C.A.Gs" />
 
         <h5 class="cag-h5">Hand-feeding a day-one chick is expert-only work</h5>
         <p>A newly hatched African Grey needs formula at the right temperature every few hours, day and night, and mistakes cause crop burns or aspiration — this is genuinely expert-only work. Our own weaned chicks below are the shortcut past all of it.</p>
-
-        <div class="bird-cards">
-          {crossSell.map((b) => (
-            <article class="bird-c">
-              <a class="bird-photo" href={b.slug}>
-                <img src={"/" + b.photo} width="400" height="300" loading="lazy" decoding="async" alt={b.alt} />
-                <span class="bird-badge">Available now</span>
-              </a>
-              <div class="bird-body">
-                <div class="bird-top">
-                  <p class="bird-name"><a href={b.slug}>{b.name}</a></p>
-                  <span class="bird-price">{b.price}</span>
-                </div>
-                <ul class="bird-docs">
-                  <li>DNA-sexed</li><li>PBFD/APV screened</li><li>CITES papered</li>
-                </ul>
-                <div class="bird-cta"><a class="btn-clay sm" href="#reserve">Reserve {b.name} &rarr;</a></div>
-                <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span>
-              </div>
-            </article>
-          ))}
-        </div>
       </section>
 
-      <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+      <div class="nl-inflow">
+      <Newsletter variant="middle" compact action="https://formspree.io/f/xrejpnvn" eyebrow="Clutch alerts"
+        heading="Rather Skip the Incubator? Get Chick Alerts" sub="One short email the moment a new hand-raised Congo or Timneh chick — or a candled fertile clutch — opens for reservation."
+        cta="Add my email" img={IMG + "cuddly-hand-raised-african-grey-baby.webp"} imgAlt="A cuddly hand-raised African Grey baby resting against its keeper's arm at C.A.Gs" imgCaption="Hand-raised in Midland, TX" note="Clutch and chick updates only." />
+      </div>
 
-      <!-- 8 · LEGAL -->
+      <!-- 9 · HEALTH -->
+      <section id="health">
+        <h2 class="cag-h2">What health screening and guarantee back our African Greys?</h2>
+        <p>Health is where an ethical breeder earns trust, so every bird we place is PCR-screened and vet-checked before it leaves — and the eggs come from that same tested foundation. A reserved chick arrives with a written health guarantee; an egg, by its nature, cannot carry one, and we say so plainly rather than pretend otherwise.</p>
+        <img class="sec-img inf-img" src={IMG + "hand-feeding-african-grey-chick-formula.webp"} srcset={IMG + "hand-feeding-african-grey-chick-formula-760.webp 760w, " + IMG + "hand-feeding-african-grey-chick-formula.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Hand-feeding a downy African Grey chick with formula at our aviary" />
+
+        <h3 class="cag-h3">What does every C.A.Gs bird leave with?</h3>
+        <p>The document folder is the same across every companion bird we place, and it's exactly what a fake listing can't assemble. Here's the stack that travels with a reserved chick:</p>
+        <div class="health-card">
+          <div class="hc-head">Every grey leaves with</div>
+          <ul class="hc-list"><li>PBFD (Beak &amp; Feather Disease) PCR screening</li><li>Avian Polyomavirus PCR screening</li><li>DNA sexing certificate</li><li>Avian-vet health certificate</li><li>Hatch certificate + closed leg band</li></ul>
+        </div>
+
+        <h4 class="cag-h4">PBFD &amp; Polyomavirus PCR screening</h4>
+        <p>We PCR-test our breeding birds and chicks for PBFD and Avian Polyomavirus, with negatives required before placement, because those two diseases are the ones that quietly wreck a collection. Screening the parents is also why the fertile eggs come from a clean, tested line rather than an unknown one.</p>
+
+        <h5 class="cag-h5">The written health guarantee on reserved chicks</h5>
+        <p>Reserved chicks carry a written health guarantee — full terms live on our <a href="/african-greys-for-sale-with-health-guarantee/">African Grey health guarantee page</a>. It covers the bird you can hold and vet-check; an egg's outcome depends on your incubator, which is the honest reason eggs are sold as-is to experienced breeders.</p>
+      </section>
+
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 10 · LEGAL -->
       <section id="legal">
         <h2 class="cag-h2">Are captive-bred African Grey eggs legal to buy in the USA?</h2>
         <p>Legality is a fair worry with African Greys, and the honest answer is reassuring: because our birds are captive-bred, their eggs are legal to own and transfer within the United States with the right paperwork. African Greys are CITES Appendix I, and we lean into that status rather than dodge it — it's the frame that separates documented breeders from the wild-caught trade we'll never touch.</p>
-        <img class="sec-img inf-img"
-          src={IMG + "captive-bred-cites-appendix-i-egg-documentation.webp"}
-          srcset={IMG + "captive-bred-cites-appendix-i-egg-documentation-760.webp 760w, " + IMG + "captive-bred-cites-appendix-i-egg-documentation.webp 1408w"}
-          sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
-          alt="Captive-bred CITES Appendix I documentation accompanying African Grey eggs" />
+        <img class="sec-img inf-img" src={IMG + "captive-bred-cites-appendix-i-egg-documentation.webp"} srcset={IMG + "captive-bred-cites-appendix-i-egg-documentation-760.webp 760w, " + IMG + "captive-bred-cites-appendix-i-egg-documentation.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Captive-bred CITES Appendix I documentation accompanying African Grey eggs" />
 
         <h3 class="cag-h3">CITES Appendix I + USDA AWA, in plain English</h3>
         <p>In plain terms, CITES Appendix I is the strictest protection tier, and it makes captive-bred documentation essential — which is exactly why we keep it on every bird. Pair that with our USDA Animal Welfare Act license and you have a paper trail a fake listing simply cannot reproduce.</p>
@@ -434,23 +457,106 @@ const crossSell = [
         <p>The species moved up to <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">CITES Appendix I</a> at CoP17 — effective January 2017, a tightening from its former Appendix II listing — per the Convention's own records. We reference the source so the status is verifiable, not just stated.</p>
       </section>
 
-      <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
 
-      <!-- 9 · FAQ -->
+      <!-- 11 · AVAILABLE -->
+      <section id="available">
+        <h2 class="cag-h2">Which African Greys — and eggs — are available now?</h2>
+        <p>Most buyers who land on an egg page actually want the outcome of an egg, so here's everything currently reservable at C.A.Gs: hand-raised Congo and Timneh chicks, a companion pair, a proven breeding pair, and our candled fertile eggs. Each listing below opens that bird's own page, where its photos, parentage and full paperwork live.</p>
+        <div class="bird-cards">
+          {available.map((b) => (
+            <article class="bird-c">
+              <a class="bird-photo" href={b.slug} tabindex="-1">
+                {birdImg[b.id] && <img src={birdImg[b.id].src} width="400" height="300" loading="lazy" decoding="async" alt={birdImg[b.id].alt} />}
+                <span class="bird-badge">{b.variant === "timneh_african_grey" ? "Timneh" : "Congo"} · Available</span>
+              </a>
+              <div class="bird-body">
+                <div class="bird-top"><p class="bird-name"><a href={b.slug}>{b.name}</a></p><span class="bird-price">{b.price_display}</span></div>
+                <ul class="bird-docs">{docBadges.map((d) => (<li>{d}</li>))}</ul>
+                <div class="bird-cta"><a class="btn-clay sm" href="#reserve">Reserve {b.name} &rarr;</a></div>
+                <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <h3 class="cag-h3">Prefer a breeding pair or the fertile eggs themselves?</h3>
+        <p>Established aviaries write us about our proven-producing African Grey pair, and experienced incubator keepers ask for the candled fertile hatching eggs directly — both carry the same documentation stack as our companion birds.</p>
+        <div class="pair-row">
+          <div class="pair-c">
+            <img class="pimg-pair" src={IMG + "congo-african-grey-breeding-pair-nest-box.webp"} width="760" height="415" loading="lazy" decoding="async" alt="Congo African Grey breeding pair at the nest box whose clutch produces our fertile eggs" />
+            <div class="pair-body"><b>Bonded Proven-Producer Pair</b><span class="bird-price">$3,000</span>
+            <span class="pair-sub">DNA-certified, actively producing — for established aviaries, not first homes</span>
+            <a class="btn-ghost sm" href="/african-grey-breeding-pair-for-sale/">See the pair page</a>
+            <span class="ship-mini">Ships nationwide · $185 airport · $350 home</span></div>
+          </div>
+          <div class="pair-c">
+            <img class="pimg-eggs" src={IMG + "african-grey-parrot-eggs-nesting-clutch.webp"} width="760" height="415" loading="lazy" decoding="async" alt="A clutch of candled fertile African Grey parrot eggs resting in the nesting substrate" />
+            <div class="pair-body"><b>Candled Fertile Hatching Eggs</b><span class="bird-price">$95 each</span>
+            <span class="pair-sub">Confirmed developing under the candling light before dispatch; for experienced incubator keepers, with free US shipping on five</span>
+            <a class="btn-ghost sm" href="#reserve">Reserve fertile eggs</a></div>
+          </div>
+        </div>
+        <p class="ctr"><a class="btn-clay" href="/available/">See all available African Greys</a></p>
+      </section>
+
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 12 · STORIES -->
+      <section id="stories">
+        <h2 class="cag-h2">What do C.A.Gs buyers say?</h2>
+        <p>We could describe our service, but two verified buyers say it better — both bought sight-unseen and both had the shipping and documentation go the way this page promises. Dozens more buyer accounts, with photos, are collected on our <a href="/african-grey-reviews/">African Grey reviews</a> page.</p>
+        <div class="quote-grid">
+          {stories.map((s) => (
+            <blockquote class="quote-c">
+              <div class="q-head">
+                <img class="q-av" src={s.avatar} width="56" height="56" loading="lazy" decoding="async" alt={`${s.name}, C.A.Gs buyer in ${s.loc}`} />
+                <div class="q-id"><b class="q-name">{s.name}</b><span class="q-loc">{s.loc} · {s.meta}</span></div>
+                <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+              </div>
+              <p>"{s.quote}"</p>
+            </blockquote>
+          ))}
+        </div>
+      </section>
+
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 13 · HOW WE COMPARE -->
+      <section id="compare">
+        <h2 class="cag-h2">How does C.A.Gs compare to other African Grey egg sellers?</h2>
+        <p>Set us beside a typical online egg listing and the difference isn't tone, it's evidence: everything in our column is something you can independently check, and almost nothing in theirs is. This is the honest scorecard the scam-dominated egg SERP never shows you.</p>
+        <div class="otA">
+          <table>
+            <thead><tr><th>What to check</th><th>Typical online egg listing</th><th>C.A.Gs</th></tr></thead>
+            <tbody>
+              {compareRows.map((r) => (
+                <tr><td data-label="What to check"><b>{r.axis}</b></td><td data-label="Typical listing">{r.them}</td><td data-label="C.A.Gs">{r.us}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="cag-h3">The one line that separates us from the fake farms</h3>
+        <p>Strip away the marketing and it comes down to a single sentence: we can be verified and they cannot. A named USDA-licensed breeder in Midland, Texas, with candling proof, CITES paperwork and our own nursery video is the opposite of an anonymous flat-priced egg farm — and that gap is the entire reason this page exists.</p>
+      </section>
+
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 14 · FAQ -->
       <section id="faq">
         <h2 class="cag-h2">African Grey egg questions we hear most</h2>
-        <p>These are the real questions buyers send us about fertile African Grey parrot eggs — cost, hatch time, legitimacy, and legality — answered the same honest way we'd answer them on the phone.</p>
-        {faqs.map((f) => (
-          <details class="faq-d">
-            <summary>{f.q}</summary>
-            <p>{f.a}</p>
-          </details>
+        <p>These are the real questions buyers send us about fertile African Grey parrot eggs — price, hatch time, clutch size, incubator humidity, legitimacy and legality — answered the same honest way we'd answer them on the phone.</p>
+        {faqs.map((f, i) => (
+          i < 3
+            ? (<div class="faq-open"><h3 class="faq-q">{f.q}</h3><p>{f.a}</p></div>)
+            : (<details class="faq-d"><summary>{f.q}</summary><p>{f.a}</p></details>)
         ))}
       </section>
 
-      <div class="seam"><img src="/cag-header-logo-160.webp" width="54" height="54" alt="" loading="lazy" decoding="async"></div>
+      <div class="seam"><img src={seam} width="54" height="54" alt="" loading="lazy" decoding="async"></div>
 
-      <!-- 10 · RESERVE / FORM -->
+      <!-- 15 · RESERVE / FORM -->
       <section id="reserve" class="final-cta">
         <h2 class="cag-h2">Reserve your African Grey eggs — or a weaned chick</h2>
         <p>Tell us what you're after and how you'd like to receive it, and we'll reply within 24 hours with honest availability — including "not right now" if that's the true answer. A $200 deposit reserves a clutch or a bird once we've confirmed the match.</p>
@@ -461,9 +567,7 @@ const crossSell = [
             <select id="egg-interest" name="interest" required>
               <option value="">Choose one…</option>
               <option>Fertile African Grey eggs — $95 each (5 = free US shipping)</option>
-              {available.map((b) => (
-                <option>{b.name} — {b.price_display} ({b.variant === "timneh_african_grey" ? "Timneh" : "Congo"}{b.sex === "pair" ? " pair" : ""})</option>
-              ))}
+              {available.map((b) => (<option>{b.name} — {b.price_display} ({b.variant === "timneh_african_grey" ? "Timneh" : "Congo"}{b.sex === "pair" ? " pair" : ""})</option>))}
               <option>Proven breeding pair — $3,000</option>
               <option>Not sure yet — help me choose egg vs. chick</option>
             </select>
@@ -496,6 +600,12 @@ const crossSell = [
 
     </main>
   </div><!-- /container -->
+
+  <!-- NEWSLETTER — BOTTOM -->
+  <Newsletter variant="bottom" action="https://formspree.io/f/xrejpnvn"
+    bottomText="New fertile African Grey clutches and weaned chicks are limited — get notified first."
+    cta="Notify me" />
+
   </div><!-- /egg -->
 
 </BaseLayout>
@@ -503,7 +613,7 @@ const crossSell = [
 <style>
 .egg{--f:#2D6A4F;--clay:#e8604c;--clay-ink:#c8472f;--clay-t:#b04228;--cream:#faf7f4;--bd:#e7ddd3;--mid:#6b625a;--hdr:96px;color:#2a2622}
 .egg .container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
-/* HERO — Split-Hero C dark + photo */
+/* HERO */
 .egg-hero{background:linear-gradient(155deg,#243f34 0%,#1b3228 58%,#22382d 100%);color:#fff;border-bottom:3px solid var(--clay);padding:36px 0 40px}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,520px);gap:clamp(24px,4vw,52px);align-items:center;min-height:360px}
 .hero-copy{max-width:600px}
@@ -518,7 +628,7 @@ const crossSell = [
 .btn-clay:hover{background:#9c3a23;transform:translateY(-2px)}
 .egg-hero .btn-ghost{border:2px solid rgba(255,255,255,.6);color:#fff}
 .egg-hero .btn-ghost:hover{background:#fff;color:#1b3228}
-.btn-clay.sm{padding:9px 18px;font-size:.83rem}
+.btn-clay.sm,.btn-ghost.sm{padding:9px 18px;font-size:.83rem}
 /* COUNTER */
 .egg-counter{background:linear-gradient(135deg,#2D6A4F,#1f4d39);color:#fff;padding:13px 0}
 .counter-row{display:flex;flex-wrap:wrap;justify-content:center;row-gap:6px}
@@ -533,32 +643,32 @@ const crossSell = [
 .railA a{flex:0 0 auto;font-size:.78rem;font-weight:600;color:var(--clay-t);border:1.5px solid var(--clay);border-radius:50px;padding:7px 14px;text-decoration:none;background:#fff;white-space:nowrap}
 .railA a.on{background:var(--clay-ink);border-color:var(--clay-ink);color:#fff}
 .railA a .p{font-weight:700}
-/* DIAL TOC (desktop) */
+/* DIAL TOC */
 .dial{display:flex;gap:26px;align-items:center;background:linear-gradient(135deg,#fff,#fdf1ec);border:1px solid var(--bd);border-radius:20px;padding:24px;margin:26px 0 8px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
 .dial-ring{flex:0 0 132px;width:132px;height:132px;border-radius:50%;background:conic-gradient(var(--clay-ink) 0 40%,#f3d9d1 40% 100%);display:grid;place-items:center}
 .dial-ring>div{width:100px;height:100px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-family:'Newsreader',serif}
 .dial-ring b{font-size:28px;color:var(--clay-ink);display:block;line-height:1}
 .dial-ring span{font-size:10px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase}
-.dial-list{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:4px 26px}
-.dial-list a{display:flex;gap:10px;align-items:center;color:#2a2622;text-decoration:none;font-size:.88rem;padding:7px 6px;border-radius:10px}
+.dial-list{flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 22px}
+.dial-list a{display:flex;gap:9px;align-items:center;color:#2a2622;text-decoration:none;font-size:.85rem;padding:6px 6px;border-radius:10px}
 .dial-list a:hover{background:#faece7}
-.dial-list .num{font-family:'Newsreader',serif;font-weight:700;color:var(--clay-t);width:24px}
-.dial-list .tag{margin-left:auto;font-size:.6rem;font-weight:700;letter-spacing:.04em;color:var(--f);background:#e7f1ec;border-radius:50px;padding:2px 9px;white-space:nowrap}
-/* K4 clipboard + K1 receipt */
-.k4{max-width:560px;background:#fff;border:1px solid var(--bd);border-radius:16px;box-shadow:0 4px 16px rgba(60,30,10,.06);padding:34px 26px 20px;position:relative;margin:22px 0 8px}
+.dial-list .num{font-family:'Newsreader',serif;font-weight:700;color:var(--clay-t);width:22px}
+.dial-list .tag{margin-left:auto;font-size:.58rem;font-weight:700;letter-spacing:.03em;color:var(--f);background:#e7f1ec;border-radius:50px;padding:2px 8px;white-space:nowrap}
+/* K4 / K1 */
+.k4{max-width:600px;background:#fff;border:1px solid var(--bd);border-radius:16px;box-shadow:0 4px 16px rgba(60,30,10,.06);padding:34px 26px 20px;position:relative;margin:22px 0 8px}
 .k4:before{content:"";position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:104px;height:24px;background:var(--clay-ink);border-radius:8px}
+.k4-title{font-family:'Newsreader',serif;font-size:1.15rem;line-height:1.25;margin:0 0 10px;color:#2a2622}
 .k4 ul{margin:6px 0 0;padding:0}
 .k4 li{list-style:none;font-size:.92rem;padding:8px 0 8px 32px;position:relative;border-bottom:1px dashed var(--bd)}
 .k4 li:last-child{border-bottom:none}
 .k4 li:before{content:"✓";position:absolute;left:4px;top:7px;width:20px;height:20px;border-radius:6px;background:#e7f1ec;color:var(--f);font-weight:700;display:grid;place-items:center;font-size:.8rem}
 .k1{background:#fff;max-width:440px;box-shadow:0 6px 20px rgba(60,30,10,.1);padding:24px 26px 16px;border-radius:8px;margin:2px 0 18px;border:1px solid var(--bd)}
-.k4-title{font-family:'Newsreader',serif;font-size:1.15rem;line-height:1.25;margin:0 0 10px;color:#2a2622}
 .k1-title{font-family:'Newsreader',serif;text-align:center;font-size:1.25rem;border-bottom:2px dashed var(--bd);padding-bottom:10px;margin:0 0 6px}
 .k1 .row{display:flex;justify-content:space-between;gap:14px;font-size:.9rem;padding:8px 0;border-bottom:1px dotted #e6dad0}
 .k1 .row b{color:var(--clay-t);white-space:nowrap}
 .k1 .tot{display:flex;justify-content:space-between;font-weight:700;padding-top:12px;font-size:.98rem}
 .k1 .tot span:last-child{color:var(--f)}
-/* MAIN type scale (matches comparison cluster) */
+/* MAIN type scale */
 .egg-main{max-width:880px;margin:0 auto}
 .egg-main section{margin-bottom:14px;scroll-margin-top:calc(var(--hdr) + 18px);padding-top:20px}
 .egg .cag-h2{font-family:'Newsreader',serif;font-size:clamp(1.375rem,3.5vw,2rem);color:#2a2622;margin:8px 0 16px;line-height:1.18}
@@ -570,15 +680,20 @@ const crossSell = [
 .egg-main a{color:var(--clay-t);text-decoration:underline;text-underline-offset:2px}
 .egg-main a.btn-clay,.egg-main a.btn-ghost{text-decoration:none}
 .egg-main a.btn-clay{color:#fff}
-.egg-main .bird-photo,.egg-main .bird-name a,.egg-main .bird-cta a{text-decoration:none}
+.egg-main .bird-photo,.egg-main .bird-name a,.egg-main .bird-cta a,.egg-main .ship-places a,.egg-main .pair-c a{text-decoration:none}
 .sec-img{display:block;width:100%;max-width:760px;aspect-ratio:760/400;object-fit:cover;height:auto;border-radius:18px;margin:4px 0 18px;box-shadow:0 6px 20px rgba(60,30,10,.1)}
 .sec-img.inf-img{aspect-ratio:1408/768;box-shadow:0 4px 16px rgba(60,30,10,.08)}
+/* VIDEO */
+.video-wrap{max-width:760px;margin:4px 0 18px;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(60,30,10,.12);background:#1b3228}
+.video-wrap video{display:block;width:100%;height:auto;aspect-ratio:1408/768;object-fit:cover}
 /* SEAM */
 .seam{display:flex;align-items:center;gap:14px;margin:34px 0}
 .seam::before{content:"";flex:1;height:2px;border-radius:1px;background:linear-gradient(90deg,transparent,rgba(240,128,112,.6))}
 .seam::after{content:"";flex:1;height:2px;border-radius:1px;background:linear-gradient(90deg,rgba(240,128,112,.6),transparent)}
 .seam img{width:54px;height:54px;object-fit:cover;background:#fff;border:2px solid rgba(232,96,76,.35);border-radius:50%;padding:2px;box-shadow:0 4px 14px rgba(60,30,10,.14)}
-/* TABLE A (otA) */
+.nl-inflow{margin:24px 0;border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.nl-inflow>*{max-width:none}
+/* TABLE A */
 .otA{border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.08);border:1px solid var(--bd);margin:6px 0 18px}
 .otA table{border-collapse:collapse;width:100%}
 .otA th{background:var(--clay-ink);color:#fff;padding:12px 14px;text-align:left;font-size:.8rem;font-weight:600}
@@ -586,6 +701,27 @@ const crossSell = [
 .otA tr:nth-child(even) td{background:#fdf4ef}
 .otA td:first-child b{font-family:'Newsreader',serif;font-size:.98rem}
 .otA .sub{display:block;font-size:.72rem;color:var(--clay-t)}
+/* SHIP CARDS + HEALTH */
+.ship-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 16px}
+.ship-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.ship-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.ship-c>img{display:block;width:100%;height:200px;object-fit:cover}
+.ship-body{padding:16px 18px}
+.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 12px;font-size:.7rem;font-weight:600}
+.ship-tier.clay{background:var(--clay-ink)}
+.ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.15rem}
+.ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
+.ship-c p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
+.ship-places{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.ship-places a{display:inline-flex;align-items:center;gap:8px;background:#f4efe9;border:1px solid var(--bd);border-radius:50px;padding:9px 15px;font-size:.84rem;line-height:1.15;color:var(--f);transition:border-color .2s,color .2s,background-color .2s}
+.ship-places a:hover{border-color:var(--clay-t);color:var(--clay-t);background:#fff}
+.ship-places .pin{color:var(--clay-t);flex:none;width:15px;height:15px}
+.ship-line{font-size:.78rem;color:#7a6f64;font-weight:600;border-top:1px dashed var(--bd);padding-top:8px}
+.health-card{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin:6px 0 14px;max-width:440px}
+.hc-head{background:var(--f);color:#fff;padding:8px 14px;font-family:'Newsreader',serif}
+.hc-list{list-style:none;margin:0;padding:12px 14px}
+.hc-list li{font-size:.85rem;padding:4px 0 4px 22px;position:relative}
+.hc-list li::before{content:"✔";position:absolute;left:0;color:var(--f);font-weight:700}
 /* BIRD CARDS */
 .bird-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:6px 0 8px}
 .bird-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
@@ -600,10 +736,32 @@ const crossSell = [
 .bird-name a:hover{color:var(--clay-t)}
 .bird-price{color:var(--clay-t);font-weight:700;font-size:1rem;white-space:nowrap}
 .bird-docs{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:5px}
-.bird-docs li{font-size:.64rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:3px 9px;white-space:nowrap}
+.bird-docs li{font-size:.62rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:3px 8px;white-space:nowrap}
 .bird-cta{text-align:center;margin-top:auto}
 .ship-mini{font-size:.66rem;color:#7a6f64;display:block;margin-top:10px;border-top:1px dashed var(--bd);padding-top:6px}
+/* PAIR ROW */
+.pair-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 16px}
+.pair-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.pair-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.pair-c>img{display:block;width:100%;height:220px;object-fit:cover}
+.pair-body{padding:15px 17px}
+.pair-c b{font-family:'Newsreader',serif;font-size:1.1rem;display:block;margin-bottom:2px}
+.pair-sub{font-size:.82rem;color:#7a6f64;display:block;margin:2px 0 10px}
+.ctr{text-align:center}
+/* QUOTES */
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 4px}
+.quote-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0}
+.q-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.q-av{width:48px;height:48px;border-radius:50%;object-fit:cover;flex:none;border:2px solid #eaf4ef}
+.q-id{flex:1;min-width:0}
+.q-name{display:block;font-family:'Newsreader',serif;font-size:1rem;color:#2a2622;line-height:1.2}
+.q-loc{display:block;font-size:.75rem;color:#7a6f64;margin-top:1px}
+.stars{color:#c9a227;letter-spacing:2px;font-size:.85rem;flex:none}
+.quote-c p{font-size:.9rem;font-style:italic;margin:0;max-width:none}
 /* FAQ */
+.faq-open{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.faq-q{font-family:'Newsreader',serif;font-size:1rem;margin:0 0 6px;color:#2a2622}
+.faq-open p{margin:0;font-size:.9rem;max-width:none}
 .faq-d{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:8px}
 .faq-d summary{font-family:'Newsreader',serif;font-weight:600;cursor:pointer;font-size:1rem}
 .faq-d p{margin:8px 0 0;font-size:.9rem;max-width:none}
@@ -633,6 +791,9 @@ const crossSell = [
   .cs+.cs{border-left:none}
   .cs:nth-child(even){border-left:1px solid rgba(255,255,255,.16)}
   .bird-cards{grid-template-columns:1fr 1fr}
+  .ship-cards,.pair-row,.quote-grid{grid-template-columns:1fr}
+  .ship-places{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ship-places a{justify-content:center}
   .form-2col{grid-template-columns:1fr}
   /* TABLE A stacking */
   .otA table,.otA thead,.otA tbody,.otA tr,.otA th,.otA td{display:block}
