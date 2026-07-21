@@ -36,18 +36,7 @@ const birdBlurb: Record<string, string> = {
   "bery": "Cuddly, gentle one-year hen who settles fast and loves a calm lap.",
   "jins-jeni": "Unrelated companion pair raised side by side — they rehome as a bonded two.",
 };
-const cardChips = ["DNA-sexed", "PBFD/APV PCR", "Vet certificate"];
-
-// Avail filter cats — counts derived from real inventory (never hardcoded)
-const maleCount = available.filter((b) => b.sex === "male").length;
-const femaleCount = available.filter((b) => b.sex === "female").length;
-const pairCount = available.filter((b) => b.sex === "pair").length;
-const filterCats = [
-  { key: "all", label: "All Congos", n: available.length },
-  { key: "male", label: "Males", n: maleCount },
-  { key: "female", label: "Females", n: femaleCount },
-  { key: "bonded", label: "Companion pair", n: pairCount },
-];
+// Gateway tile category → badge label (never hardcode counts; derived from real inventory)
 const catFor = (b: any) => (b.sex === "pair" ? "bonded" : b.sex === "male" ? "male" : "female");
 
 // Geo shipping cards — DISTINCT state/city set vs the egg page (cannibalization guard), real location slugs
@@ -218,7 +207,7 @@ const seam = "/cag-fs-seam-emblem.webp";
     <nav class="cdial desk-only" aria-label="Contents" id="congoDial" style="--p:7">
       <div class="cdial-ring"><div><b id="dialNum">1</b><span>of 14</span></div></div>
       <div class="cdial-list">
-        {sections.map((s, i) => (<a href={`#${s.id}`} data-i={i} class={i === 0 ? "on" : ""}><span class="num">{s.n}</span>{s.label}{s.tag && <span class="tag">{s.tag}</span>}</a>))}
+        {sections.map((s, i) => (<a href={`#${s.id}`} data-i={i} class={i === 0 ? "on" : ""}><span class="num">{s.n}</span><span class="lbl">{s.label}</span>{s.tag && <span class="tag">{s.tag}</span>}</a>))}
       </div>
     </nav>
 
@@ -229,49 +218,29 @@ const seam = "/cag-fs-seam-emblem.webp";
         <h2 class="cag-h2">Which Congo African Grey Parrots Do We Have for Sale Right Now?</h2>
         <p>Three hand-raised Congo African Greys are reservable at C.A.Gs today — Roys, a young male, and two hens, Amie and Bery — plus our bonded companion pair, Jins &amp; Jeni. Every one is a real bird in our Midland, Texas home, DNA-sexed and health-screened, and each card below opens that Congo's own page with its photos, parentage and full paperwork.</p>
 
-        <!-- Avail-B · sticky sidebar filter + card grid -->
-        <div class="availB">
-          <aside class="availB-side" aria-label="Filter available Congo African Greys">
-            <p class="side-h">Browse by</p>
-            <div class="side-filters">
-              {filterCats.map((c, i) => (
-                <button type="button" class={"side-f" + (i === 0 ? " on" : "")} data-cat={c.key} aria-pressed={i === 0 ? "true" : "false"}>
-                  <span>{c.label}</span><span class="side-n">{c.n}</span>
-                </button>
-              ))}
-            </div>
-            <div class="side-ship">
-              <p><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg> <b>$185</b> · Airport, nationwide</p>
-              <p><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> <b>$350</b> · Home delivery from C.A.Gs</p>
-            </div>
-          </aside>
-
-          <div class="availB-grid">
-            {available.map((b) => {
-              const cat = catFor(b);
-              const badge = cat === "bonded" ? "Companion Pair" : cat === "male" ? "Congo · Male" : "Congo · Female";
-              const meta = b.sex === "pair" ? "Bonded companion pair · " + b.age_at_listing : (b.sex === "male" ? "Male" : "Female") + " · " + b.age_at_listing + " · Congo African Grey";
-              return (
-                <article class="availB-c" data-cat={cat}>
-                  <a class="availB-photo" href={b.slug} tabindex="-1">
-                    {birdImg[b.id] && <img src={birdImg[b.id].src} width="800" height="720" loading="lazy" decoding="async" style={`object-position:${birdImg[b.id].pos}`} alt={birdImg[b.id].alt} />}
-                    <span class={"availB-badge " + cat}>{badge}</span>
-                    <span class="availB-dot" title="Available"></span>
-                  </a>
-                  <div class="availB-body">
-                    <h3 class="availB-name"><a href={b.slug}>{b.name}</a></h3>
-                    <p class="availB-meta">{meta}</p>
-                    {birdBlurb[b.id] && <p class="availB-blurb">{birdBlurb[b.id]}</p>}
-                    <ul class="availB-chips">{cardChips.map((c) => (<li>{c}</li>))}</ul>
-                    <span class="availB-price">{b.price_display}</span>
-                    <a class="btn-clay availB-btn" href="#reserve">Inquire about {b.name}</a>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+        <!-- Avail-C · two-step tile gateway (photo-forward, 4 real birds) -->
+        <div class="availC">
+          {available.map((b) => {
+            const cat = catFor(b);
+            const badge = cat === "bonded" ? "Companion Pair" : cat === "male" ? "Male" : "Female";
+            return (
+              <a class="ac-tile" href={b.slug} data-cat={cat}>
+                {birdImg[b.id] && <img src={birdImg[b.id].src} width="800" height="720" loading="lazy" decoding="async" style={`object-position:${birdImg[b.id].pos}`} alt={birdImg[b.id].alt} />}
+                <span class="ac-scrim" aria-hidden="true"></span>
+                <span class="ac-badge">{badge}</span>
+                <span class="ac-info">
+                  <span class="ac-name">{b.name}</span>
+                  {birdBlurb[b.id] && <span class="ac-blurb">{birdBlurb[b.id]}</span>}
+                  <span class="ac-foot">
+                    <span class="ac-price">{b.price_display}</span>
+                    <span class="ac-go" aria-hidden="true">View {b.name} &rarr;</span>
+                  </span>
+                </span>
+              </a>
+            );
+          })}
         </div>
-        <p class="side-note">Ships nationwide · $185 airport · $350 home · Local pickup in Midland, TX (within 2–3 hours)</p>
+        <p class="side-note">Every Congo above is a real, reservable bird in our home &middot; Ships nationwide &middot; $185 airport &middot; $350 home &middot; Local pickup in Midland, TX (within 2&ndash;3 hours)</p>
 
         <h3 class="cag-h3">Meet Roys, Amie &amp; Bery, Our Available Congo Greys</h3>
         <p>Each of these Congos is a bird we've raised by hand since the nursery, so we can tell you their temperament rather than guess it: Roys is our bold, busy-household male, Amie is a gentle, people-focused baby hen still in daily socialization, and Bery is a cuddly one-year hen who settles onto a lap in minutes. Because they're individuals, we match each to the right home rather than sell a "type."</p>
@@ -350,7 +319,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">How Do You Identify a True Congo — Red Tail, Grey Body, White Mask?</h3>
         <p>A true Congo African Grey is unmistakable once you know the marks: a light silver-grey scalloped body, a solid bright-red tail, a bare white face mask, a black beak, and pale yellow adult eyes. Those exact features are what our species photos show, and they're the first thing to check against any listing's pictures.</p>
-        <img class="sec-img inf-img" src="/congo-african-grey-red-tail-comparison-hero.webp" width="1408" height="768" loading="lazy" decoding="async" alt="Close-up of a Congo African Grey's defining bright red tail against silver-grey plumage" />
+        <img class="sec-img og-portrait" src="/congo-african-grey-red-tail-comparison-hero.webp" srcset="/congo-african-grey-red-tail-comparison-hero-480.webp 480w, /congo-african-grey-red-tail-comparison-hero.webp 760w" sizes="(max-width:640px) 86vw, 440px" width="760" height="825" loading="lazy" decoding="async" alt="Full-body Congo African Grey showing the silver-grey scalloped body and bright red tail that identify a true Congo" />
 
         <h4 class="cag-h4">Should You Choose a Congo or a Timneh?</h4>
         <p>Congos are larger with a brighter red tail and the headline vocabulary, while Timnehs are smaller, maroon-tailed, and often calmer and earlier to talk — both are wonderful, and the right pick is about your home, not prestige. Our full <a href="/congo-vs-timneh-african-grey/">Congo vs Timneh African Grey comparison</a> weighs size, temperament, talking and price so you can choose with your eyes open, and our <a href="/timneh-african-grey-for-sale/">Timneh African Greys for sale</a> are listed separately.</p>
@@ -636,7 +605,7 @@ const seam = "/cag-fs-seam-emblem.webp";
           </div>
           <figcaption>One of our hand-raised Congo African Greys at home in Midland, TX — filmed here, never stock footage.</figcaption>
         </figure>
-        <img class="sec-img og-photo" src={IMG + "congo-african-grey-used-to-other-birds.webp"} srcset={IMG + "congo-african-grey-used-to-other-birds-760.webp 760w, " + IMG + "congo-african-grey-used-to-other-birds.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="A Congo African Grey comfortable around other birds after daily socialization at C.A.Gs" />
+        <img class="sec-img og-photo face-low" src={IMG + "congo-african-grey-used-to-other-birds.webp"} srcset={IMG + "congo-african-grey-used-to-other-birds-760.webp 760w, " + IMG + "congo-african-grey-used-to-other-birds.webp 1408w"} sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" style="object-position:center 64%" alt="A Congo African Grey nuzzling a green-cheek conure, comfortable around other birds after daily socialization at C.A.Gs" />
       </section>
 
       <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
@@ -826,18 +795,21 @@ const seam = "/cag-fs-seam-emblem.webp";
 /* BODY GRID — sticky dial + main */
 .congo-body{display:grid;grid-template-columns:196px minmax(0,1fr);gap:28px;align-items:start;margin-top:14px}
 /* DIAL 2 · DARK AVIARY (dark-green sticky rail) */
-.cdial{display:flex;flex-direction:column;gap:10px;align-items:stretch;background:#1c3a2e;border:1px solid #2c5344;border-radius:16px;padding:12px 10px;box-shadow:0 6px 18px rgba(20,45,32,.22);position:sticky;top:calc(var(--hdr) + 16px);max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#3a6b54 transparent}
+.cdial{display:flex;flex-direction:column;gap:10px;align-items:stretch;background:#1c3a2e;border:1px solid #2c5344;border-radius:16px;padding:12px 10px;box-shadow:0 6px 18px rgba(20,45,32,.22);position:sticky;top:calc(var(--hdr) + 16px);max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#3a6b54 transparent}
+.cdial::-webkit-scrollbar{width:6px}
+.cdial::-webkit-scrollbar-thumb{background:#3a6b54;border-radius:3px}
 .cdial-ring{margin:2px auto 0;flex:none;width:64px;height:64px;border-radius:50%;background:conic-gradient(#8fd3ac calc(var(--p,7) * 1%),#2c5344 0);display:grid;place-items:center}
 .cdial-ring>div{width:50px;height:50px;border-radius:50%;background:#1c3a2e;display:grid;place-items:center;text-align:center;font-family:'Newsreader',serif}
 .cdial-ring b{font-size:15px;color:#a7e0c2;display:block;line-height:1}
 .cdial-ring span{font-size:7px;color:#7fac96;letter-spacing:.08em;text-transform:uppercase}
 .cdial-list{display:grid;grid-template-columns:1fr;gap:1px;border-top:1px dashed #38614c;padding-top:8px}
-.cdial-list a{display:flex;gap:7px;align-items:baseline;color:#cfe3d8;text-decoration:none;font-size:.74rem;line-height:1.25;padding:5px 7px;border-radius:8px;transition:background-color .15s,color .15s}
+.cdial-list a{display:flex;gap:8px;align-items:center;min-height:34px;color:#cfe3d8;text-decoration:none;font-size:.74rem;line-height:1.2;padding:6px 8px;border-radius:9px;transition:background-color .15s,color .15s}
 .cdial-list a:hover{background:#26503f;color:#fff}
 .cdial-list a.on{background:#2e5c48;color:#fff;font-weight:600}
 .cdial-list a.on .num{color:#a7e0c2}
 .cdial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#6f9c86;width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums}
-.cdial-list .tag{margin-left:auto;font-size:.56rem;font-weight:600;letter-spacing:.02em;color:#1c3a2e;background:#8fd3ac;border-radius:50px;padding:1px 6px;white-space:nowrap}
+.cdial-list .lbl{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cdial-list .tag{flex:none;font-size:.56rem;font-weight:600;letter-spacing:.02em;color:#1c3a2e;background:#8fd3ac;border-radius:50px;padding:2px 7px;white-space:nowrap}
 /* SECTION CTA row */
 .sec-cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 20px}
 .sec-cta .btn-clay,.sec-cta .btn-ghost{padding:11px 22px;font-size:.86rem}
@@ -873,6 +845,8 @@ const seam = "/cag-fs-seam-emblem.webp";
 .congo-main p a[target="_blank"]::after{content:"\2197";font-size:.78em;font-weight:700;margin-left:2px;text-decoration:none;display:inline-block;vertical-align:baseline}
 .sec-img{display:block;width:100%;max-width:760px;aspect-ratio:1408/768;object-fit:cover;height:auto;border-radius:18px;margin:4px 0 18px;box-shadow:0 6px 20px rgba(60,30,10,.1)}
 .sec-img.inf-img{box-shadow:0 4px 16px rgba(60,30,10,.08)}
+/* Portrait-native OG photo — show the whole bird, no 16:9 crop */
+.sec-img.og-portrait{max-width:440px;aspect-ratio:760/825;margin-left:auto;margin-right:auto}
 /* SEAM */
 .seam{display:flex;align-items:center;justify-content:center;gap:14px;margin:22px 0}
 .seam::before,.seam::after{content:"";flex:1;max-width:220px;height:2px;border-radius:1px}
@@ -973,42 +947,23 @@ const seam = "/cag-fs-seam-emblem.webp";
 .fs-video-frame video{display:block;width:100%;height:auto;aspect-ratio:1408/768;object-fit:cover}
 .fs-video-tag{position:absolute;top:12px;left:12px;background:rgba(34,31,29,.82);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.04em;padding:5px 12px;border-radius:50px;pointer-events:none}
 .fs-video figcaption{font-size:.8rem;color:var(--mid);margin-top:8px;font-style:italic}
-/* AVAIL-B */
-.availB{display:grid;grid-template-columns:200px 1fr;gap:18px;margin:6px 0;align-items:start}
-.availB-side{position:sticky;top:calc(var(--hdr) + 14px);background:#fff;border:1px solid var(--bd);border-radius:18px;padding:16px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
-.side-h{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin:0 0 12px}
-.side-filters{display:flex;flex-direction:column;gap:4px}
-.side-f{display:flex;align-items:center;justify-content:space-between;gap:10px;background:none;border:1.5px solid transparent;border-radius:10px;padding:9px 12px;font:inherit;font-size:.9rem;font-weight:600;color:#2a2622;cursor:pointer;text-align:left;transition:background-color .15s,border-color .15s}
-.side-f:hover{background:#faece7}
-.side-f.on{border-color:var(--clay);color:var(--clay-ink)}
-.side-n{font-size:.72rem;font-weight:700;color:var(--mid);background:#f4efe9;border-radius:50px;min-width:24px;text-align:center;padding:2px 8px}
-.side-f.on .side-n{background:var(--clay-ink);color:#fff}
-.side-ship{border-top:1px solid var(--bd);margin-top:12px;padding-top:12px;display:flex;flex-direction:column;gap:8px}
-.side-ship p{font-size:.78rem;color:#5b524a;margin:0!important;display:flex;align-items:center;gap:8px;max-width:none}
-.side-ship svg{color:var(--clay-t);flex:none;width:15px;height:15px}
-.side-ship b{color:#2a2622}
-.side-note{font-size:.76rem;color:#7a6f64;font-weight:600;margin:6px 0 14px;text-align:center}
-.availB-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.availB-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
-.availB-c:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(60,30,10,.13)}
-.availB-photo{position:relative;display:block}
-.availB-photo img{display:block;width:100%;height:210px;object-fit:cover;object-position:center 28%}
-.availB-badge{position:absolute;top:10px;left:10px;font-size:.58rem;font-weight:600;letter-spacing:.02em;padding:3px 9px;border-radius:50px;background:rgba(255,255,255,.82);backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.availB-badge.male{color:#1e5038}
-.availB-badge.female{color:#9c3a23}
-.availB-badge.bonded{color:#6d5510}
-.availB-dot{position:absolute;top:12px;right:12px;width:12px;height:12px;border-radius:50%;background:#3fbf6a;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
-.availB-body{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
-.availB-name{font-family:'Newsreader',serif;font-size:1.15rem;margin:0 0 3px;text-transform:uppercase;letter-spacing:.01em;line-height:1.1}
-.availB-name a{color:#2a2622;text-decoration:none}
-.availB-name a:hover{color:var(--clay-t)}
-.availB-meta{font-size:.78rem;color:#7a6f64;margin:0 0 6px!important;max-width:none}
-.availB-blurb{font-size:.8rem;color:#5b524a;line-height:1.45;margin:0 0 8px!important;max-width:none}
-.availB-chips{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-wrap:wrap;gap:5px}
-.availB-chips li{font-size:.6rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:2px 8px;white-space:nowrap}
-.availB-price{font-family:'Newsreader',serif;color:var(--clay-ink);font-weight:700;font-size:1.3rem;margin-bottom:12px}
-.availB-btn{margin-top:auto;text-align:center;font-size:.85rem;padding:11px 14px}
-.availB-c.hide{display:none}
+/* AVAIL-C · two-step tile gateway (photo-forward, 4 real birds) */
+.availC{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:12px 0 4px}
+.ac-tile{position:relative;display:block;aspect-ratio:4/5;border-radius:18px;overflow:hidden;isolation:isolate;text-decoration:none!important;background:#e7ddd4;box-shadow:0 6px 20px rgba(60,30,10,.12);transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s cubic-bezier(.22,1,.36,1)}
+.ac-tile:hover{transform:translateY(-4px);box-shadow:0 18px 36px rgba(60,30,10,.2)}
+.ac-tile:focus-visible{outline:3px solid var(--clay-ink);outline-offset:2px}
+.ac-tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.ac-tile:hover img{transform:scale(1.05)}
+.ac-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(24,16,11,0) 32%,rgba(24,16,11,.4) 62%,rgba(24,16,11,.82) 100%);z-index:1}
+.ac-badge{position:absolute;top:12px;left:12px;z-index:2;font-size:.62rem;font-weight:700;letter-spacing:.03em;color:#fff;background:var(--clay-ink);padding:4px 11px;border-radius:50px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.ac-info{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:14px 15px 15px;display:flex;flex-direction:column;gap:3px}
+.ac-name{font-family:'Newsreader',serif;font-size:1.3rem;font-weight:600;color:#fff;line-height:1.05;letter-spacing:.01em;text-shadow:0 1px 8px rgba(0,0,0,.35)}
+.ac-blurb{font-size:.74rem;line-height:1.35;color:rgba(255,255,255,.86);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.ac-foot{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:6px}
+.ac-price{font-family:'Newsreader',serif;font-weight:700;font-size:1.15rem;color:#fff}
+.ac-go{font-size:.66rem;font-weight:700;color:#ffd9cd;opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .2s;white-space:nowrap}
+.ac-tile:hover .ac-go{opacity:1;transform:translateX(0)}
+.side-note{font-size:.78rem;color:#7a6f64;font-weight:600;margin:8px 0 14px;text-align:center}
 /* FAQ-A · light bordered accordion */
 .faqA{margin:8px 0 6px;display:flex;flex-direction:column;gap:8px}
 .faqA-item{background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(60,30,10,.04)}
@@ -1047,12 +1002,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 .fs-ship{font-size:.72rem;color:rgba(255,255,255,.6);margin:12px 0 0!important}
 /* ===== TABLET / MOBILE ===== */
 @media(max-width:980px){
-  .availB{grid-template-columns:1fr}
-  .availB-side{position:static;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-  .side-h{width:100%;margin:0 0 4px}
-  .side-filters{flex-direction:row;flex-wrap:wrap;gap:8px;flex:1}
-  .side-f{border:1.5px solid var(--bd);border-radius:50px;padding:7px 14px;font-size:.82rem}
-  .side-ship{border-top:none;border-left:1px solid var(--bd);margin:0;padding:0 0 0 14px;flex-direction:column}
+  .availC{grid-template-columns:1fr 1fr}
   .stepper-row{grid-template-columns:1fr 1fr}
 }
 @media(max-width:900px){
@@ -1069,8 +1019,6 @@ const seam = "/cag-fs-seam-emblem.webp";
   .read-cards{grid-template-columns:1fr}
   .read-img{flex-basis:120px}
   .read-img img{width:120px}
-  .availB-grid{grid-template-columns:1fr 1fr}
-  .availB-photo img{height:230px;object-position:center 22%}
   .ship-cards,.quote-grid{grid-template-columns:1fr}
   .geo-cards{grid-template-columns:1fr}
   .chkB-grid{grid-template-columns:1fr;padding:10px 16px 14px}
@@ -1079,6 +1027,10 @@ const seam = "/cag-fs-seam-emblem.webp";
   /* In-body images: container width; photos zoom a touch on mobile (taller crop), infographics stay 16:9 for their labels */
   .congo-main .sec-img{width:100%;max-width:100%;margin-left:0;border-radius:14px}
   .congo-main .sec-img.og-photo{aspect-ratio:5/4}
+  /* Face-low subject: keep the full 16:9 frame on mobile so the Congo's whole face shows */
+  .congo-main .sec-img.face-low{aspect-ratio:1408/768}
+  /* Portrait-native photo stays contained + centered, never stretched full width */
+  .congo-main .sec-img.og-portrait{max-width:min(320px,84%);margin-left:auto;margin-right:auto}
   .fs-video{max-width:none}
   /* TABLE A stacking */
   .otA table,.otA thead,.otA tbody,.otA tr,.otA th,.otA td{display:block}
@@ -1089,7 +1041,21 @@ const seam = "/cag-fs-seam-emblem.webp";
   .otA td:first-child{display:block}
   .otA td:first-child:before{display:none}
 }
-@media(max-width:560px){.availB-grid{grid-template-columns:1fr}.stepper-row{grid-template-columns:1fr}}
+@media(max-width:640px){
+  /* Hero trust badges → 2 left, 2 right */
+  .chero-ribbon{display:grid;grid-template-columns:1fr 1fr;gap:9px 14px}
+  /* Compact, fluid section rhythm on mobile */
+  .congo-main section{padding-top:8px;margin-bottom:6px}
+  .seam{margin:15px 0}
+  .seam::before,.seam::after{max-width:96px}
+  .congo .cag-h2{font-size:clamp(1.28rem,6vw,1.6rem);margin:6px 0 11px}
+  .congo .cag-h3{margin:18px 0 8px}
+  .congo-main p{font-size:.95rem;margin:0 0 13px}
+  .availC{gap:11px}
+  .ac-name{font-size:1.16rem}
+  .ac-info{padding:12px 13px 13px}
+}
+@media(max-width:560px){.stepper-row{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.congo *{transition:none!important}}
 </style>
 
@@ -1101,11 +1067,23 @@ const seam = "/cag-fs-seam-emblem.webp";
   const dialLinks = dial ? Array.from(dial.querySelectorAll('a[data-i]')) : [];
   const railLinks = Array.from(document.querySelectorAll('.chero-rail .railA a'));
   const total = secs.length || 1;
+  let lastActive = -1;
   function setActive(i) {
+    if (i === lastActive) return;
+    lastActive = i;
     if (dial) dial.style.setProperty('--p', String(Math.round(((i + 1) / total) * 100)));
     if (num) num.textContent = String(i + 1);
     dialLinks.forEach((a, k) => a.classList.toggle('on', k === i));
     railLinks.forEach((a, k) => a.classList.toggle('on', k === i));
+    // Keep the active item fluidly scrolled into view within its own rail
+    const dLink = dialLinks[i];
+    if (dial && dLink && dial.scrollHeight > dial.clientHeight) {
+      dial.scrollTo({ top: dLink.offsetTop - dial.clientHeight / 2 + dLink.clientHeight / 2, behavior: 'smooth' });
+    }
+    const rLink = railLinks[i];
+    if (rLink && rLink.parentElement) {
+      rLink.parentElement.scrollTo({ left: rLink.offsetLeft - 60, behavior: 'smooth' });
+    }
   }
   if (secs.length) {
     const io = new IntersectionObserver((entries) => {
@@ -1119,16 +1097,4 @@ const seam = "/cag-fs-seam-emblem.webp";
     secs.forEach((s) => io.observe(s));
     setActive(0);
   }
-  // Avail-B sidebar filter
-  const fbtns = Array.from(document.querySelectorAll('.side-f'));
-  const cards = Array.from(document.querySelectorAll('.availB-c'));
-  fbtns.forEach((btn) => btn.addEventListener('click', () => {
-    const cat = btn.getAttribute('data-cat');
-    fbtns.forEach((b) => {
-      const on = b === btn;
-      b.classList.toggle('on', on);
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
-    cards.forEach((c) => c.classList.toggle('hide', cat !== 'all' && c.getAttribute('data-cat') !== cat));
-  }));
 </script>
