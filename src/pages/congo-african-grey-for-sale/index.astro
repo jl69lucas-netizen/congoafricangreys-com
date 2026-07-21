@@ -132,7 +132,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 
 <BaseLayout {title} {description} {canonical} ogType="product" hideGlobalCta
   heroPreload={IMG + "congo-african-grey-parrot-for-sale-hero.webp"}
-  heroPreloadSrcset={IMG + "congo-african-grey-parrot-for-sale-hero-760.webp 760w, " + IMG + "congo-african-grey-parrot-for-sale-hero.webp 1280w"}
+  heroPreloadSrcset={IMG + "congo-african-grey-parrot-for-sale-hero-560.webp 560w, " + IMG + "congo-african-grey-parrot-for-sale-hero-760.webp 760w, " + IMG + "congo-african-grey-parrot-for-sale-hero.webp 1280w"}
   heroPreloadSizes="(max-width:900px) 92vw, 520px">
 
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
@@ -160,7 +160,7 @@ const seam = "/cag-fs-seam-emblem.webp";
       </div>
       <div class="chero-media">
         <img src={IMG + "congo-african-grey-parrot-for-sale-hero.webp"}
-          srcset={IMG + "congo-african-grey-parrot-for-sale-hero-760.webp 760w, " + IMG + "congo-african-grey-parrot-for-sale-hero.webp 1280w"}
+          srcset={IMG + "congo-african-grey-parrot-for-sale-hero-560.webp 560w, " + IMG + "congo-african-grey-parrot-for-sale-hero-760.webp 760w, " + IMG + "congo-african-grey-parrot-for-sale-hero.webp 1280w"}
           sizes="(max-width:900px) 92vw, 520px" width="1280" height="960"
           fetchpriority="high" loading="eager" decoding="async"
           alt="Congo African Grey parrot for sale perched calmly, showing its grey scalloped plumage and bright red tail" />
@@ -225,16 +225,20 @@ const seam = "/cag-fs-seam-emblem.webp";
             const badge = cat === "bonded" ? "Companion Pair" : cat === "male" ? "Male" : "Female";
             return (
               <a class="ac-tile" href={b.slug} data-cat={cat}>
-                {birdImg[b.id] && <img src={birdImg[b.id].src} width="800" height="720" loading="lazy" decoding="async" style={`object-position:${birdImg[b.id].pos}`} alt={birdImg[b.id].alt} />}
-                <span class="ac-scrim" aria-hidden="true"></span>
-                <span class="ac-badge">{badge}</span>
+                <span class="ac-photo">
+                  {birdImg[b.id] && <img src={birdImg[b.id].src}
+                    srcset={birdImg[b.id].src.replace(".webp", "-440.webp") + " 440w, " + birdImg[b.id].src + " 800w"}
+                    sizes="(max-width:980px) 46vw, 210px"
+                    width="800" height="720" loading="lazy" decoding="async" style={`object-position:${birdImg[b.id].pos}`} alt={birdImg[b.id].alt} />}
+                  <span class="ac-badge">{badge}</span>
+                </span>
                 <span class="ac-info">
-                  <span class="ac-name">{b.name}</span>
-                  {birdBlurb[b.id] && <span class="ac-blurb">{birdBlurb[b.id]}</span>}
-                  <span class="ac-foot">
+                  <span class="ac-top">
+                    <span class="ac-name">{b.name}</span>
                     <span class="ac-price">{b.price_display}</span>
-                    <span class="ac-go" aria-hidden="true">View {b.name} &rarr;</span>
                   </span>
+                  {birdBlurb[b.id] && <span class="ac-blurb">{birdBlurb[b.id]}</span>}
+                  <span class="ac-go" aria-hidden="true">View {b.name} &rarr;</span>
                 </span>
               </a>
             );
@@ -319,7 +323,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">How Do You Identify a True Congo — Red Tail, Grey Body, White Mask?</h3>
         <p>A true Congo African Grey is unmistakable once you know the marks: a light silver-grey scalloped body, a solid bright-red tail, a bare white face mask, a black beak, and pale yellow adult eyes. Those exact features are what our species photos show, and they're the first thing to check against any listing's pictures.</p>
-        <img class="sec-img inf-img" src="/congo-african-grey-red-tail-comparison-hero.webp" width="1408" height="768" loading="lazy" decoding="async" alt="Close-up of a Congo African Grey's defining bright red tail against silver-grey plumage" />
+        <img class="sec-img inf-img fit-contain" src="/congo-african-grey-red-tail-comparison-hero.webp" width="760" height="825" loading="lazy" decoding="async" alt="Close-up of a Congo African Grey's defining bright red tail against silver-grey plumage" />
 
         <h4 class="cag-h4">Should You Choose a Congo or a Timneh?</h4>
         <p>Congos are larger with a brighter red tail and the headline vocabulary, while Timnehs are smaller, maroon-tailed, and often calmer and earlier to talk — both are wonderful, and the right pick is about your home, not prestige. Our full <a href="/congo-vs-timneh-african-grey/">Congo vs Timneh African Grey comparison</a> weighs size, temperament, talking and price so you can choose with your eyes open, and our <a href="/timneh-african-grey-for-sale/">Timneh African Greys for sale</a> are listed separately.</p>
@@ -805,7 +809,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 .cdial-list a:hover{background:#26503f;color:#fff}
 .cdial-list a.on{background:#2e5c48;color:#fff;font-weight:600}
 .cdial-list a.on .num{color:#a7e0c2}
-.cdial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#6f9c86;width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums}
+.cdial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#9fc7b0;width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums}
 .cdial-list .tag{margin-left:auto;font-size:.56rem;font-weight:600;letter-spacing:.02em;color:#1c3a2e;background:#8fd3ac;border-radius:50px;padding:1px 6px;white-space:nowrap}
 /* SECTION CTA row */
 .sec-cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 20px}
@@ -842,6 +846,8 @@ const seam = "/cag-fs-seam-emblem.webp";
 .congo-main p a[target="_blank"]::after{content:"\2197";font-size:.78em;font-weight:700;margin-left:2px;text-decoration:none;display:inline-block;vertical-align:baseline}
 .sec-img{display:block;width:100%;max-width:760px;aspect-ratio:1408/768;object-fit:cover;height:auto;border-radius:18px;margin:4px 0 18px;box-shadow:0 6px 20px rgba(60,30,10,.1)}
 .sec-img.inf-img{box-shadow:0 4px 16px rgba(60,30,10,.08)}
+/* Portrait masters that must never crop: same 16:9 box, letterboxed on warm cream */
+.sec-img.fit-contain{object-fit:contain;background:#f6efe8;border:1px solid var(--bd)}
 /* SEAM */
 .seam{display:flex;align-items:center;justify-content:center;gap:14px;margin:22px 0}
 .seam::before,.seam::after{content:"";flex:1;max-width:220px;height:2px;border-radius:1px}
@@ -942,22 +948,22 @@ const seam = "/cag-fs-seam-emblem.webp";
 .fs-video-frame video{display:block;width:100%;height:auto;aspect-ratio:1408/768;object-fit:cover}
 .fs-video-tag{position:absolute;top:12px;left:12px;background:rgba(34,31,29,.82);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.04em;padding:5px 12px;border-radius:50px;pointer-events:none}
 .fs-video figcaption{font-size:.8rem;color:var(--mid);margin-top:8px;font-style:italic}
-/* AVAIL-C · two-step tile gateway (photo-forward, 4 real birds) */
+/* AVAIL-C · two-step tile gateway (photo-forward, 4 real birds — clean card: face up top, info + visible button below) */
 .availC{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:12px 0 4px}
-.ac-tile{position:relative;display:block;aspect-ratio:4/5;border-radius:18px;overflow:hidden;isolation:isolate;text-decoration:none!important;background:#e7ddd4;box-shadow:0 6px 20px rgba(60,30,10,.12);transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s cubic-bezier(.22,1,.36,1)}
-.ac-tile:hover{transform:translateY(-4px);box-shadow:0 18px 36px rgba(60,30,10,.2)}
+.ac-tile{display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--bd);text-decoration:none!important;box-shadow:0 4px 14px rgba(60,30,10,.07);transition:transform .2s,box-shadow .2s}
+.ac-tile:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(60,30,10,.14)}
 .ac-tile:focus-visible{outline:3px solid var(--clay-ink);outline-offset:2px}
-.ac-tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s cubic-bezier(.22,1,.36,1)}
-.ac-tile:hover img{transform:scale(1.05)}
-.ac-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(24,16,11,0) 32%,rgba(24,16,11,.4) 62%,rgba(24,16,11,.82) 100%);z-index:1}
-.ac-badge{position:absolute;top:12px;left:12px;z-index:2;font-size:.62rem;font-weight:700;letter-spacing:.03em;color:#fff;background:var(--clay-ink);padding:4px 11px;border-radius:50px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
-.ac-info{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:14px 15px 15px;display:flex;flex-direction:column;gap:3px}
-.ac-name{font-family:'Newsreader',serif;font-size:1.3rem;font-weight:600;color:#fff;line-height:1.05;letter-spacing:.01em;text-shadow:0 1px 8px rgba(0,0,0,.35)}
-.ac-blurb{font-size:.74rem;line-height:1.35;color:rgba(255,255,255,.86);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 6px rgba(0,0,0,.4)}
-.ac-foot{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:6px}
-.ac-price{font-family:'Newsreader',serif;font-weight:700;font-size:1.15rem;color:#fff}
-.ac-go{font-size:.66rem;font-weight:700;color:#ffd9cd;opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .2s;white-space:nowrap}
-.ac-tile:hover .ac-go{opacity:1;transform:translateX(0)}
+.ac-photo{position:relative;display:block;aspect-ratio:1/1;overflow:hidden;background:#e7ddd4}
+.ac-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.ac-tile:hover .ac-photo img{transform:scale(1.04)}
+.ac-badge{position:absolute;top:10px;left:10px;font-size:.6rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:rgba(28,58,46,.92);padding:4px 10px;border-radius:50px}
+.ac-info{display:flex;flex-direction:column;gap:6px;padding:12px 13px 13px;flex:1}
+.ac-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.ac-name{font-family:'Newsreader',serif;font-size:1.12rem;font-weight:600;color:#2a2622;line-height:1.1}
+.ac-price{font-family:'Newsreader',serif;font-weight:700;font-size:1rem;color:var(--clay-t);white-space:nowrap}
+.ac-blurb{font-size:.73rem;line-height:1.4;color:#6b625a;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ac-go{margin-top:auto;display:block;text-align:center;background:var(--clay-ink);color:#fff;font-size:.76rem;font-weight:700;border-radius:50px;padding:8px 10px;white-space:nowrap;transition:background-color .2s}
+.ac-tile:hover .ac-go{background:#9c3a23}
 .side-note{font-size:.78rem;color:#7a6f64;font-weight:600;margin:8px 0 14px;text-align:center}
 /* FAQ-A · light bordered accordion */
 .faqA{margin:8px 0 6px;display:flex;flex-direction:column;gap:8px}
@@ -1003,6 +1009,8 @@ const seam = "/cag-fs-seam-emblem.webp";
 @media(max-width:900px){
   .chero-grid{grid-template-columns:1fr;gap:14px}
   .chero-media{order:-1;aspect-ratio:16/10}
+  /* Trust badges stack 2×2 on mobile (2 left, 2 right) */
+  .chero-ribbon{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
   .desk-only{display:none}
   .chero-rail{display:block}
   .congo-body{grid-template-columns:1fr;gap:0}
@@ -1033,6 +1041,17 @@ const seam = "/cag-fs-seam-emblem.webp";
   .otA td:first-child:before{display:none}
 }
 @media(max-width:560px){.stepper-row{grid-template-columns:1fr}}
+/* Avail-C mobile: 2×2, faces full, less text, button still visible */
+@media(max-width:640px){
+  .availC{gap:10px}
+  .ac-blurb{display:none}
+  .ac-info{padding:9px 10px 10px;gap:5px}
+  .ac-top{flex-direction:column;align-items:flex-start;gap:1px}
+  .ac-name{font-size:1rem}
+  .ac-price{font-size:.9rem}
+  .ac-go{font-size:.7rem;padding:7px 8px}
+  .ac-badge{font-size:.55rem;padding:3px 8px;top:8px;left:8px}
+}
 @media(prefers-reduced-motion:reduce){.congo *{transition:none!important}}
 </style>
 
