@@ -13,6 +13,8 @@ description: THE transactional for-sale page builder for CongoAfricanGreys.com �
 
 ## 1. Page inventory & build order (ALL LIVE — confirm on-disk slug in `src/pages/` first; REBUILD mode)
 
+**BUILT so far:** ① `/african-grey-parrot-bird-eggs-for-sale-usa/` (2026-07-20) · ② `/congo-african-grey-for-sale/` (2026-07-21 — tuple: Split-Hero B warm gradient · Dial 2 Dark-Aviary · Rail A · T5 stepper · K1+K4+K3 · Table A · **FAQ-A light bordered**; page-scoped under `.congo`; reword ALL egg-sibling prose before dup-gate — see `sessions/2026-07-19-for-sale-component-map.md` tuple ledger + memory `project_congo_for_sale_build`).
+
 **Cluster 1 (first 6):**
 1. `/african-grey-parrot-bird-eggs-for-sale-usa/` — **truth-forward hybrid** (see §7 Egg Rule)
 2. `/congo-african-grey-for-sale/`
