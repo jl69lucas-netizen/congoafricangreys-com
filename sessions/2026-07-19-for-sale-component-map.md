@@ -40,6 +40,7 @@ No two sibling pages ship the identical combo. Before each page build, pick {her
 | Page | Hero | Dial/Rail | TOC | Takeaway | Table |
 |---|---|---|---|---|---|
 | `/african-grey-parrot-bird-eggs-for-sale-usa/` (BUILT 2026-07-20) | Split-Hero C dark | Dial 1 + Rail A | Dial 1 IS the TOC (fs:02 folded in — one nav, not two, to avoid double-TOC clutter under a dark hero) | K4 Clipboard + K1 Receipt | Table A |
+| `/congo-african-grey-for-sale/` (BUILT 2026-07-21) | Split-Hero B warm gradient | Dial 2 Dark-Aviary + Rail A | T5 Reserve-Path Stepper (in-body) + Dial 2 (desktop) | K1 Receipt + K4 Clipboard + K3 Green Ledger | Table A + FAQ-A light bordered (egg used FAQ-C dark) |
 | (fill at each page's skeleton approval) | | | | | |
 
 ## Still-open flags (carry into next session)

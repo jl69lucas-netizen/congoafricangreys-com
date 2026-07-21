@@ -331,7 +331,8 @@ COMPARISONS = ["african-grey-comparison","congo-vs-timneh-african-grey",
                "african-grey-vs-cockatoo","african-grey-vs-amazon-parrot",
                "african-grey-parrot-breeders-comparison","african-grey-pros-and-cons"]
 
-FORSALE = ["african-grey-parrot-bird-eggs-for-sale-usa"]  # for-sale cluster, expanded as pages rebuild
+FORSALE = ["african-grey-parrot-bird-eggs-for-sale-usa",
+           "congo-african-grey-for-sale"]  # for-sale cluster, expanded as pages rebuild
 
 def blog_targets():
     """Discover the /blog/ hub (dist/blog/index.html) + every dist/blog/<slug>/ post."""
