@@ -47,3 +47,6 @@ No two sibling pages ship the identical combo. Before each page build, pick {her
 1. Egg page = truth-forward hybrid — recommended, not yet explicitly confirmed by breeder.
 2. No page-level sidebar — recommended, not yet explicitly confirmed.
 3. Bing Webmaster → Search Performance → **Queries** export still needed (supplied CSV was a date-series chart).
+
+## Avail-C v2 — clean-card spec (LOCKED 2026-07-21, congo page final touches)
+The original Avail-C dark-scrim overlay tile (text on photo) shipped bulky on desktop and buried the bird's face on mobile. Locked replacement, reuse cluster-wide: face-first card — square photo block (`aspect-ratio:1/1`, per-bird `object-position`, small dark-green uppercase badge top-left) over a white info panel: name + clay price on one row, 2-line-clamp blurb, and an always-visible full-width clay pill button "View <name> →". Mobile ≤640px: 2×2 grid, blurb hidden, name/price stacked. Card images ship `-440.webp` siblings with `srcset` + `sizes="(max-width:980px) 46vw, 210px"`. Companion fixes locked same pass: hero trust chips 2×2 grid on mobile; portrait masters use `.sec-img.fit-contain` (contain + cream bg) instead of cover-crop; dial numerals `#9fc7b0` on dark green for AA; seam emblem 182×60 q60 ≈5.3KB.
