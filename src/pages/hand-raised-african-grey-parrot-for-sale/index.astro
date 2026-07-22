@@ -1,353 +1,928 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import clutch from '../../../data/clutch-inventory.json';
 
-const title = "Hand-Raised African Grey Parrots for Sale | Tame & Socialized from Birth | CongoAfricanGreys.com";
-const description = "Hand-raised African Grey parrots for sale — every bird socialized and tamed from hatching over 12–16 weeks. Congo Greys $1,700–$3,500, Timneh $1,500–$1,600. USDA AWA licensed breeder, Midland TX.";
+// ============================================================================
+//  /hand-raised-african-grey-parrot-for-sale/  — for-sale cluster page 4
+//  Tuple (distinct from egg/congo/timneh — sessions/2026-07-19-for-sale-component-map.md):
+//    Hero-A Scattered Flock · Dial 2 Dark-Aviary + Rail B green ticker · T4 Magazine Index
+//    · K3 Green Ledger + K2 Price-Tag · Avail-B sidebar filtered by Congo/Timneh/Pair
+//    · Table C Outlined matrix + top-pick badge · FAQ-C refreshed forest-green · small seam
+//  Spine: Trust-First / welfare-authority · Engine: EEBP · AIO (C) Both
+//  Prose written fresh from sessions/2026-07-22-hand-raised-outline.md (Write-From-Outline)
+// ============================================================================
+
+const title = "Hand-Raised African Grey Parrots for Sale — Tame, People-Bonded & DNA-Tested | Are Hand-Fed Greys Really Tamer? | 6 Documented Congos & Timnehs Ready | C.A.Gs, Midland TX — Raised In-Home, Video-Call Before You Deposit, From $1,500";
+const description = "Hand-raised African Grey parrots for sale from a USDA-licensed Texas breeder — Congo and Timneh greys we hand-fed, weaned and socialized in-home, DNA-sexed and CITES-documented from $1,500. Tame, people-bonded birds raised right, not pulled early. Video-call before any deposit; 24-hour reply.";
 const canonical = "https://congoafricangreys.com/hand-raised-african-grey-parrot-for-sale/";
-const ogType = "website";
 
-const schemaJson = JSON.stringify({
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Product",
-      "name": "Hand-Raised African Grey Parrots",
-      "url": "https://congoafricangreys.com/hand-raised-african-grey-parrot-for-sale/",
-      "description": "Hand-raised, socialized African Grey parrots available from USDA AWA licensed breeder in Midland, TX.",
-      "brand": { "@type": "Brand", "name": "C.A.Gs – Midland, TX" },
-      "offers": {
-        "@type": "AggregateOffer",
-        "lowPrice": "1500",
-        "highPrice": "3500",
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/InStock"
-      }
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What does hand-raised mean for an African Grey parrot?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Hand-raised means the chick was removed from the nest at 2–3 weeks old and fed by human hands via syringe every 4–6 hours until fully weaned at 12–16 weeks. This intensive early human contact builds the neural pathways for trust and socialization that parent-raised birds never develop, producing a bird that treats humans as its flock from day one."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Are hand-raised African Greys better pets than parent-raised?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "For companion parrots, yes. Hand-raised Greys step up readily on day one, accept handling from strangers, adapt to new environments more easily, and begin vocalizing and mimicking earlier than parent-raised birds. Parent-raised Greys were not socialized to humans and require months or years of patient taming — they are better suited for experienced parrot owners or dedicated breeding programs."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "At what age are hand-raised African Greys ready for placement?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "African Grey chicks are fully weaned and ready for placement at 12–16 weeks old. Responsible breeders never place birds before weaning is complete — early weaning causes psychological stress that leads to feather-destructive behavior and attachment disorders later in life. Any breeder offering 'weaned' birds under 10 weeks should be avoided."
-          }
-        }
-      ]
-    }
-  ]
-});
+const IMG = "/images/hand-raised-page/";
+const site = "https://congoafricangreys.com";
 
-// NOTE: BreadcrumbList JSON-LD is emitted by <Breadcrumb /> itself (verified in dist) —
-// we do NOT add a second copy here (interior standard: extend, never duplicate schema).
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Greys for Sale", url: "/african-grey-parrots-for-sale/" },
+  { name: "Hand-Raised African Grey Parrots for Sale", url: "/hand-raised-african-grey-parrot-for-sale/" },
+];
+
+// Real inventory — ALL hand-raised birds available, BOTH subspecies + the pair (method umbrella).
+const variantRank: Record<string, number> = { congo_african_grey: 0, timneh_african_grey: 1 };
+const available = ((clutch as any).birds as any[])
+  .filter((b) => b.status === "available")
+  .sort((a, b) => (variantRank[a.variant] - variantRank[b.variant]) || (a.sex === "pair" ? 1 : -1));
+
+const catFor = (b: any) => (b.sex === "pair" ? "pair" : (b.variant === "timneh_african_grey" ? "timneh" : "congo"));
+const catLabel = (b: any) => (b.sex === "pair" ? "Companion Pair" : (b.variant === "timneh_african_grey" ? "Timneh Grey" : "Congo Grey"));
+const catCount = (c: string) => available.filter((b) => catFor(b) === c).length;
+
+const birdImg: Record<string, { src: string; alt: string; pos: string }> = {
+  "Bery":  { src: "/images/congo-page/bery-congo-african-grey-female-card.webp",  pos: "center 30%", alt: "Bery, a hand-raised female Congo African Grey for sale, perched calmly and looking to camera" },
+  "Amie":  { src: "/images/congo-page/amie-congo-african-grey-female-card.webp",  pos: "center 28%", alt: "Amie, a hand-fed female Congo African Grey who steps up for visitors, on a play stand" },
+  "Roys":  { src: "/images/congo-page/roys-congo-african-grey-male-card.webp",    pos: "center 30%", alt: "Roys, a people-friendly hand-raised male Congo African Grey mid head-tilt" },
+  "Jins & Jeni (pair)": { src: "/images/congo-page/jins-jeni-congo-african-grey-pair-card.webp", pos: "center 32%", alt: "Jins and Jeni, a bonded hand-raised Congo African Grey companion pair side by side" },
+  "Elad":  { src: "/images/timneh-page/elad-timneh-african-grey-male-card.webp",  pos: "center 34%", alt: "Elad, a hand-raised male Timneh African Grey leaning into a gentle head scratch" },
+  "Evie":  { src: "/images/timneh-page/evie-timneh-african-grey-female-card.webp",pos: "center 38%", alt: "Evie, a gentle young female Timneh African Grey socialized daily from weaning" },
+};
+const birdBlurb: Record<string, string> = {
+  "Bery": "Steady, affectionate Congo hen — hand-fed and unflappable, an easy grey to live with day to day.",
+  "Amie": "Bright Congo hen who steps up for strangers because we rotated her handling across the household.",
+  "Roys": "Curious, confident Congo cock — thrives in a busy, interactive home where there's always something on.",
+  "Jins & Jeni (pair)": "A bonded Congo pair that must stay together — two hand-raised greys who already keep each other company.",
+  "Elad": "Even-tempered young Timneh male, an early talker who bonds fast in a hands-on home.",
+  "Evie": "Tractable Timneh hen who takes new things calmly and loves quiet, gentle interaction.",
+};
+
+// Hero-A scattered-flock polaroids (both subspecies + the human-bond anchor)
+const heroPolaroids = [
+  { src: IMG + "hero-mark-hand-scratch-grey.webp", alt: "Mark hand-raising a Congo African Grey with a gentle head scratch", cap: "Mark & a Congo", cls: "p1" },
+  { src: IMG + "hero-amie-congo-hand-raised.webp", alt: "Amie, a hand-raised female Congo African Grey looking to camera", cap: "Amie · Congo", cls: "p2" },
+  { src: IMG + "hero-baby-timneh-hand-fed.webp", alt: "A hand-fed baby Timneh African Grey being raised by hand", cap: "Hand-fed baby", cls: "p3" },
+  { src: IMG + "hero-bery-congo-hand-raised.webp", alt: "Bery, a calm hand-raised female Congo African Grey on a perch", cap: "Bery · Congo", cls: "p4" },
+  { src: IMG + "hero-young-timneh-hand-raised.webp", alt: "A young hand-raised Timneh African Grey with a maroon tail", cap: "Young Timneh", cls: "p5" },
+];
+
+// Counter strip (Ledger-verified only)
+const counters = [
+  { n: "$1,500", l: "Honest floor price" },
+  { n: "12–16 wk", l: "Weaned, never rushed" },
+  { n: "100%", l: "Hand-raised in-home" },
+  { n: "2", l: "Subspecies, one method" },
+  { n: "0", l: "Wild-caught, ever" },
+  { n: "24h", l: "We reply, personally" },
+];
+
+// DISTINCT geo set vs Congo + Timneh pages (cannibalization guard); real live slugs.
+const shipPlaces = [
+  { href: "/african-grey-parrot-for-sale-florida/", label: "Hand-raised African Greys for sale Florida", note: "Orlando & Miami cargo hubs" },
+  { href: "/african-grey-parrot-for-sale-michigan/", label: "Tame hand-fed greys Michigan", note: "Detroit Metro live-animal desk" },
+  { href: "/african-grey-parrot-for-sale-north-carolina/", label: "Hand-raised African Grey breeder North Carolina", note: "Charlotte cargo route" },
+  { href: "/african-grey-parrot-for-sale-new-jersey/", label: "Hand-fed African Greys for sale New Jersey", note: "Newark Liberty desk" },
+  { href: "/african-grey-parrot-for-sale-minnesota/", label: "People-bonded greys Minnesota", note: "Minneapolis–St. Paul cargo" },
+  { href: "/african-grey-parrot-for-sale-indiana/", label: "Hand-raised African Grey parrots Indiana", note: "Indianapolis pickup route" },
+  { href: "/african-grey-parrot-for-sale-maryland/", label: "Buy a hand-raised African Grey Maryland", note: "BWI live-animal cargo" },
+  { href: "/african-grey-parrot-for-sale-wisconsin/", label: "Hand-fed African Greys for sale Wisconsin", note: "Milwaukee cargo desk" },
+];
+
+// Real, verified, PAGE-SPECIFIC reviews (breeder-supplied 2026-07-22). Never alter real reviews.
+const stories = [
+  { name: "Stanley Perkin", loc: "Oceanside, CA 92054", meta: "Verified C.A.Gs buyer",
+    avatar: IMG + "stanley-perkin-oceanside-ca-african-gray-bird-review.webp",
+    quote: "If you're looking for an african gray bird for sale, I highly recommend C.A.Gs. My bird arrived exactly as promised — healthy, curious, and already comfortable around people. The updates throughout the process and the professionalism of the C.A.Gs team gave me complete confidence. It's rare to find a breeder that truly cares about both the birds and their customers." },
+  { name: "Jesse Ovalle", loc: "Baton Rouge, LA 70806", meta: "Verified C.A.Gs buyer",
+    avatar: IMG + "jesse-ovalle-baton-rouge-la-african-grey-purchase-review.webp",
+    quote: "My African grey parrot purchase through C.A.Gs couldn't have gone better. Every question I had was answered promptly, and I received regular updates before my bird arrived. My African Grey is healthy, intelligent, and already becoming a wonderful member of our family. The quality of care and customer service from C.A.Gs exceeded my expectations." },
+];
+
+const readMore = [
+  { href: "/how-to-avoid-african-grey-parrot-scams/", img: IMG + "fake-hand-raised-listing-red-flags-760.webp", kicker: "Scam guide", title: "How to avoid African Grey parrot scams", sub: "How a fake 'hand-raised' listing gives itself away — and why the sub-$1,000 ones collapse first." },
+  { href: "/congo-vs-timneh-african-grey/", img: IMG + "congo-or-timneh-hand-raised-fast-facts-760.webp", kicker: "Which grey", title: "Congo vs Timneh African Grey", sub: "Both hand-raised the same way here — this weighs which subspecies actually fits your home." },
+  { href: "/african-grey-parrot-price/", img: IMG + "what-a-hand-raised-grey-costs-760.webp", kicker: "Pricing", title: "African Grey price — what you pay for", sub: "Where the $1,500 floor comes from, and why hand-rearing is most of the cost." },
+  { href: "/african-grey-adoption/", img: IMG + "hand-raised-vs-rescue-grey-760.webp", kicker: "Adopt vs buy", title: "African Grey adoption, honestly", sub: "When a rescued grey is the right call, and when a hand-raised chick is the kinder start." },
+];
+
+const faqs = [
+  { q: "Is a hand-fed African Grey the same as a hand-raised one?", a: "Not quite, and the difference matters. Hand-fed just means a person delivered the formula; hand-raised — the way we do it — means the chick was fed, handled, played with and talked to every day, then weaned on its own schedule and socialized across our whole household. A bird can be technically hand-fed and still barely tame if nobody put the hours in. Every grey we place is hand-raised, and we can show you the daily notes to prove it." },
+  { q: "Are hand-raised African Greys tamer and easier to bond with?", a: "Generally yes — a properly hand-raised grey already sees people as safe, steps up without drama, and starts associating words with objects early. What we won't tell you is that tameness is automatic or permanent: a hand-raised bird still needs daily interaction to stay confident, which is why we coach every new owner through the first weeks rather than waving goodbye at the airport." },
+  { q: "Is it bad to take a hand-raised grey away from its parents too early?", a: "Yes, and it's one of the clearest tells of a careless seller. A chick pulled or 'force-weaned' before it's ready can grow up anxious, phobic, or prone to feather-plucking. We co-parent first, let the chick wean on its own timeline between roughly 12 and 16 weeks, and only place a grey once it is eating independently and emotionally settled — never on a shipping deadline." },
+  { q: "Why are some 'hand-raised' African Greys only $500 to $800?", a: "Because raising one properly costs real money — incubation, months of hand-feeding, DNA testing, avian-vet care and CITES paperwork — so a healthy, captive-bred, genuinely hand-raised grey does not sell for a few hundred dollars. A sub-$1,000 'hand-raised African Grey' is almost always a stolen photo, a wild-caught bird, or a deposit you'll never see again. Our floor is $1,500 for exactly that reason." },
+  { q: "Do you hand-raise both Congo and Timneh African Greys?", a: "We do — every Congo and every Timneh we place is hand-raised here in Midland the same way, which is why this page lists both. Congos are the bigger, red-tailed, headline talkers; Timnehs are smaller, maroon-tailed and often a touch calmer and earlier to mimic. Same rearing, two temperaments — we help you match the bird to your home." },
+  { q: "Will a hand-raised African Grey bond with my whole family?", a: "It can, and we set it up to. Because we rotate handling across several people from the start, our greys are used to more than one pair of hands, which lowers the risk of a one-person bird that only tolerates a single owner. Keep that rotation going at home and a hand-raised grey happily becomes a family bird rather than a jealous one." },
+  { q: "How is a hand-raised African Grey shipped safely, and can I pick up instead?", a: "Your reserved grey flies domestic-only in a climate-controlled crate booked to IATA live-animal standards, on Delta, United or American — $185 to your closest airport or $350 brought to your door, with the full document folder riding along beside it. If you live roughly two to three hours from Midland, Texas, you're welcome to collect in person, and honestly that's the calmest handoff there is." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
+
+const productSchema = {
+  "@context": "https://schema.org", "@type": "Product",
+  name: "Hand-Raised African Grey Parrot for Sale (Congo & Timneh)",
+  image: [ site + IMG + "hand-raised-african-grey-parrot-for-sale-hero.webp", site + "/images/congo-page/amie-congo-african-grey-female-card.webp" ],
+  description: "A hand-raised, DNA-sexed African Grey parrot from C.A.Gs, a USDA-licensed family aviary in Midland, Texas. Congo and Timneh greys hand-fed, weaned and socialized in-home — captive-bred, CITES Appendix I documented, PBFD & Avian Polyomavirus PCR-screened, placed with lifetime breeder support.",
+  category: "Companion parrot",
+  brand: { "@type": "Organization", name: "C.A.Gs – Midland, TX" },
+  aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "52" },
+  review: stories.map((s) => ({ "@type": "Review", author: { "@type": "Person", name: s.name },
+    reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" }, reviewBody: s.quote })),
+  offers: { "@type": "AggregateOffer", lowPrice: "1500", highPrice: "3500", priceCurrency: "USD", offerCount: String(available.length),
+    availability: "https://schema.org/InStock", url: canonical,
+    seller: { "@type": ["Organization", "LocalBusiness"], name: "C.A.Gs – Midland, TX", alternateName: "Congo African Greys" } },
+};
+const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
+  itemListElement: available.map((b, i) => ({ "@type": "ListItem", position: i + 1,
+    item: { "@type": "Product", name: b.name + " — Hand-Raised " + catLabel(b), category: "Companion parrot",
+      offers: { "@type": "Offer", price: String(b.price), priceCurrency: "USD",
+        availability: "https://schema.org/InStock", url: site + b.slug } } })) };
+
+// Section spine (Dial 2 list). IDs map to the approved H1–H6 outline.
+const sections = [
+  { n: "01", id: "means",       label: "What hand-raised means", tag: "Defined" },
+  { n: "02", id: "vs",          label: "Hand-fed vs parent-raised", tag: "Compare" },
+  { n: "03", id: "available",   label: "Available greys now", tag: available.length + " birds" },
+  { n: "04", id: "trust",       label: "Why families trust us", tag: "Verify" },
+  { n: "05", id: "howraise",    label: "How we hand-raise", tag: "12–16 wk" },
+  { n: "06", id: "downside",    label: "The honest downside", tag: "Bonding" },
+  { n: "07", id: "cost",        label: "What it really costs", tag: "$1,500+" },
+  { n: "08", id: "scams",       label: "Spot a fake listing", tag: "Red flags" },
+  { n: "09", id: "why",         label: "Why greys are special", tag: "Talk" },
+  { n: "10", id: "congotimneh", label: "Congo or Timneh?", tag: "Match" },
+  { n: "11", id: "shipping",    label: "Safe shipping", tag: "$185/$350" },
+  { n: "12", id: "included",    label: "What's included", tag: "Docs" },
+  { n: "13", id: "health",      label: "Health & PCR", tag: "Screened" },
+  { n: "14", id: "video",       label: "See them on video", tag: "Real" },
+  { n: "15", id: "families",    label: "Buyer stories", tag: "5★" },
+  { n: "16", id: "faq",         label: "Before you reserve", tag: "FAQ" },
+  { n: "17", id: "resources",   label: "Keep reading", tag: "" },
+  { n: "18", id: "reserve",     label: "Reserve your grey", tag: "24h" },
+];
+const N = sections.length;
+
+// T4 Magazine Index Card (curated 6 anchors)
+const indexCards = [
+  { href: "#means",     n: "01", h: "What hand-raised really means", s: "The word sellers blur" },
+  { href: "#available", n: "02", h: "See the greys available now", s: available.length + " Congos & Timnehs" },
+  { href: "#howraise",  n: "03", h: "How we hand-raise, week by week", s: "Weaned at 12–16 weeks" },
+  { href: "#cost",      n: "04", h: "What a real one costs", s: "Why the floor is $1,500" },
+  { href: "#shipping",  n: "05", h: "Shipping, docs & guarantee", s: "$185 airport · $350 home" },
+  { href: "#reserve",   n: "06", h: "Reserve & bring one home", s: "We reply within 24h" },
+];
+const seam = "/cag-fs-seam-emblem.webp";
+const deposit = "$200";
+const schemaGraph = JSON.stringify({ "@context": "https://schema.org", "@graph": [productSchema, itemListSchema, faqSchema] });
+const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-african-grey-parrot-for-sale-hero.webp">`;
 ---
+<BaseLayout title={title} description={description} canonical={canonical} ogType="product" hideGlobalCta={true} schemaJson={schemaGraph} heroPreload={IMG + "hero-mark-hand-scratch-grey.webp"} extraHeadHtml={ogExtra}>
 
-<BaseLayout title={title} description={description} canonical={canonical} ogType={ogType} schemaJson={schemaJson}>
+  <main class="handraised">
+    <div class="hr-container"><Breadcrumb items={breadcrumbs} /></div>
 
-<style>
-  :root {
-    --green: #2D6A4F;
-    --clay: #e8604c;
-    --cream: #faf7f4;
-    --dark: #1c1a18;
-    --muted: #6b6560;
-    --border: #ede5dc;
-    --green-lt: #eaf4ef;
-  }
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-  .container-text { max-width: 760px; margin: 0 auto; }
-
-  .breadcrumb a { color: var(--green); text-decoration: none; }
-  .breadcrumb a:hover { text-decoration: underline; }
-
-  .page-hero { background: var(--green); color: #fff; padding: 52px 0 44px; }
-  .page-hero h1 { font-family: Lora, serif; font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 700; margin: 0 0 14px; line-height: 1.2; max-width: 700px; }
-  .page-hero .lead { font-family: Sora, sans-serif; font-size: 1.02rem; opacity: 0.9; max-width: 620px; margin: 0 0 28px; line-height: 1.65; }
-  .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); color: #fff; font-family: Sora, sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 14px; border-radius: 50px; margin-bottom: 16px; }
-  .btn-primary { display: inline-flex; align-items: center; background: var(--clay); color: #fff; font-family: Sora, sans-serif; font-weight: 600; font-size: 0.95rem; padding: 13px 28px; border-radius: 50px; text-decoration: none; transition: background 0.2s; }
-  .btn-primary:hover { background: #c94d3a; }
-
-  /* Trust bar */
-  .trust-bar { background: #1e5238; padding: 14px 0; }
-  .trust-bar-inner { display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: center; }
-  .trust-item { font-family: Sora, sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.9); }
-
-  /* Benefits grid */
-  .benefits-section { padding: 56px 0; }
-  .benefits-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 16px; }
-  .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 28px 0; }
-  .benefit-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 22px 20px; text-align: center; }
-  .benefit-icon { font-size: 1.8rem; margin-bottom: 10px; }
-  .benefit-card h3 { font-family: Lora, serif; font-size: 1rem; color: var(--green); margin: 0 0 8px; }
-  .benefit-card p { font-family: Sora, sans-serif; font-size: 0.86rem; color: var(--muted); line-height: 1.6; margin: 0; }
-
-  /* Compare table */
-  .content-section { padding: 48px 0; }
-  .content-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 16px; }
-  .content-section p { font-family: Sora, sans-serif; font-size: 0.97rem; color: var(--dark); line-height: 1.75; max-width: 70ch; margin: 0 0 16px; }
-  .internal-link { color: var(--green); font-weight: 600; text-decoration: none; }
-  .internal-link:hover { text-decoration: underline; }
-
-  .compare-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: Sora, sans-serif; font-size: 0.9rem; }
-  .compare-table thead th { background: var(--green); color: #fff; padding: 12px 16px; text-align: left; font-weight: 600; }
-  .compare-table thead th:first-child { border-radius: 8px 0 0 0; }
-  .compare-table thead th:last-child { border-radius: 0 8px 0 0; }
-  .compare-table tbody tr:nth-child(even) { background: var(--cream); }
-  .compare-table tbody td { padding: 10px 16px; border-bottom: 1px solid var(--border); color: var(--dark); line-height: 1.5; }
-  .compare-table tbody td:first-child { font-weight: 600; color: var(--muted); width: 30%; }
-  .good { color: #1e5238; font-weight: 600; }
-
-  /* Timeline */
-  .timeline-section { padding: 48px 0; background: var(--cream); }
-  .timeline-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 28px; }
-  .timeline { position: relative; padding-left: 36px; }
-  .timeline::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 2px; background: var(--border); }
-  .timeline-item { position: relative; margin-bottom: 28px; }
-  .timeline-dot { position: absolute; left: -30px; top: 4px; width: 16px; height: 16px; background: var(--green); border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 2px var(--green); }
-  .timeline-item h3 { font-family: Lora, serif; font-size: 1.02rem; color: var(--dark); margin: 0 0 6px; }
-  .timeline-item p { font-family: Sora, sans-serif; font-size: 0.9rem; color: var(--muted); line-height: 1.65; margin: 0; }
-
-  .section-divider { border: none; border-top: 1px solid var(--border); margin: 44px 0; }
-
-  .faq-section { padding: 48px 0; }
-  .faq-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 28px; }
-  details { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; background: #fff; }
-  summary { font-family: Sora, sans-serif; font-weight: 600; font-size: 0.97rem; padding: 18px 20px; cursor: pointer; list-style: none; color: var(--dark); }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: '+'; float: right; color: var(--clay); font-size: 1.2rem; font-weight: 400; }
-  details[open] summary::after { content: '−'; }
-  .faq-body { padding: 0 20px 18px; font-family: Sora, sans-serif; font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
-
-  .cta-section { padding: 56px 0; text-align: center; }
-  .cta-section h2 { font-family: Lora, serif; font-size: 1.55rem; color: var(--dark); margin: 0 0 12px; }
-  .cta-section p { font-family: Sora, sans-serif; color: var(--muted); max-width: 500px; margin: 0 auto 24px; font-size: 0.97rem; line-height: 1.65; }
-  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .btn-outline { display: inline-flex; align-items: center; background: transparent; color: var(--green); border: 2px solid var(--green); font-family: Sora, sans-serif; font-weight: 600; font-size: 0.95rem; padding: 11px 26px; border-radius: 50px; text-decoration: none; transition: background 0.2s, color 0.2s; }
-  .btn-outline:hover { background: var(--green); color: #fff; }
-
-  @media (max-width: 767px) {
-    .page-hero { padding: 38px 0 32px; }
-    .benefits-section { padding: 40px 0; }
-    .benefits-grid { grid-template-columns: 1fr; }
-    .content-section { padding: 36px 0; }
-    .timeline-section { padding: 40px 0; }
-  }
-  @media (min-width: 768px) and (max-width: 1024px) {
-    .benefits-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>
-
-<div>
-
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={[
-        { name: "Home", url: "/" },
-        { name: "African Grey Parrot Guide", url: "/african-grey-parrot-guide/" },
-        { name: "Hand-Raised African Grey", url: "/hand-raised-african-grey-parrot-for-sale/" }
-      ]} />
-  </div>
-
-  <section class="page-hero">
-    <div class="container">
-      <div class="hero-badge">Hand-Fed from Hatch · 12–16 Weeks</div>
-      <h1>Hand-Raised African Grey Parrots for Sale</h1>
-      <p class="lead">Every bird we place was hand-fed by our family from 2–3 weeks old through full weaning. The result is a Grey that already knows humans as its flock — not a stranger to be feared.</p>
-      <a href="/contact-us/" class="btn-primary">Check Availability</a>
-    </div>
-  </section>
-
-  <div class="trust-bar">
-    <div class="container">
-      <div class="trust-bar-inner">
-        <span class="trust-item"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Hand-Fed from Week 2</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> 12–16 Week Socialization</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> USDA AWA Licensed</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> DNA Sexed</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> CITES Documented</span>
-      </div>
-    </div>
-  </div>
-
-  <section class="benefits-section">
-    <div class="container">
-      <h2>Why Hand-Raising Produces Better Companion Parrots</h2>
-
-      <div class="benefits-grid">
-        <div class="benefit-card">
-          <div class="benefit-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <h3>Steps Up Immediately</h3>
-          <p>Our birds leave already responding to the step-up command — no weeks of fearful behavior before you can handle your new Grey.</p>
+    <!-- ===================== HERO-A · SCATTERED FLOCK ===================== -->
+    <header class="hero">
+      <div class="hero-grid hr-container">
+        <div class="hero-copy">
+          <p class="eyebrow">Est. 2014 · Midland, TX · USDA-licensed family aviary</p>
+          <h1>Hand-Raised African Grey Parrots for Sale — <em>tame, people-bonded</em> &amp; ready to reserve</h1>
+          <p class="lead">Here at C.A.Gs, every Congo and Timneh African Grey is hand-fed, weaned and socialized in our own home — not pulled early, not warehouse-raised. What you meet is a grey that already trusts people, steps up without a fight, and settles into family life from day one.</p>
+          <div class="hero-cta">
+            <a class="btn btn-clay" href="#available">Reserve a hand-raised grey →</a>
+            <a class="btn btn-ghost" href="#howraise">See how we raise them</a>
+          </div>
+          <ul class="hero-chips">
+            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> USDA-licensed</li>
+            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> CITES Appendix I documented</li>
+            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> DNA-sexed &amp; PCR-screened</li>
+            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Ships nationwide</li>
+          </ul>
         </div>
-        <div class="benefit-card">
-          <div class="benefit-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <h3>Accepts the Whole Family</h3>
-          <p>Socialized by multiple handlers from hatching, not just one person — so your Grey bonds with your household, not just one member.</p>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg></div>
-          <h3>Begins Talking Earlier</h3>
-          <p>Hand-raised Greys exposed to continuous human speech from week two begin mimicking earlier and develop larger vocabularies than parent-raised birds.</p>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
-          <h3>Adapts to New Places</h3>
-          <p>Socialized to different environments during the critical window — carrier, travel, new rooms — so your bird doesn't panic when life requires flexibility.</p>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
-          <h3>Easier Vet Handling</h3>
-          <p>A Grey accustomed to being handled by strangers is far easier — and safer — to examine at the vet than a parent-raised bird that has never been held by an unfamiliar person.</p>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></div>
-          <h3>Lower Long-Term Cost</h3>
-          <p>Fewer behavioral problems mean fewer behavioral consultations. A well-socialized bird from a reputable breeder has lower total cost of ownership over its 40–60 year life.</p>
+        <div class="hero-scatter" aria-hidden="false">
+          {heroPolaroids.map((p) => (
+            <figure class={"pofig " + p.cls}>
+              <img src={p.src} alt={p.alt} width="620" height="720" loading={p.cls === "p1" ? "eager" : "lazy"} fetchpriority={p.cls === "p1" ? "high" : undefined} />
+              <figcaption>{p.cap}</figcaption>
+            </figure>
+          ))}
         </div>
       </div>
-    </div>
-  </section>
+    </header>
 
-  <section class="content-section">
-    <div class="container container-text">
-
-      <h2>Hand-Raised vs. Parent-Raised: The Real Difference</h2>
-      <p>The term "hand-raised" is used loosely in bird sales — some sellers mean they held chicks occasionally; others mean intensive daily hand-feeding from the first weeks of life. The difference in outcome is enormous.</p>
-
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th class="good">Hand-Raised (Ours)</th>
-            <th>Parent-Raised</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Human socialization</td>
-            <td class="good">From week 2, multiple handlers</td>
-            <td>Minimal until weaned (8–14 weeks)</td>
-          </tr>
-          <tr>
-            <td>Step-up at placement</td>
-            <td class="good">Responds reliably</td>
-            <td>Must be taught from scratch</td>
-          </tr>
-          <tr>
-            <td>Fear of strangers</td>
-            <td class="good">Low — socialized broadly</td>
-            <td>High — avoids unfamiliar people</td>
-          </tr>
-          <tr>
-            <td>Taming timeline</td>
-            <td class="good">Days to weeks</td>
-            <td>Months to years</td>
-          </tr>
-          <tr>
-            <td>Carrier / travel</td>
-            <td class="good">Introduced during socialization</td>
-            <td>Highly stressful without training</td>
-          </tr>
-          <tr>
-            <td>Ideal for</td>
-            <td class="good">All owner experience levels</td>
-            <td>Experienced owners only</td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
-  </section>
-
-  <section class="timeline-section">
-    <div class="container container-text">
-      <h2>Our 12–16 Week Hand-Raising Process</h2>
-
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <h3>Weeks 1–2: Nest Monitoring</h3>
-          <p>Chicks remain with parents for initial feeding and warmth. We monitor daily for health and weight gain. No intervention during this critical immune-transfer period.</p>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <h3>Weeks 2–3: Hand-Feeding Begins</h3>
-          <p>Chicks transition to hand-feeding via syringe 4–6 times daily. Every family member participates — multiple handlers from day one. Chicks handled gently between feedings to build human association.</p>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <h3>Weeks 4–8: Intensive Socialization</h3>
-          <p>Feeding frequency decreases as crop capacity grows. Chicks introduced to normal household sounds, different rooms, carrier introductions, and gentle handling by visitors. Talking begins in the environment around them constantly.</p>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <h3>Weeks 9–12: Weaning to Solids</h3>
-          <p>Soft foods introduced alongside formula. Birds begin self-feeding from bowls. Step-up training introduced on a tabletop perch. DNA sex testing submitted to genetics lab.</p>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <h3>Weeks 12–16: Pre-Placement Assessment</h3>
-          <p>Bird is fully weaned, stepping up reliably, and eating independently. Avian vet wellness exam and health certificate issued. CITES documentation finalized. Bird is ready for placement.</p>
-        </div>
+    <!-- ===================== COUNTER STRIP ===================== -->
+    <section class="counter" aria-label="Hand-raised at a glance">
+      <div class="hr-container counter-grid">
+        {counters.map((c) => (<div class="cstat"><span class="cn">{c.n}</span><span class="cl">{c.l}</span></div>))}
       </div>
+    </section>
 
-      <p style="margin-top: 28px; font-family: Sora, sans-serif; font-size: 0.95rem; color: var(--dark); line-height: 1.75; max-width: 70ch;">
-        Want to understand what to expect in those first weeks after your bird arrives? Read our <a href="/how-to-tame-african-grey-parrot/" class="internal-link">taming guide</a> to continue from where we left off.
-      </p>
-    </div>
-  </section>
+    <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
 
-  <section class="faq-section">
-    <div class="container container-text">
-      <h2>Hand-Raised Parrot FAQs</h2>
+    <!-- ===================== BODY: DIAL 2 SIDEBAR + CONTENT ===================== -->
+    <div class="hr-container body-grid">
 
-      <details>
-        <summary>What does hand-raised mean for an African Grey parrot?</summary>
-        <div class="faq-body">Hand-raised means the chick was removed from the nest at 2–3 weeks old and fed by human hands via syringe every 4–6 hours until fully weaned at 12–16 weeks. This intensive early human contact builds the neural pathways for trust and socialization that parent-raised birds never develop, producing a bird that treats humans as its flock from day one.</div>
-      </details>
+      <!-- Dial 2 Dark-Aviary (desktop sticky) -->
+      <aside class="dial" aria-label="Section progress">
+        <div class="dial-card">
+          <div class="ring" id="dialRing" style="--p:0">
+            <div class="ring-in"><span class="ring-n" id="dialNum">01</span><span class="ring-of">of {N}</span></div>
+          </div>
+          <ul class="dial-list" id="dialList">
+            {sections.map((s) => (
+              <li><a href={"#" + s.id} data-id={s.id}><span class="di">{s.n}</span><span class="dh">{s.label}</span>{s.tag && <span class="dt">{s.tag}</span>}</a></li>
+            ))}
+          </ul>
+        </div>
+      </aside>
 
-      <details>
-        <summary>Are hand-raised African Greys better pets than parent-raised?</summary>
-        <div class="faq-body">For companion parrots, yes. Hand-raised Greys step up readily on day one, accept handling from strangers, adapt to new environments more easily, and begin vocalizing and mimicking earlier than parent-raised birds. Parent-raised Greys were not socialized to humans and require months or years of patient taming — they are better suited for experienced parrot owners or dedicated breeding programs.</div>
-      </details>
+      <div class="content">
 
-      <details>
-        <summary>At what age are hand-raised African Greys ready for placement?</summary>
-        <div class="faq-body">African Grey chicks are fully weaned and ready for placement at 12–16 weeks old. Responsible breeders never place birds before weaning is complete — early weaning causes psychological stress that leads to feather-destructive behavior and attachment disorders later in life. Any breeder offering "weaned" birds under 10 weeks should be avoided.</div>
-      </details>
-    </div>
-  </section>
+        <!-- ===== 01 · MEANS ===== -->
+        <section id="means" class="sec">
+          <h2>What does "hand-raised" really mean for an African Grey?</h2>
+          <p class="opener">"Hand-raised" is the single most abused phrase in this market, so let us define it the way we practice it: a hand-raised African Grey is a chick we fed, held, played with and talked to every single day, then weaned on its own timeline and introduced to normal household life before it ever met you. That daily investment is the whole difference between a bird that greets a stranger and one that lunges at a hand.</p>
+          <img class="sec-img inf-img" src={IMG + "what-hand-raised-means.webp"} srcset={IMG + "what-hand-raised-means-760.webp 760w, " + IMG + "what-hand-raised-means.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="What a hand-raised African Grey is: hand-fed daily, handled and socialized, weaned at 12 to 16 weeks and bonded to people" />
+          <h3>Hand-fed, hand-raised, hand-tamed: the words sellers blur</h3>
+          <p>Read a dozen listings and you'll see the three terms used as if they mean the same thing. They don't. Because the labels carry different amounts of work, the temperament you take home varies wildly between them — and a seller who blurs them is usually hiding how little handling actually happened.</p>
+          <h4>Is "hand-fed" the same as "hand-raised"?</h4>
+          <p>Hand-fed only promises that a human held the feeding syringe; it says nothing about whether that chick was ever socialized. Hand-raised — our standard — bundles the feeding together with hours of daily handling, exposure to household sound and movement, and a patient weaning process.</p>
+          <h5>Why a bird fed by hand can still be poorly socialized</h5>
+          <p>We've met plenty of "hand-fed" greys that flinch at a towel and bite when they're nervous, because volume feeding in a back room produces a fed chick, not a confident companion. Confidence is built in the minutes between feedings — and those minutes are exactly what a rushed operation skips.</p>
+          <h6>Breeder note: how we log daily handling from hatch day</h6>
+          <p>We keep a simple per-chick log from hatch — who handled it, for how long, what new thing it met that day — and we're glad to walk you through it on a video call. It isn't marketing; it's how Teri makes sure no chick gets quietly under-socialized in a busy clutch.</p>
+          <h3>What a properly hand-raised grey is like in your living room</h3>
+          <p>A grey raised this way tends to step up on request, tolerate normal household chaos, and treat new people as interesting rather than threatening. It is not a robot and it will still have opinions — but the baseline it starts from is trust, which is the hardest thing to add later.</p>
+          <p class="ticket"><a href="#available" class="ticket-cta">See the hand-raised greys we have now <span>→</span></a></p>
+        </section>
 
-  <section class="cta-section">
-    <div class="container">
-      <h2>View Available Hand-Raised Birds</h2>
-      <p>Ready to bring home a Grey that already steps up and treats your family as its flock? Inquire about current availability — Congo or Timneh.</p>
-      <div class="cta-buttons">
-        <a href="/congo-african-grey-for-sale/" class="btn-outline">Congo African Greys</a>
-        <a href="/timneh-african-grey-for-sale/" class="btn-outline">Timneh African Greys</a>
-        <a href="/buy-african-grey-parrot-near-me/" class="btn-outline">Buying Guide</a>
-        <a href="/contact-us/" class="btn-primary">Ask About Availability</a>
-      </div>
-    </div>
-  </section>
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
 
-</div>
+        <!-- ===== 02 · VS ===== -->
+        <section id="vs" class="sec">
+          <h2>Hand-fed vs hand-raised vs parent-raised: which African Grey should you buy?</h2>
+          <p class="opener">There are three honest ways a grey reaches you — hand-fed, hand-raised, or parent-raised — and each produces a different starting temperament. Because most buyers want a bird that bonds quickly, a properly hand-raised grey is usually the right answer, but we'd rather you choose it knowing the trade-offs than because a listing shouted "tame".</p>
+          <img class="sec-img inf-img" src={IMG + "hand-fed-vs-hand-raised-vs-parent-raised.webp"} srcset={IMG + "hand-fed-vs-hand-raised-vs-parent-raised-760.webp 760w, " + IMG + "hand-fed-vs-hand-raised-vs-parent-raised.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Comparison of hand-fed, hand-raised and parent-raised African Greys showing hand-raised as the tamest" />
+          <h3>The three rearing paths, side by side</h3>
+          <div class="tblwrap">
+            <table class="tblC">
+              <thead><tr><th>Rearing path</th><th>What it means</th><th>Starting tameness</th><th>Best for</th></tr></thead>
+              <tbody>
+                <tr><td>Hand-fed only</td><td>Fed by hand, little else</td><td>Variable</td><td>Owners who'll do the socializing</td></tr>
+                <tr class="pick"><td>Hand-raised <span class="badge">Top pick</span></td><td>Fed, handled &amp; socialized daily</td><td>High, people-bonded</td><td>Most families &amp; first-grey homes</td></tr>
+                <tr><td>Parent-raised</td><td>Raised by the parent birds</td><td>Shy at first</td><td>Patient, experienced keepers</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h4>Are parent-raised African Greys ever the better choice?</h4>
+          <p>Sometimes, yes. A parent-raised grey often grows up more independent and can be wonderfully well-adjusted in the right hands, which is why we won't dismiss it.</p>
+          <h5>When a parent-raised grey suits a patient, experienced owner</h5>
+          <p>If you've kept parrots before, enjoy earning trust slowly, and don't need a bird that cuddles in week one, a parent-raised grey can be a deeply rewarding project. For a first-time owner hoping to bond fast, though, it's a harder road than a hand-raised chick.</p>
+          <h6>Citation: avian-welfare findings on early socialization</h6>
+          <p><a href="https://www.aav.org/" target="_blank" rel="noopener">The Association of Avian Veterinarians' guidance on companion-parrot socialization ↗</a> lines up with what we see in the nursery — the earliest months set a grey's temperament, which is exactly why we pour ourselves into them.</p>
+          <h3>Why we co-parent first, then hand-raise</h3>
+          <p>We leave chicks with their parents through the earliest days, then bring them into the nursery for hand-raising once they're strong. That order gives us the best of both: the security of parent care first, and the human bond that makes a grey a companion.</p>
+        </section>
 
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 03 · AVAILABLE · Avail-B subspecies filter ===== -->
+        <section id="available" class="sec">
+          <h2>Which hand-raised African Greys are available right now?</h2>
+          <p class="opener">Every bird below is a grey we hand-raised ourselves, listed live from our clutch record — {available.length} available today across both subspecies, plus one bonded pair. Because they're all raised the same way, the choice really comes down to size, tail color and temperament, so filter by the grey that fits your home.</p>
+          <div class="availB">
+            <aside class="availB-rail" aria-label="Filter available greys">
+              <p class="rail-h">Browse by</p>
+              <button class="fbtn is-on" data-f="all">All greys <span>{available.length}</span></button>
+              <button class="fbtn" data-f="congo">Congo greys <span>{catCount("congo")}</span></button>
+              <button class="fbtn" data-f="timneh">Timneh greys <span>{catCount("timneh")}</span></button>
+              <button class="fbtn" data-f="pair">Companion pair <span>{catCount("pair")}</span></button>
+              <p class="rail-ship">Ships nationwide<br/><b>$185 airport · $350 home</b></p>
+            </aside>
+            <div class="availB-grid" id="birdGrid">
+              {available.map((b) => {
+                const im = birdImg[b.name] || { src: "/images/congo-page/amie-congo-african-grey-female-card.webp", pos: "center 30%", alt: b.name };
+                return (
+                  <article class={"bcard cat-" + catFor(b)} data-cat={catFor(b)}>
+                    <div class="bphoto"><img src={im.src} alt={im.alt} loading="lazy" style={"object-position:" + im.pos} width="440" height="440" /><span class={"bbadge " + catFor(b)}>{catLabel(b)}</span></div>
+                    <div class="binfo">
+                      <div class="brow"><h3>{b.name}</h3><span class="bprice">${b.price.toLocaleString()}</span></div>
+                      <p class="bblurb">{birdBlurb[b.name]}</p>
+                      <div class="bchips"><span>CITES</span><span>DNA-sexed</span><span>Hand-raised</span></div>
+                      <a class="btn btn-clay bfull" href="#reserve">Inquire about {b.name.replace(" (pair)", "")} →</a>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+          <p class="microcopy">Prices include a {deposit} refundable deposit toward the total. A bird marked reserved has a deposit down; a sold bird leaves the list. We never take two deposits on the same grey.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 04 · TRUST ===== -->
+        <section id="trust" class="sec">
+          <h2>Why do U.S. families trust our hand-raised greys?</h2>
+          <p class="opener">Trust here isn't a slogan — it's a paper trail you can check before a dollar moves. Because the market is thick with fake "hand-raised" listings, we hand every buyer the same verifiable stack the fraudulent sellers can't produce: a USDA license number, CITES captive-bred records, a DNA certificate and a live video of your actual bird.</p>
+          <img class="sec-img inf-img" src={IMG + "verify-hand-raised-breeder-60-seconds.webp"} srcset={IMG + "verify-hand-raised-breeder-60-seconds-760.webp 760w, " + IMG + "verify-hand-raised-breeder-60-seconds.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Three fast checks to verify a legitimate hand-raised African Grey breeder: ask for the USDA license, video-call the bird live, reverse-image the photos" />
+          <div class="tgrid">
+            <div class="tcard"><b>Hand-raised in-home</b><span>Fed and socialized by us in Midland, never contracted out.</span></div>
+            <div class="tcard"><b>Documented, not promised</b><span>CITES Appendix I papers, DNA cert and health record on every grey.</span></div>
+            <div class="tcard"><b>Named airline shipping</b><span>IATA live-animal cargo on Delta, United or American — not a vague "courier".</span></div>
+            <div class="tcard"><b>We answer after the wire</b><span>A lifetime support line, because placement is the start, not the end.</span></div>
+          </div>
+          <h3>The credentials behind every hand-raised bird</h3>
+          <p>Each grey ships with the same documentation set, and every credential is one you can independently verify rather than take on faith.</p>
+          <h4>How do you confirm a hand-raised grey seller is legitimate?</h4>
+          <p>You don't have to trust your gut — you can check three things in about a minute, and a real breeder will happily wait while you do.</p>
+          <h5>The three checks that expose a fake breeder fast</h5>
+          <p>Ask for the USDA license and look it up; request a live video call with the bird and today's date in frame; and reverse-image-search the listing photos to catch stolen pictures. A scammer fails at least one of these every time.</p>
+          <h6>Citation: verify our USDA AWA license at aphis.usda.gov</h6>
+          <p><a href="https://aphis.usda.gov/" target="_blank" rel="noopener">The USDA APHIS licensing lookup ↗</a> lets you confirm any breeder's Animal Welfare Act license in seconds — run ours, then run anyone else's before you send a dollar.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 05 · HOWRAISE ===== -->
+        <section id="howraise" class="sec">
+          <h2>How do we hand-raise an African Grey, week by week?</h2>
+          <p class="opener">Hand-raising a grey well is a fourteen-week job, not a marketing word — a rhythm of feeding, handling and patient weaning that we run the same way for every chick. Because rushing any stage produces a nervous adult, we let each bird set its own pace and only call it ready when it's eating on its own and emotionally settled.</p>
+          <img class="sec-img inf-img" src={IMG + "spoonfed-african-grey-baby-hand-feeding.webp"} srcset={IMG + "spoonfed-african-grey-baby-hand-feeding-760.webp 760w, " + IMG + "spoonfed-african-grey-baby-hand-feeding.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Spoon-feeding a baby African Grey chick by hand in our home — the daily hand-feeding that makes a grey hand-raised, not just hand-fed" />
+          <h3>From brooder to weaning: the 12-to-16-week timeline</h3>
+          <img class="sec-img inf-img" src={IMG + "how-we-hand-raise-weaning-timeline.webp"} srcset={IMG + "how-we-hand-raise-weaning-timeline-760.webp 760w, " + IMG + "how-we-hand-raise-weaning-timeline.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Timeline of how C.A.Gs hand-raises an African Grey from hatch through brooder, hand-feeding and weaning at 12 to 16 weeks to ready for home" />
+          <div class="otA">
+            <div class="otrow"><span class="ot-k">Hatch → 3 weeks</span><span class="ot-v">Brooder warmth, frequent hand-feeding, first daily handling</span></div>
+            <div class="otrow"><span class="ot-k">3 → 8 weeks</span><span class="ot-v">Feather growth, household sounds, more time out on hands</span></div>
+            <div class="otrow"><span class="ot-k">8 → 12 weeks</span><span class="ot-v">Exploring solid foods, fledging, confidence-building play</span></div>
+            <div class="otrow"><span class="ot-k">12 → 16 weeks</span><span class="ot-v">Self-weaning onto pellets &amp; chop, then cleared to go home</span></div>
+          </div>
+          <h4>At what age is a hand-raised grey ready to come home?</h4>
+          <p>When it is fully weaned and eating independently — typically between 12 and 16 weeks — and not a day sooner. A weaned grey travels better, settles faster, and starts its new life confident instead of frightened.</p>
+          <h5>Why we never release an unweaned or force-weaned chick</h5>
+          <p>Selling an unweaned baby shifts the hardest, riskiest job — hand-feeding formula at the right temperature and consistency — onto a new owner who's never done it, and force-weaning to hit a sale date can scar a grey for life. We simply don't do either, however keen a buyer is to take one early.</p>
+          <h6>Breeder note: our daily weaning-weight log</h6>
+          <p>Every chick is weighed daily through weaning, because a grey that's quietly dropping grams tells you it isn't ready long before it looks unwell. That log is another thing we'll gladly show you before you commit.</p>
+          <h3>How we socialize a grey across a whole household</h3>
+          <p>From the first weeks we make sure several people handle each chick — different voices, different hands, the normal noise of a family home — so the grey grows up used to more than one person. That habit is the quiet reason our birds tend to settle into families rather than fixate on a single owner.</p>
+          <p><a href="https://lafeber.com/vet/basic-information-sheet-for-the-african-grey-parrot/" target="_blank" rel="noopener">LafeberVet's African Grey information sheet ↗</a> sets out the same weaning and nutrition fundamentals we raise to, if you'd like a veterinary second opinion on how a grey should be brought up.</p>
+          <p class="ticket"><a href="#reserve" class="ticket-cta">Reserve a weaned, hand-raised grey <span>→</span></a></p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 06 · DOWNSIDE ===== -->
+        <section id="downside" class="sec">
+          <h2>What's the honest downside of a hand-raised grey?</h2>
+          <p class="opener">Here's the part most sellers skip: a hand-raised grey bonds so readily that it can over-attach to one person if you let it. Because we'd rather you succeed than just sell you a bird, we build against that from the nursery — and we tell you how to keep it from happening at home.</p>
+          <img class="sec-img inf-img" src={IMG + "prevent-one-person-bird.webp"} srcset={IMG + "prevent-one-person-bird-760.webp 760w, " + IMG + "prevent-one-person-bird.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="How rotating handling prevents a hand-raised African Grey from over-bonding to one person and keeps it a family bird" />
+          <h3>The over-bonding risk sellers don't mention</h3>
+          <p>A grey that adores exactly one human and bites everyone else isn't broken — it's usually a bird that only ever knew one pair of hands. Left unmanaged, that pattern narrows a family's bird down to a single-person pet.</p>
+          <h4>How do we prevent a one-person bird?</h4>
+          <p>We rotate handling across several people from the very start, so "people" — plural — is normal to the chick long before it comes home. Then we ask you to keep the rotation going for the first months.</p>
+          <h5>Example: why Amie steps up for strangers, not just us</h5>
+          <p>Amie is the clearest proof — because Teri, Mark and visitors all handled her through weaning, she'll step up for a guest she met five minutes ago. That isn't luck; it's the rotation, and it's a habit any household can keep.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 07 · COST · K2 price-tag ===== -->
+        <section id="cost" class="sec">
+          <h2>What does a hand-raised African Grey really cost?</h2>
+          <p class="opener">A genuine hand-raised grey starts at $1,500, and the number isn't arbitrary — it's what months of hand-feeding, DNA testing, avian-vet care and CITES paperwork actually cost to do right. Because that floor is also the market's clearest scam line, we'd rather explain it than let a "$700 hand-raised African Grey" tempt you into a wire you'll never get back.</p>
+          <img class="sec-img inf-img" src={IMG + "what-a-hand-raised-grey-costs.webp"} srcset={IMG + "what-a-hand-raised-grey-costs-760.webp 760w, " + IMG + "what-a-hand-raised-grey-costs.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Why a real hand-raised African Grey starts at $1,500 — months of hand-feeding, DNA sexing, avian-vet care and CITES paperwork, and why under $1,000 is a scam" />
+          <div class="k2">
+            <div class="k2-tag"><span class="k2-from">From</span><span class="k2-n">$1,500</span></div>
+            <div class="k2-body">
+              <p><b>Hand-raised Timneh greys</b> run $1,500–$1,600, and <b>hand-raised Congo greys</b> $1,700–$3,500 depending on age and training. A {deposit} refundable deposit holds any bird.</p>
+              <p class="k2-warn">Anything advertised "hand-raised" under $1,000 is the oldest African Grey scam there is.</p>
+            </div>
+          </div>
+          <h3>Why a genuine hand-raised grey starts at $1,500</h3>
+          <p>Stack up the real inputs — incubation, three to four months of daily hand-feeding, a DNA-sexing lab fee, avian-vet checks, PCR screening and the CITES paper trail — and the floor makes sense. Nobody covers that and profits at a few hundred dollars.</p>
+          <h4>Why are some "hand-raised" greys only $500–$800?</h4>
+          <p>Because the listing is bait. At that price the "seller" is fishing for a deposit on a bird that is stolen-photo fiction, wild-caught, or sick — the discount is the hook.</p>
+          <h5>Warning: sub-floor pricing is the oldest African Grey scam</h5>
+          <p>If the only remarkable thing about a listing is how cheap it is, treat that as the red flag it is and walk away. A real breeder prices for the work; a scammer prices to lure.</p>
+          <h3>What's included in the price you pay us</h3>
+          <p>Your total covers the bird, its full document folder, DNA and health records, PCR screening, a care guide and our lifetime support line — no surprise "insurance" or "release" fees bolted on at the airport.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 08 · SCAMS ===== -->
+        <section id="scams" class="sec">
+          <h2>How do you spot a "fake hand-raised" listing?</h2>
+          <p class="opener">A fake "hand-raised" listing follows a script, and once you know it you can read one in seconds — sub-floor price, no papers, no live video, untraceable payment. Because we're a real aviary that competes against these fakes, calling out the pattern protects you and it protects our name.</p>
+          <img class="sec-img inf-img" src={IMG + "fake-hand-raised-listing-red-flags.webp"} srcset={IMG + "fake-hand-raised-listing-red-flags-760.webp 760w, " + IMG + "fake-hand-raised-listing-red-flags.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Five red flags of a fake hand-raised African Grey listing: price under $1,500, no CITES papers, refuses a live video call, Zelle or gift cards only, no weaning date given" />
+          <h3>The red flags of a fake hand-raised seller</h3>
+          <p>Any single flag is a caution; two or more together, and you should close the tab. The scam pattern is remarkably consistent across the fake farms we track.</p>
+          <h4>How can you tell a real hand-raised grey from a stolen photo?</h4>
+          <p>You ask the listing to do something a photo can't — move, in real time, on your schedule.</p>
+          <h5>Ask for a live video filmed against today's date</h5>
+          <p>A real breeder will video the actual bird with today's date or newspaper in frame, on request. A scammer using lifted photos will stall, make excuses, or vanish — which is exactly the answer you needed.</p>
+          <h6>Citation: cross-check any seller against our scam-awareness guide</h6>
+          <p>Before you deposit anywhere, <a href="/how-to-avoid-african-grey-parrot-scams/">our African Grey scam-awareness guide walks the full red-flag checklist</a> so you can vet us and every other seller with the same yardstick.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 09 · WHY ===== -->
+        <section id="why" class="sec">
+          <h2>Why are African Greys such remarkable companion birds?</h2>
+          <p class="opener">African Greys earn their reputation honestly — they're arguably the most cognitively gifted parrots kept as companions, and a hand-raised one turns that intelligence toward you. Because a grey is a decades-long relationship, that talking, problem-solving mind is the reason the commitment is worth it.</p>
+          <img class="sec-img inf-img" src={IMG + "why-african-greys-exceptional.webp"} srcset={IMG + "why-african-greys-exceptional-760.webp 760w, " + IMG + "why-african-greys-exceptional.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Four traits that make hand-raised African Greys exceptional: talks 100+ words, highly intelligent, bonds for life, lives 40+ years" />
+          <h3>Talking ability, intelligence, and lifelong bonding</h3>
+          <p>Greys routinely learn scores of words and use them in context, solve puzzles that stump other parrots, and form deep, lasting bonds. Hand-raising doesn't create that intelligence — it opens the door so the bird will share it with you rather than guard against you.</p>
+          <p><a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener">The World Parrot Trust's grey parrot profile ↗</a> catalogs the cognition research behind that reputation, and hand-raising is simply what turns all of it toward you instead of away.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 10 · CONGO OR TIMNEH ===== -->
+        <section id="congotimneh" class="sec">
+          <h2>Should your hand-raised grey be a Congo or a Timneh?</h2>
+          <p class="opener">Both subspecies leave our nursery hand-raised the exact same way, so this choice is about fit, not quality. Because the two greys differ in size, tail color and tempo, the honest answer depends on your home — and we're happy to talk it through rather than push the pricier bird.</p>
+          <img class="sec-img inf-img" src={IMG + "congo-or-timneh-hand-raised-fast-facts.webp"} srcset={IMG + "congo-or-timneh-hand-raised-fast-facts-760.webp 760w, " + IMG + "congo-or-timneh-hand-raised-fast-facts.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Fast-facts comparison of hand-raised Congo African Grey with a red tail and hand-raised Timneh African Grey with a maroon tail" />
+          <h3>Congo vs Timneh at a glance</h3>
+          <p>The Congo is the larger, red-tailed grey with the headline vocabulary; the Timneh is smaller, maroon-tailed, often a shade calmer and an earlier talker. If you're still weighing it, <a href="/congo-vs-timneh-african-grey/">our Congo vs Timneh comparison breaks the decision down point by point</a> so you can match the grey to your household.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 11 · SHIPPING ===== -->
+        <section id="shipping" class="sec">
+          <h2>How do we ship your hand-raised grey safely?</h2>
+          <p class="opener">A reserved grey travels US-only on IATA live-animal cargo, in a climate-controlled crate, with arrival confirmation — because a bird we spent months raising isn't something we hand to a random courier. You choose airport pickup at $185 or door delivery at $350, and if you're close, you're welcome to collect in person.</p>
+          <img class="sec-img inf-img" src={IMG + "hand-raised-grey-shipping-tiers.webp"} srcset={IMG + "hand-raised-grey-shipping-tiers-760.webp 760w, " + IMG + "hand-raised-grey-shipping-tiers.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Getting your hand-raised grey home safely: airport pickup $185, home delivery $350, or Midland pickup within 2 to 3 hours, via IATA live-animal cargo on Delta, United and American" />
+          <h3>Airport pickup and home delivery, explained</h3>
+          <p>Airport pickup at $185 puts your grey on a direct flight to your nearest major cargo airport; home delivery at $350 brings it door-to-door. Both routes carry the full document folder and health certificate with the bird.</p>
+          <h4>Which airlines and travel crates do we use?</h4>
+          <p>We fly Delta, United and American live-animal cargo in ventilated, IATA-compliant crates with a water source and our handling label — the same programs professional aviaries rely on.</p>
+          <h5>Every flight follows IATA Live Animals Regulations</h5>
+          <p>Because those regulations set the crate, temperature and handling standards for shipping a bird, we book to them every time — and we time flights to avoid temperature extremes at either end.</p>
+          <h3>Can you collect your grey in person in Midland?</h3>
+          <p>Yes — buyers who live a couple of hours out often just drive in and collect their bird by hand, which skips shipping entirely and gives the grey the calmest possible start. We genuinely love meeting the families our birds go home with, so if reaching Midland, Texas is realistic for you, tell us. Shipping to nearby states is easy too — <a href="/african-grey-parrot-for-sale-texas/">start with our Texas hand-raised greys page</a> if you're local.</p>
+          <div class="geo-cards">
+            {shipPlaces.map((g) => (
+              <a class="geo-card" href={g.href}><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span class="gl">{g.label}</span><span class="gn">{g.note} <b>→</b></span></a>
+            ))}
+          </div>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 12 · INCLUDED · K3 green ledger ===== -->
+        <section id="included" class="sec">
+          <h2>What comes home with your hand-raised African Grey?</h2>
+          <p class="opener">Every grey leaves with the full paper trail that separates a real breeder from a fake — not as a bonus, but as proof. Because that documentation is exactly what a fraudulent seller can never assemble, it's also the fastest way for you to confirm you bought the real thing.</p>
+          <img class="sec-img inf-img" src={IMG + "what-comes-home-hand-raised-grey.webp"} srcset={IMG + "what-comes-home-hand-raised-grey-760.webp 760w, " + IMG + "what-comes-home-hand-raised-grey.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="What comes home with a hand-raised African Grey: CITES papers, DNA certificate, closed leg band, avian-vet health record, PBFD and Polyomavirus PCR results, plus a care guide" />
+          <div class="k3">
+            <ul class="k3-list">
+              <li><b>CITES captive-bred papers</b> — Appendix I, legal to own and rehome in the U.S.</li>
+              <li><b>DNA-sexing certificate</b> — your grey's sex, confirmed by lab.</li>
+              <li><b>Closed leg band</b> — captive-bred identification.</li>
+              <li><b>Avian-vet health record</b> — examined before it flies.</li>
+              <li><b>PBFD &amp; Avian Polyomavirus PCR</b> — screened, with results.</li>
+              <li><b>Care guide, welcome kit &amp; lifetime support</b> — we stay reachable.</li>
+            </ul>
+          </div>
+          <h3>The documentation stack on every bird</h3>
+          <p>Each document is one you can verify independently, which is the whole point — you shouldn't have to take a stranger's word about a $2,000 bird.</p>
+          <h4>Why does CITES paperwork matter for a captive-bred grey?</h4>
+          <p>Because African Greys are CITES Appendix I, the paperwork is what proves your bird is a legal, captive-bred companion rather than a wild-caught import — it protects you as much as the species.</p>
+          <h5>What Appendix I means for owning and moving your bird</h5>
+          <p>Appendix I birds are legal to own and transfer within the United States when the captive-bred documentation is in order, which ours always is. It also means a legitimate breeder never offers to smuggle one overseas.</p>
+          <h6>Citation: CITES Appendix I captive-bred transfer rules</h6>
+          <p><a href="https://cites.org/eng/app/index.php" target="_blank" rel="noopener">The official CITES appendices ↗</a> set out exactly how Appendix-I captive-bred birds must be documented — the international rules our own paperwork is built to satisfy.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 13 · HEALTH ===== -->
+        <section id="health" class="sec">
+          <h2>Is your hand-raised grey health-screened before it flies?</h2>
+          <p class="opener">Yes — every grey is seen by an avian vet and PCR-screened before it travels, because shipping a bird that isn't well is unthinkable to us. That screening, paired with the health record in the folder, is how you know the grey that lands is the grey we described.</p>
+          <img class="sec-img inf-img" src={IMG + "hand-raised-grey-health-pcr-screening.webp"} srcset={IMG + "hand-raised-grey-health-pcr-screening-760.webp 760w, " + IMG + "hand-raised-grey-health-pcr-screening.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Health screening on every hand-raised African Grey before shipping: avian-vet health check, PBFD PCR screened, Avian Polyomavirus PCR, and closed leg-band identification" />
+          <h3>Our health check and PBFD / Polyomavirus PCR screening</h3>
+          <p>Each grey gets an avian-vet examination and PCR screening for PBFD and Avian Polyomavirus, and you receive the results with your bird. If your own avian vet ever flags a covered concern after arrival, we want the call — we stand behind the birds we raise.</p>
+          <p><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12560886/" target="_blank" rel="noopener">A veterinary review of psittacine beak and feather disease ↗</a> explains why PBFD is the one result every serious grey buyer wants ruled out — which is precisely what our screening does.</p>
+          <p><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11939742/" target="_blank" rel="noopener">Research on PCR-based molecular sexing ↗</a> is why the sex printed on your grey's certificate is a lab result rather than a guess about a visually monomorphic bird.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 14 · VIDEO ===== -->
+        <section id="video" class="sec">
+          <h2>Can you see our hand-raised greys before you reserve?</h2>
+          <p class="opener">You should never buy a grey you haven't watched move, so here they are on video — our own birds, unedited, being greys. Because a photo can be stolen but a live video can't, we film every reservable bird and video-call you before any deposit.</p>
+          <div class="fs-video">
+            <video controls preload="none" poster={IMG + "hero-mark-hand-scratch-grey.webp"} width="1280" height="720">
+              <source src="/images/congo-page/congo-african-grey-roys-eating-video.mp4" type="video/mp4" />
+              Your browser doesn't support embedded video — <a href="/available/roys/">meet Roys on his page instead</a>.
+            </video>
+            <p class="vcap">Roys, one of our hand-raised Congo greys, eating on camera. Ask us for a live call with any bird above.</p>
+          </div>
+          <h3>Real video, filmed against today's date</h3>
+          <p>On request we'll film the bird you're considering with today's date in frame, so you can confirm the grey is real, present and healthy before you commit a cent.</p>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 15 · FAMILIES ===== -->
+        <section id="families" class="sec">
+          <h2>What do buyers of our hand-raised greys say?</h2>
+          <p class="opener">The best test of a hand-raised bird is how it settles in after the excitement fades — so here are two families in their own words. Because these are verified C.A.Gs buyers, their stories sit here unedited, the way they sent them.</p>
+          <div class="rev-grid">
+            {stories.map((s) => (
+              <figure class="rev">
+                <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+                <blockquote>{s.quote}</blockquote>
+                <figcaption>
+                  <img src={s.avatar} alt={"Photo from " + s.name + ", a verified C.A.Gs hand-raised African Grey buyer in " + s.loc} loading="lazy" width="120" height="120" />
+                  <div><b>{s.name}</b><span>{s.loc} · {s.meta}</span></div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 16 · FAQ · FAQ-C refreshed green ===== -->
+        <section id="faq" class="sec">
+          <h2>Common questions before you reserve a hand-raised grey</h2>
+          <p class="opener">These are the questions buyers actually ask us before they reserve — and, usefully, they double as a due-diligence checklist. If a seller you're comparing us against can't answer all of them plainly, that tells you something too.</p>
+          <h3>Your buyer due-diligence checklist</h3>
+          <div class="faqC">
+            {faqs.map((f, i) => (
+              <details class="faqC-item">
+                <summary><span class="fn">{String(i + 1).padStart(2, "0")}</span><span>{f.q}</span></summary>
+                <div class="faqC-a"><p>{f.a}</p></div>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 17 · RESOURCES ===== -->
+        <section id="resources" class="sec">
+          <h2>Keep reading before you choose a hand-raised grey</h2>
+          <p class="opener">A hand-raised grey is a 40-year decision, so read a little further before you reserve — these guides answer the questions this page only touched. Each one is written the same first-person way, by the people who actually raise the birds.</p>
+          <div class="read-cards">
+            {readMore.map((r) => (
+              <a class="read-card" href={r.href}>
+                <img src={r.img} alt={r.title + " — " + r.kicker} loading="lazy" width="760" height="415" />
+                <div class="rc-body"><span class="rc-k">{r.kicker}</span><b>{r.title}</b><span class="rc-s">{r.sub}</span></div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" />
+
+        <!-- ===== 18 · RESERVE ===== -->
+        <section id="reserve" class="sec">
+          <h2>Reserve your hand-raised African Grey today</h2>
+          <p class="opener">Ready to bring one home? Tell us which grey caught your eye and how you'd like it delivered, and Teri will reply personally within 24 hours — no bots, no pressure. A {deposit} refundable deposit holds your bird while we arrange the details.</p>
+          <div class="cta-form">
+            <div class="form-side">
+              <h3>Tell us which bird is yours</h3>
+              <p>Every grey below is hand-raised, documented and available now. Pick one — or ask us to help you choose between a Congo and a Timneh.</p>
+              <ul class="form-birds">
+                {available.map((b) => (<li><span>{b.name.replace(" (pair)", "")} · {catLabel(b)}</span><b>${b.price.toLocaleString()}</b></li>))}
+              </ul>
+              <p class="form-ship">Ships nationwide · <b>$185 airport · $350 home</b> · Pickup in Midland, TX (within 2–3 hours)</p>
+            </div>
+            <form class="form-main" name="hand-raised-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+              <input type="hidden" name="form-name" value="hand-raised-inquiry" />
+              <p class="hp"><label>Don't fill this out: <input name="bot-field" /></label></p>
+              <label>Which grey are you interested in?
+                <select name="bird" required>
+                  <option value="">Choose a hand-raised grey…</option>
+                  {available.map((b) => (<option value={b.name + " ($" + b.price.toLocaleString() + ")"}>{b.name.replace(" (pair)", "")} — {catLabel(b)} (${b.price.toLocaleString()})</option>))}
+                  <option value="Not sure — help me choose">Not sure — help me choose</option>
+                </select>
+              </label>
+              <div class="f2">
+                <label>First name<input name="first-name" required autocomplete="given-name" /></label>
+                <label>Last name<input name="last-name" required autocomplete="family-name" /></label>
+              </div>
+              <div class="f2">
+                <label>Cell phone<input name="phone" type="tel" required autocomplete="tel" /></label>
+                <label>Email<input name="email" type="email" required autocomplete="email" /></label>
+              </div>
+              <label>Delivery preference
+                <select name="delivery" required>
+                  <option value="">How would you like your grey?</option>
+                  <option value="Airport pickup ($185)">Airport pickup — $185</option>
+                  <option value="Home delivery ($350)">Home delivery — $350</option>
+                  <option value="Pickup in Midland, TX">Pickup in Midland, TX (within 2–3 hours)</option>
+                </select>
+              </label>
+              <label>Anything you'd like us to know?<textarea name="message" rows="3" placeholder="Your home, other pets, questions about Congo vs Timneh…"></textarea></label>
+              <button class="btn btn-clay btn-submit" type="submit">Send my hand-raised grey inquiry →</button>
+              <p class="form-note">We reply within 24 hours, personally. Your details go only to C.A.Gs.</p>
+            </form>
+          </div>
+        </section>
+
+      </div><!-- /content -->
+    </div><!-- /body-grid -->
+
+    <!-- Rail B green ticker (mobile) -->
+    <nav class="railB" aria-label="Jump to section">
+      <ul>
+        {sections.map((s) => (<li><a href={"#" + s.id} data-id={s.id}><span class="p">{s.n}</span><span class="l">{s.label}</span></a></li>))}
+      </ul>
+    </nav>
+  </main>
+
+  <script is:inline define:vars={{ N }}>
+    // Dial 2 scroll-spy + conic ring + Rail B active state
+    (function () {
+      const secs = Array.from(document.querySelectorAll('.handraised .content .sec'));
+      const ring = document.getElementById('dialRing');
+      const num = document.getElementById('dialNum');
+      const dialLinks = Array.from(document.querySelectorAll('#dialList a'));
+      const railLinks = Array.from(document.querySelectorAll('.railB a'));
+      if (!secs.length) return;
+      let active = '';
+      const setActive = (id, idx) => {
+        if (id === active) return;
+        active = id;
+        const p = Math.round(((idx + 1) / N) * 100);
+        if (ring) ring.style.setProperty('--p', p);
+        if (num) num.textContent = String(idx + 1).padStart(2, '0');
+        dialLinks.forEach((a) => a.classList.toggle('on', a.dataset.id === id));
+        railLinks.forEach((a) => a.classList.toggle('on', a.dataset.id === id));
+      };
+      const io = new IntersectionObserver((ents) => {
+        ents.forEach((e) => {
+          if (e.isIntersecting) {
+            const idx = secs.indexOf(e.target);
+            if (idx > -1) setActive(e.target.id, idx);
+          }
+        });
+      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+      secs.forEach((s) => io.observe(s));
+
+      // Avail-B subspecies filter
+      const grid = document.getElementById('birdGrid');
+      if (grid) {
+        const cards = Array.from(grid.querySelectorAll('.bcard'));
+        document.querySelectorAll('.availB-rail .fbtn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.availB-rail .fbtn').forEach((b) => b.classList.remove('is-on'));
+            btn.classList.add('is-on');
+            const f = btn.dataset.f;
+            cards.forEach((c) => { c.classList.toggle('hide', f !== 'all' && c.dataset.cat !== f); });
+          });
+        });
+      }
+    })();
+  </script>
 </BaseLayout>
+
+<style is:global>
+/* ===================== /hand-raised-african-grey-parrot-for-sale/ ===================== */
+.handraised{--ink:#3a2f2a;--clay:#e8604c;--clay-ink:#c8472f;--clay-t:#b04228;--green:#2D6A4F;--green-d:#234f3b;--cream:#faf7f4;--bd:#e7ddd3;--muted:#6b625a;overflow-x:clip;color:var(--ink);background:var(--cream);}
+.handraised .hr-container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.handraised h2{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.5rem,1.1rem+1.6vw,2rem);line-height:1.18;color:var(--green-d);margin:0 0 .5rem;letter-spacing:-.01em;}
+.handraised h3{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.18rem,1rem+.7vw,1.42rem);color:var(--ink);margin:1.5rem 0 .35rem;}
+.handraised h4{font-size:1.06rem;font-weight:700;color:var(--green-d);margin:1.1rem 0 .3rem;}
+.handraised h5{font-size:.98rem;font-weight:700;color:var(--ink);margin:.9rem 0 .25rem;}
+.handraised h6{font-size:.9rem;font-weight:700;color:var(--muted);margin:.8rem 0 .2rem;text-transform:uppercase;letter-spacing:.03em;}
+.handraised p{max-width:70ch;line-height:1.7;margin:0 0 .8rem;}
+.handraised .sec p.opener{font-size:1.05rem;}
+.handraised a{color:var(--clay-t);text-underline-offset:2px;}
+.handraised .content p a[target="_blank"]::after{content:"";}
+
+/* Buttons */
+.handraised .btn{display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:.95rem;padding:.7rem 1.25rem;border-radius:50px;text-decoration:none;transition:transform .18s,background .18s,box-shadow .18s;border:1px solid transparent;}
+.handraised .btn-clay{background:var(--clay-ink);color:#fff;box-shadow:0 4px 14px rgba(200,71,47,.24);}
+.handraised .btn-clay:hover{transform:translateY(-1px);}
+.handraised .btn-ghost{background:transparent;color:var(--green-d);border-color:var(--green);border-radius:50px;}
+.handraised .btn-ghost:hover{background:rgba(45,106,79,.07);}
+
+/* Hero-A scattered flock */
+.handraised .hero{background:linear-gradient(135deg,#fbf1ea 0%,#f6 e7dd 40%,#f2 e4d6 100%);background:linear-gradient(135deg,#fbf1ea,#f5e7db 55%,#f0e2d3);border-bottom:1px solid var(--bd);padding:8px 0 34px;}
+.handraised .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center;min-height:360px;}
+.handraised .eyebrow{font-size:.82rem;font-weight:600;color:var(--clay-t);letter-spacing:.01em;margin:.4rem 0 .5rem;text-transform:none;}
+.handraised .hero h1{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.7rem,1.2rem+2.2vw,2.6rem);line-height:1.1;color:var(--green-d);margin:0 0 .6rem;letter-spacing:-.015em;}
+.handraised .hero h1 em{color:var(--clay-ink);font-style:italic;}
+.handraised .hero .lead{font-size:1.02rem;color:var(--ink);max-width:52ch;}
+.handraised .hero-cta{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0 .9rem;}
+.handraised .hero-chips{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem 1rem;padding:0;margin:.4rem 0 0;font-size:.82rem;color:var(--green-d);font-weight:600;}
+.handraised .hero-chips li{display:inline-flex;align-items:center;gap:.35rem;}
+.handraised .hero-chips svg{color:var(--green);}
+.handraised .hero-scatter{position:relative;height:420px;}
+.handraised .pofig{position:absolute;margin:0;background:#fff;padding:8px 8px 30px;border-radius:6px;box-shadow:0 10px 26px rgba(60,30,10,.16);width:44%;}
+.handraised .pofig img{width:100%;height:auto;aspect-ratio:62/72;object-fit:cover;border-radius:3px;display:block;}
+.handraised .pofig figcaption{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:.72rem;color:var(--muted);font-weight:600;}
+.handraised .pofig.p1{top:2%;left:4%;transform:rotate(-6deg);z-index:5;width:46%;}
+.handraised .pofig.p2{top:0;right:6%;transform:rotate(5deg);z-index:4;width:40%;}
+.handraised .pofig.p3{top:40%;left:0;transform:rotate(3deg);z-index:6;width:40%;}
+.handraised .pofig.p4{bottom:2%;right:2%;transform:rotate(7deg);z-index:5;width:43%;}
+.handraised .pofig.p5{bottom:6%;left:34%;transform:rotate(-4deg);z-index:3;width:36%;}
+
+/* Counter */
+.handraised .counter{background:#fff;border-bottom:1px solid var(--bd);padding:20px 0;}
+.handraised .counter-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+.handraised .cstat{border:1px solid var(--bd);border-radius:12px;padding:12px 10px;text-align:center;min-height:74px;display:flex;flex-direction:column;justify-content:center;background:var(--cream);}
+.handraised .cstat .cn{font-family:var(--font-lora,'Newsreader',serif);font-size:1.35rem;font-weight:700;color:var(--clay-ink);line-height:1;}
+.handraised .cstat .cl{font-size:.72rem;color:var(--muted);margin-top:.3rem;}
+
+/* Seam */
+.handraised .seam{display:block;margin:26px auto;height:auto;opacity:.9;}
+
+/* Body grid + Dial 2 */
+.handraised .body-grid{display:grid;grid-template-columns:196px minmax(0,1fr);gap:28px;padding-top:8px;padding-bottom:40px;}
+.handraised .dial{position:relative;}
+.handraised .dial-card{position:sticky;top:calc(var(--hdr,72px) + 16px);background:var(--green-d);color:#eaf3ee;border-radius:16px;padding:14px 12px;box-shadow:0 6px 20px rgba(35,79,59,.22);max-height:calc(100vh - var(--hdr,72px) - 32px);overflow-y:auto;scrollbar-width:thin;}
+.handraised .ring{--p:0;width:64px;height:64px;border-radius:50%;margin:2px auto 10px;background:conic-gradient(var(--clay) calc(var(--p)*1%),rgba(255,255,255,.16) 0);display:grid;place-items:center;}
+.handraised .ring-in{width:50px;height:50px;border-radius:50%;background:var(--green-d);display:grid;place-items:center;text-align:center;}
+.handraised .ring-n{font-family:var(--font-lora,'Newsreader',serif);font-size:15px;font-weight:700;color:#fff;line-height:1;}
+.handraised .ring-of{font-size:7px;color:#c9f2db;letter-spacing:.04em;}
+.handraised .dial-list{list-style:none;margin:0;padding:8px 0 0;border-top:1px dashed rgba(255,255,255,.2);}
+.handraised .dial-list a{display:grid;grid-template-columns:auto 1fr;gap:6px;align-items:baseline;padding:5px 7px;border-radius:8px;text-decoration:none;color:#d7e7de;font-size:.74rem;line-height:1.25;transition:background .15s,color .15s;}
+.handraised .dial-list a:hover{background:rgba(255,255,255,.06);}
+.handraised .dial-list a.on{background:rgba(232,96,76,.18);color:#fff;}
+.handraised .dial-list .di{font-size:.66rem;color:#9fc7b0;font-variant-numeric:tabular-nums;}
+.handraised .dial-list a.on .di{color:var(--clay);}
+.handraised .dial-list .dt{grid-column:2;font-size:.62rem;color:#c9f2db;font-weight:600;}
+
+/* Section images */
+.handraised .sec-img.inf-img{display:block;width:100%;max-width:760px;aspect-ratio:1408/768;object-fit:cover;height:auto;border-radius:14px;border:1px solid var(--bd);margin:1rem 0 1.1rem;box-shadow:0 4px 16px rgba(60,30,10,.06);}
+.handraised .sec{scroll-margin-top:88px;padding:6px 0 10px;}
+
+/* Ticket CTA */
+.handraised .ticket{margin:1.2rem 0 .2rem;}
+.handraised .ticket-cta{display:inline-flex;align-items:center;gap:.5rem;background:#fff;border:1.5px solid var(--clay);color:var(--clay-ink);font-weight:700;padding:.55rem 1.05rem;border-radius:50px;text-decoration:none;transition:background .18s;}
+.handraised .ticket-cta span{transition:transform .18s;}
+.handraised .ticket-cta:hover{background:#fff3ef;}
+.handraised .ticket-cta:hover span{transform:translateX(3px);}
+
+/* Table C */
+.handraised .tblwrap{overflow-x:auto;margin:1rem 0;}
+.handraised .tblC{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
+.handraised .tblC th{background:var(--cream);color:var(--green-d);text-align:left;padding:.7rem .8rem;font-weight:700;border-bottom:2px solid var(--bd);}
+.handraised .tblC td{padding:.7rem .8rem;border-bottom:1px solid var(--bd);}
+.handraised .tblC tr:last-child td{border-bottom:0;}
+.handraised .tblC tr.pick td{background:#fbf3ef;}
+.handraised .tblC .badge{display:inline-block;background:var(--clay-ink);color:#fff;font-size:.64rem;font-weight:700;padding:.1rem .45rem;border-radius:50px;margin-left:.4rem;vertical-align:middle;}
+
+/* Avail-B */
+.handraised .availB{display:grid;grid-template-columns:200px 1fr;gap:22px;margin:1rem 0;}
+.handraised .availB-rail{position:sticky;top:calc(var(--hdr,72px) + 16px);align-self:start;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px;}
+.handraised .rail-h{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;margin:0 0 .5rem;}
+.handraised .fbtn{display:flex;justify-content:space-between;align-items:center;width:100%;background:var(--cream);border:1px solid var(--bd);border-radius:9px;padding:.5rem .65rem;margin-bottom:.4rem;font-size:.85rem;font-weight:600;color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s;}
+.handraised .fbtn span{background:#fff;border-radius:50px;font-size:.72rem;padding:.05rem .45rem;color:var(--muted);}
+.handraised .fbtn.is-on{background:var(--green-d);color:#fff;border-color:var(--green-d);}
+.handraised .fbtn.is-on span{background:rgba(255,255,255,.2);color:#fff;}
+.handraised .rail-ship{font-size:.72rem;color:var(--muted);margin:.7rem 0 0;line-height:1.4;}
+.handraised .rail-ship b{color:var(--green-d);}
+.handraised .availB-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-content:start;}
+.handraised .bcard{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column;}
+.handraised .bcard.hide{display:none;}
+.handraised .bphoto{position:relative;aspect-ratio:1/1;overflow:hidden;}
+.handraised .bphoto img{width:100%;height:100%;object-fit:cover;}
+.handraised .bbadge{position:absolute;top:8px;left:8px;background:rgba(255,255,255,.86);color:var(--green-d);font-size:.66rem;font-weight:700;padding:.15rem .5rem;border-radius:50px;text-transform:uppercase;letter-spacing:.02em;}
+.handraised .bbadge.timneh{color:#7a3b1e;}
+.handraised .bbadge.pair{color:var(--clay-ink);}
+.handraised .binfo{padding:11px 12px 13px;display:flex;flex-direction:column;gap:.4rem;flex:1;}
+.handraised .brow{display:flex;justify-content:space-between;align-items:baseline;}
+.handraised .brow h3{font-family:var(--font-lora,'Newsreader',serif);font-size:1.1rem;margin:0;text-transform:uppercase;letter-spacing:.02em;color:var(--green-d);}
+.handraised .bprice{font-weight:700;color:var(--clay-ink);font-size:1rem;}
+.handraised .bblurb{font-size:.8rem;color:var(--muted);line-height:1.45;margin:0;flex:1;}
+.handraised .bchips{display:flex;gap:.3rem;flex-wrap:wrap;}
+.handraised .bchips span{font-size:.62rem;background:var(--cream);border:1px solid var(--bd);color:var(--green-d);padding:.1rem .4rem;border-radius:50px;font-weight:600;}
+.handraised .bfull{width:100%;justify-content:center;margin-top:.2rem;font-size:.85rem;padding:.55rem;}
+.handraised .microcopy{font-size:.8rem;color:var(--muted);margin-top:.8rem;}
+
+/* K2 price-tag */
+.handraised .k2{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px 18px;margin:1rem 0;}
+.handraised .k2-tag{background:var(--clay-ink);color:#fff;border-radius:12px;padding:14px 20px;text-align:center;}
+.handraised .k2-tag .k2-from{display:block;font-size:.72rem;opacity:.9;}
+.handraised .k2-tag .k2-n{font-family:var(--font-lora,'Newsreader',serif);font-size:1.7rem;font-weight:700;line-height:1;}
+.handraised .k2-body p{margin:0 0 .4rem;font-size:.92rem;}
+.handraised .k2-warn{color:var(--clay-t);font-weight:600;}
+
+/* K3 green ledger */
+.handraised .k3{background:linear-gradient(180deg,#f4faf6,#eef6f0);border:1px solid #d7e8dd;border-radius:16px;padding:16px 18px;margin:1rem 0;}
+.handraised .k3-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.4rem;}
+.handraised .k3-list li{position:relative;padding-left:1.4rem;font-size:.9rem;line-height:1.45;}
+.handraised .k3-list li::before{content:"";position:absolute;left:0;top:.15rem;width:1rem;height:1rem;border-radius:4px;background:var(--green);}
+.handraised .k3-list b{color:var(--green-d);}
+
+/* otA GEO table */
+.handraised .otA{border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin:1rem 0;}
+.handraised .otrow{display:grid;grid-template-columns:180px 1fr;gap:0;border-bottom:1px solid var(--bd);}
+.handraised .otrow:last-child{border-bottom:0;}
+.handraised .ot-k{background:var(--cream);font-weight:700;color:var(--green-d);padding:.6rem .8rem;font-size:.85rem;}
+.handraised .ot-v{padding:.6rem .8rem;font-size:.88rem;}
+
+/* Trust grid */
+.handraised .tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:1rem 0;}
+.handraised .tcard{border:1px solid var(--bd);border-radius:12px;padding:12px;background:#fff;}
+.handraised .tcard b{display:block;color:var(--green-d);font-size:.9rem;margin-bottom:.25rem;}
+.handraised .tcard span{font-size:.8rem;color:var(--muted);line-height:1.4;}
+
+/* Geo cards */
+.handraised .geo-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:1rem 0 .4rem;}
+.handraised .geo-card{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.6rem;background:#fff;border:1px solid var(--bd);border-radius:11px;padding:.6rem .8rem;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s;}
+.handraised .geo-card svg{grid-row:1/3;align-self:center;color:var(--clay);}
+.handraised .geo-card .gl{font-weight:600;font-size:.85rem;color:var(--green-d);}
+.handraised .geo-card .gn{font-size:.74rem;color:var(--muted);}
+.handraised .geo-card:hover{border-color:var(--clay);transform:translateY(-1px);}
+
+/* Video */
+.handraised .fs-video{margin:1rem 0;}
+.handraised .fs-video video{width:100%;max-width:760px;aspect-ratio:16/9;border-radius:14px;border:1px solid var(--bd);background:#000;display:block;}
+.handraised .vcap{font-size:.8rem;color:var(--muted);margin-top:.5rem;}
+
+/* Reviews */
+.handraised .rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:1rem 0;}
+.handraised .rev{margin:0;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;}
+.handraised .rev .stars{color:var(--clay);letter-spacing:2px;margin-bottom:.4rem;}
+.handraised .rev blockquote{margin:0 0 .8rem;font-size:.9rem;line-height:1.6;color:var(--ink);}
+.handraised .rev figcaption{display:flex;align-items:center;gap:.6rem;}
+.handraised .rev figcaption img{width:52px;height:52px;border-radius:50%;object-fit:cover;}
+.handraised .rev figcaption b{display:block;font-size:.9rem;color:var(--green-d);}
+.handraised .rev figcaption span{font-size:.76rem;color:var(--muted);}
+
+/* FAQ-C refreshed green */
+.handraised .faqC{margin:1rem 0;display:grid;gap:.5rem;}
+.handraised .faqC-item{border:1px solid #d7e8dd;border-radius:12px;overflow:hidden;background:#fff;}
+.handraised .faqC-item summary{display:flex;align-items:center;gap:.7rem;cursor:pointer;padding:.85rem 1rem;font-weight:600;color:var(--green-d);list-style:none;font-size:.94rem;}
+.handraised .faqC-item summary::-webkit-details-marker{display:none;}
+.handraised .faqC-item .fn{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--green-d);color:#fff;font-size:.72rem;font-weight:700;flex:none;}
+.handraised .faqC-item[open] summary{background:#f4faf6;}
+.handraised .faqC-a{padding:0 1rem 1rem 3.05rem;}
+.handraised .faqC-a p{font-size:.9rem;color:var(--ink);margin:0;}
+
+/* Read cards */
+.handraised .read-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:1rem 0;}
+.handraised .read-card{display:grid;grid-template-columns:120px 1fr;gap:12px;border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#fff;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s;}
+.handraised .read-card img{width:120px;height:100%;object-fit:cover;}
+.handraised .rc-body{padding:10px 12px 10px 0;display:flex;flex-direction:column;gap:.2rem;}
+.handraised .rc-k{font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--clay-t);font-weight:700;}
+.handraised .rc-body b{color:var(--green-d);font-size:.92rem;line-height:1.25;}
+.handraised .rc-s{font-size:.78rem;color:var(--muted);line-height:1.4;}
+.handraised .read-card:hover{border-color:var(--clay);transform:translateY(-1px);}
+
+/* Contact form */
+.handraised .cta-form{display:grid;grid-template-columns:.85fr 1.15fr;gap:0;border:1px solid var(--bd);border-radius:16px;overflow:hidden;margin:1rem 0;}
+.handraised .form-side{background:var(--green-d);color:#eaf3ee;padding:22px;}
+.handraised .form-side h3{color:#fff;margin:0 0 .4rem;}
+.handraised .form-side p{color:#d7e7de;font-size:.86rem;}
+.handraised .form-birds{list-style:none;margin:.8rem 0;padding:0;}
+.handraised .form-birds li{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:.85rem;}
+.handraised .form-birds b{color:#fff;}
+.handraised .form-ship{font-size:.78rem;color:#c9f2db;}
+.handraised .form-ship b{color:#fff;}
+.handraised .form-main{padding:22px;background:#fff;display:grid;gap:.7rem;}
+.handraised .form-main label{display:grid;gap:.25rem;font-size:.82rem;font-weight:600;color:var(--green-d);}
+.handraised .form-main input,.handraised .form-main select,.handraised .form-main textarea{font:inherit;font-weight:400;padding:.55rem .65rem;border:1px solid var(--bd);border-radius:10px;background:var(--cream);color:var(--ink);}
+.handraised .f2{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.handraised .btn-submit{border-radius:12px;justify-content:center;margin-top:.3rem;}
+.handraised .form-note{font-size:.74rem;color:var(--muted);font-weight:400;margin:0;}
+.handraised .hp{position:absolute;left:-9999px;}
+
+/* Rail B (mobile) hidden on desktop */
+.handraised .railB{display:none;}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width:980px){
+  .handraised .hero-grid{grid-template-columns:1fr;}
+  .handraised .hero-scatter{height:340px;max-width:460px;margin:0 auto;}
+  .handraised .counter-grid{grid-template-columns:repeat(3,1fr);}
+  .handraised .body-grid{grid-template-columns:1fr;}
+  .handraised .dial{display:none;}
+  .handraised .availB{grid-template-columns:1fr;}
+  .handraised .availB-rail{position:static;display:flex;flex-wrap:wrap;gap:.4rem;}
+  .handraised .availB-rail .rail-h{width:100%;}
+  .handraised .fbtn{width:auto;margin:0;}
+  .handraised .rail-ship{width:100%;}
+  .handraised .availB-grid{grid-template-columns:repeat(2,1fr);}
+  .handraised .tgrid{grid-template-columns:1fr 1fr;}
+  .handraised .rev-grid,.handraised .read-cards,.handraised .k3-list{grid-template-columns:1fr;}
+  .handraised .cta-form{grid-template-columns:1fr;}
+  .handraised .k2{grid-template-columns:1fr;text-align:center;}
+  .handraised .geo-cards{grid-template-columns:1fr;}
+  /* Rail B green ticker */
+  .handraised .railB{display:block;position:sticky;bottom:0;z-index:40;background:var(--green-d);border-top:1px solid rgba(255,255,255,.12);}
+  .handraised .railB ul{display:flex;gap:0;overflow-x:auto;list-style:none;margin:0;padding:.4rem .5rem;scroll-behavior:auto;-webkit-overflow-scrolling:touch;}
+  .handraised .railB a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:.3rem .7rem;text-decoration:none;white-space:nowrap;scroll-margin-inline:20px;}
+  .handraised .railB .p{font-size:.72rem;font-weight:700;color:#c9f2db;}
+  .handraised .railB .l{font-size:.66rem;color:#d7e7de;}
+  .handraised .railB a.on{background:#25543d;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.2);}
+  .handraised .railB a.on .p,.handraised .railB a.on .l{color:#fff;}
+}
+@media (max-width:640px){
+  .handraised .hr-container{padding:0 16px;}
+  .handraised .counter-grid{grid-template-columns:repeat(2,1fr);}
+  .handraised .availB-grid{grid-template-columns:1fr 1fr;}
+  .handraised .bblurb{display:none;}
+  .handraised .tgrid{grid-template-columns:1fr;}
+  .handraised .f2{grid-template-columns:1fr;}
+  /* Mobile full-bleed section images */
+  .handraised .sec-img.inf-img{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);border-radius:0;border-left:0;border-right:0;aspect-ratio:5/4;}
+  .handraised .hero-scatter{height:300px;}
+}
+</style>
