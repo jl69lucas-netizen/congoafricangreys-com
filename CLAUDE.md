@@ -93,6 +93,8 @@ Transactional + informational, modeled after MaltipoosForsale.com (`/Users/apple
 - `docs/reference/site-overview.md` — site structure, page inventory, target states
 - `docs/reference/seo-rules.md` — **MASTER SEO RULES (62 rules): read this before creating or modifying any page**
 - `docs/reference/domain-knowledge.md` — variants, trust signals, health conditions, PAA questions
+- `docs/reference/research-blocked-sites.md` — **RESEARCH FALLBACK for Reddit & blocked sites (binding on every research agent/skill): fetch escalation ladder Firecrawl → WebFetch(UA retry) → Playwright/chrome-devtools headless → `last30days-skill` (https://github.com/mvanhorn/last30days-skill, recency-scoped, great for Reddit/recent threads; not installed by default). Never fabricate un-fetched data.**
+- `docs/reference/technical-seo-fixes-backlog.md` — **Lighthouse/axe fixes to sweep across pages (from the Timneh for-sale audit 2026-07-22): for-sale dial/rail AA-contrast fixes (`.tdial .num`/"of N" → `#6b625a`, `.railB .p` → `#c9f2db`, no `opacity` dimming on nav pills), GTM/Rocket-Loader unused-JS, responsive available-card srcset.**
 - `docs/reference/top-pages.md` — traffic baseline (populate after GSC API connected)
 - `docs/reference/components.md` — **COMPONENT REGISTRY v2: 24 named components with variants — read before building any page section**
 - `docs/reference/page-width.md` — **PAGE WIDTH RULES: Option A 1200px container system, breakpoints, responsive typography scale**
