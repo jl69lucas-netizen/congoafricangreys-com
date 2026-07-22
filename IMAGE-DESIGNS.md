@@ -137,10 +137,26 @@ just replace the file.
 | **H** | Duo Strip | (CSS: 2× `.h-im`) | Elad + Evie sibling / pair shots, two portraits side-by-side | ✅ full |
 
 **Mobile counterparts** (full-bleed, taller aspect): **mA** 4:5 top-cover · **mB** 4:5 contain ·
-**mC** 4:5 blur-fill *(matches B)* · **mG** stacked two-up · **mH** 3:4 top-cover. A blur-fill (B)
-file already prevents head cutoffs on mobile under the current 5:4 crop; for a *distinct taller*
-mobile frame, set the page's mobile `.og-photo{aspect-ratio:4/5}` **only once every OG photo on that
-page is a blur-fill/contain file** (otherwise the portrait crop re-cuts un-reframed photos).
+**mC** 4:5 blur-fill *(matches B)* · **mG** stacked two-up · **mH** 3:4 top-cover.
+
+### STANDING DEFAULT — every for-sale / comparison page build MUST use this (locked 2026-07-22)
+This is now the **default OG-photo pipeline for all future page builds** — apply it without asking:
+
+1. **Single-bird / pair portrait OG photos** → bake with `reframe_og.py --style blurfill --mobcrop 4:5`
+   (the `--mobcrop 4:5` makes the sharp subject **dual-safe**: fits within BOTH the desktop 16:9 box
+   AND a mobile 4:5 crop, so it is never clipped at either width), then tag the `<img>`
+   `class="sec-img og-photo og-tall"`. CSS: desktop = the uniform 16:9 `.sec-img` box (unchanged);
+   mobile (`≤900px`) = **full-bleed edge-to-edge 4:5** —
+   `.sec-img.og-tall{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);aspect-ratio:4/5;border-radius:0}`
+   (page root needs `overflow-x:clip` — already on `.for-sale`/`.timneh` wrappers). This gives the
+   **distinct taller mobile design** the breeder wants while desktop keeps the uniform rectangle.
+2. **Wide / scene / documentation / infographic images** → keep the standard `.sec-img`(`.inf-img`)
+   16:9 box; on mobile they stay `.og-photo` 5:4 (do NOT force them into 4:5 — a landscape subject in
+   a tall frame reads as a small photo floating in blur).
+3. **NEVER** cover-crop a portrait master into 16:9 with a focal-point `fit(centering=...)` — that is
+   the head-cutoff bug this whole section exists to kill.
+
+Reference implementation: `/timneh-african-grey-for-sale/` (on-hand-playful, siblings, bath-play).
 
 **Defaults:** single-bird OG photo → **B**; wide/infographic-like → **A**; pair/sibling → **H** (or B
 if it's one photo of both birds); punchy fill → **E**. Applied to the Timneh page 2026-07-22:

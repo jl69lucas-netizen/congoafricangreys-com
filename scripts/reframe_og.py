@@ -23,11 +23,11 @@ from PIL import Image, ImageOps, ImageFilter, ImageEnhance
 
 def load(p): return Image.open(p).convert("RGB")
 
-def blurfill(im, W, H, blur):
+def blurfill(im, W, H, blur, fgw, fgh):
     bg = ImageOps.fit(im, (W, H), Image.LANCZOS)               # cover
     bg = bg.filter(ImageFilter.GaussianBlur(blur))
     bg = ImageEnhance.Brightness(bg).enhance(0.92)             # settle it behind the subject
-    fg = im.copy(); fg.thumbnail((W, H), Image.LANCZOS)        # contain, full height
+    fg = im.copy(); fg.thumbnail((fgw, fgh), Image.LANCZOS)    # contain within the subject-safe box
     canvas = bg.copy()
     canvas.paste(fg, ((W - fg.width) // 2, (H - fg.height) // 2))
     return canvas
@@ -72,9 +72,16 @@ def main():
     ap.add_argument("--blur", type=int, default=30)
     ap.add_argument("--sib", default=""); ap.add_argument("--sibw", type=int, default=760); ap.add_argument("--sibh", type=int, default=415)
     ap.add_argument("--maxkb", type=int, default=95)
+    # dual-safe: constrain the sharp subject so a later mobile 4:5 cover crop (central 4/5*H wide)
+    # never clips it. Default full box; pass --mobcrop 4:5 to auto-set, or --fgmaxw explicitly.
+    ap.add_argument("--mobcrop", default=""); ap.add_argument("--fgmaxw", type=int, default=0)
     a = ap.parse_args()
+    fgw, fgh = a.w, a.h
+    if a.fgmaxw: fgw = a.fgmaxw
+    elif a.mobcrop:
+        rw, rh = (int(x) for x in a.mobcrop.split(":")); fgw = int(a.h * rw / rh)
     im = load(a.src)
-    fn = {"blurfill": lambda: blurfill(im, a.w, a.h, a.blur),
+    fn = {"blurfill": lambda: blurfill(im, a.w, a.h, a.blur, fgw, fgh),
           "contain":  lambda: contain(im, a.w, a.h),
           "topcover": lambda: topcover(im, a.w, a.h)}[a.style]
     out = fn()
