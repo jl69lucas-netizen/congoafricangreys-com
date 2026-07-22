@@ -113,6 +113,42 @@ Every generated image flows through the same pipeline:
 
 ---
 
+## 7. Named OG Framing Styles (LOCKED 2026-07-22 — breeder-approved)
+
+**The head-cutoff rule (binding):** NEVER cover-crop a portrait/near-square bird master into a wide
+box with a focal point (`ImageOps.fit(..., centering=...)`). On tall masters (e.g. 591×640, 768×1376)
+that slices the head off — this is exactly what happened to the Timneh for-sale OG photos. Instead,
+pick a **named style** below and bake it into the file with `scripts/reframe_og.py`. Say *"use Style B
+on this image"* and the recipe is unambiguous.
+
+Engine: **`scripts/reframe_og.py <src-master> <out.webp> --style <s> [--sib <out-760.webp>]`**
+(outputs a 16:9 1408×768 file that keeps the FULL subject, plus an optional `-760` sibling <55 KB).
+Every style centers the subject **full-height**, so any later mobile COVER crop (5:4 / 4:5 / 1:1)
+keeps the whole bird — only padded/blurred sides crop away. No per-image markup change needed:
+just replace the file.
+
+| Style | Name | `--style` | When to use | Full bird? |
+|---|---|---|---|---|
+| **A** | Contain · Warm Canvas | `contain` | infographic-like / wide shots, or when blur reads busy | ✅ full |
+| **B** | Blur-Fill 16:9 *(default single bird)* | `blurfill` | any single-bird portrait OG photo — premium, no bars | ✅ full |
+| **C** | Editorial Split | (CSS component) | "meet the bird" hero-adjacent moments (photo + green caption panel) | ✅ full |
+| **D** | Portrait Frame | (CSS component) | boutique matted 3:4 inside the 16:9 | ✅ full |
+| **E** | Top-Anchored Cover | `topcover` | when you want a photo to FILL punchy; head never cut, feet may crop | ⚠ head-safe |
+| **H** | Duo Strip | (CSS: 2× `.h-im`) | Elad + Evie sibling / pair shots, two portraits side-by-side | ✅ full |
+
+**Mobile counterparts** (full-bleed, taller aspect): **mA** 4:5 top-cover · **mB** 4:5 contain ·
+**mC** 4:5 blur-fill *(matches B)* · **mG** stacked two-up · **mH** 3:4 top-cover. A blur-fill (B)
+file already prevents head cutoffs on mobile under the current 5:4 crop; for a *distinct taller*
+mobile frame, set the page's mobile `.og-photo{aspect-ratio:4/5}` **only once every OG photo on that
+page is a blur-fill/contain file** (otherwise the portrait crop re-cuts un-reframed photos).
+
+**Defaults:** single-bird OG photo → **B**; wide/infographic-like → **A**; pair/sibling → **H** (or B
+if it's one photo of both birds); punchy fill → **E**. Applied to the Timneh page 2026-07-22:
+on-hand-playful + siblings reframed via **B** from their masters in
+`assets/1WORKING-ON/FOR-SALE-PAGES/TIMNEHS-FOR-SALE/`. (Any OG photo whose only file is already a
+cover-cropped 16:9 with the head gone CANNOT be recovered by reframing — it needs the original
+master or a photo swap.)
+
 *Consumed by:* `skills/image-prompt-generator.md`, `skills/cag-image-generation.md`,
 `skills/cag-photo-ingest.md`, `skills/cag-infographic.md`, `.claude/agents/cag-image-pipeline.md`,
 `.claude/agents/cag-infographic-builder.md`. **On conflict, THIS file wins — fix the consumer.**
