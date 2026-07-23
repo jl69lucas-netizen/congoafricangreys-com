@@ -51,15 +51,28 @@ The global `MobileTabBar` is `fixed bottom-0 … z-50`. Any other bottom-pinned 
 at `bottom:0` with a lower z-index renders **underneath it** and looks like dead
 code. It isn't broken; it's buried.
 
-**Fix:**
+**Fix — do NOT pin it to the bottom at all.** The breeder rejected bottom
+placement outright (2026-07-23): even correctly stacked above the tab bar it
+"interferes with the page's bottom view". **Mobile jump-rails go at the TOP**,
+sticky under the header, matching every sibling for-sale page
+(`.chero-rail`, `.egg-rail`):
+
 ```css
-position:fixed; left:0; right:0;
-bottom:calc(56px + env(safe-area-inset-bottom));
-z-index:45; border-radius:12px 12px 0 0; margin:0 8px;
-box-shadow:0 -5px 16px rgba(0,0,0,.2);
+.railB{position:sticky; top:var(--hdr); z-index:40;
+  background:rgba(250,247,244,.985);      /* cream — a green bar merges into the header */
+  border-bottom:1px solid var(--bd);
+  box-shadow:0 6px 14px rgba(60,30,10,.07);}
 ```
-…plus `padding-bottom:96px` on the page body so the rail never covers content.
-Also scroll the active chip into view on scroll-spy so the rail tracks the reader.
+
+Differentiate per page with the **chip** treatment, not the bar position
+(siblings use single-line pills; hand-raised uses stacked two-line chips).
+Scroll the active chip into view on scroll-spy so the rail tracks the reader.
+
+**`--hdr` must equal the REAL header height (96px).** It was defaulting to 72px,
+which parked the sticky desktop dial 8px *behind* the header. Anchors then need
+`scroll-margin-top: calc(var(--hdr) + 16px)` on desktop and
+`calc(var(--hdr) + 74px)` on mobile (header + rail + gap) — verify by clicking a
+rail chip and confirming the H2 lands below the rail, not under it.
 
 ### 1c. `infographic-cropped-mobile` — ERROR — *unreadable infographics*
 Infographics carry **baked-in text**. Forcing a 16:9 infographic into a 5:4 or 4:5
@@ -93,6 +106,35 @@ Brand `--clay #e8604c` is AA **only as large text** (3.38:1). Small clay text on
 light must be `#b04228`; solid clay fills use `--clay-ink #c8472f`. Separately,
 any `opacity` on a text rule silently drags contrast down — `opacity:.9` white on
 `#c8472f` measures **4.10** against a 4.5 floor.
+
+### 1e-bis. Desktop dial TOC — the CANONICAL row metrics (cluster-wide, LOCKED)
+The breeder rejected a "density pass" that shrank rows to `.7rem` / `3.5px 6px`
+with the tag hidden: *"I can hardly read the text or click."* **Readability beats
+compactness** — the card scrolls internally if it ever runs long.
+
+**Every for-sale / comparison desktop dial matches `/timneh-african-grey-for-sale/`
+(`.tdial`) exactly.** Copy these numbers verbatim; only the palette changes per
+page tuple (light-cream card vs dark-aviary card):
+
+```css
+/* sidebar column */   grid-template-columns:196px minmax(0,1fr); gap:28px;
+/* card  */ display:flex;flex-direction:column;gap:10px;align-items:stretch;
+            border-radius:16px;padding:12px 10px;
+            position:sticky;top:calc(var(--hdr) + 16px);
+            max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;
+/* ring  */ 64px outer · 50px inner · number 15px serif · "of N" 7px · margin:2px auto 0;flex:none
+/* list  */ display:grid;grid-template-columns:1fr;gap:1px;
+            border-top:1px dashed;padding-top:8px;
+/* row   */ display:flex;gap:7px;align-items:baseline;
+            font-size:.74rem;line-height:1.25;padding:5px 7px;border-radius:8px;
+/* num   */ font-size:.7rem;width:16px;flex:none;font-weight:700;font-variant-numeric:tabular-nums;
+/* tag   */ margin-left:auto;font-size:.56rem;font-weight:600;
+            color:#fff;background:var(--clay-ink);border-radius:50px;padding:1px 6px;white-space:nowrap;
+```
+
+**The tag pill is always visible** — hiding it on inactive rows was part of the
+rejected density pass. Verify: 18 rows ⇒ card ≈ **705–725px**, every row ≥ 24px
+tall (WCAG 2.5.8), label ≥ 4.5:1.
 
 **Dial/rail contrast — two variants, do NOT mix them up:**
 
