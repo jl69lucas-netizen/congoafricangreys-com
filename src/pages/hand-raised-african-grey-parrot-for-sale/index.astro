@@ -181,7 +181,7 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
     <header class="hero">
       <div class="hero-grid hr-container">
         <div class="hero-copy">
-          <p class="eyebrow">Est. 2014 · Midland, TX · USDA-licensed family aviary</p>
+          <p class="eyebrow h-card"><data class="p-name" value="C.A.Gs — Congo African Greys"></data>Est. 2014 · <span class="p-locality">Midland</span>, <span class="p-region">TX</span> · USDA-licensed family aviary</p>
           <h1>Hand-Raised African Grey Parrots for Sale — <em>tame, people-bonded</em> &amp; ready to reserve</h1>
           <p class="lead">Here at C.A.Gs, every Congo and Timneh African Grey is hand-fed, weaned and socialized in our own home — not pulled early, not warehouse-raised. What you meet is a grey that already trusts people, steps up without a fight, and settles into family life from day one.</p>
           <div class="hero-cta">
@@ -303,11 +303,11 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
               {available.map((b) => {
                 const im = birdImg[b.name] || { src: "/images/congo-page/amie-congo-african-grey-female-card.webp", pos: "center 30%", alt: b.name };
                 return (
-                  <article class={"bcard cat-" + catFor(b)} data-cat={catFor(b)}>
-                    <div class="bphoto"><img src={im.src} alt={im.alt} loading="lazy" style={"object-position:" + im.pos} width="440" height="440" /><span class={"bbadge " + catFor(b)}>{catLabel(b)}</span></div>
+                  <article class={"bcard h-product cat-" + catFor(b)} data-cat={catFor(b)}>
+                    <div class="bphoto"><img class="u-photo" src={im.src} alt={im.alt} loading="lazy" style={"object-position:" + im.pos} width="440" height="440" /><span class={"bbadge p-category " + catFor(b)}>{catLabel(b)}</span></div>
                     <div class="binfo">
-                      <div class="brow"><h3>{b.name}</h3><span class="bprice">${b.price.toLocaleString()}</span></div>
-                      <p class="bblurb">{birdBlurb[b.name]}</p>
+                      <div class="brow"><h3 class="p-name">{b.name}</h3><span class="bprice p-price">${b.price.toLocaleString()}</span></div>
+                      <p class="bblurb p-description">{birdBlurb[b.name]}</p>
                       <div class="bchips"><span>CITES</span><span>DNA-sexed</span><span>Hand-raised</span></div>
                       <a class="btn btn-clay bfull" href="#reserve">Reserve {catFor(b) === "pair" ? "the pair" : b.name} →</a>
                     </div>
@@ -535,12 +535,12 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
           <p class="opener">The best test of a hand-raised bird is how it settles in after the excitement fades — so here are two families in their own words. Because these are verified C.A.Gs buyers, their stories sit here unedited, the way they sent them.</p>
           <div class="rev-grid">
             {stories.map((s) => (
-              <figure class="rev">
-                <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
-                <blockquote>{s.quote}</blockquote>
-                <figcaption>
-                  <img src={s.avatar} alt={"Photo from " + s.name + ", a verified C.A.Gs hand-raised African Grey buyer in " + s.loc} loading="lazy" width="120" height="120" />
-                  <div><b>{s.name}</b><span>{s.loc} · {s.meta}</span></div>
+              <figure class="rev h-review">
+                <div class="stars" aria-label="5 out of 5 stars"><data class="p-rating" value="5">★★★★★</data></div>
+                <blockquote class="e-content">{s.quote}</blockquote>
+                <figcaption class="p-author h-card">
+                  <img class="u-photo" src={s.avatar} alt={"Photo from " + s.name + ", a verified C.A.Gs hand-raised African Grey buyer in " + s.loc} loading="lazy" width="120" height="120" />
+                  <div><b class="p-name">{s.name}</b><span><span class="p-locality">{s.loc}</span> · {s.meta}</span></div>
                 </figcaption>
               </figure>
             ))}
@@ -573,7 +573,10 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
           <div class="read-cards">
             {readMore.map((r) => (
               <a class="read-card" href={r.href}>
-                <img src={r.img} alt={r.title + " — " + r.kicker} loading="lazy" width="760" height="415" />
+                <img src={r.img.replace("-760.webp", "-240.webp")}
+                     srcset={r.img.replace("-760.webp", "-240.webp") + " 240w, " + r.img + " 760w"}
+                     sizes="120px"
+                     alt={r.title + " — " + r.kicker} loading="lazy" width="240" height="131" />
                 <div class="rc-body"><span class="rc-k">{r.kicker}</span><b>{r.title}</b><span class="rc-s">{r.sub}</span></div>
               </a>
             ))}
@@ -828,22 +831,22 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
 .handraised .bbadge.pair{color:var(--clay-ink);}
 .handraised .binfo{padding:11px 12px 13px;display:flex;flex-direction:column;gap:.45rem;flex:1;}
 /* Grid (not flex) so a long name wraps in its own column instead of shoving the price */
-.handraised .brow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem;align-items:baseline;min-height:2.2rem;}
+.handraised .brow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem;align-items:baseline;min-height:2.65rem;}
 .handraised .brow h3{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;line-height:1.16;margin:0;text-transform:uppercase;letter-spacing:.02em;color:var(--green-d);min-width:0;overflow-wrap:anywhere;}
 .handraised .bprice{font-weight:700;color:var(--clay-ink);font-size:.98rem;white-space:nowrap;}
 .handraised .bblurb{font-size:.8rem;color:var(--muted);line-height:1.45;margin:0;flex:1;}
 .handraised .bchips{display:flex;gap:.3rem;flex-wrap:wrap;min-height:1.4rem;align-content:start;}
 .handraised .bchips span{font-size:.62rem;background:var(--cream);border:1px solid var(--bd);color:var(--green-d);padding:.1rem .4rem;border-radius:50px;font-weight:600;}
 /* Compact, never-wrapping CTA pinned to a shared baseline across every card */
-.handraised .bfull{justify-content:center;margin-top:auto;font-size:.8rem;padding:.5rem .85rem;
-  white-space:nowrap;gap:.3rem;}
+.handraised .bfull{align-self:start;justify-content:center;margin-top:auto;font-size:.8rem;
+  padding:.5rem .95rem;white-space:nowrap;gap:.3rem;}
 .handraised .microcopy{font-size:.8rem;color:var(--muted);margin-top:.8rem;}
 
 /* K2 price-tag */
 .handraised .k2{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px 18px;margin:1rem 0;}
 .handraised .k2-tag{background:var(--clay-ink);color:#fff;border-radius:12px;padding:14px 20px;text-align:center;}
 /* opacity:.9 white on #c8472f dropped "From" below 4.5:1 — Lighthouse contrast FAIL */
-.handraised .k2-tag .k2-from{display:block;font-size:.74rem;opacity:1;color:#ffe9e3;font-weight:600;}
+.handraised .k2-tag .k2-from{display:block;font-size:.74rem;opacity:1;color:#fff;font-weight:600;}
 .handraised .k2-tag .k2-n{font-family:var(--font-lora,'Newsreader',serif);font-size:1.7rem;font-weight:700;line-height:1;}
 .handraised .k2-body p{margin:0 0 .4rem;font-size:.92rem;}
 .handraised .k2-warn{color:var(--clay-t);font-weight:600;}
@@ -884,7 +887,9 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
 /* Reviews */
 .handraised .rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:1rem 0;}
 .handraised .rev{margin:0;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;}
-.handraised .rev .stars{color:var(--clay);letter-spacing:2px;margin-bottom:.4rem;}
+/* brand --clay #e8604c is only AA at LARGE text; star glyphs are small, so they
+   use --clay-ink (4.78:1 on white) like every other small clay text on light */
+.handraised .rev .stars{color:var(--clay-ink);letter-spacing:2px;margin-bottom:.4rem;font-size:1.05rem;}
 .handraised .rev blockquote{margin:0 0 .8rem;font-size:.9rem;line-height:1.6;color:var(--ink);}
 .handraised .rev figcaption{display:flex;align-items:center;gap:.6rem;}
 .handraised .rev figcaption img{width:52px;height:52px;border-radius:50%;object-fit:cover;}
@@ -980,7 +985,7 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
   .handraised .brow{min-height:2.5rem;}
   .handraised .brow h3{font-size:.92rem;}
   .handraised .bprice{font-size:.92rem;}
-  .handraised .bfull{font-size:.74rem;padding:.5rem .55rem;}
+  .handraised .bfull{align-self:stretch;font-size:.74rem;padding:.5rem .55rem;}
   .handraised .bchips span{font-size:.58rem;}
   /* nowrap chips in 2 columns exceeded a 343px content box and dragged the whole
      hero-copy column wide (clipped text). One column each on small screens. */

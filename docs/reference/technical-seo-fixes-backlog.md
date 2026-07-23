@@ -52,3 +52,18 @@ item with weight / shadow / a darker fill instead.
 - [ ] Every available-card `srcset` has a source ≤ the largest CSS render at DPR 1
 - [ ] GTM deferred / consent-gated (site-wide, in `BaseLayout`)
 - [ ] Re-run Lighthouse warm median-of-3 (per memory `feedback_lighthouse_median`)
+
+## From the hand-raised hardening pass (2026-07-23)
+
+- **Cloudflare Rocket Loader `/70de/`** — unused JS + "large first-party JS missing
+  a source map" on every page. **Not fixable in code**: it is a dashboard toggle
+  (Cloudflare → Speed → Optimization → Rocket Loader → Off). Breeder action.
+- **Site-wide `img-no-srcset` backlog (187 WARN)** — surfaced by
+  `python3 scripts/page_hardening_scan.py`. Ship `-240/-320/-440/-760` siblings
+  with real `sizes` per the table in `skills/cag-page-hardening.md §1g`. Highest
+  value first: timneh for-sale (5 images incl. a 1408px map), trusted-breeders,
+  the comparison cluster.
+- **Site-wide duplicate body copy (6,177 passages ≥12 words)** — concentrated in
+  the location + `buy-*` pages (the shared USDA/CITES/DNA credential block).
+  The for-sale cluster itself is clean. Needs a rewrite pass on the location
+  cluster, not a whitelist expansion.

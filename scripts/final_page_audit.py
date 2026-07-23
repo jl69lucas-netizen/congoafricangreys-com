@@ -30,11 +30,22 @@ class P(HTMLParser):
         super().__init__(); s.h={i:0 for i in range(1,7)}; s.imgs=[]; s.cur=None
         s.title=""; s.intitle=False; s.links=[]; s.cura=None; s.atext=[]
         s.jsonld=[]; s.injson=False; s.metadesc=""; s.canonical=""; s.body=[]
+        # depth counter for the page hero block, so every image inside a
+        # multi-image hero (2x2 grid, polaroid scatter) is exempt from the
+        # lazy-loading rule rather than only imgs[0]
+        s.herodepth=0; s.hero_imgs=[]
     def handle_starttag(s,t,a):
         d=dict(a)
+        cls=d.get("class","") or ""
+        if s.herodepth:
+            s.herodepth+=1
+        elif t in ("header","section","div") and re.search(r"\bhero\b|\bhero-", cls):
+            s.herodepth=1
         if re.fullmatch(r"h[1-6]",t): s.cur=int(t[1]); s.h[s.cur]+=1
         if t=="title": s.intitle=True
-        if t=="img": s.imgs.append(d)
+        if t=="img":
+            s.imgs.append(d)
+            if s.herodepth: s.hero_imgs.append(d)
         if t=="a":
             s.cura=d; s.atext=[]
         if t=="meta" and d.get("name")=="description": s.metadesc=d.get("content","")
@@ -43,6 +54,8 @@ class P(HTMLParser):
     def handle_startendtag(s,t,a):
         s.handle_starttag(t,a)
     def handle_endtag(s,t):
+        if s.herodepth and t in ("header","section","div"):
+            s.herodepth-=1
         if t=="title": s.intitle=False
         if re.fullmatch(r"h[1-6]",t): s.cur=None
         if t=="a" and s.cura is not None:
@@ -228,8 +241,13 @@ def audit_html(slug, html, page_type="interior"):
     r["img_alt_le190"]=all(len(i.get("alt",""))<=190 for i in imgs)
     # LCP-hero exemption: drop the header logo(s), then the FIRST remaining content
     # image is the eager LCP hero (correct). Every image after it must be lazy.
+    # EXCEPT multi-image hero components (Split-Hero C 2x2 photo grid on the egg
+    # page, Hero-A polaroid grid on hand-raised): every image inside the hero
+    # block is above the fold and legitimately eager. Flagging them was a false
+    # positive that FAILed a correct page (2026-07-23).
     content=[i for i in imgs if "logo" not in i.get("src","").lower()]
-    non_hero=content[1:] if content else []
+    hero_srcs={i.get("src","") for i in getattr(p, "hero_imgs", []) or []}
+    non_hero=[i for i in content[1:] if i.get("src","") not in hero_srcs]
     r["img_lazy_nonhero"]=all(i.get("loading")=="lazy" for i in non_hero) if non_hero else True
     r["img_dims"]=all(yes(i,"width") and yes(i,"height") for i in imgs) if imgs else True
     # --- a11y / gotcha traps (Part K / M / #26, #28) ---
