@@ -771,23 +771,25 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
 /* Body grid + Dial 2 */
 .handraised .body-grid{display:grid;grid-template-columns:196px minmax(0,1fr);gap:28px;padding-top:8px;padding-bottom:40px;}
 .handraised .dial{position:relative;}
-.handraised .dial-card{position:sticky;top:calc(var(--hdr) + 16px);background:var(--green-d);color:#eaf3ee;border-radius:16px;padding:14px 12px;box-shadow:0 6px 20px rgba(35,79,59,.22);max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;scrollbar-width:thin;}
-.handraised .ring{--p:0;width:64px;height:64px;border-radius:50%;margin:2px auto 10px;background:conic-gradient(var(--clay) calc(var(--p)*1%),rgba(255,255,255,.16) 0);display:grid;place-items:center;}
+.handraised .dial-card{position:sticky;top:calc(var(--hdr) + 16px);display:flex;flex-direction:column;gap:10px;align-items:stretch;background:var(--green-d);color:#eaf3ee;border-radius:16px;padding:12px 10px;box-shadow:0 6px 20px rgba(35,79,59,.22);max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;scrollbar-width:thin;}
+.handraised .ring{--p:0;width:64px;height:64px;border-radius:50%;margin:2px auto 0;flex:none;background:conic-gradient(var(--clay) calc(var(--p)*1%),rgba(255,255,255,.16) 0);display:grid;place-items:center;}
 .handraised .ring-in{width:50px;height:50px;border-radius:50%;background:var(--green-d);display:grid;place-items:center;text-align:center;}
 .handraised .ring-n{font-family:var(--font-lora,'Newsreader',serif);font-size:15px;font-weight:700;color:#fff;line-height:1;}
 .handraised .ring-of{font-size:7px;color:#c9f2db;letter-spacing:.04em;}
-.handraised .dial-list{list-style:none;margin:0;padding:8px 0 0;border-top:1px dashed rgba(255,255,255,.2);}
-/* Density pass: 18 rows at .74rem/1.25 + per-row tag chips made the dial run the
-   full viewport. Tag chip now shows only on the active row. */
-.handraised .dial-list a{display:grid;grid-template-columns:auto 1fr;gap:5px;align-items:baseline;padding:3.5px 6px;border-radius:7px;text-decoration:none;color:#d7e7de;font-size:.7rem;line-height:1.2;transition:background .15s,color .15s;}
-.handraised .dial-list a:hover{background:rgba(255,255,255,.06);}
-.handraised .dial-list a.on{background:rgba(232,96,76,.2);color:#fff;}
+.handraised .dial-list{list-style:none;margin:0;padding:8px 0 0;border-top:1px dashed rgba(255,255,255,.2);display:grid;grid-template-columns:1fr;gap:1px;}
+/* Dial row metrics MATCH the timneh page's .tdial-list exactly (both pages carry
+   18 rows, so the sidebar comes out the same height). An earlier "density pass"
+   shrank this to .7rem / 3.5px padding with the tag hidden — the breeder could
+   not read or tap it. Readability wins over compactness; the card scrolls
+   internally if it ever runs long. Colours stay dark-aviary (this page's tuple). */
+.handraised .dial-list a{display:flex;gap:7px;align-items:baseline;padding:5px 7px;border-radius:8px;text-decoration:none;color:#d7e7de;font-size:.74rem;line-height:1.25;transition:background-color .15s,color .15s;}
+.handraised .dial-list a:hover{background:rgba(255,255,255,.07);color:#fff;}
+.handraised .dial-list a.on{background:rgba(232,96,76,.2);color:#fff;font-weight:600;}
 /* #9fc7b0 on #234f3b = 5.00:1 (AA). Do NOT swap in the light-card #6b625a here —
    that fix belongs to the cream dial on congo/timneh, and is unreadable on dark. */
-.handraised .dial-list .di{font-size:.63rem;color:#9fc7b0;font-variant-numeric:tabular-nums;}
+.handraised .dial-list .di{font-family:var(--font-lora,'Newsreader'),serif;font-weight:700;color:#9fc7b0;width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums;}
 .handraised .dial-list a.on .di{color:var(--clay);}
-.handraised .dial-list .dt{grid-column:2;font-size:.6rem;color:#c9f2db;font-weight:600;display:none;}
-.handraised .dial-list a.on .dt{display:block;}
+.handraised .dial-list .dt{margin-left:auto;font-size:.56rem;font-weight:600;letter-spacing:.02em;color:#fff;background:var(--clay-ink);border-radius:50px;padding:1px 6px;white-space:nowrap;}
 
 /* Section images */
 .handraised .sec-img.inf-img{display:block;width:100%;max-width:760px;aspect-ratio:1408/768;object-fit:cover;height:auto;border-radius:14px;border:1px solid var(--bd);margin:1rem 0 1.1rem;box-shadow:0 4px 16px rgba(60,30,10,.06);}
