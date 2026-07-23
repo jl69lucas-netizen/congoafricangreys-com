@@ -36,10 +36,13 @@ const catFor = (b: any) => (b.sex === "pair" ? "pair" : (b.variant === "timneh_a
 const catLabel = (b: any) => (b.sex === "pair" ? "Companion Pair" : (b.variant === "timneh_african_grey" ? "Timneh Grey" : "Congo Grey"));
 const catCount = (c: string) => available.filter((b) => catFor(b) === c).length;
 
-const birdImg: Record<string, { src: string; alt: string; pos: string }> = {
+// `badge:"top"` moves that card's category pill to the TOP-left corner. Default is
+// bottom-left (top-left lands on most birds' heads) — but Roys is photographed
+// head-down eating, so the bottom pill covered his face (breeder, 2026-07-23).
+const birdImg: Record<string, { src: string; alt: string; pos: string; badge?: "top" }> = {
   "Bery":  { src: "/images/congo-page/bery-congo-african-grey-female-card.webp",  pos: "center 30%", alt: "Bery, a hand-raised female Congo African Grey for sale, perched calmly and looking to camera" },
   "Amie":  { src: "/images/congo-page/amie-congo-african-grey-female-card.webp",  pos: "center 28%", alt: "Amie, a hand-fed female Congo African Grey who steps up for visitors, on a play stand" },
-  "Roys":  { src: "/images/congo-page/roys-congo-african-grey-male-card.webp",    pos: "center 30%", alt: "Roys, a people-friendly hand-raised male Congo African Grey mid head-tilt" },
+  "Roys":  { src: "/images/congo-page/roys-congo-african-grey-male-card.webp",    pos: "center 30%", alt: "Roys, a people-friendly hand-raised male Congo African Grey mid head-tilt", badge: "top" },
   "Jins & Jeni (pair)": { src: "/images/congo-page/jins-jeni-congo-african-grey-pair-card.webp", pos: "center 32%", alt: "Jins and Jeni, a bonded hand-raised Congo African Grey companion pair side by side" },
   "Elad":  { src: "/images/timneh-page/elad-timneh-african-grey-male-card.webp",  pos: "center 34%", alt: "Elad, a hand-raised male Timneh African Grey leaning into a gentle head scratch" },
   "Evie":  { src: "/images/timneh-page/evie-timneh-african-grey-female-card.webp",pos: "center 38%", alt: "Evie, a gentle young female Timneh African Grey socialized daily from weaning" },
@@ -277,9 +280,9 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
             <table class="tblC">
               <thead><tr><th>Rearing path</th><th>What it means</th><th>Starting tameness</th><th>Best for</th></tr></thead>
               <tbody>
-                <tr><td>Hand-fed only</td><td>Fed by hand, little else</td><td>Variable</td><td>Owners who'll do the socializing</td></tr>
-                <tr class="pick"><td>Hand-raised <span class="badge">Top pick</span></td><td>Fed, handled &amp; socialized daily</td><td>High, people-bonded</td><td>Most families &amp; first-grey homes</td></tr>
-                <tr><td>Parent-raised</td><td>Raised by the parent birds</td><td>Shy at first</td><td>Patient, experienced keepers</td></tr>
+                <tr><td>Hand-fed only</td><td data-label="What it means">Fed by hand, little else</td><td data-label="Starting tameness">Variable</td><td data-label="Best for">Owners who'll do the socializing</td></tr>
+                <tr class="pick"><td>Hand-raised <span class="badge">Top pick</span></td><td data-label="What it means">Fed, handled &amp; socialized daily</td><td data-label="Starting tameness">High, people-bonded</td><td data-label="Best for">Most families &amp; first-grey homes</td></tr>
+                <tr><td>Parent-raised</td><td data-label="What it means">Raised by the parent birds</td><td data-label="Starting tameness">Shy at first</td><td data-label="Best for">Patient, experienced keepers</td></tr>
               </tbody>
             </table>
           </div>
@@ -313,7 +316,7 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
                 const im = birdImg[b.name] || { src: "/images/congo-page/amie-congo-african-grey-female-card.webp", pos: "center 30%", alt: b.name };
                 return (
                   <article class={"bcard h-product cat-" + catFor(b)} data-cat={catFor(b)}>
-                    <div class="bphoto"><img class="u-photo" src={im.src} alt={im.alt} loading="lazy" style={"object-position:" + im.pos} width="440" height="440" /><span class={"bbadge p-category " + catFor(b)}>{catLabel(b)}</span></div>
+                    <div class="bphoto"><img class="u-photo" src={im.src} alt={im.alt} loading="lazy" style={"object-position:" + im.pos} width="440" height="440" /><span class={"bbadge p-category " + catFor(b) + (im.badge === "top" ? " badge-top" : "")}>{catLabel(b)}</span></div>
                     <div class="binfo">
                       <div class="brow"><h3 class="p-name">{b.name.replace(" (pair)", " (Pair)")}</h3><span class="bprice p-price">${b.price.toLocaleString()}</span></div>
                       <p class="bblurb p-description">{birdBlurb[b.name]}</p>
@@ -835,6 +838,10 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
   box-shadow:0 1px 4px rgba(0,0,0,.18);}
 .handraised .bbadge.timneh{color:#7a3b1e;}
 .handraised .bbadge.pair{color:var(--clay-ink);}
+/* Per-bird escape hatch (desktop AND mobile): a head-down bird like Roys has his
+   face in the lower-left, where the default pill sits. The pill is an opaque white
+   capsule with its own shadow, so it stays legible up top without the scrim. */
+.handraised .bbadge.badge-top{top:8px;bottom:auto;}
 .handraised .binfo{padding:11px 12px 13px;display:flex;flex-direction:column;gap:.45rem;flex:1;}
 /* Grid (not flex) so a long name wraps in its own column instead of shoving the price */
 .handraised .brow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem;align-items:baseline;min-height:2.65rem;}
@@ -946,7 +953,9 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
 /* ===================== RESPONSIVE ===================== */
 @media (max-width:980px){
   .handraised .hero-grid{grid-template-columns:1fr;gap:18px;}
-  .handraised .hero-scatter{max-width:420px;margin:0 auto;gap:12px 10px;}
+  /* Photos lead on mobile, copy follows — matching the sibling for-sale heroes
+     (.chero-media{order:-1} on congo/timneh). Desktop keeps copy-left/photos-right. */
+  .handraised .hero-scatter{max-width:420px;margin:0 auto;gap:12px 10px;order:-1;}
   .handraised .pofig{max-width:none;}
   .handraised .counter-grid{grid-template-columns:repeat(3,1fr);}
   /* minmax(0,1fr) + min-width:0 stop the 100vw full-bleed images from inflating
@@ -1007,6 +1016,37 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
   .handraised .seam{height:30px;}
   .handraised .tgrid{grid-template-columns:1fr;}
   .handraised .f2{grid-template-columns:1fr;}
+
+  /* ===== Mobile table stacking (breeder, 2026-07-23) =====
+     The 4-column rearing matrix and the 180px-key weaning timeline both squeezed
+     to unreadable column widths in a 343px box. Both become stacked cards that
+     keep the DESKTOP look — cream header band, green-d label, clay tint on the
+     top pick — rather than a horizontal-scroll table nobody scrolls. */
+  .handraised .tblwrap{overflow-x:visible;}
+  .handraised .tblC{border:0;border-radius:0;overflow:visible;}
+  /* header row is redundant once each cell carries its own label — keep it for
+     screen readers/parsers rather than display:none */
+  .handraised .tblC thead{position:absolute;width:1px;height:1px;overflow:hidden;
+    clip:rect(0 0 0 0);white-space:nowrap;}
+  .handraised .tblC tbody,.handraised .tblC tr,.handraised .tblC td{display:block;}
+  .handraised .tblC tr{border:1px solid var(--bd);border-radius:12px;overflow:hidden;
+    background:#fff;margin-bottom:10px;}
+  .handraised .tblC tr:last-child{margin-bottom:0;}
+  .handraised .tblC td{padding:.55rem .8rem;border-bottom:1px solid var(--bd);}
+  .handraised .tblC tr td:last-child{border-bottom:0;}
+  /* first cell becomes the card's header band, mirroring the desktop <th> row */
+  .handraised .tblC td:first-child{background:var(--cream);color:var(--green-d);
+    font-weight:700;font-size:.92rem;padding:.6rem .8rem;border-bottom:2px solid var(--bd);}
+  .handraised .tblC tr.pick td:first-child{background:#f6e6de;}
+  .handraised .tblC td[data-label]{display:grid;
+    grid-template-columns:minmax(0,7.4rem) minmax(0,1fr);gap:.55rem;align-items:baseline;}
+  .handraised .tblC td[data-label]::before{content:attr(data-label);font-size:.67rem;
+    font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);
+    line-height:1.6;}
+
+  /* weaning timeline: key band sits ABOVE its value instead of in a 180px column */
+  .handraised .otrow{grid-template-columns:1fr;}
+  .handraised .ot-k{border-bottom:1px solid var(--bd);}
   /* Mobile full-bleed section images.
      INFOGRAPHICS keep their native 16:9 and are never cover-cropped — forcing
      5:4 + cover shaved ~30% off each side and cut the baked-in text (2026-07-23).
