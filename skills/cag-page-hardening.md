@@ -147,6 +147,37 @@ tall (WCAG 2.5.8), label ≥ 4.5:1.
 Applying the light-card `#6b625a` to a dark dial makes it unreadable. Always
 check which variant the page ships before "sweeping the contrast fix".
 
+### 1e-ter. `header-not-title-case` — ERROR — *site-wide heading standard*
+**Every H1–H6 on every page uses AP-style Title Case**, matching the homepage and
+the congo / timneh for-sale pages. Sentence-case headings are a defect (the
+hand-raised page shipped 62 of them, 2026-07-23).
+
+**The rule:**
+- Capitalize every word of **4+ letters**, plus all nouns, verbs, adjectives and
+  adverbs regardless of length (`Is`, `Are`, `Do`, `Be`, `Not`, `Our`, `Such`).
+- Lowercase these **≤3-letter** articles / conjunctions / prepositions when they
+  fall mid-title: `a an the and but or nor for so yet at by in of on to as vs per via`.
+- **Always** capitalize the first word, the last word, and the word after a
+  `:` `?` `!`. An **em dash is a mid-sentence break** — it does NOT force a
+  capital (`Legit — and How Would You Even Know?` is correct).
+- Hyphenated compounds capitalize **each** part (`Hand-Raised`, `People-Bonded`,
+  `Sought-After`, `Captive-Bred`) — except a minor part (`12-to-16-Week`).
+- Particles stay capitalized (`Steps Up`), and 4-letter prepositions do too
+  (`From`, `With`, `Before`, `Across`, `Against`).
+- Never touch acronyms, brand tokens or domains: `C.A.Gs` `U.S.` `CITES` `USDA`
+  `AWA` `DNA` `PBFD` `PCR` `IATA` `aphis.usda.gov`.
+
+Reference (live siblings): *"Which Congo African Grey Parrots Do We Have for Sale
+Right Now?"* · *"Why Do Congo African Grey Prices Range From $1,500 to $8,500?"* ·
+*"How Do You Know This African Grey Breeder Is Legit, Not a Scam?"*
+
+**Scope — headings only.** FAQ accordion questions live in `<summary>`, not in a
+heading tag, and stay **conversational sentence case** ("How much does a Congo
+African Grey cost?") on congo, timneh and hand-raised alike. Do NOT title-case
+them. The homepage is the one outlier: it renders its FAQ questions *as H3*, so
+the scanner flags them — that block is a pre-existing inconsistency, not a
+licence to change the FAQ voice.
+
 ### 1f. `links-colour-only` — WARN — WCAG 1.4.1
 In-body links distinguished by colour alone fail Lighthouse.
 ```css

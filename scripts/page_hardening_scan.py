@@ -218,6 +218,52 @@ def check_img_srcset(pages):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# 8b. Headings must be AP-style Title Case, matching the homepage and the
+#     congo/timneh for-sale pages. The hand-raised page shipped 62 sentence-case
+#     headings (2026-07-23). See skills/cag-page-hardening.md §1e-ter.
+# ─────────────────────────────────────────────────────────────────────────────
+MINOR_WORDS = {"a", "an", "the", "and", "but", "or", "nor", "for", "so", "yet",
+               "at", "by", "in", "of", "on", "to", "as", "vs", "per", "via"}
+
+def check_title_case(pages):
+    import html as _html
+    for p in pages:
+        try:
+            raw = open(p, encoding="utf-8").read()
+        except Exception:
+            continue
+        slug = p.replace(DIST + "/", "").replace("/index.html", "/")
+        m = re.search(r"<main[^>]*>(.*)</main>", raw, re.S)
+        if not m:
+            continue
+        seg = m.group(1)
+        for lvl in range(1, 7):
+            for inner in re.findall(rf"<h{lvl}[^>]*>(.*?)</h{lvl}>", seg, re.S):
+                t = re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", " ", inner))).strip()
+                if not t:
+                    continue
+                words = t.split(" ")
+                force = True
+                for i, w in enumerate(words):
+                    core = re.sub(r"[^\w'-]", "", w)
+                    # skip acronyms, brands, domains, numbers, prices
+                    if (not core or core[0].isdigit() or "." in w
+                            or core.isupper() or re.search(r"[a-z][A-Z]", core)):
+                        force = bool(re.search(r"[:?!]$", w))
+                        continue
+                    must_cap = (force or i == 0 or i == len(words) - 1
+                                or core.lower() not in MINOR_WORDS)
+                    if must_cap and core[0].islower():
+                        add("ERROR", "header-not-title-case", slug, 0,
+                            f'H{lvl} is not Title Case ("{w}" in "{t[:58]}")',
+                            "AP-style Title Case: capitalise 4+ letter words and all "
+                            "nouns/verbs/adjectives; lowercase only mid-title "
+                            "a/an/the/and/or/for/at/by/in/of/on/to/as/vs")
+                        break
+                    force = bool(re.search(r"[:?!]$", w))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 9. Body links distinguishable by colour alone (WCAG 1.4.1).
 # ─────────────────────────────────────────────────────────────────────────────
 def check_link_underline(files):
@@ -281,6 +327,7 @@ def main():
     check_known_traps(files, pages)
     if pages:
         check_img_srcset(pages)
+        check_title_case(pages)
 
     errs = [f for f in findings if f["sev"] == "ERROR"]
     warns = [f for f in findings if f["sev"] == "WARN"]
