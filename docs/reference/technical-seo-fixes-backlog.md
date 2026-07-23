@@ -67,3 +67,9 @@ item with weight / shadow / a darker fill instead.
   the location + `buy-*` pages (the shared USDA/CITES/DNA credential block).
   The for-sale cluster itself is clean. Needs a rewrite pass on the location
   cluster, not a whitelist expansion.
+- **Title-Case heading sweep (1,099 headings across ~90 pages)** — surfaced by
+  `page_hardening_scan.py` (`header-not-title-case`). The homepage, congo,
+  timneh and hand-raised for-sale pages are the standard; everything else is
+  still sentence case. Heaviest: the 6 `/available/` bird pages (~86 each) and
+  the `/available/` hub (54). Spec: `skills/cag-page-hardening.md §1e-ter`.
+  NOTE: FAQ `<summary>` questions stay conversational — headings only.
