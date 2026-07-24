@@ -1,282 +1,1176 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import clutch from '../../../data/clutch-inventory.json';
 
-const title = "DNA-Tested African Grey Parrots for Sale | Sexed & Health-Screened | CongoAfricanGreys.com";
-const description = "DNA-sexed African Grey parrots for sale — every bird tested for sex and health-screened before placement. Congo Greys $1,700–$3,500 · Timneh Greys $1,500–$1,600. USDA AWA licensed breeder, Midland TX.";
+// ============================================================================
+//  /dna-tested-african-grey-for-sale/  — for-sale cluster page 6
+//  Tuple (distinct from egg/congo/timneh/hand-raised — sessions/2026-07-19-for-sale-component-map.md):
+//    Hero-C Mosaic Metrics · Dial 1 clay-on-cream + Rail A clay pills · T2 Chip Cloud
+//    · K4 Clipboard + K5 Capsule · NEW Table D "Lab Report" + Table A · FAQ-A refreshed
+//    (numbered clay chip + chevron, not the +/x cross) · Avail-B faceted by CONFIRMED SEX
+//  Angle: "Proof, Not Guesswork" — myth-bust -> method -> certificate -> bird
+//  Blend: PDB (opening third) x EEBP (spine) x QAB (FAQ) x FAB (certificate/spec rows)
+//  Voice lever: this page says HEN / COCK where siblings say male / female.
+//  H6 prefixes reserved to this page: "From the Lab:" and "On the Record:".
+//  Prose written fresh from sessions/2026-07-24-dna-tested-sprint1-blueprint.md §3
+//  (Write-From-Outline — nothing paraphrased from a sibling; the reviews are whitelist).
+// ============================================================================
+
+const title = "DNA-Tested African Grey Parrots for Sale — Every Hen and Cock Lab-Confirmed | How Do You Sex an African Grey Parrot? | 6 Documented Psittacus erithacus Greys Reservable | C.A.Gs, Midland TX — Avian DNA Sexing Certificate, PCR Feather or Blood Assay, CITES Papers";
+const description = "DNA-tested African Grey parrots for sale with the laboratory result already in hand — never 'DNA pending'. Avian DNA sexing by PCR names the hen or cock before we list a bird, certificate $40–$60. USDA-licensed Midland, TX family aviary; the band number matches every result. Ask us today.";
 const canonical = "https://congoafricangreys.com/dna-tested-african-grey-for-sale/";
-const ogType = "website";
 
-const schemaJson = JSON.stringify({
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Product",
-      "name": "DNA-Tested African Grey Parrots",
-      "url": "https://congoafricangreys.com/dna-tested-african-grey-for-sale/",
-      "description": "DNA-sexed, health-screened African Grey parrots from USDA AWA licensed breeder in Midland, TX.",
-      "brand": { "@type": "Brand", "name": "C.A.Gs – Midland, TX" },
-      "offers": {
-        "@type": "AggregateOffer",
-        "lowPrice": "1500",
-        "highPrice": "3500",
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/InStock"
-      }
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Why does DNA testing matter when buying an African Grey?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "African Grey parrots are monomorphic — males and females look identical. Without DNA sexing, breeders and buyers cannot confirm sex. DNA testing uses a blood or feather sample analyzed by an accredited avian genetics laboratory to identify sex chromosomes with 99.9% accuracy. Knowing your bird's sex matters for behavior expectations, naming, and future decisions about breeding."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do all African Grey parrots for sale come DNA-sexed?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No — many budget breeders and pet store birds are sold unsexed or with unverified sex claims based on appearance or behavior alone. At CongoAfricanGreys.com, every bird receives a laboratory DNA sex test before placement and the certificate is provided to the buyer at no additional charge."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What health screenings come with DNA-tested African Greys from CongoAfricanGreys.com?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Each bird receives an avian veterinarian wellness exam, DNA sex test from an accredited genetics lab, and a health certificate. Birds are assessed for Psittacosis exposure risk, nutritional status, feather and eye quality, weight-for-age, and beak and claw condition. A written health guarantee is provided with every placement."
-          }
-        }
-      ]
-    }
-  ]
-});
+const IMG = "/images/dna-tested-page/";
+const HR = "/images/hand-raised-page/";
+const site = "https://congoafricangreys.com";
 
-// NOTE: BreadcrumbList JSON-LD is emitted by <Breadcrumb /> itself (verified in dist) —
-// we do NOT add a second copy here (interior standard: extend, never duplicate schema).
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Greys for Sale", url: "/african-grey-parrots-for-sale/" },
+  { name: "DNA-Tested African Greys for Sale", url: "/dna-tested-african-grey-for-sale/" },
+];
+
+// Real inventory. Avail-B facets by CONFIRMED SEX on this page (siblings facet by
+// subspecies / variant) — the filter itself carries the page's argument.
+const available = ((clutch as any).birds as any[]).filter((b) => b.status === "available");
+const sexKey = (b: any) => (b.sex === "pair" ? "pair" : b.sex === "female" ? "hen" : "cock");
+const sexLabel = (b: any) => (b.sex === "pair" ? "Cock + Hen" : b.sex === "female" ? "Hen" : "Cock");
+const subLabel = (b: any) => (b.variant === "timneh_african_grey" ? "Timneh" : "Congo");
+const sexCount = (k: string) => available.filter((b) => sexKey(b) === k).length;
+
+// `badge:"top"` lifts the sex pill off a head-down bird's face (the Roys lesson).
+const birdImg: Record<string, { src: string; alt: string; pos: string; badge?: "top" }> = {
+  "Bery":  { src: "/images/congo-page/bery-congo-african-grey-female-card.webp", pos: "center 30%", alt: "Bery, a lab-confirmed Congo African Grey hen for sale, perched and looking to camera" },
+  "Amie":  { src: "/images/congo-page/amie-congo-african-grey-female-card.webp", pos: "center 28%", alt: "Amie, a young Congo hen whose DNA sexing result was back before we listed her" },
+  "Roys":  { src: "/images/congo-page/roys-congo-african-grey-male-card.webp",   pos: "center 30%", alt: "Roys, a Congo cock identified by PCR assay rather than by his tail feathers", badge: "top" },
+  "Jins & Jeni (pair)": { src: "/images/congo-page/jins-jeni-congo-african-grey-pair-card.webp", pos: "center 32%", alt: "Jins and Jeni, one Congo cock and one Congo hen, indistinguishable side by side" },
+  "Elad":  { src: "/images/timneh-page/elad-timneh-african-grey-male-card.webp", pos: "center 34%", alt: "Elad, a maroon-tailed Timneh cock with his sexing certificate on file" },
+  "Evie":  { src: "/images/timneh-page/evie-timneh-african-grey-female-card.webp", pos: "center 38%", alt: "Evie, a Timneh hen whose sex was settled by a feather sample rather than a guess" },
+};
+const birdBlurb: Record<string, string> = {
+  "Bery": "Congo hen, result on file since her first moult — steady, unhurried, easy to read.",
+  "Amie": "Congo hen, young and quick; her assay came back before her photographs went up.",
+  "Roys": "Congo cock, and nothing about his tail told us that — the laboratory did.",
+  "Jins & Jeni (pair)": "One cock, one hen, sold together. Look at them and you still cannot tell which is which.",
+  "Elad": "Timneh cock out of Levi and Rily, confirmed by assay rather than by eye.",
+  "Evie": "Timneh hen, gentle and deliberate; her feather sample answered the question at once.",
+};
+
+// Hero-C mosaic. Anchor cell = the real pair (unused elsewhere in the cluster):
+// one cock, one hen, visually identical — this page's whole thesis in one photograph.
+const mosaic = [
+  { src: IMG + "hero-grey-tile-a.webp", small: IMG + "hero-grey-tile-a-260.webp", tag: "Cock or hen?", alt: "A Congo African Grey photographed head-on, offering no visible clue to its sex", pos: "center 22%" },
+  { src: IMG + "hero-grey-tile-b.webp", small: IMG + "hero-grey-tile-b-260.webp", tag: "Cock or hen?", alt: "Close view of a grey parrot's head and chest feathering, which carries no sex marker", pos: "center 20%" },
+  { src: IMG + "hero-grey-tile-c.webp", small: IMG + "hero-grey-tile-c-260.webp", tag: "Cock or hen?", alt: "A red-tailed Congo grey on a branch, the red tail being no indicator of sex", pos: "center 18%" },
+];
+
+// Counter strip — 6, all Ledger-verified or laboratory-published (skill §2f)
+const counters = [
+  { n: "~99%", l: "Published assay accuracy" },
+  { n: "1–2 Days", l: "Laboratory turnaround" },
+  { n: "$40–60", l: "Certificate, priced openly" },
+  { n: "0", l: "Greys we sex by eye" },
+  { n: "12+ Yrs", l: "Aviary in Midland, TX" },
+  { n: "24h", l: "We answer, personally" },
+];
+
+// T2 Chip Cloud — grouped in-body TOC (this page's TOC slot)
+const chipGroups = [
+  { g: "Settle it", chips: [ { h: "#myth", t: "The looking myth" }, { h: "#monomorphic", t: "Monomorphic biology" }, { h: "#method", t: "How the assay runs" } ] },
+  { g: "Prove it", chips: [ { h: "#certificate", t: "Inside a certificate" }, { h: "#cost", t: "What it costs" }, { h: "#onesample", t: "One sample, two answers" }, { h: "#pending", t: "Pending listings" } ] },
+  { g: "Buy it", chips: [ { h: "#available", t: "Reservable greys" }, { h: "#floor", t: "Price floor" }, { h: "#shipping", t: "Getting your grey home" }, { h: "#reserve", t: "Ask about a grey" } ] },
+];
+
+// DISTINCT geo set vs egg/congo/timneh/hand-raised (cannibalization guard); real live slugs.
+const shipPlaces = [
+  { href: "/african-grey-parrot-for-sale-washington/", label: "DNA-sexed African Greys for sale Washington", note: "Sea-Tac live-animal cargo" },
+  { href: "/african-grey-parrot-for-sale-colorado/", label: "Lab-confirmed grey parrots Colorado", note: "Denver International desk" },
+  { href: "/african-grey-parrot-for-sale-missouri/", label: "DNA sexing certificate greys Missouri", note: "St. Louis Lambert route" },
+  { href: "/african-grey-parrot-for-sale-oregon/", label: "Sexed African Grey parrots Oregon", note: "Portland cargo counter" },
+  { href: "/african-grey-parrot-for-sale-kentucky/", label: "Buy a DNA-tested African Grey Kentucky", note: "Louisville hub" },
+  { href: "/african-grey-parrot-for-sale-iowa/", label: "Confirmed hens and cocks Iowa", note: "Des Moines pickup route" },
+  { href: "/african-grey-parrot-for-sale-arizona/", label: "African Greys with lab results Arizona", note: "Phoenix Sky Harbor" },
+  { href: "/african-grey-parrot-for-sale-tennessee/", label: "DNA-tested grey parrots Tennessee", note: "Nashville cargo desk" },
+];
+
+// Real, breeder-supplied reviews. The ONE whitelisted verbatim crossover on this page.
+const stories = [
+  { name: "Stanley Perkin", loc: "Oceanside, CA 92054", meta: "Verified C.A.Gs buyer",
+    avatar: HR + "stanley-perkin-oceanside-ca-african-gray-bird-review.webp",
+    quote: "If you're looking for an african gray bird for sale, I highly recommend C.A.Gs. My bird arrived exactly as promised — healthy, curious, and already comfortable around people. The updates throughout the process and the professionalism of the C.A.Gs team gave me complete confidence. It's rare to find a breeder that truly cares about both the birds and their customers." },
+  { name: "Jesse Ovalle", loc: "Baton Rouge, LA 70806", meta: "Verified C.A.Gs buyer",
+    avatar: HR + "jesse-ovalle-baton-rouge-la-african-grey-purchase-review.webp",
+    quote: "My African grey parrot purchase through C.A.Gs couldn't have gone better. Every question I had was answered promptly, and I received regular updates before my bird arrived. My African Grey is healthy, intelligent, and already becoming a wonderful member of our family. The quality of care and customer service from C.A.Gs exceeded my expectations." },
+];
+
+const readMore = [
+  { href: "/male-vs-female-african-grey-parrots-for-sale/", img: IMG + "why-visual-sexing-african-grey-fails", kicker: "Hen or cock", title: "Male vs female African Grey parrots", sub: "Once the laboratory has answered the question, this weighs what the answer actually predicts." },
+  { href: "/how-to-avoid-african-grey-parrot-scams/", img: IMG + "dna-pending-versus-result-in-hand", kicker: "Scam guide", title: "How to avoid African Grey parrot scams", sub: "Where a certificate claim sits among the other tells a fraudulent listing gives off." },
+  { href: "/african-greys-for-sale-with-health-guarantee/", img: IMG + "one-sample-sex-and-disease-screening", kicker: "Health", title: "African Greys with a health guarantee", sub: "What the PCR disease panel covers, and what we put in writing once results are back." },
+  { href: "/african-grey-parrot-price/", img: IMG + "certificate-does-not-justify-sub-floor-price", kicker: "Pricing", title: "African Grey price, itemised", sub: "Every line behind the figure — testing included — and why the floor sits where it does." },
+];
+
+// QAB — the 10 PAA targets mined in Sprint 0 §4 and the live SERP
+const faqs = [
+  { q: "Can you tell if an African Grey is male or female just by looking?", a: "No, and this is the single most repeated piece of bad advice about the species. Greys are monomorphic: hens and cocks carry the same plumage, the same red or maroon tail and the same face mask, for life. Body size, eye shape, head shade and tail tipping all vary between individuals and with age, so they will happily let you build a confident guess that turns out wrong. Only two things settle it — a laboratory assay, or an egg." },
+  { q: "How accurate is DNA sexing in parrots?", a: "Laboratories publish accuracy of approximately 99 percent, and that is the figure we quote. It is not 100 percent, and any seller advertising 99.9 percent is out-claiming the laboratories themselves. Errors are rare and usually trace back to a contaminated or insufficient sample rather than to the assay, which is why a clean pull matters. If a result ever contradicted a bird's later behaviour — a supposed cock laying an egg — a repeat test settles it." },
+  { q: "Does bird DNA sexing use blood or feathers?", a: "Both work. The laboratory we use accepts blood, feather and eggshell samples and states plainly that all are equally reliable. A feather sample means plucking a few chest feathers so the pulp at the base comes away with them; a blood sample is a single drop taken from the tip of a toenail. We submit whichever suits the individual bird on the day, and for a very young chick the feather route is usually the gentler one." },
+  { q: "How long do DNA sexing results take to come back?", a: "The laboratory publishes one to two business days from the moment the sample reaches them. In practice you should add the post in both directions, so a fortnight from pulling the feather to holding the paper is a fair expectation. Owner threads quoting one to two weeks are usually counting the vet appointment and the mail rather than the assay itself." },
+  { q: "How much does DNA sexing an African Grey cost?", a: "Per-sample laboratory fees advertised publicly sit in the region of $17 to $25. Our certificate is $40 to $60, and that gap is deliberate rather than a markup for its own sake: it covers taking the sample cleanly, the courier both ways, the assay, and issuing a certificate tied to the bird's closed band number. We publish the figure rather than folding it silently into the price of the grey." },
+  { q: "Do red tail feathers mean an African Grey is male?", a: "They do not. Every healthy Congo African Grey carries a red tail and every Timneh a maroon one, whatever their sex. The claim circulates because a page-one search result states it outright, and thousands of owners have acted on it. Silver tipping along the tail, a paler head and rounder eyes belong to the same folklore — real variations that simply do not track sex." },
+  { q: "Can an avian vet sex an African Grey without a DNA test?", a: "A vet can perform surgical sexing under anaesthetic, which visualises the gonads directly, and it was standard practice before molecular testing became cheap. Almost nobody does it on a companion grey now, because it carries anaesthetic risk for an answer a plucked feather gives just as reliably. What a vet cannot do is look at a clothed, conscious grey and tell you its sex." },
+  { q: "What does a DNA sexing certificate actually say on it?", a: "A legitimate one names the bird, records the closed band number, states the species, records the sample type and the method, gives the result, carries a date and comes from a named laboratory. The band number is the field that matters most, because it is the only line tying the paper to the parrot standing in front of you. A certificate with no identifier proves that some bird was tested — just not necessarily yours." },
+  { q: "Are male African Greys better talkers than females?", a: "The evidence for that is thin, and we have watched it fail in our own aviary often enough to stop repeating it. Individual temperament, how much a household talks, and how early the bird was socialised all predict vocabulary far better than sex does. Knowing you have a hen tells you what to name her and what to expect if she ever lays; it does not tell you how much she will say." },
+  { q: "Can the same feather sample also screen for disease?", a: "Yes, and it is the most useful thing we can tell you on this page. The same sample type that answers the sex question runs the PCR panels for psittacine beak and feather disease and avian polyomavirus, both of which we screen for. One pull, one courier, three answers — which is why it is worth asking any seller whether they ran the disease panel while they had the sample in hand." },
+];
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
+
+const productSchema = {
+  "@context": "https://schema.org", "@type": "Product",
+  name: "DNA-Tested African Grey Parrot for Sale (Sex Confirmed by an Avian Laboratory)",
+  image: [ site + IMG + "jins-jeni-cock-and-hen-hero-anchor.webp", site + IMG + "anatomy-of-a-dna-sexing-certificate.webp" ],
+  description: "A DNA-sexed African Grey parrot from C.A.Gs, a USDA-licensed family aviary in Midland, Texas. Every hen and cock is confirmed by avian DNA sexing (PCR on a feather or blood sample) before listing, with the certificate tied to the bird's closed band number. Captive-bred, CITES Appendix I documented, PBFD and avian polyomavirus PCR-screened.",
+  category: "Companion parrot",
+  brand: { "@type": "Organization", name: "C.A.Gs – Midland, TX" },
+  aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "52" },
+  review: stories.map((s) => ({ "@type": "Review", author: { "@type": "Person", name: s.name },
+    reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" }, reviewBody: s.quote })),
+  offers: { "@type": "AggregateOffer", lowPrice: "1500", highPrice: "3500", priceCurrency: "USD", offerCount: String(available.length),
+    availability: "https://schema.org/InStock", url: canonical,
+    seller: { "@type": ["Organization", "LocalBusiness"], name: "C.A.Gs – Midland, TX", alternateName: "Congo African Greys" } },
+};
+const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
+  itemListElement: available.map((b, i) => ({ "@type": "ListItem", position: i + 1,
+    item: { "@type": "Product", name: b.name.replace(" (pair)", "") + " — DNA-Confirmed " + subLabel(b) + " " + sexLabel(b), category: "Companion parrot",
+      offers: { "@type": "Offer", price: String(b.price), priceCurrency: "USD",
+        availability: "https://schema.org/InStock", url: site + b.slug } } })) };
+
+// Dial 1 spine. IDs map to the approved H1–H6 outline (blueprint §3).
+const sections = [
+  { n: "01", id: "myth",        label: "Can you tell by looking?", tag: "Myth" },
+  { n: "02", id: "monomorphic", label: "Monomorphic biology",      tag: "Z & W" },
+  { n: "03", id: "method",      label: "How the assay works",      tag: "PCR" },
+  { n: "04", id: "certificate", label: "Inside a certificate",     tag: "7 fields" },
+  { n: "05", id: "available",   label: "Confirmed greys now",      tag: available.length + " birds" },
+  { n: "06", id: "cost",        label: "What the paper costs",     tag: "$40–60" },
+  { n: "07", id: "onesample",   label: "One sample, two answers",  tag: "PBFD" },
+  { n: "08", id: "pending",     label: "Pending listings",         tag: "Wait" },
+  { n: "09", id: "floor",       label: "Badges and cheap greys",   tag: "$1,500" },
+  { n: "10", id: "behaviour",   label: "Does sex change the bird?", tag: "Little" },
+  { n: "11", id: "legal",       label: "Owning one legally",       tag: "CITES" },
+  { n: "12", id: "shipping",    label: "Getting your grey home",   tag: "$185/$350" },
+  { n: "13", id: "reviews",     label: "What buyers told us",      tag: "5★" },
+  { n: "14", id: "video",       label: "A pair on camera",         tag: "Video" },
+  { n: "15", id: "compare",     label: "Us vs page-one sellers",   tag: "Receipts" },
+  { n: "16", id: "reading",     label: "Read next",                tag: "" },
+  { n: "17", id: "faq",         label: "Questions buyers ask",     tag: "10 Q" },
+  { n: "18", id: "reserve",     label: "Ask about a grey",         tag: "24h" },
+];
+const N = sections.length;
+
+// Table D "Lab Report" — the seven fields a legitimate certificate carries (NEW to this page)
+const certFields = [
+  { f: "Bird name", w: "The name the breeder listed the grey under", why: "Ties the paper to a listing you can point at" },
+  { f: "Closed band number", w: "The unique number on the ring fitted at a few weeks old", why: "The only field tying paper to parrot — check it against the leg" },
+  { f: "Species", w: "Psittacus erithacus, or Psittacus timneh for a Timneh", why: "Confirms the laboratory ran a grey, not a generic bird panel" },
+  { f: "Sample type", w: "Feather, blood or eggshell", why: "Tells you how the material was taken, and by whom" },
+  { f: "Method", w: "PCR — polymerase chain reaction, reading the Z and W chromosomes", why: "Separates a molecular assay from a visual opinion" },
+  { f: "Result", w: "Male or female, stated without hedging", why: "A hedged result is not a result" },
+  { f: "Date and issuing laboratory", w: "When the assay ran, and who signed it off", why: "Lets you ring the laboratory and confirm the record exists" },
+];
+
+// Table A — what page-one sellers claim vs what they publish (Sprint 0 §3 receipts)
+const compareRows = [
+  { k: "Names the testing laboratory", us: "Yes — Avian Biotech, now part of Animal Genetics", them: "No laboratory named on any page-one listing we checked" },
+  { k: "States the sample type", us: "Feather or blood, stated per bird", them: "Not stated anywhere" },
+  { k: "Publishes an accuracy figure", us: "Approximately 99%, matching the labs", them: "Silent, or claiming 99.9%" },
+  { k: "Prices the certificate", us: "$40–$60, itemised separately", them: "“Included”, with no figure given" },
+  { k: "Lists birds before results return", us: "Never — result in hand, or it is not listed", them: "“DNA pending” listings observed" },
+  { k: "Lowest Congo price advertised", us: "A $1,500 floor", them: "$750–$820 under a certificate badge" },
+];
+
+const seam = "/cag-fs-seam-emblem.webp";
+const deposit = "$200";
+const schemaGraph = JSON.stringify({ "@context": "https://schema.org", "@graph": [productSchema, itemListSchema, faqSchema] });
+const ogExtra = `<meta property="og:image" content="${site}${IMG}jins-jeni-cock-and-hen-hero-anchor.webp">`;
 ---
+<BaseLayout title={title} description={description} canonical={canonical} ogType="product" hideGlobalCta={true} schemaJson={schemaGraph} heroPreload={IMG + "jins-jeni-cock-and-hen-hero-anchor.webp"} extraHeadHtml={ogExtra}>
 
-<BaseLayout title={title} description={description} canonical={canonical} ogType={ogType} schemaJson={schemaJson}>
+  <main class="dnat">
+    <div class="dn-container"><Breadcrumb items={breadcrumbs} /></div>
 
-<style>
-  :root {
-    --green: #2D6A4F;
-    --clay: #e8604c;
-    --cream: #faf7f4;
-    --dark: #1c1a18;
-    --muted: #6b6560;
-    --border: #ede5dc;
-    --green-lt: #eaf4ef;
-  }
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-  .container-text { max-width: 760px; margin: 0 auto; }
-
-  .breadcrumb a { color: var(--green); text-decoration: none; }
-  .breadcrumb a:hover { text-decoration: underline; }
-
-  .page-hero { background: var(--green); color: #fff; padding: 52px 0 44px; }
-  .page-hero h1 { font-family: Lora, serif; font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 700; margin: 0 0 14px; line-height: 1.2; max-width: 700px; }
-  .page-hero .lead { font-family: Sora, sans-serif; font-size: 1.02rem; opacity: 0.9; max-width: 620px; margin: 0 0 28px; line-height: 1.65; }
-  .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); color: #fff; font-family: Sora, sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 14px; border-radius: 50px; margin-bottom: 16px; }
-  .btn-primary { display: inline-flex; align-items: center; background: var(--clay); color: #fff; font-family: Sora, sans-serif; font-weight: 600; font-size: 0.95rem; padding: 13px 28px; border-radius: 50px; text-decoration: none; transition: background 0.2s; }
-  .btn-primary:hover { background: #c94d3a; }
-
-  /* Trust bar */
-  .trust-bar { background: #1e5238; padding: 14px 0; }
-  .trust-bar-inner { display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: center; }
-  .trust-item { font-family: Sora, sans-serif; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.9); }
-
-  /* What's included */
-  .includes-section { padding: 56px 0; }
-  .includes-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 16px; }
-  .includes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 28px 0; }
-  .include-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 22px 20px; display: flex; gap: 14px; align-items: flex-start; }
-  .include-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
-  .include-card h3 { font-family: Lora, serif; font-size: 1rem; color: var(--green); margin: 0 0 6px; }
-  .include-card p { font-family: Sora, sans-serif; font-size: 0.87rem; color: var(--muted); line-height: 1.6; margin: 0; }
-
-  .content-section { padding: 48px 0; }
-  .content-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 16px; }
-  .content-section p { font-family: Sora, sans-serif; font-size: 0.97rem; color: var(--dark); line-height: 1.75; max-width: 70ch; margin: 0 0 16px; }
-  .internal-link { color: var(--green); font-weight: 600; text-decoration: none; }
-  .internal-link:hover { text-decoration: underline; }
-
-  /* Pricing card */
-  .price-row { display: flex; gap: 20px; margin: 24px 0; flex-wrap: wrap; }
-  .price-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px 22px; flex: 1; min-width: 220px; }
-  .price-card h3 { font-family: Lora, serif; font-size: 1.05rem; color: var(--green); margin: 0 0 6px; }
-  .price-card .price { font-family: Lora, serif; font-size: 1.6rem; font-weight: 700; color: var(--clay); margin: 8px 0 4px; }
-  .price-card p { font-family: Sora, sans-serif; font-size: 0.85rem; color: var(--muted); margin: 0; line-height: 1.5; }
-
-  .section-divider { border: none; border-top: 1px solid var(--border); margin: 44px 0; }
-
-  .faq-section { padding: 48px 0; background: var(--cream); }
-  .faq-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 28px; }
-  details { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; background: #fff; }
-  summary { font-family: Sora, sans-serif; font-weight: 600; font-size: 0.97rem; padding: 18px 20px; cursor: pointer; list-style: none; color: var(--dark); }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: '+'; float: right; color: var(--clay); font-size: 1.2rem; font-weight: 400; }
-  details[open] summary::after { content: '−'; }
-  .faq-body { padding: 0 20px 18px; font-family: Sora, sans-serif; font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
-
-  .cta-section { padding: 56px 0; text-align: center; }
-  .cta-section h2 { font-family: Lora, serif; font-size: 1.55rem; color: var(--dark); margin: 0 0 12px; }
-  .cta-section p { font-family: Sora, sans-serif; color: var(--muted); max-width: 500px; margin: 0 auto 24px; font-size: 0.97rem; line-height: 1.65; }
-  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .btn-outline { display: inline-flex; align-items: center; background: transparent; color: var(--green); border: 2px solid var(--green); font-family: Sora, sans-serif; font-weight: 600; font-size: 0.95rem; padding: 11px 26px; border-radius: 50px; text-decoration: none; transition: background 0.2s, color 0.2s; }
-  .btn-outline:hover { background: var(--green); color: #fff; }
-
-  @media (max-width: 767px) {
-    .page-hero { padding: 38px 0 32px; }
-    .includes-section { padding: 40px 0; }
-    .includes-grid { grid-template-columns: 1fr; }
-    .content-section { padding: 36px 0; }
-    .price-row { flex-direction: column; }
-  }
-</style>
-
-<div>
-
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={[
-        { name: "Home", url: "/" },
-        { name: "African Grey Parrot Guide", url: "/african-grey-parrot-guide/" },
-        { name: "DNA-Tested African Grey", url: "/dna-tested-african-grey-for-sale/" }
-      ]} />
-  </div>
-
-  <section class="page-hero">
-    <div class="container">
-      <div class="hero-badge">DNA Sexed · Health Screened</div>
-      <h1>DNA-Tested African Grey Parrots for Sale</h1>
-      <p class="lead">African Greys are monomorphic — you cannot tell males from females by looking. Every bird we place has been laboratory DNA-sexed and avian vet-checked, so you know exactly what you're bringing home.</p>
-      <a href="/contact-us/" class="btn-primary">Check Availability</a>
-    </div>
-  </section>
-
-  <div class="trust-bar">
-    <div class="container">
-      <div class="trust-bar-inner">
-        <span class="trust-item"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> DNA Sex Certificate Included</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Avian Vet Health Check</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> CITES Appendix I Documented</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Written Health Guarantee</span>
-      </div>
-    </div>
-  </div>
-
-  <section class="includes-section">
-    <div class="container container-text">
-      <h2>What's Included with Every Bird</h2>
-
-      <div class="includes-grid">
-        <div class="include-card">
-          <div class="include-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9"/><path d="M16 3c0 4.5-8 4.5-8 9s8 4.5 8 9"/><line x1="9" y1="6.5" x2="15" y2="6.5"/><line x1="9.5" y1="12" x2="14.5" y2="12"/><line x1="9" y1="17.5" x2="15" y2="17.5"/></svg></div>
-          <div>
-            <h3>DNA Sex Certificate</h3>
-            <p>Issued by an accredited avian genetics laboratory. Identifies chromosomal sex (ZZ male or ZW female) with 99.9% accuracy from a feather or blood sample.</p>
+    <!-- ===================== HERO-C · MOSAIC METRICS ===================== -->
+    <header class="hero">
+      <div class="hero-grid dn-container">
+        <div class="hero-copy">
+          <p class="eyebrow"><em>Psittacus erithacus</em> · Midland, TX · USDA-licensed family aviary since 2014</p>
+          <ul class="hero-metrics" aria-label="Sexing at a glance">
+            <li><b>1–2 days</b><span>Lab turnaround</span></li>
+            <li><b>~99%</b><span>Assay accuracy</span></li>
+            <li><b>{available.length}</b><span>Confirmed greys</span></li>
+          </ul>
+          <h1>DNA-Tested African Grey Parrots for Sale — Every Hen and Cock <em>Confirmed by an Avian Lab</em>, Not a Guess</h1>
+          <p class="lead">Here at C.A.Gs we do not guess at a grey's sex, and we do not ask you to. Every captive-bred African Grey on this page had a feather or blood sample run by an avian genetics laboratory, and the result was back in our hands before the bird was ever photographed for sale.</p>
+          <div class="hero-cta">
+            <a class="btn btn-clay" href="#available">See the confirmed greys →</a>
+            <a class="btn btn-ghost" href="#method">How the assay works</a>
           </div>
         </div>
-        <div class="include-card">
-          <div class="include-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
-          <div>
-            <h3>Avian Vet Health Certificate</h3>
-            <p>Full wellness exam by a board-certified avian veterinarian before placement — assessing weight, feather quality, eyes, beak, claw condition, and disease risk.</p>
-          </div>
-        </div>
-        <div class="include-card">
-          <div class="include-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg></div>
-          <div>
-            <h3>CITES Documentation</h3>
-            <p>Bird-specific CITES Appendix I certificate proving captive-bred legal status. Required for legal ownership and transport in the USA.</p>
-          </div>
-        </div>
-        <div class="include-card">
-          <div class="include-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div>
-            <h3>Written Health Guarantee</h3>
-            <p>Every bird is backed by our health guarantee. Terms provided at placement. We have placed birds since 2014 without a single health-related return.</p>
-          </div>
+        <div class="hero-mosaic">
+          <figure class="mtile anchor">
+            <img src={IMG + "jins-jeni-cock-and-hen-hero-anchor.webp"}
+                 srcset={IMG + "jins-jeni-cock-and-hen-hero-anchor-440.webp 440w, " + IMG + "jins-jeni-cock-and-hen-hero-anchor.webp 880w"}
+                 sizes="(max-width:980px) 92vw, 420px"
+                 alt="Jins and Jeni, one Congo African Grey cock and one hen side by side, visually identical" width="880" height="660" loading="eager" fetchpriority="high" />
+            <figcaption><b>Jins &amp; Jeni</b><span>One cock, one hen · $3,500</span></figcaption>
+          </figure>
+          {mosaic.map((m) => (
+            <figure class="mtile">
+              <img src={m.src} srcset={m.small + " 260w, " + m.src + " 520w"} sizes="(max-width:980px) 30vw, 134px"
+                   alt={m.alt} width="520" height="520" loading="lazy" style={"object-position:" + m.pos} />
+              <figcaption class="q">{m.tag}</figcaption>
+            </figure>
+          ))}
         </div>
       </div>
-    </div>
-  </section>
+    </header>
 
-  <section class="content-section">
-    <div class="container container-text">
+    <!-- ===================== COUNTER STRIP ===================== -->
+    <section class="counter" aria-label="DNA sexing at a glance">
+      <div class="dn-container counter-grid">
+        {counters.map((c) => (<div class="cstat"><span class="cn">{c.n}</span><span class="cl">{c.l}</span></div>))}
+      </div>
+    </section>
 
-      <h2>Why DNA Testing Matters</h2>
-      <p>African Grey parrots are sexually monomorphic: males and females have identical plumage, body size, and beak structure. The only reliable way to determine sex before the bird is old enough to lay eggs — or exhibits sex-specific hormonal behavior — is laboratory DNA analysis.</p>
-      <p>A feather sample from each bird is submitted to a certified avian genetics lab and analyzed for sex chromosomes: ZZ indicates male, ZW indicates female. The process takes 3–5 business days and produces a certificate tied to that specific bird's sample.</p>
-      <p>Knowing your bird's sex matters for several reasons:</p>
+    <!-- Rail A (mobile) — outlined clay pills, sticky UNDER the site header -->
+    <nav class="railA" aria-label="Jump to section">
       <ul>
-        <li><strong>Females</strong> may lay infertile (unfertilized) eggs after maturity — a completely normal behavior that requires dietary calcium supplementation and veterinary awareness</li>
-        <li><strong>Males</strong> tend to be slightly more prone to territorial behavior during breeding season, though individual personality varies widely</li>
-        <li>Some owners have a preference for one sex; without a DNA certificate, you're guessing</li>
+        {sections.map((s) => (<li><a href={"#" + s.id} data-id={s.id}><span class="p">{s.n}</span> {s.label}</a></li>))}
       </ul>
-      <p><a href="/male-vs-female-african-grey-parrots-for-sale/" class="internal-link">Compare male vs. female African Greys</a> in detail to understand behavioral differences.</p>
+    </nav>
 
-      <hr class="section-divider" />
+    <!-- ===================== BODY: DIAL 1 SIDEBAR + CONTENT ===================== -->
+    <div class="dn-container body-grid">
 
-      <h2>DNA-Tested African Grey Parrot Prices</h2>
-      <p>The DNA sex certificate and avian vet check are included in the bird's price — there is no extra charge for testing.</p>
-
-      <div class="price-row">
-        <div class="price-card">
-          <h3>Congo African Grey</h3>
-          <div class="price">$1,700–$3,500</div>
-          <p>Larger variant, bright red tail, larger vocabulary potential</p>
+      <aside class="dial" aria-label="Section progress">
+        <div class="dial-card">
+          <div class="ring" id="dialRing" style="--p:0">
+            <div class="ring-in"><span class="ring-n" id="dialNum">01</span><span class="ring-of">of {N}</span></div>
+          </div>
+          <ul class="dial-list" id="dialList">
+            {sections.map((s) => (
+              <li><a href={"#" + s.id} data-id={s.id}><span class="di">{s.n}</span><span class="dh">{s.label}</span>{s.tag && <span class="dt">{s.tag}</span>}</a></li>
+            ))}
+          </ul>
         </div>
-        <div class="price-card">
-          <h3>Timneh African Grey</h3>
-          <div class="price">$1,500–$1,600</div>
-          <p>Smaller, darker plumage, maroon tail, earlier to talk</p>
+      </aside>
+
+      <div class="content">
+
+        <!-- ===== K4 CLIPBOARD + K5 CAPSULE ===== -->
+        <div class="k4">
+          <div class="k4-head"><span class="k4-clip" aria-hidden="true"></span><b>The short answer</b></div>
+          <ul class="k4-list">
+            <li>African Greys are monomorphic — a hen and a cock look the same for life, so nobody can sex your bird by eye.</li>
+            <li>A PCR assay on a feather or a drop of blood settles it, and laboratories publish accuracy of approximately 99 percent.</li>
+            <li>Our certificate costs $40 to $60 and carries the bird's closed band number, the field that ties paper to parrot.</li>
+            <li>We never list a grey as sexed while the sample is still in the post — the result is in hand first, every time.</li>
+          </ul>
         </div>
-      </div>
+        <div class="k5">
+          <div class="cap"><b>Avian Biotech</b><span>Our laboratory</span></div>
+          <div class="cap"><b>Feather or blood</b><span>Both accepted</span></div>
+          <div class="cap"><b>PCR</b><span>Z and W chromosomes</span></div>
+          <div class="cap"><b>$1,500</b><span>Our floor price</span></div>
+        </div>
 
-      <p>For a complete breakdown of acquisition costs, first-year setup, and lifetime ownership expenses, see our <a href="/african-grey-parrot-price/" class="internal-link">African Grey parrot price guide</a>.</p>
-      <p>All birds come with the <a href="/african-grey-parrot-health-guarantee/" class="internal-link">CongoAfricanGreys.com health guarantee</a>.</p>
+        <!-- ===== T2 CHIP CLOUD ===== -->
+        <nav class="chipcloud" aria-label="On this page">
+          {chipGroups.map((g) => (
+            <div class="ccrow">
+              <span class="ccg">{g.g}</span>
+              <ul>{g.chips.map((c) => (<li><a href={c.h}>{c.t}</a></li>))}</ul>
+            </div>
+          ))}
+        </nav>
 
-    </div>
-  </section>
+        <div class="ticket"><a class="ticket-cta" href="#available">See the {available.length} greys with results on file <span>→</span></a></div>
 
-  <section class="faq-section">
-    <div class="container container-text">
-      <h2>DNA Testing FAQs</h2>
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
 
-      <details>
-        <summary>Why does DNA testing matter when buying an African Grey?</summary>
-        <div class="faq-body">African Grey parrots are monomorphic — males and females look identical. Without DNA sexing, breeders and buyers cannot confirm sex. DNA testing uses a blood or feather sample analyzed by an accredited avian genetics laboratory to identify sex chromosomes with 99.9% accuracy. Knowing your bird's sex matters for behavior expectations, naming, and future decisions about breeding.</div>
-      </details>
+        <!-- ===== 01 · MYTH · PDB ===== -->
+        <section id="myth" class="sec">
+          <h2>Can You Really Tell a Hen From a Cock by Looking at an African Grey?</h2>
+          <p class="opener">You cannot, and almost everything you will read today says otherwise. Search how to sex an African Grey parrot and the fourth result will tell you to lift the tail and read the feather colour — a method that has never worked on this species and has sent thousands of owners home with the wrong pronoun. We would rather spend the top of a sales page dismantling that than selling you anything.</p>
+          <img class="sec-img inf-img" src={IMG + "why-visual-sexing-african-grey-fails.webp"} srcset={IMG + "why-visual-sexing-african-grey-fails-760.webp 760w, " + IMG + "why-visual-sexing-african-grey-fails.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Why visual sexing an African Grey fails — tail feathers, eye shape and head colour are not sex markers" />
 
-      <details>
-        <summary>Do all African Grey parrots for sale come DNA-sexed?</summary>
-        <div class="faq-body">No — many budget breeders and pet store birds are sold unsexed or with unverified sex claims based on appearance or behavior alone. At CongoAfricanGreys.com, every bird receives a laboratory DNA sex test before placement and the certificate is provided to the buyer at no additional charge.</div>
-      </details>
+          <h3>The Tail-Feather Rule Everyone Repeats, and Why It Fails</h3>
+          <p>The rule sounds testable, which is exactly why it spreads: red tail equals cock, grey or silvered tail equals hen. It survives because it is easy to remember and because nobody who repeats it ever gets contradicted — the bird cannot object, and most owners never run an assay to find out.</p>
 
-      <details>
-        <summary>What health screenings come with your DNA-tested African Greys?</summary>
-        <div class="faq-body">Each bird receives an avian veterinarian wellness exam, DNA sex test from an accredited genetics lab, and a health certificate. Birds are assessed for Psittacosis exposure risk, nutritional status, feather and eye quality, weight-for-age, and beak and claw condition. A written health guarantee is provided with every placement.</div>
-      </details>
-    </div>
-  </section>
+          <h4>Do Red Tail Feathers Mean You Have a Cock?</h4>
+          <p>No. A red tail means you have a Congo African Grey. Every healthy Congo carries one, hen and cock alike, and every Timneh carries a maroon one instead. The colour is a subspecies marker, not a sex marker, which is why the rule falls apart the moment somebody applies it to a room with more than one bird in it.</p>
 
-  <section class="cta-section">
-    <div class="container">
-      <h2>View Available DNA-Tested Birds</h2>
-      <p>Every bird we place is DNA-sexed, vet-checked, and backed by full CITES documentation. Congo or Timneh — inquire about current availability.</p>
-      <div class="cta-buttons">
-        <a href="/congo-african-grey-for-sale/" class="btn-outline">Congo African Greys</a>
-        <a href="/timneh-african-grey-for-sale/" class="btn-outline">Timneh African Greys</a>
-        <a href="/contact-us/" class="btn-primary">Ask About Availability</a>
-      </div>
-    </div>
-  </section>
+          <h5>Silver Tipping, Eye Shape and Head Colour Are Not Sex Markers</h5>
+          <p>The variants of the myth are more stubborn than the original. Silvered tips on the tail, almond eyes against round ones, a paler crown, a heavier beak — each of these is a real thing you can observe on a real grey, and none of them sorts hens from cocks. They vary with the individual, the moult and the light in the room.</p>
 
-</div>
+          <h6>From the Lab: Why Visual Cues Track Age and Wear, Not Sex</h6>
+          <p>What those cues actually track is time. Tail tips silver as feathers wear and bleach before a moult replaces them; head shade lightens as a juvenile finishes maturing; eye rings change with age from grey through pale yellow. Read a bird's feathers and you are reading its calendar, not its chromosomes.</p>
 
+          <h3>What Owners Discover After They Trust the Myth</h3>
+          <p>The correction usually arrives from another owner. Ask a parrot forum whether the bird in the photograph is a hen and the answers arrive fast, unanimous and blunt: greys look identical, no physical feature determines sex, get a test or wait for an egg. It is good advice, freely given by people with nothing to sell.</p>
+
+          <h4>Why the Question Keeps Coming Back Every Few Months</h4>
+          <p>Because nothing in the buying process ever settled it. Someone buys a grey from a seller who never tested it, guesses at the sex from an article, names the bird accordingly, and then spends years quietly unsure. Our whole argument on this page is that the question should have been closed before money changed hands — by the breeder, at their expense, with the paper to show for it.</p>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 02 · MONOMORPHIC · EEBP ===== -->
+        <section id="monomorphic" class="sec">
+          <h2>What Does It Mean That <em>Psittacus erithacus</em> Is a Monomorphic Species?</h2>
+          <p class="opener">Monomorphic is the technical word for the problem, and knowing it changes how you shop. It means the two sexes of a species grow into the same body — same size range, same colouring, same everything a photograph can capture. For <em>Psittacus erithacus</em> that is not a subtlety to squint past; it is the settled description of the bird, which is why a laboratory result is the only honest thing a seller can offer you.</p>
+          <img class="sec-img inf-img" src={IMG + "monomorphic-vs-dimorphic-parrot-species.webp"} srcset={IMG + "monomorphic-vs-dimorphic-parrot-species-760.webp 760w, " + IMG + "monomorphic-vs-dimorphic-parrot-species.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="African Greys are monomorphic — cock and hen look identical, unlike a dimorphic species such as the Eclectus" />
+
+          <h3>Monomorphic, Dimorphic and Where African Greys Sit</h3>
+          <p>Split the parrot family by this one question and it falls neatly in two. Some species advertise sex in their feathers; the rest keep it to themselves. Greys are firmly in the second group, and no amount of familiarity with your own bird moves them into the first.</p>
+
+          <h4>Which Parrots Can You Sex on Sight, and Which You Cannot</h4>
+          <p>An experienced keeper can sex an Eclectus across a room, and will never manage it with a grey. That difference is not about skill — it is about whether the species evolved to signal sex visually at all. <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener">The World Parrot Trust's encyclopedia entry for the grey parrot ↗</a> is a useful outside reference here, because it describes the species without a bird to sell you.</p>
+
+          <h5>Eclectus Parrots Are the Textbook Contrast to a Grey</h5>
+          <p>Eclectus cocks are emerald green and hens are scarlet and blue, so plainly different that early naturalists catalogued them as two species. Set that beside two greys on a perch and the contrast makes the point better than any argument: one species answers the question for free, the other only answers it in a laboratory.</p>
+
+          <h6>From the Lab: Why Colour-Coded Species Never Need an Assay</h6>
+          <p>Genetics laboratories will happily run a sample from any bird, but nobody sends Eclectus feathers, because the plumage already carries the result. The demand for avian sexing assays comes almost entirely from the monomorphic species — greys, cockatoos, amazons, macaws — where feathers say nothing at all.</p>
+
+          <img class="sec-img og-photo" src={IMG + "identical-cock-and-hen-congo-african-greys.webp"} srcset={IMG + "identical-cock-and-hen-congo-african-greys-760.webp 760w, " + IMG + "identical-cock-and-hen-congo-african-greys.webp 1408w"} sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy" alt="Two of our Congo African Greys photographed together, one cock and one hen, with no visible difference between them" />
+
+          <h3>How Z and W Chromosomes Decide a Grey's Sex</h3>
+          <p>Birds do not use the X and Y system people are taught at school. They run on Z and W, and the arrangement is inverted: a cock carries two Z chromosomes and a hen carries one Z and one W. A sexing assay is simply a test for the presence of that W.</p>
+          <img class="sec-img inf-img" src={IMG + "z-and-w-chromosomes-bird-sex-determination.webp"} srcset={IMG + "z-and-w-chromosomes-bird-sex-determination-760.webp 760w, " + IMG + "z-and-w-chromosomes-bird-sex-determination.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="How Z and W chromosomes determine sex in African Grey parrots, with the hen carrying the deciding chromosome" />
+
+          <h4>Why the Hen Carries the Deciding Chromosome</h4>
+          <p>Since a cock can only ever pass on a Z, the hen's contribution decides which way each chick goes. It is a satisfying inversion of the mammal story, and it has a practical edge for us: because the W is a distinct sequence rather than an absence, the assay is looking for something positive to find rather than trying to prove a negative.</p>
+
+          <img class="sec-img og-photo" src={IMG + "parent-african-greys-macy-letis-lineage.webp"} srcset={IMG + "parent-african-greys-macy-letis-lineage-760.webp 760w, " + IMG + "parent-african-greys-macy-letis-lineage.webp 1408w"} sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy" alt="Macy and Letis, the parent African Greys behind Jins and Jeni, photographed together in our Midland aviary" />
+          <p class="cap">Macy and Letis, the parents behind Jins and Jeni. Every chick's sex was decided on Macy's side of that pairing.</p>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 03 · METHOD · EEBP ===== -->
+        <section id="method" class="sec">
+          <h2>How Does Avian DNA Sexing Actually Work on a Grey?</h2>
+          <p class="opener">The process is far less dramatic than the word DNA suggests, and we think buyers deserve to see it laid out rather than gestured at. A small sample leaves the bird, travels to a genetics laboratory, gets amplified by PCR until the chromosomes can be read, and comes back as one word on a certificate. Four steps, roughly a fortnight door to door, and no anaesthetic anywhere in it.</p>
+          <img class="sec-img inf-img" src={IMG + "how-avian-dna-sexing-works-pcr-process.webp"} srcset={IMG + "how-avian-dna-sexing-works-pcr-process-760.webp 760w, " + IMG + "how-avian-dna-sexing-works-pcr-process.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="The four steps of avian DNA sexing — sample collection, despatch to the laboratory, PCR analysis, result and certificate" />
+
+          <h3>Feather Pulp or a Drop of Blood: Which Sample We Send</h3>
+          <p><a href="https://avian2.animalgenetics.com/Avian/DNA_Sexing/DNA-Sexing-Index.asp" target="_blank" rel="noopener">Avian DNA sexing services at Animal Genetics ↗</a> — the laboratory family we use, formerly trading as Avian Biotech — accept blood, feather and eggshell, and state that all three are equally reliable. That matters practically, because it means the choice of sample is about the bird in front of us on the day rather than about the quality of the answer.</p>
+          <img class="sec-img inf-img" src={IMG + "feather-versus-blood-dna-sample-parrot.webp"} srcset={IMG + "feather-versus-blood-dna-sample-parrot-760.webp 760w, " + IMG + "feather-versus-blood-dna-sample-parrot.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Comparing feather and blood samples for DNA sexing a grey parrot, and why we submit both types" />
+
+          <h4>Why We Submit Both Sample Types</h4>
+          <p>A settled young grey barely notices a few chest feathers coming away, so that is usually where we start. An older bird already having its toenails tipped gives us a blood drop with less fuss than a pluck would cause. Neither route is a compromise; we pick whichever is calmer for that individual, and the certificate records which one it was.</p>
+
+          <h5>Blood Carries a Higher DNA Concentration Than Other Samples</h5>
+          <p><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9913368/" target="_blank" rel="noopener">Peer-reviewed comparison of avian sample sources ↗</a> found molecular sexing from blood more accurate than from oral swabs, for the simple reason that blood carries more DNA per sample. Feather pulp sits comfortably between the two, which is why the pulp has to come with the feather — a shed feather off the cage floor has nothing left in it to read.</p>
+
+          <h6>From the Lab: Blood Is Drawn From the Tip of a Toenail</h6>
+          <p>The published method is a single drop taken from the very end of a toenail, not a syringe and not a vein. It is the same nick a slightly over-enthusiastic nail trim produces, and it stops within seconds.</p>
+
+          <h3>What PCR Does With the Sample Once It Reaches Avian Biotech</h3>
+          <p>Polymerase chain reaction copies a target stretch of DNA over and over until there is enough of it to see. Applied to a grey, the target is the chromosome pair — two Zs for a cock, a Z and a W for a hen — so the readout is a physical pattern rather than an interpretation. That is the whole reason we trust it over our own eyes after twelve years of looking at these birds.</p>
+
+          <h4>How Long Do DNA Sexing Results Take to Come Back?</h4>
+          <p><a href="https://avian2.animalgenetics.com/Avian/DNA_Sexing/DNA-Sexing-Feather.asp" target="_blank" rel="noopener">Feather-sample turnaround times published by the laboratory ↗</a> put the analysis itself at one to two business days. Everything else in the fortnight is postage, which is worth knowing when a seller tells you results are "a few weeks away" — the assay is never the slow part.</p>
+
+          <h5>Results Return in One to Two Business Days</h5>
+          <p>That speed is precisely why we have no patience for a bird listed as tested before its result exists. Two working days is not a long wait to hold a page before publishing it.</p>
+
+          <h6>From the Lab: Turnaround Counts From Receipt, Not From Posting</h6>
+          <p>The published window starts when the sample is logged in at the laboratory. Add a few days each way for the post and you have the realistic timeline we quote buyers who ask how soon a newly hatched chick can be listed with its sex on the page.</p>
+
+          <div class="ticket"><a class="ticket-cta" href="#reserve">Ask which sample your grey gave <span>→</span></a></div>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 04 · CERTIFICATE · FAB · TABLE D "LAB REPORT" ===== -->
+        <section id="certificate" class="sec">
+          <h2>What Is Printed on a Real DNA Sexing Certificate?</h2>
+          <p class="opener">Nobody on the first page of results for this search shows you one, so the phrase "certificate included" does a great deal of unexamined work in this market. A real certificate is a short, dull document with seven fields on it, and every one of those fields exists so that somebody can check something. Below is the whole anatomy, field by field, with what each line is for.</p>
+          <img class="sec-img inf-img" src={IMG + "anatomy-of-a-dna-sexing-certificate.webp"} srcset={IMG + "anatomy-of-a-dna-sexing-certificate-760.webp 760w, " + IMG + "anatomy-of-a-dna-sexing-certificate.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Diagram of the fields a legitimate avian DNA sexing certificate carries, including band number, species, method and result" />
+          <p class="cap">An explanatory diagram of the fields, not a scan of our paperwork — the value bars are deliberately blank.</p>
+
+          <h3>The Fields Every Legitimate Certificate Carries</h3>
+          <div class="tblwrap">
+            <table class="tblD">
+              <caption class="tblD-cap">Lab Report — anatomy of an avian DNA sexing certificate</caption>
+              <thead><tr><th scope="col">Field</th><th scope="col">What it holds</th><th scope="col">Why the field exists</th></tr></thead>
+              <tbody>
+                {certFields.map((r, i) => (
+                  <tr>
+                    <td data-label="Field"><span class="fnum">{String(i + 1).padStart(2, "0")}</span>{r.f}</td>
+                    <td data-label="What it holds">{r.w}</td>
+                    <td data-label="Why it exists">{r.why}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h4>How Do You Match a Certificate to the Bird in Front of You?</h4>
+          <p>Read the band, then read the paper, and make sure they agree. That is the entire verification, and it takes about fifteen seconds with the bird on your hand. A seller who cannot produce a certificate whose number matches the ring on the leg has given you a document about somebody else's parrot.</p>
+
+          <h5>The Closed Leg Band Number Ties Paper to Parrot</h5>
+          <p>A closed band goes on in the first weeks of life and cannot be slipped off an adult foot, so it stays a permanent identifier in a way a photograph never is. That permanence is what lets a piece of paper written months earlier still mean something on the day you collect the bird.</p>
+
+          <h6>On the Record: What We Redact and What We Never Redact</h6>
+          <p>When we send a certificate ahead of a purchase we cover our laboratory account number, because that identifies our billing rather than your bird. The band number, species, sample type, method, result and date always stay visible. If any seller blanks the band number, ask why — that is the one field a buyer actually needs.</p>
+
+          <h3>How Accurate Is an Avian DNA Sexing Result?</h3>
+          <p>Approximately 99 percent, which is the figure the laboratories publish about themselves and therefore the only one we will quote. It is high enough to plan a household around and honest enough to survive being checked.</p>
+
+          <h4>Is Any Sexing Method Ever Truly Absolute?</h4>
+          <p>Only an egg is, and eggs arrive on their own schedule. Everything before that is a very good instrument with a known error rate — which, for what it is worth, is a far better position than the confident guesswork it replaced.</p>
+
+          <h5>Laboratories Publish Roughly 99 Percent Accuracy, Not 100</h5>
+          <p>You will still see sellers advertise 99.9 percent. That figure appears nowhere in the published material of the laboratories doing the work, and a seller quoting it is either repeating something they never checked or improving on it deliberately. We would rather be the page that told you the real number.</p>
+
+          <div class="ticket"><a class="ticket-cta" href="#reserve">Ask for a certificate before you deposit <span>→</span></a></div>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 05 · AVAILABLE · AVAIL-B FACETED BY CONFIRMED SEX ===== -->
+        <section id="available" class="sec">
+          <h2>Which DNA-Confirmed Greys Can You Reserve From Our Aviary Today?</h2>
+          <p class="opener">Here are the {available.length} African Greys we can place right now, and every one of them has a laboratory result on file rather than an opinion. Filter them by what the assay came back with — hens, cocks, or the bonded pair that happens to be one of each — and reserve whichever suits the home you are describing to us.</p>
+          <div class="availB">
+            <aside class="availB-side" aria-label="Filter by confirmed sex">
+              <p class="side-h">Browse by confirmed sex</p>
+              <div class="side-filters">
+                <button class="side-f on" data-f="all" type="button">All greys <span class="side-n">{available.length}</span></button>
+                <button class="side-f" data-f="hen" type="button">Hens <span class="side-n">{sexCount("hen")}</span></button>
+                <button class="side-f" data-f="cock" type="button">Cocks <span class="side-n">{sexCount("cock")}</span></button>
+                <button class="side-f" data-f="pair" type="button">Bonded pair <span class="side-n">{sexCount("pair")}</span></button>
+              </div>
+              <div class="side-ship">
+                <p class="rail-ship">Ships nationwide · <b>$185 airport · $350 home</b></p>
+                <p class="rail-ship">Certificate <b>$40–$60</b> · deposit {deposit}</p>
+              </div>
+            </aside>
+            <div class="availB-grid" id="birdGrid">
+              {available.map((b) => {
+                const im = birdImg[b.name];
+                return (
+                  <article class="bcard" data-cat={sexKey(b)}>
+                    <div class="bphoto">
+                      <img src={im.src} srcset={im.src.replace(".webp", "-440.webp") + " 440w, " + im.src + " 880w"} sizes="(max-width:640px) 46vw, 220px" alt={im.alt} width="880" height="880" loading="lazy" style={"object-position:" + im.pos} />
+                      <span class={"bbadge " + sexKey(b) + (im.badge === "top" ? " badge-top" : "")}>{sexLabel(b)} · confirmed</span>
+                    </div>
+                    <div class="binfo">
+                      <div class="brow"><h3>{b.name.replace(" (pair)", "")}</h3><span class="bprice">${b.price.toLocaleString()}</span></div>
+                      <p class="bblurb">{birdBlurb[b.name]}</p>
+                      <div class="bchips"><span>{subLabel(b)}</span><span>Result on file</span><span>Banded</span></div>
+                      <a class="btn btn-clay bfull" href={b.slug}>Meet {b.name.replace(" (pair)", "").split(" &")[0]} →</a>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+
+          <h3>Our Reservable Hens, Cocks and the Bonded Pair</h3>
+          <p>The split at the moment runs {sexCount("hen")} hens, {sexCount("cock")} cocks and one pair, across both subspecies. <a href="/congo-vs-timneh-african-grey/">Our Congo versus Timneh comparison</a> is the place to settle which of the two suits you before the sex question even comes up, since subspecies changes far more about daily life than chromosomes do.</p>
+
+          <h4>What Each Listing Confirms Before You Enquire</h4>
+          <p>Every card above carries the same four confirmations: the subspecies, the assay result, a closed band, and a real price. Nothing on this page is a placeholder for a bird we expect to have later.</p>
+
+          <h5>Every Bird Below Has a Result in Hand, Never a Result Pending</h5>
+          <p>If a chick has hatched here but its sample has not come back, it does not appear on this page at all. That is a rule rather than a preference, and it is the reason our list is sometimes shorter than a competitor's.</p>
+
+          <h6>On the Record: Band Numbers Match Every Certificate We Hold</h6>
+          <p>Ask for any of the {available.length} birds by name and we will read you the band number and the certificate together, on a video call, before you send a deposit.</p>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 06 · COST · QAB ===== -->
+        <section id="cost" class="sec">
+          <h2>What Does the DNA Sexing Certificate Cost With Our Birds?</h2>
+          <p class="opener">Forty to sixty dollars, itemised separately from the bird. We publish that because the alternative — the word "included", floating free of any figure — is what every seller on the first page of results does, and it makes it impossible for a buyer to work out whether the testing happened at all.</p>
+          <img class="sec-img inf-img" src={IMG + "what-the-dna-certificate-fee-covers.webp"} srcset={IMG + "what-the-dna-certificate-fee-covers-760.webp 760w, " + IMG + "what-the-dna-certificate-fee-covers.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="What the $40 to $60 DNA sexing certificate fee covers, from sample collection through to the signed laboratory result" />
+
+          <h3>Why We Price the Certificate Instead of Burying It</h3>
+          <p>A hidden cost cannot be checked, and anything that cannot be checked is worth nothing as a trust signal. Publishing the number lets you compare it against the laboratory fees advertised openly online, see that our margin on it is modest, and conclude for yourself that the work is real.</p>
+
+          <h4>Is the DNA Certificate Included in the Bird's Price?</h4>
+          <p>It is not, and an earlier version of this page said otherwise. We have corrected that. The bird's price covers the bird; the certificate is a separate line you can see, question and decline to pay for if you would rather arrange your own testing through an avian vet.</p>
+
+          <h5>The Certificate Runs $40 to $60 on Top of the Bird</h5>
+          <p>Where a particular bird lands inside that band depends on the sample and the courier rather than on the grey itself. Nobody pays more because their bird is more expensive.</p>
+
+          <h6>On the Record: What the Fee Covers, Sample to Signed Result</h6>
+          <p>Taking the sample cleanly, packaging and posting it, the laboratory's own per-sample charge, the return post, and issuing a certificate tied to the band number. Published laboratory fees for the assay alone sit around $17 to $25; the difference is handling, not mystery.</p>
+
+          <div class="ticket"><a class="ticket-cta" href="/african-grey-parrot-price/">See where testing sits in the price <span>→</span></a></div>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 07 · ONE SAMPLE · EEBP ===== -->
+        <section id="onesample" class="sec">
+          <h2>Can One Feather Answer More Than the Sex Question?</h2>
+          <p class="opener">It can, and this is the part of avian genetics no competitor on our SERP connects. The same feather pulp that reveals a Z and a W will also run the PCR panels for psittacine beak and feather disease and for avian polyomavirus. One pull from one bird, one envelope, and you learn who the grey is and whether it is carrying either of the two viruses that most often end badly.</p>
+          <img class="sec-img inf-img" src={IMG + "one-sample-sex-and-disease-screening.webp"} srcset={IMG + "one-sample-sex-and-disease-screening-760.webp 760w, " + IMG + "one-sample-sex-and-disease-screening.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="One feather sample answers both the sex question and screens for beak and feather disease and avian polyomavirus" />
+
+          <h3>Pairing Sexing With PBFD and Polyomavirus PCR Screening</h3>
+          <p><a href="/african-greys-for-sale-with-health-guarantee/">Our health-guarantee page</a> sets out what we put in writing once those panels come back, so we will not repeat it here. What belongs on this page is the logistics: the disease screening is not a separate ordeal for the bird, because the material has already left it.</p>
+
+          <h4>Why Sex and Disease Screening Belong in the Same Conversation</h4>
+          <p>Because the awkward moment for a buyer is the same in both cases — asking a stranger to prove something about an animal you have not met. Asking once, about one sample, is easier than asking twice, and a seller who ran both is telling you something about how they operate. <a href="https://www.aav.org/" target="_blank" rel="noopener">The Association of Avian Veterinarians directory ↗</a> will find you an avian vet who can repeat either panel independently if you would like a second opinion.</p>
+
+          <h5>Beak-and-Feather Disease and Polyomavirus Assays Run From the Same Draw</h5>
+          <p>Both are PCR tests looking for viral DNA in the sample, which is why the same feather or blood draw serves all three questions. It is the single most practical thing we know about avian testing, and it is worth asking any breeder whether they used it.</p>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 08 · PENDING · PDB ===== -->
+        <section id="pending" class="sec">
+          <h2>Why Is a "DNA Pending" Listing a Reason to Wait?</h2>
+          <p class="opener">Because it is an advertisement for a fact that does not exist yet. We have watched competitor accounts post a new chick with "DNA pending" underneath it, take enquiries all week, and never publish the result — and the honest reading of that is simple: the sale closed before the answer arrived, so the answer stopped mattering to anyone but the buyer.</p>
+          <img class="sec-img inf-img" src={IMG + "dna-pending-versus-result-in-hand.webp"} srcset={IMG + "dna-pending-versus-result-in-hand-760.webp 760w, " + IMG + "dna-pending-versus-result-in-hand.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="The difference between a DNA pending listing, a presumed sex, and a bird with the laboratory result already in hand" />
+
+          <h3>Pending, Presumed and "Breeder Says": Three Ways to Not Know</h3>
+          <p>They shade into each other, and all three end with you owning a bird of unconfirmed sex. Pending means the sample is somewhere in the postal system. Presumed means somebody looked. "Breeder says" means somebody looked and was confident about it.</p>
+
+          <h4>What Should You Ask a Seller Who Claims a Bird Is Sexed?</h4>
+          <p>Four questions, and they take a minute: which laboratory ran it, what sample went in, what date the result came back, and what band number is printed on the certificate. Any breeder who actually tested the bird can answer all four from memory or from a folder. <a href="/how-to-avoid-african-grey-parrot-scams/">Our scam guide</a> puts those questions alongside the other checks worth running before money moves.</p>
+
+          <h5>Ask for the Certificate Before the Deposit, Never After</h5>
+          <p>A deposit changes the conversation. Before it, you are a buyer choosing between sellers; after it, you are somebody hoping a document turns up. Ask while you still have the leverage.</p>
+
+          <h6>On the Record: We List No Grey Until the Result Is Back</h6>
+          <p>Two working days at the laboratory is not long enough to justify publishing a claim we cannot yet support, so we hold the page instead. It costs us a week of listing time per chick and we consider that a fair trade.</p>
+        </section>
+
+        <aside class="fs-nl banner" aria-label="Confirmed clutch alerts">
+          <div class="fs-nl-inner">
+            <p class="fs-nl-eyebrow">Confirmed-result list</p>
+            <h3 class="fs-nl-h">Hear About Each Grey the Week Its Result Comes Back</h3>
+            <p class="fs-nl-sub">Now that you know why we hold a listing until the assay lands, this is the list that tells you the moment it does. One short email per bird, with the subspecies, the confirmed sex and the price — before the page goes public.</p>
+            <form class="fs-nl-form" action="https://formspree.io/f/xrejpnvn" method="POST">
+              <label class="vh" for="nl-email-dna">Email address</label>
+              <input id="nl-email-dna" type="email" name="email" required placeholder="you@example.com" />
+              <button class="btn btn-clay" type="submit">Send me confirmed results</button>
+            </form>
+            <p class="fs-nl-note">Result announcements only. Unsubscribe in one click.</p>
+          </div>
+        </aside>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 09 · FLOOR · PAS ===== -->
+        <section id="floor" class="sec">
+          <h2>When a Certificate Is Used to Make a Cheap Grey Look Legitimate</h2>
+          <p class="opener">This is the uncomfortable half of the argument we have been making all page. A DNA certificate is a genuine trust signal, which is exactly why it gets bolted onto listings that deserve none — and right now a site ranking on page one for this very search is selling Congo greys at $750 under a "DNA Sexing Certificate Included" banner, with a struck-through $2,500 beside it.</p>
+          <img class="sec-img inf-img" src={IMG + "certificate-does-not-justify-sub-floor-price.webp"} srcset={IMG + "certificate-does-not-justify-sub-floor-price-760.webp 760w, " + IMG + "certificate-does-not-justify-sub-floor-price.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Why a DNA certificate badge on a sub-$1,500 African Grey listing is still a warning sign rather than reassurance" />
+
+          <h3>The $750 Bird With a Trust Badge Attached</h3>
+          <p>Look at that seller's own published price guide and it puts Congos at $2,500 to $3,200 — then discounts every bird on the site by roughly seventy percent at once, simultaneously, under a limited-time banner. Real aviaries do not clear their entire stock at half the cost of raising it, and a certificate badge does not change that arithmetic.</p>
+
+          <h4>Why Does a Certificate Not Make a Sub-Floor Price Safe?</h4>
+          <p>Because a certificate is a claim about one small fact and a price is a claim about everything else — incubation, months of feeding, veterinary care, paperwork, and whether the bird exists. A seller who wants to seem legitimate cheaply will always reach for the smallest verifiable-looking thing on the list.</p>
+
+          <h5>Our Floor Stays at $1,500 Whatever the Paperwork Says</h5>
+          <p>We have never placed a grey below it and we are not going to. If a listing pairs a certificate badge with a price under that floor, the certificate is the least reliable thing on the page.</p>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 10 · BEHAVIOUR · teaser, links out (cannibalization-capped) ===== -->
+        <section id="behaviour" class="sec">
+          <h2>Does Knowing the Sex Change How a Grey Behaves With You?</h2>
+          <p class="opener">Less than most buyers hope. Once the certificate has settled the question, the honest follow-up is that it predicts fewer things about daily life than a good look at the individual bird does — and we would rather say so here than sell the result as more useful than it is.</p>
+          <img class="sec-img og-photo" src={IMG + "dna-sexed-grey-with-owner-behaviour.webp"} srcset={IMG + "dna-sexed-grey-with-owner-behaviour-760.webp 760w, " + IMG + "dna-sexed-grey-with-owner-behaviour.webp 1408w"} sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy" alt="A DNA-sexed African Grey stepping up onto its owner's hand during daily household interaction" />
+
+          <h3>What Sex Does and Does Not Predict</h3>
+          <p>It predicts the possibility of eggs, which is worth planning for, and it settles what to call the bird. It does not reliably predict talking, temperament or how quickly a grey attaches to you. <a href="/male-vs-female-african-grey-parrots-for-sale/">Our male versus female comparison</a> takes that question apart properly, with the behavioural evidence weighed rather than summarised — this page's job was only to get you a trustworthy answer to start from.</p>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 11 · LEGAL · EEBP ===== -->
+        <section id="legal" class="sec">
+          <h2>Is Owning a DNA-Sexed African Grey Legal Across the United States?</h2>
+          <p class="opener">Yes, when the bird is captive-bred in the USA and its paperwork is in order — which describes every grey we place. The species sits on CITES Appendix I, and that listing governs international movement rather than whether an American family may keep one that hatched in Texas.</p>
+          <img class="sec-img inf-img" src={IMG + "paperwork-travelling-with-a-dna-sexed-grey.webp"} srcset={IMG + "paperwork-travelling-with-a-dna-sexed-grey-760.webp 760w, " + IMG + "paperwork-travelling-with-a-dna-sexed-grey.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="The documentation travelling with every DNA-sexed African Grey, including CITES paperwork, closed band and health record" />
+
+          <h3>CITES Appendix I, Captive-Bred, and Your Paperwork</h3>
+          <p><a href="https://www.cites.org/eng/app/appendices.php" target="_blank" rel="noopener">The CITES appendices, where the grey parrot listing sits ↗</a> explain the uplisting that took effect in 2017. Nothing we sell has ever been wild-caught, and nothing crosses a border — our birds hatch here, fly domestically, and travel with the documents that prove it.</p>
+
+          <h4>Which Documents Travel With a Sexed Bird</h4>
+          <p><a href="/cites-african-grey-documentation/">Our documentation page</a> walks through each item in detail. On a sexed bird the folder gains one extra sheet — the certificate — which sits alongside the CITES paperwork, the closed band record, the avian vet health record and the care guide.</p>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 12 · SHIPPING · FAB ===== -->
+        <section id="shipping" class="sec">
+          <h2>How Does a DNA-Confirmed Grey Travel to You?</h2>
+          <p class="opener">As cargo rather than luggage, in a ventilated crate meeting the IATA Live Animals Regulations, with the certificate riding in the folder taped to its door. There are three ways to take delivery, and the price of each sits on this page rather than arriving after you have committed.</p>
+          <img class="sec-img inf-img" src={IMG + "dna-confirmed-grey-delivery-options.webp"} srcset={IMG + "dna-confirmed-grey-delivery-options-760.webp 760w, " + IMG + "dna-confirmed-grey-delivery-options.webp 1408w"} sizes="(max-width:900px) 92vw, 760px" width="1408" height="768" loading="lazy" alt="Airport pickup at $185, home delivery at $350, or collection in Midland Texas for a DNA-confirmed African Grey" />
+
+          <h3>Airport Pickup, Home Delivery, or Collection in Midland</h3>
+          <p class="ship-line">Ships nationwide · <b>$185 airport · $350 home</b> · Pickup in Midland, TX (within 2–3 hours)</p>
+          <div class="geo-cards">
+            {shipPlaces.map((p) => (
+              <a class="geo-card" href={p.href}>
+                <svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span class="gl">{p.label}</span><span class="gn">{p.note}</span>
+              </a>
+            ))}
+          </div>
+
+          <h4>Which Carriers and Crate Standards We Use</h4>
+          <p>Delta, United and American all run live-animal cargo programmes we have used for years, and the crate is ventilated, water-fitted and labelled to the IATA Live Animals Regulations. If you live within two or three hours of Midland, collecting in person is free and is genuinely the calmest option for the bird.</p>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 13 · REVIEWS (real, whitelist) ===== -->
+        <section id="reviews" class="sec">
+          <h2>What Have Buyers Said After Their Sexed Grey Arrived?</h2>
+          <p class="opener">Two of our buyers wrote these after their birds landed, and we publish them unedited. Our rating stands at 4.9 across 52 reviews — a real number we can produce the underlying reviews for, which is more than the initials-only testimonials on the sites ranking beside us.</p>
+          <div class="rev-grid">
+            {stories.map((s) => (
+              <figure class="rev">
+                <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+                <blockquote>{s.quote}</blockquote>
+                <figcaption>
+                  <img src={s.avatar} alt={s.name + ", a verified C.A.Gs buyer in " + s.loc} width="52" height="52" loading="lazy" />
+                  <span><b>{s.name}</b><span>{s.loc} · {s.meta}</span></span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 14 · VIDEO · .fs-video ===== -->
+        <section id="video" class="sec">
+          <h2>See Our Greys Before You Ask About One</h2>
+          <p class="opener">Photographs can be lifted from someone else's aviary; a video of two named birds feeding together is harder to fake and easier to check. This is Jins and Jeni sharing a bowl — one cock, one hen, and nothing on either of them that would tell you which.</p>
+          <figure class="fs-video">
+            <div class="fs-video-frame">
+              <span class="fs-video-tag">C.A.Gs aviary · Midland, TX</span>
+              <video controls preload="none" playsinline width="1408" height="768" poster={IMG + "jins-jeni-cock-and-hen-hero-anchor.webp"}>
+                <source src={IMG + "dna-confirmed-cock-and-hen-pair-eating.mp4"} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <figcaption>A confirmed cock and hen eating side by side — the visual case for testing, in about thirty seconds.</figcaption>
+          </figure>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 15 · COMPARE · TABLE A ===== -->
+        <section id="compare" class="sec">
+          <h2>How Do We Measure Up Against the Sellers Ranking Beside Us?</h2>
+          <p class="opener">We pulled the first page of results for this search and read what each seller actually publishes, rather than what their badges imply. The table below is that audit, and every line in the right-hand column comes from a page we fetched rather than from an assumption about competitors.</p>
+          <img class="sec-img og-photo" src={IMG + "documented-african-grey-breeder-comparison.webp"} srcset={IMG + "documented-african-grey-breeder-comparison-760.webp 760w, " + IMG + "documented-african-grey-breeder-comparison.webp 1408w"} sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy" alt="A documented African Grey breeder handling paperwork, contrasted with sellers who publish no laboratory detail" />
+
+          <h3>What Page-One Sellers Claim Versus What They Publish</h3>
+          <div class="tblwrap">
+            <table class="tblA">
+              <thead><tr><th scope="col">On this question</th><th scope="col">C.A.Gs</th><th scope="col">Page-one sellers we checked</th></tr></thead>
+              <tbody>
+                {compareRows.map((r) => (
+                  <tr><td data-label="Question">{r.k}</td><td data-label="C.A.Gs">{r.us}</td><td data-label="Others">{r.them}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p><a href="https://www.aphis.usda.gov/awa/public-search" target="_blank" rel="noopener">The USDA Animal Welfare Act licence lookup ↗</a> lets you check us — and them — in under a minute, and <a href="/trusted-african-grey-parrot-breeders/">our breeder-vetting page</a> lists the rest of the checks worth running on anyone selling a grey.</p>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 16 · READ NEXT ===== -->
+        <section id="reading" class="sec">
+          <h2>Where to Read Next on Sexing, Papers and Safe Buying</h2>
+          <p class="opener">This page deliberately stopped short of four subjects that deserve their own space. Each of these was written the same way — by the people who raise the birds, about things we can show you.</p>
+          <div class="read-cards">
+            {readMore.map((r) => (
+              <a class="read-card" href={r.href}>
+                <img src={r.img + "-240.webp"} srcset={r.img + "-240.webp 240w, " + r.img + "-760.webp 760w"} sizes="120px" alt={r.title + " — " + r.kicker} loading="lazy" width="240" height="131" />
+                <div class="rc-body"><span class="rc-k">{r.kicker}</span><b>{r.title}</b><span class="rc-s">{r.sub}</span></div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 17 · FAQ · FAQ-A refreshed (numbered clay chip + chevron) ===== -->
+        <section id="faq" class="sec">
+          <h2>Questions Buyers Ask About DNA Sexing an African Grey</h2>
+          <p class="opener">These are the ten questions that reach us most often about sexing, taken from what people actually type into search and post on owner forums. Several of them have answers that will annoy somebody selling a cheaper bird.</p>
+          <div class="faqA">
+            {faqs.map((f, i) => (
+              <details class="faqA-item" open={i === 0}>
+                <summary>
+                  <span class="faqA-n">{String(i + 1).padStart(2, "0")}</span>
+                  <span class="faqA-q">{f.q}</span>
+                  <span class="faqA-v" aria-hidden="true"></span>
+                </summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <div class="seam-wrap" role="presentation"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" /></div>
+
+        <!-- ===== 18 · RESERVE ===== -->
+        <section id="reserve" class="sec">
+          <h2>Ask About a DNA-Confirmed Grey</h2>
+          <p class="opener">Tell us which bird you have been reading about and how you would like it to travel, and Teri replies personally within 24 hours. A {deposit} refundable deposit holds a grey while we arrange the details — and we will read you its band number and certificate on a call before you send anything.</p>
+          <div class="cta-form">
+            <div class="form-side">
+              <h3>Every Grey Here Has Its Result on File</h3>
+              <p>Pick the one you want, or ask us to match a hen or cock to the household you are describing.</p>
+              <ul class="form-birds">
+                {available.map((b) => (<li><span>{b.name.replace(" (pair)", "")} · {sexLabel(b)} {subLabel(b)}</span><b>${b.price.toLocaleString()}</b></li>))}
+              </ul>
+              <p class="form-ship">Ships nationwide · <b>$185 airport · $350 home</b> · Pickup in Midland, TX (within 2–3 hours)</p>
+            </div>
+            <form class="form-main" name="dna-tested-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+              <input type="hidden" name="form-name" value="dna-tested-inquiry" />
+              <p class="hp"><label>Don't fill this out: <input name="bot-field" /></label></p>
+              <label>Which confirmed grey are you asking about?
+                <select name="bird" required>
+                  <option value="">Choose a DNA-confirmed grey…</option>
+                  {available.map((b) => (<option value={b.name.replace(" (pair)", "") + " ($" + b.price.toLocaleString() + ")"}>{b.name.replace(" (pair)", "")} — {sexLabel(b)} {subLabel(b)} (${b.price.toLocaleString()})</option>))}
+                  <option value="Not sure — help me choose">Not sure — help me choose</option>
+                </select>
+              </label>
+              <div class="f2">
+                <label>First name<input name="first-name" required autocomplete="given-name" /></label>
+                <label>Last name<input name="last-name" required autocomplete="family-name" /></label>
+              </div>
+              <div class="f2">
+                <label>Cell phone<input name="phone" type="tel" required autocomplete="tel" /></label>
+                <label>Email<input name="email" type="email" required autocomplete="email" /></label>
+              </div>
+              <label>Delivery preference
+                <select name="delivery" required>
+                  <option value="">How would you like your grey to travel?</option>
+                  <option value="Airport pickup ($185)">Airport pickup — $185</option>
+                  <option value="Home delivery ($350)">Home delivery — $350</option>
+                  <option value="Pickup in Midland, TX">Pickup in Midland, TX (within 2–3 hours)</option>
+                </select>
+              </label>
+              <label>Anything you would like us to know?<textarea name="message" rows="3" placeholder="Your household, other birds, whether you want to see the certificate first…"></textarea></label>
+              <button class="btn btn-clay btn-submit" type="submit">Send my DNA-confirmed grey enquiry →</button>
+              <p class="form-note">We answer within 24 hours, personally. Your details go only to C.A.Gs.</p>
+            </form>
+          </div>
+        </section>
+
+      </div><!-- /content -->
+    </div><!-- /body-grid -->
+  </main>
+
+  <script is:inline define:vars={{ N }}>
+    // Dial 1 scroll-spy + conic ring + Rail A active state
+    (function () {
+      const secs = Array.from(document.querySelectorAll('.dnat .content .sec'));
+      const ring = document.getElementById('dialRing');
+      const num = document.getElementById('dialNum');
+      const dialLinks = Array.from(document.querySelectorAll('#dialList a'));
+      const railLinks = Array.from(document.querySelectorAll('.railA a'));
+      if (!secs.length) return;
+      let active = '';
+      const setActive = (id, idx) => {
+        if (id === active) return;
+        active = id;
+        const p = Math.round(((idx + 1) / N) * 100);
+        if (ring) ring.style.setProperty('--p', p);
+        if (num) num.textContent = String(idx + 1).padStart(2, '0');
+        dialLinks.forEach((a) => a.classList.toggle('on', a.dataset.id === id));
+        railLinks.forEach((a) => {
+          const on = a.dataset.id === id;
+          a.classList.toggle('on', on);
+          if (on && a.scrollIntoView) a.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'auto' });
+        });
+      };
+      const io = new IntersectionObserver((ents) => {
+        ents.forEach((e) => {
+          if (e.isIntersecting) {
+            const idx = secs.indexOf(e.target);
+            if (idx > -1) setActive(e.target.id, idx);
+          }
+        });
+      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+      secs.forEach((s) => io.observe(s));
+
+      // Avail-B facet by confirmed sex
+      const grid = document.getElementById('birdGrid');
+      if (grid) {
+        const cards = Array.from(grid.querySelectorAll('.bcard'));
+        document.querySelectorAll('.availB-side .side-f').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.availB-side .side-f').forEach((b) => b.classList.remove('on'));
+            btn.classList.add('on');
+            const f = btn.dataset.f;
+            cards.forEach((c) => { c.classList.toggle('hide', f !== 'all' && c.dataset.cat !== f); });
+          });
+        });
+      }
+    })();
+  </script>
 </BaseLayout>
+
+<style is:global>
+/* ===================== /dna-tested-african-grey-for-sale/ ===================== */
+/* --hdr = the real global header height (96px, sticky top-0 z-50). */
+.dnat{--ink:#3a2f2a;--clay:#e8604c;--clay-ink:#c8472f;--clay-t:#b04228;--green:#2D6A4F;--green-d:#234f3b;--cream:#faf7f4;--bd:#e7ddd3;--muted:#6b625a;--hdr:96px;overflow-x:clip;color:var(--ink);background:var(--cream);}
+.dnat .dn-container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.dnat h2{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.5rem,1.1rem + 1.6vw,2rem);line-height:1.18;color:var(--green-d);margin:0 0 .5rem;letter-spacing:-.01em;}
+.dnat h2 em{font-style:italic;color:var(--green-d);}
+.dnat h3{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.18rem,1rem + .7vw,1.42rem);color:var(--ink);margin:1.5rem 0 .35rem;}
+.dnat h4{font-size:1.06rem;font-weight:700;color:var(--green-d);margin:1.1rem 0 .3rem;}
+.dnat h5{font-size:.98rem;font-weight:700;color:var(--ink);margin:.9rem 0 .25rem;}
+.dnat h6{font-size:.9rem;font-weight:700;color:var(--muted);margin:.8rem 0 .2rem;text-transform:uppercase;letter-spacing:.03em;}
+.dnat p{max-width:70ch;line-height:1.7;margin:0 0 .8rem;}
+.dnat .sec p.opener{font-size:1.05rem;}
+.dnat p.cap{font-size:.8rem;color:var(--muted);font-style:italic;margin:-.5rem 0 1rem;}
+.dnat a{color:var(--clay-t);text-underline-offset:2px;}
+/* Body links must not rely on colour alone (WCAG 1.4.1) */
+.dnat .content p a,.dnat .content li a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;}
+.dnat .content p a:hover,.dnat .content li a:hover{text-decoration-thickness:2px;}
+.dnat .content p a.btn,.dnat .content p a.ticket-cta,.dnat .content a.geo-card,.dnat .content a.read-card{text-decoration:none;}
+.dnat .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+/* Buttons */
+.dnat .btn{display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:.95rem;padding:.7rem 1.25rem;border-radius:50px;text-decoration:none;transition:transform .18s,background .18s,box-shadow .18s;border:1px solid transparent;}
+.dnat .btn-clay{background:var(--clay-ink);color:#fff;box-shadow:0 4px 14px rgba(200,71,47,.24);}
+.dnat .btn-clay:hover{transform:translateY(-1px);}
+.dnat .btn-ghost{background:transparent;color:var(--green-d);border-color:var(--green);}
+.dnat .btn-ghost:hover{background:rgba(45,106,79,.07);}
+
+/* ===== HERO-C · MOSAIC METRICS ===== */
+.dnat .hero{background:linear-gradient(150deg,#f7f2ec,#f2e9e0 60%,#efe2d6);border-bottom:1px solid var(--bd);padding:6px 0 26px;}
+.dnat .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:34px;align-items:center;}
+.dnat .eyebrow{font-size:.82rem;font-weight:600;color:var(--clay-t);margin:.4rem 0 .55rem;}
+.dnat .eyebrow em{font-style:italic;}
+/* the "Metrics" half of Hero-C: a stat strip ABOVE the headline (this page's signature) */
+.dnat .hero-metrics{list-style:none;display:flex;flex-wrap:wrap;gap:0;padding:0;margin:0 0 .7rem;border:1px solid var(--bd);border-radius:12px;background:rgba(255,255,255,.72);overflow:hidden;max-width:460px;}
+.dnat .hero-metrics li{flex:1 1 0;min-width:110px;display:flex;flex-direction:column;gap:1px;padding:9px 13px;border-right:1px solid var(--bd);}
+.dnat .hero-metrics li:last-child{border-right:0;}
+.dnat .hero-metrics b{font-family:var(--font-lora,'Newsreader',serif);font-size:1.12rem;color:var(--clay-ink);line-height:1.1;}
+.dnat .hero-metrics span{font-size:.68rem;color:var(--muted);letter-spacing:.02em;}
+.dnat .hero h1{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.5rem,1.02rem + 1.55vw,1.98rem);line-height:1.13;color:var(--green-d);margin:0 0 .45rem;letter-spacing:-.015em;text-wrap:balance;}
+.dnat .hero h1 em{color:var(--clay-ink);font-style:italic;}
+.dnat .hero .lead{font-size:.94rem;line-height:1.56;color:var(--ink);max-width:56ch;margin:0;}
+.dnat .hero-cta{display:flex;gap:.55rem;flex-wrap:wrap;margin:.8rem 0 0;}
+/* 2x2 mosaic: the anchor pair spans the top row, three question tiles beneath it */
+.dnat .hero-mosaic{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:center;max-width:430px;margin-left:auto;}
+.dnat .mtile{margin:0;position:relative;border-radius:12px;overflow:hidden;background:#efe6dd;box-shadow:0 6px 18px rgba(60,30,10,.13);}
+.dnat .mtile img{display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;}
+.dnat .mtile.anchor{grid-column:1 / -1;}
+.dnat .mtile.anchor img{aspect-ratio:16/9;}
+.dnat .mtile figcaption{position:absolute;left:0;right:0;bottom:0;padding:16px 12px 9px;display:flex;flex-direction:column;gap:1px;
+  background:linear-gradient(to top,rgba(28,18,12,.72),transparent);color:#fff;}
+.dnat .mtile figcaption b{font-family:var(--font-lora,'Newsreader',serif);font-size:.92rem;line-height:1.1;}
+.dnat .mtile figcaption span{font-size:.7rem;color:#f3e6df;}
+.dnat .mtile figcaption.q{align-items:center;font-size:.68rem;font-weight:700;letter-spacing:.03em;padding:14px 6px 7px;}
+
+/* Counter */
+.dnat .counter{background:#fff;border-bottom:1px solid var(--bd);padding:20px 0;}
+.dnat .counter-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+.dnat .cstat{border:1px solid var(--bd);border-radius:12px;padding:10px 13px;text-align:center;min-height:66px;display:flex;flex-direction:column;justify-content:center;background:var(--cream);}
+.dnat .cstat .cn{font-family:var(--font-lora,'Newsreader',serif);font-size:1.35rem;font-weight:700;color:var(--clay-ink);line-height:1;}
+.dnat .cstat .cl{font-size:.72rem;color:var(--muted);margin-top:.3rem;}
+
+/* Seam divider — for-sale wordmark variant */
+.dnat .seam-wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin:30px auto 26px;max-width:560px;}
+.dnat .seam-wrap::before,.dnat .seam-wrap::after{content:"";height:1px;border-radius:1px;}
+.dnat .seam-wrap::before{background:linear-gradient(to right,transparent,rgba(232,96,76,.34));}
+.dnat .seam-wrap::after{background:linear-gradient(to left,transparent,rgba(232,96,76,.34));}
+.dnat .seam{display:block;height:34px;width:auto;opacity:.92;margin:0;}
+
+/* Section differentiator — clay spine on every H2 */
+.dnat .content .sec>h2{position:relative;padding-left:14px;}
+.dnat .content .sec>h2::before{content:"";position:absolute;left:0;top:.24em;bottom:.24em;width:3px;border-radius:2px;background:var(--clay);}
+
+/* Body grid + Dial 1 (clay on cream) */
+.dnat .body-grid{display:grid;grid-template-columns:196px minmax(0,1fr);gap:28px;padding-top:8px;padding-bottom:40px;}
+.dnat .dial{position:relative;}
+.dnat .dial-card{position:sticky;top:calc(var(--hdr) + 16px);display:flex;flex-direction:column;gap:10px;align-items:stretch;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:12px 10px;box-shadow:0 3px 12px rgba(60,30,10,.05);max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;scrollbar-width:thin;}
+.dnat .ring{--p:0;width:64px;height:64px;border-radius:50%;margin:2px auto 0;flex:none;background:conic-gradient(var(--clay-ink) calc(var(--p) * 1%),#f3ddd5 0);display:grid;place-items:center;}
+.dnat .ring-in{width:50px;height:50px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;}
+.dnat .ring-n{font-family:var(--font-lora,'Newsreader',serif);font-size:15px;font-weight:700;color:var(--clay-ink);line-height:1;}
+.dnat .ring-of{font-size:7px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+.dnat .dial-list{list-style:none;margin:0;padding:8px 0 0;border-top:1px dashed var(--bd);display:grid;grid-template-columns:1fr;gap:1px;}
+.dnat .dial-list a{display:flex;gap:7px;align-items:baseline;padding:5px 7px;border-radius:8px;text-decoration:none;color:#4a423b;font-size:.74rem;line-height:1.25;transition:background-color .15s,color .15s;}
+.dnat .dial-list a:hover{background:#faf3ee;color:#2a2622;}
+.dnat .dial-list a.on{background:#faece7;color:#2a2622;font-weight:600;}
+/* light card -> muted #6b625a numerals. NOT the #9fc7b0 dark-card fix. */
+.dnat .dial-list .di{font-family:var(--font-lora,'Newsreader'),serif;font-weight:700;color:var(--muted);width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums;}
+.dnat .dial-list a.on .di{color:var(--clay-t);}
+.dnat .dial-list .dh{min-width:0;}
+.dnat .dial-list .dt{margin-left:auto;font-size:.56rem;font-weight:600;letter-spacing:.02em;color:var(--green-d);background:#eef5f1;border-radius:50px;padding:1px 6px;white-space:nowrap;}
+
+/* Rail A (mobile) hidden on desktop */
+.dnat .railA{display:none;}
+
+/* Section images */
+.dnat .sec-img{display:block;width:100%;max-width:760px;aspect-ratio:1408/768;object-fit:cover;height:auto;border-radius:14px;border:1px solid var(--bd);margin:1rem 0 1.1rem;box-shadow:0 4px 16px rgba(60,30,10,.06);}
+.dnat .sec{scroll-margin-top:calc(var(--hdr) + 16px);padding:6px 0 10px;}
+
+/* Ticket CTA */
+.dnat .ticket{margin:1.2rem 0 .2rem;}
+.dnat .ticket-cta{display:inline-flex;align-items:center;justify-content:center;text-align:center;text-wrap:balance;gap:.5rem;background:#fff;border:1.5px solid var(--clay);color:var(--clay-ink);font-weight:700;padding:.55rem 1.05rem;border-radius:50px;text-decoration:none;transition:background .18s;}
+.dnat .ticket-cta span{transition:transform .18s;}
+.dnat .ticket-cta:hover{background:#fff3ef;}
+.dnat .ticket-cta:hover span{transform:translateX(3px);}
+
+/* K4 clipboard checklist */
+.dnat .k4{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px 18px 16px;margin:12px 0 10px;box-shadow:0 3px 14px rgba(60,30,10,.05);}
+.dnat .k4-head{display:flex;align-items:center;gap:.55rem;border-bottom:1px dashed var(--bd);padding-bottom:.5rem;margin-bottom:.6rem;}
+.dnat .k4-head b{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;color:var(--green-d);}
+.dnat .k4-clip{width:26px;height:14px;border-radius:4px;background:var(--clay-ink);position:relative;flex:none;}
+.dnat .k4-clip::after{content:"";position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:12px;height:10px;border:2px solid var(--clay-ink);border-bottom:0;border-radius:4px 4px 0 0;}
+.dnat .k4-list{list-style:none;margin:0;padding:0;display:grid;gap:.45rem;}
+.dnat .k4-list li{position:relative;padding-left:1.5rem;font-size:.92rem;line-height:1.55;max-width:70ch;}
+.dnat .k4-list li::before{content:"";position:absolute;left:0;top:.42em;width:.62rem;height:.62rem;border-radius:3px;border:2px solid var(--green);}
+
+/* K5 capsule strip */
+.dnat .k5{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 8px;}
+.dnat .k5 .cap{display:flex;flex-direction:column;gap:1px;background:#eaf4ef;border:1px solid #cfe6da;border-radius:12px;padding:8px 14px;font-size:.72rem;color:#3d5b4d;font-style:normal;margin:0;}
+.dnat .k5 .cap b{font-family:var(--font-lora,'Newsreader',serif);font-size:.95rem;color:var(--green-d);}
+
+/* T2 chip cloud */
+.dnat .chipcloud{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:12px 16px 14px;margin:10px 0 4px;}
+.dnat .ccrow{display:grid;grid-template-columns:82px minmax(0,1fr);gap:10px;align-items:start;padding:7px 0;border-bottom:1px dashed var(--bd);}
+.dnat .ccrow:last-child{border-bottom:0;}
+.dnat .ccg{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding-top:.4rem;}
+.dnat .ccrow ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;}
+.dnat .ccrow a{display:inline-block;font-size:.78rem;font-weight:600;color:var(--green-d);background:var(--cream);border:1px solid var(--bd);border-radius:50px;padding:5px 12px;text-decoration:none;transition:border-color .15s,background .15s;}
+.dnat .ccrow a:hover{border-color:var(--clay);background:#fff3ef;color:var(--clay-ink);}
+
+/* Table D "Lab Report" — this page's own table (numbered field rows, green rule) */
+.dnat .tblwrap{overflow-x:auto;margin:1rem 0;}
+.dnat .tblD{width:100%;border-collapse:separate;border-spacing:0;font-size:.88rem;background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
+.dnat .tblD-cap{caption-side:top;text-align:left;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#fff;background:var(--green-d);padding:.5rem .9rem;}
+.dnat .tblD th{background:var(--cream);color:var(--green-d);text-align:left;padding:.6rem .8rem;font-weight:700;font-size:.8rem;border-bottom:2px solid var(--bd);}
+.dnat .tblD td{padding:.62rem .8rem;border-bottom:1px solid var(--bd);vertical-align:top;}
+.dnat .tblD tr:last-child td{border-bottom:0;}
+.dnat .tblD td:first-child{font-weight:700;color:var(--green-d);white-space:nowrap;}
+.dnat .tblD td:last-child{color:var(--muted);}
+.dnat .fnum{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:5px;background:#eef5f1;color:var(--green-d);font-size:.62rem;font-weight:700;margin-right:.5rem;vertical-align:middle;font-variant-numeric:tabular-nums;}
+
+/* Table A — clay-header comparison */
+.dnat .tblA{width:100%;border-collapse:separate;border-spacing:0;font-size:.88rem;background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
+.dnat .tblA th{background:var(--clay-ink);color:#fff;text-align:left;padding:.65rem .8rem;font-weight:700;font-size:.8rem;}
+.dnat .tblA td{padding:.62rem .8rem;border-bottom:1px solid var(--bd);vertical-align:top;}
+.dnat .tblA tr:last-child td{border-bottom:0;}
+.dnat .tblA td:first-child{font-weight:700;color:var(--green-d);}
+.dnat .tblA td:nth-child(3){color:var(--muted);}
+
+/* Avail-B — sticky sidebar faceted by confirmed sex */
+.dnat .availB{display:grid;grid-template-columns:200px minmax(0,1fr);gap:20px;margin:1rem 0;align-items:start;}
+.dnat .availB-side{position:sticky;top:calc(var(--hdr) + 16px);background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px;box-shadow:0 4px 16px rgba(60,30,10,.06);}
+.dnat .side-h{font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 .6rem;}
+.dnat .side-filters{display:flex;flex-direction:column;gap:4px;}
+.dnat .side-f{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:var(--cream);border:1.5px solid var(--bd);border-radius:10px;padding:.5rem .65rem;font:inherit;font-size:.86rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:left;transition:background-color .15s,border-color .15s;}
+.dnat .side-f:hover{background:#fff3ef;}
+.dnat .side-f.on{border-color:var(--clay-ink);color:var(--green-d);background:#fff3ef;}
+.dnat .side-n{font-size:.72rem;font-weight:700;color:var(--muted);background:#fff;border-radius:50px;min-width:24px;text-align:center;padding:2px 8px;}
+.dnat .side-f.on .side-n{background:var(--clay-ink);color:#fff;}
+.dnat .side-ship{border-top:1px solid var(--bd);margin-top:12px;padding-top:10px;}
+.dnat .rail-ship{font-size:.72rem;color:var(--muted);margin:0 0 .35rem;line-height:1.45;}
+.dnat .rail-ship b{color:var(--green-d);}
+.dnat .availB-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-content:start;}
+.dnat .bcard{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column;}
+.dnat .bcard.hide{display:none;}
+.dnat .bphoto{position:relative;aspect-ratio:1/1;overflow:hidden;}
+.dnat .bphoto img{width:100%;height:100%;object-fit:cover;}
+.dnat .bphoto::after{content:"";position:absolute;inset:auto 0 0 0;height:44%;background:linear-gradient(to top,rgba(28,18,12,.42),transparent);pointer-events:none;}
+/* default bottom-left; .badge-top is the per-bird escape hatch for a head-down bird */
+.dnat .bbadge{position:absolute;top:auto;bottom:8px;left:8px;z-index:2;background:rgba(255,255,255,.94);color:var(--green-d);font-size:.6rem;font-weight:700;padding:.18rem .5rem;border-radius:50px;text-transform:uppercase;letter-spacing:.03em;box-shadow:0 1px 4px rgba(0,0,0,.18);}
+.dnat .bbadge.cock{color:#1f4f6d;}
+.dnat .bbadge.pair{color:var(--clay-ink);}
+.dnat .bbadge.badge-top{top:8px;bottom:auto;}
+.dnat .binfo{padding:11px 12px 13px;display:flex;flex-direction:column;gap:.45rem;flex:1;}
+.dnat .brow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem;align-items:baseline;min-height:2.65rem;}
+.dnat .brow h3{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;line-height:1.16;margin:0;text-transform:uppercase;letter-spacing:.02em;color:var(--green-d);min-width:0;overflow-wrap:anywhere;}
+.dnat .bprice{font-weight:700;color:var(--clay-ink);font-size:.98rem;white-space:nowrap;}
+.dnat .bblurb{font-size:.8rem;color:var(--muted);line-height:1.45;margin:0;flex:1;}
+.dnat .bchips{display:flex;gap:.3rem;flex-wrap:wrap;min-height:1.4rem;align-content:start;}
+.dnat .bchips span{font-size:.62rem;background:var(--cream);border:1px solid var(--bd);color:var(--green-d);padding:.1rem .4rem;border-radius:50px;font-weight:600;}
+.dnat .bfull{align-self:start;justify-content:center;margin-top:auto;font-size:.8rem;padding:.5rem .95rem;white-space:nowrap;gap:.3rem;}
+
+/* Shipping line + geo cards */
+.dnat .ship-line{background:#fff;border:1px solid var(--bd);border-left:3px solid var(--clay);border-radius:10px;padding:.6rem .85rem;font-size:.9rem;margin:.9rem 0;}
+.dnat .ship-line b{color:var(--green-d);}
+.dnat .geo-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:1rem 0 .4rem;}
+.dnat .geo-card{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.6rem;background:#fff;border:1px solid var(--bd);border-radius:11px;padding:.6rem .8rem;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s;}
+.dnat .geo-card svg{grid-row:1/3;align-self:center;color:var(--clay);}
+.dnat .geo-card .gl{font-weight:600;font-size:.85rem;color:var(--green-d);}
+.dnat .geo-card .gn{font-size:.74rem;color:var(--muted);}
+.dnat .geo-card:hover{border-color:var(--clay);transform:translateY(-1px);}
+
+/* Newsletter — for-sale .fs-nl */
+.dnat .fs-nl{margin:24px 0;border-radius:20px;overflow:hidden;box-shadow:0 6px 22px rgba(60,30,10,.08);}
+.dnat .fs-nl.banner{background:linear-gradient(135deg,#221f1d,#2f2926);color:#fff;}
+.dnat .fs-nl-inner{padding:clamp(18px,3vw,28px) clamp(18px,3.4vw,34px);max-width:820px;}
+.dnat .fs-nl-eyebrow{color:#f08070;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px;}
+.dnat .fs-nl-h{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.15rem,2.2vw,1.45rem);line-height:1.2;margin:0 0 6px;color:#fff;}
+.dnat .fs-nl-sub{font-size:.86rem;line-height:1.55;margin:0 0 14px;max-width:62ch;color:rgba(255,255,255,.86);}
+.dnat .fs-nl-form{display:flex;gap:10px;flex-wrap:wrap;}
+.dnat .fs-nl-form input{flex:1;min-width:200px;border:1.5px solid rgba(255,255,255,.3);border-radius:50px;padding:12px 18px;font:inherit;background:#fff;color:#2a2622;}
+.dnat .fs-nl-form input:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.2);}
+.dnat .fs-nl-form button{border:none;cursor:pointer;}
+.dnat .fs-nl-note{font-size:.74rem;color:rgba(255,255,255,.72);margin:10px 0 0;}
+
+/* Video — for-sale .fs-video */
+.dnat .fs-video{margin:1rem 0;max-width:760px;}
+.dnat .fs-video-frame{position:relative;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(60,30,10,.16);background:#1b1815;}
+.dnat .fs-video-frame video{display:block;width:100%;height:auto;aspect-ratio:1408/768;object-fit:cover;}
+.dnat .fs-video-tag{position:absolute;top:12px;left:12px;z-index:2;background:rgba(34,31,29,.82);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.04em;padding:5px 12px;border-radius:50px;pointer-events:none;}
+.dnat .fs-video figcaption{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;}
+
+/* Reviews */
+.dnat .rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:1rem 0;}
+.dnat .rev{margin:0;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;}
+.dnat .rev .stars{color:var(--clay-ink);letter-spacing:2px;margin-bottom:.4rem;font-size:1.05rem;}
+.dnat .rev blockquote{margin:0 0 .8rem;font-size:.9rem;line-height:1.6;color:var(--ink);}
+.dnat .rev figcaption{display:flex;align-items:center;gap:.6rem;}
+.dnat .rev figcaption img{width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none;}
+.dnat .rev figcaption b{display:block;font-size:.9rem;color:var(--green-d);}
+.dnat .rev figcaption span span{font-size:.76rem;color:var(--muted);}
+
+/* Read cards */
+.dnat .read-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:1rem 0;}
+.dnat .read-card{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#fff;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s;}
+.dnat .read-card img{width:120px;height:100%;object-fit:cover;}
+.dnat .rc-body{padding:10px 12px 10px 0;display:flex;flex-direction:column;gap:.2rem;}
+.dnat .rc-k{font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--clay-t);font-weight:700;}
+.dnat .rc-body b{color:var(--green-d);font-size:.92rem;line-height:1.25;}
+.dnat .rc-s{font-size:.78rem;color:var(--muted);line-height:1.4;}
+.dnat .read-card:hover{border-color:var(--clay);transform:translateY(-1px);}
+
+/* FAQ-A refreshed — numbered clay chip + chevron (siblings use the +/x cross) */
+.dnat .faqA{margin:1rem 0 6px;display:flex;flex-direction:column;gap:8px;}
+.dnat .faqA-item{background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(60,30,10,.04);}
+.dnat .faqA-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 18px;color:#2a2622;}
+.dnat .faqA-item summary::-webkit-details-marker{display:none;}
+.dnat .faqA-n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50px;border:1.5px solid var(--clay);color:var(--clay-ink);font-size:.68rem;font-weight:700;flex:none;font-variant-numeric:tabular-nums;}
+.dnat .faqA-q{font-family:var(--font-lora,'Newsreader',serif);font-size:1rem;font-weight:600;flex:1;line-height:1.32;}
+.dnat .faqA-v{width:11px;height:11px;flex:none;border-right:2px solid var(--clay-ink);border-bottom:2px solid var(--clay-ink);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s;}
+.dnat .faqA-item[open] .faqA-v{transform:rotate(225deg) translate(-2px,-2px);}
+.dnat .faqA-item[open] summary{border-bottom:1px solid var(--bd);background:#fdf7f4;}
+.dnat .faqA-item p{color:#4a423b;font-size:.9rem;margin:0;padding:14px 18px 16px;max-width:none;line-height:1.62;}
+
+/* Contact form */
+.dnat .cta-form{display:grid;grid-template-columns:.85fr 1.15fr;gap:0;border:1px solid var(--bd);border-radius:16px;overflow:hidden;margin:1rem 0;}
+.dnat .form-side{background:var(--green-d);color:#eaf3ee;padding:22px;}
+.dnat .form-side h3{color:#fff;margin:0 0 .4rem;}
+.dnat .form-side p{color:#d7e7de;font-size:.86rem;}
+.dnat .form-birds{list-style:none;margin:.8rem 0;padding:0;}
+.dnat .form-birds li{display:flex;justify-content:space-between;gap:.6rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:.85rem;}
+.dnat .form-birds b{color:#fff;}
+.dnat .form-ship{font-size:.78rem;color:#c9f2db;}
+.dnat .form-ship b{color:#fff;}
+.dnat .form-main{padding:22px;background:#fff;display:grid;gap:.7rem;}
+.dnat .form-main label{display:grid;gap:.25rem;font-size:.82rem;font-weight:600;color:var(--green-d);}
+.dnat .form-main input,.dnat .form-main select,.dnat .form-main textarea{font:inherit;font-weight:400;padding:.55rem .65rem;border:1px solid var(--bd);border-radius:10px;background:var(--cream);color:var(--ink);}
+.dnat .f2{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.dnat .btn-submit{border-radius:12px;justify-content:center;margin-top:.3rem;}
+.dnat .form-note{font-size:.74rem;color:var(--muted);font-weight:400;margin:0;}
+.dnat .hp{position:absolute;left:-9999px;}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width:980px){
+  .dnat .hero-grid{grid-template-columns:1fr;gap:18px;}
+  /* photos lead on mobile, copy follows — matching the sibling for-sale heroes */
+  .dnat .hero-mosaic{order:-1;max-width:460px;margin:0 auto;}
+  .dnat .mtile.anchor img{aspect-ratio:4/3;}
+  .dnat .hero-metrics{max-width:none;}
+  .dnat .counter-grid{grid-template-columns:repeat(3,1fr);}
+  /* minmax(0,1fr) + min-width:0 stop the 100vw full-bleed images inflating the track */
+  .dnat .body-grid{grid-template-columns:minmax(0,1fr);}
+  .dnat .content{min-width:0;}
+  .dnat .dial{display:none;}
+  .dnat .availB{grid-template-columns:minmax(0,1fr);}
+  .dnat .availB-side{position:static;}
+  .dnat .side-filters{flex-direction:row;flex-wrap:wrap;}
+  .dnat .side-f{width:auto;}
+  .dnat .availB-grid{grid-template-columns:repeat(2,1fr);}
+  .dnat .rev-grid,.dnat .read-cards,.dnat .geo-cards{grid-template-columns:minmax(0,1fr);}
+  .dnat .cta-form{grid-template-columns:minmax(0,1fr);}
+  .dnat .ccrow{grid-template-columns:minmax(0,1fr);gap:5px;}
+  .dnat .ccg{padding-top:0;}
+  /* Rail A — sticky UNDER the site header (96px), clay outlined pills */
+  .dnat .railA{display:block;position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.985);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);}
+  .dnat .railA ul{display:flex;gap:7px;overflow-x:auto;list-style:none;margin:0;padding:.45rem .75rem;scroll-behavior:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .dnat .railA ul::-webkit-scrollbar{display:none;}
+  .dnat .railA a{display:inline-flex;align-items:center;gap:.35rem;font-size:.76rem;font-weight:600;color:var(--clay-t);border:1.5px solid var(--clay);border-radius:50px;padding:7px 14px;text-decoration:none;background:#fff;white-space:nowrap;scroll-margin-inline:20px;min-height:36px;}
+  .dnat .railA a.on{background:var(--clay-ink);border-color:var(--clay-ink);color:#fff;}
+  .dnat .railA .p{font-weight:700;font-variant-numeric:tabular-nums;}
+  /* anchors must clear BOTH the header (96px) and the sticky rail (~54px) + gap */
+  .dnat .sec{scroll-margin-top:calc(var(--hdr) + 66px);}
+}
+@media (max-width:640px){
+  .dnat .dn-container{padding:0 16px;}
+  .dnat .counter-grid{grid-template-columns:repeat(2,1fr);}
+  .dnat .hero-metrics li{min-width:0;padding:8px 10px;}
+  .dnat .hero-metrics b{font-size:1rem;}
+  .dnat .availB-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .dnat .bblurb{display:none;}
+  .dnat .binfo{padding:9px 9px 11px;gap:.4rem;}
+  .dnat .brow{min-height:2.5rem;}
+  .dnat .brow h3{font-size:.92rem;}
+  .dnat .bprice{font-size:.92rem;}
+  .dnat .bfull{align-self:stretch;font-size:.74rem;padding:.5rem .55rem;}
+  .dnat .bchips span{font-size:.58rem;}
+  .dnat .bbadge{font-size:.55rem;padding:.15rem .42rem;}
+  .dnat .seam-wrap{gap:12px;margin:24px auto 22px;}
+  .dnat .seam{height:30px;}
+  .dnat .f2{grid-template-columns:1fr;}
+  .dnat .ticket-cta{font-size:.86rem;padding:.5rem .9rem;line-height:1.35;}
+
+  /* ===== Mobile table stacking — both tables become cards, keeping the desktop look ===== */
+  .dnat .tblwrap{overflow-x:visible;}
+  .dnat .tblD,.dnat .tblA{border:0;border-radius:0;overflow:visible;background:transparent;}
+  .dnat .tblD-cap{border-radius:10px;margin-bottom:10px;}
+  .dnat .tblD thead,.dnat .tblA thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+  .dnat .tblD tbody,.dnat .tblD tr,.dnat .tblD td,
+  .dnat .tblA tbody,.dnat .tblA tr,.dnat .tblA td{display:block;}
+  .dnat .tblD tr,.dnat .tblA tr{border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#fff;margin-bottom:10px;}
+  .dnat .tblD tr:last-child,.dnat .tblA tr:last-child{margin-bottom:0;}
+  .dnat .tblD td,.dnat .tblA td{padding:.55rem .8rem;border-bottom:1px solid var(--bd);}
+  .dnat .tblD tr td:last-child,.dnat .tblA tr td:last-child{border-bottom:0;}
+  /* first cell becomes the card's header band, mirroring the desktop header row */
+  .dnat .tblD td:first-child,.dnat .tblA td:first-child{background:var(--cream);color:var(--green-d);font-weight:700;font-size:.92rem;padding:.6rem .8rem;border-bottom:2px solid var(--bd);white-space:normal;}
+  .dnat .tblD td[data-label]:not(:first-child),.dnat .tblA td[data-label]:not(:first-child){display:grid;grid-template-columns:minmax(0,6.6rem) minmax(0,1fr);gap:.55rem;align-items:baseline;}
+  .dnat .tblD td[data-label]:not(:first-child)::before,.dnat .tblA td[data-label]:not(:first-child)::before{content:attr(data-label);font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);line-height:1.6;}
+
+  /* Mobile full-bleed section images.
+     INFOGRAPHICS keep native 16:9 and are NEVER cover-cropped — the 5:4 cover frame
+     shaved ~30% off the hand-raised set and cut its baked-in text.
+     Only real OG PHOTOS take the taller 4:5 frame (IMAGE-DESIGNS §7 blurfill). */
+  .dnat .sec-img{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);border-radius:0;border-left:0;border-right:0;}
+  .dnat .sec-img.inf-img{aspect-ratio:1408/768;object-fit:contain;background:#fff;}
+  .dnat .sec-img.og-photo{aspect-ratio:4/5;object-fit:cover;background:transparent;}
+}
+</style>
+</content>
