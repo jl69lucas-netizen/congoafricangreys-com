@@ -142,9 +142,21 @@ def check_absolute_hero(files):
             if not re.search(r"hero|polaroid|pofig|scatter|collage", ln, re.I):
                 continue
             sel = ln.split("{")[0].strip()
-            # captions/badges/chips pinned inside a card are correct by design —
-            # only the CARD ITSELF being absolute is the overlap/collapse bug
-            if re.search(r"figcaption|caption|badge|chip|label|::(before|after)", sel, re.I):
+            # captions/badges/chips/tags pinned inside a card are correct by design —
+            # only the CARD ITSELF being absolute is the overlap/collapse bug.
+            # NOTE single-colon `:before` too — `.chero-ribbon li:before{content:"✓"}`
+            # is a bullet glyph, not hero art (it was firing before this).
+            if re.search(r"figcaption|caption|badge|chip|label|tag|:{1,2}(before|after)",
+                         sel, re.I):
+                continue
+            # A lone element pinned to `inset:0` (or all four offsets at 0) fills its
+            # positioned parent — a cover-fill, not a scatter stack. It cannot overlap
+            # a sibling at any width, so the overlap/collapse bug does not apply.
+            # This is the comparison-cluster `.cvt-hero .hero-single img` pattern.
+            decl = ln.split("{", 1)[1] if "{" in ln else ""
+            fills = re.search(r"inset:\s*0", decl) or all(
+                re.search(rf"{side}:\s*0", decl) for side in ("top", "right", "bottom", "left"))
+            if fills:
                 continue
             base = sel.split()[-1].lstrip(".")
             # is it reset inside any max-width media query?
@@ -225,6 +237,9 @@ def check_img_srcset(pages):
 MINOR_WORDS = {"a", "an", "the", "and", "but", "or", "nor", "for", "so", "yet",
                "at", "by", "in", "of", "on", "to", "as", "vs", "per", "via"}
 
+# Genus names that legitimately precede a lowercase species epithet in a heading.
+SPECIES_GENERA = {"Psittacus", "Ara", "Amazona", "Cacatua", "Eclectus", "Poicephalus"}
+
 def check_title_case(pages):
     import html as _html
     for p in pages:
@@ -246,6 +261,13 @@ def check_title_case(pages):
                 force = True
                 for i, w in enumerate(words):
                     core = re.sub(r"[^\w'-]", "", w)
+                    # Binomial species epithets are correctly lowercase — "Psittacus
+                    # erithacus", "Psittacus timneh". Capitalising them would be the
+                    # actual defect, so they sit in the same exemption class as acronyms.
+                    prev = re.sub(r"[^\w'-]", "", words[i - 1]) if i else ""
+                    if prev in SPECIES_GENERA and core.islower():
+                        force = bool(re.search(r"[:?!]$", w))
+                        continue
                     # skip acronyms, brands, domains, numbers, prices
                     if (not core or core[0].isdigit() or "." in w
                             or core.isupper() or re.search(r"[a-z][A-Z]", core)):
