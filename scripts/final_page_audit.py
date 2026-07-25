@@ -205,7 +205,10 @@ def audit_html(slug, html, page_type="interior"):
     instock = "InStock" in raw and "OutOfStock" not in raw
     r["sold_not_instock"] = not (sold_signal and instock)
     # word count of visible body (scripts stripped)
-    vis = re.sub(r"<script[\s\S]*?</script>", "", raw)
+    # Strip <style> as well as <script>: pages that ship a page-scoped style block
+    # were counting several thousand words of CSS as body copy, which pushed every
+    # for-sale and comparison page out of band regardless of its real length.
+    vis = re.sub(r"<(script|style)[\s\S]*?</\1>", "", raw)
     nwords = len(re.sub(r"<[^>]+>", " ", vis).split())
     # Bird pages use the deep 22-section standard (1,500–4,000 words).
     # Interior/other pages use the lean target (700–1,000 ±buffer for chrome).
@@ -213,6 +216,11 @@ def audit_html(slug, html, page_type="interior"):
         r["wordcount_in_band"] = 1500 <= nwords <= 4000
     elif page_type == "comparison":
         r["wordcount_in_band"] = 3000 <= nwords <= 8000  # deep 22–25-section standard + chrome
+    elif page_type == "for-sale":
+        # 22-section transactional standard + chrome. Previously fell through to the
+        # lean 600–1,200 interior band, so every page in the cluster warned by default
+        # (shipped pages measure 5,300–7,000). Band set from the built cluster, 2026-07-25.
+        r["wordcount_in_band"] = 3000 <= nwords <= 8000
     else:
         r["wordcount_in_band"] = 600 <= nwords <= 1200  # 700-1000 target ±buffer for chrome
     # hero must be a real photo, not a placeholder/logo
@@ -353,7 +361,8 @@ FORSALE = ["african-grey-parrot-bird-eggs-for-sale-usa",
            "congo-african-grey-for-sale",
            "timneh-african-grey-for-sale",
            "hand-raised-african-grey-parrot-for-sale",
-           "dna-tested-african-grey-for-sale"]  # for-sale cluster, expanded as pages rebuild
+           "dna-tested-african-grey-for-sale",
+           "african-greys-for-sale-with-health-guarantee"]  # for-sale cluster, expanded as pages rebuild
 
 def blog_targets():
     """Discover the /blog/ hub (dist/blog/index.html) + every dist/blog/<slug>/ post."""
