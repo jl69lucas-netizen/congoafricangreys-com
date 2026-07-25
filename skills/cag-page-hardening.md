@@ -205,7 +205,91 @@ a real `sizes`:
 
 ---
 
+### 1i. The 2026-07-26 gate gaps — *the six the breeder had to find by hand*
+
+Banked after the for-sale cluster PageSpeed/UX review. Every one of these shipped to
+production on pages that had already passed `cag-final-page-pass`. The scan across all
+6 built for-sale pages found each defect is **cluster-wide**, not confined to the page
+it was reported on — the breeder saw a sample, not the extent.
+
+| Check | Sev | Catches | Found on |
+|---|---|---|---|
+| `hero-preload-srcset-drift` | ERROR | `heroPreload` set and the LCP `<img>` uses `srcset`, but `heroPreloadSrcset` is missing — the preload scanner resolves a *different* candidate than the renderer, so the hero downloads twice | dna-tested |
+| `tap-target-spacing` | ERROR | Nav/rail/dial pills with `gap` < 10px — adjacent targets fall inside each other's 24px axe exclusion zone. **Checks the desktop dial too**, which is why Lighthouse flagged tap targets on desktop where the mobile rail is `display:none` | **all 6**, 13 instances |
+| `form-control-ios-zoom` | ERROR | Form controls under 16px, **including via `font:inherit`** resolving to a smaller ancestor label. Under 16px iOS Safari auto-zooms on focus and the form's right edge leaves the viewport — this reads to users as "the form is broken / cut off" | **all 6** |
+| `form-control-overflow` | ERROR | A form grid whose children never set `min-width:0`. Grid children default to `min-width:auto` and refuse to shrink below their content | — |
+| `font-family-loaded-unused` | ERROR | A family requested in `BaseLayout` that no CSS rule ever resolves to | Lora + Sora, **site-wide** |
+| `analytics-double-load` | ERROR | The same GA4 container loading twice — direct `googletagmanager.com` **and** first-party via Cloudflare's Google Tag Gateway | see caveat below |
+| `deflist-label-not-differentiated` | WARN | `<dt>` and `<dd>` sharing colour+weight, **or** a `--muted` label sitting quieter than its own `--ink` value, so the block reads as one grey slab | health-guarantee receipt |
+| `icon-text-baseline-drift` | WARN | An icon+label flex/grid row with no `align-items` — when the label wraps, the glyph drifts off its text and the column reads as scattered | 4 of 6 |
+
+**`analytics-double-load` caveat — this one cannot fire on `dist/`.** The first-party
+`/70de/` script is injected by **Cloudflare at the edge**, not by our build, so it is
+absent from local output. Run this check against the **live URL**, not `dist/`:
+
+```bash
+curl -s https://congoafricangreys.com/<slug>/ | grep -cE 'googletagmanager\.com|src="/[0-9a-f]{4,}/"'
+```
+Two hits = double-load. `/70de/` is **GA4, not Rocket Loader** — confirmed 2026-07-26 by
+fetching it (`// Copyright 2012 Google Inc.` + the `G-MEWJ9GVC4T` container). Turning
+Rocket Loader off never could have fixed it.
+
+### 1j. `smooth-scroll-breaks-anchors` — REFINED 2026-07-26
+
+The original trap warned on **any** `scroll-behavior:smooth`. That was right when the
+pages had no `scroll-margin-top`. They do now (header 96px + sticky rail ~54px), so the
+rule is narrowed:
+
+- **Allowed:** `html{scroll-behavior:smooth}` inside `@media (prefers-reduced-motion: no-preference)`.
+- **Still warns:** smooth on a jump rail / dial's own scroller — it fights the instant
+  active-pill snap.
+
+Anything relying on the old blanket ban must be re-verified per page before shipping
+smooth scroll: click every jump link at 390px and 1280px and confirm the target heading
+lands *below* the sticky chrome.
+
 ## 2. Runtime probes (§Runtime — the static scan CANNOT catch these)
+
+### 2z. `srcset-sizes-mismatch` — *the oversized-hero root cause*
+
+Added 2026-07-26. Both oversized heroes PageSpeed flagged shared one root cause that is
+**not statically knowable**: the `sizes` attribute under-declares the real rendered box,
+so the browser resolves a far larger candidate than the layout needs.
+
+| Page | `sizes` declares | Actually renders at | Served |
+|---|---|---|---|
+| hand-raised | `(max-width:980px) 42vw, 158px` | 299 × 348 | 620 × 622 (17.8 KiB wasted) |
+| dna-tested | `(max-width:980px) 92vw, 420px` | 665 × 499 | 880 × 660 (17.1 KiB wasted) |
+
+A static scan cannot know the rendered box — that is exactly the information `sizes` is
+lying about. **Do not attempt a static version of this check**; it will either miss the
+defect or fire on correct pages. Probe it in a real viewport:
+
+```js
+// per <img> with srcset, at 390 / 768 / 1280
+const r = img.getBoundingClientRect();
+({ declared: img.sizes, renderedCss: Math.round(r.width),
+   chosen: img.currentSrc, intrinsic: img.naturalWidth,
+   wasteRatio: +(img.naturalWidth / (r.width * devicePixelRatio)).toFixed(2) })
+```
+Flag `wasteRatio > 1.5`. Fix by correcting `sizes` to the true box **first**, then adding
+candidates to match — correcting the ladder alone leaves `sizes` still lying.
+
+### 2y. `line-length-out-of-band` — *does the text actually fit*
+
+Added 2026-07-26 for the breeder's "text height/width on mobile, desktop and tablet" ask,
+which had **never been measured at any breakpoint**. Body measure must land in 45–75ch.
+
+```js
+[...document.querySelectorAll('main p')].map(p => {
+  const cs = getComputedStyle(p);
+  const ch = parseFloat(cs.fontSize) * 0.5;      // ~0.5em per char for the body face
+  return { ch: Math.round(p.getBoundingClientRect().width / ch),
+           lh: cs.lineHeight, text: p.textContent.slice(0, 40) };
+}).filter(x => x.ch < 45 || x.ch > 75);
+```
+Run at **360 / 768 / 1280**. Tablet is the breakpoint most likely to fail — these pages
+were built mobile-first then verified on desktop, so 768 was never the design target.
 
 Build, open the page in the preview browser, then run each probe. These are the
 checks that caught the two worst bugs of 2026-07-23.
