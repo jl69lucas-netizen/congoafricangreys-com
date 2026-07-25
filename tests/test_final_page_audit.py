@@ -21,9 +21,18 @@ MINIMAL_BIRD = """
 <meta name="description" content="Roys, our hand-raised Congo African Grey, $2,300.">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Product","name":"Roys","offers":{"@type":"Offer","availability":"https://schema.org/InStock"}},{"@type":"Organization","name":"C.A.Gs"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://congoafricangreys.com/"},{"@type":"ListItem","position":2,"name":"Available","item":"https://congoafricangreys.com/available/"},{"@type":"ListItem","position":3,"name":"Roys"}]}]}</script>
 </head><body><main><h1>Roys</h1><h2>About Roys</h2><h3>Health</h3><h4>Shipping</h4>
+<h5>Airport Pickup</h5><h6>IATA Crate Notes</h6>
+<h5>Home Delivery</h5><h6>Door-to-Door Timing</h6>
+<h5>Collection in Midland</h5><h6>What to Bring</h6>
+<h5>Weaning Status</h5><h6>Formula Schedule</h6>
+<h5>Documentation Folder</h5><h6>Certificate Numbers</h6>
 <p>Ships nationwide &middot; $185 airport &middot; $350 home. Captive-bred, CITES Appendix I, USDA AWA. Lifespan 40-60 years.</p>
 </main><footer>(844) 820-2234</footer></body></html>
 """
+# NOTE (2026-07-26): the H5/H6 rows above were added to satisfy the Heading Hierarchy
+# Outline Gate (all six levels, >=5 H5 AND >=5 H6), which became binding in CLAUDE.md
+# AFTER this fixture was written. The fixture was stale, not the gate — a "canonical
+# clean bird" must satisfy every rule that is binding on every page.
 
 def test_profile_marks_newsletter_na_for_bird():
     r = A.audit_html("available/roys", MINIMAL_BIRD, "bird")

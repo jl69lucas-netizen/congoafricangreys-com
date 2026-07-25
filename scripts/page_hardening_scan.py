@@ -314,10 +314,8 @@ def check_known_traps(files, pages):
                 add("ERROR", "user-select-none", f, i,
                     "user-select:none is banned site-wide (anti-copy rule)",
                     "remove it")
-            if re.search(r"scroll-behavior:\s*smooth", ln):
-                add("WARN", "smooth-scroll-breaks-anchors", f, i,
-                    "scroll-behavior:smooth cancels in-page #anchor navigation on this site",
-                    "use scroll-behavior:auto for jump rails / dial TOCs")
+            # scroll-behavior is now handled by check_smooth_scroll(), which allows
+            # the reduced-motion-guarded global `html` rule and still warns on rails.
     for p in pages:
         try:
             h = open(p, encoding="utf-8").read()
@@ -328,6 +326,279 @@ def check_known_traps(files, pages):
             add("ERROR", "escaped-svg", slug, 0,
                 "an inline SVG rendered escaped (&lt;svg) — a data-array icon is "
                 "missing set:html", "add set:html to the {x.icon} render")
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# The 2026-07-26 gate gaps. Every check below was banked from a defect that
+# shipped on the for-sale cluster and was found by the breeder on a phone rather
+# than by this scanner. Each takes [(label, text)] so it is unit-testable.
+# See tests/test_page_hardening_new_checks.py.
+# ═════════════════════════════════════════════════════════════════════════════
+
+# ── hero-preload-srcset-drift ────────────────────────────────────────────────
+# BaseLayout.astro:22-23 warns that heroPreloadSrcset/heroPreloadSizes must mirror
+# the LCP <img>. When only heroPreloadSizes is passed, the preload scanner resolves
+# a different candidate than the renderer, and the hero downloads twice.
+def check_hero_preload_drift(sources):
+    for label, text in sources:
+        if "heroPreload" not in text:
+            continue
+        img_has_srcset = re.search(r"<img\b[^>]*fetchpriority=\"high\"[^>]*srcset=", text, re.S) \
+            or re.search(r"<img\b[^>]*srcset=[^>]*fetchpriority=\"high\"", text, re.S)
+        if img_has_srcset and "heroPreloadSrcset" not in text:
+            line = text[: text.index("heroPreload")].count("\n") + 1
+            add("ERROR", "hero-preload-srcset-drift", label, line,
+                "heroPreload is set and the LCP <img> uses srcset, but "
+                "heroPreloadSrcset is missing — the preload scanner will fetch a "
+                "different candidate than the renderer uses (hero downloads twice)",
+                "mirror the img's srcset/sizes into heroPreloadSrcset/heroPreloadSizes")
+
+
+# ── tap-target-spacing ───────────────────────────────────────────────────────
+# /african-greys-for-sale-with-health-guarantee/ shipped 28 failing target pairs on
+# BOTH mobile and desktop. The pills are 36px tall so SIZE passed; `gap:7px` put
+# each pill inside its neighbour's 24px exclusion zone. axe target-size minimum.
+MIN_TARGET_GAP_PX = 10.0
+
+def _px(val):
+    """Resolve a CSS length to px. rem = 16px. Returns None if not resolvable."""
+    m = re.match(r"^\s*(-?[\d.]+)(px|rem|em)?\s*$", val or "")
+    if not m:
+        return None
+    n = float(m.group(1))
+    return n * 16 if m.group(2) in ("rem", "em") else n
+
+def check_tap_target_spacing(sources):
+    for label, text in sources:
+        # A flex/grid list that is a nav rail (has overflow-x or is a ul of links)
+        for m in re.finditer(r"([^{}]*)\{([^}]*)\}", text):
+            sel, body = m.group(1).strip(), m.group(2)
+            if "display:flex" not in body.replace(" ", "") and \
+               "display:grid" not in body.replace(" ", ""):
+                continue
+            if not re.search(r"\brail|\bnav|\bdial|\bjump|\btoc\b", sel, re.I):
+                continue
+            g = re.search(r"(?<![-\w])gap:\s*([^;]+);", body)
+            if not g:
+                continue
+            gap = _px(g.group(1).split()[0])
+            if gap is None or gap >= MIN_TARGET_GAP_PX:
+                continue
+            line = text[: m.start()].count("\n") + 1
+            add("ERROR", "tap-target-spacing", label, line,
+                f"nav pills in `{sel}` sit {gap:g}px apart — adjacent tap targets "
+                f"fall inside each other's 24px exclusion zone (axe target-size)",
+                f"raise gap to >={MIN_TARGET_GAP_PX:g}px and pad the pills to >=44px tall")
+
+
+# ── form-control-overflow / form-control-ios-zoom ────────────────────────────
+# The health-guarantee contact form was cut off on the right at mobile/tablet.
+# A CSS grid child defaults to min-width:auto and refuses to shrink below its
+# content — the single most common cause of exactly this symptom. Sub-16px inputs
+# additionally trigger iOS Safari auto-zoom, which reads as "too zoomed, cut off".
+def check_form_overflow(sources):
+    for label, text in sources:
+        flat = text.replace(" ", "")
+        form_grid = re.search(r"([^{}]*form[^{}]*)\{([^}]*display:\s*grid[^}]*)\}",
+                              text, re.I)
+        if form_grid and "min-width:0" not in flat:
+            line = text[: form_grid.start()].count("\n") + 1
+            add("ERROR", "form-control-overflow", label, line,
+                f"`{form_grid.group(1).strip()}` is a grid but no child sets "
+                "min-width:0 — grid children default to min-width:auto and will "
+                "not shrink below their content, overflowing the viewport",
+                "add `.row>*{min-width:0}` and max-width:100%;box-sizing:border-box "
+                "on every input/select")
+        for m in re.finditer(r"([^{}]*(?:input|select|textarea)[^{}]*)\{([^}]*)\}",
+                             text, re.I):
+            sel, body = m.group(1).strip(), m.group(2)
+            line = text[: m.start()].count("\n") + 1
+            fs = re.search(r"font-size:\s*([^;]+);", body)
+            if fs:
+                size = _px(fs.group(1))
+                if size is not None and size < 16:
+                    add("ERROR", "form-control-ios-zoom", label, line,
+                        f"`{sel}` sets font-size {size:g}px — anything under 16px "
+                        "makes iOS Safari auto-zoom the page on focus, which reads "
+                        "to users as the form being cut off",
+                        "set font-size:16px on every input/select/textarea")
+                continue
+            # `font:inherit` is the sneaky case — the size is real but declared on an
+            # ancestor. Resolve it against the nearest label/form rule in the same file.
+            if not re.search(r"font:\s*inherit", body):
+                continue
+            scope = sel.split(",")[0].rsplit(" ", 1)[0].strip()
+            inherited = None
+            for anc in re.finditer(r"([^{}]*)\{([^}]*)\}", text):
+                anc_sel = anc.group(1).strip()
+                if scope and scope not in anc_sel:
+                    continue
+                if not re.search(r"\b(label|form|fieldset)\b", anc_sel, re.I):
+                    continue
+                afs = re.search(r"font-size:\s*([^;]+);", anc.group(2))
+                if afs:
+                    inherited = _px(afs.group(1))
+            if inherited is not None and inherited < 16:
+                add("ERROR", "form-control-ios-zoom", label, line,
+                    f"`{sel}` uses font:inherit, which resolves to {inherited:g}px "
+                    f"from its ancestor label — under 16px iOS Safari auto-zooms on "
+                    "focus and the form's right edge leaves the viewport",
+                    "set an explicit font-size:16px on every input/select/textarea "
+                    "(the label can stay smaller)")
+
+
+# ── font-family-loaded-unused ────────────────────────────────────────────────
+# Lora and Sora were requested in BaseLayout on EVERY page of the site but never
+# rendered: direction-d.css overrides .font-lora/.font-sora with !important. Two of
+# the five woff2 files in every "Network dependency tree" PageSpeed finding.
+def check_font_families(head_html, theme_css):
+    requested = set()
+    for m in re.finditer(r"family=([A-Za-z0-9+]+)[:&]", head_html):
+        requested.add(m.group(1).replace("+", " "))
+    for m in re.finditer(r"@font-face\s*\{[^}]*font-family:\s*['\"]([^'\"]+)", head_html):
+        requested.add(m.group(1))
+    rendered = set(re.findall(r"font-family:\s*[^;]*?['\"]([^'\"]+)['\"]", theme_css))
+    for fam in sorted(requested):
+        if fam in rendered:
+            continue
+        if any(fam in r for r in rendered):
+            continue
+        add("ERROR", "font-family-loaded-unused", "src/layouts/BaseLayout.astro", 0,
+            f"'{fam}' is downloaded on every page but no CSS rule ever resolves to "
+            f"it — it is pure dead weight in the critical font chain",
+            f"remove {fam} from the font request")
+
+
+# ── analytics-double-load ────────────────────────────────────────────────────
+# /70de/ is GA4 served first-party via Cloudflare's Google Tag Gateway. The direct
+# googletagmanager.com tag ALSO fired, so the same G-MEWJ9GVC4T container loaded
+# twice — ~327 KiB of analytics on every page. NOT Rocket Loader, which was off.
+GTAG_GATEWAY = re.compile(r"""<script[^>]*\bsrc=["']/[0-9a-f]{4,}/["']""", re.I)
+GTAG_DIRECT = re.compile(r"googletagmanager\.com/(?:gtag/js|gtm\.js)", re.I)
+
+def check_analytics_double_load(pages):
+    for label, html in pages:
+        direct = GTAG_DIRECT.search(html)
+        gateway = GTAG_GATEWAY.search(html)
+        if direct and gateway:
+            line = html[: direct.start()].count("\n") + 1
+            add("ERROR", "analytics-double-load", label, line,
+                "the GA4 container loads twice — once directly from "
+                "googletagmanager.com and once first-party via Cloudflare's Google "
+                "Tag Gateway (~327 KiB of analytics on this page)",
+                "keep ONE. Prefer the first-party gateway, loaded on the window "
+                "load event so it never competes with LCP")
+
+
+# ── deflist-label-not-differentiated ─────────────────────────────────────────
+# The health-guarantee "guarantee on one receipt" component: Window / Covered /
+# Remedy / Voided by / Confirmed by / From rendered in the same colour AND weight
+# as their values, so the block read as one grey slab.
+# `.dt` is a real class on this site (the dial-list tag chip), so the element must be
+# matched without a leading . or - or word char, or the wrong rule gets paired.
+EL = lambda n: re.compile(rf"([^{{}}]*(?<![.\w-]){n}(?![\w-])[^{{}}]*)\{{([^}}]*)\}}")
+
+def check_deflist_labels(sources):
+    for label, text in sources:
+        dts = list(EL("dt").finditer(text))
+        dds = list(EL("dd").finditer(text))
+        if not (dts and dds):
+            continue
+        # Pair each dt rule with the dd rule sharing its scope (same ancestor chain).
+        def scope_of(sel):
+            # `[^{}]*` greedily swallows preceding comments/newlines, so keep only
+            # the final selector line before the brace.
+            last = sel.strip().split("\n")[-1].strip()
+            last = re.sub(r"^.*\*/", "", last).strip()
+            return last.rsplit(" ", 1)[0].strip()
+        def is_css(sel):
+            # These files are .astro — the same regex happily matches markup like
+            # `<span class="dt">`. Only keep things that look like a CSS selector.
+            return "<" not in sel and ">" not in sel and bool(re.match(r"^[.#a-z]", sel))
+
+        def prop(body, name):
+            m = re.search(rf"{name}:\s*([^;]+);", body)
+            return m.group(1).strip() if m else None
+
+        pairs = []
+        for d in dts:
+            sel = scope_of(d.group(1))
+            full = d.group(1).strip().split("\n")[-1].strip()
+            if not is_css(full):
+                continue
+            match = next((x for x in dds
+                          if scope_of(x.group(1)) == sel
+                          and is_css(x.group(1).strip().split("\n")[-1].strip())), None)
+            if match:
+                pairs.append((d, match))
+        if not pairs:
+            continue
+        # Report the first pair that actually declares colours.
+        dt, dd = next(((a, b) for a, b in pairs if prop(a.group(2), "color")), pairs[0])
+        dt_colour, dd_colour = prop(dt.group(2), "color"), prop(dd.group(2), "color")
+        same_colour = dt_colour == dd_colour
+        same_weight = prop(dt.group(2), "font-weight") == prop(dd.group(2), "font-weight")
+        line = text[: dt.start()].count("\n") + 1
+        if same_colour and same_weight and dt_colour:
+            add("WARN", "deflist-label-not-differentiated", label, line,
+                "<dt> labels and their <dd> values share the same colour AND weight "
+                "— the list reads as one undifferentiated block",
+                "give the <dt> a distinct colour (var(--green-d)) and heavier weight, "
+                "and lighten the <dd>")
+        elif dt_colour and "muted" in dt_colour and dd_colour and "muted" not in dd_colour:
+            # Different, but backwards: a muted label RECEDES behind its own value.
+            # A label should lead the eye into the row, not sit quieter than it.
+            add("WARN", "deflist-label-not-differentiated", label, line,
+                f"<dt> labels use {dt_colour} while their values use {dd_colour} — the "
+                "label is quieter than the thing it labels, so the block reads as one "
+                "grey slab and the reader cannot scan the rows",
+                "give the <dt> a distinct hue that leads (var(--green-d)), not a "
+                "lower-contrast grey")
+
+
+# ── icon-text-baseline-drift ─────────────────────────────────────────────────
+# The health-guarantee trust ticks looked "scattered" on mobile: the flex row never
+# set align-items, so each tick floated against a differently-wrapped label.
+def check_icon_baseline(sources):
+    for label, text in sources:
+        for m in re.finditer(r"([^{}]*(?:tick|badge|check|trust|feat)[^{}]*)\{([^}]*)\}",
+                             text, re.I):
+            body = m.group(2).replace(" ", "")
+            if "display:flex" not in body and "display:grid" not in body:
+                continue
+            if "align-items:" in body:
+                continue
+            line = text[: m.start()].count("\n") + 1
+            sel = m.group(1).strip().split("\n")[-1].strip()
+            add("WARN", "icon-text-baseline-drift", label, line,
+                f"`{sel}` lays out an icon+label row but never sets "
+                "align-items — when the label wraps, the glyph drifts off its text "
+                "and the column reads as scattered",
+                "use grid-template-columns:1rem 1fr with align-items:start so wrapped "
+                "labels stay hanging-indented under themselves")
+
+
+# ── smooth-scroll-breaks-anchors (refined 2026-07-26) ────────────────────────
+# The original trap warned on ANY scroll-behavior:smooth. The pages now set
+# scroll-margin-top to clear the header + sticky rail, so a reduced-motion-guarded
+# GLOBAL rule on html is correct. A jump rail's own horizontal scroller must still
+# warn — smooth there fights the active-pill auto-scroll.
+def check_smooth_scroll(sources):
+    for label, text in sources:
+        for m in re.finditer(r"scroll-behavior:\s*smooth", text):
+            before = text[: m.start()]
+            line = before.count("\n") + 1
+            block_start = max(before.rfind("{"), 0)
+            selector = before[max(before.rfind("}", 0, block_start), 0):block_start]
+            guarded = "prefers-reduced-motion" in before[-400:]
+            global_rule = re.search(r"\bhtml\b\s*$", selector.strip()) is not None
+            if guarded and global_rule:
+                continue
+            add("WARN", "smooth-scroll-breaks-anchors", label, line,
+                "scroll-behavior:smooth here fights in-page navigation — on a jump "
+                "rail it cancels the instant active-pill snap",
+                "keep scroll-behavior:auto on rails/dials; the only allowed smooth "
+                "rule is `html` inside @media (prefers-reduced-motion: no-preference)")
 
 
 def main():
@@ -347,9 +618,28 @@ def main():
     check_opacity_text(files)
     check_link_underline(files)
     check_known_traps(files, pages)
+
+    # 2026-07-26 gate gaps — see tests/test_page_hardening_new_checks.py
+    src_pairs = [(f, "\n".join(lines_of(f))) for f in files]
+    check_hero_preload_drift(src_pairs)
+    check_tap_target_spacing(src_pairs)
+    check_form_overflow(src_pairs)
+    check_deflist_labels(src_pairs)
+    check_icon_baseline(src_pairs)
+    check_smooth_scroll(src_pairs)
+
+    base = "src/layouts/BaseLayout.astro"
+    theme = "\n".join(lines_of("src/styles/direction-d.css") +
+                      lines_of("src/styles/global.css"))
+    if os.path.exists(base):
+        check_font_families("\n".join(lines_of(base)), theme)
+
     if pages:
         check_img_srcset(pages)
         check_title_case(pages)
+        check_analytics_double_load(
+            [(p.replace(DIST + "/", "").replace("/index.html", "/"),
+              open(p, encoding="utf-8").read()) for p in pages])
 
     errs = [f for f in findings if f["sev"] == "ERROR"]
     warns = [f for f in findings if f["sev"] == "WARN"]
