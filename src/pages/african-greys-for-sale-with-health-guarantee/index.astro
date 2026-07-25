@@ -1,96 +1,1163 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import TrustBar from '../../components/TrustBar.astro';
-import CTA from '../../components/CTA.astro';
-import Schema from '../../components/Schema.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import clutch from '../../../data/clutch-inventory.json';
 
-const title = "African Greys For Sale With Health Guarantee | Congo African Greys";
-const description = "Every African Grey parrot from Congo African Greys ships with a written health guarantee covering Polyoma, Pacheco's disease, Psittacosis, and PBFD. USDA AWA licensed. Vet health certificate included.";
+// ============================================================================
+//  /african-greys-for-sale-with-health-guarantee/ — for-sale cluster page 5
+//  Tuple (distinct from egg/congo/timneh/hand-raised/dna — sessions/2026-07-19-for-sale-component-map.md):
+//    Split-Hero A trust ribbon · Dial 1 clay + Rail A (guarantee palette)
+//    · T4 "Guarantee Index" · K1 Receipt + K5 Capsule · NEW Table E "Guarantee
+//    Ledger" + Table A · FAQ-A refreshed (green tick, not the DNA clay chevron)
+//    · Avail-B faceted by AVAILABILITY POSTURE (siblings facet by sex/variant)
+//  Angle: "A Guarantee You Can Actually Use" — reframe -> cover -> document -> birds
+//  Blend: EEBP (spine) x PAS (trust/scam) x EEAT (guarantee blocks) x QAB (FAQ) x FAB (spec rows)
+//  Voice lever: enforceable vs unenforceable. This page says WINDOW / REMEDY /
+//    VOID / IN WRITING where siblings say hen-cock, hand-fed, maroon, incubation.
+//  H6 prefixes reserved to this page: "In Writing:" · "From the Vet:" · "On File:"
+//  Prose written fresh from sessions/2026-07-25-health-guarantee-sprint1-blueprint.md §4
+//  (Write-From-Outline — nothing paraphrased from a sibling; the reviews are whitelist).
+// ============================================================================
+
+const title = "African Greys for Sale With a Health Guarantee You Can Actually Use | What Does an African Grey Health Guarantee Actually Cover? | 6 Documented Greys Reservable Today | C.A.Gs, Midland TX — 72-Hour Written Guarantee, Avian-Vet Exam, PBFD and Psittacosis PCR, CITES Papers";
+const description = "African Greys for sale with a written 72-hour health guarantee whose terms we publish in full — covered conditions, remedy, and what voids it. Replacement or refund, anchored to your own avian vet's exam. USDA-licensed Midland, TX family aviary, $1,500 floor. Ask us about a grey today.";
 const canonical = "https://congoafricangreys.com/african-greys-for-sale-with-health-guarantee/";
+
+const IMG = "/images/health-guarantee-page/";
+const CG = "/images/congo-page/";
+const TG = "/images/timneh-page/";
+const site = "https://congoafricangreys.com";
+const seam = "/cag-fs-seam-emblem.webp";
+const deposit = "$200";
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Greys for Sale", url: "/african-grey-parrots-for-sale/" },
+  { name: "African Greys for Sale With a Health Guarantee", url: "/african-greys-for-sale-with-health-guarantee/" },
+];
+
+// Real inventory. Avail-B facets by AVAILABILITY POSTURE on this page — the filter
+// itself carries the argument that the same written guarantee travels with every
+// grey regardless of how soon it can leave.
+const available = ((clutch as any).birds as any[]).filter((b) => b.status === "available");
+const postureKey = (b: any) => (b.sex === "pair" ? "pair" : b.age_at_listing === "1 year" ? "ready" : "reserve");
+const postureLabel = (b: any) =>
+  b.sex === "pair" ? "Pair · ships together" : b.age_at_listing === "1 year" ? "Ready now" : "Reserve & wean";
+const subLabel = (b: any) => (b.variant === "timneh_african_grey" ? "Timneh" : "Congo");
+const postureCount = (k: string) => available.filter((b) => postureKey(b) === k).length;
+
+// `badge:"top"` lifts the posture pill off a head-down bird's face (the Roys lesson).
+const birdImg: Record<string, { src: string; alt: string; pos: string; badge?: "top" }> = {
+  "Bery": { src: CG + "bery-congo-african-grey-female-card.webp", pos: "center 30%",
+    alt: "Bery, an adult Congo hen whose written health guarantee travels home with her" },
+  "Amie": { src: CG + "amie-congo-african-grey-female-card.webp", pos: "center 28%",
+    alt: "Amie, a young Congo grey cleared at her pre-sale avian-vet examination" },
+  "Roys": { src: CG + "roys-congo-african-grey-male-card.webp", pos: "center 30%", badge: "top",
+    alt: "Roys, a Congo cock PCR-screened for beak and feather disease before we listed him" },
+  "Jins & Jeni (pair)": { src: CG + "jins-jeni-congo-african-grey-pair-card.webp", pos: "center 32%",
+    alt: "Jins and Jeni, a companion pair of grey parrots each covered by their own written terms" },
+  "Elad": { src: TG + "elad-timneh-african-grey-male-card.webp", pos: "center 34%",
+    alt: "Elad, a maroon-tailed Timneh with his veterinary certificate already on file" },
+  "Evie": { src: TG + "evie-timneh-african-grey-female-card.webp", pos: "center 38%",
+    alt: "Evie, a Timneh grey whose paperwork folder rides in the crate beside her" },
+};
+const birdBlurb: Record<string, string> = {
+  "Bery": "Settled Congo hen, already past every milestone the window is designed to catch.",
+  "Amie": "Congo hen still weaning; her window opens the day she reaches you, not today.",
+  "Roys": "Congo cock, screened and cleared, waiting out the last few weeks of weaning.",
+  "Jins & Jeni (pair)": "Two greys, two sets of terms, one crate — they do not separate.",
+  "Elad": "Timneh cock out of Levi and Rily, examined and papered before he was listed.",
+  "Evie": "Timneh hen, unhurried and deliberate, cleared at her pre-sale examination.",
+};
+
+// Counter strip — 6 (this page's approved count), every figure Ledger-bound.
+const counters = [
+  { n: "72 Hours", l: "Written health window" },
+  { n: "24 Hours", l: "Shipping-arrival window" },
+  { n: "3 Screens", l: "PBFD, polyoma, psittacosis" },
+  { n: "$1,500", l: "Honest floor price" },
+  { n: "12+ Yrs", l: "Aviary in Midland, TX" },
+  { n: "24h", l: "We answer, personally" },
+];
+
+// Dial 1 spine. IDs map to the approved H1–H6 outline (blueprint §4).
+const sections = [
+  { n: "01", id: "covers", label: "What the guarantee covers", tag: "Terms" },
+  { n: "02", id: "window", label: "72 hours vs a full year", tag: "Reframe" },
+  { n: "03", id: "claim", label: "If your grey falls ill", tag: "3 steps" },
+  { n: "04", id: "available", label: "Greys you can reserve", tag: available.length + " birds" },
+  { n: "05", id: "documents", label: "The paperwork behind it", tag: "5 docs" },
+  { n: "06", id: "screening", label: "One exam, three screens", tag: "PCR" },
+  { n: "07", id: "scam", label: "Legit breeder or scam", tag: "Red flags" },
+  { n: "08", id: "ask", label: "What to ask before paying", tag: "5 Q" },
+  { n: "09", id: "floor", label: "Why the floor is $1,500", tag: "$1,500" },
+  { n: "10", id: "legal", label: "Owning one legally", tag: "CITES" },
+  { n: "11", id: "shipping", label: "Getting your grey home", tag: "$185/$350" },
+  { n: "12", id: "compare", label: "Us vs page-one sellers", tag: "Receipts" },
+  { n: "13", id: "reviews", label: "What buyers told us", tag: "5★" },
+  { n: "14", id: "video", label: "Our greys on camera", tag: "Video" },
+  { n: "15", id: "reading", label: "Read next", tag: "" },
+  { n: "16", id: "faq", label: "Questions buyers ask", tag: "10 Q" },
+  { n: "17", id: "reserve", label: "Ask about a grey", tag: "24h" },
+];
+const N = sections.length;
+
+// T4 "Guarantee Index" — magazine index card, regrouped along the angle's arc.
+const indexGroups = [
+  { g: "The terms", items: [ { h: "#covers", t: "What is covered, and what voids it" }, { h: "#window", t: "Is seventy-two hours long enough?" }, { h: "#claim", t: "How a claim actually runs" } ] },
+  { g: "The proof", items: [ { h: "#documents", t: "Five documents in the folder" }, { h: "#screening", t: "One exam, three PCR screens" }, { h: "#compare", t: "Us against page-one sellers" } ] },
+  { g: "The caution", items: [ { h: "#scam", t: "Telling a breeder from a scam" }, { h: "#ask", t: "Five questions to ask first" }, { h: "#floor", t: "Why $1,500 is the honest floor" } ] },
+  { g: "The birds", items: [ { h: "#available", t: "Greys you can reserve today" }, { h: "#shipping", t: "Airport, home, or Midland" }, { h: "#reserve", t: "Ask us about one" } ] },
+];
+
+// NEW Table E "Guarantee Ledger" — this page's signature table. Every "them" cell
+// is a Sprint 0 §2c/§3 receipt, never an invention.
+const ledgerRows = [
+  { k: "Stated window", ours: "72 hours from arrival, plus a 24-hour shipping window", them: "Anything from 72 hours to 365 days, with the longest offered by the least verifiable sellers" },
+  { k: "Covered conditions named", ours: "Congenital defects and infectious disease, listed in writing", them: "Usually unstated — “health guarantee” appears as a two-word badge" },
+  { k: "Remedy", ours: "Replacement or refund, at our discretion", them: "Store credit toward a future purchase, or nothing stated at all" },
+  { k: "What voids it", ours: "Band removal, improper diet or care, exposure to other birds, no vet exam inside the window", them: "Rarely published, so a buyer meets the exclusions only when claiming" },
+  { k: "Who confirms the illness", ours: "Your own avian vet, independent of us", them: "The seller, or left unspecified" },
+  { k: "Anchored to documentation", ours: "Vet certificate, DNA certificate, CITES papers, closed band", them: "One badge among many, with no document shown anywhere" },
+];
+
+// Table A — page-one seller receipts (Sprint 0 §3). Fetched claims only.
+const compareRows = [
+  { k: "Publishes the covered conditions", us: "Yes — congenital defects and infectious disease, named", them: "No page-one seller we checked lists covered conditions" },
+  { k: "States the remedy plainly", us: "Replacement or refund", them: "One registry breeder offers credit toward a future purchase only" },
+  { k: "Publishes what voids the guarantee", us: "Four exclusions, stated on this page", them: "Silent, or buried where the listing never links" },
+  { k: "Species-correct guarantee copy", us: "Written for African Greys, by the people who raised them", them: "Boilerplate naming the wrong farm and the wrong species" },
+  { k: "Lowest advertised price", us: "A $1,500 floor, guarantee included", them: "$750–$850 Congos advertised beneath a one-year guarantee badge" },
+  { k: "Guarantee attached to a named bird", us: "Every grey below, by name and by band", them: "Marketplace stock cards, or photographs shared by several sellers" },
+];
+
+// DISTINCT geo set vs egg/congo/timneh/hand-raised/dna. All slugs verified live.
+// CO anchors to Jeffrey's city; SC has no page, so it lives in prose, never as a link.
+const shipPlaces = [
+  { href: "/african-grey-parrot-for-sale-texas/", label: "Health-guaranteed African Greys Texas", note: "Midland pickup or DFW cargo" },
+  { href: "/african-grey-parrot-for-sale-ohio/", label: "Guaranteed grey parrots Ohio", note: "Columbus and Cleveland desks" },
+  { href: "/african-grey-parrot-for-sale-colorado/", label: "Vet-checked African Greys Colorado", note: "Denver International, the Centennial run" },
+  { href: "/african-grey-parrot-for-sale-north-carolina/", label: "Written guarantee greys North Carolina", note: "Charlotte cargo counter" },
+  { href: "/african-grey-parrot-for-sale-georgia/", label: "Documented African Grey parrots Georgia", note: "Atlanta live-animal hub" },
+  { href: "/african-grey-parrot-for-sale-michigan/", label: "Buy a guaranteed African Grey Michigan", note: "Detroit Metro route" },
+  { href: "/african-grey-parrot-for-sale-pennsylvania/", label: "African Greys with health papers Pennsylvania", note: "Philadelphia desk" },
+  { href: "/african-grey-parrot-for-sale-virginia/", label: "Guaranteed healthy greys Virginia", note: "Dulles cargo" },
+];
+
+// Real, breeder-supplied reviews — the ONE whitelisted verbatim crossover on this
+// page. New to this build (siblings use Stanley Perkin / Jesse Ovalle). Verbatim,
+// unedited, as supplied 2026-07-25.
+const stories = [
+  { name: "Meredith Plaisance", loc: "Hartsville, SC 29550", meta: "Verified C.A.Gs buyer",
+    avatar: IMG + "meredith-plaisance-hartsville-sc-health-guarantee-review.webp",
+    quote: "I searched everywhere for a healthy African Grey bird for sale near me, and C.A.G.s was by far the best choice. From the first conversation, they were knowledgeable, responsive, and genuinely cared about matching me with the right bird. My African Grey arrived in excellent health, fully weaned, and incredibly friendly. The entire experience was smooth from start to finish, and I would absolutely recommend C.A.G.s to anyone looking for a quality African Grey." },
+  { name: "Jeffrey Hendershot", loc: "Centennial, CO 80112", meta: "Verified C.A.Gs buyer",
+    avatar: IMG + "jeffrey-hendershot-centennial-co-guaranteed-grey-review.webp",
+    quote: "Finding a trustworthy place for rehoming African Grey parrot options wasn't easy until I discovered C.A.G.s. They answered every question, provided regular updates, and made me feel confident throughout the entire adoption process. My Grey is healthy, intelligent, and has settled into our home beautifully. The professionalism and genuine care shown by C.A.G.s exceeded every expectation." },
+];
+
+const readMore = [
+  { href: "/african-grey-parrot-health-guarantee/", img: IMG + "what-african-grey-health-guarantee-covers", kicker: "The policy", title: "Our African Grey health guarantee in full", sub: "The complete written policy this page summarises, including fine print we did not have room for here." },
+  { href: "/how-to-avoid-african-grey-parrot-scams/", img: IMG + "72-hour-vs-one-year-parrot-health-guarantee", kicker: "Scam guide", title: "How to avoid African Grey parrot scams", sub: "Where a guarantee badge sits among the other signals a fraudulent listing gives off." },
+  { href: "/trusted-african-grey-parrot-breeders/", img: IMG + "documentation-with-guaranteed-african-grey", kicker: "Who we are", title: "Trusted African Grey parrot breeders", sub: "Mark and Teri, the licence, the aviary, and why any of that should matter to you." },
+  { href: "/dna-tested-african-grey-for-sale/", img: IMG + "one-vet-exam-three-disease-screens-parrot", kicker: "Testing", title: "DNA-tested African Greys for sale", sub: "The sexing assay that runs off the same sample as the disease panel, priced openly." },
+];
+
+// QAB — 10 PAA targets from the Sprint 0.5 fan-out (Tier 3 + Tier 7).
+const faqs = [
+  { q: "What does your African Grey health guarantee actually cover?", a: "It covers two things, and we name them rather than leaving you to guess. The first is a congenital defect — something your grey was hatched with that no examination could have surfaced beforehand. The second is infectious disease already incubating when he left us and not yet showing itself. Separately, anything that goes wrong in transit is covered for 24 hours from arrival. What it does not stretch to is an illness acquired after delivery, because at that point we would be guaranteeing a household we have never seen." },
+  { q: "Is a 72-hour health guarantee long enough to trust?", a: "It is long enough to do the one job a guarantee can honestly do, which is get an independent avian vet to look at your bird while the question of who was responsible is still answerable. Seventy-two hours is not a limit on our interest in your grey; we answer messages years later. It is the boundary of what we can fairly stand behind, because after three days in a new home the diet, the air and the stress are yours rather than ours. A twelve-month promise sounds generous precisely because nobody expects to honour it." },
+  { q: "What happens if my African Grey gets sick right after it arrives?", a: "Ring an avian vet first and us second, in that order, because the examination is what makes everything afterwards possible. Book inside the 72-hour window, mention that your bird has just travelled, and ask for the findings in writing. Send us that diagnosis and we settle it as replacement or refund, at our discretion. There is no claims department here; it is Mark or Teri reading your email. What we cannot act on is a description of symptoms alone, however worrying, because the vet's record is the only thing either of us can rely on." },
+  { q: "What voids the health guarantee?", a: "Four things, all published rather than buried. Removing the closed leg band voids it, because that band is the only physical link between the paperwork and the parrot. Improper diet or husbandry voids it, and a seed-only bowl is the usual culprit. Exposing your grey to other birds during the first thirty days voids it, since a new bird can carry something yours did not arrive with. Skipping the avian-vet exam inside the window voids it too, at which point the bird is sold as-is. None of these are traps; each marks the point where we can no longer tell what happened." },
+  { q: "Do I need to take my new African Grey to an avian vet right away?", a: "Yes, and we would push you to do it even if no guarantee existed. An avian vet is not the same as a general small-animal practice; birds hide illness so well that a trained eye catches things days or weeks before an owner would. Book the appointment before your grey arrives rather than after, because good avian practices run a waiting list and the window does not pause while you find one. Bring the paperwork folder — the vet will want the band number and the screening results, and it starts your grey's own medical record properly." },
+  { q: "How do I know an African Grey breeder is legitimate and not a scam?", a: "Ask for something only a real breeder can produce, then watch what happens. A live video call with the specific bird, taken now, on request, is the hardest thing for a fraudulent listing to fake. Beyond that: a real breeder has a physical address you can look up, a licence you can verify, a price that sits in the actual market, and no objection to your questions. Payment method is the loudest tell — anyone steering you toward a wire, a gift card or a peer-to-peer app is choosing the one route with no recourse, and that choice is the whole scam." },
+  { q: "Why won't a real breeder sell a healthy African Grey for $800?", a: "Because the costs underneath a grey do not move. A hand-raised chick eats formula every few hours for months, and somebody is awake to feed it. The pre-sale avian-vet exam, the PCR disease panel, the DNA sexing and the CITES paperwork each carry a real invoice. At $800 the arithmetic fails before the bird is even weaned, which means something in the description is untrue — the bird, the testing, or the seller. That is why the price is the first thing to check and the last thing to negotiate on." },
+  { q: "What documents come with a health-guaranteed African Grey?", a: "Five, and they arrive together in one folder rather than trickling in afterwards. The written health guarantee itself, with the window and the remedy on it. The avian-vet health certificate from the pre-sale examination, dated within ten days of travel. The DNA sexing certificate naming the hen or cock. Your CITES Appendix I captive-bred documentation. And the closed leg band already on your grey's leg, whose number appears on the paperwork so you can match them yourself. Check the band against the certificate on day one; it takes a minute and it is the whole point." },
+  { q: "Are your African Greys DNA-sexed and disease-tested before sale?", a: "Both, before a bird is ever listed rather than after somebody asks. Sexing runs by PCR on a feather or blood sample and comes back as a certificate tied to the band number. The disease screening runs off that same sample type and covers psittacine beak and feather disease, avian polyomavirus and psittacosis. We would rather find something at that stage and deal with it here than have you discover it in your living room, which is the practical reason the guarantee is affordable for us to offer at all." },
+  { q: "Can you ship an African Grey with the health guarantee intact?", a: "Yes, and shipping is exactly where the extra 24-hour window earns its place. Your grey travels as IATA-compliant live-animal cargo on Delta, United or American in a ventilated crate, on a direct flight wherever the route allows. From the moment you collect him, anything transit-related is covered for a day, and the 72-hour health window runs alongside it. If Midland is within two or three hours of you, collecting in person is free and skips the question entirely — several buyers make the drive for that reason alone." },
+];
+
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
+
+const productSchema = {
+  "@context": "https://schema.org", "@type": "Product",
+  name: "African Grey Parrot for Sale With a Written 72-Hour Health Guarantee",
+  image: [ site + IMG + "healthy-african-grey-for-sale.webp", site + IMG + "what-african-grey-health-guarantee-covers.webp" ],
+  description: "A captive-bred African Grey parrot from C.A.Gs, a USDA-licensed family aviary in Midland, Texas, sold with a written 72-hour health guarantee covering congenital defects and infectious disease, plus a 24-hour shipping-arrival window. Remedy is replacement or refund. Every grey is examined by a board-certified avian vet and PCR-screened for PBFD, avian polyomavirus and psittacosis, DNA-sexed, and documented under CITES Appendix I.",
+  category: "Companion parrot",
+  brand: { "@type": "Organization", name: "C.A.Gs – Midland, TX" },
+  aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "52" },
+  review: stories.map((s) => ({ "@type": "Review", author: { "@type": "Person", name: s.name },
+    reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" }, reviewBody: s.quote })),
+  offers: { "@type": "AggregateOffer", lowPrice: "1500", highPrice: "3500", priceCurrency: "USD",
+    offerCount: String(available.length), availability: "https://schema.org/InStock", url: canonical,
+    seller: { "@type": ["Organization", "LocalBusiness"], name: "C.A.Gs – Midland, TX", alternateName: "Congo African Greys" } },
+};
+
+const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
+  itemListElement: available.map((b, i) => ({ "@type": "ListItem", position: i + 1,
+    item: { "@type": "Product", name: b.name.replace(" (pair)", "") + " — Health-Guaranteed " + subLabel(b) + " African Grey",
+      category: "Companion parrot",
+      offers: { "@type": "Offer", price: String(b.price), priceCurrency: "USD",
+        availability: "https://schema.org/InStock", url: site + b.slug } } })) };
+
+const schemaGraph = JSON.stringify({ "@context": "https://schema.org", "@graph": [productSchema, itemListSchema, faqSchema] });
+const ogExtra = `<meta property="og:image" content="${site}${IMG}healthy-african-grey-for-sale.webp">`;
+const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`;
 ---
+<BaseLayout title={title} description={description} canonical={canonical} ogType="product" hideGlobalCta={true} schemaJson={schemaGraph} heroPreload={IMG + "healthy-african-grey-for-sale.webp"} heroPreloadSrcset={IMG + "healthy-african-grey-for-sale-760.webp 760w, " + IMG + "healthy-african-grey-for-sale.webp 1408w"} heroPreloadSizes="(max-width: 900px) 100vw, 540px" extraHeadHtml={ogExtra}>
 
-<BaseLayout {title} {description} {canonical} hideGlobalCta>
+  <main class="hgar">
+    <div class="hg-container"><Breadcrumb items={breadcrumbs} /></div>
 
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={[
-      { name: "Home", url: "/" },
-      { name: "African Greys for Sale", url: "/african-grey-parrots-for-sale/" },
-      { name: "African Greys with Health Guarantee", url: "/african-greys-for-sale-with-health-guarantee/" }
-      ]} />
-  </div>
-
-  <section class="bg-green text-white py-16 px-4">
-    <div class="max-w-3xl mx-auto text-center">
-      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-3">3-Day Written Guarantee</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">African Greys For Sale With Health Guarantee</h1>
-      <p class="text-white/80 text-lg">Every bird ships with a written health guarantee and avian vet health certificate. If your bird falls ill within 3 days of arrival, we make it right.</p>
-    </div>
-  </section>
-
-  <TrustBar />
-
-  <!-- What's Covered -->
-  <section class="py-16 px-4">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-4 text-center">What Our Health Guarantee Covers</h2>
-      <p class="text-stone-600 text-center mb-10 max-w-2xl mx-auto">Our guarantee covers the most serious parrot diseases. If your veterinarian diagnoses any of the following within 3 days of arrival, contact us immediately.</p>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { num: '1', disease: 'Polyoma', desc: 'A viral disease affecting feather development and immune system in young parrots.' },
-          { num: '2', disease: "Pacheco's Disease", desc: 'A highly contagious herpesvirus that can cause rapid liver failure in parrots.' },
-          { num: '3', disease: 'Psittacosis', desc: 'A bacterial infection affecting the respiratory system. Reportable in most U.S. states.' },
-          { num: '4', disease: 'PBFD', desc: 'Psittacine Beak and Feather Disease — a circovirus causing feather and beak abnormalities.' },
-        ].map(item => (
-          <div class="border border-gold/30 rounded-2xl p-6 bg-white shadow-sm text-center">
-            <div class="w-10 h-10 rounded-full bg-green text-white font-bold font-lora flex items-center justify-center mx-auto mb-3 text-lg">{item.num}</div>
-            <h3 class="font-lora font-semibold text-logo-dark text-lg mb-2">{item.disease}</h3>
-            <p class="text-stone-500 text-sm leading-relaxed">{item.desc}</p>
+    <!-- ===================== SPLIT-HERO A · IMAGE LEFT + TRUST RIBBON ===================== -->
+    <header class="hero">
+      <div class="hero-grid hg-container">
+        <figure class="hero-shot">
+          <img src={IMG + "healthy-african-grey-for-sale.webp"}
+               srcset={IMG + "healthy-african-grey-for-sale-760.webp 760w, " + IMG + "healthy-african-grey-for-sale.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 540px"
+               width="1408" height="768" fetchpriority="high" decoding="async"
+               alt="African greys for sale with a health guarantee — a healthy Congo grey raised at our Midland, Texas family aviary">
+        </figure>
+        <div class="hero-copy">
+          <p class="eyebrow">Written 72-hour guarantee · Midland, TX · USDA-licensed family aviary since 2014</p>
+          <h1>African Greys for Sale With a Health Guarantee You Can <em>Actually Use</em></h1>
+          <p class="lead">Nearly every seller on this search result says "health guarantee." Almost none of them say what it covers, how long you have, or what they will actually do about it. Ours runs 72 hours from arrival, rests on an examination by your own avian vet, and is settled as replacement or refund. The terms sit further down this page in full — before you have given us a dollar.</p>
+          <div class="hero-cta">
+            <a class="btn btn-clay" href="#available">See the greys we guarantee</a>
+            <a class="btn btn-ghost" href="#covers">Read the terms first</a>
           </div>
+        </div>
+      </div>
+      <ul class="ribbon hg-container" aria-label="What ships with every grey">
+        <li><span set:html={tick} /> 72-hour written guarantee</li>
+        <li><span set:html={tick} /> Avian-vet examined</li>
+        <li><span set:html={tick} /> DNA-sexed, certificate included</li>
+        <li><span set:html={tick} /> CITES Appendix I papers</li>
+      </ul>
+    </header>
+
+    <!-- ===================== COUNTER STRIP · 6 ===================== -->
+    <section class="counter" aria-label="Our guarantee at a glance">
+      <div class="hg-container counter-grid">
+        {counters.map((c) => (
+          <div class="cstat"><span class="cn">{c.n}</span><span class="cl">{c.l}</span></div>
         ))}
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Documentation -->
-  <section class="bg-warm-white py-16 px-4">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8 text-center">Documentation Included With Every Bird</h2>
-      <div class="grid sm:grid-cols-2 gap-6">
-        {[
-          { icon: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>', title: 'Avian Vet Health Certificate', body: 'Issued within 10 days of shipment. Required by airlines and confirms your bird is healthy for travel.' },
-          { icon: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>', title: 'CITES Captive-Bred Certificate', body: 'CITES Appendix I documentation proving your bird was legally captive-bred — not wild-caught.' },
-          { icon: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>', title: 'Hatch Certificate & Band Number', body: 'Unique identification for your bird. Required for CITES compliance and interstate transport.' },
-          { icon: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6l-4.6 9.2A1.5 1.5 0 0 0 6.7 21h10.6a1.5 1.5 0 0 0 1.3-2.8L14 9V3"/></svg>', title: 'DNA Sexing Certificate', body: 'Confirms the sex of your bird before purchase. Male or female — guaranteed.' },
-        ].map(doc => (
-          <div class="flex gap-4 p-5 bg-white rounded-xl border border-stone-100 shadow-sm">
-            <span class="text-2xl mt-1" set:html={doc.icon}></span>
-            <div>
-              <h3 class="font-lora font-semibold text-logo-dark text-base mb-1">{doc.title}</h3>
-              <p class="text-stone-500 text-sm leading-relaxed">{doc.body}</p>
+    <!-- ===================== RAIL A (mobile) ===================== -->
+    <nav class="railA" aria-label="Jump to a section">
+      <ul>
+        {sections.map((s) => (
+          <li><a href={"#" + s.id} data-dial={s.id}><span class="p">{s.n}</span>{s.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="hg-container body-grid">
+
+      <!-- ===================== DIAL 1 · CLAY PROGRESS (desktop) ===================== -->
+      <aside class="dial" aria-label="Section progress">
+        <div class="dial-card">
+          <div class="ring hg-ring"><div class="ring-in"><span class="ring-n">01</span><span class="ring-of">of {N}</span></div></div>
+          <ul class="dial-list">
+            {sections.map((s) => (
+              <li><a href={"#" + s.id} data-dial={s.id}><span class="di">{s.n}</span><span class="dh">{s.label}</span>{s.tag && <span class="dt">{s.tag}</span>}</a></li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+
+      <div class="content">
+
+        <!-- ===================== K1 · RECEIPT CARD ===================== -->
+        <aside class="k1" aria-label="The guarantee in brief">
+          <div class="k1-head"><b>The guarantee, on one receipt</b><span>C.A.Gs · Midland, TX</span></div>
+          <dl class="k1-rows">
+            <div><dt>Window</dt><dd>72 hours from arrival · 24 hours for anything transit-related</dd></div>
+            <div><dt>Covered</dt><dd>Congenital defects · infectious disease incubating before delivery</dd></div>
+            <div><dt>Remedy</dt><dd>Replacement or refund, at our discretion</dd></div>
+            <div><dt>Voided by</dt><dd>Band removal · improper diet or care · exposure to other birds · no vet exam</dd></div>
+            <div><dt>Confirmed by</dt><dd>Your own avian vet, independent of us</dd></div>
+            <div><dt>From</dt><dd>$1,500 · every grey below carries identical terms</dd></div>
+          </dl>
+        </aside>
+
+        <!-- ===================== T4 · GUARANTEE INDEX ===================== -->
+        <nav class="t4" aria-label="Guarantee index">
+          <p class="t4-h">The guarantee index</p>
+          <div class="t4-grid">
+            {indexGroups.map((g) => (
+              <div class="t4-col">
+                <p class="t4-g">{g.g}</p>
+                <ul>{g.items.map((i) => (<li><a href={i.h}>{i.t}</a></li>))}</ul>
+              </div>
+            ))}
+          </div>
+        </nav>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Ask us which grey suits your household <span>→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §5 · WHAT IT COVERS ===================== -->
+        <section class="sec" id="covers">
+          <h2>What Does a Real African Grey Health Guarantee Actually Cover?</h2>
+          <p class="opener">A written health guarantee is a contract about risk, and here at C.A.Gs ours names the risks it accepts instead of gesturing at them. It stands behind two categories of illness for 72 hours after your grey lands, so that a fault carried out of our aviary stays our responsibility rather than becoming your veterinary bill.</p>
+          <img class="sec-img inf-img" src={IMG + "what-african-grey-health-guarantee-covers.webp"}
+               srcset={IMG + "what-african-grey-health-guarantee-covers-760.webp 760w, " + IMG + "what-african-grey-health-guarantee-covers.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="What our written African Grey health guarantee covers, and the four conditions that void it">
+
+          <h3>The Conditions Our Written Guarantee Stands Behind</h3>
+          <p>Two categories carry the weight. A congenital defect is something a grey hatched with — a heart or airway fault, a skeletal problem — that a pre-sale examination had no way of surfacing. Infectious disease covers an organism already at work in your bird when the crate closed but not yet visible to a vet. Both share one quality: they existed before you did anything, which is precisely why they belong to us.</p>
+
+          <h4>Which Illnesses Fall Inside the Guarantee Window?</h4>
+          <p>Anything a veterinarian can trace to a point before delivery falls inside. In practice that means a positive PCR result on a disease we screen for, or a structural fault identified on examination. The 24-hour transit clause sits alongside it and answers a different question — injury or distress caused by the journey itself, which is neither congenital nor infectious but is still ours to put right.</p>
+
+          <h5>Congenital Defects and Infectious Disease Are Both Covered</h5>
+          <p>We separate the two deliberately because they fail differently. A congenital fault is usually found at the first examination and is unambiguous. An infection may take a few days to declare itself, which is why the window runs to 72 hours rather than 24 — long enough for an incubating organism to become detectable, short enough that a new household has not yet become a competing explanation.</p>
+
+          <h6>In Writing: The Exact Conditions Named on Your Guarantee</h6>
+          <p>The document you receive names congenital defects and infectious disease explicitly, states the 72-hour health window and the 24-hour shipping window as separate clauses, and records your grey's closed band number so the terms attach to one specific bird. <a href="/african-grey-parrot-health-guarantee/">Our full health-guarantee policy</a> carries the complete wording, including the fine print this summary compresses.</p>
+
+          <h3>What the Guarantee Does Not Cover, Stated Plainly</h3>
+          <p>Four exclusions, and we would rather you read them now than discover them during a claim. The band must stay on. The diet must be the one we send you home with, not a seed bowl. No other birds for the first thirty days. And the avian-vet examination has to happen inside the window — without it, the sale is as-is.</p>
+
+          <h4>Why Do Injury, Diet and Exposure Void the Guarantee?</h4>
+          <p>Each exclusion marks a boundary where evidence runs out. Once a band is removed, no paperwork can be tied to that parrot. Once another bird shares the airspace, an infection has a second possible origin. Once a grey has been fed badly for a fortnight, its bloodwork tells a story about your kitchen rather than our aviary. These are not escape hatches; they are the honest edge of what anyone can promise about an animal in someone else's home.</p>
+        </section>
+
+
+        <!-- ===================== §6 · THE REFRAME + TABLE E ===================== -->
+        <section class="sec" id="window">
+          <h2>Is a 72-Hour Guarantee Long Enough, or Do You Need a Full Year?</h2>
+          <p class="opener">Guarantee length has turned into an advertising arms race among African Grey sellers, and here at C.A.Gs we have watched it run in the wrong direction. The listings offering a full year are, with striking consistency, the ones least able to honour anything — so the number on the badge tells you less than how the promise is anchored.</p>
+          <img class="sec-img inf-img" src={IMG + "72-hour-vs-one-year-parrot-health-guarantee.webp"}
+               srcset={IMG + "72-hour-vs-one-year-parrot-health-guarantee-760.webp 760w, " + IMG + "72-hour-vs-one-year-parrot-health-guarantee.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Comparing a vet-anchored 72-hour parrot guarantee against unenforceable one-year and 365-day marketing promises">
+
+          <h3>Why a Longer Guarantee Is Often the Weaker One</h3>
+          <p>Length costs a seller nothing to advertise and everything to honour, so the incentive runs toward inflation. Independent parrot guides reach the same conclusion from the other side, advising buyers to treat an unusually long guarantee as a prompt to be reasonable rather than reassured. A promise stretched across twelve months has to survive a year of someone else's husbandry — which is another way of saying it will almost never be paid out.</p>
+
+          <h4>What Does a "1-Year" or "365-Day" Guarantee Really Promise?</h4>
+          <p>Read the ones we found and the pattern repeats: a long window, no list of covered conditions, no named remedy, and no requirement that anyone examine the bird. The length is doing the persuading while the substance stays blank. One page-one seller pairs a one-year badge with a Congo discounted to roughly $750 — a figure that cannot cover the testing the badge implies.</p>
+
+          <h5>An Unenforceable Promise Protects the Seller, Not the Buyer</h5>
+          <p>A guarantee only functions if a third party can establish what was wrong and when. Strip out the vet requirement and there is nothing to establish anything with, which leaves the seller as sole judge of their own liability. That is why we would rather hand you a short window with an independent examiner in it than a long one where we decide.</p>
+
+          <h6>From the Vet: Why a Fast, Documented Window Protects Your Grey</h6>
+          <p>Avian veterinarians make the clinical case better than the marketing does: a parrot that has just flown needs eyes on it quickly regardless of paperwork, because birds mask illness until it is advanced. <a href="https://www.aav.org/search/custom.asp?id=1803" target="_blank" rel="noopener">The Association of Avian Veterinarians' find-a-vet directory</a> is where to book that appointment ↗, ideally before your grey travels rather than after.</p>
+
+          <h3>How Our 72-Hour Window Compares to the Sellers Beside Us</h3>
+          <p>Set the models side by side on the axes that decide a claim, not the one printed on the badge.</p>
+          <div class="tblwrap">
+            <table class="tblE">
+              <caption class="tblE-cap">Table E · The guarantee ledger</caption>
+              <thead><tr><th scope="col">Term that decides a claim</th><th scope="col">Ours, in writing</th><th scope="col">What we found elsewhere on page one</th></tr></thead>
+              <tbody>
+                {ledgerRows.map((r) => (
+                  <tr>
+                    <td data-label="Term">{r.k}</td>
+                    <td data-label="Ours">{r.ours}</td>
+                    <td data-label="Elsewhere">{r.them}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h4>Which Guarantee Would an Avian Vet Tell You to Trust?</h4>
+          <p>The one that sends you to them. Every veterinary recommendation on buying a bird converges on the same instruction — have an independent avian vet examine your new parrot promptly — and a guarantee built around that instruction is the only kind a vet can actually help you enforce.</p>
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Ask about a grey with these terms attached <span>→</span></a></div>
+
+
+        <!-- ===================== §7 · THE CLAIM PATH ===================== -->
+        <section class="sec" id="claim">
+          <h2>What Happens If Your African Grey Arrives or Falls Ill?</h2>
+          <p class="opener">A guarantee is only as good as the path through it, so here at C.A.Gs we keep that path to three steps and no intermediaries. You see a vet, you send us what the vet found, and we settle it — with Mark or Teri answering, not a form.</p>
+          <img class="sec-img inf-img" src={IMG + "african-grey-health-guarantee-claim-steps.webp"}
+               srcset={IMG + "african-grey-health-guarantee-claim-steps-760.webp 760w, " + IMG + "african-grey-health-guarantee-claim-steps.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="The three steps for using an African Grey health guarantee, from avian-vet exam to refund or replacement">
+
+          <h3>The Three Steps From First Symptom to Resolution</h3>
+          <p>Book the avian-vet appointment first — it is the step everything else depends on. Ask for the diagnosis in writing, including any test results, and forward it to us the same day. We then settle the claim as replacement or refund. Nothing about that sequence requires you to argue with us; the veterinary record does the arguing.</p>
+
+          <h4>How Soon Must You Book the Avian-Vet Exam?</h4>
+          <p>Inside 72 hours of your grey arriving, which is why we ask buyers to line up a practice before travel day. Avian vets are thinner on the ground than general practices and often booked a week out. If the only appointment you can get falls outside the window, tell us before it lapses rather than after — we can work with a booked appointment, but not with a lapsed window and no examination.</p>
+
+          <h5>The Shipping Window Is 24 Hours, the Health Window 72</h5>
+          <p>Two clocks, both starting when you take possession. The shorter one covers anything the journey caused and closes quickly because transit effects show immediately. The longer one covers the congenital and infectious categories and runs three times as long because an incubating organism needs time to become detectable.</p>
+
+          <h6>In Writing: Replacement or Refund, and Who Decides</h6>
+          <p>The document states replacement or refund at our discretion. In practice the choice usually makes itself — a family who has waited months for a specific chick generally wants another bird, while someone whose circumstances have changed wants their money. We ask which you would prefer before we decide.</p>
+
+          <h3>Why We Ask You to See an Avian Vet Right Away</h3>
+          <p>Partly because it is what makes the guarantee enforceable, and partly because it is simply good practice. That first examination gives your grey a baseline weight, a baseline bloodwork picture and a relationship with a practice that may look after him for forty years. Buyers who skip it are usually the ones who later cannot tell whether something is new.</p>
+        </section>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §8 · AVAIL-B · FACETED BY POSTURE ===================== -->
+        <section class="sec" id="available">
+          <h2>Which Health-Guaranteed African Greys Can You Reserve Today?</h2>
+          <p class="opener">Every grey below carries the identical written terms — the same 72-hour window, the same remedy, the same four exclusions. What differs is only how soon each one can leave here at C.A.Gs, which is why we sort them by that rather than by price.</p>
+
+          <div class="availB">
+            <aside class="availB-side" aria-label="Filter by availability">
+              <p class="side-h">Browse by readiness</p>
+              <div class="side-filters">
+                <button class="side-f on" type="button" data-f="all">All greys<span class="side-n">{available.length}</span></button>
+                <button class="side-f" type="button" data-f="ready">Ready now<span class="side-n">{postureCount("ready")}</span></button>
+                <button class="side-f" type="button" data-f="reserve">Reserve &amp; wean<span class="side-n">{postureCount("reserve")}</span></button>
+                <button class="side-f" type="button" data-f="pair">Bonded pair<span class="side-n">{postureCount("pair")}</span></button>
+              </div>
+              <div class="side-ship">
+                <p class="rail-ship">Ships nationwide · <b>$185</b> airport · <b>$350</b> home</p>
+                <p class="rail-ship">Collection in Midland, TX is free.</p>
+              </div>
+            </aside>
+
+            <div class="availB-grid">
+              {available.map((b) => {
+                const nm = b.name.replace(" (pair)", "");
+                const im = birdImg[b.name];
+                return (
+                  <article class={"bcard " + postureKey(b)} data-p={postureKey(b)}>
+                    <div class="bphoto">
+                      <img src={im.src} alt={im.alt} style={"object-position:" + im.pos} width="440" height="440" loading="lazy" decoding="async">
+                      <span class={"bbadge " + postureKey(b) + (im.badge === "top" ? " badge-top" : "")}>{postureLabel(b)}</span>
+                    </div>
+                    <div class="binfo">
+                      <div class="brow"><h3>{nm}</h3><span class="bprice">{b.price_display}</span></div>
+                      <p class="bblurb">{birdBlurb[b.name]}</p>
+                      <div class="bchips">
+                        <span>{subLabel(b)}</span>
+                        <span>{b.age_at_listing}</span>
+                        <span>72-hr terms</span>
+                      </div>
+                      <p class="bship">Ships nationwide · $185 airport · $350 home</p>
+                      <a class="btn btn-clay bfull" href={"#reserve"}>Inquire about {nm}</a>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </div>
-        ))}
+
+          <h3>Our Reservable Congos, Timnehs and the Bonded Pair</h3>
+          <p>Four Congos and two Timnehs are with us as this page stands, plus Jins and Jeni, who are an unrelated companion pair and leave together or not at all. Bery is the one grey already past the age where the window's typical findings appear; the younger birds finish weaning here first, because a chick that leaves early is the single most common cause of a claim anywhere in this trade.</p>
+
+          <h4>What Every Listing Confirms Before You Enquire</h4>
+          <p>Each card states the subspecies, the age, the real price and the same guarantee terms — no listing here says "DNA pending" or "vet check to follow." If a grey is not yet cleared and papered, it does not appear on this page at all, which is why the grid is short rather than padded.</p>
+
+          <h5>Each Grey Below Ships Vet-Checked, DNA-Sexed and Papered</h5>
+          <p>The examination, the PCR panel and the sexing assay are all complete before a bird is listed, and the certificates are issued against the closed band number rather than the name. That ordering matters: a certificate written against a name proves a bird was tested, while one written against a band proves <em>this</em> bird was.</p>
+
+          <h6>On File: The Documents Attached to Each Bird</h6>
+          <p>Health guarantee, avian-vet certificate, DNA sexing certificate, CITES Appendix I paperwork and the band record sit in a folder under each grey's name here before they sit in yours. Ask for any of them by bird and we will send it across the same day.</p>
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Reserve one of these greys with a {deposit} deposit <span>→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §9 · THE DOCUMENTATION STACK ===================== -->
+        <section class="sec" id="documents">
+          <h2>What Documentation Backs Every Guaranteed Grey?</h2>
+          <p class="opener">A guarantee with nothing behind it is a sentence on a website. Here at C.A.Gs it sits on top of a five-document stack, and each of those documents is independently checkable by somebody who is not us — which is the only property that makes any of them worth having.</p>
+          <img class="sec-img inf-img" src={IMG + "documentation-with-guaranteed-african-grey.webp"}
+               srcset={IMG + "documentation-with-guaranteed-african-grey-760.webp 760w, " + IMG + "documentation-with-guaranteed-african-grey.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="The five documents behind a guaranteed grey parrot — guarantee, vet certificate, DNA certificate, CITES papers and closed band">
+
+          <h3>The Paper Stack Standing Behind the Guarantee</h3>
+          <p>The written guarantee names the terms. The avian-vet health certificate records the pre-sale examination and is dated within ten days of travel. The DNA sexing certificate names the hen or cock. The CITES Appendix I documentation establishes captive-bred origin. The closed leg band ties all four to one parrot. Remove any one of them and the remaining four lose some of their force.</p>
+
+          <h4>How Does Each Document Protect Your Purchase?</h4>
+          <p>Differently, and that is the point of having five rather than one. The vet certificate protects you at the moment of sale; the guarantee protects you for three days afterwards; the DNA certificate settles a question that visual inspection cannot; the CITES paperwork protects you at a state line or a vet's reception desk years from now; the band makes every other document provably about your bird.</p>
+
+          <h5>Vet Certificate, DNA Certificate, CITES Papers and Band Together</h5>
+          <p>Read as a set, they answer the four questions a buyer actually has — is this bird healthy, what sex is it, is owning it lawful, and is this paperwork really about this parrot. No single document answers more than one. Sellers who publish one badge and call it documentation are answering a quarter of the question.</p>
+
+          <h6>On File: What Each Document Proves and Who Issues It</h6>
+          <p>The guarantee comes from us; the health certificate from a board-certified avian veterinarian; the sexing certificate from the testing laboratory; the CITES documentation from the captive-breeding record; the band from the closed ring fitted at a few weeks old. Four of the five originate outside this aviary, which is precisely why they carry weight.</p>
+
+          <aside class="k5" aria-label="Documentation at a glance">
+            <span class="cap"><b>5</b>Documents per grey</span>
+            <span class="cap"><b>≤10 days</b>Vet certificate dated within</span>
+            <span class="cap"><b>1 band</b>Ties paper to parrot</span>
+            <span class="cap"><b>4 of 5</b>Issued outside our aviary</span>
+          </aside>
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Ask to see any document before you commit <span>→</span></a></div>
+
+
+        <!-- ===================== §10 · DISEASE SCREENING ===================== -->
+        <section class="sec" id="screening">
+          <h2>How Does One Avian-Vet Exam Screen for the Big Three Diseases?</h2>
+          <p class="opener">The pre-sale examination is where our guarantee stops being a promise and starts being a measurement. One visit, one sample, and three PCR panels come back — which is how we can afford to stand behind infectious disease at all.</p>
+          <img class="sec-img inf-img" src={IMG + "one-vet-exam-three-disease-screens-parrot.webp"}
+               srcset={IMG + "one-vet-exam-three-disease-screens-parrot-760.webp 760w, " + IMG + "one-vet-exam-three-disease-screens-parrot.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="One avian-vet examination PCR-screens a grey parrot for beak and feather disease, polyomavirus and psittacosis">
+
+          <h3>Which Diseases We PCR-Screen Before a Grey Ships</h3>
+          <p>Psittacine beak and feather disease, avian polyomavirus, and psittacosis. All three run by polymerase chain reaction off the same sample type the sexing assay uses, so one clean pull answers several questions at once. A grey that returns anything other than a clear result does not go on this page.</p>
+          <img class="sec-img og-photo" src={IMG + "african-grey-avian-vet-exam-beak-nails-wings.webp"}
+               srcset={IMG + "african-grey-avian-vet-exam-beak-nails-wings-760.webp 760w, " + IMG + "african-grey-avian-vet-exam-beak-nails-wings.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="One of our greys at her avian-vet appointment having her beak, nails and wings attended to">
+          <p class="cap">One of ours at the practice — beak and nails tidied, wings trimmed, and the pre-sale panel drawn in the same visit.</p>
+
+          <h4>Why Do PBFD, Polyoma and Psittacosis Matter Most?</h4>
+          <p>Because each is transmissible, each can be silent in a young bird, and each changes what a household should do next. <a href="https://www.merckvetmanual.com/exotic-and-laboratory-animals/pet-birds/viral-diseases-of-pet-birds" target="_blank" rel="noopener">Veterinary overviews of psittacine beak and feather disease</a> describe a virus that can sit undeclared for months ↗. Psittacosis matters for a further reason — it passes to people, and <a href="https://www.cdc.gov/psittacosis/about/index.html" target="_blank" rel="noopener">public-health guidance on Chlamydia psittaci</a> treats it as a reportable illness ↗. Screening for it before a bird ships is as much about your family as your parrot.</p>
+        </section>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §11 · SCAM / LEGITIMACY ===================== -->
+        <section class="sec" id="scam">
+          <h2>How Do You Know an African Grey Breeder Is Legitimate, Not a Scam?</h2>
+          <p class="opener">Most people reading a guarantee page are really asking a blunter question, and here at C.A.Gs we would rather answer it directly than pretend it was not asked. The African Grey market carries an unusual volume of fraud, and a guarantee badge is one of the cheapest things for a fraudulent listing to display.</p>
+          <img class="sec-img og-photo" src={IMG + "african-grey-hand-held-tame-not-a-scam-bird.webp"}
+               srcset={IMG + "african-grey-hand-held-tame-not-a-scam-bird-760.webp 760w, " + IMG + "african-grey-hand-held-tame-not-a-scam-bird.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="A tame hand-held grey parrot from our aviary, the kind of photograph a fraudulent listing cannot produce on request">
+
+          <h3>The Red Flags Reddit Buyers Learn Too Late</h3>
+          <p>Owner forums are full of the same post written by different people: a price well under market, a seller who will not video-call, pressure toward a wire transfer or a peer-to-peer payment app, photographs that reverse-search to somebody else's bird, and an offer to ship internationally. Any one of these is a reason to slow down. Two together is an answer. <a href="/how-to-avoid-african-grey-parrot-scams/">Our full scam-avoidance guide</a> works through each tell in detail.</p>
+
+          <h4>Why Won't a Real Breeder Sell a Healthy Grey for $800?</h4>
+          <p>Because the input costs are fixed and public. Months of hand-feeding, an avian-vet examination, three PCR panels, a sexing assay and CITES paperwork do not compress to fit an $800 sticker. When a listing pairs that price with a one-year guarantee, the two claims are contradicting each other in the same sentence.</p>
+
+          <h5>A Sub-Floor Price Is the Cheapest Scam Signal to Spot</h5>
+          <p>It requires no expertise to check, which is what makes it useful. You do not need to evaluate a photograph or interpret a certificate — you only need to know roughly what the species costs. That is why we publish our floor rather than quoting privately: a published floor is a number you can measure other sellers against.</p>
+
+          <h6>From the Vet: What an $800 "Healthy" Grey Usually Hides</h6>
+          <p>Where such a bird exists at all, the saving has come from somewhere — an unweaned chick sold early, a skipped disease panel, a wild-sourced or undocumented bird, or a parrot rehomed for a behavioural reason nobody disclosed. Each of those becomes a veterinary bill or a heartbreak later, which is the arithmetic the sticker price hides.</p>
+
+          <h3>How a Documented Breeder Answers Every Question Without Flinching</h3>
+          <p>Ask us for a live video call with a specific bird and we will schedule one. Ask which laboratory ran the panels and we will name it. Ask for the licence, the address, or a photograph of a band and none of it is a problem. The test is not whether a seller has good answers ready — it is whether questions are welcome at all. <a href="/trusted-african-grey-parrot-breeders/">Our breeder credentials page</a> sets out who we are in more detail.</p>
+        </section>
+
+        <!-- Newsletter · contextual placement after the scam section -->
+        <aside class="fs-nl banner">
+          <div class="fs-nl-inner">
+            <p class="fs-nl-eyebrow">Clutch alerts</p>
+            <p class="fs-nl-h">Know when the next guaranteed grey is cleared and papered</p>
+            <p class="fs-nl-sub">We email once a clutch, when birds have passed their examination and their panels are back — never before. No listings we cannot yet stand behind.</p>
+            <form class="fs-nl-form" name="hg-clutch-alerts" method="POST" data-netlify="true">
+              <input type="hidden" name="form-name" value="hg-clutch-alerts">
+              <label class="vh" for="hg-nl-email">Email address</label>
+              <input id="hg-nl-email" type="email" name="email" placeholder="you@example.com" required>
+              <button class="btn btn-clay" type="submit">Send me clutch alerts</button>
+            </form>
+            <p class="fs-nl-note">One email per clutch. Unsubscribe whenever you like.</p>
+          </div>
+        </aside>
+
+
+        <!-- ===================== §12 · WHAT TO ASK ===================== -->
+        <section class="sec" id="ask">
+          <h2>What Should You Ask Any Breeder Before You Pay a Deposit?</h2>
+          <p class="opener">Buyers arrive at this question from marketplaces, forums and videos that all raise it and none of them answer it from the breeder's side. Here at C.A.Gs we would rather hand you the questions ourselves, including the ones that are awkward for us.</p>
+
+          <h3>The Five Questions a Real Breeder Welcomes</h3>
+          <p>Ask what the health guarantee covers and what voids it. Ask which diseases the bird was screened for and by what method. Ask whether the grey is fully weaned and how old it is. Ask what documentation travels with it. Ask to see the bird live on video today. Five questions, none of them hostile, and together they eliminate almost every fraudulent listing without any expertise on your part.</p>
+
+          <h3>How We Answer Each of Those Five, on the Record</h3>
+          <p>Congenital defects and infectious disease, voided by four published exclusions. PBFD, polyomavirus and psittacosis, by PCR. Fully weaned before travel, never earlier, at twelve to sixteen weeks. Five documents in one folder. And yes — name a time and one of us will hold the phone. Those answers do not change depending on who is asking, which is the only real test of whether they are true.</p>
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Put those five questions to us directly <span>→</span></a></div>
+
+
+        <!-- ===================== §13 · THE FLOOR PRICE ===================== -->
+        <section class="sec" id="floor">
+          <h2>Why Is Our Floor Price $1,500, Guarantee Included?</h2>
+          <p class="opener">A floor price is a promise about what we will not do, and here at C.A.Gs ours sits at $1,500 because that is where the costs behind a properly raised, screened and papered grey actually land. Below it, something has to be left out.</p>
+          <img class="sec-img og-photo" src={IMG + "beautiful-grey-parrot-red-tail.webp"}
+               srcset={IMG + "beautiful-grey-parrot-red-tail-760.webp 760w, " + IMG + "beautiful-grey-parrot-red-tail.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="A red-tailed Congo grey parrot raised to the standard our floor price is built around">
+
+          <h3>What the Price Buys Beyond the Bird</h3>
+          <p>Months of hand-feeding and socialising. A board-certified avian-vet examination. Three PCR disease panels. A DNA sexing assay and its certificate. CITES Appendix I documentation and a closed band. And the written guarantee itself, which is only affordable to offer because everything preceding it has already reduced the risk. <a href="/african-grey-parrot-price/">Our itemised African Grey pricing page</a> breaks each line out.</p>
+          <p>Set against the life of the bird, the figure looks different again. An African Grey lives 40 to 60 years in good care, so the purchase price is a rounding error beside four or five decades of food, veterinary care and enrichment. The 72-hour window exists to protect the start of that span — but the reason we screen and document so heavily is the other fifty years, which no guarantee of any length can cover.</p>
+
+          <h4>Which Costs Would a Sub-Floor Seller Have to Skip?</h4>
+          <p>Work backwards from $800 and the answer is unavoidable. The disease panels go first because they are invisible to a buyer. Then the vet examination. Then weaning time, since every extra week is feed and labour. What survives is a young, untested bird with a badge on its listing — which is exactly the animal that generates the veterinary bill a guarantee was supposed to protect you from.</p>
+        </section>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §14 · LEGALITY ===================== -->
+        <section class="sec" id="legal">
+          <h2>Is Owning a Documented African Grey Legal Across the United States?</h2>
+          <p class="opener">Yes — a captive-bred African Grey with proper documentation is lawful to own and transfer domestically, and here at C.A.Gs every bird we place is captive-bred in the USA with that paperwork in hand.</p>
+
+          <h3>Why Your CITES Papers Outlast the Guarantee Window</h3>
+          <p><a href="https://cites.org/eng/gallery/species/bird/grey_parrot.php" target="_blank" rel="noopener">The CITES listing for <em>Psittacus erithacus</em></a> placed the species on Appendix I in 2017 ↗, the strictest tier, in response to pressure on wild populations. That listing governs international trade; it does not prohibit domestic ownership of a captive-bred bird. What it does mean is that documentation stops being a nicety — your CITES paperwork and closed band are what establish your grey's captive-bred origin, and they are worth keeping for the bird's whole life. We have never sold a wild-caught bird and never will.</p>
+        </section>
+
+
+        <!-- ===================== §15 · SHIPPING ===================== -->
+        <section class="sec" id="shipping">
+          <h2>Can You Ship a Health-Guaranteed African Grey Safely?</h2>
+          <p class="opener">Travel is the part buyers worry about most, so here at C.A.Gs the guarantee carries its own transit clause — 24 hours from the moment you take possession, running alongside the 72-hour health window rather than replacing it.</p>
+          <img class="sec-img inf-img" src={IMG + "guaranteed-african-grey-delivery-options.webp"}
+               srcset={IMG + "guaranteed-african-grey-delivery-options-760.webp 760w, " + IMG + "guaranteed-african-grey-delivery-options.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Airport pickup at $185, home delivery at $350, or free collection in Midland Texas for a guaranteed grey">
+
+          <p class="ship-line">Ships nationwide · <b>$185</b> airport pickup · <b>$350</b> home delivery · collection in Midland, TX is free if you are within two to three hours of us.</p>
+
+          <h3>Which Delivery Route Keeps Your Guarantee Intact?</h3>
+          <p>Airport pickup at $185 is what most buyers choose — your grey flies as live-animal cargo and you meet the flight at your nearest major airport. Home delivery at $350 puts the crate at your door. Collection here costs nothing and is the gentlest option for the bird, which is why buyers from Texas and the neighbouring states often drive. Meredith made the trip work from South Carolina; Jeffrey took the Denver route into Centennial.</p>
+
+          <h4>Which Carriers and Crate Standards Keep the Guarantee Intact</h4>
+          <p>Delta, United and American, in crates meeting IATA Live Animals Regulations — ventilated on multiple sides, with a secured water cup and absorbent bedding. We book direct flights wherever a route allows one, because connections are where temperature and handling risk accumulate. The health certificate travels taped to the crate, dated within ten days of the flight, because the airline will ask for it.</p>
+
+          <div class="geo-cards">
+            {shipPlaces.map((p) => (
+              <a class="geo-card" href={p.href}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span class="gl">{p.label}</span>
+                <span class="gn">{p.note}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Tell us where you are and we will quote the route <span>→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §16 · TABLE A COMPARISON ===================== -->
+        <section class="sec" id="compare">
+          <h2>Whose Guarantee Terms Survive Being Read Closely?</h2>
+          <p class="opener">We went through the page-one results for this exact search and recorded what each one actually publishes about its guarantee. The table below reports only what we could read on their pages — where a seller says nothing, we say so rather than guessing.</p>
+
+          <h3>What Page-One Sellers Promise Versus What They Guarantee</h3>
+          <div class="tblwrap">
+            <table class="tblA">
+              <thead><tr><th scope="col">What we checked</th><th scope="col">C.A.Gs</th><th scope="col">Page-one sellers</th></tr></thead>
+              <tbody>
+                {compareRows.map((r) => (
+                  <tr>
+                    <td data-label="Checked">{r.k}</td>
+                    <td data-label="C.A.Gs">{r.us}</td>
+                    <td data-label="Others">{r.them}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p>The pattern across all of it is the same: the badge is universal and the substance is rare. We are not claiming to be the only honest aviary on the internet — only that if a guarantee matters to you, the terms should be readable before you pay, and on most of these pages they are not.</p>
+        </section>
+
+
+        <!-- ===================== §17 · REVIEWS ===================== -->
+        <section class="sec" id="reviews">
+          <h2>What Have Buyers Said After Their Guaranteed Grey Arrived?</h2>
+          <p class="opener">Two buyers who took different routes to the same place — one searching for a healthy grey near her, one weighing rehoming against a breeder. Both are verified C.A.Gs buyers, and both wrote these words themselves.</p>
+          <div class="rev-grid">
+            {stories.map((s) => (
+              <figure class="rev">
+                <div class="stars" aria-label="Rated 5 out of 5">★★★★★</div>
+                <blockquote>{s.quote}</blockquote>
+                <figcaption>
+                  <img src={s.avatar} alt={"The African Grey " + s.name.split(" ")[0] + " brought home to " + s.loc.split(",")[0]} width="52" height="52" loading="lazy" decoding="async">
+                  <span><b>{s.name}</b><span>{s.loc} · {s.meta}</span></span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <p>Both greys were placed under the same written terms set out at the top of this page. Our aggregate across every placement stands at 4.9 from 52 reviews.</p>
+        </section>
+
+
+        <!-- ===================== §18 · VIDEO ===================== -->
+        <section class="sec" id="video">
+          <h2>See Our Greys on Camera Before You Ask About One</h2>
+          <p class="opener">Photographs are the easiest thing in this trade to steal, so we would rather show you a bird moving. Roys is one of the Congos in the grid above, filmed here at the aviary in Midland.</p>
+          <figure class="fs-video">
+            <div class="fs-video-frame">
+              <span class="fs-video-tag">Our aviary · Midland, TX</span>
+              <video controls preload="none" playsinline poster={CG + "roys-congo-african-grey-male-card.webp"} width="1408" height="768">
+                <source src="/birds/roys/roys-video-playing.mp4" type="video/mp4">
+                Your browser does not support embedded video. Roys is a four-month-old Congo African Grey cock playing at our Midland aviary.
+              </video>
+            </div>
+            <figcaption>Roys, playing — the same grey listed above, under the same 72-hour written terms. Ask us for a live call with any bird here.</figcaption>
+          </figure>
+        </section>
+
+
+        <!-- ===================== §20 · FURTHER READING ===================== -->
+        <section class="sec" id="reading">
+          <h2>Where to Read Next on Guarantees, Papers and Safe Buying</h2>
+          <p class="opener">This page covers the terms and the birds that carry them. These four go deeper on the policy itself, on the fraud around it, on who we are, and on the testing underneath it.</p>
+          <div class="read-cards">
+            {readMore.map((r) => (
+              <a class="read-card" href={r.href}>
+                <img src={r.img + "-760.webp"} alt="" width="120" height="120" loading="lazy" decoding="async">
+                <span class="rc-body">
+                  <span class="rc-k">{r.kicker}</span>
+                  <b>{r.title}</b>
+                  <span class="rc-s">{r.sub}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §21 · FAQ-A GREEN TICK ===================== -->
+        <section class="sec" id="faq">
+          <h2>Questions Buyers Ask About Our African Grey Health Guarantee</h2>
+          <p class="opener">Ten questions we are asked most often about the window, the remedy and the paperwork — answered here at C.A.Gs in the same words we would use on the phone.</p>
+          <div class="faqA">
+            {faqs.map((f) => (
+              <details class="faqA-item">
+                <summary>
+                  <span class="faqA-t" set:html={tick} />
+                  <span class="faqA-q">{f.q}</span>
+                  <span class="faqA-v"></span>
+                </summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+
+        <!-- ===================== §22 · RESERVE FORM ===================== -->
+        <section class="sec" id="reserve">
+          <h2>Reserve a Health-Guaranteed African Grey</h2>
+          <p class="opener">Tell us which grey you are looking at and where you are, and one of us will reply within a day — usually much sooner. A {deposit} deposit holds a bird; the written guarantee is issued in your name at that point, not after delivery.</p>
+
+          <div class="cta-form">
+            <div class="form-side">
+              <h3>Reservable Right Now</h3>
+              <p>Every grey below ships under the identical 72-hour written terms.</p>
+              <ul class="form-birds">
+                {available.map((b) => (
+                  <li><b>{b.name.replace(" (pair)", "")}</b><span>{subLabel(b)} · {b.price_display}</span></li>
+                ))}
+              </ul>
+              <p class="form-ship">Ships nationwide · <b>$185</b> airport · <b>$350</b> home · free collection in Midland, TX.</p>
+            </div>
+            <form class="form-main" name="hg-reserve" method="POST" data-netlify="true" action="/thank-you/">
+              <input type="hidden" name="form-name" value="hg-reserve">
+              <p class="hp"><label>Leave this empty <input name="bot-field"></label></p>
+              <label for="hg-bird">Which grey are you asking about?
+                <select id="hg-bird" name="bird">
+                  {available.map((b) => (<option>{b.name.replace(" (pair)", "")} — {subLabel(b)}, {b.price_display}</option>))}
+                  <option>Not sure yet — help me choose</option>
+                  <option>A future clutch</option>
+                </select>
+              </label>
+              <div class="f2">
+                <label for="hg-first">First name<input id="hg-first" name="first-name" type="text" autocomplete="given-name" required></label>
+                <label for="hg-last">Last name<input id="hg-last" name="last-name" type="text" autocomplete="family-name" required></label>
+              </div>
+              <div class="f2">
+                <label for="hg-cell">Cell<input id="hg-cell" name="cell" type="tel" autocomplete="tel" required></label>
+                <label for="hg-email">Email<input id="hg-email" name="email" type="email" autocomplete="email" required></label>
+              </div>
+              <label for="hg-delivery">How would you like your grey to reach you?
+                <select id="hg-delivery" name="delivery">
+                  <option>Airport pickup — $185</option>
+                  <option>Home delivery — $350</option>
+                  <option>Pickup in Midland, TX — if you live within 2–3 hours of us</option>
+                  <option>Not sure yet</option>
+                </select>
+              </label>
+              <label for="hg-msg">Anything you would like to ask about the guarantee?<textarea id="hg-msg" name="message" rows="4"></textarea></label>
+              <button class="btn btn-clay btn-submit" type="submit">Ask about this grey</button>
+              <p class="form-note">We reply within 24 hours, personally. No deposit is taken through this form.</p>
+            </form>
+          </div>
+        </section>
       </div>
     </div>
-  </section>
+  </main>
 
-  <!-- If Your Bird Falls Ill -->
-  <section class="py-16 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6 text-center">If Your Parrot Becomes Ill</h2>
-      <div class="bg-gold/10 border border-gold/30 rounded-2xl p-8">
-        <ol class="space-y-4 text-stone-700">
-          <li class="flex gap-3"><span class="font-bold text-green shrink-0">Step 1.</span> Contact an avian veterinarian within 24 hours of noticing symptoms.</li>
-          <li class="flex gap-3"><span class="font-bold text-green shrink-0">Step 2.</span> Email us at <a href="mailto:Info@congoafricangreys.com" class="text-green hover:underline">Info@congoafricangreys.com</a> with the diagnosis and vet contact information.</li>
-          <li class="flex gap-3"><span class="font-bold text-green shrink-0">Step 3.</span> We will review the case and work with you on a resolution — replacement or refund depending on circumstances.</li>
-        </ol>
-        <p class="text-stone-500 text-sm mt-6">Guarantee is void if the bird is exposed to other birds, improper diet, or improper cage setup within the first 30 days.</p>
-      </div>
-    </div>
-  </section>
+  <script is:inline define:vars={{ N }}>
+    (() => {
+      // ---- Dial 1 scroll-spy: a static ring reads as "broken" (skill §6a) ----
+      const ring = document.querySelector('.hg-ring');
+      const num = document.querySelector('.ring-n');
+      const items = [...document.querySelectorAll('[data-dial]')];
+      const ids = [...new Set(items.map((i) => i.dataset.dial))];
+      const secs = ids.map((id) => document.getElementById(id)).filter(Boolean);
+      if (ring && secs.length) {
+        let active = -1;
+        const paint = (i) => {
+          if (i < 0 || i === active) return;
+          active = i;
+          ring.style.setProperty('--p', String(Math.round(((i + 1) / N) * 100)));
+          if (num) num.textContent = String(i + 1).padStart(2, '0');
+          const id = secs[i].id;
+          items.forEach((el) => el.classList.toggle('on', el.dataset.dial === id));
+          const chip = document.querySelector('.railA a.on');
+          if (chip) chip.scrollIntoView({ block: 'nearest', inline: 'center' });
+        };
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => { if (e.isIntersecting) paint(secs.indexOf(e.target)); });
+        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+        secs.forEach((s) => io.observe(s));
+      }
 
-  <Schema type="local-business" />
-  <CTA headline="Every Bird Backed by a Written Guarantee" sub="USDA AWA licensed. CITES documented. Vet-certified. Inquire today." />
+      // ---- Avail-B posture filter ----
+      const btns = [...document.querySelectorAll('.side-f')];
+      const cards = [...document.querySelectorAll('.bcard')];
+      btns.forEach((b) => b.addEventListener('click', () => {
+        const f = b.dataset.f;
+        btns.forEach((x) => x.classList.toggle('on', x === b));
+        cards.forEach((c) => c.classList.toggle('hide', f !== 'all' && c.dataset.p !== f));
+      }));
+    })();
+  </script>
+
+<style is:global>
+/* ===================== /african-greys-for-sale-with-health-guarantee/ ===================== */
+/* --hdr = the real global header height (96px, sticky top-0 z-50). */
+.hgar{--ink:#3a2f2a;--clay:#e8604c;--clay-ink:#c8472f;--clay-t:#b04228;--green:#2D6A4F;--green-d:#234f3b;--cream:#faf7f4;--bd:#e7ddd3;--muted:#6b625a;--hdr:96px;overflow-x:clip;color:var(--ink);background:var(--cream);}
+.hgar .hg-container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.hgar h2{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.5rem,1.1rem + 1.6vw,2rem);line-height:1.18;color:var(--green-d);margin:0 0 .5rem;letter-spacing:-.01em;}
+.hgar h3{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.18rem,1rem + .7vw,1.42rem);color:var(--ink);margin:1.5rem 0 .35rem;}
+.hgar h4{font-size:1.06rem;font-weight:700;color:var(--green-d);margin:1.1rem 0 .3rem;}
+.hgar h5{font-size:.98rem;font-weight:700;color:var(--ink);margin:.9rem 0 .25rem;}
+.hgar h6{font-size:.9rem;font-weight:700;color:var(--muted);margin:.8rem 0 .2rem;text-transform:uppercase;letter-spacing:.03em;}
+.hgar p{max-width:70ch;line-height:1.7;margin:0 0 .8rem;}
+.hgar .sec p.opener{font-size:1.05rem;}
+.hgar p.cap{font-size:.8rem;color:var(--muted);font-style:italic;margin:-.5rem 0 1rem;}
+.hgar a{color:var(--clay-t);text-underline-offset:2px;}
+/* Body links must not rely on colour alone (WCAG 1.4.1) */
+.hgar .content p a,.hgar .content li a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;}
+.hgar .content p a:hover,.hgar .content li a:hover{text-decoration-thickness:2px;}
+.hgar .content p a.btn,.hgar .content p a.ticket-cta,.hgar .content a.geo-card,.hgar .content a.read-card{text-decoration:none;}
+.hgar .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+/* Buttons */
+.hgar .btn{display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:.95rem;padding:.7rem 1.25rem;border-radius:50px;text-decoration:none;transition:transform .18s,background .18s,box-shadow .18s;border:1px solid transparent;}
+.hgar .btn-clay{background:var(--clay-ink);color:#fff;box-shadow:0 4px 14px rgba(200,71,47,.24);}
+.hgar .btn-clay:hover{transform:translateY(-1px);}
+.hgar .btn-ghost{background:transparent;color:var(--green-d);border-color:var(--green);}
+.hgar .btn-ghost:hover{background:rgba(45,106,79,.07);}
+
+/* ===== SPLIT-HERO A · image left, story right, trust ribbon beneath ===== */
+.hgar .hero{background:linear-gradient(158deg,#f8f4ef,#f3ece4 58%,#efe4da);border-bottom:1px solid var(--bd);padding:6px 0 0;}
+.hgar .hero-grid{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:34px;align-items:center;padding-bottom:20px;}
+.hgar .hero-shot{margin:0;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(60,30,10,.16);background:#efe6dd;}
+.hgar .hero-shot img{display:block;width:100%;height:auto;aspect-ratio:1408/768;object-fit:cover;}
+.hgar .eyebrow{font-size:.82rem;font-weight:600;color:var(--clay-t);margin:.2rem 0 .55rem;}
+.hgar .hero h1{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.5rem,1.02rem + 1.55vw,1.98rem);line-height:1.13;color:var(--green-d);margin:0 0 .45rem;letter-spacing:-.015em;text-wrap:balance;}
+.hgar .hero h1 em{color:var(--clay-ink);font-style:italic;}
+.hgar .hero .lead{font-size:.94rem;line-height:1.58;color:var(--ink);max-width:58ch;margin:0;}
+.hgar .hero-cta{display:flex;gap:.55rem;flex-wrap:wrap;margin:.9rem 0 0;}
+/* the "trust ribbon" — Split-Hero A's signature strip */
+.hgar .ribbon{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0 auto;padding:0;border-top:1px solid var(--bd);}
+.hgar .ribbon li{display:flex;align-items:center;justify-content:center;gap:.45rem;text-align:center;font-size:.8rem;font-weight:600;color:var(--green-d);padding:12px 14px;border-right:1px solid var(--bd);}
+.hgar .ribbon li:last-child{border-right:0;}
+.hgar .ribbon svg{color:var(--green);flex:none;}
+
+/* Counter */
+.hgar .counter{background:#fff;border-bottom:1px solid var(--bd);padding:20px 0;}
+.hgar .counter-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+.hgar .cstat{border:1px solid var(--bd);border-radius:12px;padding:10px 13px;text-align:center;min-height:66px;display:flex;flex-direction:column;justify-content:center;background:var(--cream);}
+.hgar .cstat .cn{font-family:var(--font-lora,'Newsreader',serif);font-size:1.35rem;font-weight:700;color:var(--clay-ink);line-height:1;}
+.hgar .cstat .cl{font-size:.72rem;color:var(--muted);margin-top:.3rem;}
+
+/* Seam divider — for-sale wordmark variant */
+.hgar .seam-wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin:30px auto 26px;max-width:560px;}
+.hgar .seam-wrap::before,.hgar .seam-wrap::after{content:"";height:1px;border-radius:1px;}
+.hgar .seam-wrap::before{background:linear-gradient(to right,transparent,rgba(232,96,76,.34));}
+.hgar .seam-wrap::after{background:linear-gradient(to left,transparent,rgba(232,96,76,.34));}
+.hgar .seam{display:block;height:34px;width:auto;opacity:.92;margin:0;}
+
+/* Section differentiator — clay spine on every H2 */
+.hgar .content .sec>h2{position:relative;padding-left:14px;}
+.hgar .content .sec>h2::before{content:"";position:absolute;left:0;top:.24em;bottom:.24em;width:3px;border-radius:2px;background:var(--clay);}
+
+/* Body grid + Dial 1 (clay on cream) */
+.hgar .body-grid{display:grid;grid-template-columns:196px minmax(0,1fr);gap:28px;padding-top:8px;padding-bottom:40px;}
+.hgar .dial{position:relative;}
+.hgar .dial-card{position:sticky;top:calc(var(--hdr) + 16px);display:flex;flex-direction:column;gap:10px;align-items:stretch;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:12px 10px;box-shadow:0 3px 12px rgba(60,30,10,.05);max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;scrollbar-width:thin;}
+.hgar .ring{--p:6;width:64px;height:64px;border-radius:50%;margin:2px auto 0;flex:none;background:conic-gradient(var(--clay-ink) calc(var(--p) * 1%),#f3ddd5 0);display:grid;place-items:center;}
+.hgar .ring-in{width:50px;height:50px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;}
+.hgar .ring-n{font-family:var(--font-lora,'Newsreader',serif);font-size:15px;font-weight:700;color:var(--clay-ink);line-height:1;}
+.hgar .ring-of{font-size:7px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+.hgar .dial-list{list-style:none;margin:0;padding:8px 0 0;border-top:1px dashed var(--bd);display:grid;grid-template-columns:1fr;gap:1px;}
+.hgar .dial-list a{display:flex;gap:7px;align-items:baseline;padding:5px 7px;border-radius:8px;text-decoration:none;color:#4a423b;font-size:.74rem;line-height:1.25;transition:background-color .15s,color .15s;}
+.hgar .dial-list a:hover{background:#faf3ee;color:#2a2622;}
+.hgar .dial-list a.on{background:#faece7;color:#2a2622;font-weight:600;}
+/* light card -> muted #6b625a numerals. NOT the #9fc7b0 dark-card value. */
+.hgar .dial-list .di{font-family:var(--font-lora,'Newsreader'),serif;font-weight:700;color:var(--muted);width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums;}
+.hgar .dial-list a.on .di{color:var(--clay-t);}
+.hgar .dial-list .dh{min-width:0;}
+.hgar .dial-list .dt{margin-left:auto;font-size:.56rem;font-weight:600;letter-spacing:.02em;color:var(--green-d);background:#eef5f1;border-radius:50px;padding:1px 6px;white-space:nowrap;}
+
+/* Rail A (mobile) hidden on desktop */
+.hgar .railA{display:none;}
+
+/* Section images */
+.hgar .sec-img{display:block;width:100%;max-width:760px;aspect-ratio:1408/768;object-fit:cover;height:auto;border-radius:14px;border:1px solid var(--bd);margin:1rem 0 1.1rem;box-shadow:0 4px 16px rgba(60,30,10,.06);}
+.hgar .sec{scroll-margin-top:calc(var(--hdr) + 16px);padding:6px 0 10px;}
+
+/* Ticket CTA */
+.hgar .ticket{margin:1.2rem 0 .2rem;}
+.hgar .ticket-cta{display:inline-flex;align-items:center;justify-content:center;text-align:center;text-wrap:balance;gap:.5rem;background:#fff;border:1.5px solid var(--clay);color:var(--clay-ink);font-weight:700;padding:.55rem 1.05rem;border-radius:50px;text-decoration:none;transition:background .18s;}
+.hgar .ticket-cta span{transition:transform .18s;}
+.hgar .ticket-cta:hover{background:#fff3ef;}
+.hgar .ticket-cta:hover span{transform:translateX(3px);}
+
+/* K1 Receipt card — this page's primary takeaway */
+.hgar .k1{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:0;margin:12px 0 14px;box-shadow:0 3px 14px rgba(60,30,10,.05);overflow:hidden;}
+.hgar .k1-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:var(--green-d);color:#fff;padding:.6rem 1rem;}
+.hgar .k1-head b{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;}
+.hgar .k1-head span{font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:#c9e3d5;}
+.hgar .k1-rows{margin:0;padding:.4rem 1rem .7rem;}
+.hgar .k1-rows>div{display:grid;grid-template-columns:minmax(0,7.5rem) minmax(0,1fr);gap:.8rem;padding:.5rem 0;border-bottom:1px dashed var(--bd);}
+.hgar .k1-rows>div:last-child{border-bottom:0;}
+.hgar .k1-rows dt{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-top:.15rem;}
+.hgar .k1-rows dd{margin:0;font-size:.9rem;line-height:1.5;color:var(--ink);}
+
+/* K5 capsule strip — second takeaway */
+.hgar .k5{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 8px;}
+.hgar .k5 .cap{display:flex;flex-direction:column;gap:1px;background:#eaf4ef;border:1px solid #cfe6da;border-radius:12px;padding:8px 14px;font-size:.72rem;color:#3d5b4d;font-style:normal;margin:0;}
+.hgar .k5 .cap b{font-family:var(--font-lora,'Newsreader',serif);font-size:.95rem;color:var(--green-d);}
+
+/* T4 "Guarantee Index" — magazine index card */
+.hgar .t4{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px 18px 16px;margin:10px 0 4px;box-shadow:0 3px 12px rgba(60,30,10,.04);}
+.hgar .t4-h{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;color:var(--green-d);margin:0 0 .7rem;padding-bottom:.5rem;border-bottom:1px solid var(--bd);}
+.hgar .t4-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.hgar .t4-g{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--clay-t);margin:0 0 .4rem;}
+.hgar .t4-col ul{list-style:none;margin:0;padding:0;display:grid;gap:.3rem;}
+.hgar .t4-col a{font-size:.8rem;line-height:1.35;color:#4a423b;text-decoration:none;border-left:2px solid var(--bd);padding-left:.55rem;display:block;transition:border-color .15s,color .15s;}
+.hgar .t4-col a:hover{border-left-color:var(--clay);color:var(--clay-ink);}
+
+/* Table E "Guarantee Ledger" — this page's own table (green spine, 3-col ledger) */
+.hgar .tblwrap{overflow-x:auto;margin:1rem 0;}
+.hgar .tblE{width:100%;border-collapse:separate;border-spacing:0;font-size:.88rem;background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
+.hgar .tblE-cap{caption-side:top;text-align:left;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#fff;background:var(--green-d);padding:.5rem .9rem;}
+.hgar .tblE th{background:var(--cream);color:var(--green-d);text-align:left;padding:.6rem .8rem;font-weight:700;font-size:.8rem;border-bottom:2px solid var(--bd);}
+.hgar .tblE td{padding:.62rem .8rem;border-bottom:1px solid var(--bd);vertical-align:top;}
+.hgar .tblE tr:last-child td{border-bottom:0;}
+.hgar .tblE td:first-child{font-weight:700;color:var(--green-d);}
+.hgar .tblE td:nth-child(2){border-left:3px solid var(--green);background:#f6faf8;}
+.hgar .tblE td:last-child{color:var(--muted);}
+
+/* Table A — clay-header comparison */
+.hgar .tblA{width:100%;border-collapse:separate;border-spacing:0;font-size:.88rem;background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
+.hgar .tblA th{background:var(--clay-ink);color:#fff;text-align:left;padding:.65rem .8rem;font-weight:700;font-size:.8rem;}
+.hgar .tblA td{padding:.62rem .8rem;border-bottom:1px solid var(--bd);vertical-align:top;}
+.hgar .tblA tr:last-child td{border-bottom:0;}
+.hgar .tblA td:first-child{font-weight:700;color:var(--green-d);}
+.hgar .tblA td:nth-child(3){color:var(--muted);}
+
+/* Avail-B — sticky sidebar faceted by availability posture */
+.hgar .availB{display:grid;grid-template-columns:200px minmax(0,1fr);gap:20px;margin:1rem 0;align-items:start;}
+.hgar .availB-side{position:sticky;top:calc(var(--hdr) + 16px);background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px;box-shadow:0 4px 16px rgba(60,30,10,.06);}
+.hgar .side-h{font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 .6rem;}
+.hgar .side-filters{display:flex;flex-direction:column;gap:4px;}
+.hgar .side-f{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:var(--cream);border:1.5px solid var(--bd);border-radius:10px;padding:.5rem .65rem;font:inherit;font-size:.86rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:left;transition:background-color .15s,border-color .15s;}
+.hgar .side-f:hover{background:#fff3ef;}
+.hgar .side-f.on{border-color:var(--clay-ink);color:var(--green-d);background:#fff3ef;}
+.hgar .side-n{font-size:.72rem;font-weight:700;color:var(--muted);background:#fff;border-radius:50px;min-width:24px;text-align:center;padding:2px 8px;}
+.hgar .side-f.on .side-n{background:var(--clay-ink);color:#fff;}
+.hgar .side-ship{border-top:1px solid var(--bd);margin-top:12px;padding-top:10px;}
+.hgar .rail-ship{font-size:.72rem;color:var(--muted);margin:0 0 .35rem;line-height:1.45;}
+.hgar .rail-ship b{color:var(--green-d);}
+.hgar .availB-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-content:start;}
+.hgar .bcard{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column;}
+.hgar .bcard.hide{display:none;}
+.hgar .bphoto{position:relative;aspect-ratio:1/1;overflow:hidden;}
+.hgar .bphoto img{width:100%;height:100%;object-fit:cover;}
+.hgar .bphoto::after{content:"";position:absolute;inset:auto 0 0 0;height:44%;background:linear-gradient(to top,rgba(28,18,12,.42),transparent);pointer-events:none;}
+/* default bottom-left; .badge-top is the per-bird escape hatch for a head-down bird */
+.hgar .bbadge{position:absolute;top:auto;bottom:8px;left:8px;z-index:2;background:rgba(255,255,255,.94);color:var(--green-d);font-size:.6rem;font-weight:700;padding:.18rem .5rem;border-radius:50px;text-transform:uppercase;letter-spacing:.03em;box-shadow:0 1px 4px rgba(0,0,0,.18);}
+.hgar .bbadge.reserve{color:var(--clay-ink);}
+.hgar .bbadge.pair{color:#1f4f6d;}
+.hgar .bbadge.badge-top{top:8px;bottom:auto;}
+.hgar .binfo{padding:11px 12px 13px;display:flex;flex-direction:column;gap:.45rem;flex:1;}
+.hgar .brow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem;align-items:baseline;min-height:2.65rem;}
+.hgar .brow h3{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;line-height:1.16;margin:0;text-transform:uppercase;letter-spacing:.02em;color:var(--green-d);min-width:0;overflow-wrap:anywhere;}
+.hgar .bprice{font-weight:700;color:var(--clay-ink);font-size:.98rem;white-space:nowrap;}
+.hgar .bblurb{font-size:.8rem;color:var(--muted);line-height:1.45;margin:0;flex:1;}
+.hgar .bchips{display:flex;gap:.3rem;flex-wrap:wrap;min-height:1.4rem;align-content:start;}
+.hgar .bchips span{font-size:.62rem;background:var(--cream);border:1px solid var(--bd);color:var(--green-d);padding:.1rem .4rem;border-radius:50px;font-weight:600;}
+.hgar .bship{font-size:.64rem;color:var(--muted);margin:0;line-height:1.4;}
+.hgar .bfull{align-self:start;justify-content:center;margin-top:auto;font-size:.8rem;padding:.5rem .95rem;white-space:nowrap;gap:.3rem;}
+
+/* Shipping line + geo cards */
+.hgar .ship-line{background:#fff;border:1px solid var(--bd);border-left:3px solid var(--clay);border-radius:10px;padding:.6rem .85rem;font-size:.9rem;margin:.9rem 0;}
+.hgar .ship-line b{color:var(--green-d);}
+.hgar .geo-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:1rem 0 .4rem;}
+.hgar .geo-card{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.6rem;background:#fff;border:1px solid var(--bd);border-radius:11px;padding:.6rem .8rem;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s;}
+.hgar .geo-card svg{grid-row:1/3;align-self:center;color:var(--clay);}
+.hgar .geo-card .gl{font-weight:600;font-size:.85rem;color:var(--green-d);}
+.hgar .geo-card .gn{font-size:.74rem;color:var(--muted);}
+.hgar .geo-card:hover{border-color:var(--clay);transform:translateY(-1px);}
+
+/* Newsletter — for-sale .fs-nl */
+.hgar .fs-nl{margin:24px 0;border-radius:20px;overflow:hidden;box-shadow:0 6px 22px rgba(60,30,10,.08);}
+.hgar .fs-nl.banner{background:linear-gradient(135deg,#221f1d,#2f2926);color:#fff;}
+.hgar .fs-nl-inner{padding:clamp(18px,3vw,28px) clamp(18px,3.4vw,34px);max-width:820px;}
+.hgar .fs-nl-eyebrow{color:#f08070;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px;}
+.hgar .fs-nl-h{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.15rem,2.2vw,1.45rem);line-height:1.2;margin:0 0 6px;color:#fff;}
+.hgar .fs-nl-sub{font-size:.86rem;line-height:1.55;margin:0 0 14px;max-width:62ch;color:rgba(255,255,255,.86);}
+.hgar .fs-nl-form{display:flex;gap:10px;flex-wrap:wrap;}
+.hgar .fs-nl-form input{flex:1;min-width:200px;border:1.5px solid rgba(255,255,255,.3);border-radius:50px;padding:12px 18px;font:inherit;background:#fff;color:#2a2622;}
+.hgar .fs-nl-form input:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.2);}
+.hgar .fs-nl-form button{border:none;cursor:pointer;}
+.hgar .fs-nl-note{font-size:.74rem;color:rgba(255,255,255,.72);margin:10px 0 0;}
+
+/* Video — for-sale .fs-video */
+.hgar .fs-video{margin:1rem 0;max-width:760px;}
+.hgar .fs-video-frame{position:relative;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(60,30,10,.16);background:#1b1815;}
+.hgar .fs-video-frame video{display:block;width:100%;height:auto;aspect-ratio:1408/768;object-fit:cover;}
+.hgar .fs-video-tag{position:absolute;top:12px;left:12px;z-index:2;background:rgba(34,31,29,.82);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.04em;padding:5px 12px;border-radius:50px;pointer-events:none;}
+.hgar .fs-video figcaption{font-size:.8rem;color:var(--muted);margin-top:8px;font-style:italic;}
+
+/* Reviews */
+.hgar .rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:1rem 0;}
+.hgar .rev{margin:0;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;}
+.hgar .rev .stars{color:var(--clay-ink);letter-spacing:2px;margin-bottom:.4rem;font-size:1.05rem;}
+.hgar .rev blockquote{margin:0 0 .8rem;font-size:.9rem;line-height:1.6;color:var(--ink);}
+.hgar .rev figcaption{display:flex;align-items:center;gap:.6rem;}
+.hgar .rev figcaption img{width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none;}
+.hgar .rev figcaption b{display:block;font-size:.9rem;color:var(--green-d);}
+.hgar .rev figcaption span span{font-size:.76rem;color:var(--muted);}
+
+/* Read cards */
+.hgar .read-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:1rem 0;}
+.hgar .read-card{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#fff;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s;}
+.hgar .read-card img{width:120px;height:100%;object-fit:cover;}
+.hgar .rc-body{padding:10px 12px 10px 0;display:flex;flex-direction:column;gap:.2rem;}
+.hgar .rc-k{font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--clay-t);font-weight:700;}
+.hgar .rc-body b{color:var(--green-d);font-size:.92rem;line-height:1.25;}
+.hgar .rc-s{font-size:.78rem;color:var(--muted);line-height:1.4;}
+.hgar .read-card:hover{border-color:var(--clay);transform:translateY(-1px);}
+
+/* FAQ-A refreshed — GREEN TICK marker (the DNA page uses a numbered clay chip) */
+.hgar .faqA{margin:1rem 0 6px;display:flex;flex-direction:column;gap:8px;}
+.hgar .faqA-item{background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(60,30,10,.04);}
+.hgar .faqA-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 18px;color:#2a2622;}
+.hgar .faqA-item summary::-webkit-details-marker{display:none;}
+.hgar .faqA-t{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50px;background:#eaf4ef;border:1.5px solid var(--green);color:var(--green-d);flex:none;font-size:.8rem;}
+.hgar .faqA-item[open] .faqA-t{background:var(--green);color:#fff;}
+.hgar .faqA-q{font-family:var(--font-lora,'Newsreader',serif);font-size:1rem;font-weight:600;flex:1;line-height:1.32;}
+.hgar .faqA-v{width:11px;height:11px;flex:none;border-right:2px solid var(--green-d);border-bottom:2px solid var(--green-d);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s;}
+.hgar .faqA-item[open] .faqA-v{transform:rotate(225deg) translate(-2px,-2px);}
+.hgar .faqA-item[open] summary{border-bottom:1px solid var(--bd);background:#f6faf8;}
+.hgar .faqA-item p{color:#4a423b;font-size:.9rem;margin:0;padding:14px 18px 16px;max-width:none;line-height:1.62;}
+
+/* Contact form */
+.hgar .cta-form{display:grid;grid-template-columns:.85fr 1.15fr;gap:0;border:1px solid var(--bd);border-radius:16px;overflow:hidden;margin:1rem 0;}
+.hgar .form-side{background:var(--green-d);color:#eaf3ee;padding:22px;}
+.hgar .form-side h3{color:#fff;margin:0 0 .4rem;}
+.hgar .form-side p{color:#d7e7de;font-size:.86rem;}
+.hgar .form-birds{list-style:none;margin:.8rem 0;padding:0;}
+.hgar .form-birds li{display:flex;justify-content:space-between;gap:.6rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:.85rem;}
+.hgar .form-birds b{color:#fff;}
+.hgar .form-ship{font-size:.78rem;color:#c9f2db;}
+.hgar .form-ship b{color:#fff;}
+.hgar .form-main{padding:22px;background:#fff;display:grid;gap:.7rem;}
+.hgar .form-main label{display:grid;gap:.25rem;font-size:.82rem;font-weight:600;color:var(--green-d);}
+.hgar .form-main input,.hgar .form-main select,.hgar .form-main textarea{font:inherit;font-weight:400;padding:.55rem .65rem;border:1px solid var(--bd);border-radius:10px;background:var(--cream);color:var(--ink);}
+.hgar .f2{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.hgar .btn-submit{border-radius:12px;justify-content:center;margin-top:.3rem;}
+.hgar .form-note{font-size:.74rem;color:var(--muted);font-weight:400;margin:0;}
+.hgar .hp{position:absolute;left:-9999px;}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width:980px){
+  .hgar .hero-grid{grid-template-columns:minmax(0,1fr);gap:18px;}
+  /* photo leads on mobile, copy follows — matching the sibling for-sale heroes */
+  .hgar .hero-shot{order:-1;}
+  .hgar .ribbon{grid-template-columns:repeat(2,1fr);}
+  .hgar .ribbon li:nth-child(2){border-right:0;}
+  .hgar .ribbon li:nth-child(-n+2){border-bottom:1px solid var(--bd);}
+  .hgar .counter-grid{grid-template-columns:repeat(3,1fr);}
+  /* minmax(0,1fr) + min-width:0 stop the 100vw full-bleed images inflating the track */
+  .hgar .body-grid{grid-template-columns:minmax(0,1fr);}
+  .hgar .content{min-width:0;}
+  .hgar .dial{display:none;}
+  .hgar .t4-grid{grid-template-columns:repeat(2,1fr);}
+  .hgar .availB{grid-template-columns:minmax(0,1fr);}
+  .hgar .availB-side{position:static;}
+  .hgar .side-filters{flex-direction:row;flex-wrap:wrap;}
+  .hgar .side-f{width:auto;}
+  .hgar .availB-grid{grid-template-columns:repeat(2,1fr);}
+  .hgar .rev-grid,.hgar .read-cards,.hgar .geo-cards{grid-template-columns:minmax(0,1fr);}
+  .hgar .cta-form{grid-template-columns:minmax(0,1fr);}
+  /* Rail A — sticky UNDER the site header (96px), clay outlined pills */
+  .hgar .railA{display:block;position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.985);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);}
+  .hgar .railA ul{display:flex;gap:7px;overflow-x:auto;list-style:none;margin:0;padding:.45rem .75rem;scroll-behavior:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .hgar .railA ul::-webkit-scrollbar{display:none;}
+  .hgar .railA a{display:inline-flex;align-items:center;gap:.35rem;font-size:.76rem;font-weight:600;color:var(--clay-t);border:1.5px solid var(--clay);border-radius:50px;padding:7px 14px;text-decoration:none;background:#fff;white-space:nowrap;scroll-margin-inline:20px;min-height:36px;}
+  .hgar .railA a.on{background:var(--clay-ink);border-color:var(--clay-ink);color:#fff;}
+  .hgar .railA .p{font-weight:700;font-variant-numeric:tabular-nums;}
+  /* anchors must clear BOTH the header (96px) and the sticky rail (~54px) + gap */
+  .hgar .sec{scroll-margin-top:calc(var(--hdr) + 66px);}
+}
+@media (max-width:640px){
+  .hgar .hg-container{padding:0 16px;}
+  .hgar .counter-grid{grid-template-columns:repeat(2,1fr);}
+  .hgar .t4-grid{grid-template-columns:minmax(0,1fr);gap:12px;}
+  .hgar .k1-rows>div{grid-template-columns:minmax(0,1fr);gap:.15rem;}
+  .hgar .availB-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .hgar .bblurb{display:none;}
+  .hgar .binfo{padding:9px 9px 11px;gap:.4rem;}
+  .hgar .brow{min-height:2.5rem;}
+  .hgar .brow h3{font-size:.92rem;}
+  .hgar .bprice{font-size:.92rem;}
+  .hgar .bfull{align-self:stretch;font-size:.74rem;padding:.5rem .55rem;}
+  .hgar .bchips span{font-size:.58rem;}
+  .hgar .bship{font-size:.58rem;}
+  .hgar .bbadge{font-size:.55rem;padding:.15rem .42rem;}
+  .hgar .seam-wrap{gap:12px;margin:24px auto 22px;}
+  .hgar .seam{height:30px;}
+  .hgar .f2{grid-template-columns:1fr;}
+  .hgar .ticket-cta{font-size:.86rem;padding:.5rem .9rem;line-height:1.35;}
+
+  /* ===== Mobile table stacking — both tables become cards, keeping the desktop look ===== */
+  .hgar .tblwrap{overflow-x:visible;}
+  .hgar .tblE,.hgar .tblA{border:0;border-radius:0;overflow:visible;background:transparent;}
+  .hgar .tblE-cap{border-radius:10px;margin-bottom:10px;}
+  .hgar .tblE thead,.hgar .tblA thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+  .hgar .tblE tbody,.hgar .tblE tr,.hgar .tblE td,
+  .hgar .tblA tbody,.hgar .tblA tr,.hgar .tblA td{display:block;}
+  .hgar .tblE tr,.hgar .tblA tr{border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#fff;margin-bottom:10px;}
+  .hgar .tblE tr:last-child,.hgar .tblA tr:last-child{margin-bottom:0;}
+  .hgar .tblE td,.hgar .tblA td{padding:.55rem .8rem;border-bottom:1px solid var(--bd);}
+  .hgar .tblE tr td:last-child,.hgar .tblA tr td:last-child{border-bottom:0;}
+  .hgar .tblE td:nth-child(2){border-left:0;}
+  /* first cell becomes the card's header band, mirroring the desktop header row */
+  .hgar .tblE td:first-child,.hgar .tblA td:first-child{background:var(--cream);color:var(--green-d);font-weight:700;font-size:.92rem;padding:.6rem .8rem;border-bottom:2px solid var(--bd);white-space:normal;}
+  .hgar .tblE td[data-label]:not(:first-child),.hgar .tblA td[data-label]:not(:first-child){display:grid;grid-template-columns:minmax(0,6.6rem) minmax(0,1fr);gap:.55rem;align-items:baseline;}
+  .hgar .tblE td[data-label]:not(:first-child)::before,.hgar .tblA td[data-label]:not(:first-child)::before{content:attr(data-label);font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);line-height:1.6;}
+
+  /* Mobile full-bleed section images.
+     INFOGRAPHICS keep native 16:9 and are NEVER cover-cropped — the 5:4 cover frame
+     shaved ~30% off the hand-raised set and cut its baked-in text.
+     Only real OG PHOTOS take the taller 4:5 frame (IMAGE-DESIGNS §7 blurfill). */
+  .hgar .sec-img{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);border-radius:0;border-left:0;border-right:0;}
+  .hgar .sec-img.inf-img{aspect-ratio:1408/768;object-fit:contain;background:#fff;}
+  .hgar .sec-img.og-photo{aspect-ratio:4/5;object-fit:cover;background:transparent;}
+}
+</style>
 </BaseLayout>
