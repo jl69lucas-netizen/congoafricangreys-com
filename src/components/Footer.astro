@@ -135,3 +135,34 @@ const liveStates = (locationsData.live_states || [])
     </div>
   </div>
 </footer>
+
+<style>
+  /* WCAG 2.5.8 target size (2026-07-26). These nav links rendered 19px tall as
+     display:inline with zero padding — 27 real failures on EVERY page of the site,
+     found by probing congo-african-grey-for-sale and tracing them back here.
+
+     The row pitch is preserved exactly: each row was a 19px link + 8px space-y-2 gap
+     = 27px. It is now a 24px link + 3px gap = 27px. The footer does not grow.
+
+     Links inside a sentence are exempt from 2.5.8 (the inline exception) and are
+     deliberately left alone — only these list/nav links are touched. */
+  /* The li must be a flex container, not a block. With an inline-flex anchor the li
+     still opens a line box and adds baseline leading, so a 24px link produced a 29px
+     row and the footer grew ~200px. As a flex parent the anchor is a flex item and the
+     row is exactly the link height. */
+  footer ul.space-y-2 > li {
+    display: flex;
+  }
+  footer li a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+  }
+  /* This Tailwind build applies space-y-2 as margin-BOTTOM on each li, not margin-top,
+     so an override on margin-top computes correctly and changes nothing. Measured: the
+     footer grew 1677 -> 1757 while the computed margin-top read 3px. Trim the real
+     property so the 5px each link gained is taken back off the gap. */
+  footer ul.space-y-2 > li {
+    margin-bottom: 3px;
+  }
+</style>
