@@ -73,3 +73,39 @@ item with weight / shadow / a darker fill instead.
   still sentence case. Heaviest: the 6 `/available/` bird pages (~86 each) and
   the `/available/` hub (54). Spec: `skills/cag-page-hardening.md §1e-ter`.
   NOTE: FAQ `<summary>` questions stay conversational — headings only.
+
+## dna-tested hero CLS — bimodal ~0.44 on mobile (found 2026-07-26, NOT yet fixed)
+
+`/dna-tested-african-grey-for-sale/` fails Core Web Vitals CLS on cold mobile
+loads. Measured with `npx lighthouse@12 --form-factor=mobile --screenEmulation.mobile
+--throttling-method=simulate`, five runs:
+
+| version | run 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| current (post Phase 5/6) | 0.442 | 0.001 | 0.444 | 0.442 | 0.443 |
+| pre-session (`5e88b82`)  | 0.442 | 0.001 | 0.442 | 0.442 | 0.442 |
+
+**It is pre-existing** — the pre-session build shows the identical distribution,
+so nothing in the cross-sell or image work caused it.
+
+**It is page-specific**: `/african-greys-for-sale-with-health-guarantee/` is a
+flat 0.000 across three runs.
+
+**The shifting node** is `main.dnat > header.hero > div.hero-grid > div.hero-copy`,
+carrying the whole 0.442, with a second tiny shift on `div.hero-copy > h1 > em`.
+
+Ruled out by measurement, do not re-try these:
+- the `.xsell` cross-sell block and its CSS (bisection said yes, but that was
+  single runs of a bimodal metric — it reproduces without the block)
+- `<em>` in the H1 needing a late italic face (all six pages have one; five are clean)
+- `.hero-mosaic{order:-1}` putting images above the copy (all six do this)
+- `.mtile img{height:100%}` vs `height:auto` with `aspect-ratio` (no change, 5 runs)
+
+**Because the distribution is bimodal, any future attempt MUST be judged on at
+least 5 runs.** A single pass or fail means nothing here, which is how this was
+first misattributed.
+
+Most likely remaining suspect: a race between first paint and the async Google
+Fonts stylesheet (`BaseLayout.astro`, `media="print" onload=...`). That is
+exactly what Phase 1.1 self-hosting removes, so re-measure after that lands
+before investigating further.
