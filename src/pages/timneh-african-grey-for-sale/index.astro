@@ -62,6 +62,10 @@ const readMore = [
   { href: "/cites-african-grey-documentation/", img: IMG + "own-a-timneh-legally-usa-cites-appendix-i-infographic-760.webp", kicker: "Legality", title: "CITES documentation, explained", sub: "What Appendix I paperwork looks like when a legal, captive-bred grey travels home." },
   { href: "/african-grey-parrot-price/", img: IMG + "timneh-african-grey-eating-peanut-760.webp", kicker: "Pricing", title: "African Grey price — what you actually pay for", sub: "Where the $1,500 floor comes from, and why a sub-$1,000 grey should scare you off." },
 ];
+// Read-card thumbnails render into a 148px box but were loading the full 760px
+// file. Swap in the 320w sibling as the default and let srcset pick up from there.
+const thumb = (p) => p.replace(/(-760)?\.webp$/, "-320.webp");
+
 
 const faqs = [
   { q: "How much does a Timneh African Grey cost?", a: "Our hand-raised Timneh African Greys are $1,500 for Evie and $1,600 for Elad, held with a $200 refundable deposit. Nothing here is priced under $1,500 — a healthy, DNA-sexed, captive-bred Timneh costs real money to raise, test and document, so a $750 'limited-time' Timneh is about as loud a warning sign as this market produces." },
@@ -526,7 +530,7 @@ const seam = "/cag-fs-seam-emblem.webp";
             <p>Your Timneh rides IATA live-animal cargo on Delta, United or American to the nearest major airport</p></div>
           </div>
           <div class="ship-c">
-            <img src="/african-grey-home-delivery-pet-van.webp" width="640" height="426" loading="lazy" decoding="async" alt="Climate-controlled pet delivery van used for C.A.Gs Timneh African Grey home deliveries" />
+            <img src="/african-grey-home-delivery-pet-van.webp" srcset="/african-grey-home-delivery-pet-van-440.webp 440w, /african-grey-home-delivery-pet-van.webp 640w" sizes="(max-width:860px) 92vw, 760px" width="640" height="426" loading="lazy" decoding="async" alt="Climate-controlled pet delivery van used for C.A.Gs Timneh African Grey home deliveries" />
             <div class="ship-body"><span class="ship-tier clay">Tier 2</span><b>Home Delivery</b><span class="ship-price">$350</span>
             <p>A climate-controlled pet courier brings your Timneh and its document folder straight to your doorstep</p></div>
           </div>
@@ -534,7 +538,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h4 class="cag-h4">Can You Collect a Timneh in Person Rather Than Ship?</h4>
         <p>Absolutely — collecting your Timneh at our Midland, TX aviary is the softest possible handoff, and it's open to anyone who can make the 2–3 hour drive. Coming in person also lets you run, face to face, the very verification this whole page has been walking you through.</p>
-        <img class="sec-img inf-img" src="/african-grey-nationwide-shipping-7-metro-map.webp" width="1408" height="768" loading="lazy" decoding="async" alt="Map of nationwide African Grey shipping routes from Midland, Texas to major US metros" />
+        <img class="sec-img inf-img" src="/african-grey-nationwide-shipping-7-metro-map.webp" srcset="/african-grey-nationwide-shipping-7-metro-map-760.webp 760w, /african-grey-nationwide-shipping-7-metro-map.webp 1408w" sizes="(max-width:860px) 92vw, 760px" width="1408" height="768" loading="lazy" decoding="async" alt="Map of nationwide African Grey shipping routes from Midland, Texas to major US metros" />
 
         <h5 class="cag-h5">Airport Cargo Runs $185 and Door Delivery $350 on Delta, United or American</h5>
         <p>One more time, plainly: $185 for the airport, $350 for your door, every flight US-only on IATA-approved carriers — Delta, United or American. Those lanes reach most of the places our Timnehs land, and each card below opens that region's availability page:</p>
@@ -668,7 +672,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <div class="read-cards">
           {readMore.map((r) => (
             <a class="read-c" href={r.href}>
-              <span class="read-img"><img src={r.img} width="760" height="415" loading="lazy" decoding="async" alt={r.title} /></span>
+              <span class="read-img"><img src={thumb(r.img)} srcset={thumb(r.img) + " 320w, " + r.img + " 760w"} sizes="148px" width="320" height="175" loading="lazy" decoding="async" alt={r.title} /></span>
               <span class="read-body">
                 <span class="read-kicker">{r.kicker}</span>
                 <span class="read-title">{r.title}</span>

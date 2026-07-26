@@ -123,6 +123,10 @@ const readMore = [
   { href: "/blog/african-grey-parrot-price-what-you-get/", img: IMG + "egg-vs-weaned-chick-cost-success-comparison-760.webp", kicker: "Pricing", title: "African Grey price — what you actually get", sub: "Why the real cost of an egg is higher than $95." },
   { href: "/cites-african-grey-documentation/", img: IMG + "captive-bred-cites-appendix-i-egg-documentation-760.webp", kicker: "Legality", title: "CITES documentation, explained", sub: "What Appendix I paperwork travels with a captive-bred grey." },
 ];
+// Read-card thumbnails render into a 148px box but were loading the full 760px
+// file. Swap in the 320w sibling as the default and let srcset pick up from there.
+const thumb = (p) => p.replace(/(-760)?\.webp$/, "-320.webp");
+
 
 const faqs = [
   { q: "How much does a fertile African Grey parrot egg cost?", a: "Our fertile African Grey parrot eggs are $95 each, and if you buy 5 eggs US shipping is free. A $200 deposit reserves a clutch. We price every egg the same across our Congo lines — flat pricing that changes by species is one of the scam tells we warn buyers about, so an honest African Grey egg price stays consistent." },
@@ -493,12 +497,12 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>Reserve a weaned chick instead of an egg and it travels on one of two tiers, nationwide, whichever variant you choose. Every shipment leaves with the full document folder and health certificate.</p>
         <div class="ship-cards">
           <div class="ship-c">
-            <img src="/african-grey-airport-live-animal-shipping.webp" width="640" height="797" loading="lazy" decoding="async" alt="IATA live-animal shipping crate for an African Grey arriving at the airline cargo desk" />
+            <img src="/african-grey-airport-live-animal-shipping.webp" srcset="/african-grey-airport-live-animal-shipping-440.webp 440w, /african-grey-airport-live-animal-shipping.webp 640w" sizes="(max-width:860px) 92vw, 760px" width="640" height="797" loading="lazy" decoding="async" alt="IATA live-animal shipping crate for an African Grey arriving at the airline cargo desk" />
             <div class="ship-body"><span class="ship-tier">Tier 1</span><b>Airport Pickup</b><span class="ship-price">$185</span>
             <p>Live-animal cargo on Delta, United or American into the major airport nearest you</p></div>
           </div>
           <div class="ship-c">
-            <img src="/african-grey-home-delivery-pet-van.webp" width="640" height="426" loading="lazy" decoding="async" alt="Climate-controlled pet delivery van used for C.A.Gs African Grey home deliveries" />
+            <img src="/african-grey-home-delivery-pet-van.webp" srcset="/african-grey-home-delivery-pet-van-440.webp 440w, /african-grey-home-delivery-pet-van.webp 640w" sizes="(max-width:860px) 92vw, 760px" width="640" height="426" loading="lazy" decoding="async" alt="Climate-controlled pet delivery van used for C.A.Gs African Grey home deliveries" />
             <div class="ship-body"><span class="ship-tier clay">Tier 2</span><b>Home Delivery</b><span class="ship-price">$350</span>
             <p>A climate-controlled courier van brings the bird — and its full paperwork — to your door</p></div>
           </div>
@@ -759,7 +763,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <div class="read-cards">
           {readMore.map((r) => (
             <a class="read-c" href={r.href}>
-              <span class="read-img"><img src={r.img} width="760" height="415" loading="lazy" decoding="async" alt={r.title} /></span>
+              <span class="read-img"><img src={thumb(r.img)} srcset={thumb(r.img) + " 320w, " + r.img + " 760w"} sizes="148px" width="320" height="175" loading="lazy" decoding="async" alt={r.title} /></span>
               <span class="read-body">
                 <span class="read-kicker">{r.kicker}</span>
                 <span class="read-title">{r.title}</span>
