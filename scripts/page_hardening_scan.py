@@ -618,16 +618,26 @@ def check_deflist_labels(sources):
 # The health-guarantee trust ticks looked "scattered" on mobile: the flex row never
 # set align-items, so each tick floated against a differently-wrapped label.
 def check_icon_baseline(sources):
+    """2026-07-26: the keyword used to be matched against everything between the
+    previous } and the next {, which includes comments. A "/* FAQ-A GREEN TICK */"
+    or "/* trust chips */" comment therefore flagged the rule beneath it whatever
+    its selector said — that is how a vertical accordion stack (.faqA) and a plain
+    grid container (.hero-chips, whose child li sets align-items itself) came to be
+    reported as drifting icon rows. The keyword is now tested against the SELECTOR
+    ONLY, with comments stripped first."""
     for label, text in sources:
-        for m in re.finditer(r"([^{}]*(?:tick|badge|check|trust|feat)[^{}]*)\{([^}]*)\}",
-                             text, re.I):
+        for m in re.finditer(r"([^{}]*)\{([^}]*)\}", text):
+            sel = re.sub(r"/\*.*?\*/", "", m.group(1), flags=re.S)
+            sel = sel.strip().split("\n")[-1].strip()
+            if not re.search(r"tick|badge|check|trust|feat", sel, re.I):
+                continue
             body = m.group(2).replace(" ", "")
             if "display:flex" not in body and "display:grid" not in body:
                 continue
-            if "align-items:" in body:
+            # place-items / place-content are the shorthands that set align-items.
+            if "align-items:" in body or "place-items:" in body or "place-content:" in body:
                 continue
             line = text[: m.start()].count("\n") + 1
-            sel = m.group(1).strip().split("\n")[-1].strip()
             add("WARN", "icon-text-baseline-drift", label, line,
                 f"`{sel}` lays out an icon+label row but never sets "
                 "align-items — when the label wraps, the glyph drifts off its text "

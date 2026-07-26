@@ -389,6 +389,52 @@ def test_passes_explicitly_aligned_icon_row():
                         "icon-text-baseline-drift") == []
 
 
+# ── 7b. icon-text-baseline-drift FALSE POSITIVES (found 2026-07-26) ──────────
+# The keyword was matched against everything between the previous } and the next {,
+# which includes comments. A nearby "GREEN TICK" comment therefore flagged rules
+# whose own selector says nothing about icons.
+
+# .faqA is a vertical stack of accordion cards, not an icon+label row. It was
+# flagged only because a comment above it mentions a tick.
+COMMENT_LEAKS_KEYWORD_CSS = """
+/* FAQ-A GREEN TICK accordion */
+.hgar .faqA{margin:1rem 0 6px;display:flex;flex-direction:column;gap:8px;}
+"""
+
+# A grid CONTAINER that merely lays out rows; the icon+label alignment lives on
+# the child li, which sets align-items itself.
+CONTAINER_WITH_ALIGNED_CHILD_CSS = """
+/* One-line-each trust chips: 2x2 on desktop, 2x2 on mobile — never a 3+1 orphan */
+.handraised .hero-chips{list-style:none;display:grid;grid-template-columns:auto auto;gap:.4rem 1.6rem;padding:0;font-size:.8rem;}
+.handraised .hero-chips li{display:inline-flex;align-items:center;gap:.35rem;white-space:nowrap;}
+"""
+
+
+def test_does_not_flag_a_rule_whose_keyword_came_from_a_comment():
+    assert checks_named(run(H.check_icon_baseline,
+                            [("hg.astro", COMMENT_LEAKS_KEYWORD_CSS)]),
+                        "icon-text-baseline-drift") == []
+
+
+# place-items is the shorthand for align-items + justify-items. A badge box that
+# centres its own glyph with it is aligned, and is not an icon+label row anyway.
+PLACE_ITEMS_SHORTHAND_CSS = """
+.vf-badge{flex:none;width:28px;height:28px;border-radius:9px;background:#e7f1ec;display:grid;place-items:center;margin-top:1px}
+"""
+
+
+def test_treats_place_items_as_alignment():
+    assert checks_named(run(H.check_icon_baseline,
+                            [("eggs.astro", PLACE_ITEMS_SHORTHAND_CSS)]),
+                        "icon-text-baseline-drift") == []
+
+
+def test_does_not_flag_a_container_whose_child_sets_alignment():
+    assert checks_named(run(H.check_icon_baseline,
+                            [("hand-raised.astro", CONTAINER_WITH_ALIGNED_CHILD_CSS)]),
+                        "icon-text-baseline-drift") == []
+
+
 # ── 8. smooth-scroll: the guarded global rule must be ALLOWED ────────────────
 # The existing trap warns on any scroll-behavior:smooth because it once broke
 # in-page anchors. The pages now set scroll-margin-top to clear the header and
