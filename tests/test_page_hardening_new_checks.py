@@ -107,6 +107,59 @@ def test_passes_index_links_with_padding():
                         "tap-target-spacing") == []
 
 
+# ── 2b. tap-target-spacing FALSE POSITIVES (found 2026-07-26) ────────────────
+# The check reported 7 ERRORs across eggs/congo/timneh/hand-raised. All 7 were
+# wrong. WCAG 2.5.8 applies to pointer TARGETS; none of these are targets, and
+# the two badge rules declare an explicit height the check never read.
+
+# A decorative counter badge. Declares width/height 28px, but the check only
+# consulted min-height, then guessed 19px from font-size x line-height.
+# It is also a ::before — a pseudo-element can never be a pointer target.
+DECORATIVE_COUNTER_CSS = """
+.ds-list li::before{content:counter(ds,decimal-leading-zero);position:absolute;left:0;top:10px;font-weight:700;font-size:.85rem;color:#fff;background:var(--f);width:28px;height:28px;border-radius:9px;display:grid;place-items:center}
+"""
+
+# Same shape, 24px tick glyph inside a non-interactive <li>.
+DECORATIVE_TICK_CSS = """
+.chkB-grid li::before{content:"\\2713";position:absolute;left:0;top:11px;width:24px;height:24px;border-radius:8px;background:#e7f1ec;color:var(--f);font-weight:700;font-size:.8rem;display:grid;place-items:center}
+"""
+
+# A <ul> of static trust labels. No <a>, no <button> — matched only because
+# "chip" appears in the class name.
+STATIC_TRUST_CHIPS_CSS = """
+.handraised .hero-chips{list-style:none;display:grid;grid-template-columns:auto auto;justify-content:start;gap:.4rem 1.6rem;padding:0;margin:.3rem 0 0;font-size:.8rem;color:var(--green-d);font-weight:600;}
+"""
+
+# A real link that declares height instead of min-height still has to pass.
+LINK_SIZED_BY_HEIGHT_CSS = """
+.railA a{display:inline-flex;align-items:center;font-size:.76rem;height:36px;padding:0 14px;}
+"""
+
+
+def test_does_not_flag_a_decorative_counter_pseudo_element():
+    assert checks_named(run(H.check_tap_target_spacing,
+                            [("congo.astro", DECORATIVE_COUNTER_CSS)]),
+                        "tap-target-spacing") == []
+
+
+def test_does_not_flag_a_decorative_tick_pseudo_element():
+    assert checks_named(run(H.check_tap_target_spacing,
+                            [("congo.astro", DECORATIVE_TICK_CSS)]),
+                        "tap-target-spacing") == []
+
+
+def test_does_not_flag_a_static_label_list_named_chips():
+    assert checks_named(run(H.check_tap_target_spacing,
+                            [("hand-raised.astro", STATIC_TRUST_CHIPS_CSS)]),
+                        "tap-target-spacing") == []
+
+
+def test_honours_a_declared_height_on_a_real_link():
+    assert checks_named(run(H.check_tap_target_spacing,
+                            [("hg.astro", LINK_SIZED_BY_HEIGHT_CSS)]),
+                        "tap-target-spacing") == []
+
+
 # ── 3. form-control-overflow ─────────────────────────────────────────────────
 # Shipped on the health-guarantee contact form: fields cut off on the right at
 # mobile/tablet. Root cause is a grid child defaulting to min-width:auto, which
