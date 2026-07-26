@@ -938,7 +938,11 @@ const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stro
 .hgar .k1-rows{margin:0;padding:.4rem 1rem .7rem;}
 .hgar .k1-rows>div{display:grid;grid-template-columns:minmax(0,7.5rem) minmax(0,1fr);gap:.8rem;padding:.5rem 0;border-bottom:1px dashed var(--bd);}
 .hgar .k1-rows>div:last-child{border-bottom:0;}
-.hgar .k1-rows dt{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-top:.15rem;}
+/* The label was var(--muted) against a var(--ink) value — different, but backwards:
+   quieter than the thing it labels, so the receipt read as one grey slab and the rows
+   could not be scanned. Green makes the label lead the eye into its row, and keeps it
+   distinct from the clay used for prices and CTAs elsewhere on the page. */
+.hgar .k1-rows dt{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green-d);padding-top:.15rem;}
 .hgar .k1-rows dd{margin:0;font-size:.9rem;line-height:1.5;color:var(--ink);}
 
 /* K5 capsule strip — second takeaway */
@@ -951,9 +955,18 @@ const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stro
 .hgar .t4-h{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;color:var(--green-d);margin:0 0 .7rem;padding-bottom:.5rem;border-bottom:1px solid var(--bd);}
 .hgar .t4-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
 .hgar .t4-g{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--clay-t);margin:0 0 .4rem;}
-.hgar .t4-col ul{list-style:none;margin:0;padding:0;display:grid;gap:.3rem;}
-.hgar .t4-col a{font-size:.8rem;line-height:1.35;color:#4a423b;text-decoration:none;border-left:2px solid var(--bd);padding-left:.55rem;display:block;transition:border-color .15s,color .15s;}
-.hgar .t4-col a:hover{border-left-color:var(--clay);color:var(--clay-ink);}
+/* Guarantee index. Two defects fixed 2026-07-26:
+   1. The links were 17px tall (12.8px text, no vertical padding), under the 24px axe
+      target-size minimum. That is the "Touch targets do not have sufficient size or
+      spacing" report — it listed these links, not the jump rail, whose pills are
+      202x37 and always passed. Vertical padding does the work; the row gap shrinks to
+      compensate so the block's overall height barely moves.
+   2. The 2px border-left accent was a side-stripe, which the house design rules ban.
+      Replaced with a hover background tint, which also gives the larger target a
+      visible shape. */
+.hgar .t4-col ul{list-style:none;margin:0;padding:0;display:grid;gap:.1rem;}
+.hgar .t4-col a{font-size:.8rem;line-height:1.35;color:#4a423b;text-decoration:none;display:block;padding:.36rem .5rem;border-radius:8px;transition:background-color .15s,color .15s;}
+.hgar .t4-col a:hover,.hgar .t4-col a:focus-visible{background:#efe8e1;color:var(--clay-ink);}
 
 /* Table E "Guarantee Ledger" — this page's own table (green spine, 3-col ledger) */
 .hgar .tblwrap{overflow-x:auto;margin:1rem 0;}
@@ -1094,9 +1107,27 @@ const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stro
   .hgar .hero-grid{grid-template-columns:minmax(0,1fr);gap:18px;}
   /* photo leads on mobile, copy follows — matching the sibling for-sale heroes */
   .hgar .hero-shot{order:-1;}
-  .hgar .ribbon{grid-template-columns:repeat(2,1fr);}
-  .hgar .ribbon li:nth-child(2){border-right:0;}
-  .hgar .ribbon li:nth-child(-n+2){border-bottom:1px solid var(--bd);}
+  /* Trust ribbon on mobile. The 2x2 grid centred each label, so a two-line label
+     wrapped ragged and its tick floated vertically centred beside the block —
+     no two ticks lined up and the strip read as scattered. One column instead:
+     every label fits on a single line at 375px, the ticks form one clean vertical
+     rule, and any label that does wrap hangs under itself rather than under the
+     tick. Costs no height — the old rows were 67px each because they wrapped. */
+  .hgar .ribbon{grid-template-columns:minmax(0,1fr);}
+  .hgar .ribbon li{
+    display:grid;
+    grid-template-columns:1rem 1fr;
+    align-items:start;
+    justify-items:start;
+    text-align:left;
+    gap:.55rem;
+    padding:10px 16px;
+    line-height:1.4;
+    border-right:0;
+    border-bottom:1px solid var(--bd);
+  }
+  .hgar .ribbon li:last-child{border-bottom:0;}
+  .hgar .ribbon svg{margin-top:.16rem;}
   .hgar .counter-grid{grid-template-columns:repeat(3,1fr);}
   /* minmax(0,1fr) + min-width:0 stop the 100vw full-bleed images inflating the track */
   .hgar .body-grid{grid-template-columns:minmax(0,1fr);}

@@ -47,6 +47,13 @@ const schema = {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  /* Fade the trailing edge so a clipped trail reads as "scrolls" rather than
+     "broken text". On /african-greys-for-sale-with-health-guarantee/ the last crumb
+     rendered as "African Greys for Sale Wit" with no cue that it could be swiped.
+     When the trail already fits, the faded band covers empty background and is
+     invisible, so this costs nothing on short trails. */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 26px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 26px), transparent);
 }
 .bc-pill-wrap::-webkit-scrollbar { display: none; }
 @media (max-width: 1024px) {
@@ -74,6 +81,12 @@ const schema = {
   color: #2D6A4F;
   text-decoration: none;
   transition: color 0.15s;
+  /* 24px minimum tap target (axe target-size). At 0.75rem these links rendered
+     20px tall, which fails on touch. Vertical padding only — the strip's own
+     height is set by .bc-pill-wrap padding, so the row does not grow. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
 }
 .bc-link:hover {
   color: #1a3d2e;

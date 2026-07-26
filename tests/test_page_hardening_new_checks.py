@@ -66,25 +66,44 @@ def test_passes_mirrored_hero_preload():
 # BOTH mobile and desktop. Pills are 36px tall (size passes) but gap:7px puts
 # adjacent targets inside each other's 24px exclusion zone.
 
+# The REAL failing elements, measured in the browser: the guarantee-index links, 12.8px
+# text with no vertical padding = 17px tall. Their text matches the breeder's pasted
+# list exactly ("What is covered, and what voids it", "Is seventy-two hours long
+# enough?", ...). Verbatim from index.astro before the fix.
+HG_INDEX_CSS = """
+.hgar .t4-col ul{list-style:none;margin:0;padding:0;display:grid;gap:.3rem;}
+.hgar .t4-col a{font-size:.8rem;line-height:1.35;color:#4a423b;text-decoration:none;border-left:2px solid var(--bd);padding-left:.55rem;display:block;}
+"""
+
+# The jump rail, which my first cut wrongly flagged on all six pages for its 7px gap.
+# Measured in the browser these pills are 202x37 — comfortably over 24x24, so axe
+# target-size PASSES them and the gap is irrelevant.
 HG_RAIL_CSS = """
 .hgar .railA ul{display:flex;gap:7px;overflow-x:auto;list-style:none;margin:0;padding:.45rem .75rem;}
 .hgar .railA a{display:inline-flex;align-items:center;gap:.35rem;font-size:.76rem;border-radius:50px;padding:7px 14px;min-height:36px;}
 """
 
-GOOD_RAIL_CSS = """
-.hgar .railA ul{display:flex;gap:12px;overflow-x:auto;list-style:none;}
-.hgar .railA a{display:inline-flex;align-items:center;padding:8px 16px;min-height:44px;}
+FIXED_INDEX_CSS = """
+.hgar .t4-col ul{list-style:none;margin:0;padding:0;display:grid;gap:.1rem;}
+.hgar .t4-col a{font-size:.8rem;line-height:1.35;color:#4a423b;text-decoration:none;display:block;padding:.36rem .5rem;border-radius:8px;}
 """
 
 
-def test_flags_tight_gap_between_nav_pills():
-    found = checks_named(run(H.check_tap_target_spacing, [("hg.astro", HG_RAIL_CSS)]),
+def test_flags_undersized_index_links():
+    found = checks_named(run(H.check_tap_target_spacing, [("hg.astro", HG_INDEX_CSS)]),
                          "tap-target-spacing")
-    assert len(found) >= 1, found
+    assert len(found) == 1, found
+    assert "17px" in found[0]["msg"] or "under the 24px" in found[0]["msg"], found[0]["msg"]
 
 
-def test_passes_adequate_gap():
-    assert checks_named(run(H.check_tap_target_spacing, [("hg.astro", GOOD_RAIL_CSS)]),
+def test_does_not_flag_a_rail_whose_pills_are_36px_tall():
+    # REGRESSION: a 7px gap between 37px-tall pills is NOT an axe failure.
+    assert checks_named(run(H.check_tap_target_spacing, [("hg.astro", HG_RAIL_CSS)]),
+                        "tap-target-spacing") == []
+
+
+def test_passes_index_links_with_padding():
+    assert checks_named(run(H.check_tap_target_spacing, [("hg.astro", FIXED_INDEX_CSS)]),
                         "tap-target-spacing") == []
 
 
