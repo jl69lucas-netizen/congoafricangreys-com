@@ -804,11 +804,19 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}jins-jeni-cock-
         if (ring) ring.style.setProperty('--p', p);
         if (num) num.textContent = String(idx + 1).padStart(2, '0');
         dialLinks.forEach((a) => a.classList.toggle('on', a.dataset.id === id));
+        let activeChip = null;
         railLinks.forEach((a) => {
           const on = a.dataset.id === id;
           a.classList.toggle('on', on);
-          if (on && a.scrollIntoView) a.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'auto' });
+          if (on) activeChip = a;
         });
+        // Every class write is done above. Calling scrollIntoView() inside that loop
+        // read layout between writes and forced a synchronous reflow each iteration —
+        // the PageSpeed "Forced reflow" finding. One deferred read instead.
+        if (activeChip && activeChip.scrollIntoView) {
+          requestAnimationFrame(() =>
+            activeChip.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'auto' }));
+        }
       };
       const io = new IntersectionObserver((ents) => {
         ents.forEach((e) => {

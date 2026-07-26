@@ -664,12 +664,20 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
         if (ring) ring.style.setProperty('--p', p);
         if (num) num.textContent = String(idx + 1).padStart(2, '0');
         dialLinks.forEach((a) => a.classList.toggle('on', a.dataset.id === id));
+        let activeChip = null;
         railLinks.forEach((a) => {
           const on = a.dataset.id === id;
           a.classList.toggle('on', on);
-          // keep the active chip in view so the mobile rail tracks the reader
-          if (on && a.scrollIntoView) a.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'auto' });
+          if (on) activeChip = a;
         });
+        // Keep the active chip in view so the mobile rail tracks the reader — but do it
+        // AFTER all the class writes. Calling scrollIntoView() inside the loop read
+        // layout between writes and forced a synchronous reflow each iteration (the
+        // PageSpeed "Forced reflow" finding).
+        if (activeChip && activeChip.scrollIntoView) {
+          requestAnimationFrame(() =>
+            activeChip.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'auto' }));
+        }
       };
       const io = new IntersectionObserver((ents) => {
         ents.forEach((e) => {

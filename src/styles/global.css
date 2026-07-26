@@ -86,3 +86,20 @@
   opacity: 0.5;
   margin-left: 0.12em;
 }
+
+/* ── Fluid in-page navigation (2026-07-26) ──────────────────────────────────
+   Jump links glide instead of teleporting, on mobile and desktop alike.
+
+   This was previously banned outright: MEMORY reference_smooth_scroll_kills_jump_links
+   recorded smooth scrolling cancelling #anchor navigation. That failure was caused by
+   anchors having no scroll-margin-top, so a target landed under the sticky header and
+   looked like the jump had not fired. Every for-sale page now sets scroll-margin-top
+   clearing BOTH the 96px header and the sticky jump-rail, so the rule is safe — and it
+   is verified per page, not assumed.
+
+   Gated on prefers-reduced-motion so it never overrides a vestibular preference.
+   Horizontal jump-rail scrollers keep their own scroll-behavior:auto, so the active
+   pill still snaps instantly rather than gliding sideways while the page moves. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
