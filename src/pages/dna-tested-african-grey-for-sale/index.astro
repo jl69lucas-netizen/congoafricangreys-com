@@ -44,7 +44,7 @@ const birdImg: Record<string, { src: string; alt: string; pos: string; badge?: "
   "Bery":  { src: "/images/congo-page/bery-congo-african-grey-female-card.webp", pos: "center 30%", alt: "Bery, a lab-confirmed Congo African Grey hen for sale, perched and looking to camera" },
   "Amie":  { src: "/images/congo-page/amie-congo-african-grey-female-card.webp", pos: "center 28%", alt: "Amie, a young Congo hen whose DNA sexing result was back before we listed her" },
   "Roys":  { src: "/images/congo-page/roys-congo-african-grey-male-card.webp",   pos: "center 30%", alt: "Roys, a Congo cock identified by PCR assay rather than by his tail feathers", badge: "top" },
-  "Jins & Jeni (pair)": { src: "/images/congo-page/jins-jeni-congo-african-grey-pair-card.webp", pos: "center 32%", alt: "Jins and Jeni, one Congo cock and one Congo hen, indistinguishable side by side" },
+  "Jins & Jeni (Pair)": { src: "/images/congo-page/jins-jeni-congo-african-grey-pair-card.webp", pos: "center 32%", alt: "Jins and Jeni, one Congo cock and one Congo hen, indistinguishable side by side" },
   "Elad":  { src: "/images/timneh-page/elad-timneh-african-grey-male-card.webp", pos: "center 34%", alt: "Elad, a maroon-tailed Timneh cock with his sexing certificate on file" },
   "Evie":  { src: "/images/timneh-page/evie-timneh-african-grey-female-card.webp", pos: "center 38%", alt: "Evie, a Timneh hen whose sex was settled by a feather sample rather than a guess" },
 };
@@ -52,7 +52,7 @@ const birdBlurb: Record<string, string> = {
   "Bery": "Congo hen, result on file since her first moult — steady, unhurried, easy to read.",
   "Amie": "Congo hen, young and quick; her assay came back before her photographs went up.",
   "Roys": "Congo cock, and nothing about his tail told us that — the laboratory did.",
-  "Jins & Jeni (pair)": "One cock, one hen, sold together. Look at them and you still cannot tell which is which.",
+  "Jins & Jeni (Pair)": "One cock, one hen, sold together. Look at them and you still cannot tell which is which.",
   "Elad": "Timneh cock out of Levi and Rily, confirmed by assay rather than by eye.",
   "Evie": "Timneh hen, gentle and deliberate; her feather sample answered the question at once.",
 };
@@ -143,7 +143,7 @@ const productSchema = {
 };
 const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
   itemListElement: available.map((b, i) => ({ "@type": "ListItem", position: i + 1,
-    item: { "@type": "Product", name: b.name.replace(" (pair)", "") + " — DNA-Confirmed " + subLabel(b) + " " + sexLabel(b), category: "Companion parrot",
+    item: { "@type": "Product", name: b.name.replace(" (Pair)", "") + " — DNA-Confirmed " + subLabel(b) + " " + sexLabel(b), category: "Companion parrot",
       offers: { "@type": "Offer", price: String(b.price), priceCurrency: "USD",
         availability: "https://schema.org/InStock", url: site + b.slug } } })) };
 
@@ -471,10 +471,10 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}jins-jeni-cock-
                       <span class={"bbadge " + sexKey(b) + (im.badge === "top" ? " badge-top" : "")}>{sexLabel(b)} · confirmed</span>
                     </div>
                     <div class="binfo">
-                      <div class="brow"><h3>{b.name.replace(" (pair)", "")}</h3><span class="bprice">${b.price.toLocaleString()}</span></div>
+                      <div class="brow"><h3>{b.name.replace(" (Pair)", "")}</h3><span class="bprice">${b.price.toLocaleString()}</span></div>
                       <p class="bblurb">{birdBlurb[b.name]}</p>
                       <div class="bchips"><span>{subLabel(b)}</span><span>Result on file</span><span>Banded</span></div>
-                      <a class="btn btn-clay bfull" href={b.slug}>Meet {b.name.replace(" (pair)", "").split(" &")[0]} →</a>
+                      <a class="btn btn-clay bfull" href={b.slug}>Meet {b.name.replace(" (Pair)", "").split(" &")[0]} →</a>
                     </div>
                   </article>
                 );
@@ -746,7 +746,7 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}jins-jeni-cock-
               <h3>Every Grey Here Has Its Result on File</h3>
               <p>Pick the one you want, or ask us to match a hen or cock to the household you are describing.</p>
               <ul class="form-birds">
-                {available.map((b) => (<li><span>{b.name.replace(" (pair)", "")} · {sexLabel(b)} {subLabel(b)}</span><b>${b.price.toLocaleString()}</b></li>))}
+                {available.map((b) => (<li><span>{b.name.replace(" (Pair)", "")} · {sexLabel(b)} {subLabel(b)}</span><b>${b.price.toLocaleString()}</b></li>))}
               </ul>
               <p class="form-ship">Ships nationwide · <b>$185 airport · $350 home</b> · Pickup in Midland, TX (within 2–3 hours)</p>
             </div>
@@ -756,7 +756,7 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}jins-jeni-cock-
               <label>Which confirmed grey are you asking about?
                 <select name="bird" required>
                   <option value="">Choose a DNA-confirmed grey…</option>
-                  {available.map((b) => (<option value={b.name.replace(" (pair)", "") + " ($" + b.price.toLocaleString() + ")"}>{b.name.replace(" (pair)", "")} — {sexLabel(b)} {subLabel(b)} (${b.price.toLocaleString()})</option>))}
+                  {available.map((b) => (<option value={b.name.replace(" (Pair)", "") + " ($" + b.price.toLocaleString() + ")"}>{b.name.replace(" (Pair)", "")} — {sexLabel(b)} {subLabel(b)} (${b.price.toLocaleString()})</option>))}
                   <option value="Not sure — help me choose">Not sure — help me choose</option>
                 </select>
               </label>

@@ -54,7 +54,7 @@ const birdImg: Record<string, { src: string; alt: string; pos: string; badge?: "
     alt: "Amie, a young Congo grey cleared at her pre-sale avian-vet examination" },
   "Roys": { src: CG + "roys-congo-african-grey-male-card.webp", pos: "center 30%", badge: "top",
     alt: "Roys, a Congo cock PCR-screened for beak and feather disease before we listed him" },
-  "Jins & Jeni (pair)": { src: CG + "jins-jeni-congo-african-grey-pair-card.webp", pos: "center 32%",
+  "Jins & Jeni (Pair)": { src: CG + "jins-jeni-congo-african-grey-pair-card.webp", pos: "center 32%",
     alt: "Jins and Jeni, a companion pair of grey parrots each covered by their own written terms" },
   "Elad": { src: TG + "elad-timneh-african-grey-male-card.webp", pos: "center 34%",
     alt: "Elad, a maroon-tailed Timneh with his veterinary certificate already on file" },
@@ -65,7 +65,7 @@ const birdBlurb: Record<string, string> = {
   "Bery": "Settled Congo hen, already past every milestone the window is designed to catch.",
   "Amie": "Congo hen still weaning; her window opens the day she reaches you, not today.",
   "Roys": "Congo cock, screened and cleared, waiting out the last few weeks of weaning.",
-  "Jins & Jeni (pair)": "Two greys, two sets of terms, one crate — they do not separate.",
+  "Jins & Jeni (Pair)": "Two greys, two sets of terms, one crate — they do not separate.",
   "Elad": "Timneh cock out of Levi and Rily, examined and papered before he was listed.",
   "Evie": "Timneh hen, unhurried and deliberate, cleared at her pre-sale examination.",
 };
@@ -197,7 +197,7 @@ const productSchema = {
 
 const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
   itemListElement: available.map((b, i) => ({ "@type": "ListItem", position: i + 1,
-    item: { "@type": "Product", name: b.name.replace(" (pair)", "") + " — Health-Guaranteed " + subLabel(b) + " African Grey",
+    item: { "@type": "Product", name: b.name.replace(" (Pair)", "") + " — Health-Guaranteed " + subLabel(b) + " African Grey",
       category: "Companion parrot",
       offers: { "@type": "Offer", price: String(b.price), priceCurrency: "USD",
         availability: "https://schema.org/InStock", url: site + b.slug } } })) };
@@ -427,7 +427,7 @@ const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stro
 
             <div class="availB-grid">
               {available.map((b) => {
-                const nm = b.name.replace(" (pair)", "");
+                const nm = b.name.replace(" (Pair)", "");
                 const im = birdImg[b.name];
                 return (
                   <article class={"bcard " + postureKey(b)} data-p={postureKey(b)}>
@@ -753,7 +753,7 @@ const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stro
               <p>Every grey below ships under the identical 72-hour written terms.</p>
               <ul class="form-birds">
                 {available.map((b) => (
-                  <li><b>{b.name.replace(" (pair)", "")}</b><span>{subLabel(b)} · {b.price_display}</span></li>
+                  <li><b>{b.name.replace(" (Pair)", "")}</b><span>{subLabel(b)} · {b.price_display}</span></li>
                 ))}
               </ul>
               <p class="form-ship">Ships nationwide · <b>$185</b> airport · <b>$350</b> home · free collection in Midland, TX.</p>
@@ -763,7 +763,7 @@ const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stro
               <p class="hp"><label>Leave this empty <input name="bot-field"></label></p>
               <label for="hg-bird">Which grey are you asking about?
                 <select id="hg-bird" name="bird">
-                  {available.map((b) => (<option>{b.name.replace(" (pair)", "")} — {subLabel(b)}, {b.price_display}</option>))}
+                  {available.map((b) => (<option>{b.name.replace(" (Pair)", "")} — {subLabel(b)}, {b.price_display}</option>))}
                   <option>Not sure yet — help me choose</option>
                   <option>A future clutch</option>
                 </select>
