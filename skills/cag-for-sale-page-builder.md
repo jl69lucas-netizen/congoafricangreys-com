@@ -104,6 +104,20 @@ Link-First anchors (sentence START, never mid/end; branded ACTION anchors on CTA
 3. Manual gate list (comparison contract, restated): 400px heroes · unique newsletter image + one-liner title per page (no shared images) · opening paragraph under every header · uniform OG boxes · separate blog/contact H2s · mobile table stacking · jump-rail scroll-margin · further-reading cards with real thumbnails · AA contrast (`--clay-ink` fills, `#b04228` small clay on light) · Lighthouse warm median-of-3.
 4. First-person voice sweep + anti-ai-writing pass + non-commodity check.
 5. Verify in `dist/`, never source greps. Commit + push = deploy; work on `main` only.
+6. **Seam parity** — house idiom is one seam emblem before **every** section. health-guarantee shipped 7
+   across 17 sections and it read as unfinished. Check before calling a page done:
+   `echo "seams=$(grep -c 'class=\"seam\"' <page>) sections=$(grep -c '<section class=\"sec\"' <page>)"`.
+7. **Verify every gate finding before you fix a page.** Four checkers cried wolf on 2026-07-26 —
+   `tap-target-spacing` (7 false ERRORs), `icon-text-baseline-drift` (6 false WARNs), the line-length probe
+   (miscalibrated `ch`), and the dup gate (23 legitimate furniture matches). Confirm against the flagged
+   rule first; when the check is wrong, fix the check and add a regression test.
+8. **Perf conclusions need ≥5 runs.** CLS on this site is bimodal — a single Lighthouse run produced a
+   confident wrong attribution. Look at the distribution, not one number.
+
+> **Before starting a new for-sale group, read
+> `docs/superpowers/sessions/2026-07-26-for-sale-cluster-impeccable-lessons.md`.** It carries the reusable
+> playbook: the `.xsell` cross-sell component spec, the cross-sell FAQ + Anchor Diversity Ledger (with the
+> anchors already spent), the corrected measurement probes, and a copy-paste command sequence (§8).
 
 ## 6a. Component fidelity — the recurring mistake (LOCKED 2026-07-20, egg-page v3)
 

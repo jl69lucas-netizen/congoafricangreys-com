@@ -10,6 +10,27 @@
 
 ---
 
+## FINAL — session closed 2026-07-26
+
+Phases 0–3 and 5–7 complete. **Phase 4 resolved as a non-issue**: the body copy was already capped at 70ch
+on all six pages; the "84ch" reading was a miscalibrated probe (see the lessons doc §2). The only real
+over-wide text was the FAQ answers, fixed in `9922e1f`. **Phase 1.1 (self-hosted fonts) deferred by the
+breeder** to the full-site pass.
+
+Ending gate state on all 6: `page_hardening_scan.py` **0 ERROR · 0 WARN** (first fully clean run) ·
+`final_page_audit.py` 6/6 PASS-WITH-WARNINGS · dup gate body **PASS** · dup gate headers **PASS** ·
+health-sweep **ALL CRITICAL CHECKS PASSED** · sitemaps 109 URLs, 0 phantoms · Lighthouse mobile
+a11y/best-practices/SEO **100/100/100**.
+
+**Lessons + reusable playbook for the next cluster:**
+`docs/superpowers/sessions/2026-07-26-for-sale-cluster-impeccable-lessons.md` — read §1 (verify the gate
+before fixing the page) and §8 (copy-paste command sequence) first.
+
+Open items are listed in that document §9, and the dna-tested hero CLS is recorded in
+`docs/reference/technical-seo-fixes-backlog.md`.
+
+---
+
 ## Status Ledger — verified 2026-07-26 (rebuild + gates re-run, not read off commit messages)
 
 | Phase | State | Evidence |
