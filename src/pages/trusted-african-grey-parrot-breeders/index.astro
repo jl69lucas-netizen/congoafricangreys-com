@@ -571,8 +571,9 @@ const reviewSchema = reviews.map((r) => ({
   .trust-d { --rule: rgba(45,106,79,.16); }
 
   /* Smooth in-page jumps (JumpRail + TOC + next-nav) with reduced-motion guard. */
-  html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  /* scroll-behavior:auto — `smooth` cancels in-page #anchor navigation on this
+     site (jump rails / dial TOCs land nowhere). Established rule, do not revert. */
+  html { scroll-behavior: auto; }
 
   /* Sticky header is ~96px tall — keep jumped-to headings visible below it. */
   .trust-d [id] { scroll-margin-top: 110px; }
@@ -605,7 +606,7 @@ const reviewSchema = reviews.map((r) => ({
   .trust-d li a:not(.rounded-full):not(.bg-clay):hover { text-decoration-color:#b04228; }
 
   /* External links open in a new tab — subtle outward arrow affordance. */
-  .trust-d a[target="_blank"]::after { content:"\2197"; font-size:.7em; line-height:0; vertical-align:super; opacity:.5; margin-left:.12em; }
+  .trust-d a[target="_blank"]::after { content:"\2197"; font-size:.7em; line-height:0; vertical-align:super; margin-left:.12em; }
 
   /* Section seam — centered wordmark divider (verbatim scope). */
   .trust-d > .cag-seam{ display:flex; align-items:center; gap:26px; max-width:1100px; margin:0 auto; padding:.6rem 24px !important; }
