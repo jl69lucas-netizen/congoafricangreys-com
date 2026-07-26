@@ -280,16 +280,49 @@ candidates to match — correcting the ladder alone leaves `sizes` still lying.
 Added 2026-07-26 for the breeder's "text height/width on mobile, desktop and tablet" ask,
 which had **never been measured at any breakpoint**. Body measure must land in 45–75ch.
 
+> **Do not approximate `ch` as `0.5em`.** The first cut of this probe did, and it
+> over-reported by ~20% for IBM Plex Sans, whose "0" advance is nearer `0.6em`. On
+> 2026-07-26 that produced a false alarm: it reported the body copy at 84ch and had
+> a fix underway to "cap the measure across the cluster" — when `.hgar p{max-width:70ch}`
+> was already there and correct, and the only genuinely over-wide text on the whole
+> cluster was the FAQ answers. **Measure a real `ch` by rendering "0" in the element's
+> own computed font**, as below.
+
 ```js
-[...document.querySelectorAll('main p')].map(p => {
-  const cs = getComputedStyle(p);
-  const ch = parseFloat(cs.fontSize) * 0.5;      // ~0.5em per char for the body face
-  return { ch: Math.round(p.getBoundingClientRect().width / ch),
-           lh: cs.lineHeight, text: p.textContent.slice(0, 40) };
-}).filter(x => x.ch < 45 || x.ch > 75);
+(() => {
+  const cache = new Map();
+  const realCh = (el) => {                       // width of "0" in THIS element's font
+    const cs = getComputedStyle(el);
+    const key = cs.fontSize+'|'+cs.fontFamily+'|'+cs.fontWeight;
+    if (cache.has(key)) return cache.get(key);
+    const s = document.createElement('span');
+    s.textContent = '0'.repeat(100);             // x100 so rounding cannot skew it
+    s.style.cssText = `position:absolute;visibility:hidden;white-space:pre;font:${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize}/${cs.lineHeight} ${cs.fontFamily};letter-spacing:${cs.letterSpacing};`;
+    document.body.appendChild(s);
+    const w = s.getBoundingClientRect().width / 100; s.remove();
+    cache.set(key, w); return w;
+  };
+  document.querySelectorAll('details').forEach(d => d.open = true);  // FAQ answers have 0 width while closed
+  return [...document.querySelectorAll('main p')]
+    .filter(p => p.textContent.trim().length > 60 && p.getBoundingClientRect().width > 0)
+    .map(p => ({ ch: Math.round(p.getBoundingClientRect().width / realCh(p)),
+                 cls: (p.className || p.parentElement.className || '').toString().split(' ')[0],
+                 text: p.textContent.trim().slice(0, 40) }))
+    .filter(x => x.ch > 75);                     // see the 45ch note below
+})()
 ```
 Run at **360 / 768 / 1280**. Tablet is the breakpoint most likely to fail — these pages
 were built mobile-first then verified on desktop, so 768 was never the design target.
+
+**The 45ch floor does not apply at 360px.** A 360px viewport minus padding leaves ~328px;
+at 16px body text that is ~41ch, so *every* paragraph reads as "too narrow" and the
+result is noise. Filter on `> 75` at mobile and use the full band at 768 and up. Narrow
+measures inside cards (blurbs, form asides) are also fine — a 26ch card blurb is not a
+defect. **Over-wide is the failure mode worth chasing; under-wide usually is not.**
+
+The real defect this catches looks like `max-width:none` on a paragraph inside a
+full-width container. Uncapping inside an *already narrow* box (`.ship-c p`, `.quote-c p`)
+is correct and measures in band — verify before "fixing" it.
 
 Build, open the page in the preview browser, then run each probe. These are the
 checks that caught the two worst bugs of 2026-07-23.
