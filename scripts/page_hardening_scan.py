@@ -369,26 +369,51 @@ def _px(val):
     return n * 16 if m.group(2) in ("rem", "em") else n
 
 def check_tap_target_spacing(sources):
+    """axe target-size PASSES any target >=24x24 CSS px, whatever its neighbours do.
+    Spacing only rescues UNDERSIZED targets. The first cut of this check ignored that
+    and flagged every jump rail on all six for-sale pages purely for a 7px gap — but
+    those pills measure 202x37 and always passed. Meanwhile the real failures (17px-tall
+    index links) went unreported, because their rule sets no gap at all.
+
+    So: flag a link rule that cannot reach 24px tall. Height comes from min-height, or
+    from font-size x line-height + vertical padding. If none of those are declared the
+    rule is not sized here and is skipped — better silent than crying wolf."""
     for label, text in sources:
-        # A flex/grid list that is a nav rail (has overflow-x or is a ul of links)
         for m in re.finditer(r"([^{}]*)\{([^}]*)\}", text):
-            sel, body = m.group(1).strip(), m.group(2)
-            if "display:flex" not in body.replace(" ", "") and \
-               "display:grid" not in body.replace(" ", ""):
+            sel, body = m.group(1).strip().split("\n")[-1].strip(), m.group(2)
+            if "<" in sel or not re.match(r"^[.#a-z]", sel):
                 continue
-            if not re.search(r"\brail|\bnav|\bdial|\bjump|\btoc\b", sel, re.I):
+            if not re.search(r"\ba\b|\bli\b|link|pill|chip", sel, re.I):
                 continue
-            g = re.search(r"(?<![-\w])gap:\s*([^;]+);", body)
-            if not g:
+            flat = body.replace(" ", "")
+            if "display:block" not in flat and "display:inline-flex" not in flat \
+               and "display:grid" not in flat and "display:flex" not in flat:
                 continue
-            gap = _px(g.group(1).split()[0])
-            if gap is None or gap >= MIN_TARGET_GAP_PX:
+            mh = _px((re.search(r"min-height:\s*([^;]+);", body) or [None, None])[1]
+                     if re.search(r"min-height:\s*([^;]+);", body) else None)
+            if mh is not None and mh >= 24:
+                continue
+            fs = re.search(r"font-size:\s*([^;]+);", body)
+            lh = re.search(r"line-height:\s*([\d.]+)\s*;", body)
+            pad = re.search(r"padding:\s*([^;]+);", body)
+            if not fs:
+                continue
+            size = _px(fs.group(1))
+            if size is None:
+                continue
+            content = size * (float(lh.group(1)) if lh else 1.4)
+            padv = 0.0
+            if pad:
+                first = _px(pad.group(1).split()[0])
+                padv = (first or 0) * 2
+            total = content + padv
+            if total >= 24:
                 continue
             line = text[: m.start()].count("\n") + 1
             add("ERROR", "tap-target-spacing", label, line,
-                f"nav pills in `{sel}` sit {gap:g}px apart — adjacent tap targets "
-                f"fall inside each other's 24px exclusion zone (axe target-size)",
-                f"raise gap to >={MIN_TARGET_GAP_PX:g}px and pad the pills to >=44px tall")
+                f"`{sel}` renders about {total:.0f}px tall — under the 24px axe "
+                f"target-size minimum. Spacing cannot rescue an undersized target.",
+                "add vertical padding (or min-height:24px) so the whole row is tappable")
 
 
 # ── form-control-overflow / form-control-ios-zoom ────────────────────────────
