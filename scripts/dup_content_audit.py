@@ -37,13 +37,45 @@ WHITELIST_SNIPPETS = [
     "hand raised cites documented and dna sexed reach out to start the conversation we reply within 24 hours",
     # credential badge strip (NAP + trust set — mandated identical)
     "since 2014 usda awa cites docs dna sexing pcr screened",
+
+    # ── 2026-07-26, for-sale cluster ────────────────────────────────────────
+    # Each entry below is one of the categories CLAUDE.md names as the ONLY text
+    # allowed to match a sibling verbatim. Kept as short distinctive stems rather
+    # than full runs, since substring matching covers every phrasing variant.
+
+    # shipping line — the canonical cost line, mandated on every card and section
+    "$185 airport $350 home",
+    "midland tx within 2 3 hours",
+
+    # counter strip
+    "12 yrs aviary in midland tx 24h we answer personally",
+    "verify our license app i cites documented 0 wild caught ever",
+
+    # doc-badge lists — the certificate enumerations
+    "dna pbfd apv pcr paperwork cites app i usda",
+    "the dna certificate the vet health record the hatch record and the care guide",
+    # anchored mid-phrase: the shingle window slides, so a stem that starts at the
+    # first word of the list gets missed as soon as the reported run starts later
+    "avian vet health record a care guide a welcome kit",
+    "closed leg band an avian vet health record",
+
+    # CTA button labels
+    "book a video call first read the full scam guide",
 ]
 
 SKIP_TAGS = {"script", "style", "noscript", "header", "footer", "nav", "form"}
 VOID_TAGS = {"br", "img", "hr", "input", "meta", "link", "source", "track", "wbr", "area", "base", "col", "embed"}
 # chrome elements not wrapped in a semantic tag: jump rails, TOC card grids,
-# section-directory blocks, breadcrumbs
-CHROME_RE = re.compile(r"jump|toc|rail|msp-|crumb", re.I)
+# section-directory blocks, breadcrumbs.
+#
+# 2026-07-26: added review/testimonial and read-card blocks. Both are syndicated
+# components rather than page prose — the reviews are real buyer quotes that
+# CLAUDE.md mandates be reused verbatim, and a read-card's title and sub are the
+# link label for the page it points at, also whitelisted. Leaving them in meant
+# the gate reported 23 crossovers on the for-sale cluster that were all
+# legitimate, which trains everyone to ignore the gate. Body prose, including the
+# cross-sell strip, is still compared in full.
+CHROME_RE = re.compile(r"jump|toc|rail|msp-|crumb|review|testimonial|read-c|quote-c", re.I)
 
 class Text(HTMLParser):
     def __init__(self):
