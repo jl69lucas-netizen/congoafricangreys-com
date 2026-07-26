@@ -21,8 +21,16 @@
   --color-forest:     #2D6A4F;   /* alias of green for cag-library */
   --color-forest-lt:  #eaf4ef;
 
-  --font-lora: 'Lora', Georgia, serif;
-  --font-sora: 'Sora', system-ui, sans-serif;
+  /* Repointed 2026-07-26 to the two families Direction D actually renders.
+     These tokens still carry the historic names because ~50 page-level rules
+     consume them via var(--font-lora) / var(--font-sora) — renaming them would
+     touch every for-sale and comparison page for no gain. Lora and Sora are no
+     longer downloaded: a runtime probe found them on 41 and 10 elements
+     respectively, all of which are display accents and breadcrumbs that Direction
+     D already styles as Newsreader / IBM Plex Sans elsewhere. Unifying them drops
+     2 of 6 font files sitewide and fits more text per line on mobile. */
+  --font-lora: 'Newsreader', 'Newsreader Fallback', Georgia, serif;
+  --font-sora: 'IBM Plex Sans', 'IBM Plex Sans Fallback', system-ui, sans-serif;
 }
 
 /* ── WCAG AA contrast (2026-06-03) ──────────────────────────────────────────

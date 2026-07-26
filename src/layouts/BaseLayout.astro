@@ -89,20 +89,24 @@ const { title, description, canonical, ogType = 'website', schemaJson, extraHead
   <meta name="twitter:image" content="https://congoafricangreys.com/og-twitter.png" />
 
   <!-- Fonts — preconnect + non-render-blocking load (media=print swap). Direction D
-       (Newsreader + IBM Plex) and the Lora/Sora token fallback share one combined
-       request. display=swap means fallback text paints immediately, then swaps. -->
+       renders exactly two families: Newsreader for headings and display accents,
+       IBM Plex Sans for everything else. Lora and Sora were dropped 2026-07-26 —
+       the --font-lora / --font-sora tokens in global.css now point at these two, so
+       the ~50 page rules consuming them are unchanged. That removes 2 of 6 woff2
+       files from every page on the site.
+       display=swap means fallback text paints immediately, then swaps. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Sora:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     media="print"
     onload="this.media='all'"
   />
   <noscript>
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Sora:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
   </noscript>
 
