@@ -375,23 +375,47 @@ def check_tap_target_spacing(sources):
     those pills measure 202x37 and always passed. Meanwhile the real failures (17px-tall
     index links) went unreported, because their rule sets no gap at all.
 
-    So: flag a link rule that cannot reach 24px tall. Height comes from min-height, or
-    from font-size x line-height + vertical padding. If none of those are declared the
-    rule is not sized here and is skipped — better silent than crying wolf."""
+    So: flag a link rule that cannot reach 24px tall. Height comes from height or
+    min-height, or from font-size x line-height + vertical padding. If none of those
+    are declared the rule is not sized here and is skipped — better silent than
+    crying wolf.
+
+    2026-07-26: that "better silent" promise was not being kept. This check reported
+    7 ERRORs across eggs/congo/timneh/hand-raised and every one was wrong, for two
+    reasons now guarded against:
+
+      1. It matched `li`/`pill`/`chip` in a selector, so decorative content lists were
+         treated as pointer targets. `.ds-list li::before` is a counter badge and
+         `.handraised .hero-chips` is a <ul> of static trust labels — neither contains
+         an <a> or a <button>, and WCAG 2.5.8 governs TARGETS, not text. A `::before`
+         can never be a target at all. Now: the selector must name a link or button,
+         and pseudo-elements are skipped outright.
+      2. It read only min-height, so a rule declaring `height:28px` fell through to the
+         font-size guess and "measured" 19px. Now: height counts the same as min-height.
+    """
     for label, text in sources:
         for m in re.finditer(r"([^{}]*)\{([^}]*)\}", text):
             sel, body = m.group(1).strip().split("\n")[-1].strip(), m.group(2)
             if "<" in sel or not re.match(r"^[.#a-z]", sel):
                 continue
-            if not re.search(r"\ba\b|\bli\b|link|pill|chip", sel, re.I):
+            # A pseudo-element is decoration, never a pointer target.
+            if "::before" in sel or "::after" in sel:
+                continue
+            # Must actually BE a control. "pill"/"chip"/"li" alone are just names.
+            if not re.search(r"\ba\b|\bbutton\b", sel, re.I):
                 continue
             flat = body.replace(" ", "")
             if "display:block" not in flat and "display:inline-flex" not in flat \
                and "display:grid" not in flat and "display:flex" not in flat:
                 continue
-            mh = _px((re.search(r"min-height:\s*([^;]+);", body) or [None, None])[1]
-                     if re.search(r"min-height:\s*([^;]+);", body) else None)
-            if mh is not None and mh >= 24:
+            sized = None
+            for prop in ("min-height", "height"):
+                hit = re.search(prop + r":\s*([^;]+);", body)
+                if hit:
+                    val = _px(hit.group(1))
+                    if val is not None:
+                        sized = val if sized is None else max(sized, val)
+            if sized is not None and sized >= 24:
                 continue
             fs = re.search(r"font-size:\s*([^;]+);", body)
             lh = re.search(r"line-height:\s*([\d.]+)\s*;", body)
