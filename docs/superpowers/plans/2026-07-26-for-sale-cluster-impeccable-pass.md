@@ -10,6 +10,49 @@
 
 ---
 
+## Status Ledger — verified 2026-07-26 (rebuild + gates re-run, not read off commit messages)
+
+| Phase | State | Evidence |
+|---|---|---|
+| 0 — Gate gaps | **Done, 2 substitutions** | 8 checks + `tests/test_page_hardening_new_checks.py`. `srcset-candidate-oversized` was **not** built — `hero-preload-srcset-drift` went in instead, plus a bonus `form-control-ios-zoom`. `line-length-out-of-band` is runtime-only by design (§2y), spec + snippet present. |
+| 1.1 — Fonts | **Half done** | Lora/Sora dropped ✓. **Not self-hosted**: `public/fonts/` empty, `BaseLayout.astro:98-109` still preconnects + fetches Google CSS. The HTML→CSS→woff2 chain — the actual LCP lever — is intact on all 109 URLs. No hero-face preload. |
+| 1.2 — Analytics | **Done, survivor inverted** | Plan chose `/70de/` and dropping the direct tag; implementation kept `googletagmanager.com` deferred and dropped the gateway. 1 gtag in dist and live. `/70de/` still returns **HTTP 200**, so the Tag Gateway is still provisioned. Step 1 (network trace) and Step 4 (`generate_lead` reaches GA4) **never run**. |
+| 1.3 — Smooth scroll | **Done** | `global.css:104`, reduced-motion guarded. |
+| 1.4 — Forced reflow | **Done** | `ea3d949`, rAF-batched. |
+| 2 — LCP hero images | **Done** | `3cc4004`. |
+| 3.1–3.7 — Per-page defects | **Done** | `6a7dfa3`, `951f3d4`, `5e88b82`. |
+| 4 — Typography/fit | **Step 1 done on 1 of 6** | Measured below. Steps 2–6 open. |
+| 5 — Eggs/pair cross-sell | **Not started** | 0 eggs links and 0 pair links on hand-raised, dna-tested, health-guarantee. |
+| 6 — Remaining 3 pages | **Partial** | Got Phase 1 + footer a11y + eggs Title Case only. |
+| 7 — Verify and ship | **Not run** | — |
+
+### Gate readings after this session
+
+- `page_hardening_scan.py`, 6 pages: **0 ERROR · 29 WARN** (was 7 ERROR). All 7 errors were
+  false positives in `tap-target-spacing`; the check was fixed, not the pages — per this
+  plan's own acceptance rule. Remaining warns: 23 `img-no-srcset`, 6 `icon-text-baseline-drift`.
+- `final_page_audit.py`: all 6 **PASS-WITH-WARNINGS**.
+- `dup_content_audit.py`: FAILs sitewide, but the output is dominated by legacy location
+  pages sharing the credential line. **Never run scoped to the 6**, which is what Phase 7
+  Step 4 asks for.
+
+### Phase 4 Step 1 measurement — `/african-greys-for-sale-with-health-guarantee/`
+
+Run with the §2y probe in a real viewport. 83 body paragraphs.
+
+| Viewport | Out of band | Narrowest | Widest | Dominant offenders |
+|---|---|---|---|---|
+| 360 | 69/83 | — | 51ch | everything **under** 45ch — physically unavoidable at 360px with 16px text; the 45ch floor is not meaningful at mobile |
+| 768 | 75/83 | 51ch | 100ch | `.opener` ×17 and `.sec p` ×42 at **84ch**; `.faqA-item p` ×10 at **100ch** |
+| 1280 | 79/83 | 31ch | 129ch | same body at **84ch**; `.faqA-item p` at **129ch**; `.bblurb` ×6 at **31ch** |
+
+The finding is systematic, not cosmetic: **the body column has no measure cap and the FAQ
+answers have none at all.** CLAUDE.md already mandates `max-width:70ch` on every `<p>`; this
+page does not apply it. Bringing it into band is enforcing an existing locked rule, but it
+visibly reflows every section, so it goes through **Preview-before-apply** before it ships.
+
+---
+
 ## Ground Truth Established Before Planning
 
 These were verified against the live site and the source, not assumed. Three of them contradict what was believed going in.
