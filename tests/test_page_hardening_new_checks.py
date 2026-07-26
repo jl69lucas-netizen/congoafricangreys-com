@@ -185,6 +185,39 @@ def test_passes_when_only_used_families_are_requested():
                         "font-family-loaded-unused") == []
 
 
+# REGRESSION (2026-07-26): the first cut of this check reported Lora and Sora as dead
+# weight. A runtime probe proved otherwise — Lora renders on 41 elements and Sora on 10.
+# The check had only scanned `font-family:` declarations in two stylesheets, so it missed
+# BOTH the custom-property definition and the page CSS that consumes it. Dropping the
+# families on that advice would have degraded 51 elements to Georgia / system-ui.
+TOKENS_AND_PAGE_CSS = """
+:root{
+  --font-lora: 'Lora', Georgia, serif;
+  --font-sora: 'Sora', system-ui, sans-serif;
+}
+body.theme-d .font-sora{font-family:'IBM Plex Sans','IBM Plex Sans Fallback',system-ui,sans-serif !important;}
+body.theme-d h1,body.theme-d h2{font-family:'Newsreader','Newsreader Fallback',Georgia,serif !important;}
+.hgar .k1-head b{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;}
+"""
+
+
+def test_family_reachable_only_through_a_custom_property_is_not_dead():
+    found = checks_named(
+        run(H.check_font_families, BASE_LAYOUT_4_FAMILIES, TOKENS_AND_PAGE_CSS),
+        "font-family-loaded-unused")
+    names = " ".join(f["msg"] for f in found)
+    assert "Lora" not in names, f"Lora reaches the page via var(--font-lora): {names}"
+    assert "Sora" not in names, f"Sora reaches the page via var(--font-sora): {names}"
+
+
+def test_still_flags_a_family_with_no_reference_at_all():
+    head = ('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?'
+            'family=Newsreader:wght@400&family=Bitter:wght@400&display=swap">')
+    found = checks_named(run(H.check_font_families, head, TOKENS_AND_PAGE_CSS),
+                         "font-family-loaded-unused")
+    assert len(found) == 1 and "Bitter" in found[0]["msg"], found
+
+
 # ── 5. analytics-double-load ─────────────────────────────────────────────────
 # /70de/ is GA4 served first-party via Cloudflare's Google Tag Gateway. The direct
 # googletagmanager.com tag ALSO fires, so the same G-MEWJ9GVC4T container loads
