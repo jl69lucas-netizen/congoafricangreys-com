@@ -457,16 +457,25 @@ def check_font_families(head_html, theme_css):
         requested.add(m.group(1).replace("+", " "))
     for m in re.finditer(r"@font-face\s*\{[^}]*font-family:\s*['\"]([^'\"]+)", head_html):
         requested.add(m.group(1))
-    rendered = set(re.findall(r"font-family:\s*[^;]*?['\"]([^'\"]+)['\"]", theme_css))
+    # A family can reach the page through a CUSTOM PROPERTY as easily as through a
+    # font-family declaration: `--font-lora:'Lora',Georgia,serif` consumed by
+    # `font-family:var(--font-lora)` in page CSS. The first cut of this check only
+    # looked at `font-family:` in two stylesheets and wrongly declared Lora and Sora
+    # dead — a runtime probe found them rendering on 51 elements. Err toward a false
+    # NEGATIVE here: wrongly deleting a font is a visible sitewide regression, while
+    # wrongly keeping one costs a few KB.
+    rendered = set()
+    for m in re.finditer(r"(?:font-family|--font[\w-]*|font)\s*:\s*([^;}]+)", theme_css):
+        rendered.update(re.findall(r"['\"]([^'\"]+)['\"]", m.group(1)))
     for fam in sorted(requested):
-        if fam in rendered:
-            continue
-        if any(fam in r for r in rendered):
+        if any(fam.lower() == r.lower() or fam.lower() in r.lower() for r in rendered):
             continue
         add("ERROR", "font-family-loaded-unused", "src/layouts/BaseLayout.astro", 0,
-            f"'{fam}' is downloaded on every page but no CSS rule ever resolves to "
-            f"it — it is pure dead weight in the critical font chain",
-            f"remove {fam} from the font request")
+            f"'{fam}' is downloaded on every page but nothing references it — not a "
+            f"font-family rule and not a --font-* custom property. Confirm with a "
+            f"runtime probe before deleting.",
+            f"remove {fam} from the font request, or repoint the token that should "
+            f"have used it")
 
 
 # ── analytics-double-load ────────────────────────────────────────────────────
