@@ -1,336 +1,1584 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import CTA from '../../components/CTA.astro';
 
-const title = "Baby African Grey Parrot for Sale | Hand-Raised, Weaned | CongoAfricanGreys.com";
-const description = "Hand-raised baby African Grey parrots for sale from USDA-licensed breeders in Midland, TX. Every baby is fully weaned, DNA sexed, CITES documented, and vet certified before shipping.";
+const title = "Baby African Grey Parrot for Sale | Weaned at 12–16 Weeks, Never Sooner | 6 Hand-Raised Babies Available From $1,500 | C.A.Gs Midland TX — Congo & Timneh Chicks, DNA-Sexed, PBFD Tested, CITES Papered, Nationwide Delivery";
+const description = "Six hand-raised baby African Greys, weaned before they ship — never sold on formula. DNA-sexed, PBFD and polyomavirus PCR tested, CITES Appendix I papered, from $1,500. USDA-licensed Texas nursery, 24-hour reply. Reserve your baby today.";
 const canonical = "https://congoafricangreys.com/baby-african-grey-parrot-for-sale/";
 
 const breadcrumbs = [
   { name: "Home", url: "/" },
+  { name: "African Greys for Sale", url: "/african-grey-parrots-for-sale/" },
   { name: "Baby African Grey for Sale", url: "/baby-african-grey-parrot-for-sale/" },
 ];
 
-const faqs = [
-  {
-    q: "How old are baby African Greys when they're sold?",
-    a: "We never place baby African Greys before they are fully weaned, which typically occurs at 12–16 weeks of age. Any offer to sell an unweaned baby African Grey is a serious red flag — unweaned birds have a very high mortality rate and require professional hand-feeding equipment and expertise.",
-  },
-  {
-    q: "What does 'hand-raised' mean for an African Grey baby?",
-    a: "Hand-raised means the bird was removed from its parents at a young age and raised by humans using hand-feeding formula. This produces birds that are tame, trusting of people, and bonded to human interaction from day one. All birds from CongoAfricanGreys.com are hand-raised.",
-  },
-  {
-    q: "How much does a baby African Grey parrot cost?",
-    a: "Baby Congo African Greys from CongoAfricanGreys.com are priced from $1,700 to $3,500 depending on age, training level, and documentation. Baby Timneh African Greys range from $1,500 to $1,600. See our price guide for a full cost breakdown.",
-  },
-  {
-    q: "Can baby African Grey parrots be shipped?",
-    a: "Yes. We ship IATA-compliant to all 50 states. Every shipment uses an airline-approved live animal carrier with climate control. We only ship birds that are fully weaned, vet-certified healthy, and legally documented.",
-  },
+const IMG = "/images/baby-page";
+
+// Live inventory — data/clutch-inventory.json + data/price-matrix.json. Never hardcode a different figure.
+const babies = [
+  { id: "amie",  name: "Amie",  sex: "Hen",  variant: "Congo",  band: "weaned", bandLabel: "Just weaned",  age: "3 months", price: "$2,500", img: "card-amie",
+    blurb: "Steady, deliberate, and the first of this clutch to take pellets from a bowl without being shown twice.", href: "/available/amie/" },
+  { id: "roys",  name: "Roys",  sex: "Cock", variant: "Congo",  band: "weaned", bandLabel: "Just weaned",  age: "4 months", price: "$2,300", img: "card-roys", badge: "top",
+    blurb: "Busy, food-motivated, and happiest in a kitchen with people moving through it all day.", href: "/available/roys/" },
+  { id: "elad",  name: "Elad",  sex: "Cock", variant: "Timneh", band: "fledged", bandLabel: "Fledged", age: "5 months", price: "$1,600", img: "card-elad",
+    blurb: "Already mimicking the microwave. Timnehs tend to find their voice early, and he is proving it.", href: "/available/elad/" },
+  { id: "evie",  name: "Evie",  sex: "Hen",  variant: "Timneh", band: "fledged", bandLabel: "Fledged", age: "6 months", price: "$1,500", img: "card-evie",
+    blurb: "The quietest bird in the room until she decides otherwise. Gentle with hands from week one.", href: "/available/evie/" },
+  { id: "jins-jeni", name: "Jins & Jeni", sex: "Cock + Hen", variant: "Congo", band: "pair", bandLabel: "Bonded pair", age: "6 & 4 months", price: "$3,500", img: "card-jins-jeni",
+    blurb: "Unrelated, raised side by side, and now inseparable — which is why they leave together or not at all.", href: "/available/jins-and-jeni/" },
+  { id: "bery",  name: "Bery",  sex: "Hen",  variant: "Congo",  band: "grown", bandLabel: "Past baby stage", age: "1 year", price: "$1,700", img: "card-bery",
+    blurb: "No longer a baby, and priced accordingly. Settled, forgiving, and an easier first bird than most chicks.", href: "/available/bery/" },
 ];
 
-const faqSchema = {
+const facets = [
+  { key: "all",     label: "All babies",           n: 6 },
+  { key: "weaned",  label: "Just weaned · 3–4 mo", n: 2 },
+  { key: "fledged", label: "Fledged · 5–6 mo",     n: 2 },
+  { key: "pair",    label: "Bonded pair",          n: 1 },
+  { key: "grown",   label: "Past baby stage",      n: 1 },
+];
+
+const counters = [
+  { n: "12–16", l: "Weeks before a baby flies" },
+  { n: "6", l: "Babies in the nursery now" },
+  { n: "$1,500", l: "Baby floor price" },
+  { n: "0", l: "Unweaned birds sold, ever" },
+  { n: "100%", l: "CITES papered" },
+  { n: "24h", l: "Reply to every enquiry" },
+];
+
+const toc = [
+  { n: "01", id: "babies",         h: "The babies",         tag: "6 now" },
+  { n: "02", id: "brief",          h: "Before you deposit",  tag: "" },
+  { n: "03", id: "age",            h: "The right age",       tag: "12–16 wk" },
+  { n: "04", id: "why-early",      h: "Why sell early?",     tag: "" },
+  { n: "05", id: "pulled-early",   h: "Pulled too early",    tag: "" },
+  { n: "06", id: "nursery",        h: "Inside the nursery",  tag: "Video" },
+  { n: "07", id: "price",          h: "What a baby costs",   tag: "$1,500+" },
+  { n: "08", id: "price-warnings", h: "Price warnings",      tag: "" },
+  { n: "09", id: "questions",      h: "Seven questions",     tag: "" },
+  { n: "10", id: "congo-timneh",   h: "Congo or Timneh",     tag: "" },
+  { n: "11", id: "baby-adult",     h: "Baby or adult",       tag: "" },
+  { n: "12", id: "papers",         h: "The paperwork",       tag: "" },
+  { n: "13", id: "testing",        h: "Disease testing",     tag: "PCR" },
+  { n: "14", id: "parents",        h: "The parents",         tag: "" },
+  { n: "15", id: "legal",          h: "CITES + the law",     tag: "" },
+  { n: "16", id: "shipping",       h: "Getting home",        tag: "$185" },
+  { n: "17", id: "first30",        h: "First thirty days",   tag: "" },
+  { n: "18", id: "reviews",        h: "Buyer stories",       tag: "" },
+  { n: "19", id: "compare",        h: "How we compare",      tag: "" },
+  { n: "20", id: "reading",        h: "Keep reading",        tag: "" },
+  { n: "21", id: "faq",            h: "Questions",           tag: "10" },
+  { n: "22", id: "reserve",        h: "Reserve a baby",      tag: "" },
+];
+const N = toc.length;
+
+const faqs = [
+  { q: "How old are your baby African Greys when they go home?",
+    a: "Between twelve and sixteen weeks, and only once the bird has been self-feeding for a fortnight with a stable morning weight. Amie left the brooder at thirteen weeks; Evie took until nearly nineteen. We let the bird set that date, not the calendar and not the buyer." },
+  { q: "Will you sell me an unweaned baby if I've hand-fed before?",
+    a: "No. We have turned down experienced hand-feeders for the same reason we turn down first-timers — a bird that travels on formula arrives stressed, in a new environment, with a new person holding the syringe, and that is precisely when crop problems start. The Association of Avian Veterinarians takes the same position, and we are not going to be the exception to it." },
+  { q: "Can I get a baby African Grey for under $1,000?",
+    a: "Not from us, and in our view not safely from anyone in the United States. Our floor for a baby is $1,500, which is roughly what disease testing, DNA sexing, sixteen weeks of formula and a veterinary exam actually cost before anyone makes a dollar. Listings at $600 or $850 are either taking a deposit for a bird that does not exist, or moving a bird whose origins will not survive a question." },
+  { q: "Is a Congo baby better than a Timneh baby for a first bird?",
+    a: "Neither is better, but Timnehs are usually easier. They are smaller, generally steadier in a busy house, and tend to start talking earlier — Elad was mimicking the microwave at five months. A Congo has the bigger voice and the bigger presence, and asks a little more of you in return." },
+  { q: "Do you ship a baby African Grey to California?",
+    a: "Yes, and California is where most of our enquiries come from. A baby flies as cargo into your nearest major airport for $185, or a courier brings it to your door for $350. The bird must be weaned before it flies, so a California reservation on a three-month-old means a wait of a few weeks." },
+  { q: "What happens if the baby gets sick after it arrives?",
+    a: "You have seventy-two hours to get an independent avian vet to examine the bird, and twenty-four hours from arrival to tell us about anything you saw on the day. If that exam finds a congenital defect or an infectious disease, we replace the bird or refund you, at our discretion. Our written terms set out exactly what is and is not covered." },
+  { q: "Can I visit and see the baby before I pay?",
+    a: "Yes. We are in Midland, West Texas, and if you are within a two-to-three hour drive you are welcome to collect in person and skip shipping entirely. If you are further out we will do a live video call with the bird in hand instead — the same call, incidentally, that any breeder should be willing to take." },
+  { q: "How do I know the baby is really DNA-sexed and not just guessed?",
+    a: "Because you get the certificate with the laboratory's name on it, not our word. A feather or a toenail-tip blood sample goes to Avian Biotech, and the result comes back at roughly ninety-nine percent accuracy in one to two business days. Anyone claiming to sex a grey chick by looking at it is guessing." },
+  { q: "Do you sell African Grey eggs instead of babies?",
+    a: "We do sell fertile eggs, but only to experienced breeders with their own incubators — and an egg is the one thing on this site that cannot be weaned, which is the whole difference. If you want a companion bird rather than a hatching project, a weaned baby is the right end of that trade." },
+  { q: "Where do next season's babies come from?",
+    a: "From adult pairs we keep back rather than sell, which is a slower way to run an aviary and the reason we can name every chick's parents. We do occasionally place a proven adult pair, and those birds are listed well away from the nursery." },
+];
+
+const schema = {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: breadcrumbs.map((b, i) => ({
+        "@type": "ListItem", position: i + 1, name: b.name,
+        item: `https://congoafricangreys.com${b.url}`,
+      })),
+    },
+    {
+      "@type": "Product",
+      name: "Baby African Grey Parrot — Hand-Raised and Fully Weaned",
+      description: "Hand-raised Congo and Timneh African Grey babies from a USDA-licensed aviary in Midland, Texas. Weaned at 12–16 weeks before travel, DNA-sexed, PBFD and polyomavirus PCR screened, CITES Appendix I documented.",
+      brand: { "@type": "Brand", name: "C.A.Gs – Midland, TX" },
+      category: "Live Companion Parrot",
+      image: [`https://congoafricangreys.com${IMG}/baby-african-greys-brooder-hero.webp`],
+      offers: {
+        "@type": "AggregateOffer",
+        priceCurrency: "USD",
+        lowPrice: 1500,
+        highPrice: 3500,
+        offerCount: 6,
+        availability: "https://schema.org/InStock",
+        seller: { "@type": "Organization", name: "C.A.Gs – Midland, TX" },
+      },
+      // Real figures only — 4.9 from 52 verified buyers (CLAUDE.md sanctioned).
+      aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "52" },
+      review: [
+        {
+          "@type": "Review",
+          author: { "@type": "Person", name: "Joanna Thomas" },
+          reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+          reviewBody: "I spent weeks looking for a baby African Grey parrot for sale in California, but I wanted a breeder that truly cared about the birds rather than just making a sale. After finding C.A.Gs, I immediately noticed the difference. They answered every question, shared regular updates, and provided health records before my baby Congo African Grey arrived.",
+        },
+        {
+          "@type": "Review",
+          author: { "@type": "Person", name: "Anthony Tershal" },
+          reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+          reviewBody: "If you're planning to buy baby Congo African Grey parrots from a breeder you can trust, C.A.Gs is the place to go. My experience exceeded every expectation. Communication was excellent, the bird was healthy and exceptionally well-socialized, and everything promised was included.",
+        },
+      ],
+    },
+    {
+      "@type": "LocalBusiness",
+      name: "C.A.Gs – Midland, TX",
+      description: "USDA-licensed African Grey parrot aviary in Midland, Texas, hand-raising captive-bred Congo and Timneh babies to full weaning before placement.",
+      url: "https://congoafricangreys.com/",
+      address: { "@type": "PostalAddress", addressLocality: "Midland", addressRegion: "TX", addressCountry: "US" },
+      aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "52" },
+    },
+    {
+      "@type": "ItemList",
+      name: "Baby African Greys Available Now",
+      itemListElement: babies.map((b, i) => ({
+        "@type": "ListItem", position: i + 1,
+        item: {
+          "@type": "Product",
+          name: `${b.name} — ${b.age} ${b.variant} African Grey`,
+          description: b.blurb,
+          image: `https://congoafricangreys.com${IMG}/${b.img}.webp`,
+          url: `https://congoafricangreys.com${b.href}`,
+          offers: {
+            "@type": "Offer",
+            price: b.price.replace(/[$,]/g, ""),
+            priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
+            seller: { "@type": "Organization", name: "C.A.Gs – Midland, TX" },
+          },
+        },
+      })),
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question", name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ],
 };
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} hideGlobalCta>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogType="product"
+  hideGlobalCta
+  schemaJson={JSON.stringify(schema)}
+  heroPreload={`${IMG}/baby-african-greys-brooder-hero-760.webp`}
+  heroPreloadSrcset={`${IMG}/baby-african-greys-brooder-hero-560.webp 560w, ${IMG}/baby-african-greys-brooder-hero-760.webp 760w, ${IMG}/baby-african-greys-brooder-hero.webp 1408w`}
+  heroPreloadSizes="(max-width:900px) 100vw, 520px"
+>
+<main class="baby">
 
-  <!-- HERO -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={breadcrumbs} />
-  </div>
+  <div class="container"><Breadcrumb items={breadcrumbs} /></div>
 
-  <section class="baby-hero">
-    <div class="page-container">
-      <h1 class="baby-h1">Baby African Grey Parrots for Sale</h1>
-      <p class="baby-sub">
-        Hand-raised, fully weaned, CITES-documented baby African Greys from a USDA-licensed
-        facility in Midland, Texas. Every bird ships with a vet health certificate and DNA
-        sexing results.
-      </p>
-      <div class="baby-hero-cta">
-        <a class="btn-primary" href="/african-grey-parrot-for-sale/">View Available Birds</a>
-        <a class="btn-secondary" href="/contact-us/">Ask About a Baby</a>
+  <!-- ============ HERO · Split-Hero B warm gradient (refreshed) ============ -->
+  <header class="chero">
+    <div class="container">
+      <div class="chero-grid">
+        <div class="chero-copy">
+          <p class="eyebrow">This month's clutch · 3, 4, 5 and 6 months old · Midland, TX</p>
+          <h1 class="cag-h1">Baby African Grey Parrots for Sale, <em>Weaned Before They Fly</em></h1>
+          <p class="lead">
+            Six hand-raised babies are in our USDA-licensed nursery right now — the youngest is three
+            months old, the oldest is six, and every one of them is captive-bred here in Texas. Not one
+            will travel while it is still taking formula from a syringe. That single rule is the reason
+            this page reads differently from the listings either side of it.
+          </p>
+          <div class="chero-cta">
+            <a class="btn-clay" href="#babies">See the babies</a>
+            <a class="btn-ghost" href="#age">Why 12–16 weeks matters</a>
+          </div>
+          <p class="chero-rate"><span class="stars" aria-hidden="true">★★★★★</span> <b>4.9</b> from 52 buyer reviews</p>
+          <ul class="chero-ribbon">
+            <li>Weaned at 12–16 weeks</li>
+            <li>PBFD + polyomavirus PCR</li>
+            <li>DNA-sexed with certificate</li>
+            <li>CITES Appendix I papered</li>
+          </ul>
+        </div>
+        <figure class="chero-media">
+          <img src={`${IMG}/baby-african-greys-brooder-hero-760.webp`}
+               srcset={`${IMG}/baby-african-greys-brooder-hero-560.webp 560w, ${IMG}/baby-african-greys-brooder-hero-760.webp 760w, ${IMG}/baby-african-greys-brooder-hero.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 520px"
+               width="1408" height="768" loading="eager" fetchpriority="high"
+               alt="Three baby Congo African Grey parrots resting together in a brooder tub at our Midland, Texas nursery" />
+          <figcaption class="chero-tag">Our brooder, this season's clutch</figcaption>
+        </figure>
       </div>
     </div>
-  </section>
+  </header>
 
-  <!-- AVAILABLE BIRDS -->
-  <section class="baby-section">
-    <div class="page-container">
-      <h2 class="baby-h2">Currently Available Baby African Greys</h2>
-      <p class="baby-p">
-        Our availability changes as clutches are born and weaned. To see which baby African Greys
-        are currently available — and their estimated ready dates — visit our main listings page.
-      </p>
-      <div class="baby-avail-card">
-        <div class="baby-avail-inner">
-          <h3 class="baby-h3">View All Available Birds</h3>
-          <p>Listings include hatch date, sex, documentation status, and current price.
-          Updated as birds become available.</p>
-          <a class="btn-primary" href="/african-grey-parrot-for-sale/">See Available African Greys</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WEANING WARNING -->
-  <section class="baby-section baby-alt">
-    <div class="page-container text-wrap">
-      <h2 class="baby-h2">What "Fully Weaned" Means — and Why It Matters</h2>
-      <div class="baby-warning">
-        <p class="baby-warning-text">
-          <strong>Critical:</strong> Never purchase an unweaned baby African Grey.
-        </p>
-      </div>
-      <p class="baby-p">
-        African Grey babies complete the weaning process at approximately <strong>12 to 16 weeks
-        of age</strong>. A fully weaned bird eats independently from a dish without requiring
-        hand-feeding formula from a syringe. This is the earliest point at which a baby bird
-        can safely transition to a new home.
-      </p>
-      <p class="baby-p">
-        Any breeder offering an "unweaned baby" African Grey for sale — especially at a discount —
-        is a serious red flag. Unweaned birds have very high mortality rates outside a professional
-        breeding facility because they require precise temperature control, sterile feeding syringes,
-        properly mixed formula at exact temperatures, and monitoring for aspiration pneumonia. These
-        conditions cannot be replicated by a first-time buyer.
-      </p>
-      <p class="baby-p">
-        We never place a bird before it has been eating independently for a minimum of two weeks.
-        This brief waiting period significantly reduces post-placement mortality and produces a
-        more confident, better-adjusted bird in its new home.
-      </p>
-    </div>
-  </section>
-
-  <!-- DOCUMENTATION -->
-  <section class="baby-section">
-    <div class="page-container text-wrap">
-      <h2 class="baby-h2">What Documentation Every Baby Comes With</h2>
-      <p class="baby-p">
-        Every baby African Grey placed by CongoAfricanGreys.com ships with a complete documentation
-        package. These documents are legally required for CITES Appendix I species and are your
-        proof of legitimate captive-bred origin:
-      </p>
-      <div class="baby-docs-grid">
-        <div class="baby-doc-card">
-          <h3 class="baby-doc-title">CITES Captive-Bred Letter</h3>
-          <p>Issued by our USDA-licensed facility confirming the bird was bred in captivity in
-          the United States — not imported from the wild.</p>
-        </div>
-        <div class="baby-doc-card">
-          <h3 class="baby-doc-title">Closed Leg Band</h3>
-          <p>A permanent, closed aluminum band applied at approximately 2 weeks of age,
-          stamped with the hatch year. This band cannot be removed without cutting — it
-          proves the bird was banded as a nestling.</p>
-        </div>
-        <div class="baby-doc-card">
-          <h3 class="baby-doc-title">DNA Sexing Certificate</h3>
-          <p>African Greys are monomorphic — males and females look identical. DNA sexing
-          from an accredited genetics laboratory provides a definitive sex determination.</p>
-        </div>
-        <div class="baby-doc-card">
-          <h3 class="baby-doc-title">Avian Vet Health Certificate</h3>
-          <p>Issued within 10 days of shipping by a licensed avian veterinarian, certifying
-          the bird is free of infectious disease and fit for transport.</p>
-        </div>
-      </div>
-      <p class="baby-p" style="margin-top: 1.5rem;">
-        Keep all documents for the bird's entire life. CITES documentation must transfer with
-        the bird if you ever re-home or sell it. Learn more at
-        <a href="/cites-african-grey-documentation/" class="baby-link">/cites-african-grey-documentation/</a>.
-      </p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="baby-section baby-alt">
-    <div class="page-container text-wrap">
-      <h2 class="baby-h2">Baby African Grey FAQ</h2>
-      <div class="baby-faq">
-        {faqs.map((f) => (
-          <details class="baby-faq-item">
-            <summary class="baby-faq-q">{f.q}</summary>
-            <p class="baby-faq-a">{f.a}</p>
-          </details>
+  <!-- ============ COUNTER · 6 cards ============ -->
+  <div class="chero-counter">
+    <div class="container">
+      <div class="counter-row">
+        {counters.map((c) => (
+          <div class="cs"><b>{c.n}</b><span class="cs-l">{c.l}</span></div>
         ))}
       </div>
     </div>
-  </section>
+  </div>
 
-  <CTA
-    headline="Interested in a Baby African Grey?"
-    sub="Tell us about your home and experience — we will match you with the right bird and walk you through every step of the documentation and shipping process."
-  />
-</BaseLayout>
+  <!-- ============ MOBILE RAIL A · clay chips ============ -->
+  <nav class="chero-rail" aria-label="Jump to section">
+    <div class="container">
+      <div class="railA">
+        {toc.map((t) => (
+          <a href={`#${t.id}`}>{t.h}{t.tag && <span class="p">{t.tag}</span>}</a>
+        ))}
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="baby-body">
+
+      <!-- ============ DIAL 1 · clay progress, tags = age bands ============ -->
+      <nav class="tdial desk-only" aria-label="Contents" id="babyDial" style="--p:5">
+        <div class="tdial-ring"><div><b id="dialNum">1</b><span>of {N}</span></div></div>
+        <div class="tdial-list">
+          {toc.map((t, i) => (
+            <a href={`#${t.id}`} data-i={i}>
+              <span class="num">{t.n}</span>{t.h}{t.tag && <span class="tag">{t.tag}</span>}
+            </a>
+          ))}
+        </div>
+      </nav>
+
+      <div class="baby-main">
+
+        <!-- 01 ── THE BABIES ─────────────────────────────────────────── -->
+        <section id="babies">
+          <h2 class="cag-h2">Meet the Babies in Our Brooder This Month</h2>
+          <p>
+            Six birds are reservable from this clutch, and every baby African Grey parrot for sale on
+            this page is a real bird with a name, a hatch date and a weight chart rather than a stock
+            photograph. Four are Congos and two are Timnehs, they range from three to six months old,
+            and the prices below come straight from our inventory file — no discounts, no sale banners,
+            and no different figure for a cock than for a hen.
+          </p>
+
+          <div class="availB">
+            <aside class="availB-rail">
+              <p class="availB-k">Browse by stage</p>
+              {facets.map((f, i) => (
+                <button class={`fbtn${i === 0 ? " on" : ""}`} data-f={f.key} type="button">
+                  {f.label}<span>{f.n}</span>
+                </button>
+              ))}
+              <p class="availB-ship">Ships nationwide · $185 airport · $350 home</p>
+            </aside>
+            <div class="availB-grid">
+              {babies.map((b) => (
+                <article class="bcard" data-band={b.band}>
+                  <div class="bcard-photo">
+                    <img src={`${IMG}/${b.img}-440.webp`}
+                         srcset={`${IMG}/${b.img}-440.webp 440w, ${IMG}/${b.img}.webp 620w`}
+                         sizes="(max-width:980px) 46vw, 210px"
+                         width="620" height="620" loading="lazy"
+                         alt={`${b.name}, a ${b.age} old ${b.sex.toLowerCase()} ${b.variant} African Grey baby available from our Texas aviary`} />
+                    <span class={`bbadge${b.badge === "top" ? " badge-top" : ""}`}>{b.bandLabel}</span>
+                  </div>
+                  <div class="bcard-body">
+                    <div class="bcard-top"><h3 class="bcard-name">{b.name}</h3><span class="bcard-price">{b.price}</span></div>
+                    <p class="bcard-meta">{b.variant} · {b.sex} · {b.age}</p>
+                    <p class="bcard-blurb">{b.blurb}</p>
+                    <a class="btn-clay bfull" href="#reserve">Ask about {b.name} →</a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <h3 class="cag-h3">Which Babies Are Ready to Go Home Now?</h3>
+          <p>
+            Evie, Elad and Jins have all cleared weaning and could travel this week. Each has been
+            eating unassisted for longer than a fortnight, holding weight through the morning weigh-in,
+            and flying confidently around the fledging room — the three things we insist on before a
+            crate is ever booked.
+          </p>
+
+          <h3 class="cag-h3">Which Babies Are Still Weaning?</h3>
+          <p>
+            Amie and Roys are close but not finished, and Jeni goes when Jins goes. We will take a
+            reservation on any of them today and hold the bird until it is genuinely done, which is
+            usually a matter of weeks rather than months.
+          </p>
+
+          <h4 class="cag-h4">What "Reserve and Wait" Means for You</h4>
+          <p>
+            A $200 deposit takes the bird off the page and stops us showing it to anyone else. You get
+            photographs as the bird changes, you pay the balance when we confirm the weaning date, and
+            if the bird turns out to need another three weeks then it gets another three weeks. We have
+            never shortened that window to suit a travel booking, and we are not going to start.
+          </p>
+
+          <div class="sec-cta">
+            <a class="btn-clay" href="#reserve">Reserve a baby</a>
+            <a class="btn-ghost" href="#price">See what each one costs</a>
+          </div>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 02 ── BEFORE YOU DEPOSIT · K3 + K4 ──────────────────────── -->
+        <section id="brief">
+          <h2 class="cag-h2">Read This Before You Pay a Deposit on Any Baby Grey</h2>
+          <p>
+            Most of what goes wrong when someone buys a baby African Grey parrot goes wrong before any
+            money changes hands, in the gap between what a listing implies and what it actually
+            promises. Here is the short version of everything below, so you can carry it to whichever
+            breeder you end up choosing.
+          </p>
+
+          <div class="k3">
+            <p class="k3-h">The ledger, in plain figures</p>
+            <dl class="k3-list">
+              <div><dt>Age a baby should leave</dt><dd>12–16 weeks, self-feeding</dd></div>
+              <div><dt>Our baby price band</dt><dd>$1,500 – $3,500</dd></div>
+              <div><dt>Deposit to hold a bird</dt><dd>$200</dd></div>
+              <div><dt>Disease screening</dt><dd>PBFD + polyomavirus PCR</dd></div>
+              <div><dt>Sex confirmation</dt><dd>DNA certificate, ~99%</dd></div>
+              <div><dt>Travel</dt><dd>$185 airport · $350 home · free in Midland</dd></div>
+            </dl>
+          </div>
+
+          <div class="k4">
+            <p class="k4-h">Before you send anyone a deposit</p>
+            <ul class="k4-list">
+              <li>Ask the bird's hatch date and current weight, and expect both to arrive without hesitation.</li>
+              <li>Ask whether it is self-feeding yet. "Nearly" means no.</li>
+              <li>Ask to see the bird live on video, held, on the day you ask.</li>
+              <li>Ask which laboratory did the DNA and which vet signed the health certificate.</li>
+              <li>Notice whether the breeder asks anything at all about your household.</li>
+            </ul>
+          </div>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 03 ── THE RIGHT AGE ─────────────────────────────────────── -->
+        <section id="age">
+          <h2 class="cag-h2">At What Age Should a Baby African Grey Leave Its Breeder?</h2>
+          <p>
+            A baby African Grey should leave its breeder at twelve to sixteen weeks old, fully weaned
+            and eating on its own. Ask that question of ten sellers and you will get answers ranging
+            from six weeks to six months, which tells you the number is not really about the bird — it
+            is about what the seller finds convenient.
+          </p>
+          <img class="sec-img inf-img" src={`${IMG}/baby-african-grey-weaning-timeline-16-weeks-760.webp`}
+               srcset={`${IMG}/baby-african-grey-weaning-timeline-16-weeks-760.webp 760w, ${IMG}/baby-african-grey-weaning-timeline-16-weeks.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Sixteen-week weaning timeline for a baby African Grey, from brooder through syringe feeding and fledging to independent bowl feeding" />
+
+          <h3 class="cag-h3">Why Twelve to Sixteen Weeks Is the Honest Answer</h3>
+          <p>
+            <a href="https://cdn.ymaws.com/www.aav.org/resource/collection/AE20E93E-0F61-4C20-AB88-E237BD795B43/AAV_Weaning_Baby_Parrots.pdf" target="_blank" rel="noopener">Avian veterinary guidance on weaning baby parrots</a>
+            states plainly that the profession does not support the sale of unweaned birds, and that
+            hand-feeding belongs with people who already do it daily. A grey reaches independence later
+            than most parrots — the species is famously slow about it — so twelve weeks is the earliest
+            realistic date and sixteen is entirely normal.
+          </p>
+
+          <h4 class="cag-h4">What Fledging Has to Happen First</h4>
+          <p>
+            Weaning is not a food event, it is a confidence event. A chick that has never flown has no
+            reason to leave a syringe, because everything it needs still arrives at its beak. Once it
+            can cross a room under its own power, the bowl starts to look interesting.
+          </p>
+
+          <h5 class="cag-h5">Why a Grey Must Fly Before It Can Wean</h5>
+          <p>
+            Flight burns energy, and a bird that is burning energy gets hungry between feeds. That
+            hunger is the entire mechanism — it is what makes a chick investigate the food in front of
+            it rather than wait for the next syringe. Clip a baby's wings early, or keep it in a tub
+            past fledging age, and weaning can stall by weeks.
+          </p>
+
+          <h6 class="cag-h6">At Week 9: The First Refused Feed</h6>
+          <p>
+            The moment we watch for is unglamorous: a chick that turns its head away from the syringe
+            and goes to look at the bowl instead. Roys did it on day sixty-one. That refusal is the
+            first real signal, and everything after it is a matter of holding our nerve.
+          </p>
+
+          <h3 class="cag-h3">What Does "Fully Weaned" Actually Mean?</h3>
+          <p>
+            In our nursery it means fourteen consecutive days of eating unassisted with a stable
+            morning weight, verified on a scale rather than by eye. It does not mean the bird has
+            merely stopped begging for formula, and it does not mean it picks at pellets while still
+            taking two feeds a day. Those distinctions are exactly where buyers get caught.
+          </p>
+          <div class="sec-cta">
+            <a class="btn-clay" href="#reserve">Ask about a weaned baby</a>
+          </div>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 04 ── WHY SELL EARLY ────────────────────────────────────── -->
+        <section id="why-early">
+          <h2 class="cag-h2">Why Would Anyone Sell a Six-Week-Old Chick?</h2>
+          <p>
+            Because a six-week-old chick costs the seller ten more weeks of formula, labour and risk
+            that a sold chick does not. Search this page's own keyword and the results at the very top
+            will tell you, in their own words, that they are currently hand-feeding babies in the
+            six-to-eight-week range and taking money for them now.
+          </p>
+
+          <h3 class="cag-h3">The Three Reasons a Seller Pulls a Baby Early</h3>
+          <p>
+            The first is cash flow — money today beats money in April. The second is attrition: chicks
+            die, and a chick that has already been paid for becomes somebody else's loss. The third is
+            volume, because a brooder that empties in February can hold the next clutch.
+          </p>
+
+          <h4 class="cag-h4">Does an Unweaned Baby Really Bond Harder to You?</h4>
+          <p>
+            No, and this is the most profitable myth in the trade. The pitch is that feeding the bird
+            yourself creates a deeper attachment, which conveniently transfers ten weeks of skilled work
+            onto the buyer while raising the price rather than lowering it.
+          </p>
+
+          <h5 class="cag-h5">What Owners Who Tried It Report</h5>
+          <p>
+            <a href="https://www.reddit.com/r/AfricanGrey/comments/ipl261/what_age_did_you_buy_your_bird/" target="_blank" rel="noopener">Grey owners discussing purchase age on r/AfricanGrey</a>
+            are blunt about it — the most upvoted reply to someone offered a five-week-old chick reads
+            "don't buy an unweaned bird, your bond won't be stronger, there is a ton of risk involved
+            and many view it as unethical." That is not a breeder protecting a margin. That is the
+            people who have already lived it.
+          </p>
+
+          <h3 class="cag-h3">What the Avian Veterinary Position Actually Says</h3>
+          <p>
+            The veterinary reading is narrower and colder than the forum one: hand-feeding is a clinical
+            skill with a real complication rate, and handing it to an untrained buyer at the precise
+            moment the bird is also adjusting to a new home compounds two stresses that are each
+            survivable alone.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 05 ── PULLED TOO EARLY ──────────────────────────────────── -->
+        <section id="pulled-early">
+          <h2 class="cag-h2">What Happens to a Baby Grey Pulled Too Early</h2>
+          <p>
+            Three things go wrong often enough to be predictable, and all three are avoidable by simply
+            waiting. Spend an hour in any parrot owners' group and you will find the same posts on
+            repeat — someone holding an eight-week-old, a syringe they were handed at the door, and a
+            question nobody prepared them for.
+          </p>
+          <img class="sec-img inf-img" src={`${IMG}/unweaned-baby-parrot-risk-crop-burn-760.webp`}
+               srcset={`${IMG}/unweaned-baby-parrot-risk-crop-burn-760.webp 760w, ${IMG}/unweaned-baby-parrot-risk-crop-burn.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Three hand-feeding complications in unweaned parrot chicks: crop burn, formula aspiration and stalled weaning" />
+
+          <h3 class="cag-h3">Crop Burn, Aspiration, and Stalled Weaning</h3>
+          <p>
+            Crop burn comes from formula a few degrees too hot and can open a hole straight through the
+            crop wall. Aspiration comes from formula delivered too fast, going into the airway instead
+            of the crop, and it kills quickly. Stalled weaning is the quiet one — no emergency, just a
+            bird that never quite learns to feed itself.
+          </p>
+
+          <h4 class="cag-h4">Why a Nine-Month-Old Can Still Be on Formula</h4>
+          <p>
+            Because weaning is a window rather than a switch, and a bird that misses it does not simply
+            catch up later. One owner in a grey group described a nine-month-old still taking two
+            formula feeds a day, bought at four months and never properly finished. At that stage you
+            are not weaning a baby, you are unpicking a habit.
+          </p>
+
+          <h5 class="cag-h5">The Cost of Fixing a Badly Weaned Baby</h5>
+          <p>
+            An avian consultation, a crop culture and a follow-up will comfortably exceed the few
+            hundred dollars that made the cheap bird look attractive, and that is the good outcome. The
+            bad one involves a bird that never reaches a normal adult weight.
+          </p>
+
+          <h6 class="cag-h6">From the Nursery: Why We Never Rush a Slow Weaner</h6>
+          <p>
+            Evie was the slowest bird we have raised — she took nearly nineteen weeks and cost us most
+            of a season's patience. She is also the steadiest hand-tame hen currently in the aviary. We
+            have stopped treating slow as a problem to be managed.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 06 ── INSIDE THE NURSERY ────────────────────────────────── -->
+        <section id="nursery">
+          <h2 class="cag-h2">Inside Our Nursery: Sixteen Weeks, Feed by Feed</h2>
+          <p>
+            Everything above is easy to claim, so here is ours in the open. This is the room the babies
+            on this page came out of, the routine they were raised on, and the footage to go with it —
+            because "hand-raised" is a word anybody can type and very few will show you.
+          </p>
+
+          <figure class="fs-video">
+            <video controls preload="none" width="1408" height="768"
+                   poster={`${IMG}/hand-feeding-baby-african-grey-chick-nursery-760.webp`}>
+              <source src={`${IMG}/african-grey-chicks-nursery.mp4`} type="video/mp4" />
+              Your browser cannot play this clip. It shows African Grey chicks being hand-fed in our Midland nursery.
+            </video>
+            <figcaption>Our chicks at hand-feeding stage, Midland aviary</figcaption>
+          </figure>
+
+          <h3 class="cag-h3">Weeks One to Three: Brooder, Warmth, and Weight Checks</h3>
+          <p>
+            A chick this young lives in a temperature-controlled brooder and is weighed every morning
+            before its first feed. The scale is the whole diagnostic at this stage — a chick that has
+            not gained overnight tells us something is wrong long before it looks unwell.
+          </p>
+          <img class="sec-img og-photo" src={`${IMG}/hand-feeding-baby-african-grey-chick-nursery-760.webp`}
+               srcset={`${IMG}/hand-feeding-baby-african-grey-chick-nursery-760.webp 760w, ${IMG}/hand-feeding-baby-african-grey-chick-nursery.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Hand-held African Grey chick in pin feather at roughly three weeks old inside our Texas nursery" />
+          <p class="img-note">
+            This is a chick at pin-feather stage in our own hands — not a bird for sale at this age. A
+            baby at this point is ten to thirteen weeks away from going anywhere.
+          </p>
+
+          <h3 class="cag-h3">Weeks Four to Eight: Pin Feathers and Hand-Feeding</h3>
+          <p>
+            <a href="https://lafeber.com/pet-birds/hand-feeding-baby-birds/" target="_blank" rel="noopener">Clinical hand-feeding formula guidance</a>
+            puts the daily feed count and the temperature window where we keep ours: feeds drop from
+            five a day toward three as the crop grows, pin feathers break through, and the chick starts
+            to notice the room. This is precisely the age band at which most sellers advertise a baby
+            African Grey parrot for sale as ready to go home. It is not ready.
+          </p>
+
+          <h3 class="cag-h3">Weeks Nine to Twelve: Fledging and First Solid Foods</h3>
+          <p>
+            The babies move to a fledging room with low perches and a lot of floor, and they learn to
+            fly badly before they learn to fly well. Chopped vegetables, soaked pellets and millet go
+            down where they can be walked on, sat in and eventually eaten.
+          </p>
+
+          <h3 class="cag-h3">Weeks Twelve to Sixteen: Self-Feeding and Socialising</h3>
+          <p>
+            Formula tapers to nothing, and the bird meets the rest of the household — the vacuum, the
+            doorbell, our grandchildren, the cat who has no interest in it whatsoever. A grey that meets
+            ordinary domestic chaos here is far less startled by yours later.
+          </p>
+
+          <h4 class="cag-h4">How We Confirm a Baby Is Genuinely Weaned</h4>
+          <p>
+            Fourteen consecutive days of independent eating with a stable morning weight, and no
+            supplementary feeds inside that fortnight. If we break the streak, the streak restarts.
+          </p>
+
+          <h5 class="cag-h5">The Weight Log We Keep on Every Chick</h5>
+          <p>
+            Every bird has a running daily weight from hatch to homing, and it travels with the bird
+            when it leaves. Your avian vet will find that chart considerably more useful than anything
+            we could tell you about the bird's temperament.
+          </p>
+
+          <h6 class="cag-h6">Weaning Log: Roys, Week 13</h6>
+          <p>
+            Day sixty-one, first refused feed. Day sixty-eight, eating soaked pellets unassisted. Day
+            seventy-four, a twelve-gram dip after a growth spurt that put him back on one evening feed
+            for four days. Day ninety-one, streak complete. That dip is why we do not publish a
+            homecoming date in advance.
+          </p>
+          <div class="sec-cta">
+            <a class="btn-clay" href="#reserve">Ask to see a baby on video</a>
+          </div>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 07 ── PRICE ─────────────────────────────────────────────── -->
+        <section id="price">
+          <h2 class="cag-h2">How Much Is a Baby African Grey Parrot, Honestly?</h2>
+          <p>
+            A baby African Grey parrot for sale from a documented United States breeder costs between
+            $1,500 and $3,500. Our own birds sit inside that band, the figure depends on subspecies and
+            age rather than on sex, and it is the same number whether you found us this morning or have
+            been reading for a month.
+          </p>
+
+          <h3 class="cag-h3">What Each Baby in This Clutch Costs</h3>
+          <p>
+            Evie is our floor at $1,500 and Amie our ceiling at $2,500, with the bonded pair at $3,500
+            because two birds leave together. Bery, at a year old, is $1,700 — she is past the baby
+            stage, and we would rather say so than quietly describe a yearling as a baby.
+          </p>
+
+          <h4 class="cag-h4">Why a Timneh Baby Costs Less Than a Congo</h4>
+          <p>
+            Less demand, not less bird. Congos carry the name most people searched for, so they clear
+            faster and hold a higher price, while Timnehs are smaller, generally calmer and often
+            talking sooner. Our Timneh listing sets the two side by side if you are genuinely undecided.
+          </p>
+
+          <h3 class="cag-h3">What the Price Does and Does Not Include</h3>
+          <p>
+            It includes the bird, the DNA certificate, the veterinary health certificate, the hatch
+            record, the closed band, the CITES captive-bred paperwork and the weight chart. It does not
+            include travel, which is $185 or $350, and it does not include a cage — we would rather you
+            chose that yourself than pay us to choose badly.
+          </p>
+
+          <h4 class="cag-h4">Deposit, Balance, and Reserving a Weaning Baby</h4>
+          <p>
+            Two hundred dollars holds the bird and comes off the total. The balance falls due when we
+            confirm the weaning date, not before, and the payment method is agreed at reservation.
+            Nobody here will ever ask you to send money by a method that cannot be traced.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 08 ── PRICE WARNINGS ────────────────────────────────────── -->
+        <section id="price-warnings">
+          <h2 class="cag-h2">Why $850 and $8,500 Are Both Warning Signs</h2>
+          <p>
+            The advertised price of a baby African Grey in the United States currently spans about ten
+            to one, and both ends of that range should slow you down. We went and looked at what is
+            actually being asked, and the spread is not a market — it is two different problems.
+          </p>
+          <img class="sec-img inf-img" src={`${IMG}/baby-african-grey-price-comparison-usa-760.webp`}
+               srcset={`${IMG}/baby-african-grey-price-comparison-usa-760.webp 760w, ${IMG}/baby-african-grey-price-comparison-usa.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Price band chart placing baby African Grey listings under $950 in the warning zone against a documented $1,500 to $3,500 range" />
+
+          <h3 class="cag-h3">What a Bargain-Priced Baby Usually Costs You Later</h3>
+          <p>
+            Screening a chick for beak and feather disease and polyomavirus, sexing it, having a vet
+            examine it and feeding it formula for four months does not leave change out of $850. So a
+            bird at that price has had something removed from it, and the question worth asking is which
+            thing — the testing, the weaning time, or the bird's existence.
+          </p>
+
+          <h4 class="cag-h4">Fake Discounts and Sex-Based Pricing</h4>
+          <p>
+            Two patterns turn up constantly and both are tells. The first is the permanent sale, where a
+            bird is "reduced" from $2,900 to $1,800 and has been for as long as the page has existed.
+            The second is charging differently for a cock and a hen, which puts a price on a coin toss.
+          </p>
+
+          <h5 class="cag-h5">Why We Charge the Same for a Hen or a Cock</h5>
+          <p>
+            Because sex is settled by a laboratory before the bird is listed, and it has no bearing on
+            what the bird cost us to raise. Evie and Elad are a hen and a cock, four months apart, and
+            the hundred-dollar gap between them is age and nothing else.
+          </p>
+
+          <h3 class="cag-h3">Where Our Floor Price Sits, and Why</h3>
+          <p>
+            Our floor is $1,500, and we know how that lands on someone who has read that greys go for
+            six to eight thousand. <a href="https://www.reddit.com/r/parrots/comments/n8cie1/a_african_grey_costs_around_1000/" target="_blank" rel="noopener">Owners comparing grey prices on r/parrots</a>
+            describe exactly that trap — one asking why the bird is $5,000 to $6,000 from every breeder
+            they can find, another simply begging for anyone not charging eight grand. The honest answer
+            is that the middle of that range exists. It is just badly advertised.
+          </p>
+
+          <h4 class="cag-h4">Can You Buy a Baby African Grey for Under $600?</h4>
+          <p>
+            No, and any listing offering one is telling you something. At $600 nothing on the
+            documentation list has been paid for, so either the bird will not arrive after the deposit,
+            or it will arrive with a history that will not survive being asked about. If your budget is
+            genuinely under a thousand dollars, the right move is to keep saving or to look at a rescue
+            — not to find a cheaper website.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 09 ── SEVEN QUESTIONS ───────────────────────────────────── -->
+        <section id="questions">
+          <h2 class="cag-h2">Seven Questions That Expose a Bad Baby-Grey Listing</h2>
+          <p>
+            You do not need to be an expert to sort a real nursery from a photograph farm — you need
+            seven questions and the patience to wait for the answers. Ask a legitimate breeder these and
+            numbers come back within a day. Ask a fraudulent one and the subject changes.
+          </p>
+
+          <ol class="qlist">
+            <li><b>What is this bird's hatch date and this morning's weight?</b> A real nursery has both written down.</li>
+            <li><b>Is it self-feeding yet, and for how many days?</b> "Nearly" and "almost" are answers meaning no.</li>
+            <li><b>Can I see the bird live on video today, in your hand?</b> Photographs are cheap; a live bird is not.</li>
+            <li><b>Which laboratory ran the DNA, and can I see the certificate?</b> A laboratory has a name.</li>
+            <li><b>Which veterinarian signed the health certificate?</b> You should be able to telephone them.</li>
+            <li><b>What paperwork travels with the bird?</b> Vagueness here is the whole game.</li>
+            <li><b>What happens if the bird is ill in the first week?</b> If it is not written down, it is not a guarantee.</li>
+          </ol>
+
+          <h3 class="cag-h3">Ask About Age, Weaning, and Weight First</h3>
+          <p>
+            Those three come first because they are the hardest to fake and the fastest to check. A
+            seller who cannot produce a weight has never kept one, and a nursery that does not weigh its
+            chicks daily is not really running a nursery.
+          </p>
+
+          <h3 class="cag-h3">Then Ask About Testing and Paperwork</h3>
+          <p>
+            <a href="https://www.reddit.com/r/parrots/comments/1nno8fd/how_to_know_a_breeder_is_ethicalsigns_to_avoid/" target="_blank" rel="noopener">Owners cataloguing ethical-breeder signals on r/parrots</a>
+            put missing disease testing and absent DNA verification near the top of their list, alongside
+            hidden aviaries and cages nobody is allowed to see. Those items separate a hobbyist with good
+            intentions from an operation with something to hide.
+          </p>
+
+          <h4 class="cag-h4">The Question Most Sellers Cannot Answer</h4>
+          <p>
+            "Who were this bird's parents?" A nursery that keeps its own breeding adults can name them
+            without pausing. A reseller who bought the chick in cannot, and will usually answer a
+            slightly different question instead.
+          </p>
+
+          <h5 class="cag-h5">Why a Breeder Should Ask About Your Home Too</h5>
+          <p>
+            The most striking thing in those owner threads is what they flag as the single biggest
+            warning sign — a breeder who shows no interest whatsoever in the home the bird is going to.
+            <a href="https://www.reddit.com/r/AfricanGrey/comments/1asvyt3/please_can_someone_tell_me_a_legitimate_website/" target="_blank" rel="noopener">Buyers hunting for a legitimate grey seller on r/AfricanGrey</a>
+            are told, in the top-voted reply, that there are none worth trusting online at all. We do not
+            think that is quite true, but we understand entirely how they got there.
+          </p>
+
+          <h6 class="cag-h6">From the Nursery: What We Ask You Before We Sell</h6>
+          <p>
+            Whether anyone is home during the day, whether there are other birds already and when they
+            were last screened, whether the kitchen has non-stick pans in daily use, and who takes the
+            bird if your circumstances change in twenty years. We have declined sales over the answers.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 10 ── CONGO OR TIMNEH ───────────────────────────────────── -->
+        <section id="congo-timneh">
+          <h2 class="cag-h2">Should Your First Baby Be a Congo or a Timneh?</h2>
+          <p>
+            We raise both, so we have no reason to push you toward either. At four months the difference
+            is already obvious in the hand — the Congo heavier and louder, the Timneh smaller and
+            quicker to imitate — and which of those you want depends far more on your house than on the
+            bird.
+          </p>
+          <img class="sec-img og-photo" src={`${IMG}/congo-and-timneh-babies-side-by-side-760.webp`}
+               srcset={`${IMG}/congo-and-timneh-babies-side-by-side-760.webp 760w, ${IMG}/congo-and-timneh-babies-side-by-side.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Young Congo and Timneh African Greys photographed together showing the size and tail colour difference at a few months old" />
+
+          <h3 class="cag-h3">Size, Voice, and Temperament at This Age</h3>
+          <p>
+            A four-month Congo runs 400 to 600 grams with a scarlet tail; a Timneh of the same age is
+            275 to 375 grams with a darker maroon one and a horn-coloured upper beak. Amie fills a hand
+            at three months. Evie, three months older, does not.
+          </p>
+
+          <h4 class="cag-h4">Which Suits a First-Time Owner Better?</h4>
+          <p>
+            Usually the Timneh, for unglamorous reasons — less volume in an apartment, a steadier
+            reaction to household noise, and a tendency to start talking a few months earlier, which
+            keeps a new owner encouraged through the dull stretch. Choose the Congo if you want the
+            headline voice and have the room for it.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 11 ── BABY OR ADULT ─────────────────────────────────────── -->
+        <section id="baby-adult">
+          <h2 class="cag-h2">Is a Baby Really Better Than Adopting an Adult?</h2>
+          <p>
+            Not always, and we would rather say so here than have you find out afterwards. Ask in any
+            owners' group whether to buy a baby and a substantial number of experienced keepers will
+            tell you to adopt instead — and for a lot of households they are right.
+          </p>
+
+          <h3 class="cag-h3">What a Baby Gives You That a Rescue Cannot</h3>
+          <p>
+            A known history, and the whole of it. An African Grey lives 40 to 60 years in good
+            conditions, so a three-month-old is very nearly the entire span — you get the hatch date,
+            the parents, the screening results and the weight chart, and no accumulated fear of hands,
+            brooms or particular voices. For a first-time owner that predictability is worth a great
+            deal, because you are learning the species at the same time the bird is learning you.
+          </p>
+
+          <h3 class="cag-h3">When We Tell People to Adopt Instead</h3>
+          <p>
+            When somebody wants a bird that already talks, when the budget is genuinely under a thousand
+            dollars, or when they are away from home ten hours a day. A baby will not fix the third one,
+            and buying under pressure on the second is how people end up on a scam site. Our honest
+            adoption page makes the same argument at more length.
+          </p>
+
+          <h4 class="cag-h4">What Happens to the Babies We Do Not Place?</h4>
+          <p>
+            They stay. We have kept birds back for a year rather than send them to a home we had doubts
+            about, and Bery is on this page at twelve months for exactly that reason.
+          </p>
+
+          <h5 class="cag-h5">Why an Older Bird Is Sometimes the Easier Start</h5>
+          <p>
+            A yearling has already fledged, already weaned and already met a household, so nothing about
+            its first month with you is developmentally fragile. You trade the blank slate for a bird
+            that is simply harder to get wrong.
+          </p>
+
+          <h6 class="cag-h6">Weaning Log: Bery at One Year, and Why She Is Listed Differently</h6>
+          <p>
+            Bery weaned uneventfully at fifteen weeks and then stayed, because the family who reserved
+            her had a change of circumstances. She is a year old, priced below the babies, and we
+            describe her as what she is rather than stretching the word "baby" to cover her.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 12 ── PAPERWORK ─────────────────────────────────────────── -->
+        <section id="papers">
+          <h2 class="cag-h2">Every Paper That Travels With Your Baby</h2>
+          <p>
+            Five documents leave with every bird, and they are the reason a documented baby costs more
+            than an undocumented one. None of this is decorative — each item answers a question that
+            somebody, at some point, is going to ask you about your bird.
+          </p>
+          <img class="sec-img inf-img" src={`${IMG}/baby-african-grey-documents-included-760.webp`}
+               srcset={`${IMG}/baby-african-grey-documents-included-760.webp 760w, ${IMG}/baby-african-grey-documents-included.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="The five documents included with every baby grey: hatch certificate, veterinary health certificate, DNA sexing result, captive-bred CITES paperwork and band card" />
+
+          <h3 class="cag-h3">Hatch Certificate, Band Number, and DNA Result</h3>
+          <p>
+            <a href="https://www.aphis.usda.gov/awa/apply" target="_blank" rel="noopener">Federal animal-welfare licensing rules</a>
+            set the standard we are inspected against, and the paperwork follows from it. The hatch
+            certificate ties the baby African Grey parrot to a date and a clutch, the band ties it to
+            this aviary permanently, and the DNA result settles the sex with a laboratory's name
+            attached. Together they make the bird traceable, which is the entire point.
+          </p>
+
+          <h4 class="cag-h4">What the Band on Your Baby's Leg Tells You</h4>
+          <p>
+            A closed band goes on while the foot is still small enough to pass through it, which can
+            only happen in the first fortnight of life. That is why it is meaningful evidence of captive
+            breeding — an imported adult bird physically cannot be given one.
+          </p>
+
+          <h5 class="cag-h5">Why We Never Remove a Closed Band</h5>
+          <p>
+            Because removing it destroys the one piece of proof that cannot be reprinted. If a seller
+            offers to take a band off for you, or explains that a bird's band "came off", treat that as
+            the answer to a question you had not yet asked.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 13 ── TESTING ───────────────────────────────────────────── -->
+        <section id="testing">
+          <h2 class="cag-h2">The Disease Tests We Run Before a Baby Is Listed</h2>
+          <p>
+            Every chick is screened by PCR for psittacine beak and feather disease and for avian
+            polyomavirus before it appears on this page. Both are diseases that end a young grey, both
+            move through a nursery, and neither is visible by looking at a bird.
+          </p>
+          <img class="sec-img inf-img" src={`${IMG}/baby-parrot-pbfd-polyomavirus-pcr-testing-760.webp`}
+               srcset={`${IMG}/baby-parrot-pbfd-polyomavirus-pcr-testing-760.webp 760w, ${IMG}/baby-parrot-pbfd-polyomavirus-pcr-testing.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Screening flow for a baby African Grey from feather sample through PCR testing to result and listing" />
+
+          <h3 class="cag-h3">PBFD and Polyomavirus PCR Screening</h3>
+          <p>
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7173102/" target="_blank" rel="noopener">Published research on psittacine circovirus</a>
+            describes a virus that attacks feather follicles and the immune system, with young birds
+            most at risk and no cure once it is established. PCR finds it before symptoms do, which is
+            the only useful time to find it.
+          </p>
+
+          <h4 class="cag-h4">Why Testing Matters More in a Nursery Than a Cage</h4>
+          <p>
+            Because chicks share air, surfaces and hands. One untested bird brought into a brooder room
+            can end a whole season, which is why we screen rather than assume, and why we ask what other
+            birds you already keep.
+          </p>
+
+          <h5 class="cag-h5">What an Avian Vet Checks Before a Baby Flies</h5>
+          <p>
+            Weight against the chart, crop function, keel condition, vent, eyes, nares and feather
+            quality, plus a listen to the air sacs. The certificate that comes out of it is dated close
+            to travel, because a month-old health certificate describes a month-old bird.
+          </p>
+
+          <h6 class="cag-h6">From the Nursery: Our Quarantine Routine</h6>
+          <p>
+            Nothing feathered enters the brooder room without thirty days of separation first, and that
+            includes birds coming back from a show or a vet visit. It is inconvenient, unglamorous, and
+            the reason we have never had an outbreak.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 14 ── PARENTS ───────────────────────────────────────────── -->
+        <section id="parents">
+          <h2 class="cag-h2">Where Our Babies Hatched, and Who Their Parents Are</h2>
+          <p>
+            Every baby on this page came out of an adult pair we own and keep, which is why we can
+            answer the parentage question without checking. It is also the slowest possible way to run
+            an aviary, and the reason there are six babies here rather than sixty.
+          </p>
+
+          <h3 class="cag-h3">The Congo Pairs Behind Amie, Roys, Jins and Jeni</h3>
+          <p>
+            Amie and Roys are siblings out of James and Lois, our steadiest Congo pair. Jins and Jeni
+            are not related to each other at all — they came from separate clutches, were raised
+            alongside one another, and bonded anyway, which is why they are sold together.
+          </p>
+
+          <h3 class="cag-h3">Levi and Rily, Our Timneh Pair</h3>
+          <p>
+            Elad and Evie are both out of Levi and Rily. Timneh clutches come around less often here
+            than Congo ones, so when people ask why there are only ever two or three Timnehs listed,
+            that is the reason rather than a sales tactic.
+          </p>
+          <img class="sec-img og-photo" src={`${IMG}/timneh-african-grey-siblings-as-young-chicks-760.webp`}
+               srcset={`${IMG}/timneh-african-grey-siblings-as-young-chicks-760.webp 760w, ${IMG}/timneh-african-grey-siblings-as-young-chicks.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Elad and Evie photographed as young Timneh African Grey chicks before fledging" />
+
+          <h4 class="cag-h4">Why We Keep Our Breeding Adults Rather Than Sell Them</h4>
+          <p>
+            Because a pair that stays produces a documented line, and a documented line is what lets us
+            put a hatch certificate in your hand. We do place a proven adult pair occasionally, and
+            those are listed well away from the nursery so nobody confuses the two.
+          </p>
+
+          <h5 class="cag-h5">How Many Chicks a Season Actually Produces</h5>
+          <p>
+            Two pairings gave us six birds this season. That is an ordinary result and it is why we
+            cannot promise you a specific bird in a specific month — the clutch decides, not the diary.
+          </p>
+
+          <h6 class="cag-h6">Weaning Log: Clutch Notes From This Season</h6>
+          <p>
+            Four Congo chicks and two Timneh out of two pairings, all six weaned without intervention,
+            one growth-spurt dip logged, no crop incidents. That is an ordinary season, and ordinary is
+            exactly what we are aiming for.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 15 ── LEGAL ─────────────────────────────────────────────── -->
+        <section id="legal">
+          <h2 class="cag-h2">Owning a Captive-Bred Baby Grey Under CITES Appendix I</h2>
+          <p>
+            African Greys have been listed on CITES Appendix I since January 2017, and a captive-bred
+            baby African Grey parrot is entirely legal to own and to transfer inside the United States
+            with the right paperwork. <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener">Conservation status data for the grey parrot</a>
+            explains why the uplisting happened — wild trapping pressure, not captive breeding. The
+            listing restricts international commercial trade in wild-taken birds; it does not make your
+            baby illegal.
+          </p>
+
+          <h3 class="cag-h3">What Appendix I Means for a U.S. Buyer</h3>
+          <p>
+            <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">The CITES appendices themselves</a>
+            set out the distinction, and the practical version for you is short: buy captive-bred, keep
+            the documentation, and a domestic move between states is unremarkable. Our documentation
+            page walks through what each paper does.
+          </p>
+
+          <h4 class="cag-h4">Why We Do Not Ship Outside the United States</h4>
+          <p>
+            Because an Appendix I export needs permits at both ends and cannot honestly be promised in
+            twenty-four hours, whatever a competing site tells you. We ship domestically only, and we
+            would rather lose the enquiry than pretend otherwise.
+          </p>
+
+          <h5 class="cag-h5">How to Keep Your Paperwork Useful Long-Term</h5>
+          <p>
+            Photograph everything the day it arrives, keep the originals somewhere dry and unremarkable,
+            and give your avian vet a copy at the first appointment. Twenty years from now the band
+            number and the hatch certificate are what will answer questions about this bird.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 16 ── SHIPPING ──────────────────────────────────────────── -->
+        <section id="shipping">
+          <h2 class="cag-h2">Flying a Weaned Baby Home — or Driving to Midland</h2>
+          <p>
+            Three ways exist to get a baby from our nursery to your house, and the cheapest one is to
+            come and fetch it. We are in Midland, West Texas, and a surprising number of our buyers turn
+            out to be within a morning's drive.
+          </p>
+          <img class="sec-img inf-img" src={`${IMG}/weaned-baby-grey-shipping-tiers-usa-760.webp`}
+               srcset={`${IMG}/weaned-baby-grey-shipping-tiers-usa-760.webp 760w, ${IMG}/weaned-baby-grey-shipping-tiers-usa.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Delivery options for a weaned baby grey: airport cargo collection at $185, door delivery at $350, or free collection within the Midland radius" />
+
+          <h3 class="cag-h3">Airport Pickup and Home Delivery</h3>
+          <p>
+            Airport collection is $185 and puts the bird into your nearest major cargo terminal on a
+            Delta, United or American flight. Home delivery is $350 and a courier hands the bird and the
+            document folder to you at your door. Both travel under
+            <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener">IATA live-animal transport standards</a>
+            in an approved crate with water and ventilation.
+          </p>
+          <img class="sec-img og-photo" src={`${IMG}/african-grey-home-delivery-crate-usa-760.webp`}
+               srcset={`${IMG}/african-grey-home-delivery-crate-usa-760.webp 760w, ${IMG}/african-grey-home-delivery-crate-usa.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Door delivery of a documented African Grey to a family home with the paperwork folder handed over" />
+
+          <h4 class="cag-h4">How a Baby Travels Safely in Cargo</h4>
+          <p>
+            Direct flights wherever one exists, early departures to avoid afternoon heat on the tarmac,
+            a crate the bird has already sat in at home, and a full crop before it leaves us. Most birds
+            are in your hands within four to six hours of the aviary door closing.
+          </p>
+
+          <h5 class="cag-h5">Why We Will Not Ship a Baby Still on Formula</h5>
+          <p>
+            Because a bird that needs feeding on a timetable cannot be fed inside a cargo hold, and it
+            arrives hungry, cold and behind on weight. This is the hardest conversation we have with
+            buyers in a hurry, and the answer has never changed.
+          </p>
+
+          <h3 class="cag-h3">Collecting Your Baby in Person in West Texas</h3>
+          <p>
+            Collection in Midland is free, and if you are within two to three hours we would genuinely
+            rather you did it — you meet the bird, you see the room it grew up in, and it travels in a
+            car with you instead of in a hold. Experienced owners in buyer forums recommend exactly this
+            wherever the drive is survivable, and they are right.
+          </p>
+          <div class="geo-cards">
+            <a href="/african-grey-parrot-for-sale-california/"><b>Baby African Greys delivered to California</b><span>Most enquiries · LAX, SFO, SAN</span></a>
+            <a href="/african-grey-parrot-for-sale-texas/"><b>Baby grey collection across Texas</b><span>Drive-in from Dallas, Austin, Houston</span></a>
+            <a href="/african-grey-parrot-for-sale-washington/"><b>Hand-raised babies flown to Washington</b><span>SEA cargo</span></a>
+            <a href="/african-grey-parrot-for-sale-florida/"><b>Weaned chicks shipped to Florida</b><span>MIA, MCO, TPA</span></a>
+            <a href="/african-grey-parrot-for-sale-new-york/"><b>African Grey babies arriving in New York</b><span>JFK, LGA cargo</span></a>
+            <a href="/african-grey-parrot-for-sale-illinois/"><b>Baby Congo greys sent to Illinois</b><span>ORD, MDW</span></a>
+            <a href="/african-grey-parrot-for-sale-georgia/"><b>Timneh and Congo babies to Georgia</b><span>ATL direct</span></a>
+            <a href="/african-grey-parrot-for-sale-arizona/"><b>Documented grey chicks to Arizona</b><span>PHX · early departures</span></a>
+          </div>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 17 ── FIRST 30 DAYS ─────────────────────────────────────── -->
+        <section id="first30">
+          <h2 class="cag-h2">Your Baby's First Thirty Days at Home</h2>
+          <p>
+            The month after arrival decides more about the next forty years than anything that happens
+            in our nursery. We stay reachable through all of it, because the questions people are
+            embarrassed to ask are almost always the ones worth answering quickly.
+          </p>
+          <img class="sec-img inf-img" src={`${IMG}/baby-african-grey-first-30-days-home-760.webp`}
+               srcset={`${IMG}/baby-african-grey-first-30-days-home-760.webp 760w, ${IMG}/baby-african-grey-first-30-days-home.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Four-week settling sequence for a newly arrived baby African Grey from a quiet first week to a settled routine" />
+
+          <h3 class="cag-h3">Week One: Quiet, Warmth, and Weight</h3>
+          <p>
+            Do very little. Let the bird watch the room, keep it warmer than you think necessary, and
+            weigh it every morning on a kitchen scale. A small drop on day one is ordinary; a drop that
+            keeps going for three days is a telephone call.
+          </p>
+
+          <h3 class="cag-h3">Weeks Two to Four: Talking, Toys, and Routine</h3>
+          <p>
+            Greys settle into rhythm rather than novelty, so a predictable morning matters more than an
+            interesting one. Words start arriving once the bird is comfortable enough to be bored, which
+            is usually later than new owners expect and always sooner than they fear.
+          </p>
+          <img class="sec-img og-photo" src={`${IMG}/baby-african-grey-settling-into-family-home-760.webp`}
+               srcset={`${IMG}/baby-african-grey-settling-into-family-home-760.webp 760w, ${IMG}/baby-african-grey-settling-into-family-home.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" loading="lazy"
+               alt="Hand-raised baby Congo African Grey exploring a family living room alongside the household cat" />
+
+          <h4 class="cag-h4">What to Do If Your Baby Stops Eating</h4>
+          <p>
+            Offer what it ate here first — soaked pellets and warm chop — because a stressed bird returns
+            to a familiar texture before it tries a new one. Telephone us the same day. A young grey has
+            very little reserve, and this is not a thing to sleep on.
+          </p>
+
+          <h5 class="cag-h5">When to Call an Avian Vet, and When Not To</h5>
+          <p>
+            Call for fluffed-and-quiet lasting hours, laboured breathing, vomiting, or a weight fall past
+            five percent. Do not panic over a bird that is clumsy, noisy at dawn, or nervous of one
+            particular family member in week one — all three are normal and all three pass.
+          </p>
+
+          <h6 class="cag-h6">At Week 3: The Call We Get Most Often</h6>
+          <p>
+            "It was fine, and now it screams when I leave the room." That is a bird that has decided you
+            are its flock, which is good news arriving in an inconvenient form. We talk people through it
+            most months.
+          </p>
+          <div class="sec-cta">
+            <a class="btn-clay" href="#reserve">Start a conversation about a baby</a>
+          </div>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 18 ── REVIEWS ───────────────────────────────────────────── -->
+        <section id="reviews">
+          <h2 class="cag-h2">Families Who Took Home a Baby From This Nursery</h2>
+          <p>
+            Two buyers from this year, both of whom found us the same way you did. Their words are
+            reproduced exactly as they wrote them.
+          </p>
+          <div class="quotes">
+            <figure class="quote-c">
+              <img src={`${IMG}/review-joanna-california-220.webp`} width="220" height="220" loading="lazy"
+                   alt="Joanna's hand-fed Congo African Grey taking food from a spoon at home in California" />
+              <blockquote>
+                <p class="stars" aria-hidden="true">★★★★★</p><span class="sr-only">Rated 5 out of 5</span>
+                <p>I spent weeks looking for a baby African Grey parrot for sale in California, but I wanted a breeder that truly cared about the birds rather than just making a sale. After finding C.A.Gs, I immediately noticed the difference. They answered every question, shared regular updates, and provided health records before my baby Congo African Grey arrived. The parrot is healthy, confident, and already learning new words. If you're searching for a reputable breeder with beautiful, well-socialized African Greys, I highly recommend C.A.Gs. They made the entire experience smooth and stress-free from start to finish.</p>
+                <figcaption>Joanna Thomas · Oildale, CA</figcaption>
+              </blockquote>
+            </figure>
+            <figure class="quote-c">
+              <img src={`${IMG}/review-anthony-washington-220.webp`} width="220" height="220" loading="lazy"
+                   alt="Anthony's young Congo African Grey settled in at his home in Washington state" />
+              <blockquote>
+                <p class="stars" aria-hidden="true">★★★★★</p><span class="sr-only">Rated 5 out of 5</span>
+                <p>If you're planning to buy baby Congo African Grey parrots from a breeder you can trust, C.A.Gs is the place to go. My experience exceeded every expectation. Communication was excellent, the bird was healthy and exceptionally well-socialized, and everything promised was included. You can tell they genuinely care about raising intelligent, happy African Grey parrots. My new companion adapted quickly to our family and has already begun mimicking sounds. I wouldn't hesitate to recommend C.A.Gs to anyone looking for a quality baby Congo African Grey with outstanding customer service and ongoing support.</p>
+                <figcaption>Anthony Tershal · Lakewood, WA</figcaption>
+              </blockquote>
+            </figure>
+          </div>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 19 ── COMPARE · Table A ─────────────────────────────────── -->
+        <section id="compare">
+          <h2 class="cag-h2">How Our Nursery Stacks Up Against the Listings Beside Us</h2>
+          <p>
+            We looked at what the pages ranking around this one actually advertise, and set it against
+            what we do. Nothing in the left-hand column is invented — it is what those listings say about
+            themselves.
+          </p>
+          <div class="tA-wrap">
+            <table class="tA">
+              <caption>Baby African Grey listings compared</caption>
+              <thead>
+                <tr><th>What you are buying</th><th>Typical online listing</th><th>C.A.Gs</th></tr>
+              </thead>
+              <tbody>
+                <tr><td data-l="Age at sale">Age at sale</td><td data-l="Typical listing">6–8 weeks, still hand-feeding</td><td data-l="C.A.Gs">12–16 weeks, self-feeding</td></tr>
+                <tr><td data-l="Advertised price">Advertised price</td><td data-l="Typical listing">$750–$950, or $5,000–$8,500</td><td data-l="C.A.Gs">$1,500–$3,500</td></tr>
+                <tr><td data-l="Pricing by sex">Pricing by sex</td><td data-l="Typical listing">Cocks and hens priced differently</td><td data-l="C.A.Gs">Same price, sex confirmed by lab</td></tr>
+                <tr><td data-l="Discounting">Discounting</td><td data-l="Typical listing">Permanent "sale" pricing</td><td data-l="C.A.Gs">One price, no countdowns</td></tr>
+                <tr><td data-l="Disease screening">Disease screening</td><td data-l="Typical listing">Rarely stated, or "fully vaccinated"</td><td data-l="C.A.Gs">PBFD + polyomavirus PCR</td></tr>
+                <tr><td data-l="Parentage">Parentage</td><td data-l="Typical listing">Not named</td><td data-l="C.A.Gs">Both parents named per chick</td></tr>
+                <tr><td data-l="Seeing the bird">Seeing the bird</td><td data-l="Typical listing">Photographs only</td><td data-l="C.A.Gs">Live video, or drive to Midland</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="tA-note">
+            The "fully vaccinated" claim is worth pausing on: there is no routine vaccination programme
+            for companion African Greys in the United States, so a listing advertising one is describing
+            something that does not exist.
+          </p>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 20 ── KEEP READING + XSELL ──────────────────────────────── -->
+        <section id="reading">
+          <h2 class="cag-h2">More Reading for New Baby-Grey Owners</h2>
+          <p>
+            Four pages worth your time before you commit, each answering a question this one only had
+            room to touch.
+          </p>
+          <div class="read-cards">
+            <a href="/hand-raised-african-grey-parrot-for-sale/">
+              <img src={`${IMG}/hand-feeding-baby-african-grey-chick-nursery-760.webp`} width="320" height="175" loading="lazy" alt="" />
+              <b>How we hand-raise, week by week</b><span>The method behind every bird on this page</span></a>
+            <a href="/dna-tested-african-grey-for-sale/">
+              <img src={`${IMG}/baby-parrot-pbfd-polyomavirus-pcr-testing-320.webp`} width="320" height="175" loading="lazy" alt="" />
+              <b>What a DNA sexing certificate proves</b><span>And why nobody can sex a chick by eye</span></a>
+            <a href="/african-greys-for-sale-with-health-guarantee/">
+              <img src={`${IMG}/baby-african-grey-documents-included-320.webp`} width="320" height="175" loading="lazy" alt="" />
+              <b>Our written health terms</b><span>The 72-hour window, in full</span></a>
+            <a href="/african-grey-parrot-price/">
+              <img src={`${IMG}/baby-african-grey-price-comparison-usa-320.webp`} width="320" height="175" loading="lazy" alt="" />
+              <b>The true first-year cost</b><span>Beyond the price of the bird</span></a>
+          </div>
+
+          <div class="xsell">
+            <p class="xsell-k">Also from our aviary</p>
+            <p><a href="/african-grey-parrot-bird-eggs-for-sale-usa/">Fertile eggs for experienced incubators</a> — the one thing here that cannot be weaned, which is exactly the difference this page has been about.</p>
+            <p><a href="/african-grey-breeding-pair-for-sale/">Adult pairs kept back from the nursery</a> — where next season's babies come from, listed separately so nobody confuses a breeding bird with a companion one.</p>
+            <p><a href="/congo-african-grey-parrot-pair-for-sale/">Two Congos that leave together</a> — Jins and Jeni have their own page, because a bonded pair is a different decision from a single baby.</p>
+          </div>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 21 ── FAQ · FAQ-B two-column ────────────────────────────── -->
+        <section id="faq">
+          <h2 class="cag-h2">Baby African Grey Questions New Owners Ask Us</h2>
+          <p>
+            Ten questions we answer most weeks, in the words people actually use when they telephone.
+          </p>
+          <div class="faqB">
+            {faqs.map((f, i) => (
+              <details class="faqB-item">
+                <summary><span class="faqB-n">{String(i + 1).padStart(2, "0")}</span>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <div class="seam"><img src="/cag-fs-seam-emblem.webp" width="182" height="60" alt="" loading="lazy" /></div>
+
+        <!-- 22 ── RESERVE ───────────────────────────────────────────── -->
+        <section id="reserve">
+          <h2 class="cag-h2">Reserve a Baby African Grey From Our Current Clutch</h2>
+          <p>
+            Tell us which bird caught your eye and something about your household, and we will reply
+            within twenty-four hours — usually sooner. A $200 deposit holds a baby until it is genuinely
+            weaned, however long that takes.
+          </p>
+          <div class="fs-form">
+            <aside class="form-side">
+              <p class="fsx-k">Reservable right now</p>
+              <ul>
+                {babies.map((b) => (<li><span>{b.name} · {b.variant} · {b.age}</span><b>{b.price}</b></li>))}
+              </ul>
+              <p class="fsx-ship">Ships nationwide · $185 airport · $350 home</p>
+              <p class="fsx-note">Free collection in Midland, TX if you are within 2–3 hours of us.</p>
+            </aside>
+            <form class="fs-fields" action="https://formspree.io/f/xpqoeazq" method="POST">
+              <div class="fld">
+                <label for="baby-interest">Which baby are you asking about?</label>
+                <select id="baby-interest" name="interest" required>
+                  <option value="">Choose a bird…</option>
+                  {babies.map((b) => (<option value={`${b.name} — ${b.price}`}>{b.name} · {b.variant} · {b.age} · {b.price}</option>))}
+                  <option value="Undecided">Not sure yet — help me choose</option>
+                </select>
+              </div>
+              <div class="fld2">
+                <div class="fld"><label for="baby-first">First name</label><input id="baby-first" name="first_name" type="text" autocomplete="given-name" required /></div>
+                <div class="fld"><label for="baby-last">Last name</label><input id="baby-last" name="last_name" type="text" autocomplete="family-name" required /></div>
+              </div>
+              <div class="fld2">
+                <div class="fld"><label for="baby-email">Email</label><input id="baby-email" name="email" type="email" autocomplete="email" required /></div>
+                <div class="fld"><label for="baby-cell">Cell</label><input id="baby-cell" name="cell" type="tel" autocomplete="tel" /></div>
+              </div>
+              <div class="fld">
+                <label for="baby-delivery">How would you like the bird to travel?</label>
+                <select id="baby-delivery" name="delivery">
+                  <option value="airport">Airport pickup — $185</option>
+                  <option value="home">Home delivery — $350</option>
+                  <option value="midland">Pickup in Midland, TX — if you live within 2–3 hours of us</option>
+                </select>
+              </div>
+              <div class="fld">
+                <label for="baby-msg">Tell us about your household</label>
+                <textarea id="baby-msg" name="message" rows="4" placeholder="Who is home during the day, any birds you already keep, and anything you want to ask."></textarea>
+              </div>
+              <button class="btn-clay bfull" type="submit">Ask about this baby →</button>
+              <p class="fs-fine">We reply to every enquiry within 24 hours. No deposit is taken through this form.</p>
+            </form>
+          </div>
+        </section>
+
+      </div><!-- /baby-main -->
+    </div><!-- /baby-body -->
+  </div><!-- /container -->
+</main>
 
 <style>
-  .page-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 48px;
-  }
-  .text-wrap { max-width: 760px; }
-  .baby-h1 {
-    font-family: 'Newsreader', Georgia, serif;
-    font-weight: 700;
-    color: #faf7f4;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.2;
-    margin: 0 0 1rem;
-  }
-  .baby-h2 {
-    font-family: 'Newsreader', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
-    line-height: 1.25;
-    margin: 0 0 1.25rem;
-  }
-  .baby-h3 {
-    font-family: 'Newsreader', Georgia, serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: 1.15rem;
-    margin: 0 0 0.5rem;
-  }
-  .baby-doc-title {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-weight: 700;
-    color: #2D6A4F;
-    font-size: 1rem;
-    margin: 0 0 0.4rem;
-  }
-  .baby-hero {
-    background: #2D6A4F;
-    padding: 3.5rem 0 3rem;
-    text-align: center;
-  }
-  .baby-sub {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.65;
-    color: rgba(250,247,244,0.88);
-    max-width: 70ch;
-    margin: 0 auto 1.75rem;
-  }
-  .baby-hero-cta {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .btn-primary, .btn-secondary {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.85rem 1.9rem;
-    border-radius: 50px;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.2s ease;
-  }
-  .btn-primary { background: #e8604c; color: #fff; }
-  .btn-primary:hover { background: #d44e3b; }
-  .btn-secondary { background: #fff; color: #2D6A4F; border: 2px solid #2D6A4F; }
-  .btn-secondary:hover { background: #2D6A4F; color: #fff; }
-  .baby-section { padding: 3rem 0; }
-  .baby-alt { background: #faf7f4; }
-  .baby-p {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-size: 1.02rem;
-    line-height: 1.7;
-    color: #44403c;
-    max-width: 70ch;
-    margin: 0 0 1.2rem;
-  }
-  .baby-avail-card {
-    background: #fff;
-    border: 1px solid #e7e5e4;
-    border-radius: 20px;
-    padding: 2rem;
-    max-width: 480px;
-    box-shadow: 0 2px 8px rgba(60,30,10,0.07);
-  }
-  .baby-avail-inner p {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-size: 1rem;
-    line-height: 1.65;
-    color: #44403c;
-    margin: 0 0 1.25rem;
-    max-width: 60ch;
-  }
-  .baby-warning {
-    background: #fff3cd;
-    border-left: 4px solid #e8604c;
-    border-radius: 8px;
-    padding: 0.9rem 1.2rem;
-    margin-bottom: 1.25rem;
-  }
-  .baby-warning-text {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-size: 1rem;
-    color: #7a3a00;
-    margin: 0;
-    max-width: 70ch;
-  }
-  .baby-docs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
-    margin-top: 1rem;
-  }
-  .baby-doc-card {
-    background: #fff;
-    border: 1px solid #e7e5e4;
-    border-radius: 16px;
-    padding: 1.25rem;
-    box-shadow: 0 1px 4px rgba(60,30,10,0.06);
-  }
-  .baby-doc-card p {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #44403c;
-    margin: 0;
-  }
-  .baby-link { color: #e8604c; text-decoration: underline; }
-  .baby-link:hover { color: #d44e3b; }
-  .baby-faq { display: flex; flex-direction: column; gap: 0.75rem; }
-  .baby-faq-item {
-    border: 1px solid #e7e5e4;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    background: #fff;
-  }
-  .baby-faq-q {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #2D6A4F;
-    cursor: pointer;
-    list-style: none;
-  }
-  .baby-faq-q::-webkit-details-marker { display: none; }
-  .baby-faq-a {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-size: 0.98rem;
-    line-height: 1.65;
-    color: #44403c;
-    margin: 0.75rem 0 0;
-    max-width: 70ch;
-  }
-  @media (max-width: 767px) { .page-container { padding: 0 16px; } }
-  @media (min-width: 768px) and (max-width: 1024px) { .page-container { padding: 0 32px; } }
+.baby{--f:#2D6A4F;--clay:#e8604c;--clay-ink:#c8472f;--clay-t:#b04228;--cream:#faf7f4;--bd:#e7ddd3;--mid:#6b625a;--hdr:96px;color:#2a2622;overflow-x:clip}
+.baby .container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+.baby .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* HERO — Split-Hero B warm gradient (refreshed) */
+.chero{background:linear-gradient(135deg,#faf7f4 0%,#fbeee6 52%,#f6ddce 100%);padding:18px 0 22px}
+.chero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(300px,1fr);gap:clamp(18px,2.6vw,34px);align-items:center}
+@media(min-width:901px){.chero-grid{min-height:352px;max-height:430px}}
+.chero-copy{min-width:0}
+.chero .eyebrow{color:var(--clay-t);font-size:.78rem;font-weight:700;letter-spacing:.02em;margin:0 0 8px}
+.baby .cag-h1{font-family:'Newsreader',serif;font-size:clamp(1.5rem,2.9vw,2.15rem);line-height:1.12;margin:0 0 10px;color:#2a2622;letter-spacing:-.01em;font-weight:600}
+.baby .cag-h1 em{color:var(--clay-t);font-style:italic}
+.chero .lead{font-size:.9rem;line-height:1.55;color:#4a423b;max-width:60ch;margin:0 0 14px}
+.chero-cta{display:flex;gap:10px;flex-wrap:wrap}
+.chero-cta .btn-clay,.chero-cta .btn-ghost{padding:11px 22px;font-size:.88rem}
+.chero-rate{display:flex;align-items:center;gap:8px;font-size:.82rem;color:#4a423b;margin:12px 0 0}
+.chero-rate .stars{color:#c9a227;letter-spacing:1px}
+.chero-rate b{color:#2a2622}
+.chero-ribbon{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 16px;margin:12px 0 0;padding:12px 0 0;border-top:1px solid rgba(176,66,40,.18)}
+.chero-ribbon li{font-size:.75rem;font-weight:600;color:#4a423b;padding-left:18px;position:relative}
+.chero-ribbon li:before{content:"✓";position:absolute;left:0;top:0;color:var(--f);font-weight:700}
+.chero-media{position:relative;border-radius:22px;overflow:hidden;box-shadow:0 16px 44px rgba(120,50,20,.18);aspect-ratio:1408/768;margin:0}
+.chero-media img{display:block;width:100%;height:100%;object-fit:cover;background:#e7ddd4}
+.chero-tag{position:absolute;left:12px;bottom:12px;background:rgba(34,31,29,.82);color:#fff;font-size:.68rem;font-weight:600;padding:4px 12px;border-radius:50px}
+.btn-clay,.btn-ghost{display:inline-block;border-radius:50px;padding:13px 28px;font-weight:600;text-decoration:none;font-size:.95rem;transition:background-color .2s,color .2s,transform .15s}
+.btn-clay{background:var(--clay-ink);color:#fff}
+.btn-clay:hover{background:#9c3a23;transform:translateY(-2px)}
+.chero .btn-ghost{border:2px solid var(--f);color:var(--f)}
+.chero .btn-ghost:hover{background:var(--f);color:#fff}
+/* COUNTER — 6 fixed columns */
+.chero-counter{background:var(--cream);padding:6px 0 18px}
+.counter-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.cs{display:flex;flex-direction:column;gap:2px;align-items:flex-start;justify-content:center;min-height:74px;background:#fff;border:1px solid var(--bd);border-radius:12px;padding:10px 13px;box-shadow:0 2px 10px rgba(60,30,10,.04)}
+@media(max-width:1050px){.counter-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.counter-row{grid-template-columns:repeat(2,1fr)}}
+.counter-row b{font-family:'Newsreader',serif;font-size:1.32rem;line-height:1;color:var(--clay-ink);font-variant-numeric:tabular-nums}
+.cs-l{font-size:.71rem;font-weight:600;color:var(--mid);line-height:1.25}
+/* MOBILE RAIL A — outlined clay chips */
+.chero-rail{position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.985);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);display:none}
+.railA{display:flex;gap:8px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.railA::-webkit-scrollbar{display:none}
+.railA a{flex:0 0 auto;display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:var(--clay-t);border:1.5px solid #e3c0b4;border-radius:50px;padding:7px 14px;text-decoration:none;background:#fff;white-space:nowrap;transition:box-shadow .15s,background-color .15s,border-color .15s}
+.railA a.on{background:#fdf0ea;border-color:var(--clay-ink);box-shadow:0 2px 8px rgba(200,71,47,.22)}
+.railA a .p{font-weight:700;color:#6b625a;font-size:.7rem}
+/* BODY GRID */
+.baby-body{display:grid;grid-template-columns:196px minmax(0,1fr);gap:28px;align-items:start;margin-top:14px}
+/* DIAL 1 · clay progress */
+.tdial{display:flex;flex-direction:column;gap:10px;align-items:stretch;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:12px 10px;box-shadow:0 3px 12px rgba(60,30,10,.05);position:sticky;top:calc(var(--hdr) + 16px);max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#e0b6a8 transparent}
+.tdial-ring{margin:2px auto 0;flex:none;width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--clay) calc(var(--p,5) * 1%),#f0e2d9 0);display:grid;place-items:center}
+.tdial-ring>div{width:50px;height:50px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-family:'Newsreader',serif}
+.tdial-ring b{font-size:15px;color:var(--clay-t);display:block;line-height:1}
+.tdial-ring span{font-size:7px;color:#6b625a;letter-spacing:.08em;text-transform:uppercase}
+.tdial-list{display:grid;grid-template-columns:1fr;gap:1px;border-top:1px dashed var(--bd);padding-top:8px}
+.tdial-list a{display:flex;gap:7px;align-items:baseline;color:#4a423b;text-decoration:none;font-size:.74rem;line-height:1.25;padding:5px 7px;border-radius:8px;transition:background-color .15s,color .15s}
+.tdial-list a:hover{background:#fdf0ea;color:#2a2622}
+.tdial-list a.on{background:#fdf0ea;color:#2a2622;font-weight:600}
+.tdial-list a.on .num{color:var(--clay-t)}
+.tdial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#6b625a;width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums}
+.tdial-list .tag{margin-left:auto;font-size:.56rem;font-weight:600;color:#fff;background:var(--clay-ink);border-radius:50px;padding:1px 6px;white-space:nowrap}
+/* MAIN type scale */
+.baby-main{max-width:880px;min-width:0}
+.baby-main section{margin-bottom:14px;scroll-margin-top:calc(var(--hdr) + 18px);padding-top:20px}
+.baby .cag-h2{font-family:'Newsreader',serif;font-size:clamp(1.375rem,3.5vw,2rem);color:#2a2622;margin:8px 0 16px;line-height:1.18;padding-left:14px;border-left:4px solid var(--clay);border-radius:2px}
+.baby .cag-h3{font-family:'Newsreader',serif;font-size:clamp(1.125rem,2.2vw,1.5rem);color:var(--f);margin:24px 0 10px;line-height:1.25}
+.baby .cag-h4{font-family:'Newsreader',serif;font-size:clamp(1rem,1.8vw,1.25rem);margin:20px 0 8px;line-height:1.3;color:#2a2622}
+.baby .cag-h5{font-family:'Newsreader',serif;font-size:clamp(.95rem,1.25vw,1.05rem);margin:16px 0 6px;color:#3a332c}
+.baby .cag-h6{font-family:'IBM Plex Sans',sans-serif;font-size:clamp(.75rem,.95vw,.82rem);letter-spacing:.04em;text-transform:uppercase;color:var(--clay-t);margin:16px 0 4px}
+.baby-main p{line-height:1.68;margin:0 0 15px;max-width:70ch}
+.baby-main a{color:var(--clay-t);text-decoration:underline;text-underline-offset:2px}
+.baby-main a.btn-clay,.baby-main a.btn-ghost{text-decoration:none}
+.baby-main a.btn-clay{color:#fff}
+.baby-main p a[target="_blank"]::after{content:"\2197";font-size:.78em;font-weight:700;margin-left:2px;text-decoration:none;display:inline-block;vertical-align:baseline}
+.img-note{font-size:.8rem;color:var(--mid);margin-top:-8px!important;font-style:italic}
+.sec-img{display:block;width:100%;max-width:760px;aspect-ratio:1408/768;object-fit:cover;height:auto;border-radius:18px;margin:4px 0 18px;box-shadow:0 6px 20px rgba(60,30,10,.1)}
+.sec-img.inf-img{object-fit:contain;background:#faf7f4;box-shadow:0 4px 16px rgba(60,30,10,.08)}
+/* SEAM */
+.seam{display:flex;align-items:center;justify-content:center;gap:14px;margin:22px 0}
+.seam::before,.seam::after{content:"";flex:1;max-width:220px;height:2px;border-radius:1px}
+.seam::before{background:linear-gradient(90deg,transparent,rgba(200,71,47,.5))}
+.seam::after{background:linear-gradient(90deg,rgba(200,71,47,.5),transparent)}
+.seam img{width:auto;height:30px;object-fit:contain;opacity:.95}
+/* SECTION CTA */
+.sec-cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 20px}
+.sec-cta .btn-clay,.sec-cta .btn-ghost{padding:11px 22px;font-size:.86rem}
+.sec-cta .btn-ghost{border:2px solid var(--f);color:var(--f);background:none}
+.sec-cta .btn-ghost:hover{background:var(--f);color:#fff}
+/* AVAIL-B — faceted by AGE BAND */
+.availB{display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px;align-items:start;margin:6px 0 18px}
+.availB-rail{position:sticky;top:calc(var(--hdr) + 16px);background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px 12px;box-shadow:0 3px 12px rgba(60,30,10,.05)}
+.availB-k{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);margin:0 0 10px!important}
+.fbtn{display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;background:none;border:1px solid transparent;border-radius:9px;padding:8px 9px;font:inherit;font-size:.78rem;font-weight:600;color:#4a423b;cursor:pointer;text-align:left;min-height:34px;transition:background-color .15s,border-color .15s}
+.fbtn:hover{background:#fdf0ea}
+.fbtn.on{background:#fdf0ea;border-color:#e3c0b4;color:#2a2622}
+.fbtn span{font-size:.7rem;color:var(--mid);font-variant-numeric:tabular-nums}
+.availB-ship{font-size:.7rem;color:var(--mid);margin:12px 0 0!important;padding-top:10px;border-top:1px dashed var(--bd);line-height:1.4}
+.availB-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.bcard{background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.07);display:flex;flex-direction:column}
+.bcard.hide{display:none}
+.bcard-photo{position:relative;aspect-ratio:1/1}
+.bcard-photo img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block}
+.bbadge{position:absolute;left:8px;bottom:8px;background:rgba(255,255,255,.86);color:#1f4633;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:50px}
+.bbadge.badge-top{top:8px;bottom:auto}
+.bcard-body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:5px;flex:1}
+.bcard-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.bcard-name{font-family:'Newsreader',serif;font-size:1.02rem;text-transform:uppercase;letter-spacing:.02em;margin:0;color:#2a2622}
+.bcard-price{font-weight:700;color:var(--clay-t);font-size:.92rem;white-space:nowrap}
+.bcard-meta{font-size:.7rem;color:var(--mid);margin:0!important}
+.bcard-blurb{font-size:.78rem;color:#4a423b;margin:0 0 6px!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
+.bfull{display:block;width:100%;text-align:center;padding:9px 12px;font-size:.8rem;margin-top:auto;text-wrap:balance}
+/* K3 green ledger */
+.k3{background:#fff;border:1px solid #cfe6da;border-radius:16px;overflow:hidden;margin:6px 0 14px;max-width:640px;box-shadow:0 5px 18px rgba(45,106,79,.08)}
+.k3-h{background:var(--f);color:#fff;font-family:'Newsreader',serif;font-size:1rem;margin:0!important;padding:11px 18px;max-width:none!important}
+.k3-list{margin:0;padding:8px 18px 12px}
+.k3-list>div{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dotted #dbe9e1}
+.k3-list>div:last-child{border-bottom:none}
+.k3-list dt{font-size:.84rem;color:#4a423b}
+.k3-list dd{margin:0;font-size:.84rem;font-weight:700;color:var(--f);text-align:right}
+/* K4 clipboard checklist */
+.k4{background:#fffdfa;border:1px solid var(--bd);border-radius:16px;padding:14px 18px 6px;margin:6px 0 16px;max-width:640px;box-shadow:0 4px 16px rgba(60,30,10,.06);position:relative;overflow:hidden}
+.k4:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--clay)}
+.k4-h{font-family:'Newsreader',serif;font-size:1rem;color:#2a2622;margin:0 0 8px!important}
+.k4-list{list-style:none;margin:0;padding:0}
+.k4-list li{position:relative;padding:0 0 9px 26px;font-size:.85rem;line-height:1.5;color:#4a423b}
+.k4-list li:before{content:"";position:absolute;left:2px;top:4px;width:12px;height:12px;border:2px solid var(--f);border-radius:3px}
+/* Numbered question list */
+.qlist{margin:6px 0 16px;padding-left:22px;max-width:70ch}
+.qlist li{font-size:.88rem;line-height:1.6;margin-bottom:9px;color:#4a423b}
+.qlist b{color:#2a2622}
+/* VIDEO */
+.fs-video{margin:6px 0 18px;max-width:760px}
+.fs-video video{width:100%;height:auto;aspect-ratio:1408/768;border-radius:18px;background:#2a2622;display:block;box-shadow:0 6px 20px rgba(60,30,10,.12)}
+.fs-video figcaption{font-size:.76rem;color:var(--mid);margin-top:7px}
+/* GEO route cards */
+.geo-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 16px}
+.geo-cards a{display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--bd);border-radius:12px;padding:11px 14px;text-decoration:none!important;box-shadow:0 2px 10px rgba(60,30,10,.04);transition:border-color .15s,transform .15s}
+.geo-cards a:hover{border-color:#e3c0b4;transform:translateY(-2px)}
+.geo-cards b{font-size:.84rem;color:var(--clay-t)}
+.geo-cards span{font-size:.72rem;color:var(--mid)}
+/* QUOTES */
+.quotes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:6px 0 14px}
+.quote-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.quote-c img{width:64px;height:64px;border-radius:50%;object-fit:cover;float:left;margin:0 12px 6px 0}
+.quote-c .stars{color:#c9a227;letter-spacing:2px;margin:0 0 6px!important;font-size:.8rem}
+.quote-c blockquote{margin:0}
+.quote-c blockquote p{font-size:.83rem;line-height:1.6;color:#4a423b;max-width:none}
+.quote-c figcaption{font-size:.76rem;font-weight:700;color:var(--f);clear:both}
+/* TABLE A */
+.tA-wrap{overflow-x:auto;margin:6px 0 10px}
+.tA{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;font-size:.84rem}
+.tA caption{caption-side:top;text-align:left;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);padding:0 0 8px}
+.tA th{background:var(--clay-ink);color:#fff;text-align:left;padding:10px 13px;font-size:.78rem;font-weight:700}
+.tA td{padding:10px 13px;border-top:1px solid var(--bd);color:#4a423b;vertical-align:top}
+.tA tbody tr:nth-child(even) td{background:#fdfaf7}
+.tA tbody td:first-child{font-weight:700;color:#2a2622}
+.tA-note{font-size:.82rem;color:#4a423b}
+/* READ CARDS + XSELL */
+.read-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:6px 0 16px}
+.read-cards a{display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;text-decoration:none!important;box-shadow:0 3px 14px rgba(60,30,10,.06);transition:transform .15s,border-color .15s}
+.read-cards a:hover{transform:translateY(-2px);border-color:#e3c0b4}
+.read-cards img{width:100%;height:148px;object-fit:cover;background:#f3ece6}
+.read-cards b{font-size:.86rem;color:#2a2622;padding:9px 13px 0}
+.read-cards span{font-size:.75rem;color:var(--mid);padding:0 13px 12px}
+.xsell{background:#fdf6f2;border:1px solid #eddbd1;border-radius:14px;padding:14px 18px 6px;margin:14px 0 4px}
+.xsell-k{font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--clay-t);margin:0 0 8px!important}
+.xsell p{font-size:.84rem;line-height:1.55;color:#4a423b}
+/* FAQ-B two-column, clay number chip */
+.faqB{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px;margin:6px 0 8px;align-items:start}
+.faqB-item{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:0;box-shadow:0 2px 10px rgba(60,30,10,.04)}
+.faqB-item summary{cursor:pointer;list-style:none;display:flex;gap:10px;align-items:baseline;padding:12px 14px;font-size:.86rem;font-weight:600;color:#2a2622;line-height:1.4}
+.faqB-item summary::-webkit-details-marker{display:none}
+.faqB-n{flex:none;font-size:.66rem;font-weight:700;color:#fff;background:var(--clay-ink);border-radius:50px;padding:2px 8px;font-variant-numeric:tabular-nums}
+.faqB-item[open] summary{border-bottom:1px dashed var(--bd)}
+.faqB-item p{font-size:.83rem;line-height:1.62;color:#4a423b;padding:11px 14px 4px;margin:0 0 8px;max-width:none}
+/* FORM */
+.fs-form{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:0;border:1px solid var(--bd);border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(60,30,10,.1);margin:6px 0 10px}
+.form-side{background:#243b30;color:#e8f2ec;padding:20px 20px 22px}
+.fsx-k{font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9fc7b0;margin:0 0 10px!important}
+.form-side ul{list-style:none;margin:0;padding:0}
+.form-side li{display:flex;justify-content:space-between;gap:10px;font-size:.78rem;padding:7px 0;border-bottom:1px dotted rgba(159,199,176,.3)}
+.form-side li b{color:#f6b8a6;white-space:nowrap}
+.fsx-ship{font-size:.72rem;color:#c9f2db;margin:12px 0 4px!important;max-width:none}
+.fsx-note{font-size:.72rem;color:#c9f2db;margin:0!important;max-width:none}
+.fs-fields{background:#fff;padding:20px}
+.fld{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fld2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fld label{font-size:.76rem;font-weight:600;color:#4a423b}
+/* 16px floor is deliberate — anything smaller makes iOS Safari auto-zoom on focus */
+.fld input,.fld select,.fld textarea{font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--bd);border-radius:12px;background:#fdfbf9;color:#2a2622;width:100%}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:2px solid var(--clay-ink);outline-offset:1px;border-color:var(--clay-ink)}
+.fs-fields .btn-clay{border-radius:12px;border:none;cursor:pointer;font:inherit;font-weight:600;font-size:.9rem;padding:12px 18px}
+.fs-fine{font-size:.72rem;color:var(--mid);margin:10px 0 0!important}
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:980px){
+  .baby-body{grid-template-columns:minmax(0,1fr);gap:0}
+  .desk-only{display:none}
+  .chero-rail{display:block}
+  .chero-grid{grid-template-columns:minmax(0,1fr)}
+  .chero-media{order:-1}
+  .availB{grid-template-columns:minmax(0,1fr)}
+  .availB-rail{position:static;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 12px}
+  .availB-k{width:100%;margin:0 0 4px!important}
+  .fbtn{width:auto;border:1px solid var(--bd)}
+  .availB-ship{width:100%;margin-top:8px!important}
+  .availB-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fs-form{grid-template-columns:minmax(0,1fr)}
+  .faqB,.quotes,.read-cards,.geo-cards{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:640px){
+  .baby .cag-h2{padding-left:11px;border-left-width:3px}
+  .bcard-blurb{display:none}
+  .bcard-top{flex-direction:column;gap:1px}
+  .bcard-photo img{object-position:center 22%}
+  .fld2{grid-template-columns:1fr}
+  .quote-c img{float:none;margin:0 0 8px}
+  /* OG photos take the taller mobile frame; infographics keep 16:9 so baked text survives */
+  .sec-img.og-photo{aspect-ratio:5/4}
+  .sec-img.inf-img{aspect-ratio:1408/768;object-fit:contain}
+  /* Table A -> stacked cards */
+  .tA thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .tA,.tA tbody,.tA tr,.tA td{display:block;width:100%}
+  .tA tr{border-top:1px solid var(--bd);padding:2px 0 8px}
+  .tA td{border:none;padding:5px 13px}
+  .tA td:before{content:attr(data-l);display:block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);margin-bottom:2px}
+  .tA tbody td:first-child{background:#f6efe8;padding-top:8px}
+}
 </style>
+
+<script>
+  const dial = document.getElementById('babyDial');
+  const num = document.getElementById('dialNum');
+  const secs = Array.from(document.querySelectorAll('.baby-main section[id]'));
+  const dialLinks = dial ? Array.from(dial.querySelectorAll('a[data-i]')) : [];
+  const railLinks = Array.from(document.querySelectorAll('.chero-rail .railA a'));
+  const total = secs.length || 1;
+  function setActive(i) {
+    if (dial) dial.style.setProperty('--p', String(Math.round(((i + 1) / total) * 100)));
+    if (num) num.textContent = String(i + 1);
+    dialLinks.forEach((a, k) => a.classList.toggle('on', k === i));
+    railLinks.forEach((a, k) => a.classList.toggle('on', k === i));
+  }
+  if (secs.length) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          const i = secs.indexOf(e.target);
+          if (i > -1) setActive(i);
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    secs.forEach((s) => io.observe(s));
+    setActive(0);
+  }
+
+  // Avail-B age-band filter
+  const fbtns = Array.from(document.querySelectorAll('.fbtn'));
+  const cards = Array.from(document.querySelectorAll('.bcard'));
+  fbtns.forEach((btn) => btn.addEventListener('click', () => {
+    const f = btn.dataset.f;
+    fbtns.forEach((b) => b.classList.toggle('on', b === btn));
+    cards.forEach((c) => c.classList.toggle('hide', f !== 'all' && c.dataset.band !== f));
+  }));
+
+  if (window.matchMedia('(max-width:900px)').matches) {
+    const firstFaq = document.querySelector('.faqB .faqB-item');
+    if (firstFaq) firstFaq.open = true;
+  }
+</script>
+</BaseLayout>
