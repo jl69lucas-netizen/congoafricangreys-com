@@ -525,18 +525,34 @@ was collision-checked against `public/` and came back **free**. All eight are un
   explicit `width="1408" height="768"`, `loading="lazy"`.
 - A low-resolution master upscaled into the box is intentional. Uniform sizing beats pixel-peeping.
 
-### The eight
+### The six that survived proofing — PROCESSED AND VERIFIED 2026-07-27
 
-| # | Target filename in `public/` | Master (verified on disk) | Master size | Treatment | Section |
-|---|---|---|---|---|---|
-| OG-1 | `african-greys-available-price-bands.webp` | `assets/brand/hero-available-grey-parrots.webp` | 1672×941 | fit, centering (0.5, 0.42) | § Which Bird Sits in Which Price Band |
-| OG-2 | `what-the-african-grey-price-covers-roys.webp` | `assets/brand/Roys/What's included with Roys?.webp` | 1536×1024 | fit, centering (0.5, 0.45) | § What the Price Actually Covers |
-| OG-3 | `african-grey-forty-year-family-commitment.webp` | `assets/brand/AMIE/amie-african-grey-family-long-term.webp` | 1408×768 | already 16:9 — re-encode only | § The Forty-Year Money Question |
-| OG-4 | `living-with-an-african-grey-running-costs.webp` | `assets/1WORKING-ON/FOR-SALE-PAGES/CONGOS-For-Sale/living-with-a-congo-african-grey-family-lifestyle.webp` | 1376×768 | fit, centering (0.5, 0.5) | § What a Grey Costs You Every Year |
-| OG-5 | `african-grey-fresh-produce-annual-food-cost.webp` | `assets/brand/BERY/mix-veggetables-for-parrot.webp` | 1024×680 | fit, centering (0.5, 0.5) | § Food and Fresh Produce Line Item |
-| OG-6 | `african-grey-toy-replacement-cost.webp` | `assets/brand/BERY/parrot-toy.webp` | 1024×681 | fit, centering (0.5, 0.5) | § Enrichment and Toy Replacement |
-| OG-7 | `mark-benjamin-aviary-overhead-midland-tx.webp` | `assets/1WORKING-ON/FOR-SALE-PAGES/CONGOS-For-Sale/Mark-with the parrots.jpg` | 800×600 | fit, centering (0.5, 0.4) | § Who You Are Actually Paying |
-| OG-8 | `african-grey-first-thirty-days-setup-cost.webp` | `assets/brand/BERY/bery-first-30-days-home.webp` | 768×1376 | **PORTRAIT → blurfill + `og-tall`** | § The First Thirty Days at Home |
+> **Every master in this cluster's asset folders must be opened and looked at before use.**
+> Of the eight originally selected, **five were rejected on sight**. The filenames did not describe the
+> contents. This is now a required step, not a nicety.
+
+| # | File in `public/` (+ `-760` sibling) | Section | Notes |
+|---|---|---|---|
+| OG-1 | `african-greys-available-price-bands.webp` | §4 market spread | Warm 7-panel portrait collage; reads as the range of birds behind the range of prices |
+| OG-2 | `african-grey-forty-year-family-commitment.webp` | §14 the forty-year question | Older hands holding a Grey in a home. **AI sparkle watermark cropped out** (right 8%, bottom 12%) |
+| OG-3 | `living-with-an-african-grey-running-costs.webp` | §13 annual running cost | Grey on a play stand, owner reading. **Sparkle cropped the same way** |
+| OG-4 | `african-grey-fresh-produce-annual-food-cost.webp` | §13 food line item | Real chop bowl. Caveat: black background, off-palette; acceptable as a line-item inset, never as a lead image |
+| OG-5 | `african-grey-on-travel-carrier-day-one.webp` | §9 what you hand over on day one | Real Grey on a travel carrier. Master was cool/clinical — **warm-graded** (R ×1.08, B ×0.93, sat ×1.12) to meet DESIGN.md. Renamed from a "vet exam" working title because no vet exam is visible and alt text must describe what is actually there |
+| OG-6 | `african-grey-toy-enrichment-line-item.webp` | §13 enrichment line item | Real C.A.Gs Grey on a shoulder with a toy. Low-res master upscaled via blurfill — sanctioned by CLAUDE.md ("uniform sizing beats pixel-peeping"). Person is unidentifiable, so no misattribution |
+
+### The five rejected, and why — do not resurrect these
+
+| Master | Why it was rejected |
+|---|---|
+| `assets/brand/Roys/What's included with Roys?.webp` | **Not a photo — a text-heavy infographic.** Also states a "7 DAY health guarantee" (the real one is 72-hour) and CITES docs for "ownership **worldwide**", which contradicts this page's entire US-only position. Would not compress under 100 KB with legible text either |
+| `assets/brand/Roys/Roys, the perfect African Grey male for sale.webp` | Also an infographic — a "MEET ROYS / $2,300 INVESTMENT" card |
+| `assets/1WORKING-ON/.../CONGOS-For-Sale/Mark-with the parrots.jpg` | Real photo, but shows an **unidentified person** (the working filename would have had us caption them as Mark) and a **green Amazon**, not a Grey. Dated, green colour cast |
+| `assets/brand/BERY/bery-first-30-days-home.webp` | Infographic, and its AI-generated text is **garbled** — "Colident confident", "Sukaltane", "Reumtematory", "Every moue" |
+| `assets/brand/BERY/parrot-toy.webp` | Real photo, but the bird among the toys is a **green parrot, not an African Grey** |
+
+**Pattern worth carrying to the next page:** `assets/brand/<BIRD>/` folders are mostly per-bird
+*infographics*, not photographs, and several carry claims that predate the current Verified-Claim
+Ledger. Treat that whole tree as graphics-until-proven-photo.
 
 ### Hero 2×2 price-ladder grid — reuse, do not regenerate
 
