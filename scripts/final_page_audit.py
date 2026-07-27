@@ -362,7 +362,15 @@ FORSALE = ["african-grey-parrot-bird-eggs-for-sale-usa",
            "timneh-african-grey-for-sale",
            "hand-raised-african-grey-parrot-for-sale",
            "dna-tested-african-grey-for-sale",
-           "african-greys-for-sale-with-health-guarantee"]  # for-sale cluster, expanded as pages rebuild
+           "african-greys-for-sale-with-health-guarantee",
+           # group of 7 — added 2026-07-27
+           "baby-african-grey-parrot-for-sale",
+           "african-grey-parrot-adoption-cost",
+           "congo-african-grey-parrot-pair-for-sale",
+           "affordable-african-grey-birds-for-sale",
+           "grey-african-parrots-for-sale",
+           "male-african-gray-for-sale",
+           "african-grey-breeding-pair-for-sale"]  # for-sale cluster, expanded as pages rebuild
 
 def blog_targets():
     """Discover the /blog/ hub (dist/blog/index.html) + every dist/blog/<slug>/ post."""
