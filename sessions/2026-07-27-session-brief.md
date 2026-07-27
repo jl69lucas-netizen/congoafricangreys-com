@@ -60,4 +60,38 @@
 8. **Third review image** (`jesse-review-…jpg` from the HAND-RAISED folder) was pointed at in §16, but Jesse Ovalle is already used on hand-raised AND dna-tested. Reusing a third time is whitelisted but weakens differentiation — recommend leaving it out; awaiting breeder.
 
 ---
-<!-- Synthesized fields filled at finalization. -->
+
+## Outcome — Page 1 of 7 SHIPPED
+
+`/baby-african-grey-parrot-for-sale/` **LIVE 2026-07-27**, commit `c2ae89f`, live-verified 200 with new content.
+
+| Gate | Result |
+|---|---|
+| `page_hardening_scan` | ✅ clean |
+| `final_page_audit --for-sale` | **PASS-WITH-WARNINGS** — `no_aggregateoffer`, `house_method` only (same 2 benign as congo/dna/health-guarantee) |
+| `dup_content_audit` body | **PASS** — 0 crossovers vs all 6 siblings |
+| `dup_content_audit --headers` | **PASS** — 0 crossovers |
+| Headings | H1 1 · H2 22 · H3 39 · H4 18 · H5 13 · H6 8 · no skipped levels · AP Title Case |
+| Contrast @375 | 463 / 466 (3 flags = decorative glyphs in shared chrome) |
+| Horizontal overflow @375 | none · 0 elements wider than viewport |
+| Locked specs | hero 395px · dial 196px · rows 26px · 6 counter cards @74px · 21 seams / 22 sections |
+| Content | ~7,350 words · primary density 0.86% · 135 first-person · 0 AI tells · 12 `#reserve` CTAs · 11 external links / 8 domains |
+
+### Reusable findings banked
+1. **IntersectionObserver is inert in an occluded browser pane.** The dial scroll-spy read as "static" in the Browser pane, on my page *and* on the live Timneh page. Playwright proved both work (ring 5→14→27→45→77). **Fifth checker to cry wolf** — had I "fixed" it I'd have broken working code on two pages.
+2. **A dead external URL got through.** `aphis.usda.gov/aphis/ourfocus/...` is gone (site restructure); replaced with `/awa/apply`. Note `curl` returns `000` for *all* aphis.usda.gov from this environment, so curl cannot be used to validate .gov links here — Firecrawl can.
+3. **`.sr-only` does not exist globally.** Any page using it must define it in page scope.
+4. **`form-control-ios-zoom`** — new hardening-scan catch; inputs need a 16px floor. Siblings were clean, so this was mine alone.
+
+## What's Next
+
+1. **Page 2 of 7 — `/african-grey-parrot-adoption-cost/`** (360 impressions; note "african grey parrot price in india" 43 impr @ pos 1.0 is out-of-market and must NOT be chased). Trust-page cluster → Split-Hero C per the locked table.
+2. **Two fast wins sit behind it** — by impressions the batch ranks `grey-african-parrots` (915) and `congo-pair` (497, **the only cluster page with real clicks**: 10 @ pos 9.0) above the rest. Worth reordering if the breeder wants revenue sooner.
+3. **Register the 9 new competitors** found in Sprint 0 (`buyafricangreyparrots.com`, `mybabyparrot.com`, `theavianexchange.com`, `exoticglobalparrotsfarm.com`, `graybreedersfoundation`, `parrotsoftheworld`, `midnightparrotplace`, `prunedalebirdfarm`, `parrotstars`).
+4. **Breeder to regenerate 2 infographics** — `baby-grey-breeder-red-flags-checklist` (gibberish text) and `congo-vs-timneh-baby-at-four-months` (prompt text baked in as title, British "colour", shows adults not babies). Slots are live with an HTML checklist and a real photo respectively; filenames unchanged so they drop straight in.
+5. **Root cause for the breeder's generator:** it is baking *prompt instructions* in as visible labels ("green tick", "clay cross", "size, tail colour (red vs maroon), beak"). Future prompts should state label text as literal copy, not as an instruction.
+
+## Open Flags carried forward
+- `structure.json` has no entry for any for-sale slug — recommend one `@cag-structure-architect` pass across all 22 after this group.
+- LLM visibility still unmeasured on the whole cluster.
+- 67 tracked `assets/brand/` files show deleted in git (renamed on disk); pre-existing, deliberately not swept into this commit.
