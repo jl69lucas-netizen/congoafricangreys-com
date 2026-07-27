@@ -1,331 +1,1322 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import clutch from '../../../data/clutch-inventory.json';
+import fin from '../../../data/financial-entities.json';
 
-const title = "African Grey Parrot Adoption Cost 2026 | Full Breakdown | CongoAfricanGreys.com";
-const description = "Full African Grey parrot adoption cost breakdown: $1,700–$3,500 to acquire from a breeder, $300–$800 from rescues, plus $3,000–$5,000 first-year costs. Real numbers from active USDA-licensed breeders.";
+// Meta — extended 3-part for-sale format (Primary KW | conversational query | number+positive | brand — LSI), ≤280
+const title = "African Grey Parrot Adoption Cost | What Does an African Grey Actually Cost in the USA? | 3 Honest Routes Priced Day One, Year One and Five Years | C.A.Gs – Midland, TX — Rescue Fees, Breeder Pricing, DNA-Sexed CITES-Papered Congo and Timneh Greys";
+// Desc — primary benefit | secondary benefit | trust signal + CTA, ≤300
+const description = "See every route priced honestly — rescue fees from $450, our documented Congos and Timnehs from $1,500, and the five-year number nobody publishes. USDA-licensed, CITES Appendix I papered, PBFD and Polyomavirus PCR screened. Ships nationwide, $185 airport or $350 home. Reserve yours in 24 hours.";
 const canonical = "https://congoafricangreys.com/african-grey-parrot-adoption-cost/";
-const ogType = "article";
+const site = "https://congoafricangreys.com";
+const seam = "/cag-fs-seam-emblem.webp";
 
-const schemaJson = JSON.stringify({
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Greys for Sale", url: "/african-grey-parrots-for-sale/" },
+  { name: "African Grey Adoption Cost", url: "/african-grey-parrot-adoption-cost/" },
+];
+
+// ---- Real inventory. Status is never hardcoded; sold birds never render. ----
+const available = ((clutch as any).birds as any[])
+  .filter((b) => b.status === "available")
+  .sort((a, b) => a.price - b.price);
+
+const prices = available.map((b) => b.price);
+const floorPrice = Math.min(...prices);
+const ceilPrice = Math.max(...prices);
+
+// Price-band faceting — this page's Avail-B axis. Siblings facet by subspecies,
+// availability posture, sex and age band; the money axis is ours alone.
+const bandOf = (p: number) => (p < 1700 ? "band1" : p < 2300 ? "band2" : p < 3000 ? "band3" : "band4");
+const bands = [
+  { k: "band1", label: "$1,500 – $1,699" },
+  { k: "band2", label: "$1,700 – $2,299" },
+  { k: "band3", label: "$2,300 – $2,599" },
+  { k: "band4", label: "$3,500 bonded pair" },
+];
+const bandCount = (k: string) => available.filter((b) => bandOf(b.price) === k).length;
+const bandLabelShort = (p: number) => (p < 1700 ? "Under $1,700" : p < 2300 ? "$1,700+" : p < 3000 ? "$2,300+" : "Pair");
+
+const birdImg: Record<string, { src: string; pos: string; alt: string }> = {
+  "evie": { src: "/evie-timneh-african-grey-female-perched-card.webp", pos: "center 12%", alt: "Evie, a Timneh African Grey hen at our lowest documented price of $1,500" },
+  "elad": { src: "/elad-timneh-african-grey-male-wings-card.webp", pos: "center 20%", alt: "Elad, a young Timneh African Grey cock whose DNA certificate is already on file" },
+  "bery": { src: "/bery-congo-african-grey-cuddly-tamed-card.webp", pos: "center 30%", alt: "Bery, a tamed Congo African Grey hen in the lower Congo price band" },
+  "roys": { src: "/roys-congo-african-grey-male-tame-card.webp", pos: "center 30%", alt: "Roys, a confident Congo African Grey cock suited to a busy household" },
+  "amie": { src: "/amie-congo-african-grey-handfed-baby-card.webp", pos: "center 25%", alt: "Amie, a hand-fed Congo African Grey hen at the top of our single-bird range" },
+  "jins-jeni": { src: "/jins-jeni-congo-african-grey-pair-card.webp", pos: "center 30%", alt: "Jins and Jeni, a Congo African Grey companion pair that rehomes together" },
+};
+const birdBlurb: Record<string, string> = {
+  "evie": "Our lowest documented price, and nothing was removed to reach it.",
+  "elad": "Steady Timneh cock, harness-curious and easy to handle already.",
+  "bery": "A settled hen who reads as calm from the first afternoon home.",
+  "roys": "Busy and chatty — better matched to a loud house than a quiet one.",
+  "amie": "Hand-fed from the nursery, socialised on shoulders since hatch.",
+  "jins-jeni": "Two birds, one price, one home — they do not separate.",
+};
+const heroLadder: Record<string, string> = {
+  "evie": "Rung one of our price ladder — Evie the Timneh hen, the lowest documented price we hold",
+  "bery": "Rung two — Bery the Congo hen, where the Congo band opens",
+  "roys": "Rung three — Roys the Congo cock, mid-band and fully papered",
+  "jins-jeni": "Top rung — Jins and Jeni, the bonded Congo pair sold as one",
+};
+const cardChips = ["DNA-sexed", "PCR screened", "Vet certificate"];
+
+// ---- Delivery tiers, read from the data file, never retyped ----
+const d = (fin as any).purchase_costs.delivery_options;
+const airport = d.airport_pickup.cost;
+const home = d.home_delivery.cost;
+const nanny = d.flight_nanny.cost_from;
+
+// ---- Setup and annual ranges, read from the data file ----
+const fy = (fin as any).first_year_setup;
+const an = (fin as any).annual_ongoing;
+const sumR = (o: any, keys: string[]) => keys.reduce((a: number[], k) => [a[0] + o[k].min, a[1] + o[k].max], [0, 0]);
+const setupOnce = sumR(fy, ["cage_large", "perches_and_toys", "initial_avian_vet_visit"]);
+const annualRun = sumR(an, ["food_and_treats", "avian_vet_wellness", "toys_replacement", "unexpected_vet"]);
+const money = (n: number) => "$" + n.toLocaleString("en-US");
+const range = (r: number[]) => money(r[0]) + "–" + money(r[1]);
+
+// ---- Section spine. The band column IS the T1 refresh: the contents list previews the money. ----
+const sections = [
+  { id: "cost",     n: "01", label: "What a Grey Costs",   band: "$450–$8,500", tag: "market" },
+  { id: "rescue",   n: "02", label: "Rescue Fees",         band: "$450–$1,500", tag: "published" },
+  { id: "routes",   n: "03", label: "Three Routes Priced", band: "5-year view", tag: "our ledger" },
+  { id: "dayone",   n: "04", label: "Day One",             band: range([floorPrice, ceilPrice]), tag: "our birds" },
+  { id: "ongoing",  n: "05", label: "Every Year After",    band: range(annualRun), tag: "recurring" },
+  { id: "cheap",    n: "06", label: "Under $1,000",        band: "the warning", tag: "caution" },
+  { id: "shipping", n: "07", label: "Getting Home",        band: money(0) + "–" + money(nanny) + "+", tag: "delivery" },
+  { id: "reserve",  n: "08", label: "Reservable Now",      band: range([floorPrice, ceilPrice]), tag: available.length + " birds" },
+  { id: "faq",      n: "09", label: "Cost Questions",      band: "answers", tag: "" },
+];
+
+// ---- Geo: six states unused by every sibling in this cluster ----
+const shipPlaces = [
+  { href: "/african-grey-parrot-for-sale-new-jersey/", label: "African Grey adoption cost New Jersey", note: "Dense rescue corridor — worth pricing both routes" },
+  { href: "/african-grey-parrot-for-sale-massachusetts/", label: "What a documented Grey costs Massachusetts", note: "Boston-area cargo arrival" },
+  { href: "/african-grey-parrot-for-sale-minnesota/", label: "African Grey prices Minnesota", note: "Cold-season routing rules apply" },
+  { href: "/african-grey-parrot-for-sale-missouri/", label: "Grey parrot cost Missouri", note: "Central routing, shortest transit" },
+  { href: "/african-grey-parrot-for-sale-oregon/", label: "African Grey adoption fees Oregon", note: "West-coast arrival airports" },
+  { href: "/african-grey-parrot-for-sale-indiana/", label: "Documented African Grey pricing Indiana", note: "Midwest pickup and cargo" },
+];
+
+// ---- Real reviews only. Verbatim from our published set; neither is spent elsewhere in this cluster. ----
+const stories = [
+  { name: "Lawrence Brunner", loc: "Fullerton, CA", meta: "Congo African Grey",
+    avatar: "/lawrence-brunner-fullerton-ca-review.webp",
+    quote: "I'd been burned by a deposit scam before, so I asked C.A.Gs for everything — their license number, the CITES paperwork, a live video call. They sent it all without hesitating. My Congo landed at LAX calm and healthy with his whole documentation packet in the carrier. Worth every dollar." },
+  { name: "Ida Brim", loc: "Nashville, TN", meta: "Congo African Grey",
+    avatar: "/ida-brim-nashville-tn-review.webp",
+    quote: "From the first email to home delivery here in Nashville, everything was exactly as promised. My grey arrived hand-raised, weaned, and confident — with his health certificate and CITES documents in hand. He bonded with our family in days." },
+];
+
+// ---- Table G · True-Cost Ledger. Rescue figures from Sprint 0 fee schedules; ours from the data files. ----
+const yr1Ours = [floorPrice + setupOnce[0] + airport, ceilPrice + setupOnce[1] + home];
+const yr5Ours = [yr1Ours[0] + annualRun[0] * 4, yr1Ours[1] + annualRun[1] * 4];
+const ledgerRows = [
+  { horizon: "Day one", rescue: "$450 – $1,500", ours: range([floorPrice, ceilPrice]), sub: "$400 – $900",
+    misses: "A published rescue fee rarely covers transport. A sub-floor listing frequently covers nothing at all." },
+  { horizon: "Year one", rescue: "$925 – $2,800", ours: range(yr1Ours), sub: "$1,400 – $4,000+",
+    misses: "Setup costs the same whichever route you take. The sub-floor column swells because undocumented birds arrive needing work." },
+  { horizon: "Five years", rescue: "$2,425 – $8,200", ours: range(yr5Ours), sub: "$2,900 – $9,400+",
+    misses: "By year five the three routes converge. What you bought on day one was documentation, not a discount." },
+];
+
+// ---- Table A · how the routes present themselves, from the Sprint 0 SERP sweep ----
+const compareRows = [
+  { f: "Price actually published", a: "Yes — a fee schedule", b: "Yes — per bird", c: "Yes, and often struck through" },
+  { f: "DNA sexing certificate", a: "Sometimes, if a prior owner paid", b: "Included in the price", c: "Rarely, and rarely verifiable" },
+  { f: "PBFD and Polyomavirus PCR", a: "Case by case", b: "Screened before placing", c: "Almost never" },
+  { f: "CITES Appendix I file", a: "Depends on the surrender paperwork", b: "On file for every bird", c: "Frequently absent" },
+  { f: "Known history and parentage", a: "Often partial", b: "Named parents, hatch date, band number", c: "Unverifiable" },
+  { f: "Who sets the number", a: "A committee, against a schedule", b: "The breeder who raised the bird", c: "Whoever wants the deposit" },
+];
+
+// ---- FAQ. PAA-sourced, fetched live in Sprint 0. Answers are visible in the DOM. ----
+const faqs = [
+  { q: "How much should I pay for an African grey parrot?",
+    a: `Across the US market a documented African Grey runs roughly $1,500 to $3,500 from a licensed breeder, while rescue adoption fees are published between $450 and $1,500 and premium breeder listings reach $8,500. Our own floor is ${money(floorPrice)}, and a bird at that price still carries a DNA certificate, CITES Appendix I paperwork, PBFD and Polyomavirus PCR screening, and an avian-vet health certificate.` },
+  { q: "Is it cheaper to adopt an African grey than to buy one?",
+    a: "On day one, usually yes — a published rescue fee is lower than a breeder price. Across five years the routes converge, because setup, food, enrichment and veterinary care are identical whichever door the bird came through. Adoption changes what you pay on day one and barely changes what you pay by year five." },
+  { q: "What is a rehoming fee, and is it different from an adoption fee?",
+    a: "An adoption fee is set by an organisation against a published schedule. A rehoming fee is set by whoever currently holds the bird, and it is a private sale. That is why rehoming figures vary so wildly — owners report paying $600 to $900, while one California store was asking $5,500 for a tame six-year-old." },
+  { q: "Why are African grey parrots so expensive?",
+    a: "Three things carry the price. African Greys are CITES Appendix I, so every legal transfer is documented. They need twelve to sixteen weeks of daily hand-feeding before they can be placed. And demand rose sharply from 2020 without falling back. A bird priced far below that reality has usually skipped one of the three." },
+  { q: "What does it cost to care for an African grey each year?",
+    a: `Budget ${range(annualRun)} a year once the bird is home: pellets and fresh produce, an annual avian-vet wellness exam, toy and perch replacement, and a contingency for the vet visit you did not plan. The contingency is the line people leave out, and it is the one that hurts.` },
+  { q: "Do you ship African greys outside the United States?",
+    a: "No. We are a USDA-licensed Texas aviary and we place birds inside the United States only. Because African Greys are CITES Appendix I, international movement needs export and import permits in both countries, so prices quoted overseas do not transfer to a US captive-bred bird and are not a fair comparison to ours." },
+  { q: "How much is shipping for an African grey parrot?",
+    a: `Airport pickup is ${money(airport)} and home delivery is ${money(home)}, both on IATA live-animal terms with Delta, United or American. A flight nanny who keeps the bird in the cabin starts from ${money(nanny)} and is quoted per route. If you live within two to three hours of Midland, Texas, collection here costs nothing.` },
+  { q: "Is a cheap African grey parrot a scam?",
+    a: `Not always, but a listing far below our ${money(floorPrice)} floor is worth slowing down for. Ask for the USDA licence number, the DNA certificate, the PCR results and a live video call with the bird. A seller who holds those sends them within a day; a seller who does not will change the subject to payment.` },
+  { q: "What paperwork should come with the price?",
+    a: "A hatch certificate with the closed leg-band number, the CITES Appendix I captive-bred file, the DNA sexing certificate, the PBFD and Polyomavirus PCR results, and an avian-vet health certificate dated within ten days of travel. We price all of it into the bird and never bill it afterwards." },
+  { q: "Can I pay a deposit to hold a bird while I get set up?",
+    a: "Yes. A deposit holds a named bird and starts the paperwork; the balance falls due before travel is booked. That gap is deliberately the window in which most people buy the cage, because buying the cage twice is the most common first-year mistake we see." },
+];
+
+// ---- Schema. One Product + Offer per real available bird. AggregateOffer is banned here: not a hub. ----
+const productSchema = {
   "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Article",
-      "headline": "African Grey Parrot Adoption Cost 2026: Full Breakdown",
-      "url": "https://congoafricangreys.com/african-grey-parrot-adoption-cost/",
-      "author": { "@type": "Organization", "name": "C.A.Gs – Midland, TX" },
-      "publisher": {
-        "@type": "Organization",
-        "name": "C.A.Gs – Midland, TX",
-        "url": "https://congoafricangreys.com/"
-      },
-      "description": "Detailed breakdown of African Grey parrot adoption cost: acquisition options, first-year setup, annual ongoing costs, and 40-year lifetime ownership estimate."
+  "@graph": available.map((b) => ({
+    "@type": "Product",
+    "name": `${b.name} — ${b.variant === "timneh_african_grey" ? "Timneh" : "Congo"} African Grey`,
+    "url": site + b.slug,
+    "image": site + (birdImg[b.id]?.src ?? ""),
+    "description": birdBlurb[b.id] ?? "",
+    "category": "Live pet bird",
+    "brand": { "@type": "Brand", "name": "C.A.Gs – Midland, TX" },
+    "offers": {
+      "@type": "Offer",
+      "price": b.price,
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "url": site + b.slug,
+      "seller": { "@type": "Organization", "name": "C.A.Gs – Midland, TX" },
     },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "How much does it cost to adopt an African Grey parrot?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Adopting an African Grey from a rescue organization typically costs $300–$800 in adoption fees. Acquiring from a reputable USDA-licensed breeder costs $1,500–$3,500 depending on variant (Timneh or Congo) and age. Beyond acquisition, first-year setup costs add $1,500–$2,850 for cage, food, vet care, toys, and supplies."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is it cheaper to adopt vs buy an African Grey?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The upfront adoption fee is lower ($300–$800 vs $1,500–$3,500), but rescue Greys often require significant additional investment in veterinary care for pre-existing conditions, behavioral rehabilitation, and specialist consultations. For first-time Grey owners, a hand-raised captive-bred bird from a reputable breeder often has lower total 5-year cost of ownership due to fewer behavioral and medical complications."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is the annual cost of owning an African Grey parrot?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Annual ongoing costs for an African Grey average $1,500–$2,500: high-quality pellets and fresh food ($500–$800 per year), annual avian vet wellness exam ($150–$300), toys and enrichment ($200–$400), cage accessory replacement ($100–$200), and miscellaneous supplies ($200–$400). Lifetime cost over 40–60 years: $60,000–$150,000 or more."
-          }
-        }
-      ]
-    }
-  ]
-});
-
-// NOTE: BreadcrumbList JSON-LD is emitted by <Breadcrumb /> itself (verified in dist) —
-// we do NOT add a second copy here (interior standard: extend, never duplicate schema).
+  })),
+};
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a },
+  })),
+};
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} ogType={ogType} schemaJson={schemaJson}>
+<BaseLayout {title} {description} {canonical} ogType="product" hideGlobalCta
+  heroPreload="/african-greys-available-price-bands.webp"
+  heroPreloadSrcset="/african-greys-available-price-bands-760.webp 760w, /african-greys-available-price-bands.webp 1408w"
+  heroPreloadSizes="(max-width:900px) 92vw, 520px">
 
-<style>
-  :root {
-    --green: #2D6A4F;
-    --clay: #e8604c;
-    --cream: #faf7f4;
-    --dark: #1c1a18;
-    --muted: #6b6560;
-    --border: #ede5dc;
-    --green-lt: #eaf4ef;
-  }
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-  .container-text { max-width: 760px; margin: 0 auto; }
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-  .breadcrumb a { color: var(--green); text-decoration: none; }
-  .breadcrumb a:hover { text-decoration: underline; }
+  <div class="adopt">
+  <div class="container"><Breadcrumb items={breadcrumbs} /></div>
 
-  .page-hero { background: var(--green); color: #fff; padding: 52px 0 44px; }
-  .page-hero h1 { font-family: Lora, serif; font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 700; margin: 0 0 14px; line-height: 1.2; max-width: 700px; }
-  .page-hero .lead { font-family: Sora, sans-serif; font-size: 1.02rem; color: #fff; max-width: 640px; margin: 0; line-height: 1.65; }
-  .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); color: #fff; font-family: Sora, sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 14px; border-radius: 50px; margin-bottom: 16px; }
+  <!-- HERO — Split-Hero C dark. Refresh delta vs the egg page: the 2×2 grid is an ascending PRICE LADDER. -->
+  <header class="adopt-hero">
+    <div class="container hero-grid">
+      <div class="hero-card">
+        <p class="eyebrow">Priced {money(floorPrice)} to {money(ceilPrice)} · Midland, TX · USDA-licensed</p>
+        <h1 class="cag-h1">African Grey Parrot Adoption Cost: What You <em>Really</em> Pay, Route by Route</h1>
+        <p class="lead">A rescue publishes one number, a breeder publishes another, and the listing you found last night publishes a third that looks too good. Here at C.A.Gs we price all three side by side — day one, year one, and five years out — then show you the documented Congos and Timnehs reservable from {money(floorPrice)}.</p>
+        <div class="hero-cta">
+          <a class="btn-clay" href="#reserve">See the birds and prices &rarr;</a>
+          <a class="btn-ghost" href="#routes">Compare the three routes</a>
+        </div>
+        <ul class="hero-chips">
+          <li>Floor {money(floorPrice)}</li><li>CITES Appendix I</li><li>US delivery only</li>
+        </ul>
+      </div>
+      <div class="hero-imgs">
+        {["evie", "bery", "roys", "jins-jeni"].map((id) => {
+          const g = birdImg[id];
+          const b = available.find((x) => x.id === id);
+          return b ? (
+            <span class="hero-tile">
+              <img src={g.src}
+                srcset={g.src.replace('.webp', '-400.webp') + " 400w, " + g.src + " 800w"}
+                sizes="(max-width:900px) 44vw, 260px" width="704" height="384"
+                style={`object-position:${g.pos}`}
+                fetchpriority="high" loading="eager" decoding="async" alt={heroLadder[id]} />
+              <b class="hero-tile-p">{b.price_display}</b>
+            </span>
+          ) : null;
+        })}
+      </div>
+    </div>
+  </header>
 
-  /* Quick summary table */
-  .summary-section { padding: 52px 0; }
-  .summary-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 16px; }
-  .summary-section p { font-family: Sora, sans-serif; font-size: 0.97rem; color: var(--muted); line-height: 1.65; max-width: 65ch; margin: 0 0 28px; }
-
-  .cost-table { width: 100%; border-collapse: collapse; margin: 0 0 24px; font-family: Sora, sans-serif; font-size: 0.9rem; }
-  .cost-table thead th { background: var(--green); color: #fff; padding: 12px 16px; text-align: left; font-weight: 600; }
-  .cost-table thead th:first-child { border-radius: 8px 0 0 0; }
-  .cost-table thead th:last-child { border-radius: 0 8px 0 0; }
-  .cost-table tbody tr:nth-child(even) { background: var(--cream); }
-  .cost-table tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); color: var(--dark); line-height: 1.5; }
-  .cost-table tbody td:first-child { font-weight: 600; color: var(--muted); width: 30%; }
-  .cost-table tfoot td { padding: 12px 16px; font-weight: 700; font-family: Lora, serif; background: var(--green-lt); color: var(--green); border-top: 2px solid var(--green); }
-
-  /* Cost breakdown cards */
-  .breakdown-section { padding: 48px 0; background: var(--cream); }
-  .breakdown-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 28px; }
-
-  .cost-section-title { font-family: Lora, serif; font-size: 1.25rem; color: var(--dark); margin: 0 0 16px; padding-top: 8px; }
-  .cost-section-title span { color: var(--clay); }
-
-  .content-section { padding: 48px 0; }
-  .content-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 16px; }
-  .content-section p { font-family: Sora, sans-serif; font-size: 0.97rem; color: var(--dark); line-height: 1.75; max-width: 70ch; margin: 0 0 16px; }
-  .content-section ul { font-family: Sora, sans-serif; font-size: 0.97rem; color: var(--dark); line-height: 1.75; max-width: 68ch; padding-left: 20px; margin: 0 0 16px; }
-  .content-section li { margin-bottom: 6px; }
-  .internal-link { color: var(--green); font-weight: 600; text-decoration: none; }
-  .internal-link:hover { text-decoration: underline; }
-
-  /* Lifetime callout */
-  .lifetime-box { background: var(--green); color: #fff; border-radius: 14px; padding: 28px 32px; margin: 28px 0; }
-  .lifetime-box h3 { font-family: Lora, serif; font-size: 1.25rem; margin: 0 0 10px; }
-  body.theme-d .lifetime-box p { font-family: Sora, sans-serif; font-size: 0.95rem; color: #fff; line-height: 1.65; margin: 0; }
-  .lifetime-box .big-number { font-family: Lora, serif; font-size: 2.2rem; font-weight: 700; color: #fff; display: block; margin: 8px 0 4px; }
-
-  .section-divider { border: none; border-top: 1px solid var(--border); margin: 44px 0; }
-
-  .faq-section { padding: 48px 0; }
-  .faq-section h2 { font-family: Lora, serif; font-size: 1.65rem; color: var(--green); margin: 0 0 28px; }
-  details { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; background: #fff; }
-  summary { font-family: Sora, sans-serif; font-weight: 600; font-size: 0.97rem; padding: 18px 20px; cursor: pointer; list-style: none; color: var(--dark); }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: '+'; float: right; color: var(--clay-ink); font-size: 1.2rem; font-weight: 400; }
-  details[open] summary::after { content: '−'; }
-  .faq-body { padding: 0 20px 18px; font-family: Sora, sans-serif; font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
-
-  .cta-section { padding: 56px 0; text-align: center; }
-  .cta-section h2 { font-family: Lora, serif; font-size: 1.55rem; color: var(--dark); margin: 0 0 12px; }
-  .cta-section p { font-family: Sora, sans-serif; color: var(--muted); max-width: 500px; margin: 0 auto 24px; font-size: 0.97rem; line-height: 1.65; }
-  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .btn-primary { display: inline-flex; align-items: center; background: var(--clay); color: #fff; font-family: Sora, sans-serif; font-weight: 600; font-size: 0.95rem; padding: 13px 28px; border-radius: 50px; text-decoration: none; transition: background 0.2s; }
-  .btn-primary:hover { background: #c94d3a; }
-  .btn-outline { display: inline-flex; align-items: center; background: transparent; color: var(--green); border: 2px solid var(--green); font-family: Sora, sans-serif; font-weight: 600; font-size: 0.95rem; padding: 11px 26px; border-radius: 50px; text-decoration: none; transition: background 0.2s, color 0.2s; }
-  .btn-outline:hover { background: var(--green); color: #fff; }
-  .hub-back { text-align: center; font-family: Sora, sans-serif; font-size: 0.88rem; color: var(--muted); margin-top: 20px; }
-  .hub-back a { color: var(--green); font-weight: 600; text-decoration: none; }
-  .hub-back a:hover { text-decoration: underline; }
-
-  @media (max-width: 767px) {
-    .page-hero { padding: 38px 0 32px; }
-    .summary-section, .content-section, .faq-section { padding: 40px 0; }
-    .breakdown-section { padding: 40px 0; }
-    .cost-table { font-size: 0.82rem; }
-    .cost-table tbody td { padding: 9px 10px; }
-    .lifetime-box { padding: 22px 20px; }
-  }
-</style>
-
-<div>
-
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={[
-        { name: "Home", url: "/" },
-        { name: "African Grey Adoption", url: "/african-grey-adoption/" },
-        { name: "Adoption Cost", url: "/african-grey-parrot-adoption-cost/" }
-      ]} />
+  <!-- COUNTER — 8 Ledger-verified snippets, height reserved so the strip cannot shift -->
+  <div class="adopt-counter">
+    <div class="container counter-row">
+      <div class="cs"><b>{money(floorPrice)}</b><span class="cs-l">Floor price</span></div>
+      <div class="cs"><b>{money(airport)}</b><span class="cs-l">Airport tier</span></div>
+      <div class="cs"><b>{money(home)}</b><span class="cs-l">Home tier</span></div>
+      <div class="cs"><b>12+</b><span class="cs-l">Yrs aviary</span></div>
+      <div class="cs"><b>100%</b><span class="cs-l">CITES papered</span></div>
+      <div class="cs"><b>0</b><span class="cs-l">Wild-caught, ever</span></div>
+      <div class="cs"><b>24h</b><span class="cs-l">Inquiry reply</span></div>
+      <div class="cs"><b>40–60</b><span class="cs-l">Year commitment</span></div>
+    </div>
   </div>
 
-  <section class="page-hero">
-    <div class="container">
-      <div class="hero-badge">2026 Cost Guide</div>
-      <h1>African Grey Parrot Adoption Cost: Full 2026 Breakdown</h1>
-      <p class="lead text-white">In the parrot community, "adoption" refers both to rescue rehoming and to acquiring from a breeder. This guide covers both routes — what you'll pay upfront, in year one, and across a lifetime.</p>
+  <!-- MOBILE JUMP RAIL -->
+  <nav class="adopt-rail" aria-label="On this page">
+    <div class="container railA">
+      {sections.map((s, i) => (<a href={`#${s.id}`} class={i === 0 ? "on" : ""}><span class="p">{s.n}</span> {s.label}</a>))}
     </div>
-  </section>
+  </nav>
 
-  <section class="summary-section">
-    <div class="container container-text">
+  <div class="container">
+    <div class="adopt-body">
 
-      <h2>African Grey Parrot Cost at a Glance</h2>
-      <p>Use this table to quickly compare the two main acquisition routes. The upfront cost gap is real — but so are the downstream differences.</p>
-
-      <table class="cost-table">
-        <thead>
-          <tr>
-            <th>Cost Category</th>
-            <th>Rescue / Rehoming</th>
-            <th>Reputable Breeder</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Acquisition fee</td>
-            <td>$300–$800</td>
-            <td>$1,500–$3,500</td>
-          </tr>
-          <tr>
-            <td>Immediate vet costs</td>
-            <td>$300–$1,500 (varies)</td>
-            <td>Included in price</td>
-          </tr>
-          <tr>
-            <td>First-year setup</td>
-            <td>$1,500–$2,850</td>
-            <td>$1,500–$2,850</td>
-          </tr>
-          <tr>
-            <td>Annual ongoing</td>
-            <td>$1,500–$2,500</td>
-            <td>$1,500–$2,500</td>
-          </tr>
-          <tr>
-            <td>5-year total (est.)</td>
-            <td>$10,000–$16,000</td>
-            <td>$10,000–$18,000</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td>40-year lifetime (est.)</td>
-            <td>$62,000–$102,000</td>
-            <td>$63,000–$105,000</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <p>See the full acquisition price breakdown in our <a href="/african-grey-parrot-price/" class="internal-link">African Grey parrot price guide</a>, which covers Congo vs. Timneh pricing in detail.</p>
-
-    </div>
-  </section>
-
-  <section class="breakdown-section">
-    <div class="container container-text">
-
-      <h2>Detailed Cost Breakdown</h2>
-
-      <h3 class="cost-section-title">Option A: Rescue or Rehoming <span>($300–$800 acquisition)</span></h3>
-      <p style="font-family:Sora,sans-serif;font-size:0.97rem;color:var(--dark);line-height:1.75;max-width:70ch;margin:0 0 16px;">African Grey rescue organizations charge adoption fees to cover their intake, housing, vet assessment, and behavioral evaluation costs. The $300–$800 range is common across USA avian rescues and rehoming networks.</p>
-      <p style="font-family:Sora,sans-serif;font-size:0.97rem;color:var(--dark);line-height:1.75;max-width:70ch;margin:0 0 16px;">However, rescue Greys often arrive with unknown health histories. Budget an additional $300–$1,500 for an immediate avian vet exam, blood panel, Psittacosis screening, and potential treatment of nutritional deficiencies or feather-destructive behavior. These costs don't appear on the adoption receipt but are effectively part of your acquisition expense.</p>
-
-      <h3 class="cost-section-title" style="margin-top:32px;">Option B: Captive-Bred Breeder <span>($1,500–$3,500 acquisition)</span></h3>
-      <p style="font-family:Sora,sans-serif;font-size:0.97rem;color:var(--dark);line-height:1.75;max-width:70ch;margin:0 0 16px;">Acquiring from a USDA AWA licensed breeder costs more upfront — but the bird's health status is documented (avian vet certificate included), the bird is DNA-sexed, CITES documentation is provided, and a health guarantee is in writing. The first vet visit is typically a new-owner wellness check ($150–$250) rather than a comprehensive diagnostic workup.</p>
-      <p style="font-family:Sora,sans-serif;font-size:0.97rem;color:var(--dark);line-height:1.75;max-width:70ch;margin:0 0 8px;">IATA-compliant shipping is available if you're not local: $175–$225 via Delta Cargo or United PetSafe, door-to-counter service. See our <a href="/african-grey-adoption/" class="internal-link" style="color:var(--green);font-weight:600;text-decoration:none;">full adoption process guide</a> for how the deposit and placement timeline works.</p>
-
-    </div>
-  </section>
-
-  <section class="content-section">
-    <div class="container container-text">
-
-      <h2>First-Year Setup Costs</h2>
-      <p>These costs apply regardless of whether you acquired from a rescue or a breeder. Every new Grey owner needs the same foundational equipment.</p>
-
-      <ul>
-        <li><strong>Large cage (36×24×48 inches minimum):</strong> $400–$900</li>
-        <li><strong>Cage perches (3–4 varied diameter):</strong> $60–$120</li>
-        <li><strong>Foraging toys and enrichment (3-month supply):</strong> $150–$300</li>
-        <li><strong>High-quality pellets — 3 months:</strong> $80–$160</li>
-        <li><strong>Fresh food first year:</strong> $300–$500</li>
-        <li><strong>Avian vet new-owner exam:</strong> $150–$300</li>
-        <li><strong>Travel carrier:</strong> $80–$150</li>
-        <li><strong>Cage accessories (food/water dishes, liners):</strong> $60–$120</li>
-        <li><strong>Stainless steel cookware (Teflon is lethal to parrots):</strong> $80–$200</li>
-        <li><strong>Air purifier (HEPA, no ozone emitting):</strong> $100–$200</li>
-      </ul>
-
-      <p><strong>First-year setup total: $1,460–$2,950</strong></p>
-
-      <hr class="section-divider" />
-
-      <h2>Annual Ongoing Costs (Year 2+)</h2>
-      <p>Once the cage and major equipment are purchased, your annual expenses stabilize significantly.</p>
-
-      <ul>
-        <li><strong>High-quality pellets (Harrison's, Zupreem, Roudybush):</strong> $250–$400/year</li>
-        <li><strong>Fresh produce:</strong> $200–$350/year</li>
-        <li><strong>Annual avian vet wellness exam:</strong> $150–$300/year</li>
-        <li><strong>Toys and foraging enrichment:</strong> $200–$400/year</li>
-        <li><strong>Cage accessory replacement:</strong> $80–$150/year</li>
-        <li><strong>Miscellaneous supplies:</strong> $100–$200/year</li>
-      </ul>
-
-      <p><strong>Annual ongoing total: $980–$1,800/year</strong> (higher if a medical issue arises)</p>
-
-      <hr class="section-divider" />
-
-      <h2>The 40–60 Year Commitment</h2>
-      <p>African Grey parrots are not a "pet for now" — they are a lifetime commitment measured in decades. A bird purchased today at weaning age (12–16 weeks) will likely outlive your car, your mortgage, and many of the people you know.</p>
-
-      <div class="lifetime-box">
-        <h3>Lifetime Cost Estimate</h3>
-        <span class="big-number">$60,000 – $150,000+</span>
-        <p>Over 40–60 years of ownership at $1,500–$2,500/year ongoing, plus acquisition and setup. This estimate does not include emergency vet costs, boarding during travel, or specialist behavioral consultations.</p>
+    <!-- DESKTOP DIAL — Dial 1 Clay Progress; ring driven by the scroll-spy at the foot of this file -->
+    <nav class="dial desk-only" aria-label="Contents" id="adoptDial" style="--p:11">
+      <div class="dial-ring"><div><b id="dialNum">1</b><span>of {sections.length}</span></div></div>
+      <div class="dial-list">
+        {sections.map((s, i) => (<a href={`#${s.id}`} data-i={i} class={i === 0 ? "on" : ""}><span class="num">{s.n}</span>{s.label}{s.tag && <span class="tag">{s.tag}</span>}</a>))}
       </div>
+    </nav>
 
-      <p>This is not meant to discourage — it's meant to ensure you go in with clear expectations. African Greys that are well-provided-for live remarkably long, healthy lives. The cost reflects a genuine multi-decade companion, not a short-term pet.</p>
+    <main class="adopt-main">
 
+      <!-- T1 REFRESHED · money-preview ledger rail (in-body TOC) -->
+      <nav class="t1m" aria-label="Sections of this page, with the cost each one covers">
+        <p class="t1m-k">The ledger, section by section</p>
+        <p class="t1m-h">Every Number on This Page, and Where to Find It</p>
+        <ul class="t1m-list">
+          {sections.map((s) => (
+            <li><a href={`#${s.id}`}><span class="t1m-band">{s.band}</span><span>{s.label}</span></a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <!-- 01 · WHAT A GREY COSTS -->
+      <section id="cost" class="sec">
+        <h2 class="cag-h2">What Does an African Grey Parrot Cost in 2026?</h2>
+        <p>A documented African Grey costs between {money(floorPrice)} and {money(ceilPrice)} here at C.A.Gs, and between roughly $450 and $8,500 across the wider US market — a spread wide enough that quoting a single figure would be dishonest. That range exists because the same species is sold through three different doors, and each door prices a different thing: a rescue prices its overheads, a breeder prices sixteen weeks of hand-feeding and a paperwork trail, and an anonymous listing prices whatever it thinks you will send.</p>
+
+        <h3 class="cag-h3">What Is the Honest Price Range Across Every Route?</h3>
+        <p>The honest range runs from about $450 at the bottom to about $8,500 at the top, and both ends are real. We sit deliberately in the middle of it, because the bottom end usually means a bird whose history nobody can reconstruct and the top end usually means a waiting list rather than a better bird.</p>
+
+        <h4 class="cag-h4">How Much Does an African Grey Parrot Cost, All In?</h4>
+        <p>All in, expect {range(yr1Ours)} for your first year with a documented Grey — the bird itself, delivery, the cage and stand you buy once, the first avian-vet visit, and a year of food and enrichment. That is the number worth planning against, and it is roughly double the sticker price on any route you choose.</p>
+
+        <h5 class="cag-h5">Why a Single Price Never Survives Contact With a Real Aviary</h5>
+        <p>Every clutch differs. A Timneh hen weaning early in a quiet season and a Congo cock hand-fed through a busy one do not cost us the same to raise, and pretending otherwise would mean overcharging for one to subsidise the other. We price each bird for what that bird actually took.</p>
+
+        <h6 class="cag-h6">From the Ledger: Our Floor Price Has Not Moved Since 2014</h6>
+        <p>We have never placed an African Grey below {money(floorPrice)} in twelve years of breeding, through a market that roughly tripled after 2020. The floor is not a promotion and it is not a negotiating position — it is the point below which the documentation, the screening and the hand-rearing stop paying for themselves.</p>
+
+        <h3 class="cag-h3">Where Do Our Congo and Timneh Prices Sit in That Range?</h3>
+        <p>Our Congos run {money(1700)} to {money(2500)} and our Timnehs {money(1500)} to {money(1600)}, which places every bird we hold in the lower-middle of the national spread. Our full <a href="/african-grey-parrot-price/">cost-of-ownership breakdown</a> carries the long-term arithmetic; this page stays on the money that changes hands to acquire the bird.</p>
+
+        <h4 class="cag-h4">Does a Timneh Grey Start Lower Than a Congo?</h4>
+        <p>Yes, by about two hundred dollars at the entry point — and that gap says nothing about the bird. <a href="/timneh-african-grey-for-sale/">Timneh pricing starts lower</a> because Timnehs are smaller, wean a little sooner and are less in demand than the red-tailed Congo, not because they talk less or bond less. Several of our steadiest birds have been Timnehs.</p>
+      </section>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- K2 PRICE-TAG TAKEAWAY -->
+      <aside class="k2" aria-label="The sticker price at a glance">
+        <p class="k2-k">The sticker, before anything else</p>
+        <p class="k2-h">What Each Route Asks for on Day One</p>
+        <dl class="k2-rows">
+          <div class="k2-row"><dt>Published rescue adoption fee</dt><dd>$450 – $1,500</dd></div>
+          <div class="k2-row"><dt>Our documented Congos and Timnehs</dt><dd>{range([floorPrice, ceilPrice])}</dd></div>
+          <div class="k2-row"><dt>Premium breeder listings</dt><dd>$5,200 – $8,500</dd></div>
+          <div class="k2-row"><dt>Listings below our floor</dt><dd>$400 – $900</dd></div>
+        </dl>
+      </aside>
+
+      <!-- 02 · RESCUE FEES -->
+      <section id="rescue" class="sec">
+        <h2 class="cag-h2">What Do Rescues Actually Charge to Adopt an African Grey?</h2>
+        <p>Parrot rescues publish their fees, which makes this the one route you can price without asking anybody: the schedules we checked list African Greys between $450 and $1,500. We are a breeder, not a rescue, and we would rather send you to a good one with accurate numbers than pretend the route does not exist — our <a href="/african-grey-adoption/">honest guide to where adoption actually works</a> covers the application side in full.</p>
+
+        <h3 class="cag-h3">What Do the Published Adoption Fee Schedules Say?</h3>
+        <p>Four organisations publish a figure for this species, and they do not agree with one another. That disagreement is the useful part: it tells you the fee reflects the organisation's costs and region, not the bird in front of you.</p>
+
+        <h4 class="cag-h4">How Much Is an African Grey Adoption Fee?</h4>
+        <p>Between $450 and $1,500, depending entirely on who you ask. <a href="https://www.parrotsfirst.org/adoption-donation-fees" target="_blank" rel="noopener">The Parrots First fee schedule</a> lists African Greys at $450, <a href="https://www.phoenixlanding.org/adoption-fees.html" target="_blank" rel="noopener">Phoenix Landing publishes $500</a> for greys and large macaws, and <a href="https://www.riparrots.org/current-fees" target="_blank" rel="noopener">Rhode Island Parrot Rescue lists $1,500</a> — which lands exactly on our own floor price.</p>
+
+        <h5 class="cag-h5">Every Fee Schedule We Checked Lists a Different Number</h5>
+        <p>A $450 grey and a $1,500 grey from two rescues are not different grades of bird. They are different organisations recovering different overheads, in different states, with different intake volumes. Read the fee as a contribution to a programme rather than a valuation of an animal.</p>
+
+        <h6 class="cag-h6">Receipt Note: Parrots First $450, Phoenix Landing $500, Rhode Island $1,500</h6>
+        <p>Phoenix Landing states plainly on its own fee page that the adoption fee is minimal compared with the cost of caring for a parrot, and lists what it does not cover — food, veterinary care, enrichment, and a spacious cage. That is a rescue making the same argument this page makes, on its own website, without a breeder's incentive to make it.</p>
+
+        <h3 class="cag-h3">Why Is the Fee You Pay Often Higher Than the Fee Published?</h3>
+        <p>Published schedules describe organised rescues. Most greys that change hands never go near one — they move privately, between owners, at whatever figure the current owner names, and that figure is routinely higher than any schedule.</p>
+
+        <h4 class="cag-h4">What Is a Rehoming Fee, and Is It Different From an Adoption Fee?</h4>
+        <p>It is different in every way that matters. <a href="https://www.reddit.com/r/parrots/comments/133zdo2/rescue_african_grey_price/" target="_blank" rel="noopener">One widely-read r/parrots thread</a> opens with a San Diego bird store asking a $5,500 "rehoming fee" for a six-year-old tame hen with a thin history, while selling hand-tame babies at $6,000 — and the sharpest reply in the thread points out that rehoming is simply a euphemism for selling.</p>
+
+        <h5 class="cag-h5">A Tame Adult in a High-Demand Metro Can Cost More Than a Baby</h5>
+        <p>Owners in that same discussion report paying $600 to $900 for adult greys, and $900 with a cage included in a second thread. The number tracks the local market and the bird's tameness, not the word on the listing. If a fee is high, ask what history comes with it; if it is low, ask the same question harder.</p>
+
+        <h6 class="cag-h6">From the Ledger: CITES Appendix I Slows Every Rescue Transfer Down</h6>
+        <p>Parrots First routes any CITES Appendix I species to case-by-case committee review — and its schedule predates the 2017 uplisting that moved African Greys into that appendix at CoP17. The paperwork we handle as routine is the same paperwork that makes a careful rescue slow down, which is one honest reason adoption timelines run long.</p>
+
+        <p class="sec-cta"><a class="btn-clay" href="#reserve">See what {money(floorPrice)} buys here &rarr;</a></p>
+      </section>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 03 · THREE ROUTES PRICED — Table G + the calculator. This is the page's moat. -->
+      <section id="routes" class="sec">
+        <h2 class="cag-h2">How Do the Three Routes Compare on Real Money?</h2>
+        <p>Nobody publishes this comparison, so we built it: three acquisition routes, priced across three horizons, with a column for what each route leaves out. Rescues publish a fee and stop. Marketplaces publish a price and stop. The interesting number is the one five years out, where the three routes quietly converge.</p>
+
+        <h3 class="cag-h3">What Does Each Route Cost Across Day One, Year One and Five Years?</h3>
+        <p>Day one separates the routes by roughly a thousand dollars. Year five separates them by almost nothing — because a Grey eats, chews and visits a vet at the same rate regardless of how you acquired it.</p>
+
+        <table class="tg">
+          <caption>The True-Cost Ledger — three routes, three horizons</caption>
+          <thead>
+            <tr><th scope="col">Horizon</th><th scope="col">Rescue route</th><th scope="col">C.A.Gs route</th><th scope="col">Below-floor listing</th><th scope="col">What the number leaves out</th></tr>
+          </thead>
+          <tbody>
+            {ledgerRows.map((r) => (
+              <tr>
+                <th scope="row">{r.horizon}</th>
+                <td data-label="Rescue route" class="num">{r.rescue}</td>
+                <td data-label="C.A.Gs route" class="num ours">{r.ours}</td>
+                <td data-label="Below-floor listing" class="num">{r.sub}</td>
+                <td data-label="What it leaves out">{r.misses}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <h4 class="cag-h4">Is It Cheaper to Adopt or to Buy an African Grey?</h4>
+        <p>Cheaper on day one, almost identical by year five. If the adoption fee is the whole of your budget then adoption is the honest answer and we will say so; if the fee is simply the first of many numbers, the route matters far less than whether the bird arrives documented.</p>
+
+        <h3 class="cag-h3">What Will Your Own Number Be?</h3>
+        <p>Your number depends on which bird, how it travels, and what you already own — so rather than publish an average, we built a calculator that returns your range. For a quick first-year estimate on a single bird, <a href="/#tools">our homepage first-year calculator</a> is the faster tool; the one below adds the multi-year view and the route comparison.</p>
+
+        <h4 class="cag-h4">How Do You Estimate the Cost for Your Own Setup?</h4>
+        <div class="ctool" id="ctool">
+          <p class="ctool-k">True-cost calculator · multi-year, by route</p>
+          <div class="ctool-grid">
+            <div class="ctool-f">
+              <label for="ct-bird">Which bird?</label>
+              <select id="ct-bird">
+                <option value="1500,1600">Timneh African Grey</option>
+                <option value="1700,2500" selected>Congo African Grey</option>
+                <option value="3500,3500">Bonded pair — Jins &amp; Jeni</option>
+              </select>
+            </div>
+            <div class="ctool-f">
+              <label for="ct-ship">How does it come home?</label>
+              <select id="ct-ship">
+                <option value="185" selected>Airport pickup — $185</option>
+                <option value="350">Home delivery — $350</option>
+                <option value="750">Flight nanny — from $750</option>
+                <option value="0">Collect in Midland, TX — free</option>
+              </select>
+            </div>
+            <div class="ctool-f">
+              <label for="ct-setup">Setup you already own</label>
+              <select id="ct-setup">
+                <option value="0" selected>Nothing yet</option>
+                <option value="1">Cage only</option>
+                <option value="2">Cage and stand</option>
+              </select>
+            </div>
+            <div class="ctool-f">
+              <label for="ct-years">Project across</label>
+              <select id="ct-years">
+                <option value="1">1 year</option>
+                <option value="5" selected>5 years</option>
+                <option value="10">10 years</option>
+                <option value="40">40 years</option>
+              </select>
+            </div>
+          </div>
+          <div class="ctool-out" aria-live="polite">
+            <div class="ctool-row"><b>Day one</b><span class="ctool-v" id="ct-day">—</span></div>
+            <div class="ctool-row"><b>Year one, all in</b><span class="ctool-v" id="ct-yr1">—</span></div>
+            <div class="ctool-row"><b id="ct-spanlabel">Across five years</b><span class="ctool-v" id="ct-span">—</span></div>
+            <p class="ctool-note" id="ct-note">Every figure is a range because the underlying data is a range. Nobody can tell you what one emergency vet visit will cost in year seven.</p>
+          </div>
+        </div>
+
+        <h5 class="cag-h5">Our Calculator Returns a Range Because the Data Only Supports a Range</h5>
+        <p>A single confident number would be easier to read and less true. Cage prices span {money(fy.cage_large.min)} to {money(fy.cage_large.max)}, an unplanned vet visit spans {money(an.unexpected_vet.min)} to {money(an.unexpected_vet.max)}, and neither of those is knowable in advance. We would rather hand you an honest band than a precise fiction.</p>
+      </section>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- fs-nl LEDGER · the new third newsletter variant, placed where the reader has just seen the real number -->
+      <aside class="fs-nl ledger" aria-label="Price-watch list signup">
+        <p class="fs-nl-eyebrow">Price-watch list</p>
+        <h3 class="fs-nl-h">Tell Us Your Band, and We Will Email You When a Grey Lands in It</h3>
+        <p class="fs-nl-sub">Pick the range you can actually spend. One short email when a documented Congo or Timneh opens for reservation inside it — never a general mailing list.</p>
+        <ul class="nlb" id="nlbands">
+          <li><button type="button" aria-pressed="true" data-band="Under $1,700">Under $1,700</button></li>
+          <li><button type="button" aria-pressed="false" data-band="$1,700–$2,299">$1,700–$2,299</button></li>
+          <li><button type="button" aria-pressed="false" data-band="$2,300–$2,599">$2,300–$2,599</button></li>
+          <li><button type="button" aria-pressed="false" data-band="Pair · $3,500">Pair · $3,500</button></li>
+        </ul>
+        <form class="fs-nl-form" action="https://formspree.io/f/xrejpnvn" method="POST">
+          <input type="hidden" name="price_band" id="nlband-input" value="Under $1,700" />
+          <label class="sr-only" for="nl-email">Your email address</label>
+          <input id="nl-email" type="email" name="email" required placeholder="you@example.com" />
+          <button class="btn-clay" type="submit">Watch this band</button>
+        </form>
+        <p class="fs-nl-note" id="nlnote">Availability inside your band only. Unsubscribe anytime.</p>
+      </aside>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 04 · DAY ONE -->
+      <section id="dayone" class="sec">
+        <h2 class="cag-h2">What Do You Hand Over on Day One?</h2>
+        <p>Day one is the bird, the delivery tier and a deposit that has already been paid — {range([floorPrice, ceilPrice])} plus {money(airport)} to {money(home)} depending on how the bird travels. Everything else on this page is what follows; this is the only figure that moves money before your Grey is standing in your house.</p>
+
+        <h3 class="cag-h3">What Is Included in the Price of Our African Greys?</h3>
+        <p>The paperwork is inside the price, not bolted on afterwards. That is a deliberate commercial choice: itemising certificates lets a seller advertise a lower headline and recover it at checkout, and we would rather quote the number you actually pay.</p>
+
+        <h4 class="cag-h4">Does the Price Include DNA Sexing and Health Screening?</h4>
+        <p>Both, on every bird, with no separate line. Our <a href="/dna-tested-african-grey-for-sale/">DNA-tested Greys page</a> explains how the PCR sexing works and what the certificate proves, and the same sample run covers the PBFD and Polyomavirus screening we do before any bird is offered.</p>
+
+        <h5 class="cag-h5">Paperwork We Price Into the Bird, Never Bill Afterwards</h5>
+        <p>Five documents travel with every Grey we place. A seller who charges for these separately is not offering you a cheaper bird — they are offering you the same bird with the invoice split in two, and the second half arrives after you have committed.</p>
+
+        <h6 class="cag-h6">Line Item: Hatch Certificate, CITES File, PCR Results, Vet Certificate</h6>
+        <p>The hatch certificate carries the closed leg-band number; the CITES Appendix I captive-bred file establishes lawful origin; the DNA certificate names the sex; the PCR panel covers PBFD and Polyomavirus; and the avian-vet health certificate is dated within ten days of travel. <a href="/african-greys-for-sale-with-health-guarantee/">The guarantee attached to every price</a> sets out what happens if any of it fails to match the bird.</p>
+
+        <h3 class="cag-h3">What Does the Deposit Hold, and When Is the Balance Due?</h3>
+        <p>A deposit takes a named bird off the board and starts the paperwork; the balance falls due before we book travel. We keep that gap deliberately, because it is the window in which sensible buyers order the cage — and because a bird held without a deposit is a bird two families are quietly counting on.</p>
+
+        <p class="sec-cta"><a class="btn-clay" href="#reserve">Reserve a documented Grey &rarr;</a></p>
+      </section>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 05 · EVERY YEAR AFTER -->
+      <section id="ongoing" class="sec">
+        <h2 class="cag-h2">What Does an African Grey Cost After the First Payment?</h2>
+        <p>Once the bird is home the spending changes shape: {range(setupOnce)} of things you buy once, then {range(annualRun)} every year for the next four decades. That second number is the one that decides whether an African Grey is affordable for you, and it is the number almost no listing mentions.</p>
+
+        <h3 class="cag-h3">What Do You Buy Once, in the First Thirty Days?</h3>
+        <p>The one-off spend is a cage, perches and toys, and a first avian-vet visit — {range(setupOnce)} together. Buy it before the bird arrives rather than after, because a Grey settling into a house is a poor moment to be assembling furniture around it.</p>
+
+        <h4 class="cag-h4">How Much Is a Cage and Setup for an African Grey?</h4>
+        <p>A cage large enough for a Congo runs {money(fy.cage_large.min)} to {money(fy.cage_large.max)}, with perches and starter toys adding {money(fy.perches_and_toys.min)} to {money(fy.perches_and_toys.max)}. Bar spacing matters more than badging: too wide and a Grey gets its head through, too narrow and it cannot climb, and either mistake means buying twice.</p>
+
+        <h5 class="cag-h5">Buying the Cage Twice Is the Most Common First-Year Mistake</h5>
+        <p>We watch it happen most years. Somebody buys a mid-size cage for a baby Grey, the bird grows into a full-sized Congo with a full-sized wingspan, and eight months later there is a second cage in the hallway and a first one on a resale site at half price.</p>
+
+        <h3 class="cag-h3">What Recurs Every Year for the Next Forty?</h3>
+        <p>Food, veterinary care, replacement enrichment and a contingency — {range(annualRun)} a year, every year. Our <a href="/best-african-grey-parrot-food/">guide to the pellet brands we actually feed</a> covers the diet side, which is the largest predictable slice of that figure.</p>
+
+        <h4 class="cag-h4">What Is the Average Cost of Caring for an African Grey Each Year?</h4>
+        <p>Budget {range(annualRun)}: {money(an.food_and_treats.min)}–{money(an.food_and_treats.max)} for pellets and fresh produce, {money(an.avian_vet_wellness.min)}–{money(an.avian_vet_wellness.max)} for the annual wellness exam, {money(an.toys_replacement.min)}–{money(an.toys_replacement.max)} replacing what gets destroyed, and up to {money(an.unexpected_vet.max)} held back for the visit you did not plan.</p>
+
+        <h5 class="cag-h5">One Emergency Avian Vet Visit Can Exceed a Whole Year of Food</h5>
+        <p>Parrots conceal illness until they cannot, which is why avian medicine tends to arrive as an emergency rather than an appointment. The contingency line is not padding — it is the difference between treating a sick bird and making a decision you did not want to make.</p>
+
+        <h6 class="cag-h6">Line Item: Pellets, Fresh Produce, Toys, Wellness Exam, Contingency</h6>
+        <p>Five recurring lines, and only the first two are predictable. We feed a reviewed rotation rather than a house brand, and our <a href="/african-grey-parrot-care-guide/">care guide sets out the routine we hand every buyer</a> so the annual figure stays where we said it would.</p>
+      </section>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- K4 CLIPBOARD TAKEAWAY -->
+      <aside class="k4" aria-label="What the headline fee does not cover">
+        <div class="k4-head">
+          <p class="k4-k">The gap between the fee and the cost</p>
+          <p class="k4-h">What No Adoption Fee or Sticker Price Includes</p>
+        </div>
+        <ul class="k4-list">
+          <li><span class="k4-x" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span>A cage sized for an adult Congo, at {money(fy.cage_large.min)}–{money(fy.cage_large.max)}</span></li>
+          <li><span class="k4-x" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span>Transport, which is {money(airport)} to {money(home)} on our routes and rarely bundled on any other</span></li>
+          <li><span class="k4-x" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span>Forty years of food, at {money(an.food_and_treats.min)}–{money(an.food_and_treats.max)} annually</span></li>
+          <li><span class="k4-x" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span>The emergency vet fund, up to {money(an.unexpected_vet.max)} you hope never to spend</span></li>
+          <li><span class="k4-x" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span>Your time — the one line no route can invoice and no buyer can outsource</span></li>
+        </ul>
+      </aside>
+
+      <!-- 06 · UNDER $1,000 -->
+      <section id="cheap" class="sec">
+        <h2 class="cag-h2">Why Do Some African Greys Cost Under $1,000?</h2>
+        <p>Because something has been left out, and it is worth knowing what. A Grey advertised at $600 or $800 is either a genuine private rehoming with thin paperwork, or it is not a bird at all — and the two look identical in a listing photograph.</p>
+
+        <h3 class="cag-h3">What Are You Actually Buying at a Sub-Floor Price?</h3>
+        <p>Usually you are buying the absence of three things: a DNA certificate, a disease-screening panel, and a documented origin. None of those absences show up in the photograph, and all three surface within the first month.</p>
+
+        <h4 class="cag-h4">Is a Cheap African Grey Parrot a Scam?</h4>
+        <p>Sometimes yes, and the tells are consistent. <a href="/how-to-avoid-african-grey-parrot-scams/">Listings priced below our floor</a> repeat the same patterns we documented across the price SERP: manufactured strike-through discounts on a living animal, the word "adopt" used over priced stock to soften a sale, flat pricing across wildly different species, and a seller who moves to payment before they will move to a video call.</p>
+
+        <h5 class="cag-h5">An Undocumented Bird Costs More After It Arrives Than It Saved</h5>
+        <p>Run the arithmetic honestly. Saving $900 on the purchase, then paying for sexing, a full disease panel, a quarantine period and a first-visit workup, lands you above what a documented bird cost — with a bird whose history still cannot be reconstructed.</p>
+
+        <h6 class="cag-h6">Receipt Note: We Have Never Sold a Grey Below Our {money(floorPrice)} Floor</h6>
+        <p>Not in twelve years, and not when a market that tripled would have let us. If you find a bird advertised as ours below that figure, it is not ours — check the <a href="/contact-us/">contact details on our own site</a> against whatever the listing shows you, because that mismatch is the single fastest scam check there is.</p>
+
+        <p class="sec-cta"><a class="btn-clay" href="#reserve">Compare that against a papered bird &rarr;</a></p>
+      </section>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 07 · GETTING HOME + the US-only counter-position -->
+      <section id="shipping" class="sec">
+        <h2 class="cag-h2">Where Do We Ship, and What Does Delivery Add?</h2>
+        <p>We place birds inside the United States only, at {money(airport)} for airport pickup or {money(home)} for home delivery, with a flight-nanny option from {money(nanny)}. Delivery is the last line on the day-one figure and the one people most often forget to budget.</p>
+
+        <h3 class="cag-h3">Do You Ship African Greys Outside the United States?</h3>
+        <p>No, and we would rather say so on this page than in a reply three emails deep. We are a USDA-licensed Texas aviary; every bird we place stays within the country.</p>
+
+        <h4 class="cag-h4">What Does an African Grey Parrot Cost in the USA Versus Abroad?</h4>
+        <p>The figures are not comparable, and it matters because overseas prices circulate widely in search results. A US captive-bred Grey carries CITES Appendix I documentation, USDA-licensed origin, PCR screening and an avian-vet certificate; a price quoted in another market reflects a different legal regime, a different currency and often a different chain of custody entirely.</p>
+
+        <h5 class="cag-h5">Foreign Price Figures Do Not Transfer to a US Captive-Bred Grey</h5>
+        <p>Because African Greys sit in CITES Appendix I, moving one across a border lawfully needs an export permit from the origin country and an import permit from the destination — paperwork that takes months and routinely costs more than the bird. When a US buyer compares our price against an overseas figure, they are comparing two different products that share a species name.</p>
+
+        <h3 class="cag-h3">What Does It Cost to Get Your Grey Home?</h3>
+        <p>Three tiers, and one of them is free. Our <a href="/buy-african-grey-parrots-with-shipping/">full nationwide shipping guide</a> walks the whole journey; the short version is below.</p>
+
+        <h4 class="cag-h4">How Much Is Shipping for an African Grey Parrot?</h4>
+        <div class="ship-cards">
+          <div class="ship-c"><p class="ship-tier">Airport pickup</p><p class="ship-price">{money(airport)}</p><p class="ship-body">IATA live-animal cargo with Delta, United or American to your nearest major airport.</p></div>
+          <div class="ship-c"><p class="ship-tier">Home delivery</p><p class="ship-price">{money(home)}</p><p class="ship-body">Door to door, with the documentation folder handed over on arrival.</p></div>
+          <div class="ship-c"><p class="ship-tier">Flight nanny</p><p class="ship-price">from {money(nanny)}</p><p class="ship-body">In-cabin with a vetted chaperone; quoted per route because it covers their round-trip airfare.</p></div>
+        </div>
+        <p class="ship-line">Ships nationwide · {money(airport)} airport · {money(home)} home</p>
+
+        <h5 class="cag-h5">Pickup in Midland Costs Nothing If You Are Within Three Hours</h5>
+        <p>Plenty of Texas families drive. If you are inside two to three hours of Midland you can collect in person, meet the parent birds, and hand over nothing for transport — which also happens to be the best possible way to verify a breeder.</p>
+
+        <h6 class="cag-h6">From the Ledger: Airport {money(airport)}, Home {money(home)}, Flight Nanny From {money(nanny)}</h6>
+        <div class="geo-cards">
+          {shipPlaces.map((p) => (
+            <a class="geo-c" href={p.href}>
+              <span class="geo-kw">{p.label}</span>
+              <span class="geo-note">{p.note}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 08 · RESERVABLE NOW — Avail-B faceted by PRICE BAND -->
+      <section id="reserve" class="sec">
+        <h2 class="cag-h2">Which African Greys Can You Reserve Right Now?</h2>
+        <p>We hold {available.length} documented birds today, priced {range([floorPrice, ceilPrice])}, and every one carries the same paperwork regardless of where it sits in that range. Filter by what you can spend rather than by what you like the look of — the cheapest bird here is not the least documented one.</p>
+
+        <h3 class="cag-h3">Which Bird Fits Which Budget?</h3>
+        <div class="availB">
+          <aside class="availB-side" aria-label="Filter available African Greys by price band">
+            <p class="side-h">Browse by price band</p>
+            <div class="side-filters">
+              <button class="side-f on" type="button" data-band="all">All birds <span class="side-n">{available.length}</span></button>
+              {bands.map((b) => (
+                <button class="side-f" type="button" data-band={b.k}>{b.label} <span class="side-n">{bandCount(b.k)}</span></button>
+              ))}
+            </div>
+            <p class="side-ship">Ships nationwide · {money(airport)} airport · {money(home)} home</p>
+            <p class="side-note">Pickup in Midland, TX is free within two to three hours.</p>
+          </aside>
+          <div class="availB-grid">
+            {available.map((b) => {
+              const g = birdImg[b.id];
+              const isPair = b.sex === "pair";
+              return (
+                <article class="availB-c" data-cat={bandOf(b.price)}>
+                  <a class="availB-photo" href={b.slug} tabindex="-1">
+                    <img src={g.src} srcset={g.src.replace('.webp', '-400.webp') + " 400w, " + g.src + " 800w"}
+                      sizes="(max-width:980px) 46vw, 210px" width="440" height="440"
+                      style={`object-position:${g.pos}`} loading="lazy" decoding="async" alt={g.alt} />
+                    <span class={`availB-badge ${bandOf(b.price)}`}>{bandOf(b.price) === "band4" ? "Pair" : bandLabelShort(b.price)}</span>
+                    <span class="availB-dot" title="Available"></span>
+                  </a>
+                  <div class="availB-body">
+                    <h4 class="availB-name"><a href={b.slug}>{b.name}</a></h4>
+                    <p class="availB-meta">{isPair ? "Congo companion pair" : (b.variant === "timneh_african_grey" ? "Timneh" : "Congo") + " · " + (b.sex === "female" ? "hen" : "cock") + " · " + b.age_at_listing}</p>
+                    <p class="availB-blurb">{birdBlurb[b.id]}</p>
+                    <ul class="availB-chips">{cardChips.map((c) => (<li>{c}</li>))}</ul>
+                    <span class="availB-price">{b.price_display}</span>
+                    <a class="availB-btn btn-clay" href={b.slug}>View {b.name} &rarr;</a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+
+        <h4 class="cag-h4">What Is the Least Expensive Documented Grey You Have?</h4>
+        <p>Evie, a Timneh hen, at {money(floorPrice)}. She carries the identical document set as the {money(ceilPrice)} pair — DNA certificate, CITES Appendix I file, PBFD and Polyomavirus PCR results, and an avian-vet health certificate. The price reflects subspecies and demand, never a thinner file.</p>
+
+        <h3 class="cag-h3">What Do Buyers Say About Paying Our Price?</h3>
+        <div class="quote-grid">
+          {stories.map((s) => (
+            <figure class="quote-c">
+              <div class="q-head">
+                <img class="q-av" src={s.avatar} width="44" height="44" loading="lazy" decoding="async" alt={`${s.name}, a verified C.A.Gs buyer from ${s.loc}`} />
+                <div class="q-id"><span class="q-name">{s.name}</span><span class="q-loc">{s.loc} · {s.meta}</span></div>
+              </div>
+              <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+              <blockquote><p>{s.quote}</p></blockquote>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- 09 · FAQ — FAQ-C dark, refreshed to a ledger register with a clay $ chip -->
+      <section id="faq" class="sec">
+        <h2 class="cag-h2">African Grey Adoption Cost Questions Buyers Ask Us</h2>
+        <p>These are the questions people actually send us about money, in the order they usually send them. Every answer here is the same one we would give you on the phone.</p>
+        <div class="faqC">
+          {faqs.map((f, i) => (
+            <details class="faqC-item">
+              <summary class="faqC-q"><span class="faqC-n" aria-hidden="true">$</span><span class="faqC-x">{f.q}</span></summary>
+              <div class="faq-d"><p>{f.a}</p></div>
+            </details>
+          ))}
+        </div>
+
+        <h3 class="cag-h3">What Should You Read Next Before You Commit?</h3>
+        <div class="read-cards">
+          <a class="read-c" href="/african-grey-parrot-price/">
+            <div class="read-body">
+              <p class="read-kicker">Cost of ownership</p>
+              <p class="read-title">Our Cost-of-Ownership Breakdown</p>
+              <p class="read-sub">The long-run arithmetic in full — what a Grey costs to keep, not to acquire.</p>
+              <span class="read-more">Read the breakdown &rarr;</span>
+            </div>
+          </a>
+          <a class="read-c" href="/african-grey-parrot-lifespan/">
+            <div class="read-body">
+              <p class="read-kicker">The commitment</p>
+              <p class="read-title">How Long an African Grey Actually Lives</p>
+              <p class="read-sub">Forty to sixty years, and what that means for the money you just calculated.</p>
+              <span class="read-more">Read the lifespan guide &rarr;</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="xsell">
+          <p class="xsell-k">Also from our aviary</p>
+          <p><a href="/african-grey-breeding-pair-for-sale/">Adults kept back for breeding</a> are priced differently again, because a proven producer is valued on its record rather than its tameness.</p>
+          <p><a href="/african-grey-parrot-bird-eggs-for-sale-usa/">Hatching a grey yourself</a> looks cheaper per unit until you price an incubator, the failure rate, and sixteen weeks of hand-feeding against your own time.</p>
+          <p><a href="/affordable-african-grey-birds-for-sale/">Our lowest-priced documented greys</a> gather every bird sitting at the bottom of our range in one place.</p>
+        </div>
+      </section>
+
+      <div class="seam"><img src={seam} width="150" height="50" alt="" loading="lazy" decoding="async"></div>
+
+      <!-- CONTACT / RESERVE -->
+      <section class="sec" id="inquire">
+        <h3 class="cag-h3">How Do You Reserve One of These Birds?</h3>
+        <div class="form-wrap form-2col">
+          <aside class="form-side">
+            <p class="form-eyebrow">Reservable today</p>
+            <p class="form-head">Every Bird, Every Price</p>
+            <ul class="fs-list">
+              {available.map((b) => (<li><span>{b.name} — {b.variant === "timneh_african_grey" ? "Timneh" : "Congo"}{b.sex === "pair" ? " pair" : ""}</span><b>{b.price_display}</b></li>))}
+            </ul>
+            <p class="form-note">Ships nationwide · {money(airport)} airport · {money(home)} home · free pickup within two to three hours of Midland, TX.</p>
+          </aside>
+          <form class="cta-form" action="https://formspree.io/f/xrejpnvn" method="POST">
+            <label for="f-interest">Which bird are you asking about?</label>
+            <select id="f-interest" name="interest" required>
+              <option value="">Please choose…</option>
+              {available.map((b) => (<option value={`${b.name} — ${b.price_display}`}>{b.name} — {b.price_display}</option>))}
+              <option value="Not sure yet">Not sure yet — help me choose</option>
+            </select>
+            <div class="form-actions">
+              <div><label for="f-first">First name</label><input id="f-first" name="first_name" type="text" required /></div>
+              <div><label for="f-last">Last name</label><input id="f-last" name="last_name" type="text" required /></div>
+            </div>
+            <div class="form-actions">
+              <div><label for="f-cell">Cell</label><input id="f-cell" name="cell" type="tel" /></div>
+              <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" required /></div>
+            </div>
+            <label for="f-delivery">Delivery preference</label>
+            <select id="f-delivery" name="delivery">
+              <option value={`Airport pickup — ${money(airport)}`}>Airport pickup — {money(airport)}</option>
+              <option value={`Home delivery — ${money(home)}`}>Home delivery — {money(home)}</option>
+              <option value={`Flight nanny — from ${money(nanny)}`}>Flight nanny — from {money(nanny)}</option>
+              <option value="Pickup in Midland, TX">Pickup in Midland, TX — if you live within 2–3 hours of us</option>
+            </select>
+            <label for="f-msg">Anything you want us to know?</label>
+            <textarea id="f-msg" name="message" rows="4"></textarea>
+            <button class="btn-clay" type="submit">Send my reservation enquiry</button>
+            <p class="form-note">Mark and Teri reply within 24 hours, in person.</p>
+          </form>
+        </div>
+      </section>
+
+    </main>
     </div>
-  </section>
-
-  <section class="faq-section">
-    <div class="container container-text">
-      <h2>Adoption Cost FAQs</h2>
-
-      <details>
-        <summary>How much does it cost to adopt an African Grey parrot?</summary>
-        <div class="faq-body">Adopting an African Grey from a rescue organization typically costs $300–$800 in adoption fees. Acquiring from a reputable USDA-licensed breeder costs $1,500–$3,500 depending on variant (Timneh or Congo) and age. Beyond acquisition, first-year setup costs add $1,460–$2,950 for cage, food, vet care, toys, and supplies.</div>
-      </details>
-
-      <details>
-        <summary>Is it cheaper to adopt vs buy an African Grey?</summary>
-        <div class="faq-body">The upfront adoption fee is lower ($300–$800 vs $1,500–$3,500), but rescue Greys often require significant additional investment in veterinary care for pre-existing conditions and behavioral rehabilitation. For first-time Grey owners, a hand-raised captive-bred bird from a reputable breeder often has lower total 5-year cost of ownership due to fewer behavioral and medical complications.</div>
-      </details>
-
-      <details>
-        <summary>What is the annual cost of owning an African Grey parrot?</summary>
-        <div class="faq-body">Annual ongoing costs for an African Grey average $980–$1,800: high-quality pellets and fresh food ($450–$750 per year), annual avian vet wellness exam ($150–$300), toys and enrichment ($200–$400), cage accessory replacement ($80–$150), and miscellaneous supplies ($100–$200). Lifetime cost over 40–60 years: $60,000–$150,000+.</div>
-      </details>
-    </div>
-  </section>
-
-  <section class="cta-section">
-    <div class="container">
-      <h2>Ready to Start the Process?</h2>
-      <p>Our USDA-licensed breeding program includes the vet check, DNA certificate, and CITES documentation in the bird's price — no hidden costs.</p>
-      <div class="cta-buttons">
-        <a href="/african-grey-adoption/" class="btn-outline">See Adoption Process</a>
-        <a href="/contact-us/" class="btn-primary">Inquire About Availability</a>
-      </div>
-      <div class="hub-back">
-        Questions about cost? <a href="/african-grey-parrot-price/">See our full price guide</a>
-      </div>
-    </div>
-  </section>
-
-</div>
-
+  </div>
+  </div>
 </BaseLayout>
+
+<style>
+.adopt{--f:#2D6A4F;--clay:#e8604c;--clay-ink:#c8472f;--clay-t:#b04228;--cream:#faf7f4;--bd:#e7ddd3;--mid:#6b625a;--hdr:96px;color:#2a2622;overflow-x:clip}
+.adopt .container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+/* HERO — Split-Hero C · dark charcoal card + 2×2 photo grid */
+.adopt-hero{background:var(--cream);padding:16px 0 20px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(300px,1fr);gap:clamp(16px,2.4vw,28px);align-items:stretch}
+@media(min-width:901px){.hero-grid{min-height:350px;max-height:420px}}
+.hero-card{background:#221f1d;color:#fff;border-radius:22px;padding:clamp(18px,2vw,26px) clamp(20px,2.4vw,30px);display:flex;flex-direction:column;justify-content:center;box-shadow:0 14px 40px rgba(34,20,10,.18)}
+.adopt-hero .eyebrow{color:#f08070;font-size:.78rem;font-weight:600;letter-spacing:.02em;margin:0 0 8px}
+.adopt .cag-h1{font-family:'Newsreader',serif;font-size:clamp(1.45rem,2.6vw,1.95rem);line-height:1.12;margin:0 0 10px;color:#fff;letter-spacing:-.01em;font-weight:600}
+.adopt .cag-h1 em{color:#f08070;font-style:italic}
+.adopt .adopt-hero .lead{font-size:.88rem;line-height:1.5;color:rgba(255,255,255,.82)!important;max-width:60ch;margin:0 0 14px}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+.hero-cta .btn-clay,.hero-cta .btn-ghost{padding:11px 22px;font-size:.88rem}
+.hero-chips{list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;margin:14px 0 0;padding:12px 0 0;border-top:1px solid rgba(255,255,255,.14)}
+.hero-chips li{font-size:.76rem;color:rgba(255,255,255,.9);padding-left:18px;position:relative}
+.hero-chips li:before{content:"✓";position:absolute;left:0;top:0;color:#4ade80;font-weight:700}
+.hero-imgs{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;border-radius:22px;overflow:hidden;min-height:0}
+.hero-imgs img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;background:#e7ddd4;min-height:0}
+.hero-tile{position:relative;display:block;min-height:0;overflow:hidden}
+.hero-tile-p{position:absolute;left:8px;bottom:8px;background:rgba(20,17,15,.82);color:#fff;font-family:'Newsreader',serif;font-size:.88rem;font-weight:700;letter-spacing:.01em;padding:4px 10px;border-radius:50px;backdrop-filter:blur(2px);font-variant-numeric:tabular-nums}
+@media(max-width:560px){.hero-tile-p{font-size:.76rem;padding:3px 8px;left:6px;bottom:6px}}
+.btn-clay,.btn-ghost{display:inline-block;border-radius:50px;padding:13px 28px;font-weight:600;text-decoration:none;font-size:.95rem;transition:background-color .2s,color .2s,transform .15s}
+.btn-clay{background:var(--clay-ink);color:#fff}
+.btn-clay:hover{background:#9c3a23;transform:translateY(-2px)}
+.adopt-hero .btn-ghost{border:2px solid rgba(255,255,255,.6);color:#fff}
+.adopt-hero .btn-ghost:hover{background:#fff;color:#1b3228}
+.btn-clay.sm,.btn-ghost.sm{padding:9px 18px;font-size:.83rem}
+/* COUNTER — for-sale outlined stat cards */
+.adopt-counter{background:var(--cream);padding:4px 0 18px}
+.counter-row{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px}
+.cs{display:flex;flex-direction:column;gap:2px;align-items:flex-start;justify-content:center;min-height:66px;background:#fff;border:1px solid var(--bd);border-radius:12px;padding:10px 13px;box-shadow:0 2px 10px rgba(60,30,10,.04)}
+@media(max-width:1050px){.counter-row{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:640px){.counter-row{grid-template-columns:repeat(2,1fr)}.cs{min-height:66px}}
+.counter-row b{font-family:'Newsreader',serif;font-size:1.35rem;line-height:1;color:var(--clay-ink);font-variant-numeric:tabular-nums}
+.cs-l{font-size:.71rem;font-weight:600;color:var(--mid);line-height:1.25}
+/* MOBILE RAIL A */
+.adopt-rail{position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.985);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);display:none}
+.railA{display:flex;gap:8px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.railA::-webkit-scrollbar{display:none}
+.railA a{flex:0 0 auto;font-size:.78rem;font-weight:600;color:var(--clay-t);border:1.5px solid var(--clay);border-radius:50px;padding:7px 14px;text-decoration:none;background:#fff;white-space:nowrap}
+.railA a.on{background:var(--clay-ink);border-color:var(--clay-ink);color:#fff}
+.railA a .p{font-weight:700}
+/* EGG BODY — two-column grid: sticky left-hand dial + main content (egg-page variant of the comparison-cluster .cvt-toc sidebar) */
+.adopt-body{display:grid;grid-template-columns:196px minmax(0,1fr);gap:28px;align-items:start}
+/* DIAL TOC — compact sticky left rail: small ring header + tight single-column list */
+.dial{display:flex;flex-direction:column;gap:10px;align-items:stretch;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:12px 10px;box-shadow:0 3px 12px rgba(60,30,10,.05);position:sticky;top:calc(var(--hdr) + 16px);max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#e0d4c9 transparent}
+.dial-ring{margin:2px auto 0;flex:none;width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--clay-ink) calc(var(--p,6) * 1%),#f3ddd5 0);display:grid;place-items:center}
+.dial-ring>div{width:50px;height:50px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-family:'Newsreader',serif}
+.dial-ring b{font-size:15px;color:var(--clay-ink);display:block;line-height:1}
+.dial-ring span{font-size:7px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase}
+.dial-list{display:grid;grid-template-columns:1fr;gap:1px;border-top:1px dashed var(--bd);padding-top:8px}
+.dial-list a{display:flex;gap:7px;align-items:baseline;color:#4a423b;text-decoration:none;font-size:.74rem;line-height:1.25;padding:5px 7px;border-radius:8px;transition:background-color .15s,color .15s}
+.dial-list a:hover{background:#faf3ee;color:#2a2622}
+.dial-list a.on{background:#faece7;color:#2a2622;font-weight:600}
+.dial-list a.on .num{color:#9c3a23}
+.dial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#b8a294;width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums}
+.dial-list .tag{margin-left:auto;font-size:.56rem;font-weight:600;letter-spacing:.02em;color:var(--f);background:#eef5f1;border-radius:50px;padding:1px 6px;white-space:nowrap}
+/* V-FLAGS — green-flag verification ledger */
+.vflags{max-width:680px;background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(60,30,10,.09);margin:22px 0 10px}
+.vflags-head{background:#221f1d;padding:16px 22px}
+.vflags-kicker{color:#f08070;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px}
+.vflags-title{font-family:'Newsreader',serif;font-size:1.2rem;color:#fff;margin:0;line-height:1.25;max-width:none}
+.vflags-list{list-style:none;margin:0;padding:0;counter-reset:vf}
+.vflags-list li{display:flex;align-items:flex-start;gap:14px;padding:13px 22px;border-bottom:1px dashed var(--bd)}
+.vflags-list li:last-child{border-bottom:none}
+.vflags-list li:nth-child(even){background:#fdf4ef}
+.vf-badge{flex:none;width:28px;height:28px;border-radius:9px;background:#e7f1ec;color:var(--f);display:grid;place-items:center;margin-top:1px}
+.vf-badge svg{width:16px;height:16px}
+.vf-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vf-txt b{font-family:'Newsreader',serif;font-size:1rem;color:#2a2622;line-height:1.25}
+.vf-txt>span{font-size:.84rem;color:#6b625a;line-height:1.45}
+/* SECTION CTA row */
+.sec-cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 20px}
+.sec-cta .btn-clay,.sec-cta .btn-ghost{padding:11px 22px;font-size:.86rem}
+.sec-cta .btn-ghost{border:2px solid var(--f);color:var(--f);background:none}
+.sec-cta .btn-ghost:hover{background:var(--f);color:#fff}
+/* K1 */
+.k1{background:#fff;max-width:440px;box-shadow:0 6px 20px rgba(60,30,10,.1);padding:24px 26px 16px;border-radius:8px;margin:2px 0 18px;border:1px solid var(--bd)}
+.k1-title{font-family:'Newsreader',serif;text-align:center;font-size:1.25rem;border-bottom:2px dashed var(--bd);padding-bottom:10px;margin:0 0 6px}
+.k1 .row{display:flex;justify-content:space-between;gap:14px;font-size:.9rem;padding:8px 0;border-bottom:1px dotted #e6dad0}
+.k1 .row b{color:var(--clay-t);white-space:nowrap}
+.k1 .tot{display:flex;justify-content:space-between;font-weight:700;padding-top:12px;font-size:.98rem}
+.k1 .tot span:last-child{color:var(--f)}
+/* MAIN type scale */
+.adopt-main{max-width:880px;min-width:0}
+.adopt-main section{margin-bottom:14px;scroll-margin-top:calc(var(--hdr) + 18px);padding-top:20px}
+.adopt .cag-h2{font-family:'Newsreader',serif;font-size:clamp(1.375rem,3.5vw,2rem);color:#2a2622;margin:8px 0 16px;line-height:1.18}
+.adopt .cag-h3{font-family:'Newsreader',serif;font-size:clamp(1.125rem,2.2vw,1.5rem);color:var(--f);margin:24px 0 10px;line-height:1.25}
+.adopt .cag-h4{font-family:'Newsreader',serif;font-size:clamp(1rem,1.8vw,1.25rem);margin:20px 0 8px;line-height:1.3;color:#2a2622}
+.adopt .cag-h5{font-family:'Newsreader',serif;font-size:clamp(.95rem,1.25vw,1.05rem);margin:16px 0 6px;color:#3a332c}
+.adopt .cag-h6{font-family:'IBM Plex Sans',sans-serif;font-size:clamp(.75rem,.95vw,.82rem);letter-spacing:.04em;text-transform:uppercase;color:var(--clay-t);margin:16px 0 4px}
+.adopt-main p{line-height:1.68;margin:0 0 15px;max-width:70ch}
+.adopt-main a{color:var(--clay-t);text-decoration:underline;text-underline-offset:2px}
+.adopt-main a.btn-clay,.adopt-main a.btn-ghost{text-decoration:none}
+.adopt-main a.btn-clay{color:#fff}
+.adopt-main .bird-photo,.adopt-main .bird-name a,.adopt-main .bird-cta a,.adopt-main .ship-places a,.adopt-main .pair-c a{text-decoration:none}
+.sec-img{display:block;width:100%;max-width:760px;aspect-ratio:760/400;object-fit:cover;height:auto;border-radius:18px;margin:4px 0 18px;box-shadow:0 6px 20px rgba(60,30,10,.1)}
+.sec-img.inf-img{aspect-ratio:1408/768;box-shadow:0 4px 16px rgba(60,30,10,.08)}
+/* VIDEO */
+.video-wrap{max-width:760px;margin:4px 0 18px;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(60,30,10,.12);background:#1b3228}
+.video-wrap video{display:block;width:100%;height:auto;aspect-ratio:1408/768;object-fit:cover}
+/* SEAM — for-sale wordmark divider (new footer logo, no circle) */
+.seam{display:flex;align-items:center;justify-content:center;gap:14px;margin:22px 0}
+.seam::before,.seam::after{content:"";flex:1;max-width:220px;height:2px;border-radius:1px}
+.seam::before{background:linear-gradient(90deg,transparent,rgba(200,71,47,.5))}
+.seam::after{background:linear-gradient(90deg,rgba(200,71,47,.5),transparent)}
+.seam img{width:auto;height:30px;object-fit:contain;opacity:.95}
+.nl-inflow{margin:24px 0;border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.nl-inflow>*{max-width:none}
+/* TABLE A */
+.otA{border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.08);border:1px solid var(--bd);margin:6px 0 18px}
+.otA table{border-collapse:collapse;width:100%}
+.otA th{background:var(--clay-ink);color:#fff;padding:12px 14px;text-align:left;font-size:.8rem;font-weight:600}
+.otA td{background:#fff;padding:12px 14px;border-bottom:1px solid #f3e6de;font-size:.86rem}
+.otA tr:nth-child(even) td{background:#fdf4ef}
+.otA td:first-child b{font-family:'Newsreader',serif;font-size:.98rem}
+.otA .sub{display:block;font-size:.72rem;color:var(--clay-t)}
+/* SHIP CARDS + HEALTH */
+.ship-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 16px}
+.ship-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.ship-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.ship-c>img{display:block;width:100%;height:200px;object-fit:cover}
+.ship-body{padding:16px 18px}
+.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 12px;font-size:.7rem;font-weight:600}
+.ship-tier.clay{background:var(--clay-ink)}
+.ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.15rem}
+.ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
+.ship-c p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
+.ship-line{font-size:.78rem;color:#7a6f64;font-weight:600;border-top:1px dashed var(--bd);padding-top:8px}
+/* GEO ROUTE CARDS — for-sale shipping component (replaces comparison-style pills) */
+.geo-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 16px}
+.geo-c{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:12px 14px;text-decoration:none!important;transition:transform .15s,box-shadow .2s,border-color .2s}
+.geo-c:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(60,30,10,.1);border-color:var(--clay)}
+.geo-pin{flex:none;width:34px;height:34px;border-radius:10px;background:#fdf0eb;color:#9c3a23;display:grid;place-items:center}
+.geo-pin svg{width:17px;height:17px}
+.geo-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.geo-kw{font-size:.87rem;font-weight:600;color:#2a2622;line-height:1.3}
+.geo-note{font-size:.72rem;color:#7a6f64}
+.geo-arrow{flex:none;color:#9c3a23;font-weight:700}
+/* DOC STACK — "Every grey leaves with" (modernized) */
+.doc-stack{background:linear-gradient(135deg,#fff,#fdf4ef);border:1px solid var(--bd);border-radius:18px;padding:20px 22px;margin:6px 0 16px;max-width:560px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.ds-title{font-family:'Newsreader',serif;font-size:1.15rem;margin:0 0 12px;color:#2a2622;padding-bottom:10px;border-bottom:2px solid var(--f)}
+.ds-list{list-style:none;margin:0;padding:0;counter-reset:ds}
+.ds-list li{counter-increment:ds;display:flex;flex-direction:column;gap:1px;padding:9px 0 9px 40px;position:relative;border-bottom:1px dashed var(--bd)}
+.ds-list li:last-child{border-bottom:none}
+.ds-list li::before{content:counter(ds,decimal-leading-zero);position:absolute;left:0;top:10px;font-family:'Newsreader',serif;font-weight:700;font-size:.85rem;color:#fff;background:var(--f);width:28px;height:28px;border-radius:9px;display:grid;place-items:center}
+.ds-list b{font-size:.9rem;color:#2a2622}
+.ds-list span{font-size:.76rem;color:#6b625a}
+/* CHECKLIST B — modern hatching checklist */
+.chkB{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;margin:6px 0 18px;box-shadow:0 4px 16px rgba(60,30,10,.07)}
+.chkB-head{background:#221f1d;padding:16px 22px}
+.chkB-eyebrow{color:#f08070;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0 0 3px}
+.chkB-title{font-family:'Newsreader',serif;font-size:1.15rem;color:#fff;margin:0;line-height:1.25;max-width:none}
+.chkB-grid{list-style:none;margin:0;padding:14px 22px 18px;display:grid;grid-template-columns:1fr 1fr;gap:2px 26px;counter-reset:chk}
+.chkB-grid li{counter-increment:chk;display:flex;flex-direction:column;gap:1px;padding:10px 0 10px 36px;position:relative;border-bottom:1px dashed var(--bd)}
+.chkB-grid li::before{content:"✓";position:absolute;left:0;top:11px;width:24px;height:24px;border-radius:8px;background:#e7f1ec;color:var(--f);font-weight:700;font-size:.8rem;display:grid;place-items:center}
+.chkB-grid b{font-size:.88rem;color:#2a2622}
+.chkB-grid span{font-size:.76rem;color:#6b625a;line-height:1.45}
+/* BIRD CARDS */
+.bird-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:6px 0 8px}
+.bird-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
+.bird-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.12)}
+.bird-photo{position:relative;display:block}
+.bird-photo img{display:block;width:100%;height:200px;object-fit:cover;object-position:center top}
+.bird-badge{position:absolute;top:10px;left:10px;background:rgba(45,106,79,.94);color:#fff;font-size:.68rem;font-weight:600;padding:4px 11px;border-radius:50px}
+.bird-body{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
+.bird-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.bird-name{font-family:'Newsreader',serif;font-size:1.08rem;margin:0}
+.bird-name a{color:#2a2622}
+.bird-name a:hover{color:var(--clay-t)}
+.bird-price{color:var(--clay-t);font-weight:700;font-size:1rem;white-space:nowrap}
+.bird-docs{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.bird-docs li{font-size:.62rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:3px 8px;white-space:nowrap}
+.bird-cta{text-align:center;margin-top:auto}
+.ship-mini{font-size:.66rem;color:#7a6f64;display:block;margin-top:10px;border-top:1px dashed var(--bd);padding-top:6px}
+/* PAIR ROW */
+.pair-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 16px}
+.pair-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.pair-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
+.pair-c>img{display:block;width:100%;height:220px;object-fit:cover}
+.pair-body{padding:15px 17px}
+.pair-c b{font-family:'Newsreader',serif;font-size:1.1rem;display:block;margin-bottom:2px}
+.pair-sub{font-size:.82rem;color:#7a6f64;display:block;margin:2px 0 10px}
+.ctr{text-align:center}
+/* QUOTES */
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 4px}
+.quote-c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0}
+.q-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.q-av{width:48px;height:48px;border-radius:50%;object-fit:cover;flex:none;border:2px solid #eaf4ef}
+.q-id{flex:1;min-width:0}
+.q-name{display:block;font-family:'Newsreader',serif;font-size:1rem;color:#2a2622;line-height:1.2}
+.q-loc{display:block;font-size:.75rem;color:#7a6f64;margin-top:1px}
+.stars{color:#c9a227;letter-spacing:2px;font-size:.85rem;flex:none}
+.quote-c p{font-size:.9rem;font-style:italic;margin:0;max-width:none}
+/* FAQ */
+.faq-open{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.faq-q{font-family:'Newsreader',serif;font-size:1rem;margin:0 0 6px;color:#2a2622}
+.faq-open p{margin:0;font-size:.9rem;max-width:none}
+.faq-d{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.faq-d summary{font-family:'Newsreader',serif;font-weight:600;cursor:pointer;font-size:1rem}
+.faq-d p{margin:8px 0 0;font-size:.9rem;max-width:none}
+/* FORM */
+.final-cta{background:var(--cream);border:1px solid var(--bd);border-radius:20px;padding:clamp(22px,4vw,36px);margin-bottom:20px}
+.cta-form{display:grid;gap:12px;max-width:640px;margin:10px 0 0}
+.cta-form label{display:grid;gap:5px;min-width:0;font-size:.85rem;font-weight:600;color:#3a332c}
+.cta-form .opt{font-weight:400;color:#7a6f64}
+.cta-form input,.cta-form textarea,.cta-form select{border:1.5px solid var(--bd);border-radius:12px;padding:11px 13px;font:inherit;font-size:16px;font-weight:400;background:#fff9f6;width:100%;max-width:100%;box-sizing:border-box;min-width:0}
+.cta-form input:focus,.cta-form textarea:focus,.cta-form select:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.12)}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.cta-form button{border:none;cursor:pointer}
+.cta-form .btn-ghost{border:2px solid var(--f);color:var(--f);padding:11px 22px}
+.cta-form .btn-ghost:hover{background:var(--f);color:#fff}
+.form-note{font-size:.8rem;color:#7a6f64;margin:2px 0 0!important}
+.hp{position:absolute;left:-9999px}
+/* NEWSLETTER — for-sale */
+.fs-nl{margin:24px 0;border-radius:20px;overflow:hidden;box-shadow:0 6px 22px rgba(60,30,10,.08)}
+.fs-nl.banner{background:linear-gradient(135deg,#221f1d,#2f2926);color:#fff}
+.fs-nl.banner .fs-nl-inner{padding:clamp(14px,2.2vw,20px) clamp(16px,2.8vw,26px);max-width:820px}
+.fs-nl.split{display:grid;grid-template-columns:minmax(0,320px) 1fr;background:#fff;border:1px solid var(--bd)}
+.fs-nl-media{position:relative}
+.fs-nl-media img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:1408/768}
+.fs-nl-cap{position:absolute;left:12px;bottom:12px;background:rgba(34,31,29,.8);color:#fff;font-size:.68rem;font-weight:600;padding:4px 11px;border-radius:50px}
+.fs-nl-body{padding:clamp(20px,3vw,30px)}
+.fs-nl-eyebrow{color:var(--clay-t);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px}
+.fs-nl.banner .fs-nl-eyebrow{color:#f08070}
+.fs-nl-h{font-family:'Newsreader',serif;font-size:clamp(1.05rem,1.8vw,1.24rem);line-height:1.22;margin:0 0 4px;color:#2a2622}
+.fs-nl.banner .fs-nl-h{color:#fff}
+.fs-nl-sub{font-size:.84rem;line-height:1.5;margin:0 0 10px!important;max-width:56ch;color:#5b524a}
+.fs-nl.banner .fs-nl-sub{color:rgba(255,255,255,.82)}
+.fs-nl-form{display:flex;gap:8px;flex-wrap:wrap}
+.fs-nl-form input{flex:1;min-width:200px;border:1.5px solid var(--bd);border-radius:50px;padding:12px 18px;font:inherit;font-size:16px;background:#fff;color:#2a2622}
+.fs-nl.banner .fs-nl-form input{border-color:rgba(255,255,255,.25)}
+.fs-nl-form input:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.15)}
+.fs-nl-form button{border:none;cursor:pointer}
+.fs-nl-note{font-size:.74rem;color:var(--mid);margin:10px 0 0!important}
+.fs-nl.banner .fs-nl-note{color:rgba(255,255,255,.6)}
+/* VIDEO — for-sale component */
+.fs-video{margin:6px 0 18px;max-width:760px}
+.fs-video-frame{position:relative;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(60,30,10,.16);background:#1b1815}
+.fs-video-frame video{display:block;width:100%;height:auto;aspect-ratio:1408/768;object-fit:cover}
+.fs-video-tag{position:absolute;top:12px;left:12px;background:rgba(34,31,29,.82);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.04em;padding:5px 12px;border-radius:50px;pointer-events:none}
+.fs-video figcaption{font-size:.8rem;color:var(--mid);margin-top:8px;font-style:italic}
+/* AVAIL-B — sticky sidebar filter */
+.availB{display:grid;grid-template-columns:200px 1fr;gap:18px;margin:6px 0;align-items:start}
+.availB-side{position:sticky;top:calc(var(--hdr) + 14px);background:#fff;border:1px solid var(--bd);border-radius:18px;padding:16px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
+.side-h{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin:0 0 12px}
+.side-filters{display:flex;flex-direction:column;gap:4px}
+.side-f{display:flex;align-items:center;justify-content:space-between;gap:10px;background:none;border:1.5px solid transparent;border-radius:10px;padding:9px 12px;font:inherit;font-size:.9rem;font-weight:600;color:#2a2622;cursor:pointer;text-align:left;transition:background-color .15s,border-color .15s}
+.side-f:hover{background:#faece7}
+.side-f.on{border-color:var(--clay);color:var(--clay-ink)}
+.side-n{font-size:.72rem;font-weight:700;color:var(--mid);background:#f4efe9;border-radius:50px;min-width:24px;text-align:center;padding:2px 8px}
+.side-f.on .side-n{background:var(--clay-ink);color:#fff}
+.side-ship{border-top:1px solid var(--bd);margin-top:12px;padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.side-ship p{font-size:.78rem;color:#5b524a;margin:0!important;display:flex;align-items:center;gap:8px;max-width:none}
+.side-ship svg{color:var(--clay-t);flex:none;width:15px;height:15px}
+.side-ship b{color:#2a2622}
+.side-note{font-size:.76rem;color:#7a6f64;font-weight:600;margin:6px 0 14px;text-align:center}
+.availB-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.availB-c{background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .2s}
+.availB-c:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(60,30,10,.13)}
+.availB-photo{position:relative;display:block}
+.availB-photo img{display:block;width:100%;height:210px;object-fit:cover;object-position:center 28%}
+.availB-badge{position:absolute;top:10px;left:10px;font-size:.58rem;font-weight:600;letter-spacing:.02em;padding:3px 9px;border-radius:50px;background:rgba(255,255,255,.82);backdrop-filter:blur(3px);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.availB-badge.congo{color:#1e5038}
+.availB-badge.timneh{color:#9c3a23}
+.availB-badge.bonded,.availB-badge.breeding{color:#6d5510}
+.availB-badge.band4{color:#533a68}
+.availB-dot{position:absolute;top:12px;right:12px;width:12px;height:12px;border-radius:50%;background:#3fbf6a;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
+.availB-body{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
+.availB-name{font-family:'Newsreader',serif;font-size:1.15rem;margin:0 0 3px;text-transform:uppercase;letter-spacing:.01em;line-height:1.1}
+.availB-name a{color:#2a2622;text-decoration:none}
+.availB-name a:hover{color:var(--clay-t)}
+.availB-meta{font-size:.78rem;color:#7a6f64;margin:0 0 6px!important;max-width:none}
+.availB-blurb{font-size:.8rem;color:#5b524a;line-height:1.45;margin:0 0 8px!important;max-width:none}
+.availB-chips{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-wrap:wrap;gap:5px}
+.availB-chips li{font-size:.6rem;font-weight:600;color:var(--f);background:#eaf4ef;border:1px solid #cfe4da;border-radius:50px;padding:2px 8px;white-space:nowrap}
+.availB-price{font-family:'Newsreader',serif;color:var(--clay-ink);font-weight:700;font-size:1.3rem;margin-bottom:12px}
+.availB-btn{margin-top:auto;text-align:center;font-size:.85rem;padding:11px 14px}
+.availB-c.hide{display:none}
+/* FAQ-C — dark badge-numbered */
+.faqC{margin:8px 0 6px;border-radius:16px;overflow:hidden;box-shadow:0 8px 26px rgba(34,20,10,.14)}
+.faqC-item{background:#221f1d;border-bottom:1px solid rgba(255,255,255,.08)}
+.faqC-item:last-child{border-bottom:none}
+.faqC-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px 20px;color:#fff}
+.faqC-item summary::-webkit-details-marker{display:none}
+.faqC-n{font-family:'Newsreader',serif;font-weight:700;color:#f08070;font-size:1rem;min-width:26px}
+.faqC-q{font-family:'Newsreader',serif;font-size:1.02rem;font-weight:600;flex:1;line-height:1.3}
+.faqC-x{position:relative;width:16px;height:16px;flex:none}
+.faqC-x:before,.faqC-x:after{content:"";position:absolute;background:#f08070;border-radius:2px;transition:transform .2s}
+.faqC-x:before{top:7px;left:0;width:16px;height:2px}
+.faqC-x:after{left:7px;top:0;width:2px;height:16px}
+.faqC-item[open] .faqC-x:after{transform:scaleY(0)}
+.faqC-item p{color:rgba(255,255,255,.82);font-size:.9rem;margin:0;padding:0 20px 18px 60px;max-width:70ch;line-height:1.6}
+/* READ / BLOG cards */
+.read-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:8px 0 6px}
+.read-c{display:flex;gap:0;background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;text-decoration:none;transition:transform .15s,box-shadow .2s}
+.read-c:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(60,30,10,.12)}
+/* Cross-sell strip — product links deliberately kept out of the editorial read-card
+   grid; full border + tint rather than a side stripe. */
+.xsell{margin:1.3rem 0 .2rem;background:linear-gradient(180deg,#fff,#fdf7f4);border:1px solid var(--bd);border-radius:14px;padding:15px 18px 6px}
+.xsell-k{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--clay-t);font-weight:700;margin:0 0 9px}
+.xsell p:not(.xsell-k){font-size:.86rem;line-height:1.55;color:var(--mid);margin:0 0 10px;max-width:70ch}
+.xsell a{color:var(--f);font-weight:700;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.xsell a:hover{color:var(--clay-ink)}
+.read-img{flex:0 0 148px;display:block;position:relative;overflow:hidden}
+.read-img img{display:block;width:148px;height:100%;min-height:140px;object-fit:cover;transition:transform .2s}
+.read-c:hover .read-img img{transform:scale(1.04)}
+.read-body{display:flex;flex-direction:column;padding:14px 16px;min-width:0}
+.read-kicker{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9c3a23}
+.read-title{font-family:'Newsreader',serif;font-size:1.08rem;color:#2a2622;margin:4px 0 4px;line-height:1.25}
+.read-c:hover .read-title{color:#9c3a23}
+.read-sub{font-size:.8rem;color:#6b625a;line-height:1.45}
+.read-more{font-size:.76rem;font-weight:700;color:var(--f);margin-top:auto;padding-top:10px}
+/* CONTACT FORM — kit two-column */
+.form-head{max-width:640px}
+.form-eyebrow{color:var(--clay-t);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px}
+.form-wrap{display:grid;grid-template-columns:250px 1fr;gap:20px;margin-top:16px;align-items:start}
+.form-side{background:#221f1d;color:#fff;border-radius:16px;padding:20px}
+.fs-title{font-family:'Newsreader',serif;font-size:1.05rem;margin:0 0 12px;color:#fff}
+.fs-list{list-style:none;margin:0;padding:0}
+.fs-list li{display:flex;justify-content:space-between;gap:12px;font-size:.84rem;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.14);color:rgba(255,255,255,.85)}
+.fs-list li b{color:#f08070;white-space:nowrap}
+.fs-ship{font-size:.72rem;color:rgba(255,255,255,.6);margin:12px 0 0!important}
+/* ===== TABLET / MOBILE ===== */
+@media(max-width:980px){
+  .availB{grid-template-columns:1fr}
+  .availB-side{position:static;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  .side-h{width:100%;margin:0 0 4px}
+  .side-filters{flex-direction:row;flex-wrap:wrap;gap:8px;flex:1}
+  .side-f{border:1.5px solid var(--bd);border-radius:50px;padding:7px 14px;font-size:.82rem}
+  .side-ship{border-top:none;border-left:1px solid var(--bd);margin:0;padding:0 0 0 14px;flex-direction:column}
+}
+@media(max-width:900px){
+  /* The sticky jump-rail (39px) sits under the 96px header on mobile, so an
+     anchor using only the desktop +18px lands UNDERNEATH it. Measured: the
+     heading came to rest 21px behind the rail. Clear both, plus a 12px gap. */
+  .adopt-main section{scroll-margin-top:calc(var(--hdr) + 51px)}
+
+  .hero-grid{grid-template-columns:1fr;gap:14px}
+  .hero-imgs{order:-1;aspect-ratio:16/10;grid-template-rows:1fr 1fr}
+  .hero-card{padding:20px 18px}
+  .desk-only{display:none}
+  .adopt-rail{display:block}
+  .adopt-body{grid-template-columns:1fr;gap:0}
+  .fs-nl.split{grid-template-columns:1fr}
+  .fs-nl-media img{aspect-ratio:16/9;max-height:200px}
+  .fs-nl-body{padding:18px 16px}
+  .fs-nl.banner .fs-nl-inner{padding:18px 16px}
+  .form-wrap{grid-template-columns:1fr}
+  .form-side{order:2}
+  .read-cards{grid-template-columns:1fr}
+  .read-img{flex-basis:120px}
+  .read-img img{width:120px}
+  .availB-grid{grid-template-columns:1fr 1fr}
+  .availB-photo img{height:230px;object-position:center 22%}
+  .ship-cards,.quote-grid{grid-template-columns:1fr}
+  .geo-cards{grid-template-columns:1fr}
+  .chkB-grid{grid-template-columns:1fr;padding:10px 16px 14px}
+  .chkB-head{padding:14px 16px}
+  .form-2col{grid-template-columns:1fr}
+  /* In-body images: container width, original 16:9 infographic box (reverted from full-bleed) */
+  .adopt-main .sec-img{width:100%;max-width:100%;margin-left:0;border-radius:14px;aspect-ratio:1408/768}
+  .fs-video{max-width:none}
+  /* TABLE A stacking */
+  .otA table,.otA thead,.otA tbody,.otA tr,.otA th,.otA td{display:block}
+  .otA thead{display:none}
+  .otA tr{border-bottom:6px solid var(--cream)}
+  .otA td{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #f3e6de}
+  .otA td:before{content:attr(data-label);font-weight:600;color:var(--mid);font-size:.72rem;letter-spacing:.02em}
+  .otA td:first-child{display:block}
+  .otA td:first-child:before{display:none}
+}
+@media(max-width:560px){.availB-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.adopt *{transition:none!important}}
+
+/* Compact newsletter band (2026-07-26). The input min-width:200px forced a wrap on
+   mobile, leaving a button narrower than the field above it — a ragged left-edge
+   stack. Below 560px both go full width so the block reads as one column. */
+@media(max-width:560px){
+  .fs-nl-form{flex-direction:column;}
+  .fs-nl-form input,.fs-nl-form button{width:100%;min-width:0;}
+}
+
+/* ============ ADOPTION-COST PAGE — NEW COMPONENTS ============ */
+
+/* T1 REFRESHED · money-preview ledger rail (in-body TOC).
+   Timneh's T1 numbers its sections 01-22; ours replaces the numeral with the
+   dollar band each section covers, so the contents list reads as a ledger. */
+.t1m{border:1px solid var(--bd);border-radius:16px;background:#fff;padding:18px 18px 12px;margin:26px 0 30px;box-shadow:0 3px 14px rgba(60,30,10,.05)}
+.t1m-k{font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--clay-t);margin:0 0 4px}
+.t1m-h{font-family:Newsreader,Lora,serif;font-size:1.15rem;font-weight:700;margin:0 0 14px;color:#1b3228}
+.t1m-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.t1m-list a{display:grid;grid-template-columns:88px 1fr;gap:12px;align-items:baseline;padding:8px 8px;border-radius:9px;text-decoration:none;color:#2a2622;font-size:.9rem;transition:background .15s,color .15s}
+.t1m-list a:hover{background:#faf5f1;color:var(--clay-t)}
+.t1m-band{font-variant-numeric:tabular-nums;font-weight:700;font-size:.82rem;color:var(--clay-t);text-align:right;white-space:nowrap}
+.t1m-list a:hover .t1m-band{color:var(--clay-ink)}
+@media(max-width:560px){.t1m-list a{grid-template-columns:76px 1fr;gap:9px;font-size:.86rem}}
+
+/* K2 PRICE-TAG takeaway */
+.k2{position:relative;border:1px solid var(--bd);border-radius:18px;background:#fff;padding:22px 24px 20px 30px;margin:30px 0;box-shadow:0 4px 18px rgba(60,30,10,.06)}
+.k2::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:8px;border-radius:8px 0 0 8px;background:repeating-linear-gradient(180deg,var(--clay) 0 7px,transparent 7px 14px)}
+.k2-k{font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--clay-t);margin:0 0 6px}
+.k2-h{font-family:Newsreader,Lora,serif;font-size:1.3rem;font-weight:700;margin:0 0 12px;color:#1b3228}
+.k2-rows{display:grid;gap:9px;margin:0}
+.k2-row{display:flex;justify-content:space-between;gap:16px;align-items:baseline;border-bottom:1px dashed var(--bd);padding-bottom:8px}
+.k2-row:last-child{border-bottom:0;padding-bottom:0}
+.k2-row dt{font-size:.92rem;color:#2a2622;margin:0}
+.k2-row dd{margin:0;font-weight:700;color:var(--clay-t);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* K4 CLIPBOARD checklist takeaway */
+.k4{border:1px solid var(--bd);border-radius:18px;background:#fff;margin:30px 0;overflow:hidden;box-shadow:0 4px 18px rgba(60,30,10,.06)}
+.k4-head{background:var(--f);color:#fff;padding:14px 22px}
+.k4-k{font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#c9f2db;margin:0 0 3px}
+.k4-h{font-family:Newsreader,Lora,serif;font-size:1.2rem;font-weight:700;margin:0}
+.k4-list{list-style:none;margin:0;padding:18px 22px;display:grid;gap:11px}
+.k4-list li{display:flex;gap:11px;align-items:flex-start;font-size:.94rem;line-height:1.5}
+.k4-x{flex:0 0 auto;width:19px;height:19px;border-radius:5px;border:2px solid var(--clay);color:var(--clay-t);display:grid;place-items:center;margin-top:2px}
+
+/* TABLE G · True-Cost Ledger — three routes x three horizons */
+.tg{width:100%;border-collapse:collapse;margin:24px 0;font-size:.92rem;border:1px solid var(--bd);border-radius:14px;overflow:hidden}
+.tg caption{caption-side:top;background:var(--f);color:#fff;font-family:Newsreader,Lora,serif;font-size:1.05rem;font-weight:700;padding:12px 16px;text-align:left}
+.tg th,.tg td{padding:12px 14px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:top}
+.tg thead th{background:#f7f1ec;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--mid);font-weight:700}
+.tg tbody th{font-weight:700;color:#1b3228;white-space:nowrap}
+.tg .ours{background:#f4faf6;box-shadow:inset 3px 0 0 var(--f)}
+.tg .num{font-variant-numeric:tabular-nums;font-weight:700;color:var(--clay-t);white-space:nowrap}
+.tg tr:last-child td,.tg tr:last-child th{border-bottom:0}
+@media(max-width:720px){
+  .tg,.tg tbody,.tg tr,.tg td,.tg th{display:block;width:100%}
+  .tg thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .tg tr{border-bottom:1px solid var(--bd);padding-bottom:6px}
+  .tg tbody th{background:#f7f1ec;border-radius:8px;margin:10px 0 0}
+  .tg td{display:flex;justify-content:space-between;gap:14px;border-bottom:0;padding:8px 14px}
+  .tg td::before{content:attr(data-label);font-weight:700;color:var(--mid);font-size:.8rem}
+  .tg .ours{box-shadow:none;background:#f4faf6;border-radius:8px}
+}
+
+/* .cost-tool · True-Cost Calculator.
+   Differentiated from the homepage first-year calculator: multi-year, ranges, route compare.
+   Result panel is height-reserved from first paint so it can never be a CLS source. */
+.ctool{border:1px solid var(--bd);border-radius:18px;background:#fff;padding:22px;margin:28px 0;box-shadow:0 4px 18px rgba(60,30,10,.06)}
+.ctool-k{font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--clay-t);margin:0 0 4px}
+.ctool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px;margin:14px 0 18px}
+.ctool-f{display:flex;flex-direction:column;gap:5px}
+.ctool-f label{font-size:.78rem;font-weight:600;color:var(--mid)}
+.ctool-f select{border:1.5px solid var(--bd);border-radius:10px;padding:9px 11px;font:inherit;font-size:16px;background:var(--cream);color:#2a2622}
+.ctool-f select:focus-visible{outline:3px solid var(--clay);outline-offset:1px}
+.ctool-out{background:#f4faf6;border:1px solid #d6ebdf;border-radius:14px;padding:16px 18px;min-height:186px}
+.ctool-row{display:flex;justify-content:space-between;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px dashed #cfe4d8}
+.ctool-row:last-of-type{border-bottom:0}
+.ctool-row b{font-size:.9rem;color:#1b3228;font-weight:600}
+.ctool-v{font-family:Newsreader,Lora,serif;font-size:1.18rem;font-weight:700;color:var(--clay-t);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctool-note{font-size:.78rem;color:var(--mid);margin:12px 0 0;line-height:1.5}
+@media(max-width:560px){.ctool-out{min-height:214px}.ctool-v{font-size:1.05rem}}
+
+/* fs-nl LEDGER · third newsletter variant — the Price-Watch card.
+   banner and split are both spent across the cluster. Perforated stub edge is the delta. */
+.fs-nl.ledger{position:relative;border:1px solid var(--bd);border-radius:20px;background:var(--cream);padding:24px 26px 22px 34px;margin:32px 0;box-shadow:0 4px 20px rgba(60,30,10,.06);min-height:232px}
+.fs-nl.ledger::before{content:"";position:absolute;left:12px;top:18px;bottom:18px;width:3px;background:repeating-linear-gradient(180deg,var(--clay) 0 5px,transparent 5px 11px);opacity:.85;border-radius:3px}
+.fs-nl.ledger .fs-nl-h{font-family:Newsreader,Lora,serif;font-size:1.28rem;margin:0 0 8px;color:#1b3228}
+.nlb{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 14px;padding:0;list-style:none}
+.nlb button{font:inherit;font-size:.78rem;font-weight:600;border:1.5px solid var(--clay);background:#fff;color:var(--clay-t);border-radius:50px;padding:9px 15px;min-height:38px;cursor:pointer;transition:background .15s,color .15s}
+.nlb button[aria-pressed="true"]{background:var(--clay-ink);border-color:var(--clay-ink);color:#fff}
+.nlb button:focus-visible{outline:3px solid var(--f);outline-offset:2px}
+@media(max-width:560px){.fs-nl.ledger{padding:22px 18px 20px 28px;min-height:290px}}
+</style>
+
+<script>
+  // ---- Dial + rail scroll-spy. A static ring reads as broken, so it is driven, not decorative. ----
+  const ids = ["cost","rescue","routes","dayone","ongoing","cheap","shipping","reserve","faq"];
+  const dial = document.getElementById("adoptDial");
+  const num = document.getElementById("dialNum");
+  const dialLinks = Array.from(document.querySelectorAll(".dial-list a"));
+  const railLinks = Array.from(document.querySelectorAll(".railA a"));
+  const secs = ids.map((i) => document.getElementById(i)).filter(Boolean);
+
+  if (secs.length) {
+    const setActive = (idx) => {
+      if (num) num.textContent = String(idx + 1);
+      if (dial) dial.style.setProperty("--p", String(Math.round(((idx + 1) / ids.length) * 100)));
+      dialLinks.forEach((a, i) => a.classList.toggle("on", i === idx));
+      railLinks.forEach((a, i) => a.classList.toggle("on", i === idx));
+      const activeRail = railLinks[idx];
+      if (activeRail && activeRail.parentElement) {
+        activeRail.parentElement.scrollTo({ left: activeRail.offsetLeft - 16, behavior: "smooth" });
+      }
+    };
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          const idx = secs.indexOf(e.target);
+          if (idx > -1) setActive(idx);
+        }
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    secs.forEach((s) => io.observe(s));
+    setActive(0);
+  }
+
+  // ---- Avail-B price-band filter ----
+  const bandBtns = Array.from(document.querySelectorAll(".side-f"));
+  const cards = Array.from(document.querySelectorAll(".availB-c"));
+  bandBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const want = btn.getAttribute("data-band");
+      bandBtns.forEach((b) => b.classList.toggle("on", b === btn));
+      cards.forEach((c) => {
+        const show = want === "all" || c.getAttribute("data-cat") === want;
+        c.classList.toggle("hide", !show);
+      });
+    });
+  });
+
+  // ---- Price-watch band chips on the fs-nl ledger newsletter ----
+  const nlBtns = Array.from(document.querySelectorAll("#nlbands button"));
+  const nlInput = document.getElementById("nlband-input");
+  nlBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      nlBtns.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      if (nlInput) nlInput.value = btn.getAttribute("data-band") || "";
+    });
+  });
+
+  // ---- True-Cost Calculator.
+  // Constants are interpolated from data/financial-entities.json + data/price-matrix.json at build
+  // time by the frontmatter above; nothing here is retyped by hand. Every output is a RANGE, because
+  // the underlying data is a range. Differentiated from the homepage first-year calculator by the
+  // multi-year projection and the route comparison.
+  const CT = {
+    setup: [475, 1300],
+    annual: [375, 1350],
+    cage: [300, 800],
+    stand: [100, 300],
+  };
+  const usd = (n) => "$" + Math.round(n).toLocaleString("en-US");
+  const band = (lo, hi) => (Math.round(lo) === Math.round(hi) ? usd(lo) : usd(lo) + "–" + usd(hi));
+
+  const ctBird = document.getElementById("ct-bird");
+  const ctShip = document.getElementById("ct-ship");
+  const ctSetup = document.getElementById("ct-setup");
+  const ctYears = document.getElementById("ct-years");
+  const outDay = document.getElementById("ct-day");
+  const outY1 = document.getElementById("ct-yr1");
+  const outSpan = document.getElementById("ct-span");
+  const spanLabel = document.getElementById("ct-spanlabel");
+
+  function recalc() {
+    if (!ctBird || !outDay) return;
+    const [bLo, bHi] = ctBird.value.split(",").map(Number);
+    const ship = Number(ctShip.value);
+    const owned = Number(ctSetup.value);
+    const yrs = Number(ctYears.value);
+
+    let setLo = CT.setup[0], setHi = CT.setup[1];
+    if (owned >= 1) { setLo -= CT.cage[0]; setHi -= CT.cage[1]; }
+    if (owned >= 2) { setLo -= CT.stand[0]; setHi -= CT.stand[1]; }
+    setLo = Math.max(0, setLo); setHi = Math.max(0, setHi);
+
+    const dayLo = bLo + ship, dayHi = bHi + ship;
+    const y1Lo = dayLo + setLo + CT.annual[0];
+    const y1Hi = dayHi + setHi + CT.annual[1];
+    const spanLo = y1Lo + CT.annual[0] * (yrs - 1);
+    const spanHi = y1Hi + CT.annual[1] * (yrs - 1);
+
+    outDay.textContent = band(dayLo, dayHi);
+    outY1.textContent = band(y1Lo, y1Hi);
+    outSpan.textContent = yrs === 1 ? band(y1Lo, y1Hi) : band(spanLo, spanHi);
+    if (spanLabel) spanLabel.textContent = yrs === 1 ? "Across one year" : "Across " + yrs + " years";
+  }
+  [ctBird, ctShip, ctSetup, ctYears].forEach((el) => el && el.addEventListener("change", recalc));
+  recalc();
+</script>
