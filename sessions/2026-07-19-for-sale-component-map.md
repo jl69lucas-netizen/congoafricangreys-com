@@ -51,6 +51,7 @@ No two sibling pages ship the identical combo. Before each page build, pick {her
 3. **"If" is capitalised in AP Title Case.** It is not in the mid-title lowercase list (`a an the and but or nor for so yet at by in of on to as vs per via`). `page_hardening_scan.py` catches it; the blueprint did not.
 4. **Seam budget is 4–8, not one per section.** Placing a seam after every section reached 17; trimmed to 7 at movement boundaries.
 5. **`final_page_audit.py` had two real bugs** (both fixed this build): the `for-sale` profile fell through to the lean 600–1,200 interior word band, and the word count counted inline `<style>` CSS as body copy. Together they made every for-sale page and most comparison pages warn on `wordcount_in_band` regardless of actual length. New page slugs must also be appended to the `FORSALE` roster or the auditor silently skips them.
+| `/dna-tested-african-grey-for-sale/` (**BUILT 2026-07-24**) | **Hero-C Mosaic Metrics** | **Dial 1 Clay + Rail A** | **T2 Chip Cloud** (`<nav class="chipcloud">`, verified in the built page) | **K4 Clipboard + K5 Capsule** | **Table D** + FAQ-A + **Avail-B faceted by SEX** | *Row reconstructed 2026-07-27 — it was missing from this table and its absence caused a later build to wrongly claim T2 Chip Cloud was unused. Verify component claims against the built page, not against this table alone.* hen/cock voice; Avian Biotech; $40–60 priced certificate; ~99% accuracy |
 | `/baby-african-grey-parrot-for-sale/` (**BUILT 2026-07-27**) | **Split-Hero B warm gradient — REFRESHED** (all 5 heroes were already spent, so differentiation is by `cag-component-refresh` delta, not a new shell: clutch eyebrow naming live ages · three-babies **brooder** anchor photo where congo/timneh use single-bird portraits · **age/stage** trust chips replacing congo's price chips) | **Dial 1 Clay + Rail A** — tags wired to **age bands**, not prices. `Split-Hero B + Dial 1 + Rail A` is an unused triple (congo = B+Dial2+RailA; timneh = B+Dial1+RailB) | **T5 Reserve-Path Stepper, regrouped to the BIRD's timeline** (Hatch → Hand-Feed → Wean → Fly Home) where congo used T5 for the buyer's sequence | **K3 Green Ledger + K4 Clipboard** (unused pairing) | **NEW Table F "Weaning Timeline"** (wk 1–3 / 4–8 / 9–12 / 12–16) + Table A competitor grid · **FAQ-B two-column refreshed** with a clay number chip · **Avail-B faceted by WEANING STAGE / AGE BAND** (siblings facet by subspecies, posture, sex) | angle "Weaned First. Shipped Second. Never the Other Way Round."; **EEBP × PDB × BAB × QAB** (PDB + BAB both first use in the cluster); voice lever = **weaned vs unweaned / age-in-weeks**; H6 prefixes **At Week N: / From the Nursery: / Weaning Log:**; geo CA·TX·WA·FL·NY·IL·GA·AZ (CA leads — 30 of 89 impressions); 2 new reviews (Joanna CA · Anthony WA); 21 seams / 22 sections; 12 `#reserve` CTAs; 11 external links across 8 domains incl. 4 real Reddit threads; prose written fresh from outline — **dup-gate 0 body, 0 header crossovers** |
 | (fill at each page's skeleton approval) | | | | | |
 
@@ -61,3 +62,27 @@ No two sibling pages ship the identical combo. Before each page build, pick {her
 
 ## Avail-C v2 — clean-card spec (LOCKED 2026-07-21, congo page final touches)
 The original Avail-C dark-scrim overlay tile (text on photo) shipped bulky on desktop and buried the bird's face on mobile. Locked replacement, reuse cluster-wide: face-first card — square photo block (`aspect-ratio:1/1`, per-bird `object-position`, small dark-green uppercase badge top-left) over a white info panel: name + clay price on one row, 2-line-clamp blurb, and an always-visible full-width clay pill button "View <name> →". Mobile ≤640px: 2×2 grid, blurb hidden, name/price stacked. Card images ship `-440.webp` siblings with `srcset` + `sizes="(max-width:980px) 46vw, 210px"`. Companion fixes locked same pass: hero trust chips 2×2 grid on mobile; portrait masters use `.sec-img.fit-contain` (contain + cream bg) instead of cover-crop; dial numerals `#9fc7b0` on dark green for AA; seam emblem 182×60 q60 ≈5.3KB.
+
+## TOC rotation is now EXHAUSTED (recorded 2026-07-27)
+
+All five TOC shells are spent, verified against the built pages rather than this table:
+
+| Shell | Spent by | Marker in code |
+|---|---|---|
+| T1 Numbered Ledger Rail | timneh | — |
+| T2 Chip Cloud | **dna-tested** | `class="chipcloud"` |
+| T3 Boarding-Pass | *unused, but restricted* | ledger rule: shipping-heavy pages ONLY (buy-with-shipping, near-me) |
+| T4 Magazine Index Card | hand-raised, health-guarantee | `class="t4-grid"` |
+| T5 Reserve-Path Stepper | congo, baby | `class="stepper"` |
+
+From here, every remaining page differentiates its TOC by a **`cag-component-refresh` delta on an
+existing shell**, exactly as the baby page did when all five heroes were spent. Do not reach for T3 on a
+page that is not shipping-heavy just because it is technically unused — the restriction is the point.
+
+**Verification command — run this instead of trusting the table:**
+
+```bash
+for p in <slugs>; do printf "%-46s " "$p"; \
+  grep -ohE 'class="(chipcloud|stepper|t4-[a-z]+|toc[A-Za-z0-9]*)"' src/pages/$p/index.astro \
+  | sort -u | tr '\n' ' '; echo; done
+```
