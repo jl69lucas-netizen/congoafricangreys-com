@@ -204,3 +204,42 @@ python3 scripts/generate_sitemaps.py
 3. **dna-tested hero CLS** — see §3 and the backlog entry.
 4. **Sitewide body duplication** — ~5,857 crossovers across the ~100 location pages, untouched and out of
    scope here. Separate piece of work.
+
+### Anchors spent by `/african-grey-parrot-adoption-cost/` (2026-07-27)
+
+| Target | Anchor now spent |
+|---|---|
+| `/african-grey-parrot-bird-eggs-for-sale-usa/` | Incubating your own clutch |
+| `/african-grey-breeding-pair-for-sale/` | Breeding stock carries its own price logic |
+| `/african-grey-parrot-price/` | Our cost-of-ownership breakdown |
+| `/african-grey-adoption/` | honest guide to where adoption actually works |
+| `/affordable-african-grey-birds-for-sale/` | Our lowest-priced documented greys |
+| `/timneh-african-grey-for-sale/` | Timneh pricing starts lower |
+| `/dna-tested-african-grey-for-sale/` | DNA-tested Greys page |
+| `/african-greys-for-sale-with-health-guarantee/` | The guarantee attached to every price |
+| `/how-to-avoid-african-grey-parrot-scams/` | Listings priced below our floor |
+| `/buy-african-grey-parrots-with-shipping/` | full nationwide shipping guide |
+| `/best-african-grey-parrot-food/` | guide to the pellet brands we actually feed |
+| `/african-grey-parrot-care-guide/` | care guide sets out the routine we hand every buyer |
+| `/african-grey-parrot-lifespan/` | How Long an African Grey Actually Lives |
+| `/#tools` | our homepage first-year calculator |
+
+**Two collisions were caught here by scripting the check, exactly as section 6 warns.** The first draft
+reused *Hatching a grey yourself* and *Adults kept back for breeding*, both already spent on the eggs and
+breeding-pair targets. Eyeballing would have shipped them.
+
+Run the check against the BUILT page, pasting the spent anchors from the tables above into `spent`:
+parse every `<a href>` out of `dist/<slug>/index.html`, strip inner tags from the anchor text, and report
+any anchor whose lowercase form already appears against that same target. Script it; do not read it.
+
+### Deferred from the adoption-cost build (2026-07-27)
+
+1. **Infographic slots are empty by design.** The breeder chose build-first, images-last. Eight prompts
+   are written and collision-checked in the page's prompt pack section 7c. Nothing renders a broken box —
+   the slots simply carry no image yet, so the live page reads as finished.
+2. **`/african-grey-adoption/` and `/african-grey-parrot-price/` duplicate each other**, and it is
+   pre-existing: one shared body passage of 101 words plus five crossover headers, including
+   `why apply with us?` and `adopt an {species} — inquiry form`. Neither page was touched by this build.
+   Worth its own cleanup pass.
+3. **The homepage first-year calculator hardcodes `Timneh — $1,600`** where `price-matrix.json` holds
+   `$1,500–$1,600` and Evie is listed at `$1,500`. Out of scope here; logged so it is not lost.
