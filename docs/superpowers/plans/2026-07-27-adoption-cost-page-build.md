@@ -67,14 +67,22 @@ grep -i "^India," assets/1WORKING-ON/FOR-SALE-PAGES/GSC-extracted/Countries.csv
 Expected: `african grey parrot price in india,0,43,0%,1` plus two lower-volume variants, and the
 country row. If the research file reports different numbers, the research is wrong, not the CSV.
 
-- [ ] **Step 4: Verify the tool gap claim**
+- [x] **Step 4: Verify the tool gap claim** — RUN 2026-07-27, returned **1**, not 0
 
 ```bash
-grep -rl "calculator" src/pages/ | wc -l
+grep -rl "calculator" src/pages/
 ```
 
-Expected: `0`. This is the evidence line the page's moat rests on — if it ever returns non-zero,
-the calculator is no longer a site-first and the blueprint must say so.
+Actual: `src/pages/index.astro`. The homepage already ships a **First-Year Cost Calculator** at
+`src/pages/index.astro:828`, and the paragraph directly above it already links to this page. The
+earlier `src/pages/*/index.astro` form of this check was wrong — that glob excludes the homepage,
+which is not in a subdirectory.
+
+**Resolution (breeder, 2026-07-27): differentiate, do not duplicate.** This page's calculator adds
+multi-year projection (1/5/10/40), ranges instead of a point estimate, and route comparison; the two
+tools are cross-linked so neither claims to be the complete answer. Corrected spec in pack §6.
+The competitor-facing half of the moat is unchanged — no ranking competitor on either intent ships
+any interactive tool.
 
 - [ ] **Step 5: Commit the research**
 
@@ -395,12 +403,37 @@ route, plus a "what this route does not cover" spine. Max 6 columns. Stacks to o
 ≤640px with `data-label` on each `td`, `thead` clip-hidden, first cell as a header band. Never put a
 `::before` on a `<tr>` — it shifts the columns.
 
-- [ ] **Step 2: `.cost-tool` True-Cost Calculator, per pack §6**
+- [ ] **Step 2: `.cost-tool` True-Cost Calculator, per pack §6 (corrected spec)**
+
+**This tool must differentiate from the homepage first-year calculator at `src/pages/index.astro:828`,
+not duplicate it.** Three required differences: multi-year projection (1 / 5 / 10 / 40 years), every
+figure rendered as a **range** rather than the homepage's single `$3,835` point estimate, and
+side-by-side **route comparison** (rescue fee vs our price vs a sub-floor listing).
 
 Constants interpolated from the JSON in the frontmatter — never retyped. Result panel carries a fixed
-`min-height` from first paint. `aria-live="polite"` on the result panel. Every figure renders as a range.
-The same numbers also exist as static text and a real `<table>` elsewhere on the page, because answer
-engines cannot execute JavaScript.
+`min-height` from first paint. `aria-live="polite"` on the result panel. The same numbers also exist as
+static text and a real `<table>` elsewhere on the page, because answer engines cannot execute JavaScript.
+
+- [ ] **Step 2b: Wire the two calculators together — mandatory, not optional**
+
+Add a Link-First anchor in this page's calculator section pointing up to the homepage first-year tool at
+`/#tools`, framed as the quick first-year estimate. Then add a reciprocal link from the homepage
+calculator tile down to this page. Neither tool may present itself as the complete answer; unlinked,
+they read as redundant and compete for the same intent.
+
+```bash
+grep -n 'href="/#tools"' src/pages/african-grey-parrot-adoption-cost/index.astro
+grep -n 'african-grey-parrot-adoption-cost' src/pages/index.astro
+```
+
+Expected: at least one hit in each. The homepage already carries one link to this page at line 812 —
+that one is body prose, and the tile link is a separate, additional requirement.
+
+- [ ] **Step 2c: Log the homepage price drift, do not fix it here**
+
+The homepage tool hardcodes `Timneh — $1,600`, but `data/price-matrix.json` holds `$1,500–$1,600` and
+Evie is listed at `$1,500`. Record it in `sessions/2026-07-27-session-brief.md` under `## Open Flags`.
+Repairing the homepage is out of scope for this page.
 
 - [ ] **Step 3: Note the dependency in the data files**
 

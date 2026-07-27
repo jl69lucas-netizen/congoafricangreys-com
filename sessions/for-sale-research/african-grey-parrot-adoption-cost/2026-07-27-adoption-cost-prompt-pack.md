@@ -16,7 +16,7 @@ Everything below is copy-paste ready. Fire the prompts in order. Do not skip a g
 | Hero | **Split-Hero C · Dark + 2×2 photo grid** | breeder, 2026-07-27 |
 | `african grey parrot price in india` | **NEGATIVE keyword — do NOT target** | breeder, 2026-07-27 |
 | Mid-page newsletter | **Required. NEW third variant** (baby page shipped none) | breeder, 2026-07-27 |
-| Special element | **True-Cost Calculator** (interactive, vanilla JS) | breeder, 2026-07-27 |
+| Special element | **True-Cost Calculator** (interactive, vanilla JS) — **differentiated from the existing homepage first-year calculator**, see §6 | breeder, 2026-07-27 |
 | OG photos | **8 selected below, all verified unused site-wide** | this pack, §4 |
 | Branch | `main` only | CLAUDE.md |
 
@@ -630,15 +630,39 @@ and the note line associated via `aria-describedby`. Small clay text on the crea
 
 ## 6. THE SPECIAL ELEMENT — `.cost-tool` True-Cost Calculator
 
-**Breeder-selected, 2026-07-27.** Chosen over a static ledger table because it is the literal answer
-format for the page's dominant query shape ("how much does an African Grey parrot cost"), because it is
-a first for this site — `grep -rl "calculator" src/pages/` returns nothing across 109 pages — and
-because no ranking competitor on either intent ships one; the adoption SERP is rescue non-profits at
-280–2,158 words with no interactive tooling at all.
+**Breeder-selected 2026-07-27, then re-scoped the same day.**
 
-**Named trade-off, carried forward honestly:** every figure is baked in at build time, so the tool
-drifts the moment a price moves. Mitigation is in the spec below. It also introduces a layout-shift
-surface, which is why the result panel is height-reserved from the first paint.
+> **CORRECTION — read this before building.** An earlier draft of this pack claimed the calculator was
+> a site-first because `grep -rl "calculator" src/pages/*/index.astro` returned nothing. **That check was
+> wrong.** It excludes the homepage, which lives at `src/pages/index.astro`, not in a subdirectory.
+> The homepage **already ships a working First-Year Cost Calculator** at `src/pages/index.astro:828` —
+> bird `<select>`, three delivery radios, cage and vet checkboxes, and a live total rendered as a single
+> figure (`$3,835`). The homepage paragraph immediately above it **already links to this page**. The
+> correct check is `grep -rl "calculator" src/pages/`, which returns 1.
+
+**Therefore this calculator must differentiate, not duplicate.** The breeder ruled "differentiate it"
+on 2026-07-27. Three things the homepage tool does not do, and this one must:
+
+1. **Multi-year projection** — 1 / 5 / 10 / 40 years. The homepage stops at year one.
+2. **Ranges, never a point estimate.** The homepage prints one confident number; the underlying data in
+   `financial-entities.json` is a set of min/max pairs. Printing `$3,835` implies a precision we do not
+   have. Every figure here renders low-to-high.
+3. **Route comparison** — rescue fee vs our price vs a sub-floor listing, side by side. The homepage
+   tool models one route only.
+
+Anything the homepage tool already answers, this tool links to rather than repeats.
+
+**Named trade-offs, carried forward honestly:**
+- Two calculators on one site read as redundant unless they are wired together. **Mandatory:** this page
+  links up to the homepage first-year tool, and the homepage tile gets a link down to this one. Neither
+  may present itself as the complete answer.
+- Every figure is baked in at build time, so the tool drifts the moment a price moves. Mitigation is in
+  the spec below.
+- It introduces a layout-shift surface, which is why the result panel is height-reserved from first paint.
+
+**Pre-existing drift worth reporting, not fixing here:** the homepage tool hardcodes `Timneh — $1,600`,
+but `price-matrix.json` holds `$1,500–$1,600` and Evie is listed at `$1,500`. Log it; do not widen this
+page's scope to repair the homepage.
 
 ### Inputs
 
