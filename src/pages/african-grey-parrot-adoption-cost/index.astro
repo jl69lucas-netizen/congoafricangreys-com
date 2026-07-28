@@ -77,6 +77,9 @@ const setupOnce = sumR(fy, ["cage_large", "perches_and_toys", "initial_avian_vet
 const annualRun = sumR(an, ["food_and_treats", "avian_vet_wellness", "toys_replacement", "unexpected_vet"]);
 const money = (n: number) => "$" + n.toLocaleString("en-US");
 const range = (r: number[]) => money(r[0]) + "–" + money(r[1]);
+// the GEO fact table reads each line item straight off annual_ongoing rather
+// than retyping figures that would then drift from the data file
+const orange = (o: { min: number; max: number }) => range([o.min, o.max]);
 
 // ---- Section spine. The band column IS the T1 refresh: the contents list previews the money. ----
 const sections = [
@@ -424,6 +427,23 @@ const faqSchema = {
         <h5 class="cag-h5">A Tame Adult in a High-Demand Metro Can Cost More Than a Baby</h5>
         <p>Owners in that same discussion report paying $600 to $900 for adult greys, and $900 with a cage included in a second thread. The number tracks the local market and the bird's tameness, not the word on the listing. If a fee is high, ask what history comes with it; if it is low, ask the same question harder.</p>
 
+        <div class="chkB">
+          <div class="chkB-head">
+            <p class="chkB-eyebrow">Before you send a rescue any money</p>
+            <p class="chkB-title">Eight Questions Worth Asking a Rescue First</p>
+          </div>
+          <ul class="chkB-grid">
+            <li><b>Why was the bird surrendered?</b><span>Plucking, biting and screaming are common and workable — but you should be told, not surprised</span></li>
+            <li><b>How long has it been in care?</b><span>A settled resident and a fresh intake are two different propositions</span></li>
+            <li><b>Has a vet seen it since intake?</b><span>Ask for the date and the clinic, not a reassurance</span></li>
+            <li><b>Is the sex confirmed, and how?</b><span>Most rescue birds arrive unsexed, and a confident guess is not a certificate</span></li>
+            <li><b>What is the actual age?</b><span>Frequently unknown, which matters a great deal across a forty-year commitment</span></li>
+            <li><b>What exactly does the fee cover?</b><span>Rarely the cage, rarely transport, and sometimes not the outstanding vet work</span></li>
+            <li><b>Is there a contract or home check?</b><span>Good rescues have both, and some retain legal ownership permanently</span></li>
+            <li><b>Can you visit more than once?</b><span>A Grey chooses its people. One meeting tells you very little</span></li>
+          </ul>
+        </div>
+
         <h6 class="cag-h6">From the Ledger: CITES Appendix I Slows Every Rescue Transfer Down</h6>
         <p>Parrots First routes any CITES Appendix I species to case-by-case committee review — and its schedule predates the 2017 uplisting that moved African Greys into that appendix at CoP17. The paperwork we handle as routine is the same paperwork that makes a careful rescue slow down, which is one honest reason adoption timelines run long.</p>
 
@@ -584,6 +604,18 @@ const faqSchema = {
         <h6 class="cag-h6">Line Item: Hatch Certificate, CITES File, PCR Results, Vet Certificate</h6>
         <p>The hatch certificate carries the closed leg-band number; the CITES Appendix I captive-bred file establishes lawful origin; the DNA certificate names the sex; the PCR panel covers PBFD and Polyomavirus; and the avian-vet health certificate is dated within ten days of travel. <a href="/african-greys-for-sale-with-health-guarantee/">The guarantee attached to every price</a> sets out what happens if any of it fails to match the bird.</p>
 
+        <div class="doc-stack">
+          <p class="ds-title">Every Grey Leaves With</p>
+          <ol class="ds-list">
+            <li><b>DNA sex certificate</b><span>Avian Biotech / Animal Genetics, around 99% accurate, itemised at $40–60 rather than folded in invisibly</span></li>
+            <li><b>CITES Appendix I file</b><span>Captive-bred, US transfer paperwork, legal to own and move domestically</span></li>
+            <li><b>PBFD and Polyomavirus PCR results</b><span>Screened per bird, dated, with the laboratory named on the report</span></li>
+            <li><b>Avian-vet health certificate</b><span>Signed inside the window that makes the 72-hour guarantee enforceable</span></li>
+            <li><b>Hatch and weaning record</b><span>Hatch date, band number, and what the chick was actually weaned onto</span></li>
+            <li><b>Diet and care sheet</b><span>The pellet brand the bird already eats, so nothing changes in week one</span></li>
+          </ol>
+        </div>
+
         <h3 class="cag-h3">What Does the Deposit Hold, and When Is the Balance Due?</h3>
         <p>A deposit takes a named bird off the board and starts the paperwork; the balance falls due before we book travel. We keep that gap deliberately, because it is the window in which sensible buyers order the cage — and because a bird held without a deposit is a bird two families are quietly counting on.</p>
 
@@ -661,6 +693,18 @@ const faqSchema = {
             <figcaption>{f.cap}</figcaption>
           </figure>
         ); })()}
+        <div class="otA">
+          <table>
+            <thead><tr><th scope="col">Annual line item</th><th scope="col">Range</th><th scope="col">What moves it</th></tr></thead>
+            <tbody>
+              <tr><td><b>Pellets, seed and fresh produce</b><span class="sub">Harrison's, Roudybush, TOP's or Zupreem Natural</span></td><td data-label="Range">{orange(an.food_and_treats)}</td><td data-label="What moves it">Brand, and how much chop goes uneaten</td></tr>
+              <tr><td><b>Annual wellness exam</b><span class="sub">One well-bird visit a year</span></td><td data-label="Range">{orange(an.avian_vet_wellness)}</td><td data-label="What moves it">Whether bloodwork is bundled in</td></tr>
+              <tr><td><b>Toy and perch replacement</b><span class="sub">Consumable by design</span></td><td data-label="Range">{orange(an.toys_replacement)}</td><td data-label="What moves it">A Grey goes through wood far faster than plastic</td></tr>
+              <tr><td><b>Contingency for unexpected care</b><span class="sub">Some years nothing, one year plenty</span></td><td data-label="Range">{orange(an.unexpected_vet)}</td><td data-label="What moves it">Age, and how close your nearest avian vet is</td></tr>
+            </tbody>
+          </table>
+        </div>
+
         <h5 class="cag-h5">One Emergency Avian Vet Visit Can Exceed a Whole Year of Food</h5>
         <p>Parrots conceal illness until they cannot, which is why avian medicine tends to arrive as an emergency rather than an appointment. The contingency line is not padding — it is the difference between treating a sick bird and making a decision you did not want to make.</p>
 
@@ -708,6 +752,35 @@ const faqSchema = {
         <h5 class="cag-h5">An Undocumented Bird Costs More After It Arrives Than It Saved</h5>
         <p>Run the arithmetic honestly. Saving $900 on the purchase, then paying for sexing, a full disease panel, a quarantine period and a first-visit workup, lands you above what a documented bird cost — with a bird whose history still cannot be reconstructed.</p>
 
+        <div class="vflags">
+          <div class="vflags-head">
+            <p class="vflags-kicker">Green flags, not red ones</p>
+            <p class="vflags-title">Five Things a Real Breeder Can Show You in Sixty Seconds</p>
+          </div>
+          <ul class="vflags-list">
+            <li>
+              <span class="vf-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="vf-txt"><b>A USDA licence number you can look up</b><span>Ours resolves in the APHIS public search rather than being quoted at you in a message</span></span>
+            </li>
+            <li>
+              <span class="vf-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="vf-txt"><b>A live video call with the specific bird</b><span>Not a photo set. Nobody can produce a named bird on demand that they do not have</span></span>
+            </li>
+            <li>
+              <span class="vf-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="vf-txt"><b>An avian vet who will confirm the practice</b><span>You should be able to ring the clinic yourself and have them recognise us</span></span>
+            </li>
+            <li>
+              <span class="vf-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="vf-txt"><b>A price that stays where it was published</b><span>A documented Grey does not fall to $800 because you took a day to think</span></span>
+            </li>
+            <li>
+              <span class="vf-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="vf-txt"><b>A written window with a stated remedy</b><span>Ours runs 72 hours from arrival, and the covered conditions are published, not summarised</span></span>
+            </li>
+          </ul>
+        </div>
+
         <h6 class="cag-h6">Receipt Note: We Have Never Sold a Grey Below Our {money(floorPrice)} Floor</h6>
         <p>Not in twelve years, and not when a market that tripled would have let us. If you find a bird advertised as ours below that figure, it is not ours — check the <a href="/contact-us/">contact details on our own site</a> against whatever the listing shows you, because that mismatch is the single fastest scam check there is.</p>
 
@@ -749,6 +822,18 @@ const faqSchema = {
           <div class="ship-c"><p class="ship-tier">Flight nanny</p><p class="ship-price">from {money(nanny)}</p><p class="ship-body">In-cabin with a vetted chaperone; quoted per route because it covers their round-trip airfare.</p></div>
         </div>
         <p class="ship-line">Ships nationwide · {money(airport)} airport · {money(home)} home</p>
+
+        <div class="otA">
+          <table>
+            <thead><tr><th scope="col">Route home</th><th scope="col">Cost</th><th scope="col">How it works</th></tr></thead>
+            <tbody>
+              <tr><td><b>Airport cargo pickup</b><span class="sub">IATA Live Animal Regulations</span></td><td data-label="Cost">{money(airport)}</td><td data-label="How it works">Delta, United or American cargo; you collect at the counter</td></tr>
+              <tr><td><b>Home delivery</b><span class="sub">Door to door</span></td><td data-label="Cost">{money(home)}</td><td data-label="How it works">Climate-controlled courier, documents handed over on arrival</td></tr>
+              <tr><td><b>Accompanied flight nanny</b><span class="sub">In-cabin, quoted per route</span></td><td data-label="Cost">from {money(nanny)}</td><td data-label="How it works">Subject to route and season, so we price it per bird</td></tr>
+              <tr><td><b>Pickup in Midland, TX</b><span class="sub">Within two to three hours of us</span></td><td data-label="Cost">Free</td><td data-label="How it works">You meet the bird at the aviary before it ever travels</td></tr>
+            </tbody>
+          </table>
+        </div>
 
         <h5 class="cag-h5">Pickup in Midland Costs Nothing If You Are Within Three Hours</h5>
         <p>Plenty of Texas families drive. If you are inside two to three hours of Midland you can collect in person, meet the parent birds, and hand over nothing for transport — which also happens to be the best possible way to verify a breeder.</p>
@@ -813,6 +898,16 @@ const faqSchema = {
 
         <h4 class="cag-h4">What Is the Least Expensive Documented Grey You Have?</h4>
         <p>Evie, a Timneh hen, at {money(floorPrice)}. She carries the identical document set as the {money(ceilPrice)} pair — DNA certificate, CITES Appendix I file, PBFD and Polyomavirus PCR results, and an avian-vet health certificate. The price reflects subspecies and demand, never a thinner file.</p>
+
+        <figure class="fs-video">
+          <div class="fs-video-frame">
+            <span class="fs-video-tag">Proof of life · Midland, TX</span>
+            <video controls preload="none" poster="/rony-and-rose-proof-of-life-760.webp" width="1408" height="768">
+              <source src="/rony-and-rose-proof-of-life-midland-tx.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption>Rony and Rose, on camera beside a sheet with their names and our town written on it by hand. It is the least glamorous thing on this page and the one a scammer cannot produce — which is exactly why we ask you to expect it from anyone selling you a Grey.</figcaption>
+        </figure>
 
         <h3 class="cag-h3">What Do Buyers Say About Paying Our Price?</h3>
         <div class="quote-grid">
