@@ -134,3 +134,22 @@ two pages were out of that build's scope.
 `/congo-african-grey-parrot-pair-for-sale/`: `all_h1_h4`, `all_six_levels`, `min_h5_5`, `min_h6_5`,
 `has_org`, `shipping_line`, `real_hero_image`. Measured H1:1 H2:3 H3:4 H4:0 H5:0 H6:0. It is a pre-existing
 stub awaiting its own build slot in the 22-page programme, not a regression.
+
+## Site-wide hardening-scan census, 2026-07-28
+
+Full run over all 108 pages, from the adoption-cost harden session. **1106 ERROR · 135 WARN**, broken down:
+
+| Rule | Count | Severity | Status |
+|---|---|---|---|
+| `header-not-title-case` | **1086** | ERROR | The **known** sentence-case backlog already recorded in `CLAUDE.md` (~1,099 headings / 68 pages). 98% of all errors. One `/available/` bird page alone carries 86. |
+| `img-no-srcset` | 105 | WARN | Was recorded at 187; the backlog has shrunk. |
+| `icon-text-baseline-drift` | 17 | WARN | ⚠️ This checker produced **6 false WARNs** on 2026-07-26 (matched keywords inside CSS comments, and did not know `place-items` is shorthand). **Verify before fixing.** |
+| `form-control-ios-zoom` | **17** | ERROR | Comparison cluster + scams page. Not previously tracked here. Genuine candidates — controls under 16px auto-zoom on iOS focus. |
+| `opacity-dims-text-contrast` | 13 | WARN | |
+| `tap-target-spacing` | **3** | ERROR | ⚠️ This checker produced **7 false ERRORs** on 2026-07-26. All 3 are on comparison-cluster pages. **Verify before fixing.** |
+
+**The whole 8-page for-sale cluster scans 0 ERROR · 0 WARN**, so none of the above touches it. The
+`form-control-ios-zoom` and `tap-target-spacing` errors are concentrated in the **comparison cluster**
+(`african-grey-comparison`, `-pros-and-cons`, `-breeders-comparison`, `-vs-macaw`, `-vs-cockatoo`,
+`-vs-amazon-parrot`, `congo-vs-timneh`, `male-vs-female`) plus `how-to-avoid-african-grey-parrot-scams`.
+That cluster is the natural scope for a single sweep.
