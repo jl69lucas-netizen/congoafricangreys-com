@@ -704,36 +704,42 @@ const faqSchema = {
         <div class="form-wrap form-2col">
           <aside class="form-side">
             <p class="form-eyebrow">Reservable today</p>
-            <p class="form-head">Every Bird, Every Price</p>
+            <p class="fs-title">Every Bird, Every Price</p>
             <ul class="fs-list">
               {available.map((b) => (<li><span>{b.name} — {b.variant === "timneh_african_grey" ? "Timneh" : "Congo"}{b.sex === "pair" ? " pair" : ""}</span><b>{b.price_display}</b></li>))}
             </ul>
-            <p class="form-note">Ships nationwide · {money(airport)} airport · {money(home)} home · free pickup within two to three hours of Midland, TX.</p>
+            <p class="fs-ship">Ships nationwide · {money(airport)} airport · {money(home)} home · free pickup within two to three hours of Midland, TX.</p>
           </aside>
           <form class="cta-form" action="https://formspree.io/f/xrejpnvn" method="POST">
-            <label for="f-interest">Which bird are you asking about?</label>
-            <select id="f-interest" name="interest" required>
-              <option value="">Please choose…</option>
-              {available.map((b) => (<option value={`${b.name} — ${b.price_display}`}>{b.name} — {b.price_display}</option>))}
-              <option value="Not sure yet">Not sure yet — help me choose</option>
-            </select>
-            <div class="form-actions">
-              <div><label for="f-first">First name</label><input id="f-first" name="first_name" type="text" required /></div>
-              <div><label for="f-last">Last name</label><input id="f-last" name="last_name" type="text" required /></div>
+            <div class="fld">
+              <label for="f-interest">Which bird are you asking about?</label>
+              <select id="f-interest" name="interest" required>
+                <option value="">Please choose…</option>
+                {available.map((b) => (<option value={`${b.name} — ${b.price_display}`}>{b.name} — {b.price_display}</option>))}
+                <option value="Not sure yet">Not sure yet — help me choose</option>
+              </select>
             </div>
-            <div class="form-actions">
-              <div><label for="f-cell">Cell</label><input id="f-cell" name="cell" type="tel" /></div>
-              <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" required /></div>
+            <div class="form-2up">
+              <div><label for="f-first">First name</label><input id="f-first" name="first_name" type="text" autocomplete="given-name" required /></div>
+              <div><label for="f-last">Last name</label><input id="f-last" name="last_name" type="text" autocomplete="family-name" required /></div>
             </div>
-            <label for="f-delivery">Delivery preference</label>
-            <select id="f-delivery" name="delivery">
-              <option value={`Airport pickup — ${money(airport)}`}>Airport pickup — {money(airport)}</option>
-              <option value={`Home delivery — ${money(home)}`}>Home delivery — {money(home)}</option>
-              <option value={`Flight nanny — from ${money(nanny)}`}>Flight nanny — from {money(nanny)}</option>
-              <option value="Pickup in Midland, TX">Pickup in Midland, TX — if you live within 2–3 hours of us</option>
-            </select>
-            <label for="f-msg">Anything you want us to know?</label>
-            <textarea id="f-msg" name="message" rows="4"></textarea>
+            <div class="form-2up">
+              <div><label for="f-cell">Cell</label><input id="f-cell" name="cell" type="tel" autocomplete="tel" /></div>
+              <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required /></div>
+            </div>
+            <div class="fld">
+              <label for="f-delivery">Delivery preference</label>
+              <select id="f-delivery" name="delivery">
+                <option value={`Airport pickup — ${money(airport)}`}>Airport pickup — {money(airport)}</option>
+                <option value={`Home delivery — ${money(home)}`}>Home delivery — {money(home)}</option>
+                <option value={`Flight nanny — from ${money(nanny)}`}>Flight nanny — from {money(nanny)}</option>
+                <option value="Pickup in Midland, TX">Pickup in Midland, TX — if you live within 2–3 hours of us</option>
+              </select>
+            </div>
+            <div class="fld">
+              <label for="f-msg">Anything you want us to know?</label>
+              <textarea id="f-msg" name="message" rows="4"></textarea>
+            </div>
             <button class="btn-clay" type="submit">Send my reservation enquiry</button>
             <p class="form-note">Mark and Teri reply within 24 hours, in person.</p>
           </form>
@@ -957,6 +963,13 @@ const faqSchema = {
 .cta-form input:focus,.cta-form textarea:focus,.cta-form select:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.12)}
 .form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+/* Two-up field row. NOT .form-actions — that is the kit's BUTTON row, and
+   using it here left the name/email inputs sizing to content and wrapping.
+   min-width:0 is mandatory: grid children default to min-width:auto and
+   refuse to shrink below their content. */
+.form-2up{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-2up>div,.cta-form .fld{display:grid;gap:5px;min-width:0}
+@media(max-width:560px){.form-2up{grid-template-columns:1fr}}
 .cta-form button{border:none;cursor:pointer}
 .cta-form .btn-ghost{border:2px solid var(--f);color:var(--f);padding:11px 22px}
 .cta-form .btn-ghost:hover{background:var(--f);color:#fff}
@@ -1075,7 +1088,11 @@ const faqSchema = {
 .fs-list{list-style:none;margin:0;padding:0}
 .fs-list li{display:flex;justify-content:space-between;gap:12px;font-size:.84rem;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.14);color:rgba(255,255,255,.85)}
 .fs-list li b{color:#f08070;white-space:nowrap}
-.fs-ship{font-size:.72rem;color:rgba(255,255,255,.6);margin:12px 0 0!important}
+.fs-ship{font-size:.72rem;color:rgba(255,255,255,.72);margin:12px 0 0!important}
+/* .form-eyebrow is --clay-t #b04228, designed for a LIGHT background. On the
+   #221f1d panel it fails AA, so the dark panel takes the cluster's sanctioned
+   clay-on-dark value instead. */
+.form-side .form-eyebrow{color:#f08070}
 /* ===== TABLET / MOBILE ===== */
 @media(max-width:980px){
   .availB{grid-template-columns:1fr}
