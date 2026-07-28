@@ -178,6 +178,59 @@ const productSchema = {
     },
   })),
 };
+// ---- In-body figures. Rule 50b: the PRIMARY keyword appears in the primary
+// image's alt only; every other alt rotates a different keyword type, so no two
+// images on the page share a keyword class.
+//   kind "inf" = infographic — baked-in text, so native 16:9 with object-fit
+//                contain, NEVER cover-cropped (hardening §1c).
+//   kind "og"  = real photo — takes the taller 5:4 mobile frame and a per-image
+//                object-position so the bird is never clipped out of the strip.
+const figs: Record<string, { src: string; kind: "inf" | "og"; pos?: string; alt: string; cap: string }> = {
+  inf1: { src: "/african-grey-adoption-fee-vs-true-cost-iceberg.webp", kind: "inf",
+    alt: "African Grey parrot adoption cost split into the visible fee above the waterline and the cage, vet, food and forty-year costs below it",
+    cap: "The fee is the visible tip. Cage, vet, food and four decades of upkeep sit under the waterline — and no listing prices those." },
+  og1: { src: "/african-greys-available-price-bands.webp", kind: "og", pos: "center 30%",
+    alt: "Seven documented Congo and Timneh Greys from our aviary, the birds behind each price band we publish",
+    cap: "Seven of ours. The spread in price across them is subspecies and demand — never a thinner document file." },
+  inf7: { src: "/what-an-adoption-fee-does-not-cover.webp", kind: "inf",
+    alt: "African Grey rescue adoption fee inclusions checked off against the DNA certificate, PCR screening, CITES paperwork and health guarantee it leaves out",
+    cap: "A rescue fee reliably buys the bird and whatever history came with it. The four struck-through lines are what you then arrange and pay for yourself." },
+  inf3: { src: "/african-grey-cost-by-acquisition-route-stacked.webp", kind: "inf",
+    alt: "Total cost by acquisition route, stacked across rescue, breeder and online listing, with purchase price in clay and everything after it in green",
+    cap: "Clay is what you pay to acquire the bird; green is everything that follows. The online listing starts cheapest and finishes highest." },
+  inf2: { src: "/african-grey-day-one-money-breakdown.webp", kind: "inf",
+    alt: "Day one money breakdown for a hand-raised Grey, itemised as bird, delivery and papers on a single receipt",
+    cap: "Three lines, one total. We publish all three before you send a deposit." },
+  og5: { src: "/african-grey-on-travel-carrier-day-one.webp", kind: "og", pos: "center 35%",
+    alt: "Hand-raised Grey settled on its travel carrier the morning it leaves our Midland aviary",
+    cap: "Day one, from our side of it — carrier, water cup, and the document folder that travels taped to the crate." },
+  og3: { src: "/living-with-an-african-grey-running-costs.webp", kind: "og", pos: "center 30%",
+    alt: "Grey on a play stand in a family room, the daily setting the annual running cost actually pays for",
+    cap: "This is what the recurring lines buy: a bird out of its cage, in the room, part of the household." },
+  og4: { src: "/african-grey-fresh-produce-annual-food-cost.webp", kind: "og", pos: "center 45%",
+    alt: "Fresh chop bowl prepared for our Greys, the produce line item inside the yearly food budget",
+    cap: "One morning's chop. Produce, not pellets, is the line most first-year budgets underestimate." },
+  og6: { src: "/african-grey-toy-enrichment-line-item.webp", kind: "og", pos: "center 28%",
+    alt: "One of our Greys shoulder-perched with a foraging toy, showing the enrichment line item in practice",
+    cap: "Toys are consumable by design — a Grey is supposed to destroy them. Budget them as recurring, not once." },
+  inf8: { src: "/african-grey-cost-by-decade-forty-year-timeline.webp", kind: "inf",
+    alt: "Lifetime cost of owning an African Grey widening decade by decade from years one to forty",
+    cap: "Decade by decade. You are the first of what may be two or three owners, and the bird outlives most of the equipment." },
+  og2: { src: "/african-grey-forty-year-family-commitment.webp", kind: "og", pos: "center 32%",
+    alt: "Older owner holding a settled Grey, the long commitment the forty-year money question really describes",
+    cap: "The forty-year question is not really about money. It is about who takes the bird if you cannot." },
+  inf5: { src: "/what-a-cheap-african-grey-really-costs.webp", kind: "inf",
+    alt: "Cheap African Grey parrot true cost traced from an eight hundred dollar listing through missing papers, vet bills and quarantine",
+    cap: "The $800 is where it starts, not where it ends. Every box to the right is a bill that arrives later." },
+  inf6: { src: "/adoption-cost-african-grey-delivery-options.webp", kind: "inf",
+    alt: "African Grey parrot delivery cost compared across airport cargo, home delivery and an accompanied flight nanny",
+    cap: "Three ways home, three published prices. Pickup in Midland is free if you are within two to three hours." },
+};
+const fig = (k: string) => {
+  const f = figs[k];
+  return { ...f, srcset: `${f.src.replace(".webp", "-760.webp")} 760w, ${f.src} 1408w` };
+};
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -190,9 +243,9 @@ const faqSchema = {
 ---
 
 <BaseLayout {title} {description} {canonical} ogType="product" hideGlobalCta
-  heroPreload="/african-greys-available-price-bands.webp"
-  heroPreloadSrcset="/african-greys-available-price-bands-760.webp 760w, /african-greys-available-price-bands.webp 1408w"
-  heroPreloadSizes="(max-width:900px) 92vw, 520px">
+  heroPreload="/evie-timneh-african-grey-female-perched-card.webp"
+  heroPreloadSrcset="/evie-timneh-african-grey-female-perched-card-400.webp 400w, /evie-timneh-african-grey-female-perched-card.webp 800w"
+  heroPreloadSizes="(max-width:900px) 44vw, 260px">
 
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
@@ -284,9 +337,28 @@ const faqSchema = {
         <h2 class="cag-h2">What Does an African Grey Parrot Cost in 2026?</h2>
         <p>A documented African Grey costs between {money(floorPrice)} and {money(ceilPrice)} here at C.A.Gs, and between roughly $450 and $8,500 across the wider US market — a spread wide enough that quoting a single figure would be dishonest. That range exists because the same species is sold through three different doors, and each door prices a different thing: a rescue prices its overheads, a breeder prices sixteen weeks of hand-feeding and a paperwork trail, and an anonymous listing prices whatever it thinks you will send.</p>
 
+        {(() => { const f = fig("inf1"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
+
         <h3 class="cag-h3">What Is the Honest Price Range Across Every Route?</h3>
         <p>The honest range runs from about $450 at the bottom to about $8,500 at the top, and both ends are real. We sit deliberately in the middle of it, because the bottom end usually means a bird whose history nobody can reconstruct and the top end usually means a waiting list rather than a better bird.</p>
 
+        {(() => { const f = fig("og1"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
         <h4 class="cag-h4">How Much Does an African Grey Parrot Cost, All In?</h4>
         <p>All in, expect {range(yr1Ours)} for your first year with a documented Grey — the bird itself, delivery, the cage and stand you buy once, the first avian-vet visit, and a year of food and enrichment. That is the number worth planning against, and it is roughly double the sticker price on any route you choose.</p>
 
@@ -322,6 +394,15 @@ const faqSchema = {
         <h2 class="cag-h2">What Do Rescues Actually Charge to Adopt an African Grey?</h2>
         <p>Parrot rescues publish their fees, which makes this the one route you can price without asking anybody: the schedules we checked list African Greys between $450 and $1,500. We are a breeder, not a rescue, and we would rather send you to a good one with accurate numbers than pretend the route does not exist — our <a href="/african-grey-adoption/">honest guide to where adoption actually works</a> covers the application side in full.</p>
 
+        {(() => { const f = fig("inf7"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
         <h3 class="cag-h3">What Do the Published Adoption Fee Schedules Say?</h3>
         <p>Four organisations publish a figure for this species, and they do not agree with one another. That disagreement is the useful part: it tells you the fee reflects the organisation's costs and region, not the bird in front of you.</p>
 
@@ -356,6 +437,15 @@ const faqSchema = {
         <h2 class="cag-h2">How Do the Three Routes Compare on Real Money?</h2>
         <p>Nobody publishes this comparison, so we built it: three acquisition routes, priced across three horizons, with a column for what each route leaves out. Rescues publish a fee and stop. Marketplaces publish a price and stop. The interesting number is the one five years out, where the three routes quietly converge.</p>
 
+        {(() => { const f = fig("inf3"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
         <h3 class="cag-h3">What Does Each Route Cost Across Day One, Year One and Five Years?</h3>
         <p>Day one separates the routes by roughly a thousand dollars. Year five separates them by almost nothing — because a Grey eats, chews and visits a vet at the same rate regardless of how you acquired it.</p>
 
@@ -463,9 +553,28 @@ const faqSchema = {
         <h2 class="cag-h2">What Do You Hand Over on Day One?</h2>
         <p>Day one is the bird, the delivery tier and a deposit that has already been paid — {range([floorPrice, ceilPrice])} plus {money(airport)} to {money(home)} depending on how the bird travels. Everything else on this page is what follows; this is the only figure that moves money before your Grey is standing in your house.</p>
 
+        {(() => { const f = fig("inf2"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
+
         <h3 class="cag-h3">What Is Included in the Price of Our African Greys?</h3>
         <p>The paperwork is inside the price, not bolted on afterwards. That is a deliberate commercial choice: itemising certificates lets a seller advertise a lower headline and recover it at checkout, and we would rather quote the number you actually pay.</p>
 
+        {(() => { const f = fig("og5"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
         <h4 class="cag-h4">Does the Price Include DNA Sexing and Health Screening?</h4>
         <p>Both, on every bird, with no separate line. Our <a href="/dna-tested-african-grey-for-sale/">DNA-tested Greys page</a> explains how the PCR sexing works and what the certificate proves, and the same sample run covers the PBFD and Polyomavirus screening we do before any bird is offered.</p>
 
@@ -488,11 +597,41 @@ const faqSchema = {
         <h2 class="cag-h2">What Does an African Grey Cost After the First Payment?</h2>
         <p>Once the bird is home the spending changes shape: {range(setupOnce)} of things you buy once, then {range(annualRun)} every year for the next four decades. That second number is the one that decides whether an African Grey is affordable for you, and it is the number almost no listing mentions.</p>
 
+        {(() => { const f = fig("og3"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
+
         <h3 class="cag-h3">What Do You Buy Once, in the First Thirty Days?</h3>
         <p>The one-off spend is a cage, perches and toys, and a first avian-vet visit — {range(setupOnce)} together. Buy it before the bird arrives rather than after, because a Grey settling into a house is a poor moment to be assembling furniture around it.</p>
 
+        {(() => { const f = fig("og4"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
+
         <h4 class="cag-h4">How Much Is a Cage and Setup for an African Grey?</h4>
         <p>A cage large enough for a Congo runs {money(fy.cage_large.min)} to {money(fy.cage_large.max)}, with perches and starter toys adding {money(fy.perches_and_toys.min)} to {money(fy.perches_and_toys.max)}. Bar spacing matters more than badging: too wide and a Grey gets its head through, too narrow and it cannot climb, and either mistake means buying twice.</p>
+
+        {(() => { const f = fig("og6"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
 
         <h5 class="cag-h5">Buying the Cage Twice Is the Most Common First-Year Mistake</h5>
         <p>We watch it happen most years. Somebody buys a mid-size cage for a baby Grey, the bird grows into a full-sized Congo with a full-sized wingspan, and eight months later there is a second cage in the hallway and a first one on a resale site at half price.</p>
@@ -500,9 +639,28 @@ const faqSchema = {
         <h3 class="cag-h3">What Recurs Every Year for the Next Forty?</h3>
         <p>Food, veterinary care, replacement enrichment and a contingency — {range(annualRun)} a year, every year. Our <a href="/best-african-grey-parrot-food/">guide to the pellet brands we actually feed</a> covers the diet side, which is the largest predictable slice of that figure.</p>
 
+        {(() => { const f = fig("inf8"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
+
         <h4 class="cag-h4">What Is the Average Cost of Caring for an African Grey Each Year?</h4>
         <p>Budget {range(annualRun)}: {money(an.food_and_treats.min)}–{money(an.food_and_treats.max)} for pellets and fresh produce, {money(an.avian_vet_wellness.min)}–{money(an.avian_vet_wellness.max)} for the annual wellness exam, {money(an.toys_replacement.min)}–{money(an.toys_replacement.max)} replacing what gets destroyed, and up to {money(an.unexpected_vet.max)} held back for the visit you did not plan.</p>
 
+        {(() => { const f = fig("og2"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
         <h5 class="cag-h5">One Emergency Avian Vet Visit Can Exceed a Whole Year of Food</h5>
         <p>Parrots conceal illness until they cannot, which is why avian medicine tends to arrive as an emergency rather than an appointment. The contingency line is not padding — it is the difference between treating a sick bird and making a decision you did not want to make.</p>
 
@@ -532,6 +690,15 @@ const faqSchema = {
         <h2 class="cag-h2">Why Do Some African Greys Cost Under $1,000?</h2>
         <p>Because something has been left out, and it is worth knowing what. A Grey advertised at $600 or $800 is either a genuine private rehoming with thin paperwork, or it is not a bird at all — and the two look identical in a listing photograph.</p>
 
+        {(() => { const f = fig("inf5"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
         <h3 class="cag-h3">What Are You Actually Buying at a Sub-Floor Price?</h3>
         <p>Usually you are buying the absence of three things: a DNA certificate, a disease-screening panel, and a documented origin. None of those absences show up in the photograph, and all three surface within the first month.</p>
 
@@ -554,6 +721,15 @@ const faqSchema = {
         <h2 class="cag-h2">Where Do We Ship, and What Does Delivery Add?</h2>
         <p>We place birds inside the United States only, at {money(airport)} for airport pickup or {money(home)} for home delivery, with a flight-nanny option from {money(nanny)}. Delivery is the last line on the day-one figure and the one people most often forget to budget.</p>
 
+        {(() => { const f = fig("inf6"); return (
+          <figure class="sec-fig">
+            <img class={`sec-img ${f.kind === "inf" ? "inf-img" : "og-photo"}`} src={f.src} srcset={f.srcset}
+              sizes="(max-width:900px) 92vw, 760px" width="1408" height="768"
+              style={f.kind === "og" ? `object-position:${f.pos}` : undefined}
+              loading="lazy" decoding="async" alt={f.alt} />
+            <figcaption>{f.cap}</figcaption>
+          </figure>
+        ); })()}
         <h3 class="cag-h3">Do You Ship African Greys Outside the United States?</h3>
         <p>No, and we would rather say so on this page than in a reply three emails deep. We are a USDA-licensed Texas aviary; every bird we place stays within the country.</p>
 
@@ -850,7 +1026,16 @@ const faqSchema = {
 .adopt-main a.btn-clay{color:#fff}
 .adopt-main .bird-photo,.adopt-main .bird-name a,.adopt-main .bird-cta a,.adopt-main .ship-places a,.adopt-main .pair-c a{text-decoration:none}
 .sec-img{display:block;width:100%;max-width:760px;aspect-ratio:760/400;object-fit:cover;height:auto;border-radius:18px;margin:4px 0 18px;box-shadow:0 6px 20px rgba(60,30,10,.1)}
-.sec-img.inf-img{aspect-ratio:1408/768;box-shadow:0 4px 16px rgba(60,30,10,.08)}
+/* Infographics carry baked-in text, so they keep their native 16:9 and are
+   never cover-cropped at any width (hardening §1c — a 5:4 cover box shaves
+   ~30% off each side and cuts the words). */
+.sec-img.inf-img{aspect-ratio:1408/768;object-fit:contain;box-shadow:0 4px 16px rgba(60,30,10,.08)}
+/* Real photos share the same uniform desktop box; only the focal point varies
+   per image. They take the taller 5:4 frame on mobile (IMAGE-DESIGNS §7). */
+.sec-img.og-photo{aspect-ratio:1408/768;object-fit:cover}
+.sec-fig{margin:18px 0 20px;max-width:760px}
+.sec-fig .sec-img{margin:0}
+.sec-fig figcaption{font-size:.8rem;color:var(--mid);line-height:1.5;margin-top:9px;font-style:italic;max-width:70ch}
 /* VIDEO */
 .video-wrap{max-width:760px;margin:4px 0 18px;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(60,30,10,.12);background:#1b3228}
 .video-wrap video{display:block;width:100%;height:auto;aspect-ratio:1408/768;object-fit:cover}
@@ -1132,6 +1317,9 @@ const faqSchema = {
   .form-2col{grid-template-columns:1fr}
   /* In-body images: container width, original 16:9 infographic box (reverted from full-bleed) */
   .adopt-main .sec-img{width:100%;max-width:100%;margin-left:0;border-radius:14px;aspect-ratio:1408/768}
+  /* photos only — infographics must stay 16:9 or their baked-in text is cut */
+  .adopt-main .sec-img.og-photo{aspect-ratio:5/4}
+  .sec-fig{max-width:100%}
   .fs-video{max-width:none}
   /* TABLE A stacking */
   .otA table,.otA thead,.otA tbody,.otA tr,.otA th,.otA td{display:block}
