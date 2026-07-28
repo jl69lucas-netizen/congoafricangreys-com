@@ -109,3 +109,28 @@ Most likely remaining suspect: a race between first paint and the async Google
 Fonts stylesheet (`BaseLayout.astro`, `media="print" onload=...`). That is
 exactly what Phase 1.1 self-hosting removes, so re-measure after that lands
 before investigating further.
+
+## Star-rating contrast on congo + timneh (found 2026-07-28)
+
+`.stars{color:#c9a227}` measures **2.42:1 on white** — below even the 3:1 graphical-object floor, and well
+below 4.5:1 if the ★ glyphs are treated as text. It ships on exactly two pages:
+
+- `/congo-african-grey-for-sale/`
+- `/timneh-african-grey-for-sale/`
+
+The other four for-sale pages (hand-raised, dna-tested, health-guarantee, adoption-cost) already use
+`var(--clay-ink)`, which passes. This is a two-line sweep to bring the last two into line:
+
+```bash
+grep -n '\.stars{color:#c9a227' src/pages/congo-african-grey-for-sale/index.astro src/pages/timneh-african-grey-for-sale/index.astro
+```
+
+Found while running the §2b contrast sweep on the adoption-cost hardening pass. Not fixed there because the
+two pages were out of that build's scope.
+
+## Unbuilt stub failing the audit: congo-african-grey-parrot-pair-for-sale (confirmed 2026-07-28)
+
+`python3 scripts/final_page_audit.py --for-sale` returns **FAIL** for
+`/congo-african-grey-parrot-pair-for-sale/`: `all_h1_h4`, `all_six_levels`, `min_h5_5`, `min_h6_5`,
+`has_org`, `shipping_line`, `real_hero_image`. Measured H1:1 H2:3 H3:4 H4:0 H5:0 H6:0. It is a pre-existing
+stub awaiting its own build slot in the 22-page programme, not a regression.
