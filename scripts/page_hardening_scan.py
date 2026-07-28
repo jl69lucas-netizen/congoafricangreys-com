@@ -159,6 +159,24 @@ def check_absolute_hero(files):
             if fills:
                 continue
             base = sel.split()[-1].lstrip(".")
+            # §1d says the bug is "the CARD ITSELF being absolute" — hero ART that
+            # overlaps its siblings on desktop and collapses to slivers on mobile.
+            # A text element pinned to a corner of its own card is correct by design.
+            # The name-based allowlist above misses any badge not literally called
+            # badge/chip/tag (e.g. `.hero-tile-p`, a price pill), so test STRUCTURE:
+            #   (a) the rule styles type and sets no box  -> it is text, not art, and
+            #   (b) a shorter class it extends declares position:relative -> that
+            #       ancestor is the positioning context, so it cannot escape the card.
+            styles_type = re.search(r"font-(size|family|weight)|letter-spacing", decl)
+            sets_box = re.search(r"(?<!min-)(?<!max-)\b(width|height)\s*:", decl)
+            parent_relative = any(
+                re.search(r"\.%s\s*(,[^{]*)?\{[^{}]*position:\s*relative" % re.escape(base[:n]),
+                          txt)
+                for n in range(4, len(base))          # any shorter prefix class
+                if base[:n].rstrip("-")
+            )
+            if styles_type and not sets_box and parent_relative:
+                continue
             # is it reset inside any max-width media query?
             reset = re.search(
                 r"@media[^{]*max-width[^{]*\{(?:[^{}]|\{[^{}]*\})*?"
