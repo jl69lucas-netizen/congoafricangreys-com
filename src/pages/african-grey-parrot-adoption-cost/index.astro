@@ -31,9 +31,9 @@ const ceilPrice = Math.max(...prices);
 // availability posture, sex and age band; the money axis is ours alone.
 const bandOf = (p: number) => (p < 1700 ? "band1" : p < 2300 ? "band2" : p < 3000 ? "band3" : "band4");
 const bands = [
-  { k: "band1", label: "$1,500 – $1,699" },
-  { k: "band2", label: "$1,700 – $2,299" },
-  { k: "band3", label: "$2,300 – $2,599" },
+  { k: "band1", label: "$1,500–$1,699" },
+  { k: "band2", label: "$1,700–$2,299" },
+  { k: "band3", label: "$2,300–$2,599" },
   { k: "band4", label: "$3,500 bonded pair" },
 ];
 const bandCount = (k: string) => available.filter((b) => bandOf(b.price) === k).length;
@@ -118,11 +118,11 @@ const stories = [
 const yr1Ours = [floorPrice + setupOnce[0] + airport, ceilPrice + setupOnce[1] + home];
 const yr5Ours = [yr1Ours[0] + annualRun[0] * 4, yr1Ours[1] + annualRun[1] * 4];
 const ledgerRows = [
-  { horizon: "Day one", rescue: "$450 – $1,500", ours: range([floorPrice, ceilPrice]), sub: "$400 – $900",
+  { horizon: "Day one", rescue: "$450–$1,500", ours: range([floorPrice, ceilPrice]), sub: "$400–$900",
     misses: "A published rescue fee rarely covers transport. A sub-floor listing frequently covers nothing at all." },
-  { horizon: "Year one", rescue: "$925 – $2,800", ours: range(yr1Ours), sub: "$1,400 – $4,000+",
+  { horizon: "Year one", rescue: "$925–$2,800", ours: range(yr1Ours), sub: "$1,400–$4,000+",
     misses: "Setup costs the same whichever route you take. The sub-floor column swells because undocumented birds arrive needing work." },
-  { horizon: "Five years", rescue: "$2,425 – $8,200", ours: range(yr5Ours), sub: "$2,900 – $9,400+",
+  { horizon: "Five years", rescue: "$2,425–$8,200", ours: range(yr5Ours), sub: "$2,900–$9,400+",
     misses: "By year five the three routes converge. What you bought on day one was documentation, not a discount." },
 ];
 
@@ -385,10 +385,10 @@ const faqSchema = {
         <p class="k2-k">The sticker, before anything else</p>
         <p class="k2-h">What Each Route Asks for on Day One</p>
         <dl class="k2-rows">
-          <div class="k2-row"><dt>Published rescue adoption fee</dt><dd>$450 – $1,500</dd></div>
+          <div class="k2-row"><dt>Published rescue adoption fee</dt><dd>$450–$1,500</dd></div>
           <div class="k2-row"><dt>Our documented Congos and Timnehs</dt><dd>{range([floorPrice, ceilPrice])}</dd></div>
-          <div class="k2-row"><dt>Premium breeder listings</dt><dd>$5,200 – $8,500</dd></div>
-          <div class="k2-row"><dt>Listings below our floor</dt><dd>$400 – $900</dd></div>
+          <div class="k2-row"><dt>Premium breeder listings</dt><dd>$5,200–$8,500</dd></div>
+          <div class="k2-row"><dt>Listings below our floor</dt><dd>$400–$900</dd></div>
         </dl>
       </aside>
 
@@ -481,7 +481,7 @@ const faqSchema = {
                 <td data-label="Rescue route" class="num">{r.rescue}</td>
                 <td data-label="C.A.Gs route" class="num ours">{r.ours}</td>
                 <td data-label="Below-floor listing" class="num">{r.sub}</td>
-                <td data-label="What it leaves out">{r.misses}</td>
+                <td class="wide" data-label="Leaves out">{r.misses}</td>
               </tr>
             ))}
           </tbody>
@@ -895,7 +895,7 @@ const faqSchema = {
                     <p class="availB-blurb">{birdBlurb[b.id]}</p>
                     <ul class="availB-chips">{cardChips.map((c) => (<li>{c}</li>))}</ul>
                     <span class="availB-price">{b.price_display}</span>
-                    <a class="availB-btn btn-clay" href={b.slug}>View {b.name} &rarr;</a>
+                    <a class="availB-btn btn-clay" href={b.slug}>View {isPair ? "the Pair" : b.name} &rarr;</a>
                   </div>
                 </article>
               );
@@ -1090,7 +1090,10 @@ const faqSchema = {
 .dial-list a:hover{background:#faf3ee;color:#2a2622}
 .dial-list a.on{background:#faece7;color:#2a2622;font-weight:600}
 .dial-list a.on .num{color:#9c3a23}
-.dial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#b8a294;width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums}
+/* #b8a294 measured 2.28:1 on cream. This is a LIGHT dial, so it takes the
+   locked light-card numeral #6b625a (5.59:1) — never the dark-aviary #9fc7b0,
+   which is unreadable here. Spec: cag-page-hardening §1e-bis. */
+.dial-list .num{font-family:'Newsreader',serif;font-weight:700;color:#6b625a;width:16px;flex:none;font-size:.7rem;font-variant-numeric:tabular-nums}
 .dial-list .tag{margin-left:auto;font-size:.56rem;font-weight:600;letter-spacing:.02em;color:var(--f);background:#eef5f1;border-radius:50px;padding:1px 6px;white-space:nowrap}
 /* V-FLAGS — green-flag verification ledger */
 .vflags{max-width:680px;background:#fff;border:1px solid var(--bd);border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(60,30,10,.09);margin:22px 0 10px}
@@ -1157,11 +1160,17 @@ const faqSchema = {
 .ship-c:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(60,30,10,.11)}
 .ship-c>img{display:block;width:100%;height:200px;object-fit:cover}
 .ship-body{padding:16px 18px}
-.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 12px;font-size:.7rem;font-weight:600}
-.ship-tier.clay{background:var(--clay-ink)}
+/* .ship-tier is a <p>, so the generic `.ship-c p{color:#5b524a}` below beat it
+   on specificity (0,1,1 vs 0,1,0) and painted dark grey on the green pill —
+   1.19:1, effectively illegible. Qualified so the component wins. */
+.ship-c p.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 12px;font-size:.7rem;font-weight:600;margin:0!important}
+.ship-c p.ship-tier.clay{background:var(--clay-ink)}
 .ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.15rem}
 .ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
-.ship-c p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:none}
+/* max-width:none is right while the card is a narrow 2-up column, but
+   .ship-cards collapses to 1fr at ≤900px and the measure then ran 90ch at
+   768. A 70ch cap never bites in the 2-up state and holds the band at tablet. */
+.ship-c p{font-size:.82rem;color:#5b524a;margin:6px 0 0!important;max-width:70ch}
 .ship-line{font-size:.78rem;color:#7a6f64;font-weight:600;border-top:1px dashed var(--bd);padding-top:8px}
 /* GEO ROUTE CARDS — for-sale shipping component (replaces comparison-style pills) */
 .geo-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 16px}
@@ -1202,8 +1211,12 @@ const faqSchema = {
 .q-id{flex:1;min-width:0}
 .q-name{display:block;font-family:'Newsreader',serif;font-size:1rem;color:#2a2622;line-height:1.2}
 .q-loc{display:block;font-size:.75rem;color:#7a6f64;margin-top:1px}
-.stars{color:#c9a227;letter-spacing:2px;font-size:.85rem;flex:none}
-.quote-c p{font-size:.9rem;font-style:italic;margin:0;max-width:none}
+/* #c9a227 gold measured 2.42:1 on white — below even the 3:1 graphical floor.
+   Matches the three most recent siblings (hand-raised / dna-tested /
+   health-guarantee), which all use clay-ink. congo + timneh still carry the
+   failing gold: logged for the cluster backlog. */
+.stars{color:var(--clay-ink);letter-spacing:2px;font-size:.85rem;flex:none}
+.quote-c p{font-size:.9rem;font-style:italic;margin:0;max-width:70ch}
 /* FAQ */
 /* FORM */
 .cta-form{display:grid;gap:12px;max-width:640px;margin:10px 0 0}
@@ -1429,7 +1442,7 @@ const faqSchema = {
 .k4-k{font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#c9f2db;margin:0 0 3px}
 .k4-h{font-family:Newsreader,Lora,serif;font-size:1.2rem;font-weight:700;margin:0}
 .k4-list{list-style:none;margin:0;padding:18px 22px;display:grid;gap:11px}
-.k4-list li{display:flex;gap:11px;align-items:flex-start;font-size:.94rem;line-height:1.5}
+.k4-list li{display:flex;gap:11px;align-items:flex-start;font-size:.94rem;line-height:1.5;max-width:70ch}
 .k4-x{flex:0 0 auto;width:19px;height:19px;border-radius:5px;border:2px solid var(--clay);color:var(--clay-t);display:grid;place-items:center;margin-top:2px}
 
 /* TABLE G · True-Cost Ledger — three routes x three horizons */
@@ -1442,11 +1455,16 @@ const faqSchema = {
 .tg .num{font-variant-numeric:tabular-nums;font-weight:700;color:var(--clay-t);white-space:nowrap}
 .tg tr:last-child td,.tg tr:last-child th{border-bottom:0}
 @media(max-width:720px){
-  /* The caption was the one part of .tg this block never restyled, so a
-     1.05rem/700 serif line wrapped to three heavy lines on the solid green
-     band and read as a slab. White on #2D6A4F is 7.4:1, so weight can drop. */
-  .tg caption{font-size:.92rem;font-weight:600;line-height:1.3;padding:10px 12px;letter-spacing:0}
-  .tg,.tg tbody,.tg tr,.tg td,.tg th{display:block;width:100%}
+  /* caption MUST be in the display:block list. Left as display:table-caption
+     under a display:block .tg, the browser wraps it in an anonymous table box
+     that shrink-wraps to ~70px, so the title stacked one word per line. That
+     was the real cause of "the title is too thick" — the font-size was only
+     the symptom. */
+  .tg,.tg caption,.tg tbody,.tg tr,.tg td,.tg th{display:block;width:100%}
+  .tg caption{font-size:.92rem;font-weight:600;line-height:1.3;padding:10px 12px;letter-spacing:0;box-sizing:border-box}
+  /* the long prose column stacks its label instead of fighting it for width */
+  .tg td.wide{display:block}
+  .tg td.wide::before{display:block;margin-bottom:3px}
   .tg thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .tg tr{border-bottom:1px solid var(--bd);padding-bottom:6px}
   .tg tbody th{background:#f7f1ec;border-radius:8px;margin:10px 0 0}
