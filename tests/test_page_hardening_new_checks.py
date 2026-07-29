@@ -591,6 +591,84 @@ def test_no_flag_without_a_bare_tag_descendant_rule():
     assert found == []
 
 
+def test_sibling_container_is_not_a_nesting_relationship():
+    """The cartesian-product bug: 586 WARNs on 8 pages, 2026-07-29.
+
+    `.dial-ring span` and `.availB-price` both exist on adoption-cost, but
+    .availB-price is never inside a .dial-ring. Requiring only "both appear
+    somewhere in the file" pairs every kit descendant rule with every component
+    rule and floods the gate. Nesting must be established in the DOM.
+    """
+    src = '''<div class="dial-ring"><span class="dial-n">3</span></div>
+<div class="availB"><span class="availB-price">$1,500</span></div>
+<style>
+.dial-ring span{color:#9fc7b0}
+.availB-price{color:#b04228}
+</style>'''
+    found = run(H.check_component_color_specificity, [("src/pages/x/index.astro", src)])
+    assert checks_named(found, "component-color-loses-to-descendant") == [], found
+
+
+def test_real_nesting_is_still_caught_when_the_container_is_deep():
+    """Tightening must not blind the check: nesting through an intermediate wrapper."""
+    src = '''<div class="ship-c">
+  <div class="row"><p class="ship-tier">Airport $185</p></div>
+</div>
+<style>
+.ship-c p{color:#5b524a}
+.ship-tier{color:#fff}
+</style>'''
+    found = run(H.check_component_color_specificity, [("src/pages/x/index.astro", src)])
+    assert checks_named(found, "component-color-loses-to-descendant"), found
+
+
+def test_an_existing_qualified_rescue_rule_clears_the_finding():
+    """5 of 8 findings on 2026-07-29 were .btn-clay, which is already rescued.
+
+    adoption-cost ships BOTH `.btn-clay{color:#fff}` (0,1,0) and, 69 lines later,
+    `.adopt-main a.btn-clay{color:#fff}` — the prescribed fix, already applied. The
+    check must notice the rescue, not just the unqualified rule.
+    """
+    src = '''<main class="adopt-main"><a class="btn-clay" href="#r">Reserve</a></main>
+<style>
+.btn-clay{background:var(--clay-ink);color:#fff}
+.adopt-main a{color:var(--clay-t);text-decoration:underline}
+.adopt-main a.btn-clay{color:#fff}
+</style>'''
+    found = run(H.check_component_color_specificity, [("src/pages/x/index.astro", src)])
+    assert checks_named(found, "component-color-loses-to-descendant") == [], found
+
+
+def test_a_not_exclusion_on_the_descendant_rule_clears_the_finding():
+    """`.xsell p:not(.xsell-k){color:...}` deliberately spares .xsell-k."""
+    src = '''<div class="xsell"><p class="xsell-k">Also from our aviary</p>
+<p>Another line</p></div>
+<style>
+.xsell p:not(.xsell-k){color:var(--mid)}
+.xsell-k{color:#b04228}
+</style>'''
+    found = run(H.check_component_color_specificity, [("src/pages/x/index.astro", src)])
+    assert checks_named(found, "component-color-loses-to-descendant") == [], found
+
+
+def test_rules_quoted_inside_css_comments_are_ignored():
+    """The 2026-07-26 icon-baseline bug, repeated: matching inside comments.
+
+    adoption-cost documents its own past fix in a comment that contains the literal
+    text `.ship-c p{color:#5b524a}`, so the same defect was reported twice.
+    """
+    src = '''<div class="ship-c"><p class="ship-price">$185</p></div>
+<style>
+/* .ship-tier is a <p>, so the generic `.ship-c p{color:#5b524a}` below beat it */
+.ship-price{color:var(--clay-t)}
+.ship-c p{color:#5b524a}
+</style>'''
+    found = checks_named(
+        run(H.check_component_color_specificity, [("src/pages/x/index.astro", src)]),
+        "component-color-loses-to-descendant")
+    assert len(found) == 1, f"one defect, reported once — got {len(found)}"
+
+
 def test_background_only_collision_is_not_this_checks_job():
     """The white-on-white FAQ was a BACKGROUND collision — §1k / §2b own it."""
     bg = '''<div class="faqC-item"><div class="faq-d"><p>Answer</p></div></div>

@@ -176,3 +176,23 @@ pre-change scanner from git on the same slugs: `✅ clean — no known hardening
 **Scanner runtime is a pre-existing problem, not a regression from this check:** the unchanged
 scanner takes ~43 s for 4 pages (~19 s fixed + ~6 s/page). A full 108-page run exceeds 8 minutes and
 should be treated as a batch job, not an interactive gate.
+
+### Component colour specificity (`§1l`), same run
+
+| Page | Finding | Verified |
+|---|---|---|
+| `african-grey-parrot-adoption-cost` | `.ship-price{color:var(--clay-t)}` (line 1169, specificity 0,1,0) loses to `.ship-c p{color:#5b524a}` (line 1173, 0,1,1 **and** later in source). The three shipping prices render grey instead of clay. | **REAL.** Pointedly so: the comment at line 1163 records fixing `.ship-tier` this exact way (`.ship-c p.ship-tier{…}`) and `.ship-price` was left unqualified. Fix: `.ship-c p.ship-price{…}`. |
+| `baby-african-grey-parrot-for-sale` | `.xsell-k{color:var(--clay-t)}` (1510) loses to `.xsell p{color:#4a423b}` (1511). The cross-sell eyebrow renders body grey. | **REAL.** Its siblings (eggs, adoption-cost, health-guarantee) all write `.xsell p:not(.xsell-k){…}`; baby is the only page that does not. Fix: adopt the `:not(.xsell-k)` form for consistency. |
+
+**Three false-positive classes were removed from the check, not from the pages.** First pass reported
+**586 WARN across 8 pages**; final is **2**, both confirmed by reading the CSS:
+
+1. **Cartesian product, not nesting** (~578 of them). Pairing "ancestor appears in the file" with
+   "component appears in the file" matched `.dial-ring span` against every component on the page.
+   Nesting is now established from the DOM via `_subtrees_with_class`.
+2. **An existing qualified rescue rule** (5 of them, all `.btn-clay`). adoption-cost ships both
+   `.btn-clay{color:#fff}` and, 69 lines later, `.adopt-main a.btn-clay{color:#fff}` — the prescribed
+   fix, already applied. The check now looks for it.
+3. **Selectors quoted inside CSS comments** (1 duplicate). adoption-cost's comment documenting its own
+   past fix contains the literal text `.ship-c p{color:#5b524a}`. This is the same trap that produced
+   6 false icon-baseline WARNs on 2026-07-26; both new checks now strip `/* … */` first.

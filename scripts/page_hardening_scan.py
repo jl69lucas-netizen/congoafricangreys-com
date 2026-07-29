@@ -771,6 +771,7 @@ def check_class_drift(src_pairs):
             continue
         markup, css = text[:i], text[i:]
         css = css[:css.find("<script")] if "<script" in css else css
+        css = _strip_css_comments(css)
         used, literal = _rendered_classes(markup)
         defined = set(re.findall(r"^\s*\.([A-Za-z][\w-]*)", css, re.M))
 
@@ -805,6 +806,123 @@ def check_class_drift(src_pairs):
                 "confirm which before editing.")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 1l. component-color-loses-to-descendant — the concrete mechanism behind
+#     "this component looks wrong" (three instances on one page, 2026-07-28).
+#     `.ship-tier{color:#fff}` is (0,1,0); `.ship-c p{color:#5b524a}` is (0,1,1)
+#     and wins -> dark grey on forest green, 1.19:1, shipped live.
+#     Fix: qualify the component rule — `.ship-c p.ship-tier{...}`.
+#
+#     COLOUR-vs-COLOUR ONLY. The background half (the white-on-white FAQ, where a
+#     `.faq-d` wrapper set background:#fff inside a dark accordion) belongs to §1k
+#     plus the runtime contrast sweep §2b. Widening this check to backgrounds
+#     floods it. WARN, never ERROR: nesting is inferred from the markup, so this
+#     is a "go and measure it" signal, not a verdict.
+# ─────────────────────────────────────────────────────────────────────────────
+BARE_TAGS = ("p", "li", "span", "dt", "dd", "a", "small", "strong", "em")
+_HAS_COLOR = re.compile(r"(?<![-\w])color\s*:")
+
+
+_CSS_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+
+
+def _strip_css_comments(css):
+    """Blank out /* ... */ so selectors QUOTED IN PROSE are never analysed.
+
+    This is how the icon-baseline checker produced 6 false WARNs on 2026-07-26, and
+    adoption-cost repeats the trap: a comment documenting a past fix contains the
+    literal text `.ship-c p{color:#5b524a}`, which made the same defect report twice
+    (2026-07-29). Replace with spaces, not "", to keep byte offsets stable.
+    """
+    return _CSS_COMMENT.sub(lambda m: " " * len(m.group(0)), css)
+
+
+def _subtrees_with_class(markup, cls):
+    """Every element subtree (as raw markup) whose opening tag carries `cls`.
+
+    Needed because CSS descendant selectors are about DOM containment. Matching on
+    "both names appear in the file" instead pairs every kit rule with every
+    component and floods the gate.
+    """
+    out = []
+    for m in re.finditer(r"<([a-zA-Z][\w-]*)\b[^>]*class=\"([^\"]*)\"[^>]*>", markup):
+        if cls not in m.group(2).split():
+            continue
+        tag, gt = m.group(1), m.end()
+        if markup[gt - 2] == "/":                      # self-closing: empty subtree
+            out.append("")
+            continue
+        depth, pos = 1, gt
+        step = re.compile(rf"<(/?){re.escape(tag)}\b", re.I)
+        while depth and pos < len(markup):
+            n = step.search(markup, pos)
+            if not n:
+                break
+            depth += -1 if n.group(1) else 1
+            pos = n.end()
+        out.append(markup[gt:pos])
+    return out
+
+
+def check_component_color_specificity(src_pairs):
+    for f, text in src_pairs:
+        i = text.find("<style>")
+        if i == -1:
+            continue
+        markup, css = text[:i], text[i:]
+        css = css[:css.find("<script")] if "<script" in css else css
+        css = _strip_css_comments(css)
+
+        # Kit rules `.ancestor tag{...color...}` — specificity (0,1,1).
+        descendants = []
+        for m in re.finditer(r"\.([A-Za-z][\w-]*)\s+([a-z]+)\s*\{([^}]*)\}", css):
+            anc, tag, body = m.group(1), m.group(2), m.group(3)
+            if tag in BARE_TAGS and _HAS_COLOR.search(body):
+                descendants.append((anc, tag))
+
+        # Component rules `.component{...color...}` — specificity (0,1,0).
+        # Anchor on line start: a `(?<![\w.\s>+~])` lookbehind looks right but also
+        # rejects a rule at the start of a line, because the preceding newline IS
+        # whitespace — it silently collected nothing (caught by the RED test,
+        # 2026-07-29). Line-anchoring keeps this to genuine single-class rules, so
+        # the prescribed fix `.ship-c p.ship-tier{...}` is correctly NOT collected,
+        # and neither is a descendant selector like `.a .b{...}` at (0,2,0).
+        singles = {m.group(1) for m in
+                   re.finditer(r"^[ \t]*\.([A-Za-z][\w-]*)\s*\{([^}]*)\}", css, re.M)
+                   if _HAS_COLOR.search(m.group(2))}
+
+        for anc, tag in descendants:
+            # Nesting must be established in the DOM, not by co-occurrence in the
+            # file. Pairing "ancestor appears somewhere" with "component appears
+            # somewhere" is a cartesian product and produced 586 WARNs across 8
+            # pages (2026-07-29) — e.g. `.dial-ring span` paired with every
+            # component on the page, none of which live inside a .dial-ring.
+            subtrees = _subtrees_with_class(markup, anc)
+            if not subtrees:
+                continue
+            for comp in sorted(singles):
+                if comp == anc:
+                    continue
+                pat = re.compile(rf'<{tag}\b[^>]*class="[^"]*\b{re.escape(comp)}\b')
+                if not any(pat.search(s) for s in subtrees):
+                    continue
+                # Already fixed? A selector that qualifies the component — the very
+                # fix this check prescribes — clears it. adoption-cost ships both
+                # `.btn-clay{color:#fff}` and `.adopt-main a.btn-clay{color:#fff}`;
+                # without this, .btn-clay accounted for 5 of 8 findings and every
+                # one of them was already correct (2026-07-29).
+                c = re.escape(comp)
+                if re.search(rf"\.{re.escape(anc)}\b[^{{}}]*\.{c}\b", css) or \
+                   re.search(rf"\b{tag}\.{c}\b", css):
+                    continue
+                add("WARN", "component-color-loses-to-descendant", f, None,
+                    f".{comp} (0,1,0) sets color but `.{anc} {tag}` (0,1,1) outranks it "
+                    "— the component colour is silently discarded",
+                    f"Qualify the component rule: `.{anc} {tag}.{comp}{{...}}`. Confirm "
+                    "with getComputedStyle in Playwright before editing "
+                    "(skills/cag-gate-integrity.md).")
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     fail_on_error = "--fail-on-error" in sys.argv
@@ -832,8 +950,10 @@ def main():
     check_icon_baseline(src_pairs)
     check_smooth_scroll(src_pairs)
 
-    # 2026-07-29: markup↔CSS drift (adoption-cost harden lessons §1)
+    # 2026-07-29: markup↔CSS drift + component colour specificity
+    # (adoption-cost harden lessons §1 and §2)
     check_class_drift(src_pairs)
+    check_component_color_specificity(src_pairs)
 
     base = "src/layouts/BaseLayout.astro"
     theme = "\n".join(lines_of("src/styles/direction-d.css") +
