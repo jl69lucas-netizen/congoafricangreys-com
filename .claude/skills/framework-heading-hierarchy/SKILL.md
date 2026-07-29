@@ -125,6 +125,77 @@ For every core H2, generate 5 variations for A/B testing:
 
 ---
 
+## Header Style Selection (added 2026-07-29)
+
+The 6-level map above decides **what keyword** each heading carries. This section
+decides **how it is phrased** — and the choice must be justified out loud at the
+outline gate, grounded in that page's own query data, never in taste.
+
+### The three styles
+
+**Style 1 — Pure Conversational.** Natural language, reader curiosity, no forced
+keyword.
+*"What Is It Really Like to Live with a Congo African Grey?"*
+Highest engagement, weakest keyword signal.
+
+**Style 2 — Conversational Hybrid (keyword + entity).** Question or benefit phrasing
+wrapped around a target keyword and a named entity.
+*"How to Choose the Best Congo African Grey Cage Setup"* ·
+*"Safe Foods vs. Toxic Foods for Psittacus erithacus"*
+Balanced. Best for informational depth across many sections.
+
+**Style 3 — Recommended Hybrid (direct-answer / snippet-targeted).** Question plus a
+parenthetical or colon that states the answer scope, so the section is extractable on
+its own.
+*"What Do Congo African Greys Eat? (Nutrition & Safe Foods)"*
+Strongest for Featured Snippets and AI Overviews. Reads repetitive if every H2 uses
+it — alternate with Style 2 inside a page.
+
+### Register variants (choose the register, not a fourth style)
+
+| Register | Example | Best for | Cost |
+|---|---|---|---|
+| **FAQ question-based** | "How Long Do Congo African Greys Live in Captivity?" | direct answers, AIO + Featured Snippets | monotonous if overused |
+| **Quora-style** | "Why Is My African Grey Pulling Out Its Chest Feathers All of a Sudden?" | long-tail behaviour / problem posts | too long to scan |
+| **Reddit-style** | "Is a Congo Grey Actually Worth the Hassle for a Beginner?" | community, subjective, review roundups, Reddit-modifier pages | weak explicit keyword |
+
+### Page-type → default style
+
+| Page type | Default | Why |
+|---|---|---|
+| For-sale / buy (transactional) | **Style 3**, ~30% Style 2 | Buyer queries are decision questions; the parenthetical carries the commercial modifier without stuffing the H2 |
+| Comparison | **Style 3**, both entities named | The query *is* the comparison — both entities must appear for passage-level ranking |
+| Care / health / informational | **Style 2** | Long-tail depth queries; entity density beats snippet framing across 20+ sections |
+| Bird listing `/available/` | **FAQ register on Style 2** | Buyers ask about one named bird — name + attribute + question |
+| Reddit-modifier | **Reddit register**, deliberately | The page's whole promise is "what owners actually say" |
+| Blog | **Style 2**, Quora-register H1 | Curiosity opener, keyword body |
+| Location | **Style 2** with the geo modifier | The state/city IS the differentiator |
+| Legal / privacy | Plain declarative | No search intent to serve; clarity only |
+
+### The justification requirement (binding)
+
+Every H1–H6 outline presented at the Sprint 1 gate MUST carry a one-line style
+declaration and a reason grounded in real data — the page's GSC/query set, the SERP
+snapshot, PAA demand, or a named competitor gap. **Never taste.**
+
+```
+Header style: Style 3 (Recommended Hybrid), FAQ register on H4–H6.
+Why: price intent beats adoption intent 5:1 in this page's own query set, and 6 of the
+top 10 SERP results are question-led — so a direct-answer H2 competes for the snippet
+those informational results currently hold.
+Trade-off: Style 3 on every H2 reads repetitive; H3s alternate to Style 2.
+```
+
+An outline submitted without the style line and its reason is **incomplete** and does
+not pass the gate. Deviating from the page-type default is allowed; deviating
+**silently** is not.
+
+Style choice never overrides the heading standards: **Title Case applies to every
+H1–H6 regardless of style**, and FAQ `<summary>` text — which is not a heading — stays
+conversational sentence case.
+
+---
+
 ## The No-Skip Law
 
 Heading levels MUST be sequential. You cannot use H2 and then jump to H4 — H3 must come first.
@@ -228,3 +299,6 @@ grep -oP '(?<=<)[hH][1-6]' site/content/[slug]/index.html | grep -oP '[1-6]' | a
 7. **Question format preferred for H2/H3** — conversational, voice-search optimized
 8. **Audit command first** — always grep heading levels and run skip-detection before manual review
 9. **OUTLINE-FIRST APPROVAL GATE** — the full H1→H6 heading tree must be presented to the breeder and **approved before any page code is written or edited** (breeder rule 2026-06-20). Semantic map: H1=topic · H2=search intents · H3=subtopics/clusters · H4=micro-intent/PAA · H5=supporting facts/warnings/examples · H6=ultra-specific details/breeder notes/citations.
+10. **HEADER STYLE MUST BE DECLARED AND JUSTIFIED** at the outline gate — one of Style 1 (Pure Conversational) / Style 2 (Conversational Hybrid) / Style 3 (Recommended Hybrid), plus its register (FAQ / Quora / Reddit), with a data-grounded reason and a named trade-off. See §Header Style Selection. **No style line = incomplete outline.**
+11. **STYLE FOLLOWS PAGE TYPE BY DEFAULT** — Style 3 for transactional and comparison, Style 2 for informational / care / location / blog, FAQ register for bird listings, Reddit register for Reddit-modifier pages. Deviating is allowed; deviating silently is not.
+12. **TITLE CASE OVERRIDES STYLE** — every H1–H6 is AP-style Title Case whatever the style. FAQ `<summary>` text is not a heading and stays sentence case.
