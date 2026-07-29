@@ -60,6 +60,65 @@ For a site with moderate authority, **the URL slug + page title supply ~90% of r
 - Existing comparison/blog pages get a Link-First pointer to their sibling Reddit page ("Reddit owners weigh in on this exact question — our summary of the r/parrots thread…").
 - After every page: `python3 scripts/generate_sitemaps.py`, commit + push, and log target queries in the session brief for GSC tracking.
 
+## Thread Sourcing Protocol (added 2026-07-29)
+
+Applies to **every** page that cites Reddit — not just Reddit-modifier pages. Eight
+threads are already cited across the for-sale cluster, and **five links are bare
+subreddit roots** with no evidentiary value. This protocol replaces "find a thread
+that looks relevant."
+
+### Step A — derive the queries from the PAGE, not from the topic
+
+3–5 queries from **that page's own** intent, primary keyword and PAA set. The
+adoption-cost page's real query set runs price-intent 5:1 over adoption-intent, so a
+thread about rehoming would have been off-intent even though it is squarely about
+adoption. The page decides, not the subject.
+
+### Step B — search through the escalation ladder
+
+Use `skills/research-recency.md`: Firecrawl → WebFetch with a UA retry → **headless
+browser (Playwright)** → `/last30days`. Reddit blocks curl and Firecrawl, so in
+practice the browser or `last30days` does the work, and `last30days` ranks by real
+engagement — exactly the signal this protocol needs.
+
+**Never fabricate a thread, a quote, or a vote count.**
+
+### Step C — score the candidates
+
+| Signal | Weight | How to read it |
+|---|---|---|
+| Subreddit authority | high | r/parrots and r/AfricanGrey rank position-1 on our decision queries; a 200-member sub does not |
+| Upvotes | high | absolute score on the thread |
+| Comment count | **highest** | a 12-comment thread with real owner detail beats a 400-upvote photo post — **we quote comments, not titles** |
+| On-intent fit | **gate** | must answer the query the *page* targets, not the topic generally |
+| Recency | medium | older is fine for stable facts (lifespan, price floors); recent matters for market claims |
+| Ethics | **veto** | never link threads promoting wild-caught birds, undocumented sales, or scam marketplaces |
+
+Keep the top **2–4**. One thread is thin; eight is a link farm.
+
+### Step D — verify by opening it
+
+Open each surviving thread and confirm it exists, is not deleted or locked, and
+actually contains the quote you intend to use. Quotes are ≤15 words, attributed as an
+owner's claim, and linked. The `⚠ CITE OR DROP` rule holds — an anonymous Reddit
+statistic is quoted **as a claim** or dropped, never printed as fact.
+
+### Step E — log it in the Thread Diversity Ledger
+
+Record URL, subreddit, topic, page and verification month in
+`data/reddit-thread-ledger.json`. **Check the ledger before citing.** A thread already
+spent on a sibling needs either a different thread or an explicitly different angle —
+the same discipline as the Anchor Diversity Ledger, which caught two collisions on the
+adoption-cost build that eyeballing would have shipped.
+
+### Standing rules
+
+- **Never link a bare subreddit root.** `r/parrots/` is not evidence. Link the thread.
+- **A thread is evidence, not filler.** If you cannot say in one sentence what it
+  proves *for this page*, drop it.
+- **Script the ledger check; do not read it.** Parse `<a href>` out of the built page
+  and compare against the ledger — the anchor-collision lesson applies verbatim.
+
 ## Quick Reference
 
 | Element | Rule |
