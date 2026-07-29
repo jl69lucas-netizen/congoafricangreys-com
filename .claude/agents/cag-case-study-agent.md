@@ -2,7 +2,7 @@
 name: cag-case-study-agent
 description: Manages all case studies on CongoAfricanGreys.com. Scans site/content/ HTML to extract existing testimonial/case study sections from pages, writes structured data to data/case-studies.json, builds a dedicated /case-studies/ hub page, and manages new case study submissions. Never fabricates buyer outcomes — all content must come from [BREEDER_NAME] directly.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

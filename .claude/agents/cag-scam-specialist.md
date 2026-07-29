@@ -2,7 +2,7 @@
 name: cag-scam-specialist
 description: Rebuilds /how-to-avoid-african-grey-parrot-scams/ and manages the scam-prevention content cluster. Reads data/structure.json for hub/spoke map. Focuses on scam identification, CITES documentation verification, and ethical-breeder trust signals. Converts scam-fearful visitors into documented-purchase inquiries.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

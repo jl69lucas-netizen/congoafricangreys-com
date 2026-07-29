@@ -2,7 +2,7 @@
 name: cag-variant-specialist
 description: Rebuilds the two African Grey variant pages — /congo-african-grey-for-sale/ and /timneh-african-grey-for-sale/ — AND the three attribute/feature pages (/captive-bred-african-grey-parrot/, /dna-tested-african-grey-for-sale/, /hand-raised-african-grey-parrot-for-sale/) — section-by-section. Inserts cross-links and a shared comparison table. The variant + attribute pages form the variant/attribute cluster with cross-sell opportunities.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

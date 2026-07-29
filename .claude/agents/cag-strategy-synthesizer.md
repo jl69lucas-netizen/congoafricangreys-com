@@ -2,7 +2,7 @@
 name: cag-strategy-synthesizer
 description: Turns existing CAG research (gap matrix, competitor-intel, GSC, LLM-keyword-intel) into TWO complete reverse-engineered content strategies, recommends ONE with a data-grounded WHY plus its named trade-off, and derives concrete artifacts (e.g. the 9 blog topics + 1 hub) for the chosen strategy. Reads research only — never re-runs Sprint 0, never fabricates data. Hands the chosen strategy to cag-content-architect.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: max
 dynamic_workflow: false
 ---

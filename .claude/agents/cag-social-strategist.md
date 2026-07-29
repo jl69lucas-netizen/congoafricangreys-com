@@ -2,7 +2,7 @@
 name: cag-social-strategist
 description: Orchestrates all non-YouTube social media for CongoAfricanGreys.com — Instagram, Facebook, Pinterest, TikTok. Turns one source asset (talking-bird clip, chick photo, or site page) into platform-native posts, builds the content calendar, and tracks competitor social. Reads skills/social-content.md as its writing vocabulary and data/ for live pricing/availability/stories. Never auto-posts. YouTube stays with @cag-video-seo-agent.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

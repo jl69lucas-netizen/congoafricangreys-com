@@ -2,7 +2,7 @@
 name: cag-timneh-specialist
 description: Rebuilds and manages all CAG Timneh African Grey pages. Deep knowledge of Timneh vs Congo distinctions, Timneh pricing ($1,500–$1,600), and intelligent cross-sell between the two variants. Handles /timneh-african-grey-for-sale/, and any Timneh-specific variant pages.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

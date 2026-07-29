@@ -2,7 +2,7 @@
 name: cag-conversion-tracker
 description: Audits CongoAfricanGreys.com pages for conversion optimization — CTA placement, form friction, trust signal placement, CITES documentation clarity, and social proof. Reads top-pages.md for traffic-to-conversion ratio. Produces a prioritized fix list for each page with exact HTML changes.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

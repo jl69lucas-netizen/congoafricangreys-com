@@ -2,7 +2,7 @@
 name: cag-content-architect
 description: Orchestrates all content creation for CongoAfricanGreys.com. Selects the right framework (AIDA, PAS, FAB, QAB, BAB, EBD, Entity-Tree, Inverse Pyramid, H-S-S) for each page type and content need. Reads top-pages.md for traffic context before every session. Routes tasks to the right specialist agent.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: max
 dynamic_workflow: true
 ---
