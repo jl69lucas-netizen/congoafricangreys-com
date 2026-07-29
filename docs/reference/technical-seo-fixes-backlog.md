@@ -153,3 +153,26 @@ Full run over all 108 pages, from the adoption-cost harden session. **1106 ERROR
 (`african-grey-comparison`, `-pros-and-cons`, `-breeders-comparison`, `-vs-macaw`, `-vs-cockatoo`,
 `-vs-amazon-parrot`, `congo-vs-timneh`, `male-vs-female`) plus `how-to-avoid-african-grey-parrot-scams`.
 That cluster is the natural scope for a single sweep.
+
+## markup↔CSS drift census, 2026-07-29 (NEW check `§1k`)
+
+The line above — *"the whole 8-page for-sale cluster scans 0 ERROR · 0 WARN"* — was true of the
+scanner as it stood, and **not true of the pages**. The new `markup-css-drift` / `markup-css-orphan`
+checks (`scripts/page_hardening_scan.py` §1k, added 2026-07-29 from the adoption-cost harden lessons)
+find **3 WARN on the same 8 pages the previous scanner called clean**. Verified by running the
+pre-change scanner from git on the same slugs: `✅ clean — no known hardening defects found`.
+
+| Page | Finding | Triage |
+|---|---|---|
+| `african-grey-parrot-bird-eggs-for-sale-usa` | **20 classes styled, never rendered**: `bird-badge bird-body bird-c bird-cards bird-cta bird-docs bird-name bird-photo bird-price bird-top` · `faq-d faq-open faq-q` · `pair-body pair-c pair-row pair-sub` · `nl-inflow` · `ship-mini` · `video-wrap` | **Highest priority.** This is 5–6 whole components with no markup behind them, the same failure mode as adoption-cost. Note `faq-d` is the exact class behind the 2026-07-28 white-on-white FAQ defect. Triage each as MISSING COMPONENT (render it) vs DEAD VARIANT (delete it) — never bulk-delete. |
+| `timneh-african-grey-for-sale` | **14 classes styled, never rendered**: `carecards cc cc-k cc-s` · `chkT chkT-eyebrow chkT-grid chkT-head chkT-title` · `pb-bar pb-note pb-scale pb-zone priceband` | 3 components: a care-cards grid, a `chkT` checklist, and a `priceband` scale. Compare against the tuple ledger in `sessions/2026-07-19-for-sale-component-map.md` before deciding. |
+| `african-grey-parrot-adoption-cost` | `faqC-a` **rendered with no CSS rule** on this page | Real. `hand-raised` styles it as `.handraised .faqC-a{padding:0 1rem 1rem 3.05rem}`; adoption-cost renders the same wrapper unstyled. Confirm in a real viewport before editing. |
+
+**Two false positives were found and fixed in the check itself, not in the pages** (per
+`skills/cag-gate-integrity.md`): `top` on the baby page is a comparison *value*
+(`b.badge === "top"`), not a class — the orphan half now uses literal `class="…"` tokens only; and
+`sr-only` is a generated Tailwind utility with no authored rule in `src/`.
+
+**Scanner runtime is a pre-existing problem, not a regression from this check:** the unchanged
+scanner takes ~43 s for 4 pages (~19 s fixed + ~6 s/page). A full 108-page run exceeds 8 minutes and
+should be treated as a batch job, not an interactive gate.
