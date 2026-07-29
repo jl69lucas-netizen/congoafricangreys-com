@@ -3,7 +3,19 @@ name: cag-page-hardening
 description: Use when a CAG page is built but feels rushed, or before any deploy/final pass, or when the breeder reports a page looks wrong on mobile/desktop — zoomed images, broken or overlapping hero art, a jump-rail that does nothing, buttons that wrap or stretch, text cut off at the screen edge, headings that ignore their CSS, or Lighthouse contrast / link-distinguishability / image-delivery flags. Runs an automatic scan for every UI/UX/perf/a11y defect class that has actually shipped on this site, then applies the banked fix for each. Triggers: "harden this page", "polish the UI", "fix the mobile view", "why is this cut off", "sweep the contrast fix", "make it modern/clean", final-pass QA.
 ---
 
-# SKILL: CAG Page Hardening (v1.0 — 2026-07-23)
+# SKILL: CAG Page Hardening (v2.0 — 2026-07-29)
+
+**v2.0 adds the 2026-07-28 adoption-cost lessons.** v1.0 assumed the enemy was a
+defect the scanner could not see. v2.0 assumes the harder case: **a clean scan on a
+broken page.** `page_hardening_scan.py` returned `0 ERROR · 0 WARN` on a page whose
+FAQ answers were invisible (1.00:1) and whose five mandated components had no markup
+behind them. Both halves — static scan AND runtime probes — are mandatory, always.
+
+**Before you fix anything a gate reports, read `skills/cag-gate-integrity.md`.**
+Nine checkers have cried wolf on this cluster, and building v2.0 added three more
+false-positive classes that were fixed in the checks rather than the pages — the
+`§1l` check reported **586 WARN** on its first pass and **2** once nesting was
+resolved from the DOM instead of from name co-occurrence.
 
 **Why this exists.** The same UI defects keep reaching production because they are
 invisible in source review — the CSS *looks* right. Each one below was found the
@@ -15,19 +27,29 @@ SEO; this one audits whether the page actually *renders* correctly.
 
 ---
 
-## 0. The one-command scan
+## 0. The static half
 
 ```bash
-python3 scripts/page_hardening_scan.py <slug>
+npx astro build                                    # nothing below works on a stale dist/
+python3 scripts/page_hardening_scan.py <slug>      # 21 checks
+python3 scripts/seam_parity.py <slug>              # one seam per section
 ```
 
 `ERROR` = shipped-broken, fix before deploy. `WARN` = very likely wrong, eyeball it.
 Omit the slug to sweep the whole site. Add `--fail-on-error` for CI.
 
-The scanner covers everything statically detectable. Three defects can only be
-caught at runtime — run §Runtime below in the browser as well. **Both halves are
-required**; the static scan alone would have missed the two worst bugs of
-2026-07-23.
+**Pass slugs literally.** zsh does not word-split an unquoted `$VAR`, so
+`python3 … $SLUGS` arrives as one argument, matches no page, and the gate reports
+PASS having examined nothing. **Read the examined count in the gate's own output
+before you believe a pass** — see `skills/cag-gate-integrity.md`.
+
+The scan is slow and always has been: roughly 19 s of fixed cost plus ~6 s per page,
+so a full 108-page sweep runs over 8 minutes. Treat the sitewide run as a batch job
+and scope interactive runs to the cluster you are working on.
+
+**Both halves are required.** The static scan alone would have missed the two worst
+bugs of 2026-07-23 *and* every defect of 2026-07-28 — that page scanned
+`0 ERROR · 0 WARN` while its FAQ answers were invisible. Run §2 Runtime as well.
 
 ---
 
@@ -248,7 +270,92 @@ Anything relying on the old blanket ban must be re-verified per page before ship
 smooth scroll: click every jump link at 390px and 1280px and confirm the target heading
 lands *below* the sticky chrome.
 
+### 1k. `markup-css-drift` / `markup-css-orphan` — ERROR / WARN — *the clean-scan trap*
+
+Added 2026-07-29. The page was assembled by porting the CSS kit and hand-writing
+markup that drifted from it. On `/african-grey-parrot-adoption-cost/`: **101 classes
+defined and never rendered** — five of them components the for-sale spec mandates —
+and the two that *were* rendered pointed at **the wrong class names**, so FAQ question
+text sat in `.faqC-x`, a 16×16 icon box, and every question crushed to 16px.
+
+**Triage is mandatory and the scanner cannot do it for you:**
+
+| Styled, never rendered | When | Action |
+|---|---|---|
+| **Missing component** | the spec mandates it (`.doc-stack`, `.otA`, `.geo-pin`, `.read-img`, `.vflags`, `.chkB`, `.fs-video`, `.xsell`, `.seam`) | **Render it.** Deleting the CSS hides a spec violation. Raised as ERROR. |
+| **Dead code** | it belongs to a variant this page does not ship (`.k1` when the page ships K2) | Delete it. Raised as WARN. |
+
+On adoption-cost that split was **7 missing components vs 30 genuinely dead classes**.
+**Never bulk-delete a WARN list.**
+
+What the first real run found on pages the previous scanner called clean — eggs **20**
+unrendered classes (5–6 whole components, including the `.faq-d` class behind the
+white-on-white FAQ bug), timneh **14** (a care-cards grid, a `chkT` checklist, a
+`priceband` scale). Census in `docs/reference/technical-seo-fixes-backlog.md`.
+
+**Two false positives to expect, both already handled:** a *comparison value* is not a
+class (`class={`bbadge${b.badge === "top" ? …}`}` reported a class `top`), so the
+orphan half reads literal `class="…"` tokens only; and Tailwind utilities like
+`sr-only` are generated, with no authored rule in `src/`.
+
+### 1l. `component-color-loses-to-descendant` — WARN — *"the component looks wrong"*
+
+Added 2026-07-29. Every such complaint on adoption-cost traced to a generic descendant
+selector out-ranking a component selector:
+
+| Component rule | Beaten by | Result |
+|---|---|---|
+| `.ship-tier{color:#fff}` (0,1,0) | `.ship-c p{color:#5b524a}` (0,1,1) | dark grey on forest green, **1.19:1** |
+| answer in `.faq-d` (`background:#fff`) inside the dark accordion | `.faqC-item p{color:rgba(255,255,255,.82)}` | **white on white, 1.00:1 — invisible** |
+
+**Rule: when a component's inner element is a bare tag (`p`, `span`, `li`, `dt`, `dd`,
+`a`), qualify the component rule** — `.ship-c p.ship-tier{…}` — or the kit's generic
+descendant rules silently win. The `:not()` form works too:
+`.xsell p:not(.xsell-k){…}`.
+
+Scope: **colour vs colour only.** The second row above is a *background* set by a
+wrongly-applied class — that belongs to §1k plus the runtime contrast sweep §2b.
+Widening §1l to backgrounds floods it.
+
+**WARN, never ERROR** — nesting is inferred from markup, so this is a "go and measure
+it" signal, not a verdict. Confirm with `getComputedStyle` in Playwright first.
+
+> **What building this check taught, which generalises to every check you write.**
+> First pass: **586 WARN** on 8 pages. Three separate bugs, all mine:
+> 1. **Nesting was a cartesian product** — "ancestor somewhere in the file" ×
+>    "component somewhere in the file" paired `.dial-ring span` with every component
+>    on the page. CSS descendant selectors are about **DOM containment**; resolve the
+>    subtree, don't co-occur names.
+> 2. **An existing rescue rule already fixed it** — adoption-cost ships both
+>    `.btn-clay{color:#fff}` and `.adopt-main a.btn-clay{color:#fff}`, the prescribed
+>    fix. 5 of 8 findings were already correct code.
+> 3. **Selectors quoted inside `/* … */` were analysed** — a comment documenting a
+>    past fix contains the literal text `.ship-c p{color:#5b524a}`, so the same defect
+>    reported twice. **This is the identical trap that produced 6 false icon-baseline
+>    WARNs on 2026-07-26.** Strip comments before parsing CSS. Always.
+
 ## 2. Runtime probes (§Runtime — the static scan CANNOT catch these)
+
+> **Use Playwright, not the Browser pane.** The Browser pane reports `vw: 0` and every
+> `getBoundingClientRect()` comes back zero — elements are in the DOM but nothing
+> paints, so every probe below reads as a false pass. Sequence: `browser_resize` →
+> `browser_navigate` → `browser_evaluate`. Banked as
+> `reference_intersectionobserver_needs_painting_page`; it applies to **all**
+> measurement, not just scroll-spy.
+>
+> **Breakpoints: 375 / 768 / 1280 — and 768 is the one that fails.** On the
+> adoption-cost pass, 375 and 1280 were clean and *every* line-length defect was at
+> tablet.
+>
+> **Capture components with element screenshots** (`browser_take_screenshot` with
+> `target`). A viewport screenshot resets scroll, and a prior `scrollIntoView` does
+> not survive it.
+>
+> **Your own probes are gates too, and they lie.** Two of mine were wrong on
+> 2026-07-28: the contrast sweep tested `display:none` on the element but not on its
+> ancestors (8 of 13 "failures" evaporated — skip when `!el.offsetParent` or the rect
+> is zero-sized), and a hero measured 432px only because I included its `16px 0 20px`
+> padding instead of measuring `.hero-grid`, the element the spec actually names.
 
 ### 2z. `srcset-sizes-mismatch` — *the oversized-hero root cause*
 
@@ -415,7 +522,40 @@ label and never wrap.
 
 ---
 
-## 5. Handoff
+## 5. Small defects that reached production anyway
+
+Each of these shipped live and was reported by the breeder, not by a gate.
+
+- **`caption` must join the mobile `display:block` list.** Left as
+  `display:table-caption` under a `display:block` table, the browser wraps it in an
+  anonymous table box that shrink-wraps to ~70px and stacks the title one word per
+  line. This — not font-size — was the true cause of "the ledger title is too thick."
+- **`max-width:none` is conditional, not wrong.** Correct while a card is a narrow
+  2-up column; a bug the moment that grid collapses to `1fr`. `.ship-c p` and
+  `.quote-c p` measured 90ch at 768. **Check every uncapped paragraph at the
+  breakpoint where its container goes full width.**
+- **A long card label breaks the button baseline.** `View Jins & Jeni (Pair) →`
+  wrapped to two lines while five siblings stayed on one. Shorten the label; never
+  add `nowrap` to a label that cannot fit.
+- **Every printed figure reads from the data files.** The adoption-cost plan
+  hand-drafted `$240–$420` food; `financial-entities.json` says `$200–$400`, and
+  flight nanny is `750`, not `700`. Render through a helper
+  (`orange(an.food_and_treats)`), never a typed literal — a literal is a future
+  contradiction.
+- **Orphaned assets are a real category.** Six OG photos were committed and never
+  referenced by any markup, and `heroPreload` pointed at one of them — 94 KB
+  preloaded for an image the page never rendered, which was also not the LCP element.
+  Diff `public/` against the page before assuming images are missing.
+- **Seam parity: `python3 scripts/seam_parity.py <slug>`.** Never
+  `grep -c '<section class="sec"'` — only 2 of the 8 for-sale pages use that class,
+  so the previously published command compared seams against **zero sections**. And
+  never a `\bseam\b` regex: `-` is a word boundary, so `class="seam-wrap"` makes
+  every seam count twice (read 34 for 17 real). Fixed 2026-07-29.
+- **Sitemap regeneration on a no-URL-change edit is churn** — the generator stamps
+  today's date on all 109 URLs. Run it for the phantom-URL check, then revert if the
+  URL set is unchanged.
+
+## 6. Handoff
 
 Clean scan + clean runtime probes → `skills/cag-final-page-pass` → deploy.
 Anything this skill could not fix in code (e.g. **Cloudflare Rocket Loader**
