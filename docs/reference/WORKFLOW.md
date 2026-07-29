@@ -1,7 +1,40 @@
 # CongoAfricanGreys.com — Master Workflow
 
 > **Read this before starting any new page, sprint, or monitoring cycle.**
-> This is the authoritative end-to-end sequence for all 62 agents.
+> This is the authoritative end-to-end sequence for all 68 agents.
+
+## The 7-Sprint Page Pipeline (rewritten 2026-07-29)
+
+```
+Sprint 0    Intel      competitor-intel --all + keyword-gap + gsc-analytics
+                       + research-recency                            [REVIEW]
+Sprint 0.5  Orient     grill-me + full fan-out queries               [APPROVE]
+Sprint 1    Blueprint  visual companion + image-framing letters
+                       + distribution matrix (A/B/C categories)
+                       + full H1–H6 outline + HEADER STYLE + WHY
+                       + header dup-gate                             [APPROVE]
+── ASSET GATE ──  breeder drops the infographics and says "start"
+Sprint 2    Build      the page-type builder skill + EEBP + dup-gate (during)
+Sprint 3    Harden     page_hardening_scan + seam_parity + runtime probes
+                       @375/768/1280 + contrast + overflow + dup-gate
+Sprint 4    Final      cag-final-page-pass + AEO/GEO + keyword-verifier
+                       + anti-ai-writing + technical batch
+Sprint 5    Ship       generate_sitemaps + push + deploy-verify + live 200
+Sprint 6    Bank       session-closer + memory + BACK-PROPAGATE to the
+                       skill/scanner that enforces each lesson + sweep siblings
+```
+
+**Sprint 3 (Harden) must stay its own sprint, never a bullet inside Final.** The
+hand-raised page passed every static gate and still came back "feels rushed," with
+five root causes that were invisible in source review; `page_hardening_scan.py`
+existed but sat outside the named pipeline, so it stayed optional. Then on 2026-07-28
+a page that scanned `0 ERROR · 0 WARN` shipped with invisible FAQ answers and five
+mandated components missing. The moment Harden is a sub-bullet, it is the bullet that
+gets skipped.
+
+**Before acting on ANY gate's output, read `skills/cag-gate-integrity.md`.** Twelve
+checkers have reported defects that did not exist on this cluster, and two reported
+PASS having examined zero pages.
 
 ---
 
@@ -323,12 +356,64 @@ cag-bird-personality
 
 ---
 
-## Sprint 3 — AEO/GEO Layer
+## Sprint 3 — Harden (does the page RENDER correctly?)
+*Runs on the BUILT page, before any final audit. **Never a sub-bullet of Final** — the
+moment Harden becomes a bullet, it becomes the bullet that gets skipped.*
+
+**REQUIRED SKILL:** `cag-page-hardening` (v2.0) · **REQUIRED FIRST:** `cag-gate-integrity`
+
+```
+0. npx astro build                      ← nothing below works on a stale dist/
+
+1. python3 scripts/page_hardening_scan.py <slug>
+   → 21 static checks. ERROR = shipped-broken. WARN = eyeball it.
+   → §1k markup-css-drift          (101 classes styled + never rendered, 5 mandated)
+   → §1l component colour specificity (.ship-tier at 1.19:1 on forest green)
+
+2. python3 scripts/seam_parity.py <slug>
+   → one seam per section; exactly one seamless hero allowed
+   → NEVER grep '<section class="sec"' — 6 of 8 for-sale pages don't use that class
+
+3. Runtime probes in PLAYWRIGHT at 375 / 768 / 1280   ← 768 is the one that fails
+   → the Browser pane reports vw:0, so every probe there false-passes
+   → horizontal overflow · full-page contrast · real-ch line length · component sizing
+
+4. python3 scripts/dup_content_audit.py <slug> [<slug>...]
+   python3 scripts/dup_content_audit.py --headers <slug> [<slug>...]
+   → pass slugs LITERALLY; zsh does not word-split $VAR, and the gate will
+     report PASS having compared nothing
+```
+
+### Sprint 3 Gate
+- [ ] `page_hardening_scan` → 0 ERROR; every WARN triaged REAL / DEAD-CODE / FALSE-POSITIVE
+- [ ] **Every finding confirmed on the page before any edit** (`cag-gate-integrity` — 12 checkers have cried wolf here)
+- [ ] **Every gate's own examined count read** — a PASS over 0 pages is not a pass
+- [ ] `seam_parity` PASS
+- [ ] Runtime probes clean at 375 / 768 / 1280, measured in Playwright
+- [ ] Dup gate 0 body + 0 header crossovers vs ALL siblings
+- [ ] Every printed figure traced to `financial-entities.json` / `price-matrix.json` — no typed literals
+
+---
+
+## Sprint 4 — Final (AEO/GEO + structure + schema + voice)
 *Runs over ALL new pages before deploy. This is a gate, not optional.*
 
-### AEO/GEO Gate Checklist
+**REQUIRED SKILL:** `cag-final-page-pass` — THE final gate for EVERY page type,
+including the bird `/available/` and for-sale pages the old interior gate excluded.
 
-Every page must pass ALL items before moving to Sprint 4:
+```
+1. npx astro build
+2. python3 scripts/final_page_audit.py [--birds]
+   → page-type-aware, nested-slug aware. SUPERSEDES scripts/interior_29_audit.py.
+   → headings: all six levels, ≥5 H5 AND ≥5 H6, no skipped levels, Title Case
+   → schema · meta · image SEO · a11y traps · links · phone · compliance copy
+   → one PASS / PASS-WITH-WARNINGS / FAIL verdict; triage every ✗
+3. anti-ai-writing  → AI-tell sweep on the final prose
+```
+
+### 4a — AEO/GEO Gate Checklist
+
+Every page must pass ALL items before moving to Sprint 5 (Ship):
 
 ```
 AEO/GEO GATE — RUN IN THIS ORDER:
@@ -346,7 +431,8 @@ AEO/GEO GATE — RUN IN THIS ORDER:
 
 3. cag-external-link-agent
    → Inserts authority links from docs/reference/external-link-library.md
-   → Rule: links at beginning or middle of sentences ONLY (never end)
+   → Link-First rule: the anchor sits at the START of the sentence — never
+     mid-sentence, never at the end (supersedes the old 'beginning or middle')
    → Verifies: all URLs return 200 before inserting
 
 4. cag-trust-signals-agent
@@ -370,7 +456,7 @@ AEO/GEO GATE — RUN IN THIS ORDER:
    → Rule 62: Internal links use Appendix A canonical URLs from skills/cag-seo-master-checklist.md
 ```
 
-### AEO/GEO Schema Checklist (verify presence before deploy)
+### 4b — AEO/GEO Schema Checklist (verify presence before deploy)
 
 ```
 ☐ FAQPage JSON-LD present (cag-faq-agent output)
@@ -388,7 +474,7 @@ AEO/GEO GATE — RUN IN THIS ORDER:
 ☐ IMAGE-04: OG image (og:image) is 1200×630px — separate from portrait bird images
 ```
 
-### LLM Visibility Probe (run after page goes live)
+### 4c — LLM Visibility Probe (run after page goes live)
 
 ```
 cag-llm-keyword-intel [for target keyword]
@@ -400,10 +486,10 @@ cag-llm-keyword-intel [for target keyword]
 
 ---
 
-## Sprint 4 — Technical Hardening
-*Run as a batch across all new pages before deploy.*
+### 4d — Technical batch
+*Run across all new pages before deploy.*
 
-### Agent Sequence
+#### Agent Sequence
 
 ```
 1. cag-accessibility-fixer
@@ -434,26 +520,28 @@ cag-llm-keyword-intel [for target keyword]
    → Adds state-level map embed
    → Fixes CSP object-src blocker (embed → iframe)
 
-7. manual-auditor-check skill  ← FINAL GATE — run LAST, after the build
-   → npx astro build → python3 scripts/interior_29_audit.py (mechanical, over dist/)
-   → headings · schema · meta · image SEO · a11y traps · links · phone · compliance
-   → + copy-paste manual checklist for the 6 subjective items
+7. cag-final-page-pass skill  ← THE FINAL GATE for every page type
+   → python3 scripts/final_page_audit.py [--birds]  (mechanical, over dist/)
    → TRIAGE every ✗: REAL / ACCEPTED / FALSE POSITIVE / NET-NEW (never report blind)
-   → [interior/informational pages; excludes comparison/location/for-sale/blog]
+   → manual-auditor-check remains valid ONLY as the subjective companion checklist
+     for interior pages; scripts/interior_29_audit.py is SUPERSEDED — do not run it
 ```
 
 ### Sprint 4 Gate
-- [ ] Lighthouse Performance ≥90
-- [ ] Lighthouse Accessibility ≥90
+- [ ] One PASS / PASS-WITH-WARNINGS verdict from `scripts/final_page_audit.py`; every ✗ triaged
+- [ ] All six heading levels present, ≥5 H5 AND ≥5 H6, no skipped levels
+- [ ] **Title Case on every H1–H6**; FAQ `<summary>` stays sentence case
+- [ ] **Header style declared + justified** at the outline gate (framework-heading-hierarchy §Header Style Selection)
+- [ ] Lighthouse Performance ≥90 · Accessibility ≥90 — **judged on the DISTRIBUTION of ≥5 runs**, never one; CLS is bimodal on this site and one run already caused a confident wrong attribution
 - [ ] All canonicals are absolute URLs
 - [ ] Footer is cag-footer-v1 on all new pages
 - [ ] Inquiry form passes ARIA check
-- [ ] manual-auditor-check clean (every ✗ triaged to REAL-fixed / ACCEPTED / FALSE-POSITIVE / BY-DESIGN)
+- [ ] Zero non-whitelist duplicate crossovers, body AND headers, vs every sibling
 
 ---
 
-## Sprint 5 — Deploy + Verify
-*Run after every deploy.*
+## Sprint 5 — Ship
+*Run after every deploy. Push = deploy (GitHub Actions → Cloudflare Pages on `main`).*
 
 ```
 1. git push → GitHub Actions → Cloudflare Pages (auto-deploy)
@@ -473,6 +561,34 @@ cag-llm-keyword-intel [for target keyword]
    → Updates sitemap after any page change
    → Ensures all new pages are included
 ```
+
+---
+
+## Sprint 6 — Bank
+*The step that makes the next page cheaper. Skipping it is why three of the 2026-07-28
+lessons never reached the skill that enforces them.*
+
+```
+1. session-closer skill        → fill the brief's What's Next
+2. Write the lessons doc       → docs/superpowers/sessions/YYYY-MM-DD-<page>-lessons.md
+3. BACK-PROPAGATE every lesson into the artifact that ENFORCES it:
+     a render defect      → a check in scripts/page_hardening_scan.py + a RED test
+     a gate that lied     → skills/cag-gate-integrity.md
+     a rule for everyone  → CLAUDE.md + a scripts/add_<rule>_rule.py injector
+                            (a rule with no injector is 0/68 in the agents)
+     a component decision → sessions/2026-07-19-for-sale-component-map.md ledger
+     an anchor spent      → the Anchor Diversity Ledger
+     a Reddit thread cited→ data/reddit-thread-ledger.json
+     a live defect not fixed → docs/reference/technical-seo-fixes-backlog.md
+4. SWEEP SIBLINGS for the same defect class
+   (the infographic-crop bug was found on 4 OTHER live pages in one pass)
+5. Memory: write/update the relevant memory file + its MEMORY.md pointer
+```
+
+### Sprint 6 Gate
+- [ ] Every lesson in the doc maps to a named enforcing artifact, or is explicitly logged as backlog
+- [ ] Siblings swept for the same defect class
+- [ ] Any new rule has an injector, and it reports 68/68
 
 ---
 
