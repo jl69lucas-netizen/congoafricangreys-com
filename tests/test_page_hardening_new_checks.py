@@ -463,6 +463,87 @@ def test_unguarded_rail_smooth_scroll_still_warns():
     assert len(found) == 1, found
 
 
+# ── 10. markup-css-drift (§1k) ───────────────────────────────────────────────
+# The 2026-07-28 adoption-cost defect. The page was assembled by porting the CSS
+# kit and hand-writing markup that drifted from it: 101 classes styled and never
+# rendered (5 of them spec-mandated components) and 2 rendered components pointing
+# at the wrong class name — FAQ question text sat in `.faqC-x`, a 16x16 icon box,
+# so every question crushed to 16px. The scanner returned 0 ERROR / 0 WARN.
+DRIFT_SRC = '''---
+const x = 1;
+---
+<main class="adopt">
+  <p class="faqC-x">Is the fee the same as the cost?</p>
+  <div class={`tile ${x ? "on" : "off"}`}></div>
+</main>
+<style>
+.adopt{color:#111}
+.faqC-x{width:16px}
+.faqC-q{font-size:1.05rem}
+.doc-stack{display:grid}
+.tile{border:0}
+.on{opacity:1}
+.off{opacity:.4}
+</style>'''
+
+
+def _listed(found):
+    """The class names a drift finding enumerates, as a set.
+
+    Parse the message tail rather than substring-matching it: `on` and `off` are
+    substrings of ordinary prose, so a naive `"on" in msg` check passes by accident.
+    """
+    out = set()
+    for f in found:
+        if ": " in f["msg"]:
+            out.update(t.strip() for t in f["msg"].split(": ", 1)[1].split(","))
+    return out
+
+
+def test_class_drift_reports_styled_but_never_rendered():
+    found = run(H.check_class_drift, [("src/pages/adoption/index.astro", DRIFT_SRC)])
+    d = checks_named(found, "markup-css-drift")
+    assert d, "must report the classes that are styled but never rendered"
+    listed = _listed(d)
+    assert {"faqC-q", "doc-stack"} <= listed, listed
+
+
+def test_class_drift_flags_spec_mandated_components_as_ERROR():
+    """.doc-stack is mandated by the for-sale spec — a missing component, not dead code."""
+    found = checks_named(
+        run(H.check_class_drift, [("src/pages/adoption/index.astro", DRIFT_SRC)]),
+        "markup-css-drift")
+    errors = [f for f in found if f["sev"] == "ERROR"]
+    assert errors, "a spec-mandated component must raise ERROR, not WARN"
+    assert "doc-stack" in _listed(errors)
+    # …and it must NOT be lumped into the deletable WARN list.
+    warns = [f for f in found if f["sev"] == "WARN"]
+    assert "doc-stack" not in _listed(warns)
+    assert "faqC-q" in _listed(warns), "non-mandated dead code belongs in the WARN list"
+
+
+def test_class_drift_reports_classes_used_with_no_css():
+    src = DRIFT_SRC.replace(".faqC-x{width:16px}\n", "")
+    found = run(H.check_class_drift, [("src/pages/adoption/index.astro", src)])
+    assert "faqC-x" in _listed(checks_named(found, "markup-css-orphan"))
+
+
+def test_class_drift_understands_template_literal_classes():
+    """`class={`tile ${x?"on":"off"}`}` must count tile AND on AND off as RENDERED.
+
+    Harvesting only the first quoted branch misreports `off` as dead code.
+    """
+    found = run(H.check_class_drift, [("src/pages/adoption/index.astro", DRIFT_SRC)])
+    listed = _listed(found)
+    for cls in ("tile", "on", "off"):
+        assert cls not in listed, f"{cls} is rendered dynamically, not dead: {listed}"
+
+
+def test_class_drift_skips_files_with_no_style_block():
+    found = run(H.check_class_drift, [("src/pages/x/index.astro", "<main class='a'></main>")])
+    assert found == []
+
+
 if __name__ == "__main__":
     import traceback, inspect
     fns = [f for n, f in sorted(globals().items())
