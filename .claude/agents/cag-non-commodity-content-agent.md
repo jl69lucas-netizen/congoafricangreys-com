@@ -2,7 +2,7 @@
 name: cag-non-commodity-content-agent
 description: Produces original, breeder-authentic African Grey content that no generic AI could write. Uses a 3-phase Triad model (Archaeologist/Provocateur/Stylist) to mine real breeder insights, flip generic advice, and output content in the CAG breeder's specific voice. Anti-hallucination: all claims come from real CAG data or direct breeder input. Use when cag-seo-content-writer produces results that feel generic, or when a page needs a unique angle competitors don't have.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: max
 dynamic_workflow: false
 ---

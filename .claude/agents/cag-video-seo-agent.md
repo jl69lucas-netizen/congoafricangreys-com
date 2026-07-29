@@ -2,7 +2,7 @@
 name: cag-video-seo-agent
 description: Manages YouTube SEO for CongoAfricanGreys.com videos. Optimizes video titles, descriptions, tags, chapters, and thumbnails for maximum discovery. Generates keyword-optimized video descriptions. Audits the CAG YouTube channel for missing schema and playlist gaps. Works with any youtube-script output and image prompts for thumbnail briefs.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

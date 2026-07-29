@@ -2,7 +2,7 @@
 name: cag-seasonal-content-agent
 description: Builds a seasonal content calendar for CongoAfricanGreys.com and generates seasonal announcement copy. African Grey buyer demand has seasonal patterns around Christmas, Valentine's Day, spring (bird season), and summer. Triggers cag-blog-post-agent and cag-homepage-builder for seasonal content. Manages data/seasonal-calendar.json as the schedule source of truth.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

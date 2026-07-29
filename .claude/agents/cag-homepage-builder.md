@@ -2,7 +2,7 @@
 name: cag-homepage-builder
 description: Rebuilds the CAG homepage (site/content/index.md) section-by-section using the CAG design system. Preserves H1, canonical, schema, and all SEO elements. Calls Section Builder for each section. Highest GSC traffic page — 28 clicks, 14,915 impressions, position 45.6.
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_scrape, mcp__plugin_playwright_playwright__browser_snapshot]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: max
 dynamic_workflow: false
 ---

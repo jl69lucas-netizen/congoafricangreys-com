@@ -2,7 +2,7 @@
 name: cag-gsc-analytics
 description: Analyzes Google Search Console CSV exports from data/analytics/ to surface ranking opportunities, CTR gaps, impression-to-click leaks, and device/country insights. Updates docs/reference/top-pages.md with findings. Never calls external APIs — reads local CSV exports only.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

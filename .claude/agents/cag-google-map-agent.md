@@ -2,7 +2,7 @@
 name: cag-google-map-agent
 description: Adds, replaces, and audits Google Maps embeds across all CAG pages. Handles the CSP object-src blocker (embed → iframe), adds state-level maps to all location pages, fixes broken UAG WordPress embed exports, and generates styled map sections using the CAG design system.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: medium
 dynamic_workflow: false
 ---

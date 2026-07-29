@@ -2,7 +2,7 @@
 name: cag-contact-form-updater
 description: Audits and standardizes all contact/inquiry forms across CongoAfricanGreys.com pages. Detects outdated form markup, missing ARIA labels, and accessibility violations. Replaces with canonical CAG inquiry form. Payment method is [PAYMENT_METHOD_TBD] — never hardcode a payment processor.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: medium
 dynamic_workflow: false
 ---

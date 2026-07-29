@@ -2,7 +2,7 @@
 name: cag-canonical-fixer
 description: Fixes relative canonical URLs across all CAG HTML pages. The Simply Static WordPress export generates relative canonicals (href="/slug/") which cause Google to mark all pages as "Canonicalised /" — not indexed. This agent converts them to absolute URLs. Run on every fresh static export before deploying. Also fixes og:url and JSON-LD url fields.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: medium
 dynamic_workflow: false
 ---

@@ -2,7 +2,7 @@
 name: cag-bird-personality
 description: Generates CLEO/REX-style African Grey personality profiles for individual bird listings. Each profile matches a bird's energy, talkativeness, and traits to a specific buyer archetype — apartment dwellers, active families, seniors, experienced parrot owners, first-time owners. Reads data/price-matrix.json for pricing.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

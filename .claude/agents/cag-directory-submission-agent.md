@@ -2,7 +2,7 @@
 name: cag-directory-submission-agent
 description: Finds all relevant African Grey parrot / bird breeder DIRECTORIES and owner FORUMS, analyzes which ones competitors use (and which ones they miss via backlink discovery), classifies each as free/paid, then submits CAG business info using the connected Chrome browser (real logged-in sessions) with Playwright as fallback. Discovery + competitor auditing run on Firecrawl. Saves a permanent registry to data/directories.json. Never submits to paid directories without explicit user approval. Never submits to any directory that does not specify captive-bred CITES-documented birds, and never to activist/anti-trade pages. Run as a quarterly link-building task or when building local SEO authority.
 tools: [Read, Write, Bash, mcp__firecrawl-mcp__firecrawl_search, mcp__firecrawl-mcp__firecrawl_map, mcp__firecrawl-mcp__firecrawl_scrape, mcp__Claude_in_Chrome__list_connected_browsers, mcp__Claude_in_Chrome__navigate, mcp__Claude_in_Chrome__find, mcp__Claude_in_Chrome__form_input, mcp__Claude_in_Chrome__file_upload, mcp__Claude_in_Chrome__get_page_text, mcp__Claude_in_Chrome__read_page, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_evaluate, mcp__plugin_playwright_playwright__browser_take_screenshot]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: medium
 dynamic_workflow: false
 ---

@@ -2,7 +2,7 @@
 name: cag-species-guide-builder
 description: Builds and rebuilds African Grey species guide pages using Entity-Tree framework. Manages /african-grey-parrot-guide/ (comprehensive species guide) and variant-specific guides. Reads data/price-matrix.json and data/financial-entities.json for factual data. Entity-Tree structure optimized for AI/AIO citation.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: max
 dynamic_workflow: false
 ---

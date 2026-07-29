@@ -2,7 +2,7 @@
 name: cag-funnel-analysis-agent
 description: Analyzes the CongoAfricanGreys.com buyer inquiry funnel — from first page visit to contact form submission — to identify where buyers drop off. Maps funnel stages, quantifies drop-off rates from GSC and available analytics, and produces a prioritized fix list. Works with cag-heatmap-analyst-agent and cag-conversion-tracker. Run quarterly or after major page rebuilds.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: high
 dynamic_workflow: false
 ---

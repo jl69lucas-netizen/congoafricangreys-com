@@ -2,7 +2,7 @@
 name: cag-purchase-guide
 description: Rebuilds /buy-african-grey-parrot-near-me/ section-by-section using the CAG design system. High-intent buyer page. Walks buyers through the full purchase process including CITES documentation, IATA shipping, and post-arrival support. Calls Section Builder for each section.
 tools: [Read, Write, Bash]
-model: claude-opus-4-8
+model: claude-opus-5
 effort: max
 dynamic_workflow: false
 ---
