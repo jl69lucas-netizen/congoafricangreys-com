@@ -687,6 +687,124 @@ def check_smooth_scroll(sources):
                 "rule is `html` inside @media (prefers-reduced-motion: no-preference)")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 1k. markup↔CSS drift — the 2026-07-28 adoption-cost failure mode.
+#     A page assembled by porting the CSS kit and hand-writing markup drifts:
+#     classes get styled and never rendered, and rendered components point at the
+#     wrong class name. This scanner returned 0 ERROR / 0 WARN on a page whose FAQ
+#     answers were white-on-white (1.00:1) and whose five mandated components had
+#     no markup behind them at all — 101 classes styled, never rendered.
+#
+#     TRIAGE IS REQUIRED, and the check cannot do it for you:
+#       styled + never rendered + spec-mandated   -> MISSING COMPONENT. Render it.
+#       styled + never rendered + variant-not-used -> DEAD CODE. Delete it.
+#     Deleting the CSS of a mandated component hides a spec violation.
+#     On adoption-cost the split was 7 missing components vs 30 dead classes.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Components the for-sale spec mandates. Sourced from
+# sessions/2026-07-19-for-sale-component-map.md + the 2026-07-28 harden pass,
+# where all of these shipped as CSS with no markup behind them.
+SPEC_MANDATED = {
+    "doc-stack", "otA", "geo-pin", "geo-arrow", "read-img",
+    "vflags", "chkB", "fs-video", "xsell", "seam",
+}
+
+_QUOTED = re.compile(r'"([^"]*)"|\'([^\']*)\'')
+
+# Tailwind is in this project's toolchain (package.json), so its utilities have no
+# authored rule anywhere in src/ — they are generated. `sr-only` was reported as a
+# missing class on adoption-cost for exactly this reason (2026-07-29). Tailwind
+# variant syntax (`md:flex`, `w-1/2`) is filtered structurally below.
+TAILWIND_UTILS = {"sr-only", "not-sr-only", "container", "group", "peer",
+                  "antialiased", "truncate", "sticky", "fixed", "absolute",
+                  "relative", "hidden", "block", "flex", "grid", "inline"}
+
+
+def _rendered_classes(markup):
+    """(harvested, literal) class-token sets.
+
+    `harvested` is every token the markup could possibly emit — including values
+    scraped out of dynamic expressions. Dynamic attributes must be read from EVERY
+    quoted branch, not just the first: `class={`tile ${x ? "on" : "off"}`}` renders
+    `off` as readily as `on`, and taking only the first branch misreports `off` as
+    dead code. Over-collecting is the SAFE direction for the never-rendered half.
+
+    `literal` is only the tokens from a plain `class="..."` attribute. The orphan
+    half must use this narrower set, because harvesting quoted strings out of
+    expressions also picks up comparison VALUES: `class={`bbadge${b.badge === "top"
+        ? " badge-top" : ""}`}` made the scanner report a non-existent class `top`
+    on the baby page (2026-07-29).
+    """
+    harvested, literal = set(), set()
+    for m in re.finditer(r'class(?:Name)?="([^"{}]+)"', markup):
+        literal.update(m.group(1).split())
+    harvested |= literal
+    # Template-literal form: class={`a b ${cond ? "c" : "d"}`}
+    for m in re.finditer(r"class(?:Name)?=\{`([^`]*)`\}", markup):
+        raw = m.group(1)
+        for q in _QUOTED.findall(raw):
+            harvested.update((q[0] or q[1]).split())
+        harvested.update(re.findall(r"[A-Za-z][\w-]*", re.sub(r"\$\{[^}]*\}", " ", raw)))
+    # Expression form: class={cond ? "a" : "b"} / class={map[k]}
+    for m in re.finditer(r"class(?:Name)?=\{([^}]*)\}", markup):
+        for q in _QUOTED.findall(m.group(1)):
+            harvested.update((q[0] or q[1]).split())
+    return harvested, literal
+
+
+def _global_css():
+    """The project-wide sheets, cached. A class styled here is not an orphan."""
+    if not hasattr(_global_css, "_cache"):
+        text = ""
+        for g in ("src/styles/*.css", "src/layouts/*.astro", "src/components/*.astro"):
+            for p in glob.glob(g):
+                text += "\n".join(lines_of(p))
+        _global_css._cache = text
+    return _global_css._cache
+
+
+def check_class_drift(src_pairs):
+    for f, text in src_pairs:
+        i = text.find("<style>")
+        if i == -1:
+            continue
+        markup, css = text[:i], text[i:]
+        css = css[:css.find("<script")] if "<script" in css else css
+        used, literal = _rendered_classes(markup)
+        defined = set(re.findall(r"^\s*\.([A-Za-z][\w-]*)", css, re.M))
+
+        unrendered = sorted(defined - used)
+        mandated = [c for c in unrendered if c in SPEC_MANDATED]
+        dead = [c for c in unrendered if c not in SPEC_MANDATED]
+        if mandated:
+            add("ERROR", "markup-css-drift", f, None,
+                f"{len(mandated)} SPEC-MANDATED component(s) styled but never rendered: "
+                + ", ".join(mandated),
+                "Render them. Do NOT delete the CSS — that hides a spec violation. "
+                "See skills/cag-page-hardening.md §1k.")
+        if dead:
+            add("WARN", "markup-css-drift", f, None,
+                f"{len(dead)} class(es) styled but never rendered: " + ", ".join(dead),
+                "Triage each: a variant this page does not ship -> delete; a component "
+                "the spec mandates -> render it. Never bulk-delete this list.")
+
+        # Classes rendered with no rule at all — the 'wrong class name' half.
+        # Literal tokens only, and a rule anywhere (page, global sheet, layout,
+        # component, or a Tailwind utility) clears it.
+        gcss = _global_css()
+        orphans = sorted(c for c in literal - defined
+                         if not re.search(rf"[.\[]{re.escape(c)}\b", css)
+                         and not re.search(rf"[.\[]{re.escape(c)}\b", gcss)
+                         and c not in TAILWIND_UTILS)
+        if orphans:
+            add("WARN", "markup-css-orphan", f, None,
+                f"{len(orphans)} class(es) in markup with no CSS rule: " + ", ".join(orphans),
+                "Either the component name is misspelled (adoption-cost put FAQ text in "
+                "`.faqC-x`, a 16x16 icon box) or the rule lives in a global sheet — "
+                "confirm which before editing.")
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     fail_on_error = "--fail-on-error" in sys.argv
@@ -713,6 +831,9 @@ def main():
     check_deflist_labels(src_pairs)
     check_icon_baseline(src_pairs)
     check_smooth_scroll(src_pairs)
+
+    # 2026-07-29: markup↔CSS drift (adoption-cost harden lessons §1)
+    check_class_drift(src_pairs)
 
     base = "src/layouts/BaseLayout.astro"
     theme = "\n".join(lines_of("src/styles/direction-d.css") +
