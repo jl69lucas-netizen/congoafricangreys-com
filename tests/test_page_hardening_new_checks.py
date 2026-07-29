@@ -544,6 +544,64 @@ def test_class_drift_skips_files_with_no_style_block():
     assert found == []
 
 
+# ── 11. component-color-loses-to-descendant (§1l) ────────────────────────────
+# `.ship-tier{color:#fff}` is (0,1,0) and loses to `.ship-c p{color:#5b524a}` at
+# (0,1,1): dark grey on forest green, 1.19:1, on the live adoption-cost page.
+# Colour-vs-colour only — the background half (the white-on-white FAQ, where a
+# `.faq-d` wrapper set background:#fff inside a dark accordion) is §1k plus the
+# runtime contrast sweep §2b, and must NOT be folded in here or the check floods.
+SPECIFICITY_SRC = '''<div class="ship-c">
+  <p class="ship-tier">Airport pickup $185</p>
+</div>
+<style>
+.ship-c{background:#2D6A4F}
+.ship-c p{color:#5b524a}
+.ship-tier{color:#fff}
+</style>'''
+
+
+def test_component_color_loses_to_kit_descendant_rule():
+    found = run(H.check_component_color_specificity,
+                [("src/pages/adoption/index.astro", SPECIFICITY_SRC)])
+    d = checks_named(found, "component-color-loses-to-descendant")
+    assert d, "must flag .ship-tier losing to .ship-c p"
+    assert "ship-tier" in d[0]["msg"] and "ship-c p" in d[0]["msg"], d[0]["msg"]
+
+
+def test_qualified_component_rule_is_not_flagged():
+    """The prescribed fix — qualify the component rule — must clear the check."""
+    fixed = SPECIFICITY_SRC.replace(".ship-tier{color:#fff}",
+                                    ".ship-c p.ship-tier{color:#fff}")
+    found = run(H.check_component_color_specificity,
+                [("src/pages/adoption/index.astro", fixed)])
+    assert checks_named(found, "component-color-loses-to-descendant") == []
+
+
+def test_no_flag_when_the_component_class_is_never_nested_there():
+    """.ship-tier used outside .ship-c cannot be beaten by `.ship-c p`."""
+    other = SPECIFICITY_SRC.replace('<div class="ship-c">', '<div class="other">')
+    found = run(H.check_component_color_specificity,
+                [("src/pages/adoption/index.astro", other)])
+    assert checks_named(found, "component-color-loses-to-descendant") == []
+
+
+def test_no_flag_without_a_bare_tag_descendant_rule():
+    plain = '<p class="a">x</p><style>.a{color:#fff}</style>'
+    found = run(H.check_component_color_specificity, [("src/pages/x/index.astro", plain)])
+    assert found == []
+
+
+def test_background_only_collision_is_not_this_checks_job():
+    """The white-on-white FAQ was a BACKGROUND collision — §1k / §2b own it."""
+    bg = '''<div class="faqC-item"><div class="faq-d"><p>Answer</p></div></div>
+<style>
+.faqC-item p{color:rgba(255,255,255,.82)}
+.faq-d{background:#fff}
+</style>'''
+    found = run(H.check_component_color_specificity, [("src/pages/x/index.astro", bg)])
+    assert checks_named(found, "component-color-loses-to-descendant") == []
+
+
 if __name__ == "__main__":
     import traceback, inspect
     fns = [f for n, f in sorted(globals().items())
