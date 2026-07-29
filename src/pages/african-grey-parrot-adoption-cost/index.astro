@@ -1166,7 +1166,11 @@ const faqSchema = {
 .ship-c p.ship-tier{display:inline-block;background:var(--f);color:#fff;border-radius:50px;padding:3px 12px;font-size:.7rem;font-weight:600;margin:0!important}
 .ship-c p.ship-tier.clay{background:var(--clay-ink)}
 .ship-c b{font-family:'Newsreader',serif;display:block;margin:8px 0 2px;font-size:1.15rem}
-.ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
+/* Qualified for the same reason .ship-tier above is: .ship-price is a <p>, so the
+   generic `.ship-c p{color:#5b524a}` below (0,1,1) outranks a bare `.ship-price`
+   (0,1,0) AND comes later, silently rendering the prices body-grey instead of clay.
+   Caught by page_hardening_scan §1l, 2026-07-29. */
+.ship-c p.ship-price{color:var(--clay-t);font-weight:700;font-size:1.15rem}
 /* max-width:none is right while the card is a narrow 2-up column, but
    .ship-cards collapses to 1fr at ≤900px and the measure then ran 90ch at
    768. A 70ch cap never bites in the 2-up state and holds the band at tablet. */
