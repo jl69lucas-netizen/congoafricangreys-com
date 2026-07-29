@@ -41,11 +41,43 @@ def test_hero_without_a_seam_is_allowed():
 
 
 def test_a_genuinely_missing_seam_fails():
-    """health-guarantee shipped 7 seams across 17 sections. diff > 1 must FAIL."""
-    bad = '<section class="hero"></section>' + '<section id="x"><h2>H</h2></section>' * 5
+    """The real defect: health-guarantee shipped 7 seams across 17 sections."""
+    bad = ('<section class="hero"></section>'
+           + '<div class="seam"></div><section id="x"><h2>H</h2></section>' * 7
+           + '<section id="y"><h2>H</h2></section>' * 9)
     verdict, sections, seams = S.verdict(bad)
-    assert (verdict, sections, seams) == ("FAIL", 6, 0)
+    assert (verdict, sections, seams) == ("FAIL", 17, 7)
+
+
+def test_a_page_with_no_seams_at_all_is_NA_not_FAIL():
+    """One-seam-per-section is a for-sale/comparison convention, not sitewide.
+
+    A page with zero seams is not violating the idiom — it is not using it. Treating
+    zero as FAIL reported 71 of 108 pages as broken (2026-07-29), which is a claim
+    about the probe's scope, not about the pages.
+    """
+    none = '<section class="hero"></section><section id="x"><h2>H</h2></section>'
+    assert S.verdict(none) == ("N/A", 2, 0)
 
 
 def test_does_not_count_the_closing_tag():
     assert S.count_sections("<section></section>") == 1
+
+
+def test_counts_the_sitewide_cag_seam_idiom_too():
+    """Two idioms ship on this site and BOTH are seams.
+
+    `class="seam"` is the for-sale cluster (291 uses); `class="cag-seam"` is the
+    shared component used everywhere else (913 uses). Counting only the exact token
+    `seam` read ZERO seams on 83 of 108 pages and reported them all as FAIL
+    (2026-07-29) — my own probe, not the site.
+    """
+    assert S.count_seams('<div class="cag-seam"></div>') == 1
+    assert S.count_seams('<div class="cag-seam"><img class="seam-logo"></div>') == 1
+    mixed = '<div class="seam"></div><div class="cag-seam"></div>'
+    assert S.count_seams(mixed) == 2
+
+
+def test_seamless_is_not_a_seam():
+    """`seamless` must not match — the substring trap that started all this."""
+    assert S.count_seams('<div class="seamless"></div>') == 0

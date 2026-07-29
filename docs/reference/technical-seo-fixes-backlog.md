@@ -196,3 +196,30 @@ should be treated as a batch job, not an interactive gate.
 3. **Selectors quoted inside CSS comments** (1 duplicate). adoption-cost's comment documenting its own
    past fix contains the literal text `.ship-c p{color:#5b524a}`. This is the same trap that produced
    6 false icon-baseline WARNs on 2026-07-26; both new checks now strip `/* … */` first.
+
+## Seam-parity census, 2026-07-29 (`scripts/seam_parity.py`)
+
+House idiom is one `seam` / `cag-seam` divider before every section, with exactly one
+seamless hero allowed. Sitewide: **29 FAIL / 50 pages that use the idiom** (58 pages
+are `N/A` — they ship no seams at all, so they are not using the convention).
+
+**The 8-page for-sale cluster is 100% clean.** The failures cluster in three places:
+
+| Group | Pages | Shape |
+|---|---|---|
+| `/available/` bird pages | amie · bery · elad · evie · jins-jeni · roys (6) + the hub | **24 sections / 6 seams — 17 missing each.** The heaviest gap on the site by far, and uniform across all six, so it is one template decision, not six oversights. |
+| Comparison cluster | vs-macaw 28/22 · vs-cockatoo 26/20 · vs-amazon 27/21 · breeders-comparison 24/19 · pros-and-cons 23/18 · comparison hub 23/19 · congo-vs-timneh 22/17 | 3–5 missing each. Consistent, so likely the same authoring habit rather than damage. |
+| Interior / care | care-guide 12/7 · diet 12/7 · parrot-guide 13/8 · captive-bred 12/7 · cites-docs 10/6 · health-guarantee 10/6 · lifespan 11/8 · best-food 10/7 · adoption 11/9 · care 7/5 · reviews 8/6 · how-to-tame 9/6 · trusted-breeders 10/7 · blog 8/5 | 1–4 missing each |
+| Homepage | `index.astro` 20/6 — **13 missing** | Note the homepage keeps its own structural dividers scoped to `.home-d`, so verify visually before treating this as a defect. |
+
+**Two bugs were fixed in the probe before this census was trusted**, per
+`skills/cag-gate-integrity.md`:
+1. It counted only the token `seam` and missed `cag-seam`, the shared component used
+   **913** times sitewide against `seam`'s 291 — that alone reported **83 of 108**
+   pages as FAIL.
+2. Zero seams was scored FAIL. One-seam-per-section is a for-sale / comparison
+   convention, not a sitewide law, so a page that never uses the idiom is not
+   violating it. Those are now `N/A`, which took 71 FAIL down to 29.
+
+Judgement before anyone sweeps this: the `/available/` template and the homepage are
+worth a decision; the 1–4-missing interior pages are low value.
