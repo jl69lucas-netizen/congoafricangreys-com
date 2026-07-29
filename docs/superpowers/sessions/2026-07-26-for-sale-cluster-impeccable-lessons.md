@@ -96,12 +96,23 @@ Both were in `src/components/Footer.astro` and affected **all 108 pages**:
 
 ## 5. Component decisions worth reusing
 
-**Section seams.** House idiom is **one seam before every section** (dna-tested 18/18, congo 15/16).
-health-guarantee had shipped 7 across 17 sections. Check `seams == sections` on every new page:
+**Section seams.** House idiom is **one seam before every section**; the hero carries no seam above it, so
+`sections - seams <= 1` is the correct gate. health-guarantee had shipped 7 across 17 sections.
 
 ```bash
-for p in <slugs>; do echo "$p: seams=$(grep -c 'class="seam"' src/pages/$p/index.astro) sections=$(grep -c '<section class="sec"' src/pages/$p/index.astro)"; done
+python3 scripts/seam_parity.py <slug> [<slug> ...]
 ```
+
+> **The command previously published here was broken** (found 2026-07-29). It counted sections with
+> `grep -c '<section class="sec"'`, a class only **2 of the 8** built for-sale pages use — congo, timneh,
+> baby, eggs, dna-tested and hand-raised all use `<section id=...>`, so the probe reported **0 sections**
+> and compared seams against nothing. It also counted seams with `grep -c 'class="seam"'`, which counts
+> *lines*, not elements. `scripts/seam_parity.py` counts `<section` (any attributes) and tokenises the
+> class attribute so `class="seam-wrap"` cannot double-count — a `\bseam\b` regex reads 34 seams for 17
+> real ones, because `-` is a word boundary. **Never re-derive this check with grep.**
+>
+> True counts, measured 2026-07-29: eggs 16/15 · congo 15/15 · timneh 18/18 · hand-raised 19/18 ·
+> health-guarantee 18/17 · dna-tested 19/18 · baby 22/21 · adoption-cost 10/10 — all PASS.
 
 **The `.xsell` cross-sell strip (new this session).** Sits at the end of the existing reading/resources
 section — *not* a new section, so it never triggers the Heading Outline Gate.
@@ -172,8 +183,8 @@ git checkout main && npx astro build
 python3 scripts/page_hardening_scan.py <slug> [<slug> ...]
 python3 -m pytest tests/ -q
 
-# 2. seam parity
-for p in <slugs>; do echo "$p: seams=$(grep -c 'class=\"seam\"' src/pages/$p/index.astro) sections=$(grep -c '<section class=\"sec\"' src/pages/$p/index.astro)"; done
+# 2. seam parity  (NEVER grep for this — see §5; the old grep compared against 0 sections)
+python3 scripts/seam_parity.py <slug> [<slug> ...]
 
 # 3. measure, don't assume (real-ch probe + overflow probe from skills/cag-page-hardening.md §2y / §2a)
 #    at 360 / 768 / 820 / 1024 / 1280, on a page AND the homepage
