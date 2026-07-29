@@ -26,6 +26,22 @@ EFFORT_TEXT = {
     # medium: no directive — standard inference.
 }
 
+# Matches the directive as WHOLE LINES only — no surrounding newlines. Eating the
+# newline on either side is what made the old strip/re-insert leak one blank line
+# per run (44 excess lines across 42 agents by 2026-07-29).
+BLOCK_RE = re.compile(
+    rf"^{re.escape(EFFORT_START)}\n.*?^{re.escape(EFFORT_END)}\n",
+    re.DOTALL | re.MULTILINE,
+)
+
+
+def strip_effort_block(content):
+    """Remove the directive block. Returns (content, offset_it_was_at | None)."""
+    m = BLOCK_RE.search(content)
+    if not m:
+        return content, None
+    return content[: m.start()] + content[m.end() :], m.start()
+
 
 def patch(content, model, effort, dynamic):
     block = f"model: {model}\neffort: {effort}\ndynamic_workflow: {str(dynamic).lower()}"
@@ -40,19 +56,20 @@ def patch(content, model, effort, dynamic):
             fm = re.sub(rf"\n{key}:.*", "", fm)
         content = "---" + fm + "\n" + block + content[end:]
 
-    # Inject/replace the behavioral effort directive right after frontmatter.
-    content = re.sub(
-        rf"\n{re.escape(EFFORT_START)}.*?{re.escape(EFFORT_END)}\n",
-        "\n",
-        content,
-        flags=re.DOTALL,
-    )
+    # Inject/replace the behavioral effort directive. Re-inserting at the offset the
+    # old block occupied is what makes the run idempotent AND keeps a hand-placed
+    # block where its author put it (e.g. cag-infographic-builder.md keeps a binding
+    # image-sizing note above it) instead of hoisting it to just under frontmatter.
+    content, was_at = strip_effort_block(content)
     directive = EFFORT_TEXT.get(effort)
     if directive:
-        fm_end = content.find("\n---", 3)
-        insert_at = content.find("\n", fm_end + 1) + 1  # after the closing '---' line
-        injection = f"\n{EFFORT_START}\n{directive}\n{EFFORT_END}\n"
-        content = content[:insert_at] + injection + content[insert_at:]
+        injection = f"{EFFORT_START}\n{directive}\n{EFFORT_END}\n"
+        if was_at is not None:
+            content = content[:was_at] + injection + content[was_at:]
+        else:
+            fm_end = content.find("\n---", 3)
+            insert_at = content.find("\n", fm_end + 1) + 1  # after the closing '---' line
+            content = content[:insert_at] + f"\n{injection}\n" + content[insert_at:]
     return content
 
 
