@@ -181,8 +181,8 @@ Fetched via IG's public tag hubs and post snippets.
 | # | Flag | Owner |
 |---|---|---|
 | 8 | **Citation-preservation constraint** — 8 named facts Perplexity currently cites must survive the rebuild in substance | Build · **binding** |
-| 9 | **Jins & Jeni are the high-risk configuration** by Perplexity's own criteria. Recommend publishing that plus the mitigation protocol | **Breeder** — confirm willingness to say it |
-| 10 | Pair-vs-two-singles arithmetic: Williams discounts the pair; we must state our own logic | **Breeder** |
+| 9 | ~~Jins & Jeni high-risk disclosure~~ | ✅ **APPROVED 2026-07-30 — publish it** (see below) |
+| 10 | ~~Pair-vs-two-singles arithmetic~~ | ✅ **APPROVED 2026-07-30 — state our logic, show both market ends** (see below) |
 | 11 | `data/competitors.json`: 4 dead entries; add `williamsafricangreys.com` and `denimixanipetsparadise.com` | Build |
 | 12 | `/last30days` not installed — run `/plugin marketplace add mvanhorn/last30days-skill` in an interactive session | **Breeder** |
 | 13 | LLM visibility should now be measured on **every** cluster page (closes the long-standing open flag #10) | Build |
