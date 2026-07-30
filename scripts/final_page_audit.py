@@ -230,7 +230,7 @@ def audit_html(slug, html, page_type="interior"):
     ) if content_imgs else False
     # house-method naming (WARN) — presence of a named protocol where hand-rearing is discussed
     r["house_method"] = (not re.search(r"hand-rais|hand-fed|hand-rear", raw, re.I)) or \
-                        bool(re.search(r"C\.A\.Gs [A-Z][a-z]+ Method|Grey Method", raw))
+                        bool(re.search(r"C\.A\.Gs [A-Z][a-z]+ Method|Grey Method|Benjamin Home-Raising Protocol|Midland Socialization Method", raw))
     # --- meta (Part J / #13) — long-format standard kept (≤275 title / ≤300 desc) ---
     r["title_len"] = len(p.title.strip())
     r["desc_len"] = len(p.metadesc.strip())
