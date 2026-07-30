@@ -1,8 +1,11 @@
 # 🦜 C.A.Gs — For-Sale Page Master Build Brief
 
-> **Target page:** `https://congoafricangreys.com/african-greys-for-sale-with-health-guarantee/`
+> **Target page (current):** `https://congoafricangreys.com/congo-african-grey-parrot-pair-for-sale/` — **Page 9 of 22**, first page of Cluster 3.
+> **On disk:** `src/pages/congo-african-grey-parrot-pair-for-sale/index.astro` — an **8 KB inline-styled stub** (1 H1, 2 H2, 4 FAQs, no kit components, no images, no dial, no bird cards). Live HTTP 200. **Mode: full rebuild from stub**, exactly like Congo on 2026-07-21.
 > **Pipeline:** ☐ Sprint 0 · ☐ Sprint 0.5 · ☐ Sprint 1 · ☐ Asset Gate · ☐ Sprint 2 · ☐ Sprint 3 · ☐ Sprint 4 · ☐ Sprint 5 · ☐ Sprint 6
 > **Nothing is written or coded until every ▣ Approval Gate below is signed off by the breeder.**
+>
+> **Target history.** This brief is the standing template for every remaining for-sale page. It was written for `/african-greys-for-sale-with-health-guarantee/` (Page 5, shipped 2026-07-25), retargeted to `/congo-african-grey-parrot-pair-for-sale/` on 2026-07-30. Part II is cumulative and is never retargeted — it grows one dossier per shipped page.
 
 > **Editorial note.** This is the copy-edited edition. Spelling, grammar, and phrasing have been corrected, and the shouted capitals converted to sentence case with bold emphasis. Every instruction, value, path, and requirement is unchanged. The word-for-word original is preserved in the `.docx` twin and in git at commit `5d29c73`.
 
@@ -14,13 +17,13 @@
 |---|---|
 | 0 | [Placeholder Legend](#0--placeholder-legend) |
 | 1 | [Brand Color](#1--brand-color) |
-| 2 | [Invoke — Skills to Run First](#2--invoke--skills-to-run-first) |
-| 3 | [Headers, Copy, and Voice Standard](#3--headers-copy-and-voice-standard) |
-| 4 | [Deliverables and Approval Requirements](#4--deliverables-and-approval-requirements) |
+| 2 | [Invoke — Skills to Run First](#2--invoke--skills-to-run-first) · *2a session-opening · 2b full roster by sprint* |
+| 3 | [Headers, Copy, and Voice Standard](#3--headers-copy-and-voice-standard) · *3a header style · **3b Keyword Variation Standard*** |
+| 4 | [Deliverables and Approval Requirements](#4--deliverables-and-approval-requirements) · *4a required reading · 4b binding fact corrections* |
 | 5 | [Internal and External Link Standard](#5--internal-and-external-link-standard) |
 | 6 | [CTAs and Buttons](#6--ctas-and-buttons) |
 | 7 | [Footer Divider Style](#7--footer-divider-style) |
-| 8 | [OG Images and Hero Image Selection](#8--og-images-and-hero-image-selection) |
+| 8 | [OG Images and Hero Image Selection](#8--og-images-and-hero-image-selection) · *8a asset proof · **8b pair framing vs Jins & Jeni*** |
 | 9 | [Infographics and the Asset Gate](#9--infographics-and-the-asset-gate) |
 | 10 | [Components — Desktop and Mobile Versions](#10--components--desktop-and-mobile-versions) |
 | 11 | [The Five Heroes](#11--the-five-heroes) |
@@ -29,7 +32,7 @@
 | 14 | [Deep Competitor Analysis — Mandatory](#14--deep-competitor-analysis--mandatory) |
 | 15 | [Blended Strategies and Frameworks (EEBP)](#15--blended-strategies-and-frameworks-eebp) |
 | 16 | [Two New Verified Reviews](#16--two-new-verified-reviews) |
-| 17 | [Workflow — The Seven-Sprint Pipeline](#17--workflow--the-seven-sprint-pipeline) |
+| 17 | [Workflow — The Seven-Sprint Pipeline](#17--workflow--the-seven-sprint-pipeline) · ***17c full skill routing, top to bottom*** · ***17d component quality bar*** |
 | 18 | [Verified Results the Page Must Pass](#18--verified-results-the-page-must-pass) |
 | 19 | [Root Causes Found — Saved Reference](#19--root-causes-found--saved-reference) |
 | 20 | [Desktop Dial TOC — Locked Spec](#20--desktop-dial-toc--locked-spec) |
@@ -67,11 +70,32 @@
 
 ## 2 · Invoke — Skills to Run First
 
-Invoke the following against `https://congoafricangreys.com/african-greys-for-sale-with-health-guarantee/`, then check, read, analyse, and verify the page before confirming you understand the task set out below.
+Invoke the following against the target page, then check, read, analyse, and verify the page before confirming you understand the task set out below.
 
-- ☐ `/cag-for-sale-page-builder`
-- ☐ `/superpowers:writing-plans`
+**2a · Session-opening invocation (run these four first, before anything else)**
+
+- ☐ `/cag-for-sale-page-builder` — the canonical builder; carries the kit, the pass gates, the Egg Rule
+- ☐ `/frontend-design:frontend-design` — production-grade UI craft, anti-AI-slop bans
+- ☐ `/impeccable:impeccable` — auto-loads `PRODUCT.md` + `DESIGN.md`; owns `critique` / `audit` / `polish` / `harden`
+- ☐ `/superpowers:writing-plans` — turns the approved blueprint into a bite-sized, checkbox task plan
 - ☐ Check · read · analyse · verify → **confirm understanding**
+
+**2b · The full skill roster for this page, by sprint.** None of these is optional; §17c is the routing table that says *when* each fires.
+
+| Sprint | Skills / agents to invoke |
+|---|---|
+| **0 Intel** | `@cag-competitor-intel --all` · `@cag-competitive-keyword-gap-agent` · `@cag-gsc-analytics` · `/research-recency` · `/reddit-strategy` · `@cag-paa-agent` · `@cag-llm-keyword-intel` |
+| **0.5 Orient** | `/grill-me` · `/keyword-cluster` · `@cag-angle-agent` · `@cag-strategy-synthesizer` |
+| **1 Blueprint** | `/framework-heading-hierarchy` · `/cag-seo-master-checklist` · `/cag-duplicate-content-gate --headers` · `/cag-entity-agent` · `@cag-entity-incorporation-agent` · `/cag-cta-strategy` · `@cag-content-audit-agent` · visual companion |
+| **2 Build** | `/cag-for-sale-page-builder` · `/framework-eebp` · `/cag-branded-search-skill` · `/cag-branded-hybrid-keywords` · `/internal-link-agent` · `@cag-external-link-agent` · `/anti-ai-writing` · `@cag-non-commodity-content-agent` · `/cag-infographic` · `/cag-component-refresh` |
+| **3 Harden** | `/cag-gate-integrity` **(read first, every time)** · `/cag-page-hardening` · `/impeccable audit` · `/impeccable critique` · `/impeccable harden` · `/impeccable polish` · `/frontend-design` |
+| **4 Final** | `/cag-aeo-pass` · `@cag-keyword-verifier` · `/cag-duplicate-content-gate` · `/cag-final-page-pass` · `/cags-comprehensive-page-audit-system` · `@cag-accessibility-fixer` |
+| **5 Ship** | `/sitemap-agent` · `@cag-canonical-fixer` · `@cag-deploy-verifier` |
+| **6 Bank** | `/session-closer` · memory write · back-propagate fixes to the 8 shipped siblings |
+
+**Humor.** There is no `humor-agent` skill. Humor is a **mode inside `@cag-seo-content-writer`** (5 modes) governed by `skills/anti-ai-writing.md` and memory `feedback_humor_honesty_policy`: **Style-2 dry, ≤1 beat per section, never on legal, health, CITES, guarantee, or price copy.** Invoke it as a writing instruction, not as a slash command.
+
+**`/cag-bird-page-excellence`** is listed for this page too, but note its scope: it polishes `/available/<bird>/` pages. On a for-sale category page it is read-only reference — use it for the **card, badge-placement, and geo-block patterns** it banks, not as the page builder.
 
 ---
 
@@ -89,6 +113,39 @@ Every header must be followed by a conversational opening paragraph that reinfor
 - ☐ A conversational opening paragraph under every header, reinforcing that header's core message
 - ☐ Opening sentences and paragraphs built from the header's keyword variations — related, similar, LSI, long-tail, and question-form search queries
 
+### 3a · Which of the Three Header Styles Applies Here?
+
+Every outline presented at the Sprint 1 gate must **declare its header style and its register**, with a reason grounded in that page's own query set, SERP snapshot, PAA demand or a named competitor gap — never taste — plus a named trade-off. An outline with no style line does not pass the gate. Spec: `skills/framework-heading-hierarchy.md §Header Style Selection`; injected into all 68 agent Golden Rules by `scripts/add_header_style_rule.py`.
+
+| Style | What it is | Default for |
+|---|---|---|
+| **Style 1** | Pure Conversational — the header *is* the question, verbatim | Informational / PAA-led pages |
+| **Style 2** | Conversational Hybrid — question + one entity | Care · location · blog · informational |
+| **Style 3** | **Recommended Hybrid** — question + entity + transactional modifier | **Transactional + comparison** |
+
+**Registers:** FAQ · Quora · Reddit. FAQ is the default for bird listings; Reddit for Reddit-modifier pages.
+
+> ### ▣ APPROVAL GATE — Header Style
+> `[AI RECOMMENDS: **Style 3, Recommended Hybrid, FAQ register**]`
+> **Why:** this is a transactional page whose whole job is the pair-versus-single decision, and Style 3 is the locked default for transactional pages. It is also the only style that can carry all three of the page's competing entities in one header — the pair, the subspecies, and the price — which is what a header like *"What Does a Congo African Grey Pair Cost Compared With Two Single Birds?"* needs to do.
+> **Trade-off:** Style 3 headers run long, so they eat vertical space on mobile and are harder to keep under the H2 clamp. Budget for two-line H2s at 375px and check the clamp at Sprint 3 rather than at final pass.
+> Breeder approval: `[ ___ ]`
+
+### 3b · Keyword Variation Standard — Non-Negotiable
+
+**Keyword variation on the page is the single most important on-page lever, and it is measured, not asserted.** Distribution targets live in `skills/cag-for-sale-page-builder.md §2a` (~85–105 total mentions, 1–2% primary density). This section adds the four *variation* metrics the breeder wants reported on every page:
+
+| # | Metric | Target | How it is measured |
+|---|---|---|---|
+| 1 | **Number of unique keywords / variations used** | **≥ 60 distinct** surface forms across primary, secondary, LSI, NLP variation, long-tail, question-form, comparison, solution and transactional buckets | Count distinct normalised strings in the built `dist/` page, not the source |
+| 2 | **Variation density in the top 30 KB** | The primary keyword **plus ≥ 12 distinct variations** must all appear inside the first 30 KB of rendered HTML | Byte-slice `dist/<slug>/index.html` at 30,720 bytes and count there |
+| 3 | **Exact matches in the HTML tags** | Primary keyword exact-match in `<title>`, `<h1>`, `<meta name="description">`, the first `<h2>`, the primary image `alt`, and the canonical slug. Every other `alt` carries a **different** keyword type (Rule 50b) | Parse tags out of `dist/`, never grep the `.astro` source |
+| 4 | **Clean keyword density in the HTML tags** | No tag stuffs the primary keyword twice. Headers use the Two-Keyword rule (Rule 28b) — maximum two keyword concepts per header, no chains | Per-tag count, reported as a table |
+
+**Entity variety is the anti-stuffing counterweight** (skill §2d): **85–112 different entities** per page, each mentioned a natural number of times. Brand 5–10×, full location 1–2× plus city/state 5–8×, each bird named in its card plus 1–2 body mentions. The MFS failure log is explicit that the business name in every sentence is unreadable and unrankable.
+
+**Reported at Sprint 4** by `@cag-keyword-verifier` as a four-row table, alongside the density figure. A page that hits 1.78% primary density but only 22 unique variations has failed this section even though it passes §18.
+
 ---
 
 ## 4 · Deliverables and Approval Requirements
@@ -97,7 +154,32 @@ Show me every deliverable — entities, keyword universe, and the rest — for r
 
 Provide **blended strategies**, the **frameworks** in play, the **transactional angles**, how each **search intent** is satisfied, and the full **H1–H6 outline**. All of it needs my confirmation before any page or code is written.
 
-Check the saved data on everything we did well and badly on those pages, so you know exactly what you are doing with this one.
+Check the saved data on everything we did well and badly on the pages already shipped, so you know exactly what you are doing with this one.
+
+### 4a · The Required Reading List — Read Before Sprint 0, Every Page
+
+These are binding, not background. Fixing the backlog items is a separate call; **knowing them before you build is not.**
+
+| # | Source | What it gives you |
+|---|---|---|
+| 1 | `docs/superpowers/sessions/2026-07-26-for-sale-cluster-impeccable-lessons.md` | The reusable playbook: the `.xsell` cross-sell spec, the cross-sell FAQ rules, the **Anchor Diversity Ledger with the anchors already spent** (§6 + §9 — three of them are already spent against *this page's* own slug), the corrected `ch` probe, and the copy-paste command sequence in §8 |
+| 2 | `skills/cag-gate-integrity.md` | **Read at the first report from any checker, and before believing any PASS.** 12 recorded false or empty reports, with the bug in each checker |
+| 3 | `skills/cag-page-hardening.md` (v2.0) | The static half of Sprint 3, plus §1k `markup-css-drift` and §1l colour specificity, added 2026-07-29 |
+| 4 | `skills/cag-asset-proofing.md` | Proof every dropped asset before the build — resolution, taxonomy, baked-in text errors |
+| 5 | `skills/cag-aeo-pass.md` | The 6-part answer-engine gate, plus the three binding fact corrections and the two approved method labels |
+| 6 | `docs/reference/technical-seo-fixes-backlog.md` | Everything known-broken and deferred, so nothing is re-discovered as new |
+| 7 | `sessions/2026-07-19-for-sale-component-map.md` | The binding tuple ledger — **record this page's tuple here before the build begins** |
+| 8 | `docs/research/for-sale-keywords-2026-07.md` | 793 GSC queries bucketed across the 22 pages. Never invent keyword data |
+
+### 4b · The Three Binding Fact Corrections
+
+Wrong on sight, correct on sight, on every page:
+
+1. **CITES is Appendix I** — uplisted at CoP17, effective January 2017. Never Appendix II.
+2. **The Congo range is $1,500–$3,500** — not $3,000. The bonded pair sets the ceiling.
+3. **The guarantee is written "72-hour"** — plus the 24-hour arrival window. Never "3-day".
+
+**Brand-owned method labels** — two only, never invent a third: **The Benjamin Home-Raising Protocol** (hand-feeding, weaning, the 12–16-week gate) and **The Midland Socialization Method** (family handling, out-of-cage routine). Both are proper nouns, defined once where first used, never implied to be third-party certification.
 
 As before, I must approve this. Competitor-based and suggested/recommended sections can only be drawn up **after** the competitor analysis is complete.
 
@@ -155,15 +237,59 @@ Use the **small footer-logo divider style** on this page.
 The OG images for this page live at:
 
 ```
-/Users/apple/Downloads/CAG/assets/1WORKING-ON/FOR-SALE-PAGES/FOR-sale-with-health-guarantee
+/Users/apple/Downloads/CAG/assets/1WORKING-ON/FOR-SALE-PAGES/1CONGO-AFRICAN-grey-parrot-pair/
 ```
 
-Use **only** these OG images, plus the two review images in the same folder.
+Use **only** the OG images provided in that folder — **all of them, or at minimum 80%** — plus the two review images in the same folder.
 
-**Hero selection:** choose the best OG image for the hero, based on the page, the image itself, and the hero type this page uses. I will approve it if it suits the page, or on the strength of your reasoning.
+**Breeder-nominated candidates**
+
+| Slot | Candidate files |
+|---|---|
+| **Hero** | `mac-letia-young-african-grey-parrot-with-midland-tx-image-real-trust.jpg` **or** `two-trained-african-grey-parrots-sitting-on-mike-shoulder.jpg` |
+| **Breeding-pair section** | `breeding-pair-african-grey-parrots.jpg` **or** `african-grey-breeding-pair-available.jpg` |
+| **Fertile-egg section** | `fertile-grey-parrot-egg-for-sale.jpg` |
+| **Reviews** | `review-Walter-Zander.jpg` · `review-Alene-Murphy.jpg` |
+
+### 8a · Asset Proof — Measured 2026-07-30 (run `cag-asset-proofing` before every build)
+
+**20 assets in the folder. Only 6 are ≥ 760px wide**, which is the width of the uniform in-body box. This decides the hero and it decides the framing letters, so it is recorded here rather than discovered mid-build.
+
+| ≥ 760px wide (usable at native resolution) | Below 760px (blur-fill or accept upscale) |
+|---|---|
+| `mac-letia-…-real-trust.jpg` **1039×539** · `timneh-vs-congo-real-photo.webp` 1000×547 · `united-home-delivery-van-petsafe.webp` 1024×185 · `Mark-with the parrots.jpg` 800×600 · `jins-jeni1.webp` 800×600 · `jins-jeni4-…-eating-veggies.webp` 800×600 | `two-african-grey-congos-for-sale.jpg` 590×639 · `Congo-African-grey-pair-eating.jpg` 500×375 · `african-grey-breeding-pair-available.jpg` 500×431 · `breeding-pair-african-grey-parrots.jpg` 640×480 · `male-vs-female-…-inside-their-cage.webp` 640×480 · `jins-jeni-congo-…-pair.webp` 640×480 · `fertile-grey-parrot-egg-for-sale.jpg` 485×500 · `tamed-pair-…-on-shoulder.jpg` 310×400 · **`two-trained-…-on-mike-shoulder.jpg` 300×400** · `male-and-female-…-for-sale.jpg` 287×320 · `review-Walter-Zander.jpg` 293×320 · `review-Alene-Murphy.jpg` 203×319 · `affordable-…-shipping.jpg.webp` 640×362 |
+
+Also in the folder: `african-grey-parrot-socialization-training copy.mp4` (7.6 MB) — a `.fs-video` candidate. It needs a `-760.webp` poster sibling, `preload="none"`, and **no autoplay**.
 
 > ### ▣ APPROVAL GATE — Hero Image
-> `[AI RECOMMENDS: ___ ]` → breeder approval: `[ ___ ]`
+> `[AI RECOMMENDS: **`mac-letia-young-african-grey-parrot-with-midland-tx-image-real-trust.jpg`**]`
+> **Why, grounded in measurement:** the hero is baked to 1408×768 with a plain `ImageOps.fit` cover crop, and this is the **only** nominated file with the resolution to survive it — 1039×539 needs a 1.35× upscale, while the alternative `two-trained-…-on-mike-shoulder.jpg` is **300×400** and would need a 4.7× upscale into a landscape box it is the wrong orientation for. It is also the file the breeder named "real trust", it carries the Midland geo signal the page's local intent needs, and its aspect ratio is already close to the 16:9 target.
+> **Trade-off, stated plainly:** it shows **one** bird, and this is a *pair* page. The pair proposition therefore has to be carried by the hero's secondary photos rather than its anchor image — which is precisely why §11 recommends a two-photo hero component rather than a single-image hero. If the breeder can supply a high-resolution two-bird shot (≥1400px wide), that file should take the anchor slot instead and this recommendation is withdrawn.
+> Breeder approval: `[ ___ ]`
+
+### 8b · The Framing Question — Pairs, Singles, and How This Page Differs From Jins & Jeni
+
+The breeder's own note: *"If you don't want a pair, you can get a single bird — list all. You can also get Roys and Amie as a pair, Elad and Evie as a pair. How do we frame it? And how will this page be different from the Jins and Jeni page?"*
+
+**The cannibalization answer, and it is the spine of the whole page.**
+
+`/available/jins-jeni/` is a **single-listing product page**: one specific pair, one `Product` + `Offer`, 700–1,000 words. It answers *"tell me about these two birds."*
+
+`/congo-african-grey-parrot-pair-for-sale/` is the **category page for pair intent**. It answers the question that comes *before* the listing: *"should I buy two birds at all, and if so, which two?"* It ranks for the pair keyword universe, carries `AggregateOffer` (group pages may, per skill §3.2), and routes down to the individual listings.
+
+**Three pairing routes, sourced live from `clutch-inventory.json` + `price-matrix.json` — never hardcoded:**
+
+| Route | Birds | Price | What it is |
+|---|---|---|---|
+| **Ready-made companion pair** | Jins ♂ + Jeni ♀ | **$3,500** | Unrelated, must go together. Links to `/available/jins-jeni/` |
+| **Build-your-own pair** | Roys ♂ $2,300 + Amie ♀ $2,500 (Congo) · Elad ♂ $1,600 + Evie ♀ $1,500 (Timneh) | Sum of the two | Two singles bought together, introduced under supervision |
+| **Proven breeding pair** | Adults held back | **$3,000** | Bonded, DNA-certified. Links to `/african-grey-breeding-pair-for-sale/` |
+
+**And the honest fourth answer: one bird is fine.** The page must state plainly that a single well-socialised grey is not a lonely grey, list every available single with its price, and let the buyer step down to one. That honesty *is* the page's moat — every competitor pair listing pushes two birds because two birds is a bigger sale.
+
+> ### ▣ APPROVAL GATE — Pair Framing
+> Three routes plus the honest single-bird step-down: `[ ___ ]`
+> Confirm no other pair page is planned that would cannibalise this one: `[ ___ ]`
 
 ---
 
@@ -191,14 +317,18 @@ Both **mobile and desktop component versions** are covered here. To make each co
 /Users/apple/Downloads/CAG/assets/1WORKING-ON/FOR-SALE-PAGES/component-designs
 ```
 
-This page's component tuple must be **fully distinct** from the Congo, Timneh, Hand-Raised, and Egg pages. That includes the tables — and every table must stack crisply and cleanly on mobile.
+This page's component tuple must be **fully distinct** from every page already shipped. That includes the tables — and every table must stack crisply and cleanly on mobile.
 
 | Item | Value |
 |---|---|
 | Components path | `/Users/apple/Downloads/CAG/assets/1WORKING-ON/FOR-SALE-PAGES/component-designs` |
-| Must be distinct from | Congo · Timneh · Hand-Raised · Egg |
+| Component names reference | `assets/1WORKING-ON/FOR-SALE-PAGES/FOR-SALE-PAGES:components-NAMES.md` — read the full text **and** inspect the PNGs before building |
+| Must be distinct from *(all 8 shipped)* | Eggs · Congo · Timneh · Hand-Raised · Health Guarantee · DNA-Tested · Baby · Adoption-Cost |
+| Tuple ledger *(binding — record before building)* | `sessions/2026-07-19-for-sale-component-map.md` |
 | Refresh tool | `cag-component-refresh` agent/skill |
-| Tables | Must stack crisply and cleanly on mobile |
+| Tables | Must stack crisply and cleanly on mobile — recipe banked in memory `reference_mobile_table_stacking` |
+
+**Never import a homepage or comparison component onto a for-sale page.** This cost a full v3 rebuild of the Egg page. No `NewsletterV2`, no comparison hero, no green counter strip, no comparison circular-emblem seam. The for-sale cluster has its own kit.
 
 ---
 
@@ -208,16 +338,19 @@ There are **five heroes** to choose from for these pages. Screenshots of all fiv
 
 **Which hero for this page?**
 
+The locked cluster assignment (Part II·C) puts *pair and family* pages on **Hero-A Scattered Flock**. That default collides: Hero-A is already spent on Hand-Raised, where it ships as a rotated 2×2 grid of four Polaroids.
+
 > ### ▣ APPROVAL GATE — Hero Component
-> `[AI RECOMMENDS: ___ ]` → breeder approval: `[ ___ ]`
+> `[AI RECOMMENDS: **Hero-A refreshed as a "Bonded Duo" — two large paired Polaroids, not a four-up scatter**]`
+> **Why:** the page's entire proposition is *two birds together*, and a hero that shows one bird undercuts the H1 before a word is read. Hero-A is the only kit hero built to carry multiple bird photos, so the family is right; the refresh is what keeps the tuple distinct from Hand-Raised. Two tiles instead of four also solves the §8a resolution problem — two larger tiles need fewer usable source files, and we measured only six assets at or above 760px.
+> **Trade-off:** it reuses the Hero-A name, so this page's tuple distinctness has to be earned in the dial, rail, TOC, takeaway, table and FAQ slots rather than in the hero slot. Recording the tuple in the component-map ledger before the build is therefore mandatory, not optional. The alternative — Split-Hero A trust ribbon — would be a cleanly unused hero, but it is a single-image left-hand layout and cannot show a pair.
+> Breeder approval: `[ ___ ]`
 
 ---
 
 ## 12 · Desktop and Mobile Image Styles
 
-Which desktop and mobile styles are we using on this page? Choose from the options below.
-
-> ⚠️ **Inconsistency to resolve:** the opening of this request asks for **8 desktop + 8 mobile** styles, while the closing instruction asks for **5–6 of each**. Confirm which count applies before proceeding.
+Which desktop and mobile **image** styles are we using on this page? Choose from the options below. Full named spec: `IMAGE-DESIGNS.md §7`.
 
 ### 12a · Desktop
 
@@ -245,6 +378,9 @@ Which desktop and mobile styles are we using on this page? Choose from the optio
 
 > ### ▣ APPROVAL GATE — Style Letters
 > **To finish this, reply with your desktop letters and your mobile letters** — for example: *"Desktop A, B, C, H, E · Mobile mC, mA, mH, mG, mB."*
+> `[AI RECOMMENDS: **Desktop H, B, A, E · Mobile mG, mC, mB, mA**]`
+> **Why:** **H Duo Strip leads** because it is the one style built for pair shots, and this page has five two-bird photos to place. **B Blur-Fill** takes the single-bird portraits — it is the locked default and, critically, it is the only style that survives the §8a resolution problem, since a blurred backdrop hides that the foreground is a 500px master. **A Contain-Canvas** takes the infographics so no baked-in label is ever cropped, and **E Top-Anchored Cover** takes the wide scene shots. On mobile, **mG is the pair style** and pairs with H; mC blur-fill 4:5 pairs with B; mB contain protects the infographics.
+> **Trade-off:** B and mC add a blurred layer, so those images ship heavier than a plain cover crop. Given that 14 of the 20 assets are below 760px wide, that weight is the price of not showing a visibly upscaled bird — worth paying here, and it is the reason the recommendation is not the lighter A-everywhere option.
 > Desktop: `[ ___ ]` · Mobile: `[ ___ ]`
 
 ---
@@ -302,35 +438,33 @@ Use the following framework as part of the blended framework set.
 
 ## 16 · Two New Verified Reviews
 
-Two new verified reviews, with images, for this page. The review images are in the folder below and can be identified by name:
+Two new verified reviews, with images, for this page. The review images are in the folder below and can be identified by name — `review-Walter-Zander.jpg` and `review-Alene-Murphy.jpg`:
 
 ```
-/Users/apple/Downloads/CAG/assets/1WORKING-ON/FOR-SALE-PAGES/FOR-sale-with-health-guarantee
+/Users/apple/Downloads/CAG/assets/1WORKING-ON/FOR-SALE-PAGES/1CONGO-AFRICAN-grey-parrot-pair/
 ```
 
-> **Real customer reviews — reproduced verbatim. Never alter the wording of a real review.**
+> **Real customer reviews — reproduced verbatim. Never alter the wording of a real review.** These two are also the *only* text on this page permitted to match a sibling verbatim, and only because they are whitelisted furniture. Both are on-query for the pair keyword set, which is why they belong here rather than on another page.
 
-### ★ Review 1 — Meredith Plaisance
+### ★ Review 1 — Walter Zander, Fort Washington, PA
 
 ⭐⭐⭐⭐⭐
 
-> I searched everywhere for a healthy African Grey bird for sale near me, and C.A.G.s was by far the best choice. From the first conversation, they were knowledgeable, responsive, and genuinely cared about matching me with the right bird. My African Grey arrived in excellent health, fully weaned, and incredibly friendly. The entire experience was smooth from start to finish, and I would absolutely recommend C.A.G.s to anyone looking for a quality African Grey.
+> After weeks of searching for an affordable African grey parrot pair, I finally found C.A.G.s, and the experience exceeded every expectation. Walter patiently answered all my questions, provided recent photos, health records, and explained the personalities of both birds before I committed. The pair arrived healthy, well-socialized, and already comfortable around people. It's rare to find such quality, transparency, and fair pricing in one place. If you're looking for an affordable African grey parrot pair, I highly recommend C.A.G.s for their professionalism, ethical breeding practices, and exceptional customer service.
 
-— Meredith Plaisance, Hartsville, SC
+— Walter Zander, Fort Washington, PA
 
-### ★ Review 2 — Jeffrey Hendershot
+### ★ Review 2 — Alene Murphy, Savannah, GA
 
 ⭐⭐⭐⭐⭐
 
-> Finding a trustworthy place for rehoming African Grey parrot options wasn't easy until I discovered C.A.G.s. They answered every question, provided regular updates, and made me feel confident throughout the entire adoption process. My Grey is healthy, intelligent, and has settled into our home beautifully. The professionalism and genuine care shown by C.A.G.s exceeded every expectation.
+> Finding a reliable African grey parrot pair for sale wasn't easy until I discovered C.A.G.s. Their honesty, professionalism, and knowledge immediately gave me confidence. The birds were exactly as described—healthy, affectionate, and beautifully cared for. Even after delivery, the team continued providing advice on diet, enrichment, and acclimation. I couldn't be happier with my experience, and I highly recommend C.A.G.s to anyone searching for an African grey parrot pair for sale from a breeder that genuinely cares about both the birds and their new families.
 
-— Jeffrey Hendershot, Centennial, CO
+— Alene Murphy, Savannah, GA
 
-### 📎 Additional review image
+> ⚠️ **Open flag for the breeder.** Review 1 reads *"Walter patiently answered all my questions"* — the reviewer's own first name. If that is a transcription slip for Mark or Teri, say so and it will be corrected at source; **it will not be silently edited**, because the standing rule is that real review wording is never altered. Left as-is until the breeder rules. `[ ___ ]`
 
-```
-/Users/apple/Downloads/CAG/assets/1WORKING-ON/FOR-SALE-PAGES/HAND-RAISED-GREYS/jesse-review-African grey parrot purchase.jpg
-```
+**Rating arithmetic.** These two reviews do not change the site-wide aggregate. It stays **4.9 from 52 real reviews**. Never ship a fabricated `reviewCount`.
 
 ---
 
@@ -359,6 +493,114 @@ Sprint 6 pays for itself too. That hardening pass found the same infographic bug
 | **4** | Final | `final-page-pass` + keyword-verifier + anti-ai-writing | |
 | **5** | Ship | Sitemap + push + deploy-verify + live 200 | |
 | **6** | Bank | `session-closer` + memory + back-propagate fixes to siblings | |
+
+### 17c · The Full Workflow, Top to Bottom — Which Skill Fires When
+
+This is the authoritative per-page routing table. Nothing is skipped, and every gate names the artifact it produces, so "done" is never a judgement call.
+
+---
+
+#### **Sprint 0 · Intel** — *no page may be planned on assumptions*
+
+| Step | Invoke | Produces |
+|---|---|---|
+| 0.1 | `@cag-competitor-intel --all` | Top-10 competitors per platform for the pair keyword + the 30-competitor registry sweep |
+| 0.2 | `@cag-competitive-keyword-gap-agent` | Gap matrix, opportunity-scored 1–10 |
+| 0.3 | `@cag-gsc-analytics` | Real query positions from `docs/research/for-sale-keywords-2026-07.md` and the fresh CSVs. **Never invent keyword data** |
+| 0.4 | `/research-recency` + `/reddit-strategy` | Reddit and blocked-site signal via the escalation ladder. Un-fetchable is written `NOT FETCHED`, never invented |
+| 0.5 | `@cag-paa-agent` | The real PAA set for the primary keyword |
+| 0.6 | `@cag-llm-keyword-intel` | LLM visibility baseline. **Open flag #10: never yet run on any cluster page** |
+| **Gate** | **[REVIEW]** | `sessions/YYYY-MM-DD-<slug>-sprint0-research.md` — SERP snapshot · section inventory · gaps · keyword universe · entity map · visual blueprint · PAA set |
+
+#### **Sprint 0.5 · Orient**
+
+| Step | Invoke | Produces |
+|---|---|---|
+| 0.5.1 | `/grill-me` | Session brief on disk, checkpointed answer by answer |
+| 0.5.2 | `/keyword-cluster` | Primary / secondary / LSI / long-tail / PAA tiers, feeding §3b metric 1 |
+| 0.5.3 | `@cag-angle-agent` | 5–10 angles, hooks, counter-intuitive POVs |
+| 0.5.4 | `@cag-strategy-synthesizer` | **Two** reverse-engineered strategies plus one blended, one marked **(Recommended)** with a data-grounded why and a named trade-off |
+| **Gate** | **[APPROVE]** | The chosen angle and strategy |
+
+#### **Sprint 1 · Blueprint** — *the longest gate, and the cheapest place to fix anything*
+
+| Step | Invoke | Produces |
+|---|---|---|
+| 1.1 | `@cag-content-audit-agent` | 4-phase pre-build audit |
+| 1.2 | `/framework-heading-hierarchy` | **Full H1→H6 outline** — no skipped levels, all six levels, **≥5 H5 and ≥5 H6**, Title Case throughout, plus the **declared header style** from §3a |
+| 1.3 | `/cag-duplicate-content-gate --headers` | Header dup-gate **run before outline approval**, pairwise against all 8 siblings plus the comparison cluster |
+| 1.4 | `/cag-entity-agent` → `@cag-entity-incorporation-agent` | 85–112 distinct entities, bounded by the Verified-Claim Ledger |
+| 1.5 | `/cag-seo-master-checklist` | Distribution matrix: section taxonomy · ordered topic→micro stack · framework per section · word-count split · **A / B / C categories** with a grounded why on every B and C row |
+| 1.6 | `/cag-cta-strategy` | The ≥5 action CTAs of §6, placed on a 500–700-word cadence |
+| 1.7 | Visual companion | Clickable skeleton, hero comparison, section-layout screens |
+| 1.8 | `/superpowers:writing-plans` | The approved blueprint becomes a checkbox task plan in `docs/superpowers/plans/` |
+| **Gate** | **[APPROVE]** | Outline · matrix · framing letters · component tuple recorded in the ledger |
+
+#### **── ASSET GATE ──** ⛔
+
+Prompt pack delivered for every H2/H3/H4 needing an infographic → breeder drops the images → **breeder says "start"**. Then `/cag-asset-proofing` runs over the drop: resolution, `.jpg` vs `.webp` taxonomy, and **read the baked-in text on every AI infographic** (this caught "BREDDER", "HOME HOME", and a tight "Polyomavirus" on Hand-Raised).
+
+#### **Sprint 2 · Build**
+
+| Step | Invoke | Note |
+|---|---|---|
+| 2.1 | `/cag-for-sale-page-builder` | Section by section, straight from the approved matrix. **Write-From-Outline, never from a sibling** |
+| 2.2 | `/framework-eebp` | Entity → Evidence → Benefit → Purpose, under every header |
+| 2.3 | `/cag-branded-search-skill` + `/cag-branded-hybrid-keywords` | Branded targets and Contextual-Intelligence local intent |
+| 2.4 | `/internal-link-agent` + `@cag-external-link-agent` | Link-First anchors, ≥6 external across ≥6 domains, **Anchor Diversity Ledger enforced by script, never by eye** |
+| 2.5 | `/anti-ai-writing` + `@cag-non-commodity-content-agent` | Zero AI tells; breeder-authentic detail |
+| 2.6 | `/cag-infographic` + `/cag-component-refresh` | Uniform `.sec-img.inf-img` boxes; layout and accent deltas so the page is not a sibling clone |
+| 2.7 | `/cag-duplicate-content-gate` (body) | Run **during** the build on your own draft, not after |
+
+#### **Sprint 3 · Harden** — *the sprint that exists because a page passed every static gate and still felt rushed*
+
+| Step | Invoke | Catches |
+|---|---|---|
+| **3.0** | **`/cag-gate-integrity` — read FIRST** | 12 recorded false or empty reports. **Verify every finding against the built page before editing anything, and read a gate's own examined count before believing a PASS** |
+| 3.1 | `python3 scripts/page_hardening_scan.py <slug>` | Title Case · `img-no-srcset` · opacity-dimmed text · small clay contrast · unwound absolute hero · smooth-scroll · **§1k markup-css-drift** · **§1l colour specificity** |
+| 3.2 | `python3 scripts/seam_parity.py <slug>` | Seam count against real section count. **Never re-derive this with grep** |
+| 3.3 | Playwright runtime probes at **375 / 768 / 820 / 1024 / 1280** | Horizontal overflow · real-`ch` line length · contrast · tap targets · sticky-rail collisions. The Browser pane reports `vw:0`, so every probe false-passes there — **measure in Playwright** |
+| 3.4 | `/impeccable audit` → `/impeccable critique` → `/impeccable harden` → `/impeccable polish` | Technical quality, then heuristic UX review, then edge cases, then the final craft pass |
+| 3.5 | `/frontend-design` | The absolute bans: no side-stripe borders, no gradient text, no decorative glassmorphism, no identical card grids, no em dashes in copy |
+| **Loop** | **Any component that still feels rough goes back to 3.4** | Do not advance a rough component to Sprint 4 |
+
+#### **Sprint 4 · Final**
+
+| Step | Invoke | Bar |
+|---|---|---|
+| 4.1 | `/cag-aeo-pass` + `python3 scripts/aeo_audit.py <slug>` | BLUF openers · atomic sections · entity-rich naming · declarative sentences · citation formatting · brand ownership · **schema-only freshness, zero visible dates** |
+| 4.2 | `@cag-keyword-verifier` | The §3b four-metric table plus 1–2% primary density |
+| 4.3 | `/cag-duplicate-content-gate` + `--headers` | Zero non-whitelist crossover, on `dist/` |
+| 4.4 | `@cag-accessibility-fixer` | WCAG 2.1 AA, verified in Lighthouse |
+| 4.5 | `/cag-final-page-pass` → `python3 scripts/final_page_audit.py --for-sale` | One PASS / PASS-WITH-WARNINGS / FAIL verdict. Word band **3,000–8,000** |
+| 4.6 | `/cags-comprehensive-page-audit-system` | Only if 4.5 scores low — the 17-section strategic audit |
+
+#### **Sprint 5 · Ship**
+
+`python3 scripts/generate_sitemaps.py` → `@cag-canonical-fixer` → commit + `git push origin main` (**push is the deploy**) → `@cag-deploy-verifier` live 200 + IndexNow → `/sitemap-agent`.
+
+#### **Sprint 6 · Bank**
+
+`/session-closer` → write the memory → **back-propagate every fix to the 8 shipped siblings**. This is where the pass pays for itself: the Hand-Raised hardening pass found the same infographic-crop bug on four live comparison pages, and the fixes were cheap because the memory already existed.
+
+---
+
+### 17d · The Component Quality Bar — "Must Not Feel Rushed"
+
+The breeder's rejection phrase for Hand-Raised was **"feels rushed"**, and none of the five root causes was visible in a source review. These are the standing conditions of done.
+
+**Every component, at every breakpoint.**
+
+- ☐ Clean, smooth, fluid, modern — no component ships rough. If one feels rough, it goes back through `/impeccable critique` → `harden` → `polish` before Sprint 4, however many loops that takes.
+- ☐ **Type sizing fits at all three widths.** No oversized headers; H2 clamped and checked at 375px; even paragraph rhythm; body capped at 65–75ch measured with a **real `ch`**, never `0.5em`.
+- ☐ Motion ≤ 0.2s, ease-out. No bounce, no parallax, no autoplay.
+- ☐ Warm-tinted shadows only. Never neutral grey.
+- ☐ Line-icon SVGs, never emoji. Never 🦜 — use `/emoji/cag-congo.png` and `cag-timneh.png`.
+- ☐ Tables stack to one card per row at ≤640px.
+- ☐ Every table, card, dial row and pill clears the 24px tap-target floor.
+- ☐ Zero horizontal overflow at 375px. `overflow-x:clip` **hides** this defect — probe `scrollWidth` *and* look at whether text is clipped.
+- ☐ Hero 350–400px on desktop, images first on mobile (`order:-1`), copy first on desktop.
+- ☐ **Spaces around `+` and `−` inside every `clamp()` and `calc()`** — without them the declaration is silently dropped, which is what left a hero at 524px.
 
 ---
 
@@ -470,8 +712,17 @@ Compiled 2026-07-25 from `sessions/2026-07-19-for-sale-component-map.md`, the pr
 | 4 | Hand-Raised | `/hand-raised-african-grey-parrot-for-sale/` | 2026-07-22 | Page 4 |
 | 5 | Health Guarantee | `/african-greys-for-sale-with-health-guarantee/` | 2026-07-25 | Page 5 |
 | 6 | DNA-Tested | `/dna-tested-african-grey-for-sale/` | 2026-07-24 | Page 6 |
+| 7 | Baby | `/baby-african-grey-parrot-for-sale/` | 2026-07-27 | Page 7 |
+| 8 | Adoption Cost | `/african-grey-parrot-adoption-cost/` | 2026-07-27 | Page 8 |
+| **9** | **Congo Pair — CURRENT TARGET** | `/congo-african-grey-parrot-pair-for-sale/` | *stub, rebuild pending* | **Page 9, Cluster 3 opener** |
 
-**Six of 22 built.** Sixteen remain — 11 for-sale and 5 buy-prefixed.
+**Eight of 22 built** (verified on disk 2026-07-30: eight `index.astro` files at 100–124 KB). **Fourteen remain** — 9 for-sale and 5 buy-prefixed. The remaining for-sale slugs are all stubs of 4–20 KB.
+
+**Page 7 — Baby** · `/baby-african-grey-parrot-for-sale/` · weaned-first angle · Split-Hero B refreshed · Avail-B faceted by age band · PDB + BAB, first use in the cluster · Reddit used as an evidence base. Memory: `project_baby_page_build`.
+
+**Page 8 — Adoption Cost** · `/african-grey-parrot-adoption-cost/` · Number→Ledger→Thesis spine · price-ladder hero · new Table G · the `.ctool` first-year calculator. The asset folders turned out to be infographics rather than photos, and five were rejected on intake — which is why `cag-asset-proofing` now runs at the Asset Gate. Hardened 2026-07-28. Memory: `project_adoption_cost_pack_ready`.
+
+> **Both pages shipped with empty infographic slots by breeder choice** (build first, images last). Nothing renders a broken box; the slots simply carry no image yet. Prompt packs are written and collision-checked.
 
 ### Measured on Disk, 2026-07-25
 
@@ -704,6 +955,19 @@ The breeder's verdict was **"feels rushed."** There were five root causes, and *
 | **Voice lever** | Scam-exception | Anti-scam trust | US-only CITES honesty | Raising method | **Enforceable vs unenforceable** | **Hen/cock** |
 | **H6 prefixes** | — | — | — | — | In Writing / From the Vet / On File | From the Lab / On the Record |
 
+**Pages 7–9** *(continued — the table above stops at six columns for width)*
+
+| Slot | Baby | Adoption Cost | **Congo Pair — TARGET, to be filled at Sprint 1** |
+|---|---|---|---|
+| **Hero** | Split-Hero B refreshed | Price-ladder hero | `[AI RECOMMENDS: Hero-A refreshed "Bonded Duo", two tiles]` |
+| **TOC** | — *(recorded in the component-map ledger)* | — | `[ ___ ]` |
+| **Table** | — | **new Table G** | `[ ___ ]` — must be a new letter or an unused existing one |
+| **Avail facet** | **Avail-B by age band** | — | `[AI RECOMMENDS: Avail-B faceted by pairing route — ready-made pair / build-your-own / breeding pair / single]` |
+| **Voice lever** | Weaned-first | Number→Ledger→Thesis | `[AI RECOMMENDS: two-versus-one — bonded, compatible, introduced, quarantined, solo]` |
+| **Special** | PDB + BAB, first use | `.ctool` first-year calculator | `[ ___ ]` |
+
+> **Fill this column before writing a line of the page.** The tuple ledger at `sessions/2026-07-19-for-sale-component-map.md` is the binding record; this table is its summary.
+
 ### Hero → Cluster Assignment (locked 2026-07-19)
 
 | Cluster | Default hero | Notes |
@@ -825,10 +1089,19 @@ Every one of these cost real rework, and every one applies to the 16 remaining f
 
 ## II·F — Tooling and Gate Order
 
-Run these in order on every page **before** calling it done.
+Run these in order on every page **before** calling it done. **Read `skills/cag-gate-integrity.md` before you act on any output below — including a PASS.**
 
 ```bash
+git checkout main && npx astro build
+```
+```bash
 python3 scripts/page_hardening_scan.py <slug>
+```
+```bash
+python3 scripts/seam_parity.py <slug>
+```
+```bash
+python3 scripts/aeo_audit.py <slug>
 ```
 ```bash
 python3 scripts/dup_content_audit.py
@@ -851,8 +1124,11 @@ python3 scripts/generate_sitemaps.py
 | `final_page_audit.py --for-sale` | Runs the page-type profile and returns PASS, PASS-WITH-WARNINGS, or FAIL. The word band is **3,000–8,000**, and the `FORSALE` roster is hardcoded, so new slugs must be appended. |
 | `generate_sitemaps.py` | Regenerates the shards from `src/pages/` and validates that there are zero phantom URLs |
 | `reframe_og.py --style blurfill --mobcrop 4:5` | In-body OG photos **only** — never heroes |
+| `seam_parity.py` *(added 2026-07-29)* | One seam per section, one seamless hero allowed. **Never re-derive this with grep** — the published grep matched a class only 2 of the 8 built pages use, so it compared seams against **zero sections**, and a `\bseam\b` regex double-counts because `-` is a word boundary. The script prints its own examined count and refuses to call a 0-page run a pass |
+| `aeo_audit.py` | The machine half of `cag-aeo-pass`: BLUF proxy, entity counts, pronoun density, labeled-method presence, `dateModified` in JSON-LD, **visible-date detection (ERROR)**, tables / lists / stat-header counts, sentence-length report |
+| `verify_model_tiers.sh` | All 68 agents on Opus 5. Runs are idempotent since the 2026-07-29 drift fix |
 
-**Always read the built `dist/` output, never a source grep.**
+**Always read the built `dist/` output, never a source grep.** And **read every gate's own examined count before believing a PASS** — zsh does not word-split `$VAR`, so `PASS … in 0 pages` has happened twice on this site. Pass slugs literally, or use `${=SL}`.
 
 ---
 
@@ -901,11 +1177,40 @@ This is the bar every page in the cluster has cleared.
 
 ## II·I — What Remains
 
-**Sixteen of the 22 pages are unbuilt** — 11 for-sale and 5 buy-prefixed.
+**Fourteen of the 22 pages are unbuilt** — 9 for-sale and 5 buy-prefixed. Verified on disk 2026-07-30.
 
 Every remaining page inherits the locked specs in [II·D](#iid--locked-cluster-wide-specs), the trap log in [II·E](#iie--trap-and-failure-log), and the gate order in [II·F](#iif--tooling-and-gate-order) — and each must record a **fully distinct tuple** in `sessions/2026-07-19-for-sale-component-map.md` before the build begins.
 
-**Fast wins flagged by keyword mining:** breeding-pair queries already rank at **positions 5–9**. For comparison, all 74 egg queries sat between positions 60 and 92 before the rebuild.
+**Fast wins flagged by keyword mining:** breeding-pair queries already rank at **positions 5–9** — the strongest starting position of any page in the cluster, and the reason the pair page opens Cluster 3. For comparison, all 74 egg queries sat between positions 60 and 92 before the rebuild.
+
+---
+
+## II·J — Tooling and Rules Upgrade, Shipped 2026-07-29
+
+That session's scope was tooling, not page fixes. Everything below is **done and live**, and every page from Page 9 onward is built on top of it.
+
+| Task | Result |
+|---|---|
+| All agents moved to **Opus 5** | 68 of 68 · `verify_model_tiers` PASS=68 |
+| `scripts/seam_parity.py` | Replaces a probe that compared seams against **0 sections on 6 of the 8 built pages** |
+| **§1k `markup-css-drift`** | Finds the "clean scan, broken page" failure mode |
+| **§1l colour specificity** | Finds the 1.19:1 mechanism — a component colour losing to a descendant |
+| **`cag-page-hardening` v2.0** | Adds §1k, §1l, the Playwright mandate, and §5 small defects |
+| **NEW `cag-gate-integrity`** | Registered and loadable. The highest-value item of the session — 12 checkers had cried wolf |
+| **Header-style layer** | 3 styles + 3 registers + a routing table, injected into 68 of 68 agent Golden Rules |
+| **Reddit thread protocol** | Plus `data/reddit-thread-ledger.json`, 6 threads seeded |
+| **`WORKFLOW.md`** | Rewritten to the 7-sprint model; `interior_29_audit` routing retired |
+| **NEW `cag-asset-proofing`** | Small skill; proves every dropped asset before the build |
+
+**Still outstanding from that session, all logged in `docs/reference/technical-seo-fixes-backlog.md`:** GSC + GA4 MCP and a `cag-analytics-live` skill (needs the breeder's credentials), and the `CLAUDE.md` core/site split with the prompt-improvement rule.
+
+### The Anchor Ledger Already Touches This Page
+
+Three anchors are **already spent** against `/congo-african-grey-parrot-pair-for-sale/` by sibling pages, and none of them may be reused when those siblings link here or when this page links out:
+
+> Congo African Grey pair page · Our Congo pair listing · The Congo pair listed separately · Two Congos sold together · A documented Congo pair · The larger Congo equivalent
+
+Eight more are spent against `/african-grey-breeding-pair-for-sale/`, which this page must link to. Full tables in the lessons doc §6 and §9. **Script the collision check against the built page; two collisions were caught that way on adoption-cost, and eyeballing would have shipped both.**
 
 ---
 
@@ -913,6 +1218,6 @@ Every remaining page inherits the locked specs in [II·D](#iid--locked-cluster-w
 
 **C.A.Gs — Midland, TX** · Forest `#2D6A4F` · Clay `#e8604c` · Cream `#faf7f4` · Charcoal `#3a2f2a`
 
-*Part I — the build brief. Part II — the cluster record, compiled 2026-07-25.*
+*Part I — the build brief. Part II — the cluster record, compiled 2026-07-25, retargeted to `/congo-african-grey-parrot-pair-for-sale/` and extended through Pages 7–9 plus the 2026-07-29 tooling upgrade on **2026-07-30**.*
 
 </div>
