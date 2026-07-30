@@ -164,7 +164,7 @@ pre-change scanner from git on the same slugs: `✅ clean — no known hardening
 
 | Page | Finding | Triage |
 |---|---|---|
-| `african-grey-parrot-bird-eggs-for-sale-usa` | **20 classes styled, never rendered**: `bird-badge bird-body bird-c bird-cards bird-cta bird-docs bird-name bird-photo bird-price bird-top` · `faq-d faq-open faq-q` · `pair-body pair-c pair-row pair-sub` · `nl-inflow` · `ship-mini` · `video-wrap` | **Highest priority.** This is 5–6 whole components with no markup behind them, the same failure mode as adoption-cost. Note `faq-d` is the exact class behind the 2026-07-28 white-on-white FAQ defect. Triage each as MISSING COMPONENT (render it) vs DEAD VARIANT (delete it) — never bulk-delete. |
+| `african-grey-parrot-bird-eggs-for-sale-usa` | **20 classes styled, never rendered**: `bird-*` (10) · `pair-*` (4) · `faq-d faq-open faq-q` · `nl-inflow` · `ship-mini` · `video-wrap` | **TRIAGED 2026-07-30: all 20 are DEAD CODE, 0 missing components.** Every one is superseded by a newer variant that *is* rendered — `bird-*` by `availB-*` (same 3-up grid, plus a `.hide` filter state), `pair-*` by `.xsell` (the 2026-07-26 decision to stop growing the card grid), `faq-*` by `faqC-*`, `nl-inflow` by `fs-nl-*`, `video-wrap` by `fs-video*`, and `ship-mini` by the full `ship-c` set. Safe to delete. **Correction: an earlier note here called this "5–6 whole components missing, highest priority" — that was wrong.** It counted raw unrendered classes without checking for renamed equivalents, which is precisely the triage `skills/cag-page-hardening.md` §1k says the scanner cannot do for you. |
 | `timneh-african-grey-for-sale` | **14 classes styled, never rendered**: `carecards cc cc-k cc-s` · `chkT chkT-eyebrow chkT-grid chkT-head chkT-title` · `pb-bar pb-note pb-scale pb-zone priceband` | 3 components: a care-cards grid, a `chkT` checklist, and a `priceband` scale. Compare against the tuple ledger in `sessions/2026-07-19-for-sale-component-map.md` before deciding. |
 | `african-grey-parrot-adoption-cost` | `faqC-a` **rendered with no CSS rule** on this page | Real. `hand-raised` styles it as `.handraised .faqC-a{padding:0 1rem 1rem 3.05rem}`; adoption-cost renders the same wrapper unstyled. Confirm in a real viewport before editing. |
 
@@ -223,3 +223,19 @@ are `N/A` — they ship no seams at all, so they are not using the convention).
 
 Judgement before anyone sweeps this: the `/available/` template and the homepage are
 worth a decision; the 1–4-missing interior pages are low value.
+
+### Timneh's 14: three complete components, built and never wired (triaged 2026-07-30)
+
+Unlike the eggs page, **nothing on timneh is superseded** — `class="(chk|care|pb|price)*"` matches
+**zero** rendered markup, so these are genuinely MISSING components, not dead variants.
+
+| Component | Classes | What the CSS builds | Decision needed |
+|---|---|---|---|
+| **`.priceband`** | `priceband pb-scale pb-bar pb-zone pb-note` (+ `.red/.green/.amber` zone modifiers) | A horizontal price-honesty scale: three coloured zones (red = below our floor / amber / green = documented range) with a tabular-numeral scale above and a note below. Reads as the strongest anti-scam visual in the cluster. | Render — but it needs one new H3 and a `<figure>`-class caption |
+| **`.carecards`** | `carecards cc cc-k cc-s` | A 4-up card grid: uppercase clay eyebrow, Newsreader value, small sub-label. Generic enough to carry weaning/diet/lifespan/noise facts. | Render, or delete if the page's `otA` GEO tables already cover it |
+| **`.chkT`** | `chkT chkT-eyebrow chkT-grid chkT-head chkT-title` | A titled checklist block with an eyebrow and a grid of items. `chkB` is the adoption-cost sibling that ships. | Render — the timneh tuple has no checklist, and its siblings do |
+
+**Heading impact — this is why it is not a mechanical fix.** Rendering `priceband` and `chkT` adds at
+least two new headings to a page that currently passes the Heading Outline Gate at 18 sections / 18 seams.
+Per CLAUDE.md the **full H1→H6 outline must be re-approved before the markup is written**, and each new
+section needs its own seam to keep `seam_parity` at PASS.
