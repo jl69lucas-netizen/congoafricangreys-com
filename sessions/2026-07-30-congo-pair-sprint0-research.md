@@ -97,7 +97,13 @@ Query-level demand splits cleanly into two clusters that must not share a page.
 > **Why:** the breeding-pair queries already rank at 2.3–9.0 through a redirect into the sibling slug. Pointing a second, stronger page at the same eight queries would split that equity and put two of our own URLs in competition — the exact failure the cannibalization guard exists to prevent. The sibling is one page away in the build queue and inherits the demand cleanly.
 > **Trade-off, stated plainly:** Cluster B is small — 40 impressions and zero clicks. Ranking it perfectly wins very little direct traffic. The page has to earn its keep on **informational demand** (§4) and on **conversion**, not on its head term. That is a real cost and the breeder should weigh it.
 > **The alternative I rejected:** merge both intents here and 301 the breeding-pair slug into it. It would concentrate 1,055 impressions on one URL. I rejected it because the two buyers are genuinely different people — one wants a companion, one wants breeding stock at $3,000 — and one page cannot serve both without the honest advice in §4 being undercut by a breeding-stock sales pitch.
-> Breeder decision: `[ ___ ]`
+> **✅ BREEDER DECISION 2026-07-30: COMPANION PAIRS ONLY.** This page owns Cluster B. Every `breeding pair` variant stays with `/african-grey-breeding-pair-for-sale/`.
+>
+> **Binding consequences for the Sprint 1 outline:**
+> 1. **No H1–H6 heading may contain "breeding pair"** as its target phrase. The breeding route is covered in exactly one section, as a link-out.
+> 2. `/african-grey-breeding-pair-for-sale/` gets **one** link from this page, using an anchor not already spent (eight are spent — see the lessons doc §6).
+> 3. The $3,000 proven pair appears in the routes table as a **referral**, not as a product card with an `Offer`.
+> 4. Run `dup_content_audit.py --headers` against the sibling stub before outline approval, so the two pages cannot converge later.
 
 ---
 
@@ -215,7 +221,14 @@ Advertises a **"breeding pair … 1 year 3 months old"** at $2,500. African Grey
 > **(a) Publish the comparison** — "documented pairs sell for $6,500–$8,000; ours is $3,500 because we bred them ourselves and skip the middleman." Turns the gap into the strongest value proof on the page.
 > **(b) Revisit pricing.** Out of scope here, breeder's call.
 > **Trade-off on (a):** naming a $6,500–$8,000 market rate anchors buyers high and could make $3,500 read as *suspiciously* cheap on a page whose neighbours warn that below-floor pricing is a scam signal. It must be paired with the reason for the gap, never stated bare.
-> Breeder direction: `[ ___ ]`
+> **✅ BREEDER DECISION 2026-07-30: PUBLISH THE COMPARISON (option a).** Prices are unchanged.
+>
+> **Binding rules for how it is written:**
+> 1. **The market figure never appears without its reason in the same paragraph.** The reason is that we bred these birds ourselves in Midland and there is no middleman, reseller, or import chain in the price.
+> 2. Cite it as **observed live listings**, not as a survey or an index. Phrasing must stay attributable: documented adult pairs *currently listed* at $6,500–$8,000.
+> 3. **Do not claim a discount, a sale, or a saving.** No struck-through prices, no "was/now" — that is a scam tell we counter-position against.
+> 4. It pairs with the anti-scam module, which must keep saying that pricing *far below* the floor is a warning sign. The distinction we draw: a low price with verifiable documentation and a named breeder is value; a low price with neither is bait. That distinction has to be explicit or the two sections contradict each other.
+> 5. Source table (§5) is the evidence. If those listings go stale before launch, re-fetch rather than reprint.
 
 **Also note:** the NJ listing's *"Can't find paper work"* is the market's weak point in six words. Documentation is our moat, and here is a competitor listing admitting the gap.
 
@@ -278,7 +291,15 @@ Advertises a **"breeding pair … 1 year 3 months old"** at $2,500. African Grey
 >
 > **Trade-off, named:** an honest page will talk some buyers down from a $3,500 pair to a $1,700 single. That is real revenue traded for trust and for a defensible ranking on a question the whole market dodges. If the breeder wants pair revenue maximised instead, say so now — that is a different page and it should be decided before the outline, not after.
 >
-> Breeder approval: `[ ___ ]`
+> **✅ BREEDER APPROVAL 2026-07-30: ANGLE APPROVED — "Two Birds, One Honest Answer."** The step-down to a single bird is in scope and is a feature, not a leak.
+>
+> **What the angle commits the page to:**
+> 1. **The pair-versus-single question is answered before anything is sold.** The bonding risk is stated plainly and early, not buried in an FAQ.
+> 2. **A real "buy one instead" path exists**, listing every available single with its price, and it is not styled as a lesser option.
+> 3. **The three routes are framed as fit, not upsell** — ready-made pair, build-your-own, breeding referral.
+> 4. **Voice lever: two-versus-one.** Reserved vocabulary for this page — *bonded, compatible, introduced, quarantined, solo, flock-of-two, human-bonded*. Siblings own hen/cock (DNA), enforceable/unenforceable (guarantee), weaned-first (baby), raising method (hand-raised).
+> 5. **Frameworks:** PAS for the bonding fear → EEBP for the routes → QAB for the FAQ. PDB and BAB are spent on the baby page; do not reuse them as the spine.
+> 6. Honesty stays inside the Verified-Claim Ledger. Community consensus is cited **as community consensus**, never as our clinical finding.
 
 ---
 
@@ -286,10 +307,10 @@ Advertises a **"breeding pair … 1 year 3 months old"** at $2,500. African Grey
 
 | # | Flag | Owner |
 |---|---|---|
-| 1 | Cluster A / Cluster B intent split (§2) | **Breeder** |
-| 2 | Pricing: market is $6,500–$8,000, we are $3,000–$3,500 (§5) | **Breeder** |
-| 3 | Angle approval (§9) | **Breeder** |
-| 4 | `/african-grey-breeding-pair-for-sale/` is a 4 KB stub holding 750 impressions at pos ~10 — **the highest-value unbuilt page in the cluster.** Recommend it is built immediately after this one | Build |
+| 1 | ~~Cluster A / Cluster B intent split~~ | ✅ **CLOSED 2026-07-30 — companion pairs only** |
+| 2 | ~~Pricing gap handling~~ | ✅ **CLOSED 2026-07-30 — publish the comparison, prices unchanged** |
+| 3 | ~~Angle approval~~ | ✅ **CLOSED 2026-07-30 — "Two Birds, One Honest Answer"** |
+| 4 | `/african-grey-breeding-pair-for-sale/` is a 4 KB stub holding 750 impressions at pos ~10 — **the highest-value unbuilt page in the cluster.** Recommend it is built immediately after this one. Decision 1 raises the stakes: it now solely owns ~475 impressions of top-10 demand | Build |
 | 5 | Bing query export still missing — now blocking a second page (was open flag #9) | **Breeder** |
 | 6 | Clutch figures sourced from classified ads; need an authority or drop them | Build |
 | 7 | The mining doc's regex bucketing is unreliable per-page. Every remaining page should verify against `Pages.csv` before planning | Build |
