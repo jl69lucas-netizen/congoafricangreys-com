@@ -395,6 +395,27 @@ moment Harden becomes a bullet, it becomes the bullet that gets skipped.*
 
 ---
 
+### 3b — AEO gate (added 2026-07-30)
+
+**REQUIRED SKILL:** `cag-aeo-pass` — the 6-part answer-engine gate. Hardening asks
+*does the page render*; this asks *can an engine lift a correct sentence and attribute
+it to us*.
+
+```
+python3 scripts/aeo_audit.py <slug>
+  → ERROR: no dateModified in JSON-LD · any VISIBLE date (banned)
+  → WARN:  no binomial · no breeder-name entity · no brand-owned method label
+           · pronoun-heavy · buried answers (PROXY, read them) · no stat header
+```
+
+- [ ] Zero ERROR from `aeo_audit.py`
+- [ ] `python3 scripts/generate_page_dates.py --check` current, map committed
+- [ ] Facts correct: **CITES Appendix I** · **$1,500–$3,500** · **72-hour** guarantee
+- [ ] One of the two approved method labels present and defined
+- [ ] Part 2 (atomic sections) checked BY HAND — three sections read in isolation
+
+---
+
 ## Sprint 4 — Final (AEO/GEO + structure + schema + voice)
 *Runs over ALL new pages before deploy. This is a gate, not optional.*
 
