@@ -26,6 +26,38 @@ interface Props {
   heroPreloadSizes?: string;
 }
 const { title, description, canonical, ogType = 'website', schemaJson, extraHeadHtml, robots = 'index, follow', hideGlobalCta = false, heroPreload, heroPreloadSrcset, heroPreloadSizes } = Astro.props;
+
+/* ── Freshness signal (AEO principle 6b, added 2026-07-30) ─────────────────────
+   CLAUDE.md forbids any VISIBLE date and puts freshness exclusively in JSON-LD —
+   but `dateModified` was reaching only 23 of 108 pages, so 85 pages emitted no
+   freshness signal at all. This injects it site-wide from a COMMITTED map of real
+   git dates (data/page-dates.json).
+
+   It is NOT computed at build time on purpose: deploy.yml uses actions/checkout@v4
+   with no fetch-depth, i.e. a depth-1 clone, so a build-time `git log` would report
+   the deploy date for every file and stamp a fake "today" on all 108 pages on every
+   push. Regenerate the map with scripts/generate_page_dates.py and commit it.
+
+   Emitted as its own WebPage node, and ONLY for routes the map marks `selfDated:
+   false`. A props-only check is NOT enough: 36 pages build their schema inline in the
+   BODY (`<script type="application/ld+json" set:html={JSON.stringify(articleSchema)}
+   />`), which the layout cannot see, and the first attempt gave all 36 two
+   contradicting dates. generate_page_dates.py reads the source and sets the flag. */
+import pageDates from '../../data/page-dates.json';
+type Freshness = { datePublished: string; dateModified: string; selfDated: boolean };
+const routeKey = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const freshness = (pageDates.routes as Record<string, Freshness>)[routeKey];
+const emitFreshness = !!freshness && !freshness.selfDated
+  && !(schemaJson || '').includes('dateModified');
+const freshnessJson = emitFreshness ? JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': canonical,
+  url: canonical,
+  name: title,
+  datePublished: freshness.datePublished,
+  dateModified: freshness.dateModified,
+}) : null;
 ---
 <!DOCTYPE html>
 <html lang="en-US">
@@ -112,6 +144,7 @@ const { title, description, canonical, ogType = 'website', schemaJson, extraHead
 
   <!-- Structured data -->
   {schemaJson && <script type="application/ld+json" set:html={schemaJson} />}
+  {freshnessJson && <script type="application/ld+json" set:html={freshnessJson} />}
   {extraHeadHtml && <Fragment set:html={extraHeadHtml} />}
 
   <!-- LCP hero preload — for pages whose LCP is a <video poster> (poster can't take fetchpriority
