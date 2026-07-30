@@ -8,6 +8,23 @@ import BirdCard from '../../components/BirdCard.astro';
 import InquiryForm from '../../components/cag-inquiry-form.astro';
 import Newsletter from '../../components/cag-library/NewsletterV2.astro';
 import JumpRail from '../../components/cag-library/JumpRail.astro';
+import fin from '../../../data/financial-entities.json';
+
+// Cost figures are DERIVED from financial-entities.json, never typed. A typed literal here is
+// what let annual_ongoing drift to $375-$1,350 while every page quoted $60-$150/month (fixed
+// 2026-07-30) — see skills/cag-page-hardening.md on literals as future lies.
+const money = (n: number) => "$" + n.toLocaleString("en-US");
+const band = (r: {min:number;max:number}) => `${money(r.min)}–${money(r.max)}`;
+const sum = (o: Record<string, any>) => Object.entries(o)
+  .filter(([k, v]) => !k.startsWith("_") && v && typeof v.min === "number")
+  .reduce((a, [, v]: any) => ({ min: a.min + v.min, max: a.max + v.max }), { min: 0, max: 0 });
+
+const FY = (fin as any).first_year_setup;
+const AN = (fin as any).annual_ongoing;
+const fyTotal = band(sum(FY));            // $1,045–$2,350
+const anTotal = band(sum(AN));            // $720–$1,800
+const life40 = band({ min: sum(AN).min * 40, max: sum(AN).max * 40 });
+const life60 = band({ min: sum(AN).min * 60, max: sum(AN).max * 60 });
 
 const title = "African Grey Parrot Price 2026 — Complete Cost of Ownership: Congo $1,700–$2,500 · Timneh $1,500–$1,600 · Shipping $185/$350, First-Year Setup, Annual & 40–60 Yr Lifetime Costs | C.A.Gs – Midland, TX";
 const description = "African Grey parrot price, published in full by C.A.Gs — USDA-licensed breeders in Midland, TX. Congo babies $2,300–$2,500, adults $1,700, Timnehs $1,500–$1,600, pairs $3,500. Documentation included, shipping $185 airport / $350 home, plus first-year, annual, and 40–60 yr lifetime costs.";
@@ -43,7 +60,7 @@ const jumpPartNames = {
 //   pair $3,500 · breeding pair $3,000 · fertile egg $95 · deposit $200
 // Delivery (financial-entities.json delivery_options): airport $185 · home $350 · flight nanny from $750
 // First-year + annual ranges: financial-entities.json first_year_setup / annual_ongoing
-// Lifetime: computed from annual_ongoing ($375–$1,350) × lifespan_years (40–60)
+// Lifetime: computed from annual_ongoing ($720–$1,800) × lifespan_years (40–60)
 
 // ─── Published price list (rendered table + schema source) ───
 const priceList = [
@@ -58,19 +75,19 @@ const priceList = [
 
 // ─── First-year setup (financial-entities.json first_year_setup) ───
 const firstYear = [
-  { item: "Large cage (wide, horizontal bars)", range: "$300–$800", type: "One-time" },
-  { item: "Perches & starter toys", range: "$100–$300", type: "One-time" },
-  { item: "Initial avian vet visit", range: "$75–$200", type: "One-time" },
-  { item: "Food & pellets (first year)", range: "$200–$400", type: "Recurring" },
-  { item: "Enrichment (first year)", range: "$150–$300", type: "Recurring" },
+  { item: "Large cage (wide, horizontal bars)", range: band(FY.cage_large), type: "One-time" },
+  { item: "Perches & starter toys", range: band(FY.perches_and_toys), type: "One-time" },
+  { item: "Initial avian vet visit", range: band(FY.initial_avian_vet_visit), type: "One-time" },
+  { item: "Food & pellets (first year)", range: band(FY.food_pellets_annual), type: "Recurring" },
+  { item: "Enrichment (first year)", range: band(FY.enrichment_annual), type: "Recurring" },
 ];
 
 // ─── Annual ongoing (financial-entities.json annual_ongoing) ───
 const annual = [
-  { item: "Food & treats", range: "$200–$400" },
-  { item: "Avian vet wellness exam", range: "$75–$200" },
-  { item: "Toy replacement (chewed = healthy)", range: "$100–$250" },
-  { item: "Unexpected vet buffer", range: "$0–$500" },
+  { item: "Food & treats", range: band(AN.food_and_treats) },
+  { item: "Avian vet wellness exam", range: band(AN.avian_vet_wellness) },
+  { item: "Toy replacement (chewed = healthy)", range: band(AN.toys_replacement) },
+  { item: "Unexpected vet buffer", range: band(AN.unexpected_vet) },
 ];
 
 // ─── Available birds (verified against price-matrix.json; shipping line hardwired in BirdCard) ───
@@ -128,9 +145,9 @@ const faqs = [
   { q: "How much does it cost to ship an African Grey parrot?",
     a: `We ship nationwide under IATA Live Animals Regulations on Delta, United, or American: airport pickup at your nearest major airport is $185, door-to-door home delivery is $350, and an in-cabin flight nanny — where the bird never enters the cargo hold — is quoted per route from $750. The benefit of flat published tiers is that your total cost is knowable before you commit, with no destination-based surprises.` },
   { q: "What is the first-year cost of owning an African Grey?",
-    a: `Beyond the purchase price, plan on $825–$2,000 in first-year costs: a large cage ($300–$800), perches and starter toys ($100–$300), an initial avian vet visit ($75–$200), a year of food ($200–$400), and enrichment ($150–$300). The cage and vet figures are typical industry ranges — your local prices may differ. The benefit of budgeting the first year before the bird arrives is that the only surprise left is how fast you fall for the bird.` },
+    a: `Beyond the purchase price, plan on ${fyTotal} in first-year costs: a large cage (${band(FY.cage_large)}), perches and starter toys (${band(FY.perches_and_toys)}), an initial avian vet visit (${band(FY.initial_avian_vet_visit)}), a year of food (${band(FY.food_pellets_annual)}), and enrichment (${band(FY.enrichment_annual)}). The cage and vet figures are typical industry ranges — your local prices may differ. The benefit of budgeting the first year before the bird arrives is that the only surprise left is how fast you fall for the bird.` },
   { q: "What is the lifetime cost of an African Grey parrot?",
-    a: `African Greys live 40–60 years, and ongoing care of $375–$1,350 per year compounds to roughly $15,000–$54,000 over a 40-year life and $22,500–$81,000 over 60 years — on top of the purchase price. A Grey can outlive its owner, so responsible ownership includes naming a future caretaker. The benefit of facing the lifetime math now is that you make a once-in-a-lifetime decision deliberately instead of discovering it by surprise in year three.` },
+    a: `African Greys live 40–60 years, and ongoing care of ${anTotal} per year compounds to roughly ${life40} over a 40-year life and ${life60} over 60 years — on top of the purchase price. A Grey can outlive its owner, so responsible ownership includes naming a future caretaker. The benefit of facing the lifetime math now is that you make a once-in-a-lifetime decision deliberately instead of discovering it by surprise in year three.` },
 ];
 
 const stripHtml = (s: string) => s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
@@ -317,8 +334,8 @@ const tocParts = [
         { stat: "$1,500–$1,700", label: "The Entry Tier",    body: "Timnehs run $1,500–$1,600 and settled adult Congos $1,700 — same documentation packet, gentler price." },
         { stat: "$1,500",        label: "The Scam Floor",    body: "A legally documented, health-screened Grey realistically can't sell far below $1,500. Listings way under it are bait." },
         { stat: "$185 / $350",   label: "Shipping Tiers",    body: "IATA-compliant nationwide on Delta, United, or American: $185 airport pickup, $350 to your door." },
-        { stat: "$825–$2,000",   label: "First-Year Setup",  body: "Cage, perches, toys, first vet visit, food and enrichment — budget it before the bird arrives, not after." },
-        { stat: "40–60 yrs",     label: "The Real Price Tag", body: "Ongoing care of $375–$1,350/yr across a Grey's lifespan is the biggest line item nobody advertises." },
+        { stat: fyTotal,   label: "First-Year Setup",  body: "Cage, perches, toys, first vet visit, food and enrichment — budget it before the bird arrives, not after." },
+        { stat: "40–60 yrs",     label: "The Real Price Tag", body: `Ongoing care of ${anTotal}/yr across a Grey's lifespan is the biggest line item nobody advertises.` },
       ]}
     />
 
@@ -522,7 +539,7 @@ const tocParts = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Beyond the Purchase Price</p>
           <h2 class="font-lora font-bold text-logo-dark">What Does the First Year Cost, Beyond the Purchase Price?</h2>
         </div>
-        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Plan on $825–$2,000 in first-year costs on top of the purchase price: a large cage, perches and toys, an initial avian vet visit, a year of food, and enrichment.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Plan on {fyTotal} in first-year costs on top of the purchase price: a large cage, perches and toys, an initial avian vet visit, a year of food, and enrichment.</p>
         <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">The cage and vet figures are typical industry ranges — these are things you buy locally, not from us.</p>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mb-8" style="max-width:70ch;">
           <p>Honesty about the first year is where most sales pages go quiet, so here is ours at full volume.</p>
@@ -549,7 +566,7 @@ const tocParts = [
                 ))}
                 <tr class="font-semibold" style="background:rgba(45,106,79,0.07);">
                   <td class="px-5 py-3.5 text-green">First-year total (excl. purchase &amp; shipping)</td>
-                  <td class="px-5 py-3.5 font-lora font-bold text-[16px] text-green">$825–$2,000</td>
+                  <td class="px-5 py-3.5 font-lora font-bold text-[16px] text-green">{fyTotal}</td>
                   <td class="px-5 py-3.5"></td>
                 </tr>
               </tbody>
@@ -557,7 +574,7 @@ const tocParts = [
           </div>
         </div>
         <div class="space-y-4 text-stone-600 leading-relaxed text-[15px] mt-8" style="max-width:70ch;">
-          <p>Two notes on the recurring lines. Food matters more in a Grey than in almost any other parrot — the species is prone to calcium deficiency, and a dye-free formulated pellet base with fresh greens is the foundation; our <a href="/best-african-grey-parrot-food/">best African Grey food guide</a> walks through exactly what to buy and what that $200–$400 actually purchases.</p>
+          <p>Two notes on the recurring lines. Food matters more in a Grey than in almost any other parrot — the species is prone to calcium deficiency, and a dye-free formulated pellet base with fresh greens is the foundation; our <a href="/best-african-grey-parrot-food/">best African Grey food guide</a> walks through exactly what to buy and what that {band(FY.food_pellets_annual)} actually purchases.</p>
           <p>The initial vet visit deserves its own appointment even though your bird arrives with our veterinarian's certificate: establishing a relationship with a local avian vet — findable through the <a href="https://www.aav.org/" target="_blank" rel="noopener noreferrer">Association of Avian Veterinarians directory</a> — before you need one urgently is the cheapest insurance in bird ownership.</p>
           <p>Worked example, all-in: a $2,500 baby Congo + $185 airport shipping + a realistic mid-range $1,400 of first-year setup lands a fully equipped first year at roughly $4,085.</p>
           <p>Budget that number and nothing about year one will surprise you except the bird's vocabulary.</p>
@@ -598,7 +615,7 @@ const tocParts = [
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Long Ledger</p>
           <h2 class="font-lora font-bold text-logo-dark">What Are the Annual and 40–60 Year Lifetime Costs?</h2>
         </div>
-        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">After year one, ownership settles into $375–$1,350 per year in typical ongoing costs — food, an annual wellness exam, replaced toys, and a vet buffer.</p>
+        <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">After year one, ownership settles into {anTotal} per year in typical ongoing costs — food, an annual wellness exam, replaced toys, and a vet buffer.</p>
         <p class="font-sora text-green text-[15px] font-semibold leading-relaxed mb-5" style="max-width:70ch;">Across a 40–60 year lifespan, that compounds to roughly $15,000–$81,000 of care on top of the purchase price.</p>
         <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
           <div class="overflow-x-auto">
@@ -618,7 +635,7 @@ const tocParts = [
                 ))}
                 <tr class="font-semibold" style="background:rgba(45,106,79,0.07);">
                   <td class="px-5 py-3.5 text-green">Annual ongoing total</td>
-                  <td class="px-5 py-3.5 font-lora font-bold text-[16px] text-green">$375–$1,350</td>
+                  <td class="px-5 py-3.5 font-lora font-bold text-[16px] text-green">{anTotal}</td>
                 </tr>
               </tbody>
             </table>
@@ -628,20 +645,20 @@ const tocParts = [
           <p>A word on the toy line, because it confuses people: African Greys destroy toys, and that is the toys working.</p>
           <p>Chewing, shredding, and dismantling are how one of the smartest minds in the bird world stays occupied — a Grey whose toys survive the year is a Grey that is bored, and bored Greys invent hobbies like feather-plucking that cost far more than $250 to undo.</p>
           <p>Budget the destruction; it is the cheapest mental-health plan your bird will ever have.</p>
-          <p>The vet buffer is the other line worth respecting. Routine wellness runs $75–$200 a year as a typical range, but avian emergencies can reach $500 or beyond in a single visit.</p>
+          <p>The vet buffer is the other line worth respecting. Routine wellness runs {band(AN.avian_vet_wellness)} a year as a typical range, but avian emergencies can reach $500 or beyond in a single visit.</p>
           <p>Setting aside a small monthly amount converts a 2 a.m. crisis from a financial emergency into a logistical one.</p>
         </div>
         <div class="rounded-2xl border-l-4 border-clay bg-white p-7" style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
           <p class="font-lora text-xl font-bold text-logo-dark mb-2">An African Grey purchased today may still be alive in 2086.</p>
-          <p class="text-stone-600 text-[15px] leading-relaxed mb-5" style="max-width:70ch;">At $375–$1,350 per year, here is the honest lifetime arithmetic — ongoing care only, on top of the purchase price:</p>
+          <p class="text-stone-600 text-[15px] leading-relaxed mb-5" style="max-width:70ch;">At {anTotal} per year, here is the honest lifetime arithmetic — ongoing care only, on top of the purchase price:</p>
           <div class="grid gap-4 sm:grid-cols-2">
             <div class="rounded-xl bg-cream/80 border border-black/[0.06] p-5 text-center">
               <p class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-stone-400 mb-1.5">40-Year Lifespan</p>
-              <p class="font-lora font-bold text-2xl m-0" style="color:#b04228;">~$15,000–$54,000</p>
+              <p class="font-lora font-bold text-2xl m-0" style="color:#b04228;">~{life40}</p>
             </div>
             <div class="rounded-xl bg-cream/80 border border-black/[0.06] p-5 text-center">
               <p class="font-sora text-[11px] font-bold uppercase tracking-[0.12em] text-stone-400 mb-1.5">60-Year Lifespan</p>
-              <p class="font-lora font-bold text-2xl m-0" style="color:#b04228;">~$22,500–$81,000</p>
+              <p class="font-lora font-bold text-2xl m-0" style="color:#b04228;">~{life60}</p>
             </div>
           </div>
           <p class="text-stone-500 text-sm leading-relaxed mt-5 mb-0" style="max-width:70ch;">Greys regularly outlive arrangements made for them, so responsible ownership includes naming a future caretaker — closer to estate planning than pet shopping.</p>
