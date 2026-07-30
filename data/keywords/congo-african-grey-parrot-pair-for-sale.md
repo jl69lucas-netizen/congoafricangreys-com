@@ -137,7 +137,7 @@ These are the queries where Perplexity does **not** cite us today. Each becomes 
 
 ## 8 · Tier 6 — Transactional modifiers (~15 mentions)
 
-reserve · reserve this pair · deposit · $200 deposit · available now · currently available · ships nationwide · $185 airport pickup · $350 home delivery · pickup in Midland TX · inquire about this pair · check availability · price per pair · both birds included · must go together
+reserve · reserve this pair · deposit · $200 deposit · available now · currently available · ships nationwide · $185 airport pickup · $350 home delivery · pickup in Midland TX · inquire about this pair · check availability · price per pair · both birds included · offered together · either bird singly
 
 **Honest scarcity only.** Real counts from `clutch-inventory.json`. No countdowns, no "must go" pressure — that is williamsafricangreys' and the Instagram sellers' register, and we counter-position against it.
 
@@ -256,7 +256,8 @@ Perplexity cites these today. They must survive the rebuild **in substance**:
 1. Midland, Texas
 2. USDA AWA licensed
 3. CITES Appendix I documentation **for each bird in a pair**
-4. Jins + Jeni — an unrelated pair that must go together
+4. Jins + Jeni — an unrelated pair, offered together
+   > ⚠️ **CHANGED 2026-07-30.** The breeder confirms they are separable, so the live-stub claim "must go together" is now false and has been removed site-wide. Perplexity currently cites the old wording; that citation will shift. **Accuracy wins — this is a deliberate, recorded change.** Singles: Jins $1,900 · Jeni $1,800; pair stays $3,500. Only this page surfaces the single prices.
 5. A proven bonded pair, DNA certified
 6. DNA sexing + health certificates + hatch certificates
 7. Ships IATA-compliant to all 50 states
