@@ -88,3 +88,26 @@ for p in <slugs>; do printf "%-46s " "$p"; \
   grep -ohE 'class="(chipcloud|stepper|t4-[a-z]+|toc[A-Za-z0-9]*)"' src/pages/$p/index.astro \
   | sort -u | tr '\n' ' '; echo; done
 ```
+
+---
+
+## Page 9 — Congo Pair · `/congo-african-grey-parrot-pair-for-sale/`
+
+**Tuple recorded 2026-07-30, before build** (binding, per skill §1 and master brief §10).
+
+| Slot | Assignment | Distinctness |
+|---|---|---|
+| Hero | **Hero-A refreshed "Bonded Duo"** — two large paired Polaroids | Hero-A used once (hand-raised, rotated 2×2 of four). Only kit hero built to show two birds; two tiles also solve the asset-resolution problem |
+| Dial | **Dial 2 Dark-Aviary** | Legal — the Bonded-Duo hero is warm/light |
+| Rail | **Rail A** | **New pairing.** Hand-raised is the only other Dial 2 page and it used Rail B |
+| TOC | **T3 Boarding-Pass** ⭐ **first use in the cluster** | Spec reserves T3 for shipping-heavy pages. Earned: shipping two birds together is a real content axis (§18) |
+| Takeaway | **K1 Receipt + K2 Price-Tag** | New combination across all 8 shipped tuples |
+| Table | **new Table F "Pairing Routes"** + Table A | **F is the only unused letter.** The three routes need a table that does not exist |
+| FAQ | **FAQ-B refreshed**, two-column, new palette | FAQ-B used once (timneh) |
+| Avail facet | **Avail-B faceted by pairing route** — Ready-Made · Build-Your-Own · Breeding Referral · Single | New facet; siblings use subspecies / posture / sex / age band |
+| Voice lever | **two-versus-one** — bonded, compatible, introduced, quarantined, solo, flock-of-two, human-bonded | New |
+| H6 prefixes | **From the Aviary: · Two-Bird Note: · Before You Commit:** | Clear of health-guarantee and dna-tested prefixes |
+| Images | Desktop **H, B, A, E** · Mobile **mG, mC, mB, mA** | H Duo Strip leads — the only pair-shot style |
+| Seams | 4–8, movement boundaries, small footer-logo | Cluster standard |
+
+**Header dup-gate run BEFORE outline approval** (trap #6): 98 proposed headings vs 606 sibling headings across all 8 shipped pages → **0 exact, 0 template crossovers.** Counts machine-verified: H1 1 · H2 23 · H3 38 · H4 18 · **H5 10** · **H6 8**; all six levels present.
