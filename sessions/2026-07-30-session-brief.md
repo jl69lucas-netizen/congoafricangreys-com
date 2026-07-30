@@ -1,8 +1,7 @@
 # Session Brief — 2026-07-30
 
-> **Status:** IN PROGRESS — interview underway. Resume with `grill-me --resume`.
-> **Last updated:** 2026-07-30, after startup sequence + workflow gate check
-> **Next question:** Q1
+> **Status:** READY — interview complete, Sprint 0.5 closed.
+> **Last updated:** 2026-07-30, finalized
 > **Session:** Sprint 0.5 Orient · `/congo-african-grey-parrot-pair-for-sale/` (Page 9 of 22, Cluster 3 opener)
 
 ## Startup Reads Completed
@@ -59,4 +58,80 @@ Sprint 0 shipped today. These are already settled and are **not** being asked ag
 - `/last30days` not installed — needs `/plugin marketplace add mvanhorn/last30days-skill` in an interactive session.
 
 ---
-<!-- Synthesized fields below are filled in at finalization, from the Q&A Log above. -->
+
+## Business Focus
+
+Rebuild `/congo-african-grey-parrot-pair-for-sale/` from an 8 KB stub into a transactional pair page that does three jobs at once: defends the Perplexity citation we already hold on the transactional query and extends it to the informational one, converts the small but hot traffic that arrives (12.5% CTR), and ranks on Google for the companion-pair cluster from a standing start. The differentiator is the one answer the entire market refuses to give — whether two greys will bond to each other instead of you.
+
+## SESSION CONTEXT
+
+- **Page Type:** for-sale / transactional variant page (Cluster 3 opener, Page 9 of 22)
+- **Target Keyword:** `congo african grey parrot pair for sale` (slug head term, 0 measured demand — see fan-out §3)
+- **Framework:** PAS → EEBP → QAB
+- **Framework Reason:** PAS opens on the bonding fear, which is the measured demand gap; EEBP carries the three pairing routes as entity → evidence → benefit → purpose; QAB runs the FAQ. PDB and BAB are spent on the baby page and may not be the spine.
+- **AIO / GEO Approach:** **(C) Both**, entity-first weighted
+- **AIO Notes:** **Perplexity — we are the #1 cited source on the transactional pair query (~16 citations) and absent on the informational one.** Defend the first, take the second. 8 protected facts listed in Open Flags.
+- **Component Style:** transactional 1200px, for-sale kit only
+- **Visual Plan:** governed by the master brief §9 Asset Gate — full prompt pack after outline approval, then breeder drops images and says "start"
+- **Audit Status:** **pending — explicitly NOT waived.** `@cag-content-audit-agent` runs at Sprint 1.1
+- **LLM Visibility:** **Perplexity 1/1 transactional, 0/1 informational.** First measurement on any cluster page
+- **Structure.json Entry:** ✅ **added 2026-07-30** — Variant Cluster silo, hub `/african-grey-parrot-guide/`, intent split written into `link_logic`
+- **Hub Page:** `/african-grey-parrot-guide/` (exists)
+- **Keyword Fan-Out:** ✅ `data/keywords/congo-african-grey-parrot-pair-for-sale.md` — 118 distinct surface forms
+
+## Today's Target
+
+- **Page:** `/congo-african-grey-parrot-pair-for-sale/`
+- **Goal:** all three channels — defend + extend AEO · convert · rank
+- **Reader:** someone who already wants two birds and is afraid of the consequence. Their fear is **not** scam-first (unusual for this site) — it is "will they still love me?"
+- **Benchmark:** `williamsafricangreys.com/product/alex-and-lizzy` (only true AG-pair rival) · our own DNA-Tested page (same no-demand-head-term shape)
+
+## Sprint 0.5 — Strategy Synthesis
+
+The angle is settled. What was still open after the breeder's transactional correction is **how the informational entry and the transactional layer interleave.** Two strategies, then the blend.
+
+### Strategy A — Informational-First
+Answer the bonding question fully, then present routes and birds. Maximum AEO capture on the informational query; strongest trust arc.
+**Risk:** produces an essay with a form at the bottom. Directly against the Q1 correction. Buries cards below the fold and starves the conversion channel.
+
+### Strategy B — Transactional-First
+Cards, prices and routes near the fold; the bonding answer follows as the trust layer. Maximum conversion; matches the kit profile exactly.
+**Risk:** the informational demand is the *only* place with measurable volume and an open AEO gap. Leading with cards on a head term with zero demand means nothing to rank on, and the extension channel is lost.
+
+### ⭐ Blended (Recommended) — "Answer, Then Offer, Then Prove"
+**Fold:** hero + counter strip + the bonding answer compressed into a single BLUF block, roughly 60–80 words, immediately followed by the route cards with real prices. The reader gets the honest answer and the inventory in one screen.
+**Body:** the full bonding treatment expands underneath as atomic, chunk-survivable sections (the AEO extension), interleaved with reserve CTAs on the 500–700-word cadence.
+**Close:** proof layer — documentation, the market-price comparison with both brackets, reviews, kit contact form.
+
+**Why:** it is the only arrangement that feeds all three channels without starving one. The BLUF block is what answer engines extract, the cards are what converts, and the expanded sections are what ranks. It also respects the correction literally — the honest answer is the *entry*, occupying a compressed block, not the page's shape.
+**Trade-off, named:** the fold gets crowded, and compressing the bonding answer to 60–80 words risks making it sound glib on the single most sensitive claim on the page. Mitigation: the BLUF block ends with a jump link into the full treatment, and the compressed version must be reviewed as standalone copy, not skimmed as a summary.
+
+## Constraints
+
+- **CONSTRAINT — citation preservation (binding).** 8 facts must survive the rebuild in substance. See Open Flags.
+- **CONSTRAINT — TRANSACTIONAL profile.** No essay-with-a-form. Cards + prices near the fold, Offer schema, reserve CTA every 500–700 words.
+- **CONSTRAINT — no heading may target "breeding pair."** One link-out, unspent anchor.
+- **CONSTRAINT — market-rate figure never without its reason in the same paragraph, never as a discount.**
+- **CONSTRAINT — no sprint may be skipped.** The content audit is not waived.
+
+## Repeat / Avoid
+
+- **Repeat:** verifying the gate before acting on it. The regex-bucketing catch (497 → 8 impressions) and the LLM measurement both came from checking rather than assuming, and both changed the build.
+- **Avoid:** declaring a research standard optional. Calling the full sweep "wouldn't change the angle" was right about the angle and wrong about the build — it would have missed the citation-preservation constraint entirely.
+
+## Urgency
+
+None stated. Gate pace.
+
+## Recommended Next Steps
+
+1. **Sprint 1.1** — `@cag-content-audit-agent /congo-african-grey-parrot-pair-for-sale/ "congo african grey parrot pair for sale" FOR-SALE` *(not waived)*
+2. **Sprint 1.2** — full H1→H6 outline, Style 3 declared, ≥5 H5 and ≥5 H6, Title Case
+3. **Sprint 1.3** — `dup_content_audit.py --headers` against all 8 siblings **before** outline approval
+4. **Sprint 1.4–1.6** — entity pass · distribution matrix with A/B/C section tiers · CTA cadence
+5. **Sprint 1.7** — visual companion screens
+6. **Sprint 1.8** — `/superpowers:writing-plans` → checkbox task plan
+7. **ASSET GATE** — prompt pack → breeder drops images → "start"
+
+## What's Next
+_(Filled in at end of build session.)_
