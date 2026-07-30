@@ -116,10 +116,11 @@
 >>> ↳ **H5** — A Low Price With Papers Is Value; A Low Price Without Them Is Bait
 >>>> ↳ **H6** — `Before You Commit:` We Breed Ours, So No Reseller Margin Sits in the Price
 
-### H2 — Who Are Jins and Jeni, and Why Must They Go Together? *(§13 — flagship pair + disclosure)*
+### H2 — Who Are Jins and Jeni, and Do They Have to Leave Together? *(§13 — flagship pair + disclosure)*
 > ↳ H3 — Jins, Male, and Jeni, Female — Unrelated and Raised Alongside Each Other
 > ↳ H3 — What We Tell Every Buyer Who Asks About This Pair
->> ↳ **H4** — Would You Sell Them Separately?
+>> ↳ **H4** — Can You Buy Just One of Them?
+>>> ↳ **H5** — They Are Offered as a Pair, but Neither Is Held Hostage to the Other
 
 ### H2 — Which of Our Single Greys Pair Well Together? *(§14 — build-your-own)*
 > ↳ H3 — Roys and Amie, Both Congo, Both Available
@@ -249,8 +250,28 @@ Hero-A "Bonded Duo" · **Dial 2 Dark-Aviary + Rail A** *(new pairing)* · **T3 B
 
 ---
 
-## 8 · Open Items for the Gate
+## 8 · Gate Answers — Received 2026-07-30
 
-1. **Clutch figures still need an authority.** 2–3 eggs, 2 clutches/year currently trace to classified ads only. Either cite Lafeber / World Parrot Trust, or cut them. Recommend cutting — the page does not need them under the companion-only intent split.
-2. **§14 "Can a Congo and a Timneh Live as a Pair?"** — needs the breeder's real answer. Recommend: yes as companions, not recommended as a breeding pair. Confirm.
-3. **§13 "Would You Sell Them Separately?"** — inventory says must go together. Confirm the reason is compatibility rather than price.
+1. **Clutch figures** → ✅ **CUT.** Not used on the page. No authority needed.
+2. **Congo + Timneh as a pair** → ✅ **YES, they can live together.** Confirmed by the breeder, and we have a **real photo of both together in our own aviary**: `assets/1WORKING-ON/FOR-SALE-PAGES/1CONGO-AFRICAN-grey-parrot-pair/timneh-vs-congo-real-photo.webp` (1000×547). **§14 therefore takes a real photo, not an infographic** — first-party proof beats a generated diagram every time, and no competitor can produce this shot.
+3. **Jins and Jeni** → 🔴 **CHANGED: they can be sold as singles or separately.**
+
+### 8a · 🔴 The "must go together" reversal — three consequences
+
+This overturns a fact that is recorded in two data files, on the live page, **and in a Perplexity citation.**
+
+| Where it says otherwise | Current text | Action |
+|---|---|---|
+| `data/price-matrix.json` → `congo_pair.notes` | *"Unrelated pair — **must go together**. JINS male 6mo, JENI female 4mo."* | **Must be corrected before build** |
+| `data/clutch-inventory.json` | single entry `Jins & Jeni (Pair)`, `sex: pair`, `price: 3500` | Needs individual entries or a `separable: true` flag |
+| Live stub + **protected fact #4** | Perplexity cites *"an unrelated pair that must go together"* | **This citation will change.** Accuracy wins — but it is a deliberate, recorded change, not a slip |
+
+**The angle gets stronger, not weaker.** "One bird is also a complete answer" (§9) stops being an abstract courtesy and becomes literally true of our flagship pair. It is now the cleanest proof on the page that we are not upselling: *the pair is offered as a pair, but neither bird is held hostage to the other.*
+
+> ### ▣ ONE BLOCKING QUESTION — individual prices
+> `clutch-inventory.json` holds only the **$3,500 pair price**. If Jins and Jeni can be bought singly, each needs its own price, and the page cannot show a "Build Your Own Pair" table without them.
+> **`[AI RECOMMENDS: Jins $1,900 · Jeni $1,800 — pair $3,500]`**
+> **Why:** it sets the pair $200 below the sum of the singles, which is the honest arithmetic (one reservation, one crate booking, one set of handling) and matches how every other route on the page is priced. It also keeps both birds above the $1,500 floor price the whole site advertises. Sibling reference: Roys $2,300, Amie $2,500, Bery $1,700 — Jins and Jeni are younger, so pricing under Roys is consistent.
+> **Trade-off:** any pair discount invites "why is two cheaper than one twice?", which §11 then has to answer honestly rather than hand-wave. That is a section we are writing anyway.
+> **Nothing else is blocked by this** — the infographic pack below is complete and buildable now; only the two price numerals in slot `IG-04` wait on your answer.
+> Breeder: `[ ___ ]`
