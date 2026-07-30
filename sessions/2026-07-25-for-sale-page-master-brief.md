@@ -450,7 +450,7 @@ Two new verified reviews, with images, for this page. The review images are in t
 
 ⭐⭐⭐⭐⭐
 
-> After weeks of searching for an affordable African grey parrot pair, I finally found C.A.G.s, and the experience exceeded every expectation. Walter patiently answered all my questions, provided recent photos, health records, and explained the personalities of both birds before I committed. The pair arrived healthy, well-socialized, and already comfortable around people. It's rare to find such quality, transparency, and fair pricing in one place. If you're looking for an affordable African grey parrot pair, I highly recommend C.A.G.s for their professionalism, ethical breeding practices, and exceptional customer service.
+> After weeks of searching for an affordable African grey parrot pair, I finally found C.A.G.s, and the experience exceeded every expectation. Teri patiently answered all my questions, provided recent photos, health records, and explained the personalities of both birds before I committed. The pair arrived healthy, well-socialized, and already comfortable around people. It's rare to find such quality, transparency, and fair pricing in one place. If you're looking for an affordable African grey parrot pair, I highly recommend C.A.G.s for their professionalism, ethical breeding practices, and exceptional customer service.
 
 — Walter Zander, Fort Washington, PA
 
