@@ -2,6 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import clutch from '../../../data/clutch-inventory.json';
+import prices from '../../../data/price-matrix.json';
+
+// Our band is read from the price matrix, never typed — one source of truth for "$1,500–$1,600"
+const tagPrice = (prices as any).variants.timneh_african_grey.price_display;
 
 // Meta — extended 3-part, transactional-compact (distinct LSI from the Congo page), ≤280
 const title = "Timneh African Grey for Sale — Hand-Raised & DNA-Tested | Where Can I Buy a Calmer African Grey? | 2 Documented Babies Ready | C.A.Gs, Midland TX — Psittacus timneh, Verify in 60 Seconds, From $1,500";
@@ -419,6 +423,17 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h4 class="cag-h4">Why Is a $750 "Limited-Time" Timneh a Warning Sign?</h4>
         <p>When a Timneh is dangled at $750 under a ticking "limited-time" clock, the number itself is the tell: no one can hand-feed, DNA-test, vet-check and document a grey for that and stay in business. <a href="/how-to-avoid-african-grey-parrot-scams/">Our breakdown of parrot fraud</a> shows why the urgency is deliberate — it exists to hurry you past that math before you run it yourself.</p>
+
+        <!-- Price band — visualises the $750/$1,000/$6,500 figures this section's own H2 + H4 already state -->
+        <div class="priceband" role="group" aria-label="Where Timneh African Grey asking prices fall, and which bands are credible">
+          <div class="pb-scale"><span>$750</span><span>$1,500</span><span>$6,500</span></div>
+          <div class="pb-bar">
+            <div class="pb-zone red"><em>Under $1,000</em><span>Below documented rearing cost</span></div>
+            <div class="pb-zone green"><em>{tagPrice}</em><span>Ours — DNA-sexed, screened, papered</span></div>
+            <div class="pb-zone amber"><em>$2,000–$6,500</em><span>Resold, imported, or priced on scarcity</span></div>
+          </div>
+          <p class="pb-note">A Timneh below <b>$1,000</b> is not a bargain — it is a listing that has skipped something you were going to pay for anyway. Ours sit at <b>{tagPrice}</b>, the credible floor for a hand-reared, DNA-sexed, PBFD-screened bird with CITES paperwork in the box.</p>
+        </div>
 
         <h5 class="cag-h5">Hand-Rearing, DNA and Disease Testing, Age and Paperwork Set the Real Price</h5>
         <p>Add up the actual labor and you get the actual price: weeks of hand-feeding and handling, a DNA-sexing fee, PBFD and Polyomavirus PCR panels, an avian-vet workup, and the CITES and USDA filing. Take any of that away and the number falls — and so does every safeguard that made the bird worth buying.</p>
@@ -888,11 +903,16 @@ const seam = "/cag-fs-seam-emblem.webp";
 .priceband{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:18px 20px;margin:6px 0 16px;box-shadow:0 4px 16px rgba(60,30,10,.06)}
 .pb-scale{display:flex;justify-content:space-between;font-size:.72rem;font-weight:600;color:var(--mid);margin-bottom:6px;font-variant-numeric:tabular-nums}
 .pb-bar{display:flex;gap:4px}
-.pb-zone{display:flex;flex-direction:column;justify-content:center;gap:2px;border-radius:8px;padding:12px 10px;color:#fff;font-size:.72rem;line-height:1.2}
+.pb-zone{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;border-radius:8px;padding:12px 10px;color:#fff;font-size:.72rem;line-height:1.2}
 .pb-zone em{font-style:normal;font-weight:700;font-size:.82rem}
-.pb-zone.red{background:#bd4129}
-.pb-zone.green{background:var(--f)}
-.pb-zone.amber{background:#c99a4e}
+/* Weights track LABEL LENGTH, not price span: a $250-wide red zone on a $750–$6,500 axis
+   would render as a 4% sliver and imply a linear scale this band is not. The .pb-scale
+   ticks carry the real numbers; the zones are three labelled bands. */
+.pb-zone.red{background:#bd4129;flex-grow:1}
+.pb-zone.green{background:var(--f);flex-grow:1.15}
+/* #c99a4e was 2.58:1 against white text — under the AA floor, and never caught because
+   this component was styled but never rendered. #946a2a is 4.82:1. */
+.pb-zone.amber{background:#946a2a;flex-grow:1.5}
 .pb-note{font-size:.82rem;color:#4a423b;margin:10px 0 0!important;max-width:none}
 .pb-note b{color:var(--clay-t)}
 /* CARE CARDS (HTML) */
@@ -1122,8 +1142,10 @@ const seam = "/cag-fs-seam-emblem.webp";
   .ac-price{font-size:.9rem}
   .ac-go{font-size:.7rem;padding:7px 8px}
   .ac-badge{font-size:.55rem;padding:3px 8px;top:8px;left:8px}
-  .pb-zone{font-size:.6rem;padding:10px 5px}
-  .pb-zone em{font-size:.66rem}
+  /* Stack rather than shrink: three zones across 375px squeezed "$1,500–$1,600" onto three
+     lines, and the old .6rem escape hatch was itself a legibility problem. */
+  .pb-bar{flex-direction:column}
+  .pb-zone{flex:none;padding:11px 13px}
 }
 @media(max-width:520px){.carecards{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.timneh *{transition:none!important}}
