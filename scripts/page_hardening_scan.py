@@ -671,6 +671,12 @@ def check_icon_baseline(sources):
 # warn — smooth there fights the active-pill auto-scroll.
 def check_smooth_scroll(sources):
     for label, text in sources:
+        # Strip /* ... */ first. Without this the check reads its own documentation:
+        # the congo-pair page carries a comment explaining WHY it sets
+        # scroll-behavior:auto, and the phrase `scroll-behavior:smooth` inside that
+        # prose was reported as a defect (2026-07-31). Third recurrence of this trap
+        # after icon-baseline (2026-07-26) and the §1l selector check (2026-07-29).
+        text = _strip_css_comments(text)
         for m in re.finditer(r"scroll-behavior:\s*smooth", text):
             before = text[: m.start()]
             line = before.count("\n") + 1
