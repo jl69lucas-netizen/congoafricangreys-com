@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { registry } from './lib/registry.js';
 import './checks/index.js';
 import { writePartial, writeManifest } from './lib/scorecard.js';
+import { checkDistFreshness } from './lib/freshness.js';
 import type { Defect } from './lib/registry.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -43,6 +44,20 @@ writeManifest(
   registry.map((c) => c.id),
   targets.pages.length * 3,
 );
+
+/**
+ * A throwing beforeAll fails every test in this file, so no partial is written, so
+ * build_scorecard.mjs Guard 1 (partials !== manifest) also fails. That cascade is
+ * deliberate: a stale measurement must be loud at both ends, never a green run.
+ *
+ * meta.spec.ts is intentionally NOT gated — it tests the checkers against fixtures,
+ * where dist/ is irrelevant, and it must stay runnable while a build is broken.
+ */
+test.beforeAll(() => {
+  const f = checkDistFreshness();
+  if (!f.fresh) throw new Error(`RENDER HARNESS REFUSES TO MEASURE: ${f.reason}`);
+  console.log(`[freshness] ${f.reason}`);
+});
 
 for (const target of targets.pages) {
   const families = targets.families_by_page_type[target.page_type];
