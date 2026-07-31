@@ -77,17 +77,46 @@ Locked order, identical at every width — **nothing shares a row**:
   loudest object on the card and duplicated the filter chip. Use uppercase text at
   `.72rem` / `rgba(255,255,255,.88)` on the photo's own bottom scrim (deepen the scrim to
   `.62` alpha and `64–72px`), with `text-shadow:0 1px 4px rgba(20,14,10,.7)`.
-- **Pin the label to BOTH edges on mobile** (`left:9px; right:9px; white-space:normal`).
-  A 37% photo column is ~127px; `left` alone clips "BUILD YOUR OWN PAIR" against
-  `.rcard`'s `overflow:hidden`.
 - **Every card carries the shipping line directly** — `Ships nationwide · $185 airport ·
   $350 home` (CLAUDE.md, non-negotiable). A rail-level line that is `display:none` on
   mobile does not satisfy the rule.
-- **≤640px: one horizontal card per row**, not two portrait cards. Two-up leaves ~136px of
-  body width, which is why the description had been hidden. Horizontal shows everything and
-  costs ~1,400px of scroll versus ~2,500px for a vertical stack:
-  `.rcard{flex-direction:row}` · `.rcard-photo{flex:0 0 37%; align-self:stretch}` ·
-  `.rcard-photo img{position:absolute; inset:0; width:100%; height:100%; aspect-ratio:auto}`.
+
+### ≤640px: one card per row, photo first, full card width
+
+**The listing photo is the product. Never narrow it to buy vertical space.**
+
+This took two attempts and the breeder caught the wrong one, so the reasoning is worth
+keeping:
+
+| Attempt | Layout | Why it failed / worked |
+|---|---|---|
+| Shipped | two portrait cards per row | ~136px of body width, so the description had to be `display:none` |
+| **Rejected** | one **horizontal** card, photo in a 37% column | Saved ~1,100px of scroll, but a ~127px photo column **cut the birds' heads in half**. Also forced the route label to wrap to two lines. |
+| **Correct** | **one card per row, photo on top at full card width, all detail lines stacked beneath** | 343px photo, nothing hidden, nothing cropped |
+
+```css
+@media (max-width:640px) {
+  .availB-grid { grid-template-columns:1fr; gap:14px; }   /* .rcard is already column-flex */
+  .rcard-photo::after { height:76px; }                    /* deeper scrim under the label */
+  .rbadge { left:14px; right:14px; bottom:10px; font-size:.7rem; letter-spacing:.08em; }
+  .rcard-body { padding:14px 16px 16px; gap:5px; }
+  .rcard-name { font-size:1.14rem; }
+  .cpair p.rcard-price { font-size:1.1rem; }
+  .cpair p.rcard-sub { font-size:.82rem; }
+  .cpair p.rcard-blurb { font-size:.86rem; -webkit-line-clamp:3; }
+  .cpair p.rcard-trust, .cpair p.rcard-ship { font-size:.78rem; }
+  .rcard .rcta { align-self:stretch; text-align:center; padding:.68rem 1rem; font-size:.88rem; }
+}
+```
+
+- **Match the box ratio to the master.** The card masters are 640×480, so a 4:3 box makes
+  `object-fit:cover` a no-op: the whole blurfill-framed bird, face included, is inside the
+  frame at every width. A 16:9 box would crop heads again.
+- **Step the body type up for the wider measure** (see block above). Type sized for a
+  ~200px column reads undersized across 343px.
+- Keep the design-system **20px** card radius. No per-breakpoint radius drift.
+- Cost: the section runs ~3,500px for six cards. That is acceptable — it is the inventory,
+  the most important section on a transactional page. Do not buy scroll back with crops.
 
 ## 4. Section rhythm: the seam is punctuation, not a page break
 
@@ -120,8 +149,14 @@ Lighthouse flagged 232 KiB. Result: **above-fold set 299 KiB → 94 KiB (−205 
    at 316px, so the browser skipped the small candidate every time.
 2. **Ship a candidate near each real width.** Cards got a 480w; the hero inset (renders at
    158–185px, was pulling a 760w file) got 320w + 480w; the LCP hero got 560w + 1040w.
-3. **Write `sizes` per breakpoint**, e.g.
-   `(max-width:640px) 44vw, (max-width:1024px) 232px, 212px`.
+3. **Write one `sizes` entry per layout the grid actually has** — not per "device". The card
+   grid changes shape four times, so it needs four entries:
+   `(max-width:640px) 92vw, (max-width:980px) 46vw, (max-width:1024px) 232px, 212px`
+   (1 full-width card ≤640 · 2 columns 641–980 · 3 of ~232px 981–1024 · 3 of ~212px above).
+   **Re-derive `sizes` whenever a card layout changes.** A `44vw` that was correct while the
+   mobile card was a narrow photo column upscaled a 320w file into a 341px box the moment
+   the photo went full width; `232px` under-served the ~346px two-up tablet card. Every
+   wrong value here costs either bytes or sharpness.
 4. **Keep `heroPreload*` byte-identical to the LCP `<img>` srcset + sizes**, or the preload
    fetches a different candidate and the LCP downloads twice.
 5. Generation recipe (Pillow, never `sips`): `LANCZOS` resize → WebP `method=6` → walk
@@ -144,11 +179,14 @@ python3 scripts/final_page_audit.py <slug>
 Then Playwright at **375 / 768 / 1280**, screenshotting the hero, the card grid, the
 takeaway block and the CTA at each.
 
-**Two gate-integrity notes from this session:**
+**Three gate-integrity notes from this session:**
 
-- **A stale stylesheet will lie to you.** A measurement said the K2 note was still inline
-  *after* the fix shipped to `dist/`; a hard reload showed it correct. Reload before
-  concluding a fix did not work.
+- **A stale stylesheet will lie to you, twice.** A measurement said the K2 note was still
+  inline *after* the fix shipped to `dist/`; a hard reload showed it correct. Later the
+  card photo measured 126×265 (the old horizontal layout) against a build that had already
+  replaced it, and `naturalWidth` reported a nonsense `165x123`. `astro preview` + a
+  same-URL navigation is not a fresh load — **navigate with a cache-busting query
+  (`?v=2`) after every rebuild**, and treat an impossible intrinsic size as the tell.
 - **Write the probe's assertion carefully.** `note.top > price.top` "passed" purely on
   baseline offset while the element was still on the same row. The honest test was
   `note.top >= price.bottom` **and** `note.left === tag.left`.
