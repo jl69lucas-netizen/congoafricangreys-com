@@ -1271,6 +1271,17 @@ git commit -m "test(render): NAV/jump-target-lands — click every chip, measure
 
 ## Task 11: The page runner
 
+> **As built, this task differs from the code blocks below** — apply amendments A4/A5 above.
+> Three changes landed: (1) `lib/scorecard.ts` also exports `writeManifest(checkIds, expectedPartials)`,
+> written once per run, because the dead-check guard must be seeded from the **registry**, not from
+> the partials — a check that ran nowhere contributes no key and is otherwise invisible to it;
+> (2) `pages.spec.ts` throws when a `page_type` maps to no families or no registered check, since a
+> page examined by nothing would otherwise score a perfect zero; (3) each check is preceded by a
+> `scrollTo(0,0)` + `blur()` reset, because the NAV check leaves scroll position, `:target` styling
+> and focus mutated for whatever runs next — today NAV imports last by luck, not by design.
+> `build_scorecard.mjs` additionally fails when the partial count does not match the manifest:
+> **missing results are not passes.**
+
 **Files:**
 - Create: `tests/render/targets.json`
 - Create: `tests/render/lib/scorecard.ts`
