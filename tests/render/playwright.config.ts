@@ -23,7 +23,7 @@ export default defineConfig({
       command: `python3 -m http.server ${SITE_PORT} --bind 127.0.0.1`,
       cwd: '../../dist',
       port: SITE_PORT,
-      reuseExistingServer: true,
+      reuseExistingServer: false,
       timeout: 60_000,
     },
     // The repo root, so tests/render/fixtures/... are reachable.
@@ -31,7 +31,7 @@ export default defineConfig({
       command: `python3 -m http.server ${FIXTURE_PORT} --bind 127.0.0.1`,
       cwd: '../../',
       port: FIXTURE_PORT,
-      reuseExistingServer: true,
+      reuseExistingServer: false,
       timeout: 60_000,
     },
   ],
