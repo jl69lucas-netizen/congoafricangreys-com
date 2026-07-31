@@ -5,30 +5,65 @@ import type { Page } from '@playwright/test';
  * wait for every image to settle, then return to the top.
  * Required before any IMG check — below-fold images are otherwise unloaded.
  */
-export async function settlePage(page: Page): Promise<void> {
+export async function settlePage(page: Page): Promise<{ pending: number }> {
+  // Force every lazy image to fetch BEFORE scrolling.
+  //
+  // Scrolling alone does not do it: measured on /congo-african-grey-for-sale/,
+  // a full-page scroll left 45 of 52 images with complete === false, zero HTTP
+  // 4xx, and they stayed unloaded after a further 15 seconds. All 45 were
+  // ordinary loading="lazy" images — visible, real widths, not inside <details>.
+  // Chromium never commits a lazy load when the viewport passes that fast, and
+  // returning to the top drops the pending ones. The consequence was that
+  // img-srcset-within-2x examined 7 of 52 images and called the page clean.
+  //
+  // We measure the assets a page SHIPS, not the order a browser happens to
+  // fetch them in, so eager is the honest setting here — and it is
+  // deterministic, where the scroll race was not.
+  await page.evaluate(() => {
+    for (const img of Array.from(document.images)) {
+      if (img.getAttribute('loading') === 'lazy') img.setAttribute('loading', 'eager');
+    }
+  });
+
   await page.evaluate(async () => {
     const step = window.innerHeight;
-    const total = document.body.scrollHeight;
-    for (let y = 0; y < total; y += step) {
+    // Re-read scrollHeight each iteration: the document GROWS while settling
+    // (measured +611px on the corpus page), so a height cached up front stops
+    // the loop short of the real bottom. Iteration cap guards a page that grows
+    // faster than we scroll.
+    for (let y = 0, i = 0; y < document.body.scrollHeight && i < 400; y += step, i++) {
       window.scrollTo(0, y);
       await new Promise((r) => setTimeout(r, 30));
     }
     window.scrollTo(0, 0);
   });
-  await page.evaluate(
-    () =>
+
+  // BOUNDED. An image that never loads and never errors fires neither onload nor
+  // onerror, so an unbounded Promise.all here hangs until the test timeout —
+  // measured on /congo-african-grey-for-sale/, where it stalled both IMG checks
+  // past 45s and killed the page's results entirely. A page whose results never
+  // get written scores as absent rather than as failed, which is the worst
+  // failure mode this harness has. Never let this wait be unbounded.
+  const pending = await page.evaluate(async () => {
+    const incomplete = Array.from(document.images).filter((i) => !i.complete);
+    await Promise.race([
       Promise.all(
-        Array.from(document.images)
-          .filter((i) => !i.complete)
-          .map(
-            (i) =>
-              new Promise((res) => {
-                i.onload = i.onerror = () => res(null);
-              }),
-          ),
+        incomplete.map(
+          (i) =>
+            new Promise((res) => {
+              i.onload = i.onerror = () => res(null);
+            }),
+        ),
       ),
-  );
-  await page.waitForTimeout(200);
+      new Promise((res) => setTimeout(res, 3000)),
+    ]);
+    return Array.from(document.images).filter((i) => !i.complete).length;
+  });
+
+  await page.waitForTimeout(150);
+  // Callers may surface this; the IMG checks already report any image that
+  // failed to decode, so a stuck image becomes a defect rather than a hang.
+  return { pending };
 }
 
 export interface TopChrome {
