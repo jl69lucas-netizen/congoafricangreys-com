@@ -239,3 +239,50 @@ Unlike the eggs page, **nothing on timneh is superseded** — `class="(chk|care|
 least two new headings to a page that currently passes the Heading Outline Gate at 18 sections / 18 seams.
 Per CLAUDE.md the **full H1→H6 outline must be re-approved before the markup is written**, and each new
 section needs its own seam to keep `seam_parity` at PASS.
+
+---
+
+## Site-wide heading/eyebrow type floor — 11px and 10px minima (found 2026-07-31)
+
+Found while hardening `/congo-african-grey-parrot-pair-for-sale/`. A Playwright font-size
+sweep at 375px counted **108 text nodes rendering under 12.5px on that one page**, bottoming
+out at **10.6px**. The cause is not page CSS — it is the global clamp scale in `global.css`:
+
+| Token | clamp | value at 375px |
+|---|---|---|
+| `--fs-h5` (applies to `h5` AND `h6`) | `clamp(0.6875rem, 1.1vw, 0.875rem)` | **11px** |
+| `--fs-eyebrow` | `clamp(0.625rem, 1.2vw, 0.75rem)` | **10px** |
+
+This sits directly against two binding statements: `PRODUCT.md` says the audience skews
+older, and `DESIGN.md` §Accessibility says "contrast **and text size** matter more than
+usual." Every page carrying the mandated ≥5 H5 and ≥5 H6 therefore ships at least ten
+11px headings on mobile.
+
+**Fixed page-scoped on the congo-pair page only** (floors raised to 12–14px, every desktop
+maximum unchanged so the page still matches its siblings at 1280). **Not swept**, because
+changing a locked token in the clamp scale moves all 108 pages and needs its own
+verification pass with per-page screenshots.
+
+**Explicitly out of scope of any sweep:** the desktop dial's `.tg` / `.tdial-k` at `.56rem`.
+Those are locked cluster-wide by `cag-page-hardening` §1e-bis, and the dial is `display:none`
+at every width where the complaint applies.
+
+Reproduce on any page:
+
+```js
+// Playwright, 375px viewport. offsetParent filter is required — without it the
+// hidden desktop dial is measured and the count is meaningless.
+[...document.querySelectorAll('main *')].filter(e=>
+  [...e.childNodes].some(c=>c.nodeType===3&&c.textContent.trim().length>1) &&
+  e.offsetParent && parseFloat(getComputedStyle(e).fontSize) < 12
+).length
+```
+
+## `no_aggregateoffer` warns on genuine group pages (found 2026-07-31)
+
+`final_page_audit.py` warns `no_aggregateoffer` on `congo-african-grey-parrot-pair-for-sale`,
+`grey-african-parrots-for-sale` and `male-african-gray-for-sale`. All three legitimately list
+several priced birds, which is the one case `cag-for-sale-page-builder` §3.2 permits
+(`AggregateOffer` ONLY on group/hub pages). Either encode the group-page exemption in the
+auditor or move these pages to per-bird `Offer` — a cluster decision, not a page decision.
+Left as a WARN, not silently suppressed.
