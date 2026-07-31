@@ -400,6 +400,45 @@ git commit -m "test(render): gate-integrity meta gate — every check must fire 
 
 ---
 
+## Contract amendments (checkpoint review after Task 3 — BINDING on Tasks 4-13)
+
+A review of the contract layer found four defects, all independently re-measured before being
+acted on. Every check written from here applies these.
+
+**A1 — `examined` counts what the predicate judged, not what the DOM contains.** The draft
+`layout-no-horizontal-overflow` returned `all.length` (measured: 1116) while box-testing zero
+elements, which makes every downstream zero-examined guard decorative. Count the units your
+pass/fail test actually ran against.
+
+**A2 — every check declares `minExamined`,** and the meta gate asserts
+`examined >= minExamined` on both fixtures. This is what stops a check passing the gate by
+inflating its own count.
+
+**A3 — `measureTopChrome` now returns `TopChrome { height, parts, implausible }`, not a number,
+and it scrolls before measuring.** A rail with `top: var(--hdr)` is not pinned at scrollY 0 —
+measured at rest it sits at `top:1030`. The old probe returned 96 and was blind to a 55px rail,
+so any heading landing *behind the rail* scored as correct. Verified after the fix: **151px at
+375/768** (header 96 + rail 55), **96px at 1280** (rail is `display:none`).
+
+**A4 — `nav-jump-target-lands` must not use `locator(href).first()` and must never throw.**
+Measured on the corpus page: **48 in-page links for 19 unique targets — 18 duplicate hrefs and
+18 zero-box (0×0) links**, plus an `sr-only` skip link. `.first()` resolves in DOM order and
+will pick a 0×0 copy, which Playwright retries against for 30s and then throws — and a thrown
+check means `writePartial()` never runs, so the page silently vanishes from the scorecard
+instead of failing. Filter to links with a non-zero box, scope the selector to the visible
+chip, give each click a short timeout, and convert any click failure into a **defect**, not an
+exception.
+
+**A5 — the dead-check guard must compare against the registry, not against the partials.**
+`build_scorecard.mjs` builds `examinedAnywhere` from keys present in each partial, so a check
+that ran *nowhere* contributes no key and can never appear in the `dead` list. Pass the full
+registry id list into the merge step and fail on any id absent from every partial. Likewise
+`pages.spec.ts` must throw when a page's `page_type` is missing from `families_by_page_type`
+or resolves to an empty check set — otherwise that page scores a perfect 0 having been
+examined by nothing.
+
+---
+
 ## Task 4: LAYOUT — no horizontal overflow
 
 Born from `fix(footer): two horizontal-overflow bugs on every page of the site`.
