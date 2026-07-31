@@ -429,6 +429,15 @@ instead of failing. Filter to links with a non-zero box, scope the selector to t
 chip, give each click a short timeout, and convert any click failure into a **defect**, not an
 exception.
 
+**A6 — every run owns its own server; `reuseExistingServer` must be `false`.** With it `true`,
+a run attaches to a server it does not own. Observed: a previous suite's process tree exited
+mid-baseline, tore down the server its own child had started, and 20 of 27 tests died with
+`ERR_CONNECTION_REFUSED` — producing 11 partials that, without the manifest guard, would have
+been merged into a "baseline" computed from 40% of the run. The related hazard is worse because
+it is silent: a leftover server rooted at an **older `dist/`** answers 200 and the harness
+happily reports on yesterday's HTML. Phase 2 should add a build-stamp assertion; owning the
+server closes the loud half now.
+
 **A5 — the dead-check guard must compare against the registry, not against the partials.**
 `build_scorecard.mjs` builds `examinedAnywhere` from keys present in each partial, so a check
 that ran *nowhere* contributes no key and can never appear in the `dead` list. Pass the full
