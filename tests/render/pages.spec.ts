@@ -14,12 +14,20 @@ const targets = JSON.parse(readFileSync(resolve(here, 'targets.json'), 'utf8')) 
 };
 
 /**
- * RENDER_OVERRIDE="check-id:reason,other-check:reason"
+ * RENDER_OVERRIDE="check-id:reason; other-check:reason"
+ *
  * An override suppresses a blocking failure and is written into the scorecard,
  * so overrides are counted rather than hidden. A bare id with no reason is rejected.
+ *
+ * Entries are separated by SEMICOLONS, not commas, because a real reason
+ * contains commas — "card srcset regen queued, see backlog" was split into two
+ * entries by a comma separator and rejected for the fragment having no colon.
+ * A reason nobody can write is an override nobody will use, and an override
+ * nobody will use gets replaced by someone quietly flipping the check back to
+ * advisory, which is the outcome this whole mechanism exists to prevent.
  */
 const overrides: { checkId: string; reason: string }[] = (process.env.RENDER_OVERRIDE ?? '')
-  .split(',')
+  .split(';')
   .map((s) => s.trim())
   .filter(Boolean)
   .map((entry) => {

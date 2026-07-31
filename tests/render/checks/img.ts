@@ -5,7 +5,7 @@ import type { Page } from '@playwright/test';
 register({
   id: 'img-srcset-within-2x',
   family: 'IMG',
-  severity: 'advisory',
+  severity: 'blocking',
   describe: 'no image may decode at more than 2x the width it paints at',
   minExamined: 1,
   async run(page: Page, viewport: number): Promise<CheckResult> {
