@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Defect } from './registry.js';
 
@@ -31,4 +31,20 @@ export function writeManifest(checkIds: string[], expectedPartials: number): voi
     resolve(RAW_DIR, '_manifest.json'),
     JSON.stringify({ checkIds, expectedPartials }, null, 2),
   );
+}
+
+/**
+ * A run's results must come from that run. Without this, a refused or crashed run
+ * leaves the PREVIOUS run's partials sitting in RAW_DIR; writeManifest still writes
+ * expectedPartials for the CURRENT target list (which is usually unchanged), so
+ * build_scorecard.mjs Guard 1 compares old-file-count against new-expected-count,
+ * finds them equal, and merges yesterday's numbers into a scorecard dated today —
+ * a run that never executed, reported as if it had. Reproduced 2026-08-01: the
+ * dist/-freshness beforeAll threw, zero new partials were written, and the 27
+ * stale partials from the prior run still satisfied Guard 1's count check.
+ * Call this immediately before writeManifest, so a refusal leaves RAW_DIR empty
+ * rather than stale.
+ */
+export function resetRaw(dir: string = RAW_DIR): void {
+  rmSync(dir, { recursive: true, force: true });
 }

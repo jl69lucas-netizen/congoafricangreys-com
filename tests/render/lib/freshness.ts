@@ -17,13 +17,36 @@ export interface Freshness {
   reason: string;
 }
 
-function newest(path: string): { path: string; ms: number } {
+interface NewestResult {
+  path: string;
+  ms: number;
+  /**
+   * True if `readdirSync`/`statSync` threw anywhere under this path (permission
+   * error, a broken symlink, a file deleted mid-walk). Deliberately NOT the same
+   * signal as `ms === 0` — a path that legitimately contains nothing but
+   * SKIP-listed vendor trees (the `src/pages/node_modules/.vite` case) also
+   * reports `ms: 0` with no error, and that case must stay fresh, not refuse.
+   * Only a genuine read failure should refuse; "found nothing because everything
+   * present was filtered out by design" is the normal, expected state.
+   */
+  error: boolean;
+}
+
+function newest(path: string): NewestResult {
   let best = { path, ms: 0 };
+  let error = false;
+  // Only walks real directories — a Dirent for a symlink-to-directory reports
+  // isDirectory() === false (it reflects the link itself, not readlink's target),
+  // so symlinked source trees are silently not descended into. That is latent
+  // today (no symlinks under src/, public/, or dist/ in this repo) and it is the
+  // same non-recursion that keeps a symlink cycle from hanging this walk forever
+  // — accepted as a trade, not tracked as a bug.
   const walk = (dir: string): void => {
     let entries;
     try {
       entries = readdirSync(dir, { withFileTypes: true });
     } catch {
+      error = true;
       return;
     }
     for (const e of entries) {
@@ -34,8 +57,12 @@ function newest(path: string): { path: string; ms: number } {
       } else {
         let ms = 0;
         try {
+          // Follows symlinks (unlike lstat). A symlink whose target is gone
+          // throws ENOENT here, which is exactly the "could not be read" signal
+          // this function exists to surface — not silence.
           ms = statSync(p).mtimeMs;
         } catch {
+          error = true;
           continue;
         }
         if (ms > best.ms) best = { path: p, ms };
@@ -46,16 +73,33 @@ function newest(path: string): { path: string; ms: number } {
   try {
     st = statSync(path);
   } catch {
-    return best;
+    return { ...best, error: true };
   }
   if (st.isDirectory()) walk(path);
   else best = { path, ms: st.mtimeMs };
-  return best;
+  return { ...best, error };
+}
+
+/** `123456ms` → `"2 min"` or `"37s"`. Below a minute, "0 min" reads as "no difference found" —
+ * the opposite of what a refusal is trying to say — so seconds are used under that floor. */
+function formatAge(deltaMs: number): string {
+  return deltaMs < 60_000 ? `${Math.max(1, Math.round(deltaMs / 1000))}s` : `${Math.round(deltaMs / 60_000)} min`;
 }
 
 /**
  * A stale `dist/` is the quietest way this harness can lie: every check passes, every
  * number is real, and all of them describe a build nobody is shipping. Refuse to measure.
+ *
+ * Note on what this does NOT catch: deleting a source file (e.g. removing
+ * `src/pages/foo/index.astro`) is invisible here — `newest()` only reads file mtimes,
+ * so removing a file leaves every surviving file older than `dist/`, and the gate
+ * reports fresh while `dist/foo/index.html` still serves a page whose source is gone.
+ * Folding directory mtimes into the comparison would catch that, but was deliberately
+ * rejected: directory mtimes are noisy (an editor swap file or a tool's temp file
+ * appearing and vanishing under src/ bumps its parent directory's mtime), and on this
+ * codebase a false REFUSAL is the more expensive failure mode — a gate that cries wolf
+ * once gets ignored forever, which is how twelve gates accumulated false reports here.
+ * A rare false PASS on a deleted-but-not-replaced source file is the accepted trade.
  */
 export function checkDistFreshness(root: string = process.cwd()): Freshness {
   const dist = resolve(root, 'dist');
@@ -71,12 +115,26 @@ export function checkDistFreshness(root: string = process.cwd()): Freshness {
     const p = resolve(root, rel);
     if (!existsSync(p)) continue;
     const n = newest(p);
-    if (n.ms > newestDist.ms) {
-      const ageMin = Math.round((n.ms - newestDist.ms) / 60000);
+    // A read failure under an existing source path must refuse, never fall through as
+    // "nothing newer than dist". Falling through would be a false PASS having examined
+    // zero of the files it failed to read — the exact "PASS having examined nothing"
+    // failure mode this whole harness exists to stop reproducing (see build_scorecard.mjs
+    // Guard 1's own comment). This is NOT the same branch as "n.ms === 0 with no error" —
+    // that is the legitimate all-vendored-content case handled by NewestResult.error above.
+    if (n.error) {
       return {
         fresh: false,
         reason:
-          `${relative(root, n.path)} is ${ageMin} min newer than the newest file in dist/ ` +
+          `${rel} could not be fully read (permission error or a broken symlink) — refusing ` +
+          `to call dist/ fresh without having examined it. Silently treating an unreadable ` +
+          `source path as "nothing newer" is the same false PASS this gate exists to prevent.`,
+      };
+    }
+    if (n.ms > newestDist.ms) {
+      return {
+        fresh: false,
+        reason:
+          `${relative(root, n.path)} is ${formatAge(n.ms - newestDist.ms)} newer than the newest file in dist/ ` +
           `(${relative(root, newestDist.path)}) — run \`npm run build\` first. ` +
           `Measuring a stale dist/ produces real numbers about a build nobody ships.`,
       };
