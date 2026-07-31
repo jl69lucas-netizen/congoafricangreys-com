@@ -114,6 +114,15 @@ Link-First anchors (sentence START, never mid/end; branded ACTION anchors on CTA
 8. **Perf conclusions need ≥5 runs.** CLS on this site is bimodal — a single Lighthouse run produced a
    confident wrong attribution. Look at the distribution, not one number.
 
+> **Before any UI/UX polish pass on an already-live for-sale page, read
+> `docs/superpowers/sessions/2026-07-31-forsale-uiux-polish-playbook.md`.** It is the
+> measured recipe from the congo-pair pass: the 18-stop dial cap and how to make it fit,
+> the two scroll-spy failure modes (last-intersecting-entry wins; rAF-gated handler
+> latching on a non-painting page), the locked one-fact-per-line card stack with a quiet
+> photo-scrim label and the mandated per-card shipping line, the horizontal-card mobile
+> layout below 640px, the −40% seam gutter numbers, the `flex:1 0 100%` / `text-wrap:balance`
+> traps, and the `sizes`-first image-delivery sequence that cut 205 KiB.
+
 > **Before starting a new for-sale group, read
 > `docs/superpowers/sessions/2026-07-26-for-sale-cluster-impeccable-lessons.md`.** It carries the reusable
 > playbook: the `.xsell` cross-sell component spec, the cross-sell FAQ + Anchor Diversity Ledger (with the
