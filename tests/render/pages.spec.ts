@@ -4,7 +4,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { registry } from './lib/registry.js';
 import './checks/index.js';
-import { writePartial, writeManifest } from './lib/scorecard.js';
+import { writePartial, writeManifest, resetRaw } from './lib/scorecard.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import type { Defect } from './lib/registry.js';
 
@@ -39,6 +39,12 @@ const overrides: { checkId: string; reason: string }[] = (process.env.RENDER_OVE
     return { checkId: entry.slice(0, idx).trim(), reason: entry.slice(idx + 1).trim() };
   });
 const overridden = new Set(overrides.map((o) => o.checkId));
+
+// Must run BEFORE writeManifest, and both must run at module load (collection time) —
+// not inside beforeAll. A refused/crashed run must leave RAW_DIR empty so Guard 1 in
+// build_scorecard.mjs compares 0 found partials against N expected and fails loudly,
+// instead of silently merging a previous run's stale partials into today's scorecard.
+resetRaw();
 
 writeManifest(
   registry.map((c) => c.id),
