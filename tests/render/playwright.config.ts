@@ -1,6 +1,5 @@
 import { defineConfig } from '@playwright/test';
-
-const PORT = 4321;
+import { SITE_PORT, FIXTURE_PORT, SITE_BASE } from './lib/servers.js';
 
 export default defineConfig({
   testDir: '.',
@@ -10,7 +9,7 @@ export default defineConfig({
   timeout: 120_000,
   reporter: [['list']],
   use: {
-    baseURL: `http://127.0.0.1:${PORT}`,
+    baseURL: SITE_BASE,
     deviceScaleFactor: 1,
   },
   projects: [
@@ -18,11 +17,22 @@ export default defineConfig({
     { name: 'vp768', use: { viewport: { width: 768, height: 1024 } } },
     { name: 'vp1280', use: { viewport: { width: 1280, height: 800 } } },
   ],
-  webServer: {
-    command: `python3 -m http.server ${PORT} --bind 127.0.0.1`,
-    cwd: '../../',
-    port: PORT,
-    reuseExistingServer: true,
-    timeout: 60_000,
-  },
+  webServer: [
+    // The built site, served at its own root so absolute /images/... resolve.
+    {
+      command: `python3 -m http.server ${SITE_PORT} --bind 127.0.0.1`,
+      cwd: '../../dist',
+      port: SITE_PORT,
+      reuseExistingServer: true,
+      timeout: 60_000,
+    },
+    // The repo root, so tests/render/fixtures/... are reachable.
+    {
+      command: `python3 -m http.server ${FIXTURE_PORT} --bind 127.0.0.1`,
+      cwd: '../../',
+      port: FIXTURE_PORT,
+      reuseExistingServer: true,
+      timeout: 60_000,
+    },
+  ],
 });
