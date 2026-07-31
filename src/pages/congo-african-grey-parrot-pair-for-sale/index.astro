@@ -17,27 +17,27 @@ const breadcrumbs = [
 const routes = [
   { id: "ready", facet: "Ready-Made Pair", name: "Jins & Jeni", price: "$3,500", sub: "Two birds, one reservation",
     blurb: "Jins (male, about six months) and Jeni (female, about four) were raised alongside each other here. Unrelated, both hand-raised, both papered.",
-    img: `${IMG}/jins-jeni-congo-pair-portrait`, alt: "Jins and Jeni, our unrelated Congo African Grey companion pair, perched together in our Midland aviary",
+    img: `${IMG}/jins-jeni-pair-card-portrait`, alt: "Jins and Jeni, our unrelated Congo African Grey companion pair, feeding side by side in our Midland aviary",
     href: "/available/jins-jeni/", cta: "See Jins & Jeni" },
   { id: "single", facet: "Either Bird Singly", name: "Jins, or Jeni", price: "$1,900 / $1,800", sub: "You are not obliged to take both",
     blurb: "If one bird is the right answer for your household, say so and we will place one. Neither of them is held hostage to the other.",
-    img: `${IMG}/congo-pair-eating-together-aviary`, alt: "A single young Congo African Grey feeding beside its companion, showing both birds eat independently",
-    href: "#reserve", cta: "Ask About One Bird" },
-  { id: "build", facet: "Build Your Own Pair", name: "Roys & Amie", price: "$2,300 + $2,500", sub: "Two singles you introduce at home",
+    img: `${IMG}/jins-or-jeni-single-bird-option`, alt: "Two unrelated young Congo greys sharing a bowl, either of which we will place on its own",
+    href: "#reserve", cta: "Ask About One" },
+  { id: "build", facet: "Build Your Own Pair", name: "Roys & Amie", price: "$2,300 + $2,500", split: "Two birds, $4,800 in total", sub: "Two singles you introduce at home",
     blurb: "Roys is a confident male, Amie a steadier female. Bought together they arrive as two individuals, not a unit, which is the configuration that keeps both birds people-focused.",
-    img: `${IMG}/two-congo-african-greys-available`, alt: "Roys and Amie, two available Congo African Greys that can be reserved together as a build-your-own pair",
-    href: "#reserve", cta: "Ask About Roys & Amie" },
-  { id: "timneh", facet: "Build Your Own Pair", name: "Elad & Evie", price: "$1,600 + $1,500", sub: "The Timneh alternative",
+    img: `${IMG}/roys-amie-two-congo-singles`, alt: "Roys and Amie photographed close together, the two Congo singles most often reserved as a build-your-own pair",
+    href: "#reserve", cta: "See Roys & Amie" },
+  { id: "timneh", facet: "Build Your Own Pair", name: "Elad & Evie", price: "$1,600 + $1,500", split: "Two birds, $3,100 in total", sub: "The Timneh alternative",
     blurb: "Both Timnehs, both out of Levi and Rily. Smaller, quieter and typically talking earlier than a Congo, at the lowest two-bird figure we offer.",
-    img: `${IMG}/congo-and-timneh-together-our-aviary`, alt: "A Timneh and a Congo African Grey sharing a perch in our aviary, photographed here in Midland",
-    href: "/timneh-african-grey-for-sale/", cta: "See Our Timnehs" },
+    img: `${IMG}/elad-evie-timneh-pair-option`, alt: "A pair of hand-tame Timneh greys stepping onto a keeper's hand, the lower-priced two-bird route",
+    href: "/timneh-african-grey-for-sale/", cta: "See the Timnehs" },
   { id: "breeding", facet: "Breeding Referral", name: "Proven Breeding Pair", price: "$3,000", sub: "A different purchase entirely",
     blurb: "Adults we hold back for breeding, DNA certified. This is stock for an aviary, not a companion pair for a living room.",
-    img: `${IMG}/proven-breeding-pair-african-greys`, alt: "Our proven adult African Grey breeding pair, DNA certified, listed separately from our companion birds",
-    href: "/african-grey-breeding-pair-for-sale/", cta: "See the Breeding Pair" },
+    img: `${IMG}/proven-breeding-pair-african-greys`, alt: "An adult grey inside our breeding flight, the aviary stock we list apart from every companion bird",
+    href: "/african-grey-breeding-pair-for-sale/", cta: "See the Adults" },
   { id: "bery", facet: "Either Bird Singly", name: "Bery", price: "$1,700", sub: "One bird, complete on her own",
     blurb: "Bery is a female Congo who came out of hand-raising exceptionally people-oriented. She is the bird we point first-time owners toward.",
-    img: `${IMG}/male-female-congo-greys-side-by-side`, alt: "Bery, an available female Congo African Grey offered as a single bird rather than half of a pair",
+    img: `${IMG}/bery-single-congo-hen`, alt: "Bery taking a head scratch, the single Congo hen we point first-time owners toward",
     href: "/available/bery/", cta: "Ask About Bery" },
 ];
 
@@ -228,7 +228,7 @@ const seam = "/cag-fs-seam-emblem.webp";
 
     <div class="cpair-main">
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §3 BLUF — the compressed honest answer ═══ -->
       <section id="bonding-short">
         <h2 class="cag-h2">Will Two African Greys Bond to Each Other and Ignore You?</h2>
@@ -239,7 +239,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>Below you will find every pair and single we currently have, the three genuine routes to owning two birds, what a documented pair costs elsewhere, and the protocol we hand every pair buyer. <a href="#one-bird">Our honest case for buying one bird instead</a> sits in the middle of the page rather than buried at the bottom, because for a fair number of households it is the right answer.</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §4 AVAILABLE — Avail-B faceted by pairing route ═══ -->
       <section id="available">
@@ -258,16 +258,17 @@ const seam = "/cag-fs-seam-emblem.webp";
             {routes.map((r) => (
               <article class="rcard" data-facet={r.facet}>
                 <div class="rcard-photo">
-                  <img src={`${r.img}.webp`} srcset={`${r.img}-760.webp 760w, ${r.img}.webp 1408w`}
-                       sizes="(max-width:980px) 46vw, 240px" width="1408" height="768"
+                  <img src={`${r.img}.webp`} srcset={`${r.img}-320.webp 320w, ${r.img}.webp 640w`}
+                       sizes="(max-width:640px) 46vw, 240px" width="640" height="480"
                        alt={r.alt} loading="lazy" decoding="async" />
                   <span class="rbadge">{r.facet}</span>
                 </div>
                 <div class="rcard-body">
                   <div class="rcard-top"><h3 class="rcard-name">{r.name}</h3><span class="rcard-price">{r.price}</span></div>
+                  {r.split && <p class="rcard-split">{r.split}</p>}
                   <p class="rcard-sub">{r.sub}</p>
                   <p class="rcard-blurb">{r.blurb}</p>
-                  <a class="btn-clay bfull" href={r.href}>{r.cta} →</a>
+                  <a class="btn-clay rcta" href={r.href}>{r.cta} →</a>
                 </div>
               </article>
             ))}
@@ -284,7 +285,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="ctaline"><a class="btn-clay" href="#reserve">Reserve This Pair →</a></p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §5 KEY TAKEAWAY — K1 Receipt + K2 Price-Tag ═══ -->
       <section id="takeaway">
         <h2 class="cag-h2">What Should You Know Before Committing to a Second Grey?</h2>
@@ -306,7 +307,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         </div>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §6 THE BONDING TREATMENT ═══ -->
       <section id="pair-bond">
@@ -318,7 +319,14 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">The Three Conditions That Make Human Bonding Fade</h3>
         <p>In our experience it takes all three together, and removing any one of them changes the outcome. The birds are unrelated, they are close in age, and they are housed together with constant access to each other and little separate handling.</p>
-        <!-- INFOGRAPHIC SLOT: pair-bond-three-risk-conditions.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/pair-bond-three-risk-conditions.webp`}
+               srcset={`${IMG}/pair-bond-three-risk-conditions-760.webp 760w, ${IMG}/pair-bond-three-risk-conditions.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="The three stacked conditions that let a Congo African Grey pair bond to each other instead of to you"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">All three present is the strongest pair bond. Remove any one of them and the human bond holds.</figcaption>
+        </figure>
         <h4 class="cag-h4">Does Buying Two Birds at Once Cause This?</h4>
         <p>Buying two at once raises the odds, because neither bird has an established relationship with you to fall back on. A grey that has lived with you for two years before a second arrives usually keeps its human bond intact.</p>
         <h4 class="cag-h4">Does It Matter If the Two Birds Are Unrelated?</h4>
@@ -338,7 +346,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <figcaption class="img-note">Constant shared access is the single strongest predictor of a pair that stops needing people.</figcaption>
       </figure>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §7 THE COUNTERWEIGHT ═══ -->
       <section id="protects">
         <h2 class="cag-h2">What Does a Bonded Pair Protect Your Grey From?</h2>
@@ -347,9 +355,25 @@ const seam = "/cag-fs-seam-emblem.webp";
         <h3 class="cag-h3">The One-Person-Bird Problem a Single Grey Often Develops</h3>
         <p>Greys are notorious for choosing one human and defending that choice against everyone else in the house. It is the most common behavioural complaint we field, and it lands hardest on families. A second bird spreads the social load and takes the edge off it.</p>
 
+        <figure class="sec-img-wrap">
+          <img class="sec-img og-photo" src={`${IMG}/two-trained-african-greys-with-owner.webp`}
+               srcset={`${IMG}/two-trained-african-greys-with-owner-760.webp 760w, ${IMG}/two-trained-african-greys-with-owner.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768"
+               alt="Two hand-tame greys perched at a keeper's shoulder at once, the social load spread across more than one bird"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Two birds comfortable with the same person at the same time. That is the outcome the protocol below is aiming at.</figcaption>
+        </figure>
+
         <h3 class="cag-h3">Boredom, Plucking, and the Cost of an Under-Occupied Grey</h3>
         <p>A grey alone in a quiet house for nine hours is an intelligent animal with nothing to do. <a href="https://lafeber.com/pet-birds/" target="_blank" rel="noopener">Lafeber's companion-bird behaviour library</a> treats enrichment and social contact as core husbandry rather than enrichment extras, and company is one form of that contact. ↗</p>
-        <!-- INFOGRAPHIC SLOT: pair-versus-single-grey-tradeoff.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/pair-versus-single-grey-tradeoff.webp`}
+               srcset={`${IMG}/pair-versus-single-grey-tradeoff-760.webp 760w, ${IMG}/pair-versus-single-grey-tradeoff.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768" style={"aspect-ratio:1408/768"}
+               alt="One grey against two greys, weighed column by column, with neither side drawn as the winner"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Both columns are true at once. Which one you want decides the purchase.</figcaption>
+        </figure>
         <h4 class="cag-h4">Are Two Greys Really Less Neurotic Than One?</h4>
         <p>Often, in households where the birds would otherwise be alone all day. Not reliably, in households where one bird would have had constant company anyway.</p>
         <h5 class="cag-h5">Feather-Destructive Behaviour Is Multi-Causal, Never Just Loneliness</h5>
@@ -358,7 +382,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="note">If a seller offers you a second bird as a fix for a plucking grey, they are guessing with your money.</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §8 THE PROTOCOL ═══ -->
       <section id="protocol">
@@ -371,9 +395,24 @@ const seam = "/cag-fs-seam-emblem.webp";
         <h3 class="cag-h3">Training Each Bird Alone Rather Than as a Unit</h3>
         <p>Target training, step-up, recall, simple foraging puzzles — done individually. A bird that has learned something with you has a reason to seek you out. Two birds trained together learn to watch each other instead.</p>
 
+        <figure class="fs-video">
+          <video controls preload="none" width="1280" height="720"
+                 poster={`${IMG}/tamed-pair-african-greys-on-shoulder-760.webp`}>
+            <source src="/video/congo-pair-socialization.mp4" type="video/mp4" />
+          </video>
+          <figcaption><span class="fsv-tag">Our aviary · Midland, TX</span> A one-to-one socialisation session, filmed here. This is what each bird in a pair needs on its own, away from the other.</figcaption>
+        </figure>
+
         <h3 class="cag-h3">Why We Recommend Two Cages, Not One</h3>
         <p>Two cages is the structural version of everything above. It gives you a way to separate without a confrontation, it lets each bird have its own territory, and it means an illness in one bird is not automatically an illness in both.</p>
-        <!-- INFOGRAPHIC SLOT: keeping-a-pair-tame-daily-protocol.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/keeping-a-pair-tame-daily-protocol.webp`}
+               srcset={`${IMG}/keeping-a-pair-tame-daily-protocol-760.webp 760w, ${IMG}/keeping-a-pair-tame-daily-protocol.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="The four daily habits that keep both birds in a two-grey household focused on people"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Four habits, done daily. Skipping them is how a pair drifts away from its owners.</figcaption>
+        </figure>
         <h4 class="cag-h4">30 Minutes a Day per Bird Is the Number That Keeps a Pair Tame</h4>
         <p>Fifteen minutes is the floor and thirty is comfortable. Two birds therefore need roughly an hour of your undivided attention a day before you count any shared time at all.</p>
         <h4 class="cag-h4">Can You Undo a Pair Bond That Has Already Formed?</h4>
@@ -386,7 +425,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="ctaline"><a class="btn-clay" href="#reserve">Ask Us Which Bird Suits You →</a></p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §9 THE STEP-DOWN ═══ -->
       <section id="one-bird">
         <h2 class="cag-h2">When Is One African Grey the Better Buy?</h2>
@@ -400,12 +439,19 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">Buying One Now and a Second Later</h3>
         <p>This is the route we quietly recommend most often. Take one bird, build the relationship, and add a second in a year or two if the household still wants it. The established bird keeps its human bond, and the new arrival learns from a grey who already trusts people.</p>
-        <!-- INFOGRAPHIC SLOT: one-grey-or-two-decision-guide.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/one-grey-or-two-decision-guide.webp`}
+               srcset={`${IMG}/one-grey-or-two-decision-guide-760.webp 760w, ${IMG}/one-grey-or-two-decision-guide.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="A buy-one or buy-two decision guide for African Grey households, split by free time and experience"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">There is no wrong answer on this chart, only a wrong match to a household.</figcaption>
+        </figure>
         <h4 class="cag-h4">Will a Single Grey Be Lonely While You Work?</h4>
         <p>A single grey in an empty house needs foraging work, radio or background noise, a window view, and a real reunion when you get home. That is a manageable list, and it is a smaller commitment than a second bird.</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §10 TABLE F — PAIRING ROUTES ═══ -->
       <section id="routes">
@@ -438,16 +484,23 @@ const seam = "/cag-fs-seam-emblem.webp";
             </tbody>
           </table>
         </div>
-        <!-- INFOGRAPHIC SLOT: three-routes-to-an-african-grey-pair.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/three-routes-to-an-african-grey-pair.webp`}
+               srcset={`${IMG}/three-routes-to-an-african-grey-pair-760.webp 760w, ${IMG}/three-routes-to-an-african-grey-pair.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="Ready-made pair, build your own, and proven breeding stock compared as three separate purchases"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Three purchases the market calls one word. Every route ships full documentation for both birds.</figcaption>
+        </figure>
         <h3 class="cag-h3">Ready-Made Pair Versus Two Singles You Introduce</h3>
         <p>A ready-made pair is easier on arrival and harder afterwards. Two singles are harder on arrival — you run the introduction yourself — and easier afterwards, because neither bird arrives already committed to the other.</p>
         <h3 class="cag-h3">Why a Proven Breeding Pair Is a Different Purchase Entirely</h3>
-        <p><a href="/african-grey-breeding-pair-for-sale/">Adults kept back for production</a> are valued on their breeding record, not their tameness, and they are usually not hand-tame at all. If someone offers you a proven breeding pair as a family companion purchase, they are selling you the wrong animal.</p>
+        <p><a href="/african-grey-breeding-pair-for-sale/">Aviary stock valued on its breeding record</a> is priced by what it produces rather than by how it behaves on a hand, and most of it is not hand-tame at all. If someone offers you a proven breeding pair as a family companion purchase, they are selling you the wrong animal.</p>
         <h4 class="cag-h4">Which Route Suits a First-Time Grey Owner?</h4>
         <p>None of them, honestly. A first-time owner is best served by a single hand-raised bird, and we would rather say so here than after your deposit clears.</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §11 THE ARITHMETIC ═══ -->
       <section id="arithmetic">
         <h2 class="cag-h2">Does Buying a Pair Cost Less Than Buying Two Single Greys?</h2>
@@ -466,7 +519,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="note">A second bird adds paperwork, screening and rearing time. It does not add a second flight, a second crate fee, or a second round of our time on the phone with you.</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §12 MARKET COMPARISON — both brackets ═══ -->
       <section id="market">
@@ -478,7 +531,14 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">Why Some Listings Show a Pair at $1,800</h3>
         <p>At the other end, retail sites advertise African Grey pairs around $1,800, frequently with no breeder name, no licence number, no certificates and an add-to-cart button. Those two figures are not measuring the same thing.</p>
-        <!-- INFOGRAPHIC SLOT: african-grey-pair-price-bracket.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/african-grey-pair-price-bracket.webp`}
+               srcset={`${IMG}/african-grey-pair-price-bracket-760.webp 760w, ${IMG}/african-grey-pair-price-bracket.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="Where our $3,500 documented pair sits between $1,800 undocumented listings and $8,000 adult pairs"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">The spread itself is the information. What the price sits next to tells you more than the price.</figcaption>
+        </figure>
         <h4 class="cag-h4">Is a Cheaper Pair Always a Scam?</h4>
         <p>No, and this is where most anti-scam advice gets lazy. Price alone tells you very little. What the price sits next to tells you everything.</p>
         <h5 class="cag-h5">A Low Price With Papers Is Value; A Low Price Without Them Is Bait</h5>
@@ -489,7 +549,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="ctaline"><a class="btn-clay" href="#reserve">See What Each Pair Includes →</a></p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §13 JINS & JENI ═══ -->
       <section id="jins-jeni">
         <h2 class="cag-h2">Who Are Jins and Jeni, and Do They Have to Leave Together?</h2>
@@ -516,7 +576,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p>The pair price exists because they are easy to place together, not because we refuse to separate them. Say which bird suits you and we will talk it through honestly.</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §14 BUILD YOUR OWN ═══ -->
       <section id="build-your-own">
@@ -544,7 +604,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="ctaline"><a class="btn-clay" href="#reserve">Ask About Roys and Amie →</a></p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §15 PAPERWORK ═══ -->
       <section id="papers">
         <h2 class="cag-h2">What Paperwork Travels With Each Bird in a Pair?</h2>
@@ -555,12 +615,19 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">DNA Sexing on Both Birds, Not Just One</h3>
         <p><a href="/dna-tested-african-grey-for-sale/">Our DNA-sexing process</a> runs on every bird we list, because a grey is monomorphic and nobody can sex one by eye. A pair sold with one certificate is a pair where somebody guessed. ↗</p>
-        <!-- INFOGRAPHIC SLOT: two-birds-two-document-sets.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img inf-tall" src={`${IMG}/two-birds-two-document-sets.webp`}
+               srcset={`${IMG}/two-birds-two-document-sets-760.webp 760w, ${IMG}/two-birds-two-document-sets.webp 768w`}
+               sizes="(max-width:900px) 100vw, 760px" width="768" height="1376" style={"aspect-ratio:768/1376"}
+               alt="Two complete document stacks, one per grey, covering CITES, DNA sexing, vet health and hatch records"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Two birds, two files. Nothing is shared and nothing is summarised onto one page.</figcaption>
+        </figure>
         <h4 class="cag-h4">Do You Need Separate CITES Papers for Each Grey?</h4>
         <p>Yes. The documentation attaches to the bird, not to the transaction, and a pair is two birds.</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §16 HEALTH ═══ -->
       <section id="health">
         <h2 class="cag-h2">What Health Screening Do Both Birds Clear Before They Ship?</h2>
@@ -571,12 +638,19 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">Why a Pair Raises the Stakes on Disease Screening</h3>
         <p>Two birds in constant contact share everything. An unscreened pair is not two independent risks, it is one shared one — and it is why we will not sell a pair where only one bird has been tested.</p>
-        <!-- INFOGRAPHIC SLOT: pair-health-screening-pcr-panel.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/pair-health-screening-pcr-panel.webp`}
+               srcset={`${IMG}/pair-health-screening-pcr-panel-760.webp 760w, ${IMG}/pair-health-screening-pcr-panel.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="The PCR screening panel and avian veterinary examination both birds clear before either one ships"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Both birds, not a sample of one. Neither ships until both results are back.</figcaption>
+        </figure>
         <h4 class="cag-h4">What Happens If One Bird of a Pair Tests Positive?</h4>
         <p>Neither ships. We do not split a pair to move the healthy half, and we do not hold the result back to save a sale. <a href="/african-greys-for-sale-with-health-guarantee/">The written health guarantee behind every bird</a> runs seventy-two hours from arrival, with a twenty-four-hour window on shipping. ↗</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §17 LEGAL ═══ -->
       <section id="legal">
@@ -585,14 +659,21 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">CITES Appendix I and What It Means for Domestic Transfer</h3>
         <p><a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">The CITES appendices listing</a> places <em>Psittacus erithacus</em> in Appendix I, which governs international trade. Captive-bred birds are legal to own and transfer domestically with proper documentation, and every bird we place is captive-bred in the USA. ↗</p>
-        <!-- INFOGRAPHIC SLOT: cites-appendix-one-two-birds-usa.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/cites-appendix-one-two-birds-usa.webp`}
+               srcset={`${IMG}/cites-appendix-one-two-birds-usa-760.webp 760w, ${IMG}/cites-appendix-one-two-birds-usa.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="What CITES Appendix I status means for owning and transferring two captive-bred greys inside the USA"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Appendix I governs international trade. Captive-bred birds transfer domestically with their papers.</figcaption>
+        </figure>
         <h4 class="cag-h4">Does Owning Two Birds Change Your Legal Obligations?</h4>
         <p>Not materially. You keep two sets of papers instead of one. <a href="https://www.aphis.usda.gov/" target="_blank" rel="noopener">USDA APHIS animal-care licensing information</a> covers the breeder side of that arrangement rather than the owner side. ↗</p>
         <h5 class="cag-h5">Appendix I Since CoP17, Effective January 2017</h5>
         <p>The uplisting from Appendix II took effect in January 2017. Any seller still describing greys as Appendix II is working from stale information, and that is worth noticing.</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §18 SHIPPING — T3 earns its slot ═══ -->
       <section id="shipping">
         <h2 class="cag-h2">How Do Two African Greys Travel to You Together?</h2>
@@ -604,6 +685,29 @@ const seam = "/cag-fs-seam-emblem.webp";
         <h3 class="cag-h3">Airport Pickup at $185, Home Delivery at $350</h3>
         <p>Both figures are per reservation rather than per bird. Airport pickup puts them on Delta, United or American cargo to your nearest major airport; home delivery brings them door to door.</p>
 
+        <div class="ship-tiers">
+          <article class="ship-t">
+            <img src={`${IMG}/airport-cargo-shipping-african-greys-760.webp`}
+                 srcset={`${IMG}/airport-cargo-shipping-african-greys-760.webp 760w, ${IMG}/airport-cargo-shipping-african-greys.webp 1408w`}
+                 sizes="(max-width:760px) 92vw, 360px" width="760" height="428"
+                 alt="Two ventilated live-animal containers standing side by side at the cargo counter, ready for an airport handover"
+                 loading="lazy" decoding="async" />
+            <p class="ship-tier">Airport pickup</p>
+            <p class="ship-fig">$185</p>
+            <p class="ship-b">Charged once per reservation, never twice for a pair. Delta, United or American cargo into your nearest major airport, and you collect both crates at the counter.</p>
+          </article>
+          <article class="ship-t">
+            <img src={`${IMG}/home-delivery-van-two-african-greys-760.webp`}
+                 srcset={`${IMG}/home-delivery-van-two-african-greys-760.webp 760w, ${IMG}/home-delivery-van-two-african-greys.webp 1408w`}
+                 sizes="(max-width:760px) 92vw, 360px" width="760" height="428"
+                 alt="A climate-controlled courier fleet at the terminal, the door-to-door route for a two-bird booking"
+                 loading="lazy" decoding="async" />
+            <p class="ship-tier">Home delivery</p>
+            <p class="ship-fig">$350</p>
+            <p class="ship-b">Door to door on the same single booking, with both birds handed over in person and each bird's file handed over with it.</p>
+          </article>
+        </div>
+
         <div class="geo-cards">
           <a href="/african-grey-parrot-for-sale-texas/"><span class="geo-k">Congo pairs delivered across Texas</span><span class="geo-n">Pickup within 2–3 hours of Midland</span><span class="geo-a">→</span></a>
           <a href="/african-grey-parrot-for-sale-maryland/"><span class="geo-k">Documented greys shipped to Maryland</span><span class="geo-n">Airport cargo, BWI</span><span class="geo-a">→</span></a>
@@ -614,7 +718,14 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">Driving to Midland Within Two to Three Hours</h3>
         <p>If you are inside a two-to-three-hour radius of Midland you are welcome to collect in person, meet both birds first, and skip shipping altogether. It is the arrangement we prefer for a pair.</p>
-        <!-- INFOGRAPHIC SLOT: two-african-greys-travel-together.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/two-african-greys-travel-together.webp`}
+               srcset={`${IMG}/two-african-greys-travel-together-760.webp 760w, ${IMG}/two-african-greys-travel-together.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="How a two-bird reservation travels: airport cargo at $185, home delivery at $350, or Midland pickup"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">One booking, one flight, three ways to collect. The figures are per reservation, not per bird.</figcaption>
+        </figure>
         <h4 class="cag-h4">Do Both Birds Fly on the Same Flight?</h4>
         <p>Always. We will not split a pair across two bookings, because the arrival is stressful enough without separating them for it.</p>
         <h5 class="cag-h5">IATA Live Animal Regulations Govern Every Booking We Make</h5>
@@ -623,7 +734,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="ctaline"><a class="btn-clay" href="#reserve">Check Delivery to Your State →</a></p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §19 SETTLING IN ═══ -->
       <section id="settling">
@@ -635,7 +746,14 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">Quarantine If You Already Keep Birds</h3>
         <p>Thirty days minimum, in a separate airspace, before any new grey meets an existing bird. Both of ours arrive screened, but screening is not a substitute for quarantine.</p>
-        <!-- INFOGRAPHIC SLOT: introducing-two-african-greys-first-30-days.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/introducing-two-african-greys-first-30-days.webp`}
+               srcset={`${IMG}/introducing-two-african-greys-first-30-days-760.webp 760w, ${IMG}/introducing-two-african-greys-first-30-days.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="A week-by-week timeline for settling two new African Greys into one home across the first month"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Four weeks, cage by cage. Never start two new greys in one cage on day one.</figcaption>
+        </figure>
         <h4 class="cag-h4">How Long Before You Let Them Interact Unsupervised?</h4>
         <p>A month, at the earliest, and longer if either bird is showing territorial behaviour at the cage bars.</p>
         <h5 class="cag-h5">Introduce Across a Gap Before You Ever Share a Cage</h5>
@@ -644,17 +762,17 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="note">It is the one thing we ask of pair buyers, and it costs nothing but patience. <a href="/african-grey-parrot-care-guide/">Our full care routine</a> covers the rest of that first month. ↗</p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §20 VERIFY ═══ -->
       <section id="verify">
         <h2 class="cag-h2">How Do You Verify Anyone Selling You an African Grey Pair?</h2>
         <p>Pair listings attract fraud because the ticket is bigger. These are the checks we would run on ourselves, and they take about ten minutes.</p>
 
         <figure class="sec-img-wrap">
-          <img class="sec-img og-photo" src={`${IMG}/mark-benjamin-with-our-african-greys.webp`}
-               srcset={`${IMG}/mark-benjamin-with-our-african-greys-760.webp 760w, ${IMG}/mark-benjamin-with-our-african-greys.webp 1408w`}
+          <img class="sec-img og-photo og-scene" src={`${IMG}/our-greys-handled-at-home-midland.webp`}
+               srcset={`${IMG}/our-greys-handled-at-home-midland-760.webp 760w, ${IMG}/our-greys-handled-at-home-midland.webp 1408w`}
                sizes="(max-width:900px) 100vw, 760px" width="1408" height="768"
-               alt="Mark Benjamin handling our African Greys at the C.A.Gs aviary, the kind of live proof any pair seller should be able to show"
+               alt="A grey out of its cage in our living room with a family member close by, the kind of unstaged proof any seller should be able to film"
                loading="lazy" decoding="async" />
           <figcaption class="img-note">Ask any seller for a live video call with both birds. We will do one on request.</figcaption>
         </figure>
@@ -664,7 +782,14 @@ const seam = "/cag-fs-seam-emblem.webp";
 
         <h3 class="cag-h3">The Claims That Should End the Conversation</h3>
         <p><a href="/how-to-avoid-african-grey-parrot-scams/">Our full scam-pattern breakdown</a> covers the rest, but three claims are immediately disqualifying on a pair listing: a bonded pair of four-month-olds, a breeding pair of yearlings, and worldwide shipping inside a few days. ↗</p>
-        <!-- INFOGRAPHIC SLOT: verify-african-grey-pair-seller-checks.webp -->
+        <figure class="sec-img-wrap">
+          <img class="sec-img inf-img" src={`${IMG}/verify-african-grey-pair-seller-checks.webp`}
+               srcset={`${IMG}/verify-african-grey-pair-seller-checks-760.webp 760w, ${IMG}/verify-african-grey-pair-seller-checks.webp 1376w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1376" height="768" style={"aspect-ratio:1376/768"}
+               alt="Five verification questions to ask any African Grey pair seller, and the three answers that end it"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Ten minutes of questions. Any seller who cannot answer these is telling you something.</figcaption>
+        </figure>
         <h4 class="cag-h4">Why Does "Bonded Pair, Four Months Old" Make No Sense?</h4>
         <p>Because a four-month-old grey is barely weaned. It can have a companion. It cannot have a pair bond in any sense that survives contact with the word.</p>
         <h5 class="cag-h5">Greys Reach Sexual Maturity at Three to Five Years, Never Months</h5>
@@ -675,7 +800,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         <p class="ctaline"><a class="btn-clay" href="#reserve">Send Us Your Verification Questions →</a></p>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §21 REVIEWS ═══ -->
       <section id="reviews">
@@ -695,11 +820,21 @@ const seam = "/cag-fs-seam-emblem.webp";
         </div>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §22 HOW WE COMPARE ═══ -->
       <section id="compare">
         <h2 class="cag-h2">How Does Our Pair Offer Compare With the Listings Beside Us?</h2>
         <p>We went through the pair listings currently ranking for these searches and checked them against what we publish. This is what the difference looks like line by line.</p>
+
+        <figure class="sec-img-wrap">
+          <img class="sec-img og-photo og-scene" src={`${IMG}/congo-pair-eating-together-aviary.webp`}
+               srcset={`${IMG}/congo-pair-eating-together-aviary-760.webp 760w, ${IMG}/congo-pair-eating-together-aviary.webp 1408w`}
+               sizes="(max-width:900px) 100vw, 760px" width="1408" height="768"
+               alt="Our own two Congos feeding from their bowls, an ordinary unedited frame rather than a stock listing image"
+               loading="lazy" decoding="async" />
+          <figcaption class="img-note">Our birds, our bowls, our light. Every photo on this page was taken here, which is the first row of the table below.</figcaption>
+        </figure>
+
         <div class="tA-wrap">
           <table class="tA">
             <caption>Our pair offer against typical ranking pair listings</caption>
@@ -717,7 +852,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         </div>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §23 KEEP READING + XSELL ═══ -->
       <section id="reading">
         <h2 class="cag-h2">More Reading Before You Reserve Two Greys</h2>
@@ -728,13 +863,13 @@ const seam = "/cag-fs-seam-emblem.webp";
         </div>
         <div class="xsell">
           <p class="xsell-k">Also from our aviary</p>
-          <p><a href="/african-grey-breeding-pair-for-sale/">Adult breeding stock priced on its record</a> is a separate listing from the companion birds above. ↗</p>
-          <p><a href="/african-grey-parrot-bird-eggs-for-sale-usa/">Fertile eggs for experienced incubators</a> answer a different ambition entirely, and we are candid on that page about who should not buy them. ↗</p>
-          <p><a href="/hand-raised-african-grey-parrot-for-sale/">The way every bird here is raised</a> explains what "hand-raised" means when we use it. ↗</p>
+          <p><a href="/african-grey-breeding-pair-for-sale/">A proven producing duo for an established aviary</a> is valued on what it has fledged, not on how tame it is, which makes it a different listing from every companion bird above.</p>
+          <p><a href="/african-grey-parrot-bird-eggs-for-sale-usa/">Candled Congo eggs for a working incubator</a> answer a different ambition entirely, and that page is blunt about who should not buy them.</p>
+          <p><a href="/hand-raised-african-grey-parrot-for-sale/">The Benjamin Home-Raising Protocol behind both birds</a> is what we mean whenever the phrase "hand-raised" appears on this site.</p>
         </div>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
       <!-- ═══ §24 FAQ — FAQ-B refreshed, two-column ═══ -->
       <section id="faq">
         <h2 class="cag-h2">Pair Questions Buyers Ask Us Most</h2>
@@ -749,7 +884,7 @@ const seam = "/cag-fs-seam-emblem.webp";
         </div>
       </section>
 
-      <img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" />
+      <div class="seam-wrap" aria-hidden="true"><img class="seam" src={seam} alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
 
       <!-- ═══ §25 RESERVE ═══ -->
       <section id="reserve">
@@ -854,7 +989,18 @@ const seam = "/cag-fs-seam-emblem.webp";
 
 <style>
 :root { --cp-ink:#1c1a18; --cp-mid:#5a5248; --cp-bd:#ede5dc; --cp-green:#2D6A4F; --cp-clay:#e8604c; --cp-clayink:#c8472f; --cp-claytext:#b04228; --cp-cream:#faf7f4; }
-.cpair { background:var(--cp-cream); color:var(--cp-ink); overflow-x:clip; }
+/* THE root cause of "jump links on mobile not working". A global `scroll-behavior:smooth`
+   applies to this 31,000px page, so one rail tap starts a multi-second crawl through
+   ~9,000px that any thumb-touch cancels. Measured: click a chip, wait 1.2s, scrollY is
+   still 25. The for-sale cluster spec requires `scroll-behavior:auto` on pages carrying a
+   jump rail (cag-for-sale-page-builder §5, memory reference_smooth_scroll_kills_jump_links).
+   Scoped with :has() so no sibling page loses its smooth scrolling. */
+:global(html:has(.cpair)) { scroll-behavior:auto; }
+
+/* The site header measures 96px, not the 72px this page had been assuming. At 72 the
+   sticky rail parked 24px behind the header and every jump link landed underneath both.
+   Measured in Playwright: body>header rect h=96, .railA h=52. (page-hardening §1b) */
+.cpair { --hdr:96px; --rail-h:52px; background:var(--cp-cream); color:var(--cp-ink); overflow-x:clip; }
 .cpair .container { max-width:1200px; margin:0 auto; padding:0 clamp(16px, 4vw, 48px); }
 .cpair p { max-width:70ch; color:var(--cp-mid); line-height:1.65; }
 .cpair .lead { color:var(--cp-ink); font-size:clamp(0.98rem, 1.6vw, 1.08rem); }
@@ -888,8 +1034,8 @@ const seam = "/cag-fs-seam-emblem.webp";
 /* ── Body grid + Dial 2 Dark-Aviary ── */
 .cpair-body { display:grid; grid-template-columns:196px minmax(0,1fr); gap:28px; padding-bottom:56px; }
 .cpair-main { min-width:0; }
-.cpair-main section { scroll-margin-top:calc(var(--hdr, 72px) + 20px); padding:6px 0 4px; }
-.tdial { position:sticky; top:calc(var(--hdr, 72px) + 16px); align-self:start; background:#20342b; border-radius:16px; padding:12px 10px; box-shadow:0 3px 12px rgba(60,30,10,.05); max-height:calc(100vh - var(--hdr, 72px) - 32px); overflow-y:auto; scrollbar-width:thin; }
+.cpair-main section { scroll-margin-top:calc(var(--hdr) + 16px); padding:6px 0 4px; }
+.tdial { position:sticky; top:calc(var(--hdr) + 16px); align-self:start; background:#20342b; border-radius:16px; padding:12px 10px; box-shadow:0 3px 12px rgba(60,30,10,.05); max-height:calc(100vh - var(--hdr) - 32px); overflow-y:auto; scrollbar-width:thin; }
 .tdial-ring { width:64px; height:64px; margin:2px auto 8px; border-radius:50%; background:conic-gradient(var(--cp-clay) calc(var(--p,0) * 1%), #33503f 0); display:grid; place-items:center; }
 .tdial-inner { width:50px; height:50px; border-radius:50%; background:#20342b; display:grid; place-items:center; line-height:1; }
 .tnum { font-family:var(--font-lora, Georgia, serif); font-size:15px; color:#fff; }
@@ -925,24 +1071,32 @@ const seam = "/cag-fs-seam-emblem.webp";
 
 /* ── Avail-B by route ── */
 .availB { display:grid; grid-template-columns:200px minmax(0,1fr); gap:20px; margin:1rem 0 .6rem; }
-.availB-rail { position:sticky; top:calc(var(--hdr,72px) + 16px); align-self:start; }
+.availB-rail { position:sticky; top:calc(var(--hdr) + 16px); align-self:start; }
 .availB-k { font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--cp-mid); margin:0 0 6px; }
 .facet { display:block; width:100%; text-align:left; background:#fff; border:1px solid var(--cp-bd); border-radius:10px; padding:7px 10px; font-size:.78rem; color:var(--cp-ink); margin-bottom:5px; cursor:pointer; min-height:32px; }
 .facet.on { background:var(--cp-green); color:#fff; border-color:var(--cp-green); }
 .availB-ship { font-size:.68rem; color:var(--cp-mid); margin-top:10px; }
 .availB-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:14px; }
-.rcard { background:#fff; border:1px solid var(--cp-bd); border-radius:20px; overflow:hidden; box-shadow:0 2px 12px rgba(60,30,10,.05); display:flex; flex-direction:column; }
+.rcard { background:#fff; border:1px solid var(--cp-bd); border-radius:20px; overflow:hidden; box-shadow:0 2px 12px rgba(60,30,10,.05); display:flex; flex-direction:column; transition:transform .15s cubic-bezier(.4,0,.2,1), box-shadow .15s cubic-bezier(.4,0,.2,1); }
+.rcard:hover { transform:translateY(-2px); box-shadow:0 6px 22px rgba(60,30,10,.09); }
 .rcard.hide { display:none; }
+/* 4:3, never a fixed pixel height with a guessed object-position — the masters are
+   blurfill-framed so the whole bird is inside the frame at every width. */
 .rcard-photo { position:relative; }
-.rcard-photo img { width:100%; height:180px; object-fit:cover; object-position:center 30%; display:block; }
-.rbadge { position:absolute; left:8px; bottom:8px; background:rgba(255,255,255,.86); color:var(--cp-green); font-size:.6rem; font-weight:700; letter-spacing:.05em; padding:3px 8px; border-radius:50px; }
-.rcard-body { padding:12px 13px 14px; display:flex; flex-direction:column; gap:5px; flex:1; }
-.rcard-top { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
-.rcard-name { font-family:var(--font-lora, Georgia, serif); font-size:.98rem; margin:0; color:var(--cp-ink); }
-.rcard-price { color:var(--cp-claytext); font-weight:700; font-size:.9rem; white-space:nowrap; }
-.rcard-sub { font-size:.7rem; color:var(--cp-green); margin:0; font-weight:600; }
-.rcard-blurb { font-size:.78rem; margin:0 0 6px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-.rcard .btn-clay { margin-top:auto; font-size:.78rem; padding:.55rem .7rem; }
+.rcard-photo img { width:100%; aspect-ratio:4/3; height:auto; object-fit:cover; display:block; }
+.rcard-photo::after { content:""; position:absolute; inset:auto 0 0 0; height:54px; pointer-events:none;
+  background:linear-gradient(to top, rgba(28,26,24,.45), rgba(28,26,24,0)); }
+.rbadge { position:absolute; left:10px; bottom:10px; z-index:1; background:rgba(255,255,255,.94); color:var(--cp-green); font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:3px 9px; border-radius:50px; }
+.rcard-body { padding:13px 14px 15px; display:flex; flex-direction:column; gap:5px; flex:1; }
+/* auto column + nowrap price, so a wrapping name can never shove the figure off the card */
+.rcard-top { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 9px; align-items:baseline; }
+.rcard-name { font-family:var(--font-lora, Georgia, serif); font-size:1.04rem; line-height:1.2; margin:0; color:var(--cp-ink); }
+.rcard-price { color:var(--cp-claytext); font-weight:700; font-size:.95rem; white-space:nowrap; }
+.rcard-split { font-size:.74rem; margin:0; }
+.rcard-sub { font-size:.78rem; color:var(--cp-green); margin:0; font-weight:600; }
+.rcard-blurb { font-size:.82rem; margin:0 0 8px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+/* hugs its label on desktop, one line always, shared baseline via margin-top:auto */
+.rcard .rcta { margin-top:auto; align-self:start; width:auto; white-space:nowrap; font-size:.82rem; padding:.55rem 1rem; }
 
 /* ── K1 receipt + K2 price tag ── */
 .k1 { background:#fff; border:1px solid var(--cp-bd); border-radius:16px; overflow:hidden; margin:.8rem 0; }
@@ -960,8 +1114,31 @@ const seam = "/cag-fs-seam-emblem.webp";
 /* ── Images ── */
 .sec-img-wrap { margin:1.2rem 0; }
 .sec-img { display:block; width:100%; max-width:760px; aspect-ratio:1408/768; object-fit:cover; height:auto; border-radius:16px; border:1px solid var(--cp-bd); }
-.img-note { font-size:.74rem; color:var(--cp-mid); margin:.4rem 0 0; max-width:70ch; }
-.seam { display:block; margin:2rem auto; opacity:1; }
+.img-note { font-size:.8rem; color:var(--cp-mid); margin:.45rem 0 0; max-width:70ch; }
+/* Infographics carry baked-in type: native ratio, contained, NEVER cover-cropped (§1c). */
+.sec-img.inf-img { max-width:760px; width:100%; height:auto; aspect-ratio:auto; object-fit:contain; background:#fff; }
+.sec-img.inf-tall { max-width:420px; }
+/* Framed seam, not a floating logo: two clay hairlines flanking the wordmark (§4). */
+.seam-wrap { display:flex; align-items:center; gap:clamp(12px,3vw,20px); margin:2.4rem 0 1.7rem; }
+.seam-wrap::before, .seam-wrap::after { content:""; flex:1; height:1px;
+  background:linear-gradient(to right, transparent, rgba(232,96,76,.42), transparent); }
+.seam { display:block; margin:0; height:34px; width:auto; opacity:.92; flex:none; }
+
+/* ── Shipping tiers — both supplied images, one card per delivery option ── */
+.ship-tiers { display:grid; grid-template-columns:repeat(auto-fit, minmax(258px,1fr)); gap:14px; margin:1.1rem 0; }
+.ship-t { background:#fff; border:1px solid var(--cp-bd); border-radius:20px; overflow:hidden; box-shadow:0 2px 12px rgba(60,30,10,.05); }
+.ship-t img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; }
+/* Qualified with `.cpair p` on purpose: a bare `.ship-tier{color}` loses to the page's own
+   `.cpair p` rule — the exact §1l collision that rendered this text at 1.19:1 elsewhere. */
+.cpair p.ship-tier { margin:13px 15px 0; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--cp-green); font-weight:700; max-width:none; }
+.cpair p.ship-fig { margin:2px 15px 0; font-family:var(--font-lora, Georgia, serif); font-size:1.55rem; color:var(--cp-claytext); max-width:none; }
+.cpair p.ship-b { margin:5px 15px 15px; font-size:.86rem; color:var(--cp-mid); max-width:none; }
+
+/* ── Framed video (kit .fs-video), never a bare <video> ── */
+.fs-video { margin:1.2rem 0; max-width:760px; background:#20342b; border-radius:20px; overflow:hidden; }
+.fs-video video { width:100%; height:auto; display:block; aspect-ratio:16/9; object-fit:cover; background:#20342b; }
+.fs-video figcaption { padding:12px 16px; font-size:.86rem; color:#dcefe4; line-height:1.55; }
+.fsv-tag { display:inline-block; font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:#c9f2db; margin-right:8px; }
 
 /* ── Tables: F pairing routes + A comparison ── */
 .tF-wrap, .tA-wrap { overflow-x:auto; margin:1rem 0; }
@@ -973,11 +1150,17 @@ const seam = "/cag-fs-seam-emblem.webp";
 .tF tbody tr:first-child th { box-shadow:inset 3px 0 0 var(--cp-clay); }
 
 /* ── Geo cards ── */
-.geo-cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:10px; margin:1rem 0; }
-.geo-cards a { display:grid; grid-template-columns:1fr auto; gap:2px 8px; background:#fff; border:1px solid var(--cp-bd); border-radius:12px; padding:10px 12px; text-decoration:none; min-height:44px; align-content:center; }
-.geo-k { color:var(--cp-green); font-weight:700; font-size:.8rem; }
-.geo-n { grid-column:1; font-size:.7rem; color:var(--cp-mid); }
-.geo-a { grid-row:1 / span 2; align-self:center; color:var(--cp-claytext); font-weight:700; }
+/* Named areas, because `grid-row:1/span 2` on the arrow alone let auto-placement drop it
+   into column 1 and collapse the 1fr label track to one word per line. */
+.geo-cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(248px,1fr)); gap:10px; margin:1rem 0; }
+.geo-cards a { display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"k a" "n a";
+  gap:2px 10px; background:#fff; border:1px solid var(--cp-bd); border-radius:14px; padding:11px 13px;
+  text-decoration:none; min-height:44px; align-items:center;
+  transition:border-color .15s cubic-bezier(.4,0,.2,1), transform .15s cubic-bezier(.4,0,.2,1); }
+.geo-cards a:hover { border-color:var(--cp-clay); transform:translateY(-2px); }
+.geo-k { grid-area:k; color:var(--cp-green); font-weight:700; font-size:.84rem; line-height:1.3; }
+.geo-n { grid-area:n; font-size:.78rem; color:var(--cp-mid); line-height:1.3; }
+.geo-a { grid-area:a; align-self:center; color:var(--cp-claytext); font-weight:700; font-size:1rem; }
 
 /* ── Reviews ── */
 .quotes { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; margin:1rem 0; }
@@ -1035,6 +1218,11 @@ const seam = "/cag-fs-seam-emblem.webp";
 .cpair p.k1-h { color:#fff; }
 .cpair p.fs-fine { color:var(--cp-mid); }
 .cpair p.availB-ship { color:var(--cp-mid); }
+/* Same collision, the max-width axis: `.cpair p{max-width:70ch}` (0,1,1) beat the bare
+   component classes (0,1,0), so the receipt's green header band stopped at 443px inside
+   an 880px card. Measured, not inferred. */
+.cpair p.k1-h, .cpair p.xsell-k, .cpair p.fsx-k, .cpair p.availB-k,
+.cpair p.tdial-k, .cpair p.k2-tag { max-width:none; }
 
 /* ── §1k drift fix: these three classes shipped in markup with no rule ── */
 .phero-copy { min-width:0; }
@@ -1053,13 +1241,58 @@ const seam = "/cag-fs-seam-emblem.webp";
 .cpair-main p a.btn-ghost:hover { color:#fff; }
 .cpair-main p a[target="_blank"]::after { content:"\2197"; margin-left:2px; }
 
+/* ── Readable floors ──────────────────────────────────────────────────────────
+   A Playwright sweep at 375px found 108 text nodes rendering under 12.5px, down to
+   10.6px. PRODUCT.md notes the audience skews older and DESIGN.md §Accessibility
+   says text size matters more than usual here. The global --fs-h5 clamp bottoms out
+   at 11px, so this is a site-wide condition — raised page-scoped here and logged to
+   the backlog. Every desktop MAXIMUM below is unchanged, so the page still matches
+   its siblings at 1280. ─────────────────────────────────────────────────────── */
+.cpair .cag-h5 { font-size:clamp(.875rem, 1.1vw, .95rem); }
+.cpair .cag-h6 { font-size:clamp(.85rem, 1.1vw, .9rem); }
+.cpair .cs-l { font-size:clamp(.75rem, 2.2vw, .78rem); }
+.cpair .phero-ribbon li { font-size:clamp(.75rem, 2vw, .78rem); }
+.cpair .phero .eyebrow { font-size:.78rem; }
+/* Letterspaced uppercase chrome. DESIGN.md's --fs-eyebrow bottoms out at 10px; that is
+   what read as "too tiny", so the floor here is 12px and the ceiling is unchanged.
+   `.tg` / `.tdial-k` are deliberately NOT in this list: they belong to the desktop dial,
+   whose row metrics are locked cluster-wide (page-hardening §1e-bis) and which is
+   display:none at every width where the complaint applies. */
+.cpair .xsell-k, .cpair .availB-k,
+.cpair .fsx-k, .cpair .k1-h, .cpair .k2-tag { font-size:clamp(.75rem, 1vw, .78rem); }
+.cpair .availB-ship, .cpair .fsx-ship, .cpair .fsx-note { font-size:.8rem; }
+.cpair .rbadge { font-size:.75rem; }
+.cpair .rcard-split { font-size:.78rem; }
+.cpair .fsv-tag { font-size:.75rem; }
+.cpair p.ship-tier { font-size:.75rem; }
+.cpair .tF caption, .cpair .tA caption { font-size:.75rem; }
+.cpair .facet { font-size:.82rem; }
+.cpair .fsx-list li { font-size:.85rem; }
+.cpair .fs-fine { font-size:.76rem; }
+.cpair .fld, .cpair .fld2 label { font-size:.82rem; }
+.cpair .quote-c figcaption { font-size:.82rem; }
+.cpair .tF, .cpair .tA { font-size:.88rem; }
+.cpair .tF thead th, .cpair .tA thead th { font-size:.76rem; }
+.cpair .k1-list dt, .cpair .k1-list dd { font-size:.88rem; }
+.cpair .faqB-i summary { font-size:.9rem; }
+.cpair .faqB-i p { font-size:.86rem; }
+.cpair .quote-c blockquote p { font-size:.88rem; }
+/* NOT a defect, do not "fix" it: my own right-edge probe flagged `.bc-pill` at 424px in
+   a 375px viewport. `.bc-pill-wrap` is an intentional `overflow-x:auto` scroller with a
+   trailing fade mask, added deliberately so long trails swipe instead of clipping. The
+   probe was missing it from its scroller exclusion list, exactly the failure class in
+   skills/cag-gate-integrity.md. No rule belongs here. */
+
 /* ── Tablet ── */
 @media (max-width:1024px) {
   .cpair-body { grid-template-columns:1fr; }
   .tdial { display:none; }
-  .railA { display:block; position:sticky; top:var(--hdr, 72px); z-index:40; background:rgba(250,247,244,.985); border-bottom:1px solid var(--cp-bd); }
-  .railA ul { display:flex; gap:6px; overflow-x:auto; list-style:none; margin:0; padding:9px clamp(16px,4vw,48px); scrollbar-width:none; }
-  .railA a { display:inline-block; white-space:nowrap; font-size:.74rem; color:var(--cp-green); background:#eaf4ef; border-radius:50px; padding:6px 11px; text-decoration:none; min-height:24px; }
+  .railA { display:block; position:sticky; top:var(--hdr); z-index:40; background:rgba(250,247,244,.985); border-bottom:1px solid var(--cp-bd); box-shadow:0 6px 14px rgba(60,30,10,.07); }
+  .railA ul { display:flex; gap:10px; overflow-x:auto; list-style:none; margin:0; padding:9px clamp(16px,4vw,48px); scrollbar-width:none; }
+  .railA ul::-webkit-scrollbar { display:none; }
+  .railA a { display:inline-block; white-space:nowrap; font-size:.82rem; color:var(--cp-green); background:#eaf4ef; border-radius:50px; padding:7px 13px; text-decoration:none; min-height:24px; }
+  /* Anchors must clear the header AND the rail that sits under it, not the header alone. */
+  .cpair-main section { scroll-margin-top:calc(var(--hdr) + var(--rail-h) + 14px); }
   .counter-row { grid-template-columns:repeat(3, minmax(0,1fr)); }
   .fs-form { grid-template-columns:1fr; }
   .faqB { columns:1; }
@@ -1080,15 +1313,31 @@ const seam = "/cag-fs-seam-emblem.webp";
 @media (max-width:640px) {
   .counter-row { grid-template-columns:repeat(2, minmax(0,1fr)); }
   .rcard-blurb { display:none; }
+  /* Two cards per row leaves ~140px of body width: stack the name over the price so a
+     long name and a nowrap figure can never collide. */
+  .rcard-top { grid-template-columns:1fr; gap:1px; }
+  .rcard-price { font-size:1rem; }
+  .rcard .rcta { align-self:stretch; text-align:center; }
   .fld2 { grid-template-columns:1fr; }
   /* mobile table stacking — one card per row */
   .tF thead, .tA thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+  .tF caption, .tA caption { display:block; border-radius:10px 10px 0 0; }
   .tF tr, .tA tr { display:block; border:1px solid var(--cp-bd); border-radius:12px; margin-bottom:10px; background:#fff; overflow:hidden; }
-  .tF td, .tF tbody th, .tA td, .tA tbody th { display:block; border-bottom:1px dashed var(--cp-bd); }
-  .tF tbody th, .tA tbody th { background:#f6efe8; }
-  .tF td::before, .tA td::before { content:attr(data-label); display:block; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--cp-mid); margin-bottom:2px; }
+  .tF td, .tF tbody th, .tA td, .tA tbody th { display:block; border-bottom:1px dashed var(--cp-bd); padding:9px 13px; }
+  .tF tbody th, .tA tbody th { background:#f6efe8; font-size:.95rem; }
+  .tF td::before, .tA td::before { content:attr(data-label); display:block; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--cp-mid); margin-bottom:2px; }
   .tF tbody tr:first-child th { box-shadow:none; }
+  /* The five-fact receipt: two columns in a 343px box crushes both. Stack them. */
+  .k1-list > div { grid-template-columns:1fr; gap:2px; padding:9px 0; }
+  .k2 { flex-direction:column; align-items:flex-start; gap:3px; }
+  .k2-note { max-width:none; }
   .sec-img { border-radius:12px; }
+  /* Scene photos (a room, people, several birds) take the wider 5:4 mobile frame;
+     single-bird portraits keep the taller 4:5 above. Infographics take neither. */
+  .cpair .sec-img.og-photo.og-scene { aspect-ratio:5/4; }   /* beats .og-photo's 4:5 on specificity, not on source order */
+  .cpair .sec-img.inf-img { width:100vw; margin-left:calc(50% - 50vw); max-width:none; border-radius:0; border-left:0; border-right:0; }
+  .cpair .sec-img.inf-tall { width:auto; margin-left:0; max-width:100%; border-radius:12px; border:1px solid var(--cp-bd); }
+  .ship-tiers { gap:12px; }
 }
 @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
 </style>
