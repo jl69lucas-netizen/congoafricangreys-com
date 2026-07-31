@@ -28,7 +28,8 @@
 
 | Path | Responsibility |
 |---|---|
-| `tests/render/playwright.config.ts` | Three viewport projects, static server, reporters |
+| `tests/render/playwright.config.ts` | Three viewport projects, two static servers, reporters |
+| `tests/render/lib/servers.ts` | Port constants + `fixtureUrl()`. **Two servers, not one** — see below. |
 | `tests/render/lib/registry.ts` | Check contract types + the registry array. No logic. |
 | `tests/render/lib/probes.ts` | Shared measurement helpers: `settlePage`, `measureTopChrome` |
 | `tests/render/lib/scorecard.ts` | Writes one partial result file per (page, viewport) |
@@ -44,6 +45,20 @@
 | `scripts/build_scorecard.mjs` | Merges partials into `data/quality/scorecards/` |
 
 Checks live in `checks/*.ts` (not `*.spec.ts`) so Playwright does not collect them as test files; only `meta.spec.ts` and `pages.spec.ts` are tests.
+
+### Correction applied during Task 1 — two servers, not one
+
+The original plan served the **repo root** on one port and addressed pages as `/dist/<slug>/`.
+That is wrong, and wrong in the most dangerous direction. Built pages reference assets with
+absolute paths (`/images/…`, `/cag-header-logo-160.webp`) that resolve against `dist/`, so a
+repo-root server 404s **all 58 images** on the congo-pair page. A 404'd image has
+`naturalWidth === 0`, which every IMG check skips — so `img-srcset-within-2x` would have
+reported a **clean page on a page full of oversized images**, and `examined` would have been
+zero. The harness would have lied in exactly the way it exists to prevent.
+
+Corrected: `dist/` is served on **4321** (the `baseURL`, pages addressed as `/<slug>/`), and
+the repo root on **4322** for fixtures, reached via `fixtureUrl()` from `lib/servers.ts`.
+Verified: 58 images, 0 broken, 58 loaded.
 
 ---
 
@@ -328,6 +343,7 @@ Create `tests/render/meta.spec.ts`:
 ```ts
 import { test, expect } from '@playwright/test';
 import { registry } from './lib/registry.js';
+import { fixtureUrl } from './lib/servers.js';
 import './checks/index.js';
 
 const VIEWPORT = 1280;
@@ -342,7 +358,7 @@ test('the registry is not empty', () => {
 for (const check of registry) {
   test.describe(`${check.id} [${check.family}]`, () => {
     test('fires on the known_broken fixture', async ({ page }) => {
-      const res = await page.goto(`/tests/render/fixtures/known_broken/${check.id}.html`);
+      const res = await page.goto(fixtureUrl('known_broken', check.id));
       expect(res?.status(), 'known_broken fixture must exist').toBe(200);
       const result = await check.run(page, VIEWPORT);
       expect(result.examined, 'examined must be > 0').toBeGreaterThan(0);
@@ -353,7 +369,7 @@ for (const check of registry) {
     });
 
     test('is silent on the known_good fixture', async ({ page }) => {
-      const res = await page.goto(`/tests/render/fixtures/known_good/${check.id}.html`);
+      const res = await page.goto(fixtureUrl('known_good', check.id));
       expect(res?.status(), 'known_good fixture must exist').toBe(200);
       const result = await check.run(page, VIEWPORT);
       expect(result.examined, 'examined must be > 0').toBeGreaterThan(0);
@@ -1300,7 +1316,7 @@ for (const target of targets.pages) {
 
   test(`${target.slug}`, async ({ page }, testInfo) => {
     const viewport = testInfo.project.use.viewport!.width;
-    const res = await page.goto(`/dist/${target.slug}/`);
+    const res = await page.goto(`/${target.slug}/`);
     expect(res?.status(), `${target.slug} must be built`).toBe(200);
 
     const defects: Defect[] = [];
