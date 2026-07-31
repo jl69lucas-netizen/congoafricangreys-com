@@ -258,12 +258,14 @@ const seam = "/cag-fs-seam-emblem.webp";
             {routes.map((r) => (
               <article class="rcard" data-facet={r.facet}>
                 <div class="rcard-photo">
-                  {/* sizes matches what the grid actually renders — 3 columns of ~212px at
-                      1280, ~232px on tablet, 2 columns of ~164px at 375. The old flat
-                      "240px" pulled the 640w master into a 316px box on every card. */}
+                  {/* One `sizes` entry per layout the grid actually has: 1 full-width card
+                      ≤640 (~345px at 375), 2 columns 641–980 (~346px at 768), 3 columns of
+                      ~232px 981–1024, 3 of ~212px above. Every wrong value here costs
+                      real bytes or real sharpness — a flat "240px" pulled the 640w master
+                      into a 316px box, and "232px" on tablet under-served a 346px card. */}
                   <img src={`${r.img}-480.webp`}
                        srcset={`${r.img}-320.webp 320w, ${r.img}-480.webp 480w, ${r.img}.webp 640w`}
-                       sizes="(max-width:640px) 44vw, (max-width:1024px) 232px, 212px" width="640" height="480"
+                       sizes="(max-width:640px) 92vw, (max-width:980px) 46vw, (max-width:1024px) 232px, 212px" width="640" height="480"
                        alt={r.alt} loading="lazy" decoding="async" />
                   <span class="rbadge">{r.facet}</span>
                 </div>
@@ -1383,23 +1385,22 @@ const seam = "/cag-fs-seam-emblem.webp";
      Equal full-width rows instead — tidier, and a bigger target for each. */
   .phero-cta { display:grid; grid-template-columns:1fr; gap:9px; }
   .phero-cta a { text-align:center; }
-  /* Two cards per row leaves ~136px of body width — too narrow for a name, a price, a
-     trust line AND a description, which is why the description used to be display:none
-     here. One horizontal card per row instead: nothing is hidden, nothing shares a line,
-     and six cards cost ~1,400px of scroll instead of ~2,500px stacked vertically. */
-  .availB-grid { grid-template-columns:1fr; gap:11px; }
-  .rcard { flex-direction:row; }
-  .rcard-photo { flex:0 0 37%; align-self:stretch; min-height:132px; }
-  .rcard-photo img { position:absolute; inset:0; width:100%; height:100%; aspect-ratio:auto; }
-  .rcard-photo::after { height:64px; }
-  /* The photo column is ~127px here, narrower than "BUILD YOUR OWN PAIR" — pinning the
-     label to `left` alone clipped it against .rcard's overflow:hidden. Pin both edges and
-     let it wrap onto a second line. */
-  .rbadge { left:9px; right:9px; bottom:6px; font-size:.64rem; letter-spacing:.06em;
-    white-space:normal; line-height:1.2; }
-  .rcard-body { padding:11px 13px 12px; min-width:0; }
-  .cpair p.rcard-blurb { -webkit-line-clamp:2; }
-  .rcard .rcta { align-self:stretch; text-align:center; }
+  /* ONE card per row, photo first at full card width, every detail line stacked beneath.
+     Two-up left ~136px of body width (which is why the description used to be
+     display:none), and the horizontal split that replaced it squeezed the photo into a
+     ~127px column and cut the birds' heads in half. Full width solves both: the masters
+     are 640x480 and this box is 4:3, so `cover` crops nothing — the whole bird, face
+     included, is inside the frame — and the text gets the full 343px measure. */
+  .availB-grid { grid-template-columns:1fr; gap:14px; }
+  .rcard-photo::after { height:76px; }
+  .rbadge { left:14px; right:14px; bottom:10px; font-size:.7rem; letter-spacing:.08em; }
+  .rcard-body { padding:14px 16px 16px; gap:5px; }
+  .rcard-name { font-size:1.14rem; }
+  .cpair p.rcard-price { font-size:1.1rem; }
+  .cpair p.rcard-sub { font-size:.82rem; }
+  .cpair p.rcard-blurb { font-size:.86rem; -webkit-line-clamp:3; }
+  .cpair p.rcard-trust, .cpair p.rcard-ship { font-size:.78rem; }
+  .rcard .rcta { align-self:stretch; text-align:center; padding:.68rem 1rem; font-size:.88rem; }
   .fld2 { grid-template-columns:1fr; }
   /* mobile table stacking — one card per row */
   .tF thead, .tA thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
