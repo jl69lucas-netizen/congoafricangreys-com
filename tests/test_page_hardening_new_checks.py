@@ -463,6 +463,30 @@ def test_unguarded_rail_smooth_scroll_still_warns():
     assert len(found) == 1, found
 
 
+# The congo-pair page documents WHY it sets scroll-behavior:auto, and the phrase
+# `scroll-behavior:smooth` inside that comment was reported as a defect (2026-07-31).
+# Third recurrence of the strip-comments trap, after icon-baseline (2026-07-26) and
+# the §1l selector check (2026-07-29). Prose is not code.
+COMMENTED_SMOOTH = """
+/* A global `scroll-behavior:smooth` turns one rail tap into a multi-second crawl,
+   so this page pins scroll-behavior:auto instead. */
+:global(html:has(.cpair)){scroll-behavior:auto;}
+"""
+
+
+def test_smooth_scroll_quoted_in_a_comment_is_not_a_defect():
+    assert checks_named(run(H.check_smooth_scroll, [("cpair.astro", COMMENTED_SMOOTH)]),
+                        "smooth-scroll-breaks-anchors") == []
+
+
+def test_comment_stripping_does_not_blind_the_check():
+    """The real declaration must still warn when it sits beside such a comment."""
+    src = COMMENTED_SMOOTH + "\n.cpair .railA ul{overflow-x:auto;scroll-behavior:smooth;}\n"
+    found = checks_named(run(H.check_smooth_scroll, [("cpair.astro", src)]),
+                         "smooth-scroll-breaks-anchors")
+    assert len(found) == 1, found
+
+
 # ── 10. markup-css-drift (§1k) ───────────────────────────────────────────────
 # The 2026-07-28 adoption-cost defect. The page was assembled by porting the CSS
 # kit and hand-writing markup that drifted from it: 101 classes styled and never
