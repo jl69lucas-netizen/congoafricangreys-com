@@ -23,11 +23,25 @@ from PIL import Image, ImageOps, ImageFilter, ImageEnhance
 
 def load(p): return Image.open(p).convert("RGB")
 
-def blurfill(im, W, H, blur, fgw, fgh):
+def fit_subject(im, fgw, fgh, allow_upscale):
+    """Contain the subject inside the subject-safe box.
+
+    thumbnail() only ever SHRINKS, so a small master (e.g. 310x400) left a postage
+    stamp floating in blur inside a 1408x768 canvas. --fgup permits the upscale;
+    CLAUDE.md IMAGE-DESIGNS 1a is explicit that a low-res master is upscaled to the
+    box on purpose — uniform sizing beats pixel-peeping.
+    """
+    if not allow_upscale:
+        fg = im.copy(); fg.thumbnail((fgw, fgh), Image.LANCZOS)
+        return fg
+    s = min(fgw / im.width, fgh / im.height)
+    return im.resize((max(1, round(im.width * s)), max(1, round(im.height * s))), Image.LANCZOS)
+
+def blurfill(im, W, H, blur, fgw, fgh, fgup=False):
     bg = ImageOps.fit(im, (W, H), Image.LANCZOS)               # cover
     bg = bg.filter(ImageFilter.GaussianBlur(blur))
     bg = ImageEnhance.Brightness(bg).enhance(0.92)             # settle it behind the subject
-    fg = im.copy(); fg.thumbnail((fgw, fgh), Image.LANCZOS)    # contain within the subject-safe box
+    fg = fit_subject(im, fgw, fgh, fgup)                       # contain within the subject-safe box
     canvas = bg.copy()
     canvas.paste(fg, ((W - fg.width) // 2, (H - fg.height) // 2))
     return canvas
@@ -75,13 +89,15 @@ def main():
     # dual-safe: constrain the sharp subject so a later mobile 4:5 cover crop (central 4/5*H wide)
     # never clips it. Default full box; pass --mobcrop 4:5 to auto-set, or --fgmaxw explicitly.
     ap.add_argument("--mobcrop", default=""); ap.add_argument("--fgmaxw", type=int, default=0)
+    # opt-in: let a small master scale UP to the subject-safe box instead of floating in blur
+    ap.add_argument("--fgup", action="store_true")
     a = ap.parse_args()
     fgw, fgh = a.w, a.h
     if a.fgmaxw: fgw = a.fgmaxw
     elif a.mobcrop:
         rw, rh = (int(x) for x in a.mobcrop.split(":")); fgw = int(a.h * rw / rh)
     im = load(a.src)
-    fn = {"blurfill": lambda: blurfill(im, a.w, a.h, a.blur, fgw, fgh),
+    fn = {"blurfill": lambda: blurfill(im, a.w, a.h, a.blur, fgw, fgh, a.fgup),
           "contain":  lambda: contain(im, a.w, a.h),
           "topcover": lambda: topcover(im, a.w, a.h)}[a.style]
     out = fn()
