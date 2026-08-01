@@ -629,3 +629,27 @@ test.describe('measureTopChrome is deterministic and finds late-pinning chrome',
     expect(afterReset.height).toBe(fresh.height);
   });
 });
+
+test.describe('measureTopChrome does not absorb sticky page content', () => {
+  const onlyOnce = (testInfo: { project: { name: string }; config: { projects: { name: string }[] } }) =>
+    test.skip(
+      testInfo.project.name !== testInfo.config.projects[0].name,
+      `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
+    );
+
+  test('a sticky sidebar pinned at top:0 is not counted as chrome', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_broken/chrome-sticky-sidebar.html`);
+
+    // Vertical adjacency alone absorbed this 300px-wide sidebar into the band. On the
+    // live site that pulled aside.availB-rail (287px) and div.dial-card (672px) in,
+    // reported "chrome measures 784px", tripped the implausible guard, and left NAV
+    // examining ZERO units on those page-viewports — worse than the too-low band it
+    // replaced, because a page that is not judged reports no defects at all.
+    const chrome = await measureTopChrome(page);
+    expect(chrome.height).toBe(96);
+    expect(chrome.parts.length).toBe(1);
+    expect(chrome.implausible).toBe(false);
+  });
+});
