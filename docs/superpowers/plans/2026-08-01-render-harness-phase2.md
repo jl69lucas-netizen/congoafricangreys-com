@@ -2293,4 +2293,45 @@ directory mtimes in would close it but trades a rare false PASS for a rare false
 on this codebase false FAIL is the more expensive error — a gate that cries wolf once gets
 ignored forever. Recorded as a documented limitation in `freshness.ts` instead of a test.
 
+### Task 1 — the fix for the fix: `resetRaw` cannot live at spec-module scope (commit `9e1e58a`)
+
+Placing `resetRaw()` at module scope in `pages.spec.ts` was wrong, and worse than the bug it
+closed. **Playwright loads a spec file once during collection and again in every worker
+process**, so the reset ran repeatedly, mid-run, deleting partials earlier workers had
+already written. Measured on the real harness: one page across the three viewport projects
+wrote 3 partials and kept **1** (the last worker's load wiped the other two). Scaled to the
+full suite that is 27 written, 9 kept — and `build_scorecard.mjs` would then print
+`expected 27 partials, found 9`, whose documented meaning is "a page test crashed." Nothing
+crashed. The gate would have issued a **false diagnosis**, which is the cry-wolf failure this
+harness exists to prevent, shipping inside the fix for it.
+
+`writeManifest` had always been at module scope and was fine, because rewriting identical
+content is idempotent. **Deletion is not.** That asymmetry is the transferable lesson.
+
+Fixed by `tests/render/global-setup.ts`, registered as Playwright `globalSetup` — the only
+hook that runs exactly once, in the main process, before any worker spawns. It performs
+`resetRaw()` then `writeManifest()`, deriving the expected partial count from
+`config.projects.length` rather than a hardcoded 3, so adding a viewport project cannot
+silently break Guard 1. Pinned by a nested-Playwright regression probe over a disposable
+3-project suite, verified red (`Expected: 3, Received: 1`) against the old placement.
+
+**`checkDistFreshness` deliberately stayed in `pages.spec.ts`.** Moving it to `globalSetup`
+was tried and rejected on evidence: `globalSetup` fires for *every* invocation of the config,
+including `npm run test:render:meta`, so the freshness throw would have dist-gated the meta
+suite and broken the approved invariant that the gate-integrity gate stays runnable while a
+build is broken. Freshness is a pure read, so per-worker execution is redundant, not harmful.
+
+**Accepted consequence:** because `globalSetup` fires for meta runs, `npm run test:render:meta`
+clears `data/quality/raw/`. Chosen over invocation-sniffing, because the documented order is
+meta-then-pages and the failure is loud (`expected N, found 0`) rather than quiet — and a
+guard built on argv inspection would be exactly the kind of quiet correctness mechanism that
+had just failed twice.
+
+**A near-miss worth recording:** the regression probe itself initially passed for the wrong
+reason. Rooted under the OS tmpdir it could not resolve `@playwright/test`, so both variants
+silently no-op'd — and `0 survivors` satisfies `< 3` exactly as `1` does, so the "broken"
+assertion went green while testing nothing. Re-rooted under `tests/render/.probe-*/`
+(gitignored). A test for a gate that passes for the wrong reason is the same defect one level
+up, and it nearly shipped.
+
 
