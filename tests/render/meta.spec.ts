@@ -8,6 +8,7 @@ import {
   rmSync,
   existsSync,
   readdirSync,
+  readFileSync,
 } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
@@ -179,12 +180,23 @@ test.describe('resetRaw', () => {
 });
 
 test.describe('globalSetup vs spec-module-scope regression probe', () => {
-  // This does not merely restate the bug — it reproduces the actual causal mechanism
-  // (Playwright loading a spec module once per worker PROCESS, not once per RUN) with a
-  // throwaway 3-project suite and the real resetRaw(), then proves both directions:
-  // module scope loses partials, globalSetup does not. If resetRaw() is ever moved back
-  // to spec module scope in pages.spec.ts or global-setup.ts, the first test here goes
-  // red — decoration would stay green no matter where the call lives.
+  // Two DIFFERENT things are pinned here, deliberately not conflated:
+  //
+  // 1. The synthetic probe below (runProbe + its two tests) proves the general
+  //    Playwright LOADING MECHANISM: a spec module's top-level code runs once per
+  //    worker PROCESS, not once per run, so a destructive call there can destroy an
+  //    earlier worker's output, and moving that call into globalSetup fixes it. It
+  //    builds its own throwaway spec/config from scratch and never reads
+  //    pages.spec.ts or global-setup.ts — so it CANNOT detect a regression in this
+  //    repo's actual wiring. (An earlier version of this comment claimed it could;
+  //    it was reviewed, the claim was reproduced as false — reintroducing
+  //    resetRaw() at pages.spec.ts module scope left both probe tests green — and
+  //    the comment is corrected here instead of left to mislead the next reader.)
+  //
+  // 2. The 'resetRaw() lives in global-setup.ts, never in pages.spec.ts' test below
+  //    pins the actual PRODUCTION WIRING by reading both real files from disk. THAT
+  //    is the one that goes red if resetRaw() is ever moved back to pages.spec.ts
+  //    module scope — confirmed by doing exactly that and reverting (2026-08-01).
   const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
   const playwrightCli = resolve(repoRoot, 'node_modules', '@playwright', 'test', 'cli.js');
   const scorecardAbs = resolve(repoRoot, 'tests', 'render', 'lib', 'scorecard.ts');
@@ -273,19 +285,56 @@ test.describe('globalSetup vs spec-module-scope regression probe', () => {
     return survivors;
   }
 
-  test("resetRaw() at spec module scope loses other workers' partials", () => {
+  // Viewport-independent: the probe shells out to a whole nested Playwright run and
+  // gains nothing from repeating across vp375/vp768/vp1280 — skip on the other two
+  // projects so the meta suite isn't paying for 3x identical signal.
+  test("resetRaw() at spec module scope loses other workers' partials", ({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'vp375', 'viewport-independent; runs once');
     const survivors = runProbe(true);
     expect(
+      // > 0 first: a probe that silently fails to run at all (e.g. the tmpdir
+      // MODULE_NOT_FOUND case caught while building this) also produces 0 survivors,
+      // which satisfies "< 3" for the wrong reason. Pin that this test's OWN signal
+      // is "at least one worker actually ran and wrote its file", not borrowed from
+      // test 2 failing.
       survivors.length,
       `expected fewer than 3 of 3 projects' partials to survive module-scope reset; found ${JSON.stringify(survivors)}`,
-    ).toBeLessThan(3);
+    ).toBeGreaterThan(0);
+    expect(survivors.length).toBeLessThan(3);
   });
 
-  test('resetRaw() in globalSetup preserves every project’s partial', () => {
+  test('resetRaw() in globalSetup preserves every project’s partial', ({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'vp375', 'viewport-independent; runs once');
     const survivors = runProbe(false);
     expect(
       survivors.length,
       `expected all 3 projects' partials to survive; found ${JSON.stringify(survivors)}`,
     ).toBe(3);
+  });
+});
+
+test.describe('resetRaw placement — pins the actual production wiring', () => {
+  // Unlike the synthetic probe above, this reads the REAL files. Comments are
+  // stripped before matching so prose that mentions "resetRaw()" — including the
+  // paragraph in pages.spec.ts explaining why the call moved OUT of that file —
+  // can't produce a false positive; only a call in live code counts.
+  const stripComments = (src: string) => src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+  const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
+
+  test('resetRaw() is called in global-setup.ts and nowhere in pages.spec.ts', () => {
+    const globalSetupCode = stripComments(readFileSync(resolve(repoRoot, 'tests', 'render', 'global-setup.ts'), 'utf8'));
+    const pagesSpecCode = stripComments(readFileSync(resolve(repoRoot, 'tests', 'render', 'pages.spec.ts'), 'utf8'));
+
+    expect(
+      globalSetupCode,
+      'global-setup.ts must call resetRaw() — that is the entire fix this file exists for',
+    ).toContain('resetRaw(');
+    expect(
+      pagesSpecCode,
+      'resetRaw() must not be called anywhere in pages.spec.ts — Playwright loads a spec ' +
+        "module's top-level code once per WORKER PROCESS, not once per run, so a destructive " +
+        "call there destroys earlier workers' already-written partials (reproduced 2026-08-01: " +
+        '3 tests across 3 viewport projects left exactly 1 partial standing). See global-setup.ts.',
+    ).not.toContain('resetRaw(');
   });
 });
