@@ -45,53 +45,68 @@ register({
  * Names the ONE page-level thing most likely to be producing the landings we measured.
  * Returns null rather than guessing — a wrong root cause is worse than none, because it
  * sends the next person to edit a file that was never the problem.
+ *
+ * Takes `targets`, `lo` and `hi` FROM THE CALLER rather than re-deriving them. Two
+ * separate defects came out of the old self-service version:
+ *
+ * 1. It rebuilt its own id set from every `a[href^="#"]` with NO box or visibility
+ *    filter, while the headline counted the box-filtered `targets`. The scorecards read
+ *    "18 of 18 in-page links ... 1 of 19 targets" — two counts over two different
+ *    populations printed side by side, which reads as "1 of the 19 failures".
+ * 2. It recomputed `chromeH ± 8/60` inline, so the diagnostic's idea of the band could
+ *    silently drift from the band that actually DECIDES a failure. One source now.
+ *
+ * Every branch names the measured quantity — what a target DECLARES — never a landing,
+ * because that is what this function inspects. And when both cohorts exist it reports
+ * BOTH: naming only the majority silently drops the targets that need the opposite fix,
+ * which is a milder form of the misattribution this function was rewritten to remove.
  */
-async function diagnoseLandingCause(page: Page, chromeHeight: number): Promise<string | null> {
-  return page.evaluate((chromeH: number) => {
-    const docH = document.documentElement.scrollHeight;
-    const behavior = getComputedStyle(document.documentElement).scrollBehavior;
+async function diagnoseLandingCause(
+  page: Page,
+  targets: string[],
+  lo: number,
+  hi: number,
+): Promise<string | null> {
+  return page.evaluate(
+    ({ hrefs, lo, hi }: { hrefs: string[]; lo: number; hi: number }) => {
+      const docH = document.documentElement.scrollHeight;
+      const behavior = getComputedStyle(document.documentElement).scrollBehavior;
 
-    const ids = new Set(
-      Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'))
-        .map((a) => (a.getAttribute('href') || '').slice(1))
-        .filter(Boolean)
-        .map((h) => decodeURIComponent(h)),
-    );
-    let seen = 0;
-    let short = 0;
-    let long = 0;
-    for (const id of ids) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-      seen++;
-      const smt = parseFloat(getComputedStyle(el).scrollMarginTop || '0');
-      // The band nav.ts judges against is [chromeH - 8, chromeH + 60]. A target is
-      // "short" when it lands under the chrome and "long" when it lands past the far
-      // edge. Testing only `short` reported an undershoot cause for every overshooting
-      // page, pointing the reader at the opposite CSS change from the one needed.
-      if (smt < chromeH - 8) short++;
-      else if (smt > chromeH + 60) long++;
-    }
+      let seen = 0;
+      let short = 0;
+      let long = 0;
+      for (const href of hrefs) {
+        const el = document.getElementById(decodeURIComponent(href.slice(1)));
+        if (!el) continue;
+        seen++;
+        const smt = parseFloat(getComputedStyle(el).scrollMarginTop || '0');
+        if (smt < lo) short++;
+        else if (smt > hi) long++;
+      }
 
-    if (seen && long === seen) {
-      return `every target overshoots — scroll-margin-top sits over the ${chromeH}px of pinned chrome plus the 60px tolerance`;
-    }
-    if (seen && short === seen) {
-      return `every target's scroll-margin-top is under the ${chromeH}px of pinned chrome`;
-    }
-    // Mixed or minority cases: name the larger cohort, and never present a minority
-    // as "the" root cause without saying how small it is.
-    if (long > short) {
-      return `${long} of ${seen} targets overshoot the ${chromeH}px of pinned chrome by more than 60px`;
-    }
-    if (short) {
-      return `${short} of ${seen} targets have scroll-margin-top under the ${chromeH}px of pinned chrome`;
-    }
-    if (behavior === 'smooth' && docH > 8000) {
-      return `html{scroll-behavior:smooth} on a ${docH}px document`;
-    }
-    return null;
-  }, chromeHeight);
+      const over = `declare scroll-margin-top past the ${hi}px far edge`;
+      const under = `declare scroll-margin-top under the ${lo}px near edge`;
+
+      // Every branch requires its own cohort to be NON-EMPTY, so a zero count can never
+      // be printed and can never preempt the scroll-behavior branch below it. The old
+      // `long > short` form returned "0 of 19 targets overshoot" whenever both were
+      // zero — reachable in practice, because the last anchor on a page often cannot
+      // reach its offset at the document end and so lands outside the band while every
+      // scroll-margin-top on the page is correct.
+      if (long && short) {
+        return `${long} of ${seen} targets ${over} and ${short} ${under} — the two need opposite fixes`;
+      }
+      if (long && long === seen) return `all ${seen} targets ${over}`;
+      if (short && short === seen) return `all ${seen} targets ${under}`;
+      if (long) return `${long} of ${seen} targets ${over}`;
+      if (short) return `${short} of ${seen} targets ${under}`;
+      if (behavior === 'smooth' && docH > 8000) {
+        return `html{scroll-behavior:smooth} on a ${docH}px document`;
+      }
+      return null;
+    },
+    { hrefs: targets, lo, hi },
+  );
 }
 
 register({
@@ -207,7 +222,7 @@ register({
     const chromeDesc = `${chrome.height}px = ${chrome.parts.map((p) => `${p.tag}:${p.height}`).join('+')}`;
 
     if (missed.length) {
-      const cause = await diagnoseLandingCause(page, chrome.height);
+      const cause = await diagnoseLandingCause(page, targets, lo, hi);
       defects.push({
         checkId: 'nav-jump-target-lands',
         family: 'NAV' as const,
