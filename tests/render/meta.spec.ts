@@ -1,7 +1,18 @@
 import { test, expect } from '@playwright/test';
-import { mkdtempSync, mkdirSync, writeFileSync, utimesSync, symlinkSync, rmSync, existsSync } from 'node:fs';
+import {
+  mkdtempSync,
+  mkdirSync,
+  writeFileSync,
+  utimesSync,
+  symlinkSync,
+  rmSync,
+  existsSync,
+  readdirSync,
+} from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { registry } from './lib/registry.js';
 import { fixtureUrl } from './lib/servers.js';
 import { checkDistFreshness } from './lib/freshness.js';
@@ -164,5 +175,117 @@ test.describe('resetRaw', () => {
     writeFileSync(join(dir, '_manifest.json'), '{}');
     resetRaw(dir);
     expect(existsSync(dir)).toBe(false);
+  });
+});
+
+test.describe('globalSetup vs spec-module-scope regression probe', () => {
+  // This does not merely restate the bug — it reproduces the actual causal mechanism
+  // (Playwright loading a spec module once per worker PROCESS, not once per RUN) with a
+  // throwaway 3-project suite and the real resetRaw(), then proves both directions:
+  // module scope loses partials, globalSetup does not. If resetRaw() is ever moved back
+  // to spec module scope in pages.spec.ts or global-setup.ts, the first test here goes
+  // red — decoration would stay green no matter where the call lives.
+  const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
+  const playwrightCli = resolve(repoRoot, 'node_modules', '@playwright', 'test', 'cli.js');
+  const scorecardAbs = resolve(repoRoot, 'tests', 'render', 'lib', 'scorecard.ts');
+
+  /**
+   * Builds and runs a disposable 3-project, 1-test-per-project Playwright suite whose
+   * only job is to write one file per project into a shared scratch RAW dir, with
+   * resetRaw() placed either at the probe spec's module scope (the old, broken
+   * pattern) or inside a probe globalSetup (the fix). Returns which of the 3 files
+   * survived. `workers: 2` mirrors the real playwright.config.ts, since the real bug
+   * was observed at exactly that worker count on the real harness (2026-08-01).
+   *
+   * The probe directory is created UNDER tests/render/, not the OS tmpdir — Node's
+   * module resolution walks up from a file's own location looking for node_modules,
+   * and a probe.config.ts living outside the repo tree cannot find `@playwright/test`
+   * at all. First attempt used tmpdir() and both variants silently failed to even
+   * start (MODULE_NOT_FOUND), which made the "broken" case pass for the wrong reason
+   * (0 survivors satisfies "< 3" same as 1 does) — decoration, caught before it shipped.
+   */
+  function runProbe(resetAtModuleScope: boolean): string[] {
+    const probeRoot = mkdtempSync(resolve(repoRoot, 'tests', 'render', '.probe-'));
+    const rawDir = join(probeRoot, 'raw');
+    mkdirSync(rawDir, { recursive: true });
+    const rawDirLit = JSON.stringify(rawDir);
+    const scorecardLit = JSON.stringify(scorecardAbs);
+    // mkdirSync here mirrors production writePartial(), which also recreates RAW_DIR
+    // before every write — resetRaw() deletes the directory outright, so whichever
+    // side runs it (module scope or globalSetup) leaves nothing for a bare
+    // writeFileSync to write into.
+    const writeOnePartial =
+      `test('write-one-partial', ({}, testInfo) => {\n` +
+      `  mkdirSync(${rawDirLit}, { recursive: true });\n` +
+      `  writeFileSync(join(${rawDirLit}, testInfo.project.name + '.json'), '{}');\n` +
+      `});\n`;
+
+    writeFileSync(
+      join(probeRoot, 'probe.spec.ts'),
+      resetAtModuleScope
+        ? `import { test } from '@playwright/test';\n` +
+            `import { writeFileSync, mkdirSync } from 'node:fs';\n` +
+            `import { join } from 'node:path';\n` +
+            `import { resetRaw } from ${scorecardLit};\n` +
+            `resetRaw(${rawDirLit}); // BROKEN: module scope runs once per worker process\n` +
+            writeOnePartial
+        : `import { test } from '@playwright/test';\n` +
+            `import { writeFileSync, mkdirSync } from 'node:fs';\n` +
+            `import { join } from 'node:path';\n` +
+            writeOnePartial,
+    );
+
+    if (!resetAtModuleScope) {
+      writeFileSync(
+        join(probeRoot, 'probe-global-setup.ts'),
+        `import { resetRaw } from ${scorecardLit};\n` +
+          `export default function globalSetup() { resetRaw(${rawDirLit}); } // FIX: runs exactly once\n`,
+      );
+    }
+
+    writeFileSync(
+      join(probeRoot, 'probe.config.ts'),
+      `import { defineConfig } from '@playwright/test';\n` +
+        `export default defineConfig({\n` +
+        `  testDir: ${JSON.stringify(probeRoot)},\n` +
+        `  testMatch: ['probe.spec.ts'],\n` +
+        `  fullyParallel: false,\n` +
+        `  workers: 2,\n` +
+        `  reporter: [['dot']],\n` +
+        (resetAtModuleScope ? '' : `  globalSetup: ${JSON.stringify(join(probeRoot, 'probe-global-setup.ts'))},\n`) +
+        `  projects: [{ name: 'a' }, { name: 'b' }, { name: 'c' }],\n` +
+        `});\n`,
+    );
+
+    try {
+      execFileSync(process.execPath, [playwrightCli, 'test', '-c', join(probeRoot, 'probe.config.ts')], {
+        cwd: repoRoot,
+        timeout: 30_000,
+        stdio: 'pipe',
+      });
+    } catch {
+      // Nothing here depends on Playwright's own exit code — only on how many
+      // scratch files survive in rawDir. A non-zero exit changes nothing.
+    }
+
+    const survivors = existsSync(rawDir) ? readdirSync(rawDir) : [];
+    rmSync(probeRoot, { recursive: true, force: true });
+    return survivors;
+  }
+
+  test("resetRaw() at spec module scope loses other workers' partials", () => {
+    const survivors = runProbe(true);
+    expect(
+      survivors.length,
+      `expected fewer than 3 of 3 projects' partials to survive module-scope reset; found ${JSON.stringify(survivors)}`,
+    ).toBeLessThan(3);
+  });
+
+  test('resetRaw() in globalSetup preserves every project’s partial', () => {
+    const survivors = runProbe(false);
+    expect(
+      survivors.length,
+      `expected all 3 projects' partials to survive; found ${JSON.stringify(survivors)}`,
+    ).toBe(3);
   });
 });
