@@ -141,8 +141,12 @@ export async function measureTopChrome(page: Page): Promise<TopChrome> {
     };
   });
 
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.waitForTimeout(120);
+  // Instant, not `scrollTo(0, 0)`. That plain form is smooth-ANIMATED under the site's
+  // global `html{scroll-behavior:smooth}` — the exact shape of the bug removed from
+  // nav.ts. It happened to be harmless here only because this animation's destination is
+  // also 0, so it was safe by coincidence rather than by design. Left as-is it is the
+  // nearest wrong pattern for the next reader to copy, one function above its own fix.
+  await resetScrollInstant(page);
   return result;
 }
 
@@ -156,8 +160,17 @@ export async function measureTopChrome(page: Page): Promise<TopChrome> {
  * (in ScrollOptions, 'auto' means "use the computed style", which is the trap).
  */
 export async function resetScrollInstant(page: Page): Promise<void> {
-  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }));
-  await page.waitForTimeout(50);
+  // An instant scroll sets scrollY to 0 SYNCHRONOUSLY but does not CANCEL an animation
+  // already in flight. Measured: a smooth scroll toward 20000 interrupted at y=1213 read
+  // 0 immediately, then resurrected to 485 one frame later and stayed there. So the wait
+  // below is not decoration — it is the window in which a surviving animation reveals
+  // itself, and re-asserting afterwards is what stops one slow target from contaminating
+  // the next one's landing measurement.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }));
+    await page.waitForTimeout(50);
+    if ((await page.evaluate(() => window.scrollY)) === 0) return;
+  }
 }
 
 export interface ScrollSettle {
@@ -165,6 +178,14 @@ export interface ScrollSettle {
   /** False means it was still moving when the budget ran out — that is a finding, not a landing. */
   settled: boolean;
   ms: number;
+  /**
+   * Pixels moved over the final tick. Only meaningful when `settled` is false, where it
+   * separates "the page never started scrolling" (0, at y=0 — a real page defect) from
+   * "the page is still travelling and our budget was too short" (non-zero — OUR defect).
+   * Without it both look identical in the scorecard, which is the confusion this whole
+   * check was rewritten to remove.
+   */
+  lastDeltaPx: number;
 }
 
 /**
@@ -182,23 +203,32 @@ export async function waitForScrollSettle(
   page: Page,
   opts: { maxMs?: number; stableTicks?: number; tickMs?: number } = {},
 ): Promise<ScrollSettle> {
-  const { maxMs = 5000, stableTicks = 5, tickMs = 32 } = opts;
+  // 3000ms, not 5000. Chromium caps programmatic smooth-scroll DURATION rather than
+  // scaling it with distance — measured on this harness's own fixture, 23,284px took
+  // 1494ms and 11,984px took 1496ms. 3000 is ~2x the observed worst case, and the ceiling
+  // matters because pages.spec runs every check for one page+viewport inside a single
+  // 120s test: at 5000ms, 18 targets could spend 90s in NAV alone, blow the test timeout,
+  // and write no partial — and a page with no partial scores ABSENT rather than failed,
+  // which probes.ts already calls the worst failure mode this harness has.
+  const { maxMs = 3000, stableTicks = 5, tickMs = 32 } = opts;
   return page.evaluate(
     ({ maxMs, stableTicks, tickMs }) =>
-      new Promise<{ y: number; settled: boolean; ms: number }>((resolve) => {
+      new Promise<{ y: number; settled: boolean; ms: number; lastDeltaPx: number }>((resolve) => {
         const t0 = Date.now();
         let last = window.scrollY;
         let stable = 0;
+        let lastDeltaPx = 0;
         const tick = () => {
           const y = window.scrollY;
           if (y === last) stable++;
           else {
             stable = 0;
+            lastDeltaPx = Math.abs(y - last);
             last = y;
           }
           const ms = Date.now() - t0;
-          if (stable >= stableTicks) return resolve({ y, settled: true, ms });
-          if (ms >= maxMs) return resolve({ y, settled: false, ms });
+          if (stable >= stableTicks) return resolve({ y, settled: true, ms, lastDeltaPx });
+          if (ms >= maxMs) return resolve({ y, settled: false, ms, lastDeltaPx });
           setTimeout(tick, tickMs);
         };
         setTimeout(tick, tickMs);
