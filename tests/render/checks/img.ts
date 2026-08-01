@@ -33,7 +33,18 @@ register({
           );
         }
       }
-      return { examined, bad: bad.slice(0, 10), count: bad.length, skipped: skipped.slice(0, 10) };
+      // skippedTotal is derived BEFORE the slice, for the same reason `count` is:
+      // a row's count must be the true magnitude, never the length of a list that
+      // was truncated for readability. Phase 2 swept two checks for exactly this
+      // and the comment below claimed both were the only stragglers — `skipped`
+      // was a third, and reported 10 whenever 10 or more images failed to decode.
+      return {
+        examined,
+        bad: bad.slice(0, 10),
+        count: bad.length,
+        skipped: skipped.slice(0, 10),
+        skippedTotal: skipped.length,
+      };
     });
 
     const defects = [];
@@ -46,13 +57,15 @@ register({
         message: `${r.count} oversized image(s): ${r.bad.join(' | ')}`,
       });
     }
-    if (r.skipped.length) {
+    if (r.skippedTotal) {
       defects.push({
         checkId: 'img-srcset-within-2x',
         family: 'IMG' as const,
         viewport,
-        count: r.skipped.length,
-        message: `${r.skipped.length} image(s) failed to decode and could not be measured: ${r.skipped.join(', ')}`,
+        count: r.skippedTotal,
+        message: `${r.skippedTotal} image(s) failed to decode and could not be measured: ${r.skipped.join(', ')}${
+          r.skippedTotal > r.skipped.length ? ` (+${r.skippedTotal - r.skipped.length} more)` : ''
+        }`,
       });
     }
     return { examined: r.examined, defects };
@@ -93,6 +106,13 @@ register({
       // invisibly, since a capped number looks like a small problem rather than a
       // truncated one. img-srcset-within-2x already returns a separate `count` for
       // this reason; these two were the stragglers.
+      //
+      // CORRECTION (2026-08-01): "these two were the stragglers" was false when
+      // written. img-srcset-within-2x returned a separate `count` for its OVERSIZED
+      // row but derived its decode-failure row's count from `skipped.slice(0, 10)`,
+      // so it reported 10 whenever 10 or more images failed. A comment asserting a
+      // safety property the code lacks is worse than no comment — it is why that
+      // third case survived a dedicated sweep for exactly this defect.
       return {
         examined,
         missing: missing.slice(0, 6),
