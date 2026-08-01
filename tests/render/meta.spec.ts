@@ -19,7 +19,7 @@ import { runCheck } from './lib/runCheck.js';
 import { flattenSlug } from './lib/scorecard.js';
 import { fixtureUrl, FIXTURE_BASE } from './lib/servers.js';
 import { measureTopChrome } from './lib/probes.js';
-import { checkDistFreshness } from './lib/freshness.js';
+import { checkDistFreshness, builtRoutesWithoutSource } from './lib/freshness.js';
 import { resetRaw } from './lib/scorecard.js';
 import './checks/index.js';
 
@@ -678,5 +678,68 @@ test.describe('layout-tap-target-size honours WCAG 2.5.8 exemptions', () => {
     expect(r.defects.map((d) => d.message)).toEqual([]);
     // ...and it must still have judged the real controls, not skipped everything.
     expect(r.examined).toBeGreaterThanOrEqual(2);
+  });
+});
+
+test.describe('dist/ freshness sees a DELETED source page', () => {
+  const roots: string[] = [];
+  const mkRoot = () => {
+    const root = mkdtempSync(join(tmpdir(), 'del-'));
+    roots.push(root);
+    mkdirSync(join(root, 'src', 'pages'), { recursive: true });
+    mkdirSync(join(root, 'dist'), { recursive: true });
+    return root;
+  };
+  const page = (root: string, route: string) => {
+    mkdirSync(join(root, 'src', 'pages', route), { recursive: true });
+    writeFileSync(join(root, 'src', 'pages', route, 'index.astro'), 'x');
+  };
+  const built = (root: string, route: string) => {
+    mkdirSync(join(root, 'dist', route), { recursive: true });
+    writeFileSync(join(root, 'dist', route, 'index.html'), 'x');
+  };
+
+  test.afterAll(() => {
+    for (const r of roots) rmSync(r, { recursive: true, force: true });
+  });
+
+  test('a built route whose source was deleted is reported by name', () => {
+    const root = mkRoot();
+    page(root, 'kept');
+    built(root, 'kept');
+    built(root, 'deleted-page'); // source removed; dist/ still serves the old build
+    expect(builtRoutesWithoutSource(root)).toEqual(['deleted-page']);
+  });
+
+  test('matching source and built sets report no orphan', () => {
+    const root = mkRoot();
+    page(root, 'a');
+    page(root, 'b');
+    built(root, 'a');
+    built(root, 'b');
+    // The false-FAIL risk is the whole reason this was deferred once. If a legitimate
+    // build ever produces routes with no 1:1 source file, THIS is the test that fails.
+    expect(builtRoutesWithoutSource(root)).toEqual([]);
+  });
+
+  test('checkDistFreshness refuses, and its reason names the orphaned route', () => {
+    const root = mkRoot();
+    page(root, 'kept');
+    built(root, 'kept');
+    built(root, 'ghost');
+    // mtimes alone CANNOT see this: every surviving file is older than dist/, so the
+    // age comparison says fresh. Only the set comparison catches it.
+    utimesSync(join(root, 'src', 'pages', 'kept', 'index.astro'), new Date(1000), new Date(1000));
+    const r = checkDistFreshness(root);
+    expect(r.fresh).toBe(false);
+    expect(r.reason).toContain('/ghost/');
+    expect(r.reason).toContain('no source');
+  });
+
+  test('the real repo has no orphaned routes', () => {
+    // Measured 2026-08-01: 108 source routes, 108 built routes. If this ever fails it
+    // is either a genuine stale dist/ or the site gained dynamic/collection routes —
+    // both worth knowing, and both named explicitly rather than guessed at.
+    expect(builtRoutesWithoutSource(resolve(dirname(fileURLToPath(import.meta.url)), '..', '..'))).toEqual([]);
   });
 });
