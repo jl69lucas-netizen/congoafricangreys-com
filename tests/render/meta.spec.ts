@@ -18,6 +18,7 @@ import { registry, MAX_DEFECT_ROWS, type Check, type Defect } from './lib/regist
 import { runCheck } from './lib/runCheck.js';
 import { flattenSlug } from './lib/scorecard.js';
 import { fixtureUrl, FIXTURE_BASE } from './lib/servers.js';
+import { measureTopChrome } from './lib/probes.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import { resetRaw } from './lib/scorecard.js';
 import './checks/index.js';
@@ -577,5 +578,54 @@ test.describe('nested slugs cannot silently lose a page', () => {
       process.chdir(prev);
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+test.describe('measureTopChrome is deterministic and finds late-pinning chrome', () => {
+  const onlyOnce = (testInfo: { project: { name: string }; config: { projects: { name: string }[] } }) =>
+    test.skip(
+      testInfo.project.name !== testInfo.config.projects[0].name,
+      `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
+    );
+
+  const URL = `${FIXTURE_BASE}/tests/render/fixtures/known_broken/chrome-late-rail.html`;
+
+  test('finds a rail that only pins past 1.5 viewports', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(URL);
+
+    // The rail sits 2000px down; 1.5 viewports is 1200px. A single-sample probe that
+    // scrolls 1.5 viewports and looks once reports 96 and misses 62px of real chrome —
+    // every heading judged against a band 62px too high. Measured on the live site:
+    // dna-tested and hand-raised reported 96 fresh / 147-158 pre-scrolled.
+    const chrome = await measureTopChrome(page);
+    expect(chrome.height).toBe(158);
+    expect(chrome.parts.length).toBe(2);
+  });
+
+  test('returns the same height however the page was left scrolled', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(URL);
+
+    // pages.spec shares ONE page object across every check, so this probe runs on
+    // whatever scroll position the previous check left behind. Until this test existed,
+    // the same page measured 96 or 158 depending purely on check order, which made the
+    // band that judges every NAV landing non-deterministic across runs.
+    const fresh = await measureTopChrome(page);
+
+    await page.evaluate(() =>
+      window.scrollTo({ top: 5000, behavior: 'instant' as ScrollBehavior }),
+    );
+    await page.waitForTimeout(150);
+    const afterDeepScroll = await measureTopChrome(page);
+
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }));
+    await page.waitForTimeout(150);
+    const afterReset = await measureTopChrome(page);
+
+    expect(afterDeepScroll.height).toBe(fresh.height);
+    expect(afterReset.height).toBe(fresh.height);
   });
 });
