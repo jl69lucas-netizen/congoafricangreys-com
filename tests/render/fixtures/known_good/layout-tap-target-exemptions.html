@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>tap-target exemptions — all of these are CORRECT</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, sans-serif; font-size: 16px; padding: 20px; }
+
+  /* The WCAG-mandated skip link, in the standard 1px-clip pattern. It has client
+     rects and is not visibility:hidden, so a naive size check counts it — and then
+     reports an accessibility FEATURE as an accessibility defect. */
+  .skip-link { position: absolute; width: 1px; height: 1px; overflow: hidden;
+               clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+
+  p { max-width: 60ch; line-height: 1.65; margin-bottom: 1em; }
+  .controls { display: flex; gap: 12px; margin-top: 20px; }
+  .controls a, .controls button { display: inline-flex; align-items: center;
+    justify-content: center; min-width: 44px; min-height: 44px; padding: 0 16px;
+    border: 1px solid #e7ddd3; border-radius: 50px; text-decoration: none; }
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <main id="main">
+    <!-- Inline links in a block of text. WCAG 2.2 SC 2.5.8 exempts these explicitly:
+         the target is in a sentence, so enlarging it would break the line box. -->
+    <p>
+      Our <a href="/congo-african-grey-for-sale/">Congo African Grey guide</a> covers
+      diet, weaning and documentation in depth, and the
+      <a href="https://www.parrottrust.org/">World Parrot Trust</a> keeps a good
+      reference on CITES status for anyone comparing breeders.
+    </p>
+    <p>
+      Every chick is <a href="/dna-tested-african-grey-for-sale/">DNA-sexed</a> before
+      it leaves us.
+    </p>
+
+    <!-- Real controls, all comfortably above 24x24. -->
+    <div class="controls">
+      <a href="/contact-us/">Reserve a bird</a>
+      <button type="button">Filter</button>
+    </div>
+  </main>
+</body>
+</html>
