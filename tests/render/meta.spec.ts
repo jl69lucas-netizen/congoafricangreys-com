@@ -416,6 +416,26 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
 
     expect(r.defects.length).toBe(0);
   });
+
+  // The pair above pins BLINDNESS to overshoot (uniform cohort, old code returned
+  // "no single page-level cause identified"). This third fixture pins the defect
+  // actually measured in the scorecards: a MIXED cohort, where the old code found the
+  // one small target among nineteen and printed it as THE root cause of the other
+  // eighteen's overshoot. Verified red against the pre-fix nav.ts, whose output was
+  // "1 of 19 targets have scroll-margin-top under the 96px of pinned chrome" —
+  // character-for-character the string dna-tested and hand-raised shipped.
+  test('names the majority cohort when a minority undershoots', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-overshoot-mixed.html`);
+    const check = registry.find((c) => c.id === 'nav-jump-target-lands')!;
+    const r = await runCheck(check, page, 1280);
+
+    expect(r.defects.length).toBe(1);
+    // The measured real-page failure: 1 small target among 19 was reported as THE
+    // root cause of 18 overshoot failures. The cause must name the 18, not the 1.
+    expect(r.defects[0].message).toMatch(/18 of 19 targets overshoot/);
+    expect(r.defects[0].message).not.toMatch(/1 of 19 targets have scroll-margin-top under/);
+  });
 });
 
 /**
