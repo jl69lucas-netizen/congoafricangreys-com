@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { registry, MAX_DEFECT_ROWS, type Check, type Defect } from './lib/registry.js';
 import { runCheck } from './lib/runCheck.js';
 import { flattenSlug } from './lib/scorecard.js';
-import { fixtureUrl } from './lib/servers.js';
+import { fixtureUrl, FIXTURE_BASE } from './lib/servers.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import { resetRaw } from './lib/scorecard.js';
 import './checks/index.js';
@@ -380,6 +380,41 @@ test.describe('nav-jump-target-lands reports causes, not instances', () => {
       result.defects[0].message,
       'the row must name the page-level cause',
     ).toMatch(/scroll-margin-top|scroll-behavior/);
+  });
+});
+
+/**
+ * Naming a cause is only worth doing if the cause names the right DIRECTION.
+ *
+ * Measured 2026-08-01: dna-tested and hand-raised land every one of their 18 links at
+ * 162px and 170px against an 88-156px band — OVERSHOOTS, past the far edge — and both
+ * rows read "1 of 19 targets have scroll-margin-top under the 96px of pinned chrome".
+ * That is an undershoot description, sourced from a minority of one, and a reader who
+ * followed it would INCREASE a scroll-margin that is already 66px too large.
+ *
+ * The fixture pair below isolates exactly one declaration (200px vs 108px against 96px
+ * of chrome) so the assertion can only be satisfied by the check reading both directions.
+ */
+test.describe('nav-jump-target-lands names the direction of failure', () => {
+  test('fires on a page whose targets overshoot the chrome band', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-overshoot.html`);
+    const check = registry.find((c) => c.id === 'nav-jump-target-lands')!;
+    const r = await runCheck(check, page, 1280);
+
+    expect(r.defects.length).toBe(1);
+    // The whole point of this fixture: the cause must not blame a too-SMALL margin.
+    expect(r.defects[0].message).toMatch(/overshoot|past|beyond|over the/i);
+    expect(r.defects[0].message).not.toMatch(/under the \d+px of pinned chrome/);
+  });
+
+  test('stays silent when the same page lands inside the band', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_good/nav-overshoot-fixed.html`);
+    const check = registry.find((c) => c.id === 'nav-jump-target-lands')!;
+    const r = await runCheck(check, page, 1280);
+
+    expect(r.defects.length).toBe(0);
   });
 });
 

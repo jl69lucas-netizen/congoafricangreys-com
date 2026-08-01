@@ -59,15 +59,30 @@ async function diagnoseLandingCause(page: Page, chromeHeight: number): Promise<s
     );
     let seen = 0;
     let short = 0;
+    let long = 0;
     for (const id of ids) {
       const el = document.getElementById(id);
       if (!el) continue;
       seen++;
-      if (parseFloat(getComputedStyle(el).scrollMarginTop || '0') < chromeH - 8) short++;
+      const smt = parseFloat(getComputedStyle(el).scrollMarginTop || '0');
+      // The band nav.ts judges against is [chromeH - 8, chromeH + 60]. A target is
+      // "short" when it lands under the chrome and "long" when it lands past the far
+      // edge. Testing only `short` reported an undershoot cause for every overshooting
+      // page, pointing the reader at the opposite CSS change from the one needed.
+      if (smt < chromeH - 8) short++;
+      else if (smt > chromeH + 60) long++;
     }
 
+    if (seen && long === seen) {
+      return `every target overshoots — scroll-margin-top sits over the ${chromeH}px of pinned chrome plus the 60px tolerance`;
+    }
     if (seen && short === seen) {
       return `every target's scroll-margin-top is under the ${chromeH}px of pinned chrome`;
+    }
+    // Mixed or minority cases: name the larger cohort, and never present a minority
+    // as "the" root cause without saying how small it is.
+    if (long > short) {
+      return `${long} of ${seen} targets overshoot the ${chromeH}px of pinned chrome by more than 60px`;
     }
     if (short) {
       return `${short} of ${seen} targets have scroll-margin-top under the ${chromeH}px of pinned chrome`;
