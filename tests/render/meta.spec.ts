@@ -404,8 +404,17 @@ test.describe('nav-jump-target-lands reports causes, not instances', () => {
  */
 test.describe('nav-jump-target-lands names the direction of failure', () => {
   const check = () => registry.find((c) => c.id === 'nav-jump-target-lands')!;
-  const onlyOnce = (testInfo: { project: { name: string } }) =>
-    test.skip(testInfo.project.name !== 'vp375', 'viewport-independent; runs once');
+  // These four fixtures pin their own viewport, so running them once per project is
+  // duplicate work. Anchored on the FIRST CONFIGURED PROJECT rather than the literal
+  // 'vp375': with a literal, renaming that project made all four tests skip in every
+  // project and the suite still reported green — coverage vanishing silently is the
+  // failure this repo has already shipped twice, and a skip is the easiest place to
+  // hide it. Deriving the name means there is always exactly one project that runs.
+  const onlyOnce = (testInfo: { project: { name: string }; config: { projects: { name: string }[] } }) =>
+    test.skip(
+      testInfo.project.name !== testInfo.config.projects[0].name,
+      `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
+    );
 
   test('fires on a page whose targets overshoot the chrome band', async ({ page }, testInfo) => {
     onlyOnce(testInfo);
@@ -435,7 +444,7 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
   // eighteen's overshoot. Verified red against the pre-fix nav.ts, whose output was
   // "1 of 19 targets have scroll-margin-top under the 96px of pinned chrome" —
   // character-for-character the string dna-tested and hand-raised shipped.
-  test('names the majority cohort when a minority undershoots', async ({ page }, testInfo) => {
+  test('names both cohorts when targets fail in opposite directions', async ({ page }, testInfo) => {
     onlyOnce(testInfo);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-overshoot-mixed.html`);
@@ -444,8 +453,14 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
     expect(r.defects.length).toBe(1);
     // The measured real-page failure: 1 small target among 19 was reported as THE
     // root cause of 18 overshoot failures. The cause must name the 18, not the 1.
-    expect(r.defects[0].message).toMatch(/18 of 19 targets overshoot/);
-    expect(r.defects[0].message).not.toMatch(/1 of 19 targets have scroll-margin-top under/);
+    // Both cohorts must be named. Reporting only the majority is a milder form of the
+    // misattribution this function was rewritten to remove: a reader of a 10-long /
+    // 9-short page would learn nothing about the 9 that need the OPPOSITE fix.
+    expect(r.defects[0].message).toMatch(
+      /18 of 19 targets declare scroll-margin-top past the 156px far edge/,
+    );
+    expect(r.defects[0].message).toMatch(/and 1 declare scroll-margin-top under the 88px near edge/);
+    expect(r.defects[0].message).toMatch(/the two need opposite fixes/);
   });
 
   test('names an undershooting minority without claiming overshoot', async ({ page }, testInfo) => {
@@ -461,8 +476,14 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
     // An implementation that defines `long` as "not short" rather than "past the far
     // edge" passes every other fixture and reports "18 of 19 targets overshoot" here.
     // Verified: the `else long++` mutant fails exactly this assertion.
-    expect(r.defects[0].message).toMatch(/1 of 19 targets have scroll-margin-top under/);
-    expect(r.defects[0].message).not.toMatch(/overshoot/);
+    expect(r.defects[0].message).toMatch(
+      /1 of 19 targets declare scroll-margin-top under the 88px near edge/,
+    );
+    // Asserted against the far-edge PHRASE, not the word "overshoot". The vocabulary no
+    // longer contains "overshoot" anywhere, so a `not.toMatch(/overshoot/)` here would
+    // pass on every possible implementation — the third toothless assertion this file
+    // has shipped. Match what the wrong implementation would actually print.
+    expect(r.defects[0].message).not.toMatch(/past the \d+px far edge/);
   });
 });
 
