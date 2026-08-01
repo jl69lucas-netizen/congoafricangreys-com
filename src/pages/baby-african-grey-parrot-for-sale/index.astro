@@ -1543,6 +1543,12 @@ const schema = {
   .baby-body{grid-template-columns:minmax(0,1fr);gap:0}
   .desk-only{display:none}
   .chero-rail{display:block}
+  /* The rail appears here and adds 62px of pinned chrome above the 96px header, but the
+     114px base margin was never raised to match — so all 22 in-page links landed at
+     114px behind 158px of chrome and every heading arrived hidden. Its siblings
+     (timneh, egg, congo) all carry this override; baby was the one that missed it.
+     Measured chrome 158px at 375 and 768 (plan Task 3), band [150,218]; 96+74=170. */
+  .baby-main section{scroll-margin-top:calc(var(--hdr) + 74px)}
   .chero-grid{grid-template-columns:minmax(0,1fr)}
   .chero-media{order:-1}
   .availB{grid-template-columns:minmax(0,1fr)}
