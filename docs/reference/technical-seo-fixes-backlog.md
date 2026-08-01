@@ -376,3 +376,88 @@ page types rather than flagging everything uniformly. And **LAYOUT leads on ever
 page type**, which makes `layout-min-font-size` the site-wide next action rather than a
 for-sale-cluster quirk. Before acting on it, re-read item 1 above: ~11% of its hits are the
 `12.48px` rounding band and are not real defects.
+
+---
+
+## 2026-08-01 — legibility sweep, NAV repairs, and three harness criticals
+
+### Resolved
+
+**`layout-min-font-size` — 6,498 instances to ZERO.** The surface was 684 declarations
+across 64 files, not the 129 a first grep suggested: the codebase writes `.78rem`, not
+`0.78rem`, so a pattern requiring the leading zero undercounted it 5x. But the *dominant*
+source was not CSS at all — **Tailwind's `text-xs` (0.75rem = 12px), used 746 times across
+76 files.** Raising `--fs-h5`/`--fs-eyebrow` in the `:root` scale first moved the measured
+count by exactly zero, because almost nothing here is styled by element selector. Four
+passes, each aimed by measurement: `--text-xs` -> 0.79rem in `@theme`; 291 arbitrary
+`text-[10/11/12px]` utilities consolidated onto `text-xs`; 675 CSS declarations to
+`var(--fs-micro)`; and 18 `clamp()` MINIMUMS the first three missed entirely
+(`.cag-h6` was `clamp(.75rem,.95vw,.82rem)`, pinned at 12px on mobile at any width).
+
+**The 12.48px band was NOT a rounding artifact.** The previous note here advised leaving
+`.78rem` alone. It is 88 declarations — the most-used small size in the codebase — so
+exempting it would have retired the check's largest cohort permanently. Threshold stayed
+at 12.5; the codebase moved to `--fs-micro: 0.79rem`. Reasoning lives beside the threshold.
+
+**The 7px dial labels were never geometry-bound.** Measured before deciding: the ring is
+64x64 and the label is five characters, painting 33x21 at `--fs-micro`. No override needed.
+
+**NAV.** `roys` had no `scroll-margin-top` at all (51 links landing at 0px); `baby` and
+`congo-vs-timneh` reveal a rail at their mobile breakpoint without raising the 114px base
+margin. Fixed. **`dna-tested` and `hand-raised` were FALSE POSITIVES** and needed no edit.
+
+**Freshness deletion-blindness — CLOSED**, and not with directory mtimes (that trade was
+rejected for a reason). `builtRoutesWithoutSource()` diffs built routes against source
+pages, naming the exact orphaned route. Measured first: 108 source routes, 108 built.
+
+### The corpus baseline
+
+| Family | Rows before | Rows after | Instances before | Instances after |
+|---|---:|---:|---:|---:|
+| LAYOUT | 90 | 45 | 6,498 | 698 |
+| IMG | 42 | 42 | 333 | 333 (overridden) |
+| NAV | 8 | 3 | 149 | 13 |
+| **Total** | **140** | **90** | **6,980** | **1,044** |
+
+### Three harness criticals found by the whole-implementation review
+
+1. **`measureTopChrome` was order-dependent.** `scrollBy` from wherever the previous check
+   left the page, sampling only 1.5 viewports — not deep enough for rails sitting
+   1300-2000px down. The same page measured 96px fresh and 147-158px pre-scrolled.
+2. **The repair for (1) then over-absorbed.** Taking the MAXIMUM across depths pulled
+   sticky *page content* into the band (`aside.availB-rail` 287px, `div.dial-card` 672px),
+   reported "chrome measures 784px", tripped the implausible guard, and left NAV
+   examining **zero** units on 6 of 45 page-viewports — worse than the bug it replaced.
+   Fixed by requiring an absorbed element to span >=80% of `innerWidth`.
+3. **`layout-tap-target-size` flags WCAG's own exemptions.** All 45 LAYOUT rows named the
+   MANDATED 1x1 skip link, plus inline prose links that SC 2.5.8 exempts explicitly. The
+   report's "worst family / next action" line was pointing at a check defect.
+
+Also: a **third** truncation-derived `count` (`skipped.slice(0,10).length`) in the very
+check whose comment claimed there were none left.
+
+### STILL OPEN
+
+**Images — 21 files over 2.0x; the override stands.** 17 constant-painted-size assets were
+regenerated (164 KB saved; `ida-brim` was a 640px file in a 40px avatar slot). The rest
+need `srcset`, and **a first attempt at that was reverted** — worth reading before retrying:
+
+- Applying one blanket `sizes="(max-width:640px) 45vw, 356px"` to every image conflated
+  two roles. Gallery cells really are ~45vw; the full-width feature images paint at
+  **343px** at 375. The browser duly loaded a **168px file into a 343px box** — visibly
+  blurry. Shipping blur to satisfy a byte metric is a bad trade.
+- **`sizes` must be measured per image role, not guessed.** Feature images on `roys`:
+  343px @375, 736px @768, 768px @1280 -> `(max-width:640px) 92vw, 768px`.
+- The correct variant width is **2x the painted box** (680w for a 341px box = exactly
+  2.00x, which passes). A 720w variant misses at 2.11x.
+- A patch guard that scans the following 200 chars for `srcset=` will see a NEIGHBOURING
+  image's srcset and silently skip the tag it was meant to patch. Patch by tag, not by
+  proximity.
+- Several images appear more than once per page at different painted sizes; a
+  `replace(..., 1)` fixes only the first.
+
+**Follow-ups recorded, not fixed:** the chrome band is still measured once globally and
+applied to every landing rather than re-measured per landing; check ORDER is load-bearing
+and unpinned (`settlePage` mutates the DOM at check #4, so LAYOUT measures an unsettled
+document); scorecard filenames carry no run label, so a same-day recheck overwrites the
+first-run card; `harness_version` is written and never read.
