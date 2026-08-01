@@ -14,9 +14,29 @@ export interface PagePartial {
 
 const RAW_DIR = resolve(process.cwd(), 'data/quality/raw');
 
+/**
+ * Slug → a filename component that cannot contain a path separator.
+ *
+ * Two corpus pages are nested — `blog/african-grey-parrot-cage-setup` and
+ * `available/roys`. Interpolated raw, those produce `data/quality/raw/blog/<...>.json`,
+ * a directory that does not exist, so the write throws, the page test fails AFTER its
+ * checks have already run, and the page contributes no partial. A page with no partial
+ * scores ABSENT rather than failed — the failure mode this harness treats as its worst.
+ * Guard 1 in build_scorecard.mjs would catch the count mismatch, but it would report it
+ * as a crashed page and send someone hunting a defect that is really a filename.
+ *
+ * The `slug` FIELD inside the JSON keeps the real slug; only the filename is flattened.
+ */
+export function flattenSlug(slug: string): string {
+  return slug.replace(/\//g, '__');
+}
+
 export function writePartial(p: PagePartial): void {
   mkdirSync(RAW_DIR, { recursive: true });
-  writeFileSync(resolve(RAW_DIR, `${p.slug}-vp${p.viewport}.json`), JSON.stringify(p, null, 2));
+  writeFileSync(
+    resolve(RAW_DIR, `${flattenSlug(p.slug)}-vp${p.viewport}.json`),
+    JSON.stringify(p, null, 2),
+  );
 }
 
 /**
