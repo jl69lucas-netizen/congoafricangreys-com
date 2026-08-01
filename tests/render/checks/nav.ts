@@ -117,7 +117,11 @@ register({
             checkId: 'nav-jump-target-lands',
             family: 'NAV' as const,
             viewport,
-            message: `${href} was still scrolling after ${settle.ms}ms at y=${settle.y}`,
+            message:
+              `${href}: the harness's own ${settle.ms}ms settle budget ran out at y=${settle.y}, ` +
+              (settle.lastDeltaPx > 0
+                ? `still moving ${settle.lastDeltaPx}px/tick — THIS IS PROBABLY A BUDGET DEFECT, NOT A PAGE DEFECT; raise maxMs before touching the page`
+                : `and it never moved — the click produced no scroll at all, which is a page defect`),
           });
           continue;
         }
