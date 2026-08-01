@@ -349,3 +349,30 @@ in-page links land at 114px against 158px of pinned chrome** — `scroll-margin-
 `calc(var(--hdr) + 18px)` = 114px, which clears the 96px header but not the 62px sticky
 jump rail above it. Verified against `dist/`. Every heading lands behind the rail. Same
 root cause on `dna-tested` and `hand-raised` (1 row each).
+
+### 4. Benchmark corpus baseline — all 7 page types, 2026-08-01
+
+Spec §3.2's frozen sample now exists: one page per page type, flagged `corpus: true` in
+`tests/render/targets.json`, so the quality trend stops depending on which pages happened
+to get built that month. Re-score with `npm run test:render:pages` (15 pages, ~12 min).
+
+| Page type | Corpus page | Rows | Instances |
+|---|---|---:|---:|
+| bird | `available/roys` | 12 | 652 |
+| comparison | `congo-vs-timneh-african-grey` | 11 | 529 |
+| blog | `blog/african-grey-parrot-cage-setup` | 9 | 473 |
+| for-sale | `congo-african-grey-parrot-pair-for-sale` | 9 | 324 |
+| interior | `african-grey-parrot-care-guide` | 9 | 663 |
+| location | `african-grey-parrot-for-sale-florida` | 9 | **59** |
+| hub | `african-grey-parrots-for-sale` | 6 | **70** |
+
+Across all 15 measured pages: **140 rows** — LAYOUT 90, IMG 42, NAV 8; instances LAYOUT
+6,498, IMG 333, NAV 149.
+
+Two things worth reading off this rather than assuming. **The hub and the Florida location
+page are dramatically cleaner** (59–70 instances against 324–663 elsewhere), and the hub is
+the only page in the corpus with no IMG row at all — so the checks discriminate between
+page types rather than flagging everything uniformly. And **LAYOUT leads on every single
+page type**, which makes `layout-min-font-size` the site-wide next action rather than a
+for-sale-cluster quirk. Before acting on it, re-read item 1 above: ~11% of its hits are the
+`12.48px` rounding band and are not real defects.

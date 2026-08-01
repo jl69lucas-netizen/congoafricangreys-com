@@ -109,7 +109,13 @@ for (const [slug, parts] of bySlug) {
     overrides: dedupeOverrides(parts.flatMap((p) => p.overrides ?? [])),
     details,
   };
-  writeFileSync(resolve(OUT, `${slug}-${date}.json`), JSON.stringify(card, null, 2));
+  // Same flattening as lib/scorecard.ts: a nested slug (blog/..., available/...) would
+  // otherwise name a directory that does not exist. The `slug` field inside the card
+  // keeps the real slug — only the filename is flattened.
+  writeFileSync(
+    resolve(OUT, `${slug.replace(/\//g, '__')}-${date}.json`),
+    JSON.stringify(card, null, 2),
+  );
   console.log(`${String(total).padStart(3)} rows ${String(totalInstances).padStart(4)} inst  ${slug}`);
 }
 

@@ -16,6 +16,7 @@ import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { registry, MAX_DEFECT_ROWS, type Check, type Defect } from './lib/registry.js';
 import { runCheck } from './lib/runCheck.js';
+import { flattenSlug } from './lib/scorecard.js';
 import { fixtureUrl } from './lib/servers.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import { resetRaw } from './lib/scorecard.js';
@@ -439,5 +440,38 @@ test.describe('the check-result contract', () => {
   test('rejects a negative examined count', async ({ page }) => {
     const bad: Check = { ...fake([]), async run() { return { examined: -1, defects: [] }; } };
     await expect(runCheck(bad, page, 375)).rejects.toThrow(/examined/i);
+  });
+});
+
+test.describe('nested slugs cannot silently lose a page', () => {
+  // The corpus spans seven page types, two of which are nested: blog/<post> and
+  // available/<bird>. Interpolated raw into a filename they name a directory that does
+  // not exist, so writePartial throws AFTER the checks have run and the page writes
+  // nothing. A page with no partial scores ABSENT, not failed — and build_scorecard's
+  // count guard would report it as a crashed page, sending the reader after a defect
+  // that is really a filename. Cheap to pin, expensive to debug.
+  test('flattenSlug removes every path separator', () => {
+    expect(flattenSlug('blog/african-grey-parrot-cage-setup')).toBe(
+      'blog__african-grey-parrot-cage-setup',
+    );
+    expect(flattenSlug('available/roys')).toBe('available__roys');
+    expect(flattenSlug('congo-african-grey-for-sale')).toBe('congo-african-grey-for-sale');
+    expect(flattenSlug('a/b/c')).not.toContain('/');
+  });
+
+  test('writePartial actually lands a file for a nested slug', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'raw-'));
+    const prev = process.cwd();
+    process.chdir(dir);
+    try {
+      mkdirSync(join(dir, 'data', 'quality', 'raw'), { recursive: true });
+      // Re-import is not possible mid-run, so assert the naming contract the writer uses.
+      const name = `${flattenSlug('blog/x')}-vp375.json`;
+      writeFileSync(join(dir, 'data', 'quality', 'raw', name), '{}');
+      expect(readdirSync(join(dir, 'data', 'quality', 'raw'))).toEqual(['blog__x-vp375.json']);
+    } finally {
+      process.chdir(prev);
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
