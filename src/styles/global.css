@@ -1,6 +1,16 @@
 @import "tailwindcss";
 
 @theme {
+  /* Tailwind's default `text-xs` is 0.75rem = 12px, which is BELOW the 12.5px
+     legibility floor the render harness enforces. It is used 746 times across 76 files
+     — far and away the largest source of sub-floor text on this site, and the reason
+     raising --fs-h5/--fs-eyebrow in the :root scale below moved the measured count by
+     exactly zero: almost nothing on these pages is styled by element selector, so the
+     token scale only governs text that carries no utility class.
+     0.79rem = 12.64px clears the floor with room for sub-pixel rounding.
+     Line-height is left at Tailwind's default 1rem (16px, a 1.27 ratio at this size). */
+  --text-xs:          0.79rem;   /* 12.64px — was 0.75rem/12px */
+
   --color-logo-dark:  #12100e;
   --color-gold:       #e8604c;
   --color-orange:     #F97316;
@@ -48,14 +58,27 @@
    ──────────────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    --fs-eyebrow: clamp(0.625rem, 1.2vw, 0.75rem);    /* 10 → 12px */
+    /* The legibility floor. 12.64px — the smallest size clearing the render harness's
+       layout-min-font-size threshold (12.5px) with room for sub-pixel rounding. Use
+       this instead of hand-picked .78rem / .72rem / .68rem values.
+       Do NOT "tidy" it to .78rem: that computes to 12.48px and fails by 0.02px. */
+    --fs-micro:   0.79rem;                              /* 12.64px */
+
+    /* Every clamp MINIMUM must clear --fs-micro. These clamps ALWAYS resolve to their
+       minimum on mobile — at 375px a `1.1vw` term is 4.1px and a `1.2vw` term is 4.5px —
+       so --fs-h5 rendered every H5 and H6 at 11px on every page on the site, while
+       CLAUDE.md's Heading Hierarchy Gate mandates at least five of each per page. That
+       is ten-plus headings per page below the legibility floor, from one line of CSS.
+       --fs-eyebrow resolved to 10px the same way. Maximums are unchanged; only the
+       mobile end moves. */
+    --fs-eyebrow: clamp(0.79rem, 1.2vw, 0.8125rem);   /* 12.64 → 13px */
     --fs-h1:      clamp(1.75rem, 5vw, 3rem);            /* 28 → 48px */
     --fs-h2:      clamp(1.25rem, 3.5vw, 2rem);          /* 20 → 32px */
     --fs-h3:      clamp(1.0625rem, 2.2vw, 1.5rem);      /* 17 → 24px */
     --fs-h4:      clamp(0.9375rem, 1.8vw, 1.25rem);     /* 15 → 20px */
-    --fs-h5:      clamp(0.6875rem, 1.1vw, 0.875rem);    /* 11 → 14px */
+    --fs-h5:      clamp(0.8125rem, 1.1vw, 0.875rem);    /* 13 → 14px */
     --fs-body:    clamp(0.9375rem, 1.5vw, 1.0625rem);   /* 15 → 17px */
-    --fs-caption: clamp(0.75rem, 1vw, 0.875rem);        /* 12 → 14px */
+    --fs-caption: clamp(0.8125rem, 1vw, 0.875rem);      /* 13 → 14px */
   }
 
   body {
