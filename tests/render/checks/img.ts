@@ -42,6 +42,7 @@ register({
         checkId: 'img-srcset-within-2x',
         family: 'IMG' as const,
         viewport,
+        count: r.count,
         message: `${r.count} oversized image(s): ${r.bad.join(' | ')}`,
       });
     }
@@ -50,6 +51,7 @@ register({
         checkId: 'img-srcset-within-2x',
         family: 'IMG' as const,
         viewport,
+        count: r.skipped.length,
         message: `${r.skipped.length} image(s) failed to decode and could not be measured: ${r.skipped.join(', ')}`,
       });
     }
@@ -93,6 +95,7 @@ register({
         checkId: 'img-alt-present-and-unique',
         family: 'IMG' as const,
         viewport,
+        count: r.missing.length,
         message: `image(s) with no alt attribute: ${r.missing.join(', ')}`,
       });
     }
@@ -101,6 +104,7 @@ register({
         checkId: 'img-alt-present-and-unique',
         family: 'IMG' as const,
         viewport,
+        count: r.dupes.length,
         message: `duplicate alt text (Rule 50b): ${r.dupes.join(' | ')}`,
       });
     }

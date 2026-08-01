@@ -58,37 +58,54 @@ if (bySlug.size === 0) {
 
 let grandTotal = 0;
 for (const [slug, parts] of bySlug) {
+  // Two numbers, deliberately. `defects` counts ROWS — one failure mode of one check at
+  // one viewport — and is the only number comparable across families. `instances` sums
+  // `count` and is the magnitude. The first baseline had only the first, computed from
+  // checks that disagreed about what a row was.
   const defectsByFamily = {};
+  const instancesByFamily = {};
   const examined = { pages: 1, checks: 0 };
   const details = [];
   for (const part of parts) {
     examined.checks = Math.max(examined.checks, Object.keys(part.examined).length);
     for (const d of part.defects) {
       defectsByFamily[d.family] = (defectsByFamily[d.family] || 0) + 1;
-      details.push({ viewport: part.viewport, checkId: d.checkId, message: d.message });
+      instancesByFamily[d.family] = (instancesByFamily[d.family] || 0) + (d.count ?? 1);
+      details.push({
+        viewport: part.viewport,
+        checkId: d.checkId,
+        count: d.count ?? 1,
+        message: d.message,
+      });
     }
   }
   const total = Object.values(defectsByFamily).reduce((a, b) => a + b, 0);
+  const totalInstances = Object.values(instancesByFamily).reduce((a, b) => a + b, 0);
   grandTotal += total;
   const card = {
     slug,
     date,
     page_type: parts[0].page_type,
     run: runLabel,
-    harness_version: '1.0.0',
+    harness_version: '2.0.0',
     viewports: parts.map((p) => p.viewport).sort((a, b) => a - b),
     examined,
     defects: defectsByFamily,
+    instances: instancesByFamily,
     total,
+    total_instances: totalInstances,
     overrides: parts.flatMap((p) => p.overrides ?? []),
     details,
   };
   writeFileSync(resolve(OUT, `${slug}-${date}.json`), JSON.stringify(card, null, 2));
-  console.log(`${String(total).padStart(3)}  ${slug}`);
+  console.log(`${String(total).padStart(3)} rows ${String(totalInstances).padStart(4)} inst  ${slug}`);
 }
 
 const allOverrides = [...bySlug.values()].flat().flatMap((p) => p.overrides ?? []);
-console.log(`---\n${grandTotal} defects across ${bySlug.size} pages (run=${runLabel})`);
+console.log(
+  `---\n${grandTotal} defect ROWS across ${bySlug.size} pages (run=${runLabel}, harness 2.0.0). ` +
+    `Rows are comparable across families; instances are not.`,
+);
 if (allOverrides.length) {
   console.log(`${allOverrides.length} OVERRIDE(S) IN EFFECT — these are suppressed defects:`);
   for (const o of allOverrides) console.log(`  ${o.checkId}: ${o.reason}`);

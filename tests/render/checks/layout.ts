@@ -44,6 +44,7 @@ register({
                 checkId: 'layout-no-horizontal-overflow',
                 family: 'LAYOUT' as const,
                 viewport,
+                count: 1,
                 message: `document overflows by ${r.overflow}px — offenders: ${
                   r.offenders.join(' | ') || 'none isolated'
                 }`,
@@ -92,6 +93,7 @@ register({
               checkId: 'layout-min-font-size',
               family: 'LAYOUT' as const,
               viewport,
+              count: r.count,
               message: `${r.count} text node(s) below 12.5px: ${r.bad.join(' | ')}`,
             },
           ]
@@ -137,6 +139,7 @@ register({
               checkId: 'layout-tap-target-size',
               family: 'LAYOUT' as const,
               viewport,
+              count: r.count,
               message: `${r.count} control(s) under 24x24: ${r.bad.join(' | ')}`,
             },
           ]
