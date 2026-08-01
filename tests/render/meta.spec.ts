@@ -653,3 +653,30 @@ test.describe('measureTopChrome does not absorb sticky page content', () => {
     expect(chrome.implausible).toBe(false);
   });
 });
+
+test.describe('layout-tap-target-size honours WCAG 2.5.8 exemptions', () => {
+  const onlyOnce = (testInfo: { project: { name: string }; config: { projects: { name: string }[] } }) =>
+    test.skip(
+      testInfo.project.name !== testInfo.config.projects[0].name,
+      `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
+    );
+
+  test('is silent on skip links and inline prose links', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(
+      `${FIXTURE_BASE}/tests/render/fixtures/known_good/layout-tap-target-exemptions.html`,
+    );
+    const check = registry.find((c) => c.id === 'layout-tap-target-size')!;
+    const r = await runCheck(check, page, 1280);
+
+    // Both categories are WCAG's OWN exemptions, and both were being reported as
+    // defects on every page: the 1x1 clipped skip link appeared in all 45 LAYOUT
+    // rows of the 2026-08-01 baseline, and inline prose links supplied the bulk of
+    // every message. SC 2.5.8 exempts a target that is "in a sentence or block of
+    // text". Flagging them made this check elect itself worst family.
+    expect(r.defects.map((d) => d.message)).toEqual([]);
+    // ...and it must still have judged the real controls, not skipped everything.
+    expect(r.examined).toBeGreaterThanOrEqual(2);
+  });
+});

@@ -121,12 +121,49 @@ register({
       const nodes = Array.from(document.querySelectorAll<HTMLElement>(sel));
       let examined = 0;
       const bad: string[] = [];
+      // WCAG 2.2 SC 2.5.8 exempts two things this check used to flag on every page.
+      // In the 2026-08-01 baseline all 45 LAYOUT rows named the skip link, and inline
+      // prose links supplied the bulk of every message — so the report's "worst
+      // family / next action" line was pointing at the standard's own exemptions.
+
+      // (1) Visually-hidden controls in the 1px-clip pattern. The WCAG-MANDATED skip
+      //     link is the canonical case: it has client rects and is not
+      //     visibility:hidden, so a naive size test counts it and reports an
+      //     accessibility feature as an accessibility defect.
+      const isVisuallyHidden = (el: HTMLElement, box: DOMRect, cs: CSSStyleDeclaration) =>
+        box.width <= 4 ||
+        box.height <= 4 ||
+        cs.clipPath === 'inset(50%)' ||
+        /rect\(0(px)?[,\s]/.test(cs.clip) ||
+        /(^|\s)(sr-only|visually-hidden|skip-link)(\s|$)/.test(el.className || '');
+
+      // (2) A link sitting INSIDE a sentence. SC 2.5.8: "the target is in a sentence
+      //     or its size is otherwise constrained by the line-height". Enlarging these
+      //     would break the line box, so the standard does not ask for it. Detected
+      //     structurally — an inline <a> whose parent carries text beyond the link
+      //     itself — which distinguishes prose links from nav pills, where the parent
+      //     <li> contains nothing but the link.
+      const isInlineProseLink = (el: HTMLElement, cs: CSSStyleDeclaration) => {
+        // EXACTLY `inline`, never `startsWith('inline')`: inline-block and inline-flex
+        // are how every button-shaped control on this site is laid out, and matching
+        // the prefix exempted the known_broken fixture's own 44x44 control because
+        // <body> happened to contain other text. Caught by the fixture, not by review.
+        if (el.tagName !== 'A' || cs.display !== 'inline') return false;
+        const parent = el.parentElement;
+        if (!parent) return false;
+        const own = (el.textContent || '').trim().length;
+        const around = (parent.textContent || '').trim().length;
+        return around > own + 1;
+      };
+
       for (const el of nodes) {
         if (el.getClientRects().length === 0) continue;
         const cs = getComputedStyle(el);
         if (cs.visibility === 'hidden') continue;
         const box = el.getBoundingClientRect();
         if (box.width === 0 || box.height === 0) continue;
+        if (isVisuallyHidden(el, box, cs)) continue;
+        if (isInlineProseLink(el, cs)) continue;
         examined++;
         if (box.width < 24 || box.height < 24) {
           const label = (el.textContent || el.getAttribute('aria-label') || '').trim().slice(0, 24);
