@@ -86,7 +86,20 @@ register({
       seen.forEach((n, alt) => {
         if (n > 1) dupes.push(`"${alt.slice(0, 48)}" x${n}`);
       });
-      return { examined, missing: missing.slice(0, 6), dupes: dupes.slice(0, 6) };
+      // Return the true totals ALONGSIDE the truncated display lists. `count` is the
+      // magnitude the ledger ranks families by, so deriving it from a list already
+      // sliced for readability would silently cap this check's contribution at 6 —
+      // undercounting exactly the field that was just made load-bearing, and doing it
+      // invisibly, since a capped number looks like a small problem rather than a
+      // truncated one. img-srcset-within-2x already returns a separate `count` for
+      // this reason; these two were the stragglers.
+      return {
+        examined,
+        missing: missing.slice(0, 6),
+        missingTotal: missing.length,
+        dupes: dupes.slice(0, 6),
+        dupesTotal: dupes.length,
+      };
     });
 
     const defects = [];
@@ -95,7 +108,7 @@ register({
         checkId: 'img-alt-present-and-unique',
         family: 'IMG' as const,
         viewport,
-        count: r.missing.length,
+        count: r.missingTotal,
         message: `image(s) with no alt attribute: ${r.missing.join(', ')}`,
       });
     }
@@ -104,7 +117,7 @@ register({
         checkId: 'img-alt-present-and-unique',
         family: 'IMG' as const,
         viewport,
-        count: r.dupes.length,
+        count: r.dupesTotal,
         message: `duplicate alt text (Rule 50b): ${r.dupes.join(' | ')}`,
       });
     }
