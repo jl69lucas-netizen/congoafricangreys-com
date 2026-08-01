@@ -93,11 +93,51 @@ export interface TopChrome {
  *    so far, and repeat until nothing more is absorbed.
  */
 export async function measureTopChrome(page: Page): Promise<TopChrome> {
-  // Pin whatever pins. 1.5 viewports is past every sticky trigger on this site.
-  await page.evaluate(() => window.scrollBy(0, Math.round(window.innerHeight * 1.5)));
-  await page.waitForTimeout(250);
+  // Sample the pinned band at several ABSOLUTE depths and keep the largest.
+  //
+  // Two defects are fixed by doing it this way, both measured on the live site
+  // 2026-08-01 (plan Task 2), and both invisible to the previous single-sample form:
+  //
+  // 1. ONE SAMPLE AT 1.5 VIEWPORTS IS NOT DEEP ENOUGH. The jump rails on the for-sale
+  //    pages sit 1300-2000px down the document, past 1.5 viewports at 375 and 768.
+  //    dna-tested and hand-raised measured 96px (header only) while their real chrome
+  //    is 147px and 158px — so every landing was judged against a band 51-62px too
+  //    high, and two pages were reported as defective when their CSS was correct.
+  //    This is the second time this probe has been too shallow: it originally measured
+  //    at scrollY 0, and 1.5 viewports was the fix. A fixed offset is the wrong shape.
+  //
+  // 2. `scrollBy` MADE THE ANSWER DEPEND ON CHECK ORDER. pages.spec shares ONE page
+  //    object across every check, so this probe ran from whatever scroll position the
+  //    previous check left behind and added 1.5 viewports to it. The same page measured
+  //    96 or 158 depending purely on what ran before it, which made the band that judges
+  //    every NAV landing non-deterministic across runs. `scrollTo` is absolute, so the
+  //    incoming scroll position cannot influence the result.
+  //
+  // The maximum is the right reducer, not the last or the deepest sample: the band-grow
+  // below only admits elements contiguous from the viewport top, so a band of 158 means
+  // header AND rail were pinned SIMULTANEOUSLY at that depth. Chrome is "the most that
+  // can be pinned at once". Neither a fixed offset nor scroll-to-bottom can find that —
+  // at the document end a sticky element whose parent has ended has already un-stuck.
+  const depths: number[] = await page.evaluate(() => {
+    const vh = window.innerHeight;
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - vh);
+    const wanted = [0, 0.75, 1.5, 2.5, 4, 6, 9].map((m) => Math.round(vh * m));
+    return Array.from(new Set(wanted.map((y) => Math.min(y, maxScroll)))).sort((a, b) => a - b);
+  });
 
-  const result = await page.evaluate(() => {
+  let result: TopChrome = { height: 0, parts: [], implausible: false };
+
+  for (const y of depths) {
+    await page.evaluate((top: number) => {
+      // `instant`, never `auto`: in ScrollOptions `auto` MEANS "use the computed style",
+      // and this site sets html{scroll-behavior:smooth}. An animated scroll here would
+      // have us measuring mid-flight, which is the bug that produced 337 phantom NAV
+      // rows on the 2026-07-31 baseline.
+      window.scrollTo({ top, behavior: 'instant' as ScrollBehavior });
+    }, y);
+    await page.waitForTimeout(80);
+
+    const sample = await page.evaluate(() => {
     const candidates: { tag: string; cls: string; top: number; bottom: number }[] = [];
     for (const el of Array.from(document.body.querySelectorAll<HTMLElement>('*'))) {
       const cs = getComputedStyle(el);
@@ -139,7 +179,10 @@ export async function measureTopChrome(page: Page): Promise<TopChrome> {
       parts,
       implausible: band > window.innerHeight * 0.4,
     };
-  });
+    });
+
+    if (sample.height > result.height) result = sample;
+  }
 
   // Instant, not `scrollTo(0, 0)`. That plain form is smooth-ANIMATED under the site's
   // global `html{scroll-behavior:smooth}` — the exact shape of the bug removed from
