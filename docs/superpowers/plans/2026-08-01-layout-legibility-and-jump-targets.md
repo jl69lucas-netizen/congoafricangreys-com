@@ -1440,3 +1440,31 @@ Commits `91a6013`, `446770b`, `43a9873`, plus the consolidation commit that foll
 **`onlyOnce` used to fail open.** It skipped on the string literal `'vp375'`; renaming that project made all four direction tests skip in *every* project with the suite still reporting green. It now derives from `testInfo.config.projects[0].name`. Proven by renaming the project and confirming the four tests still execute.
 
 **The transferable lesson, and the correction to this plan's own method:** Task 1 specified what the fixtures should *contain* but not what they must *prove*. Three successive rounds each shipped a test that would pass on a wrong implementation. **Mutation-kill, not green, is the acceptance criterion for a gate-integrity fixture** — if you cannot state which wrong implementation the fixture rejects, it pins nothing. Task 3, if the Task 2 probe leads there, is written under that standard.
+
+### Task 2 — neither branch was right: the chrome measurement is ORDER-DEPENDENT
+
+The probe was written to choose between "the rail is genuinely not pinned at 375px" (page bug → Task 5) and "the probe misses a pinned rail" (harness bug → Task 3). **The answer is a third thing that invalidates both, and it invalidates two of this plan's own NAV conclusions.**
+
+Measured with the REAL `measureTopChrome` — a hand-rolled copy in `scripts/probe_chrome_375.mjs` did NOT reproduce the harness's own readings, and using it would have produced a confident wrong answer:
+
+| Page | Viewport | Fresh load | Pre-scrolled deep |
+|---|---|---:|---:|
+| dna-tested | 375 | **96** | **147** (header 96 + railA 51) |
+| dna-tested | 768 | **96** | **147** |
+| hand-raised | 375 | **96** | **158** (header 96 + railB 62) |
+| hand-raised | 768 | **96** | **158** |
+| baby | 768 | **158** | 158 |
+| baby | 375 | **96** | **158** |
+| all three | 1280 | 96 | 96 (rails are ≤980px only — correct) |
+
+**`measureTopChrome`'s 1.5-viewport scroll is not far enough to pin these rails.** It returns 96px on a freshly-loaded page and 147–158px on the same page pre-scrolled. Since `pages.spec.ts` shares one page object across every check, NAV measures whatever state the previous check left behind — so the band `[chrome-8, chrome+60]` that judges every landing is **non-deterministic across runs and dependent on check order.** This is the same defect class as Phase-1 lesson #2, which moved the measurement from scrollY 0 to 1.5 viewports; 1.5 viewports is still short.
+
+`baby @768` is the tell. It is the ONE row in the 2026-08-01 scorecards that recorded 158px while dna-tested and hand-raised recorded 96px — because at 768×1024 a 1.5-viewport scroll is 1,536px, which happens to clear baby's rail. Nothing about baby was different; the scroll distance was.
+
+**Consequence 1 — `dna-tested` and `hand-raised` are FALSE POSITIVES. Task 5 must not run.** Their true chrome is 147px and 158px, so their true bands are `[139, 207]` and `[150, 218]`. They land at **162px** and **170px** — comfortably inside. Their `+66px` and `+74px` overrides are **correct as written**. Task 5 would have narrowed two working pages to a `min-width:641px` scope and broken the mobile landings it was trying to fix. This is the "verify the gate before you fix the page" rule catching a page edit that would have introduced the defect it was meant to remove.
+
+**Consequence 2 — Task 3 is required, but not for the reason it was written.** Its premise (a guard wrongly excluding a visible rail) is wrong: all three guards pass. The real fix is to make the measurement **deterministic and independent of prior page state**. Recommended approach — sample the band at several scroll depths and take the maximum, because neither a fixed offset nor "scroll to the bottom" is safe: at the document end a sticky element whose parent has ended has already *un*stuck. Chrome is "the most that can be pinned at once", not "what is pinned at one arbitrary offset".
+
+**Consequence 3 — every NAV row in every existing scorecard was judged against a possibly-wrong band**, so the NAV portion of the 2026-08-01 baseline cannot be trusted until Task 3 lands and Task 11 re-scores. The LAYOUT and IMG portions are unaffected — they never consult chrome height.
+
+**Consequence 4 — `available/roys`, `baby` and `congo-vs-timneh` remain real defects** (Task 4 stands), but their corrective *values* must be derived after Task 3, not from the current scorecards' band figures.
