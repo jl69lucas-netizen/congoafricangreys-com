@@ -174,10 +174,21 @@ def main(argv=None) -> int:
     print(f"   worst family: {fam or 'n/a'} ({n} rows) — fix the check first if it looks impossible")
 
     ovr = open_overrides(cards)
-    print(f"\n4. OPEN OVERRIDES  ({len(ovr)})")
+    # Grouped by (check, reason), not listed per page. An override is DECLARED once for a
+    # run and rides along in every page's scorecard, so printing it per page repeated one
+    # 105-character reason nine times and swallowed the screen this report promises to fit
+    # on. Its magnitude is the number of pages it silences — that is a count, not nine
+    # copies of the same sentence. Same mixed-unit error the harness itself was just fixed
+    # for; `open_overrides` still returns per-page tuples, because callers and its test
+    # want the pages, and only the DISPLAY groups.
+    grouped: dict = {}
     for slug, cid, reason in ovr:
-        print(f"   {slug}: {cid} — {reason}")
-    if not ovr:
+        grouped.setdefault((cid, reason), []).append(slug)
+    print(f"\n4. OPEN OVERRIDES  ({len(grouped)} distinct, suppressing on {len(ovr)} page-runs)")
+    for (cid, reason), slugs in grouped.items():
+        print(f"   {cid} — silencing {len(slugs)} page(s)")
+        print(f"      {reason}")
+    if not grouped:
         print("   none")
 
     print("\n5. RULES WITH NO BACKING TEST  (deletion candidates)")
