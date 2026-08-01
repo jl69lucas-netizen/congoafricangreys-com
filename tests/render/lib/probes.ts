@@ -145,3 +145,64 @@ export async function measureTopChrome(page: Page): Promise<TopChrome> {
   await page.waitForTimeout(120);
   return result;
 }
+
+/**
+ * Return to the top with NO animation, whatever `scroll-behavior` the page declares.
+ *
+ * `window.scrollTo(0, 0)` is itself smooth-animated under `html{scroll-behavior:smooth}`,
+ * which every page on this site sets. The previous NAV check reset that way and clicked
+ * 80ms later — starting a fragment navigation while a full-document smooth scroll was
+ * still in flight. `behavior:'instant'` overrides the computed style; `'auto'` does not
+ * (in ScrollOptions, 'auto' means "use the computed style", which is the trap).
+ */
+export async function resetScrollInstant(page: Page): Promise<void> {
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }));
+  await page.waitForTimeout(50);
+}
+
+export interface ScrollSettle {
+  y: number;
+  /** False means it was still moving when the budget ran out — that is a finding, not a landing. */
+  settled: boolean;
+  ms: number;
+}
+
+/**
+ * Poll until `scrollY` stops changing, or give up and say so.
+ *
+ * Replaces a fixed 1200ms wait, which is simultaneously too long for an instant jump and
+ * too short for a smooth scroll across 26,000px — so it reported false failures on slow
+ * pages and wasted 20 minutes per run on fast ones.
+ *
+ * Polls with setTimeout, not requestAnimationFrame: rAF is throttled to a stop in a page
+ * that is not painting, and a probe that silently never ticks reports `settled:false` on a
+ * page that is perfectly fine. See MEMORY reference_intersectionobserver_needs_painting_page.
+ */
+export async function waitForScrollSettle(
+  page: Page,
+  opts: { maxMs?: number; stableTicks?: number; tickMs?: number } = {},
+): Promise<ScrollSettle> {
+  const { maxMs = 5000, stableTicks = 5, tickMs = 32 } = opts;
+  return page.evaluate(
+    ({ maxMs, stableTicks, tickMs }) =>
+      new Promise<{ y: number; settled: boolean; ms: number }>((resolve) => {
+        const t0 = Date.now();
+        let last = window.scrollY;
+        let stable = 0;
+        const tick = () => {
+          const y = window.scrollY;
+          if (y === last) stable++;
+          else {
+            stable = 0;
+            last = y;
+          }
+          const ms = Date.now() - t0;
+          if (stable >= stableTicks) return resolve({ y, settled: true, ms });
+          if (ms >= maxMs) return resolve({ y, settled: false, ms });
+          setTimeout(tick, tickMs);
+        };
+        setTimeout(tick, tickMs);
+      }),
+    { maxMs, stableTicks, tickMs },
+  );
+}

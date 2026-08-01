@@ -1,11 +1,17 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>clean jump</title>
+<html lang="en"><head><meta charset="utf-8"><title>clean jump, smooth scrolling</title>
 <style>
-html{scroll-behavior:auto}
+/* MATCHES THE LIVE SITE: src/styles/global.css:104 sets html{scroll-behavior:smooth}
+   inside @media (prefers-reduced-motion: no-preference). A known_good fixture that
+   used `auto` would let the check pass by being unable to measure smooth at all. */
+html{scroll-behavior:smooth}
 body{margin:0;font:16px/1.5 system-ui}
 header{position:sticky;top:0;height:96px;background:#2D6A4F;color:#fff;display:flex;align-items:center}
 nav a{color:#fff;margin-right:12px;display:inline-block;min-width:44px;min-height:44px}
-section{min-height:1600px;padding:0}
+/* Long enough that a smooth scroll between the two targets covers ~24,000px, which is
+   the distance the real for-sale pages ask for. A 1600px fixture finishes inside any
+   fixed wait and so cannot exercise the settle logic. */
+section{min-height:12000px;padding:0}
 h2{margin:0;scroll-margin-top:112px}
 </style></head><body>
 <header><nav><a href="#care">Care</a> <a href="#shipping">Shipping</a></nav></header>

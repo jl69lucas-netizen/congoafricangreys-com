@@ -1,5 +1,5 @@
 import { register, type CheckResult, type Defect } from '../lib/registry.js';
-import { measureTopChrome } from '../lib/probes.js';
+import { measureTopChrome, resetScrollInstant, waitForScrollSettle } from '../lib/probes.js';
 import type { Page } from '@playwright/test';
 
 register({
@@ -83,8 +83,7 @@ register({
 
     for (const href of targets) {
       try {
-        await page.evaluate(() => window.scrollTo(0, 0));
-        await page.waitForTimeout(80);
+        await resetScrollInstant(page);
 
         // Click the first link for this href that has a real box, in the page
         // itself. This triggers the browser's own fragment navigation — the
@@ -112,10 +111,16 @@ register({
           continue;
         }
 
-        // Long enough for a smooth scroll to finish. The recorded failure was
-        // "click a chip, wait 1.2s, scrollY is still 25" — a shorter wait would
-        // report a false failure on a page whose animation simply had not ended.
-        await page.waitForTimeout(1200);
+        const settle = await waitForScrollSettle(page);
+        if (!settle.settled) {
+          defects.push({
+            checkId: 'nav-jump-target-lands',
+            family: 'NAV' as const,
+            viewport,
+            message: `${href} was still scrolling after ${settle.ms}ms at y=${settle.y}`,
+          });
+          continue;
+        }
 
         const top = await page.evaluate((h: string) => {
           const el = document.getElementById(decodeURIComponent(h.slice(1)));
