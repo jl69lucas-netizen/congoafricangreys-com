@@ -6,6 +6,7 @@ import { registry } from './lib/registry.js';
 import './checks/index.js';
 import { writePartial } from './lib/scorecard.js';
 import { checkDistFreshness } from './lib/freshness.js';
+import { runCheck } from './lib/runCheck.js';
 import type { Defect } from './lib/registry.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -96,7 +97,7 @@ for (const target of targets.pages) {
         window.scrollTo(0, 0);
         (document.activeElement as HTMLElement | null)?.blur?.();
       });
-      const result = await check.run(page, viewport);
+      const result = await runCheck(check, page, viewport);
       examined[check.id] = result.examined;
       defects.push(...result.defects);
     }

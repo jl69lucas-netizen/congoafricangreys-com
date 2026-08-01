@@ -14,7 +14,8 @@ import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { registry } from './lib/registry.js';
+import { registry, MAX_DEFECT_ROWS, type Check, type Defect } from './lib/registry.js';
+import { runCheck } from './lib/runCheck.js';
 import { fixtureUrl } from './lib/servers.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import { resetRaw } from './lib/scorecard.js';
@@ -34,7 +35,7 @@ for (const check of registry) {
       const viewport = testInfo.project.use.viewport!.width;
       const res = await page.goto(fixtureUrl('known_broken', check.id));
       expect(res?.status(), 'known_broken fixture must exist').toBe(200);
-      const result = await check.run(page, viewport);
+      const result = await runCheck(check, page, viewport);
       expect(
         result.examined,
         `examined must reach the declared floor (${check.minExamined}) — a check cannot pass by inflating its own count`,
@@ -49,7 +50,7 @@ for (const check of registry) {
       const viewport = testInfo.project.use.viewport!.width;
       const res = await page.goto(fixtureUrl('known_good', check.id));
       expect(res?.status(), 'known_good fixture must exist').toBe(200);
-      const result = await check.run(page, viewport);
+      const result = await runCheck(check, page, viewport);
       expect(
         result.examined,
         `examined must reach the declared floor (${check.minExamined})`,
@@ -378,5 +379,65 @@ test.describe('nav-jump-target-lands reports causes, not instances', () => {
       result.defects[0].message,
       'the row must name the page-level cause',
     ).toMatch(/scroll-margin-top|scroll-behavior/);
+  });
+});
+
+/**
+ * The contract is enforced at the call site, not in each check, and not only against
+ * fixtures. A fixture has two anchors; a real page has sixty-two. A rule that only the
+ * fixtures can violate is a rule the real pages are exempt from.
+ */
+test.describe('the check-result contract', () => {
+  const fake = (defects: Partial<Defect>[]): Check => ({
+    id: 'synthetic-check',
+    family: 'NAV',
+    severity: 'advisory',
+    describe: 'synthetic',
+    minExamined: 0,
+    async run() {
+      return { examined: 9, defects: defects as Defect[] };
+    },
+  });
+
+  const row = (over: Partial<Defect> = {}): Partial<Defect> => ({
+    checkId: 'synthetic-check',
+    family: 'NAV',
+    viewport: 375,
+    count: 1,
+    message: 'x',
+    ...over,
+  });
+
+  test('accepts a well-formed result', async ({ page }) => {
+    const r = await runCheck(fake([row()]), page, 375);
+    expect(r.defects.length).toBe(1);
+  });
+
+  test('rejects more rows than MAX_DEFECT_ROWS', async ({ page }) => {
+    const many = Array.from({ length: MAX_DEFECT_ROWS + 1 }, () => row());
+    await expect(runCheck(fake(many), page, 375)).rejects.toThrow(/rows/i);
+  });
+
+  test('rejects a row with no count', async ({ page }) => {
+    await expect(runCheck(fake([row({ count: undefined })]), page, 375)).rejects.toThrow(/count/i);
+  });
+
+  test('rejects count: 0 — a defect row describes at least one failure', async ({ page }) => {
+    await expect(runCheck(fake([row({ count: 0 })]), page, 375)).rejects.toThrow(/count/i);
+  });
+
+  test('rejects a row attributed to a different check', async ({ page }) => {
+    await expect(runCheck(fake([row({ checkId: 'someone-else' })]), page, 375)).rejects.toThrow(
+      /checkId/i,
+    );
+  });
+
+  test('rejects a row attributed to a different family', async ({ page }) => {
+    await expect(runCheck(fake([row({ family: 'IMG' })]), page, 375)).rejects.toThrow(/family/i);
+  });
+
+  test('rejects a negative examined count', async ({ page }) => {
+    const bad: Check = { ...fake([]), async run() { return { examined: -1, defects: [] }; } };
+    await expect(runCheck(bad, page, 375)).rejects.toThrow(/examined/i);
   });
 });

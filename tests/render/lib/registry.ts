@@ -7,6 +7,17 @@ export interface Defect {
   checkId: string;
   family: Family;
   viewport: number;
+  /**
+   * How many individual units failed.
+   *
+   * A defect ROW is one failure MODE of one check at one viewport. `count` carries the
+   * magnitude. Without this split the first baseline mixed units: layout-min-font-size
+   * folded 108 undersized text nodes into one row while nav-jump-target-lands emitted one
+   * row per anchor, so NAV supplied 81% of the headline number by counting granularity
+   * alone — and "which family produces the most defects", the whole point of the ledger,
+   * was answering a question about aggregation style.
+   */
+  count: number;
   message: string;
 }
 
@@ -51,3 +62,12 @@ export function register(check: Check): void {
   }
   registry.push(check);
 }
+
+/**
+ * The cap on defect ROWS a single check may emit for one page at one viewport.
+ *
+ * Three is one row per failure mode, which is as many distinct modes as any check on this
+ * site has. A check that wants a fourth is really asking to report instances, and instances
+ * belong in `count`.
+ */
+export const MAX_DEFECT_ROWS = 3;
