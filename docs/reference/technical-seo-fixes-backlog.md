@@ -286,3 +286,66 @@ several priced birds, which is the one case `cag-for-sale-page-builder` §3.2 pe
 (`AggregateOffer` ONLY on group/hub pages). Either encode the group-page exemption in the
 auditor or move these pages to per-bird `Offer` — a cluster decision, not a page decision.
 Left as a WARN, not silently suppressed.
+
+## Render-harness baseline, 2026-08-01 (9 for-sale pages, 375/768/1280)
+
+First full run of `npm run test:render:pages` at harness 2.0.0. Scorecards in
+`data/quality/scorecards/*-2026-08-01.json`. **85 defect rows / 5,076 instances.**
+A *row* is one failure mode of one check at one viewport and is comparable across
+families; an *instance* is magnitude and is not.
+
+| Family | Rows | Instances | Note |
+|---|---:|---:|---|
+| LAYOUT | 54 | 4,360 | the real backlog — see below |
+| IMG | 27 | 116 | all from the overridden blocking check |
+| NAV | 4 | 76 | was 337 rows; see the correction below |
+
+### 1. `layout-min-font-size` — 3,916 instances, the largest real finding
+
+Text rendering under 12.5px. Interrogated before being recorded, because a
+suspiciously high count usually means a broken check: the flagged sizes are
+genuinely small — 12px (most common), then 11.36px, 10.88px, 11.52px, 10px — on
+`span`, `li`, `a`, `p`, `button`, `figcaption`. It is not a broken check.
+
+Two things to know before acting on the number. It sums the same text node once per
+viewport, so distinct nodes are roughly a third of it, ~145 per page. And **~11% of
+hits are `12.48px`** — `0.78rem` at a 16px root, failing the 12.5 threshold by 0.02px.
+That band is a rounding artifact, not a legibility defect; fix the 10–12px text and
+leave `0.78rem` alone, or move the threshold to 12.4 and say so.
+
+### 2. Oversized images — 33 files, currently overridden
+
+`img-srcset-within-2x` (blocking) fires on all 9 pages: 33 distinct files decode at
+more than 2x the width they paint at, measured in Playwright with
+`deviceScaleFactor: 1`. Suppressed by a counted `RENDER_OVERRIDE`, which
+`scripts/quality_report.py` prints on every run.
+
+| Ratio | File | Where |
+|---|---|---|
+| 13.33x | `ida-brim-nashville-tn-review.webp` | 640px asset in a 48px review avatar |
+| 9.23x | `stanley-perkin-oceanside-ca-african-gray-bird-review.webp` | 480px → 52px |
+| 9.23x | `jesse-ovalle-baton-rouge-la-african-grey-purchase-review.webp` | 480px → 52px |
+| 6.73x | `african-grey-parrot-eggs-nesting-clutch.webp` | 1408px → 209px |
+| 6.25x | `archie-obrien-farmingdale-ny-review.webp` | 300px → 48px |
+| 4.86x | six `*-card.webp` bird cards | 640px → 132px |
+
+Fix: regenerate review avatars at 2x their painted size (96–128px wide, not 480–640),
+and give the bird cards a `srcset` rather than one 640px master. About ten of the 33
+sit between 2.0x and 2.5x — one retina asset for a slightly different painted box;
+regenerate those last or not at all. Re-run without the override to confirm, then drop
+the override from the run command.
+
+### 3. `nav-jump-target-lands` — the 337 was mostly the harness, but not entirely
+
+The 2026-07-31 baseline recorded 337 NAV rows across 8 pages and 0 on congo-pair, which
+read as a cluster-wide `scroll-behavior:smooth` defect. **It was not.** The check reset
+with a smooth-*animated* `scrollTo(0,0)` and clicked 80ms into that animation, so it was
+measuring a fragment navigation fighting its own in-flight scroll — and congo-pair scored
+0 only because its `scroll-behavior:auto` made that reset instant by accident. It was the
+one page being measured correctly. **No site CSS change is needed; `global.css:104` stays.**
+
+What survives is real and worth fixing: **`baby-african-grey-parrot-for-sale`, all 22
+in-page links land at 114px against 158px of pinned chrome** — `scroll-margin-top` is
+`calc(var(--hdr) + 18px)` = 114px, which clears the 96px header but not the 62px sticky
+jump rail above it. Verified against `dist/`. Every heading lands behind the rail. Same
+root cause on `dna-tested` and `hand-raised` (1 row each).

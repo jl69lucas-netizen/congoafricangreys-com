@@ -56,6 +56,13 @@ if (bySlug.size === 0) {
   process.exit(1);
 }
 
+/** One entry per distinct checkId+reason. See the call site for why this matters. */
+function dedupeOverrides(list) {
+  const seen = new Map();
+  for (const o of list) seen.set(`${o.checkId}\u0000${o.reason}`, o);
+  return [...seen.values()];
+}
+
 let grandTotal = 0;
 for (const [slug, parts] of bySlug) {
   // Two numbers, deliberately. `defects` counts ROWS — one failure mode of one check at
@@ -94,19 +101,26 @@ for (const [slug, parts] of bySlug) {
     instances: instancesByFamily,
     total,
     total_instances: totalInstances,
-    overrides: parts.flatMap((p) => p.overrides ?? []),
+    // Deduped. One override is DECLARED once for the run, but it rides along in every
+    // partial, so flattening gave the same suppression 3x per page and 27x overall —
+    // the same mixed-unit error this harness version exists to remove, reappearing in
+    // the report about it. An override's magnitude is the pages it silences, not the
+    // partials it was copied into.
+    overrides: dedupeOverrides(parts.flatMap((p) => p.overrides ?? [])),
     details,
   };
   writeFileSync(resolve(OUT, `${slug}-${date}.json`), JSON.stringify(card, null, 2));
   console.log(`${String(total).padStart(3)} rows ${String(totalInstances).padStart(4)} inst  ${slug}`);
 }
 
-const allOverrides = [...bySlug.values()].flat().flatMap((p) => p.overrides ?? []);
+const allOverrides = dedupeOverrides([...bySlug.values()].flat().flatMap((p) => p.overrides ?? []));
 console.log(
   `---\n${grandTotal} defect ROWS across ${bySlug.size} pages (run=${runLabel}, harness 2.0.0). ` +
     `Rows are comparable across families; instances are not.`,
 );
 if (allOverrides.length) {
-  console.log(`${allOverrides.length} OVERRIDE(S) IN EFFECT — these are suppressed defects:`);
+  console.log(
+    `${allOverrides.length} DISTINCT OVERRIDE(S) IN EFFECT across ${bySlug.size} pages — suppressed defects:`,
+  );
   for (const o of allOverrides) console.log(`  ${o.checkId}: ${o.reason}`);
 }

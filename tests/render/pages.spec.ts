@@ -7,6 +7,7 @@ import './checks/index.js';
 import { writePartial } from './lib/scorecard.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import { runCheck } from './lib/runCheck.js';
+import { resetScrollInstant } from './lib/probes.js';
 import type { Defect } from './lib/registry.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -16,20 +17,28 @@ const targets = JSON.parse(readFileSync(resolve(here, 'targets.json'), 'utf8')) 
 };
 
 /**
- * RENDER_OVERRIDE="check-id:reason; other-check:reason"
+ * RENDER_OVERRIDE=$'check-id:reason\nother-check:reason'  (one per line)
  *
  * An override suppresses a blocking failure and is written into the scorecard,
  * so overrides are counted rather than hidden. A bare id with no reason is rejected.
  *
- * Entries are separated by SEMICOLONS, not commas, because a real reason
- * contains commas — "card srcset regen queued, see backlog" was split into two
- * entries by a comma separator and rejected for the fragment having no colon.
- * A reason nobody can write is an override nobody will use, and an override
- * nobody will use gets replaced by someone quietly flipping the check back to
- * advisory, which is the outcome this whole mechanism exists to prevent.
+ * Entries are separated by NEWLINES, and this is the third separator tried.
+ * Commas failed first: "card srcset regen queued, see backlog" split into two
+ * entries, the second having no colon. Semicolons were chosen as the fix and
+ * failed the very first time a real override was written, on 2026-08-01, for
+ * exactly the same reason — the reason prose contained a semicolon.
+ *
+ * The lesson is not "pick rarer punctuation." It is that ANY character common
+ * in English prose will eventually appear in a reason, and each time it does
+ * the override is rejected at the moment someone is trying to use it. A reason
+ * nobody can write is an override nobody will use, and an override nobody will
+ * use gets replaced by someone quietly flipping the check back to advisory,
+ * which is the outcome this whole mechanism exists to prevent. A newline cannot
+ * appear by accident in a shell-set value, so the escape hatch stops fighting
+ * the prose it was built to carry.
  */
 const overrides: { checkId: string; reason: string }[] = (process.env.RENDER_OVERRIDE ?? '')
-  .split(';')
+  .split('\n')
   .map((s) => s.trim())
   .filter(Boolean)
   .map((entry) => {
@@ -93,10 +102,13 @@ for (const target of targets.pages) {
     for (const check of checks) {
       // Reset shared page state between checks — NAV clicks leave scroll,
       // :target styling and focus mutated for whatever runs next.
-      await page.evaluate(() => {
-        window.scrollTo(0, 0);
-        (document.activeElement as HTMLElement | null)?.blur?.();
-      });
+      //
+      // resetScrollInstant, not scrollTo(0, 0): the plain form is smooth-ANIMATED under
+      // the site's global html{scroll-behavior:smooth}, so it would hand the next check
+      // a page still gliding toward the top. That is how the NAV check spent a whole
+      // baseline measuring its own animation instead of the page.
+      await resetScrollInstant(page);
+      await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur?.());
       const result = await runCheck(check, page, viewport);
       examined[check.id] = result.examined;
       defects.push(...result.defects);
