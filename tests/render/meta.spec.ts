@@ -392,15 +392,26 @@ test.describe('nav-jump-target-lands reports causes, not instances', () => {
  * That is an undershoot description, sourced from a minority of one, and a reader who
  * followed it would INCREASE a scroll-margin that is already 66px too large.
  *
- * The fixture pair below isolates exactly one declaration (200px vs 108px against 96px
- * of chrome) so the assertion can only be satisfied by the check reading both directions.
+ * Four fixtures, because direction has FOUR quadrants and three of them can be satisfied
+ * by a wrong implementation. Defining `long` as "not short" rather than "past the far
+ * edge" passes the uniform, the good and the mixed fixture, and then prints "18 of 19
+ * targets overshoot" on a page whose 18 targets sit correctly IN-BAND — the mirror image
+ * of the bug this exists to kill. nav-undershoot-minority.html is that fourth quadrant.
+ *
+ * Every test here forces its own 1280x900 viewport because the fixtures' geometry is
+ * computed against it, so running them once per viewport project would be three
+ * byte-identical executions of the same work.
  */
 test.describe('nav-jump-target-lands names the direction of failure', () => {
-  test('fires on a page whose targets overshoot the chrome band', async ({ page }) => {
+  const check = () => registry.find((c) => c.id === 'nav-jump-target-lands')!;
+  const onlyOnce = (testInfo: { project: { name: string } }) =>
+    test.skip(testInfo.project.name !== 'vp375', 'viewport-independent; runs once');
+
+  test('fires on a page whose targets overshoot the chrome band', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-overshoot.html`);
-    const check = registry.find((c) => c.id === 'nav-jump-target-lands')!;
-    const r = await runCheck(check, page, 1280);
+    const r = await runCheck(check(), page, 1280);
 
     expect(r.defects.length).toBe(1);
     // The whole point of this fixture: the cause must not blame a too-SMALL margin.
@@ -408,11 +419,11 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
     expect(r.defects[0].message).not.toMatch(/under the \d+px of pinned chrome/);
   });
 
-  test('stays silent when the same page lands inside the band', async ({ page }) => {
+  test('stays silent when the same page lands inside the band', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_good/nav-overshoot-fixed.html`);
-    const check = registry.find((c) => c.id === 'nav-jump-target-lands')!;
-    const r = await runCheck(check, page, 1280);
+    const r = await runCheck(check(), page, 1280);
 
     expect(r.defects.length).toBe(0);
   });
@@ -424,17 +435,34 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
   // eighteen's overshoot. Verified red against the pre-fix nav.ts, whose output was
   // "1 of 19 targets have scroll-margin-top under the 96px of pinned chrome" —
   // character-for-character the string dna-tested and hand-raised shipped.
-  test('names the majority cohort when a minority undershoots', async ({ page }) => {
+  test('names the majority cohort when a minority undershoots', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-overshoot-mixed.html`);
-    const check = registry.find((c) => c.id === 'nav-jump-target-lands')!;
-    const r = await runCheck(check, page, 1280);
+    const r = await runCheck(check(), page, 1280);
 
     expect(r.defects.length).toBe(1);
     // The measured real-page failure: 1 small target among 19 was reported as THE
     // root cause of 18 overshoot failures. The cause must name the 18, not the 1.
     expect(r.defects[0].message).toMatch(/18 of 19 targets overshoot/);
     expect(r.defects[0].message).not.toMatch(/1 of 19 targets have scroll-margin-top under/);
+  });
+
+  test('names an undershooting minority without claiming overshoot', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(
+      `${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-undershoot-minority.html`,
+    );
+    const r = await runCheck(check(), page, 1280);
+
+    expect(r.defects.length).toBe(1);
+    // Guards the fourth quadrant: 18 targets sit correctly IN-BAND and one undershoots.
+    // An implementation that defines `long` as "not short" rather than "past the far
+    // edge" passes every other fixture and reports "18 of 19 targets overshoot" here.
+    // Verified: the `else long++` mutant fails exactly this assertion.
+    expect(r.defects[0].message).toMatch(/1 of 19 targets have scroll-margin-top under/);
+    expect(r.defects[0].message).not.toMatch(/overshoot/);
   });
 });
 
