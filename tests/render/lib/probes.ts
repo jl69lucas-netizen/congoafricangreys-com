@@ -148,6 +148,17 @@ export async function measureTopChrome(page: Page): Promise<TopChrome> {
       if (box.height === 0 || box.width === 0) continue;
       // must actually span the viewport horizontally — excludes off-canvas drawers
       if (box.right <= 0 || box.left >= window.innerWidth) continue;
+
+      // ...and must span MOST of it. Top chrome is a full-width band; a sticky
+      // sidebar or sticky card in a content column is not, however close to the
+      // viewport top it happens to pin. Without this, vertical adjacency alone pulled
+      // aside.availB-rail (287px) and div.dial-card (672px) into the band on
+      // hand-raised at 1280, reported "chrome measures 784px", tripped the
+      // implausible guard, and left nav-jump-target-lands examining ZERO units on
+      // that page-viewport — a strictly worse failure than the too-low band it
+      // replaced, because an unjudged page reports no defects rather than wrong ones.
+      // 0.8 rather than 1.0: real rails carry container padding and inset borders.
+      if (box.width < window.innerWidth * 0.8) continue;
       candidates.push({
         tag: el.tagName.toLowerCase(),
         cls: (el.className || '').toString().trim().split(/\s+/).slice(0, 2).join(' '),
