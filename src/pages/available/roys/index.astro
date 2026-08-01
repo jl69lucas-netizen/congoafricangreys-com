@@ -185,6 +185,15 @@ const jumpLinks = [
     .jump-mobile { position: sticky; top: 94px; z-index: 40; background: #faf7f4; }
     @media (min-width: 768px) { .jump-mobile { display: none; } }
 
+    /* Anchored landings. This page had NO scroll-margin-top at all, so all 51 in-page
+       links across the three viewports landed at 0px — flush under the 96px header,
+       every heading hidden, and each jump looking like it had not fired.
+       Measured chrome (plan Task 3): 96px at >=768 where .jump-mobile is hidden, and
+       158px below that, where the bar pins at top:94px and is 64px tall. 108 and 170
+       sit mid-band for [88,156] and [150,218] respectively. */
+    section[id] { scroll-margin-top: 108px; }
+    @media (max-width: 767px) { section[id] { scroll-margin-top: 170px; } }
+
     /* Standard media height so portrait crops aren't cut at the edges */
     .roys-d .roys-feature-img { max-height: 420px !important; object-position: center top; }
     /* Constrained 16/9 video frame for non-hero clips */
