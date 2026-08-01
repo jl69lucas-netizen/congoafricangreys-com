@@ -60,6 +60,13 @@ register({
   family: 'LAYOUT',
   severity: 'advisory',
   describe: 'no visible text may render below 12.5px',
+  // 12.5 was questioned on 2026-08-01: 88 declarations of `.78rem` compute to 12.48px
+  // and fail by 0.02px, which reads like a rounding artifact, and the backlog advised
+  // exempting them. It is not an artifact — `.78rem` is the single most-used small size
+  // in this codebase (88 declarations across 17 files), so moving the threshold to 12.4
+  // would retire the check's LARGEST cohort permanently and leave it unable to speak
+  // about that band again. The threshold stayed; the codebase moved to `--fs-micro`
+  // (0.79rem = 12.64px). Do not lower this number to make a sweep smaller.
   minExamined: 3,
   async run(page: Page, viewport: number): Promise<CheckResult> {
     const r = await page.evaluate(() => {
