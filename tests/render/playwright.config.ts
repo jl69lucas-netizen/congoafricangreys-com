@@ -4,6 +4,9 @@ import { SITE_PORT, FIXTURE_PORT, SITE_BASE } from './lib/servers.js';
 export default defineConfig({
   testDir: '.',
   testMatch: ['meta.spec.ts', 'pages.spec.ts'],
+  // Fires for EVERY invocation of this config, meta-only included — see the long
+  // comment in global-setup.ts for what deliberately does and doesn't live there.
+  globalSetup: './global-setup.ts',
   fullyParallel: false,
   workers: 2,
   timeout: 120_000,

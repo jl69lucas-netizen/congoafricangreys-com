@@ -4,7 +4,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { registry } from './lib/registry.js';
 import './checks/index.js';
-import { writePartial, writeManifest, resetRaw } from './lib/scorecard.js';
+import { writePartial } from './lib/scorecard.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import type { Defect } from './lib/registry.js';
 
@@ -40,24 +40,25 @@ const overrides: { checkId: string; reason: string }[] = (process.env.RENDER_OVE
   });
 const overridden = new Set(overrides.map((o) => o.checkId));
 
-// Must run BEFORE writeManifest, and both must run at module load (collection time) —
-// not inside beforeAll. A refused/crashed run must leave RAW_DIR empty so Guard 1 in
-// build_scorecard.mjs compares 0 found partials against N expected and fails loudly,
-// instead of silently merging a previous run's stale partials into today's scorecard.
-resetRaw();
-
-writeManifest(
-  registry.map((c) => c.id),
-  targets.pages.length * 3,
-);
-
 /**
+ * resetRaw() and writeManifest() used to live here at module scope and that was
+ * wrong: Playwright loads this module once per WORKER PROCESS, not once per run, so
+ * a destructive resetRaw() at this scope deleted earlier workers' already-written
+ * partials out from under them (reproduced 2026-08-01 — see global-setup.ts for the
+ * full account). Both now run exactly once, in the main process, from
+ * global-setup.ts, before any worker spawns.
+ *
+ * The freshness beforeAll below is DIFFERENT and correctly stays here: it only
+ * reads (checkDistFreshness has no destructive side effect), so re-running it once
+ * per worker is harmless — every worker reaches the same true/false answer. It is
+ * deliberately NOT in global-setup.ts, because that file is shared with
+ * meta.spec.ts (globalSetup fires for every invocation of the config, meta-only
+ * included), and meta.spec.ts must keep running while dist/ is stale or missing —
+ * it tests the checkers against static fixtures, never against dist/ itself.
+ *
  * A throwing beforeAll fails every test in this file, so no partial is written, so
  * build_scorecard.mjs Guard 1 (partials !== manifest) also fails. That cascade is
  * deliberate: a stale measurement must be loud at both ends, never a green run.
- *
- * meta.spec.ts is intentionally NOT gated — it tests the checkers against fixtures,
- * where dist/ is irrelevant, and it must stay runnable while a build is broken.
  */
 test.beforeAll(() => {
   const f = checkDistFreshness();

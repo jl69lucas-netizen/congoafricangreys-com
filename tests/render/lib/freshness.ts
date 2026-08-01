@@ -100,6 +100,10 @@ function formatAge(deltaMs: number): string {
  * codebase a false REFUSAL is the more expensive failure mode — a gate that cries wolf
  * once gets ignored forever, which is how twelve gates accumulated false reports here.
  * A rare false PASS on a deleted-but-not-replaced source file is the accepted trade.
+ * In practice the blind spot is narrower than it reads: a `git checkout` that removes
+ * a file almost always rewrites others in the same commit with a current mtime, which
+ * trips the gate anyway — the gap is specifically a file deleted with nothing else
+ * in `src/` touched.
  */
 export function checkDistFreshness(root: string = process.cwd()): Freshness {
   const dist = resolve(root, 'dist');
@@ -107,6 +111,16 @@ export function checkDistFreshness(root: string = process.cwd()): Freshness {
     return { fresh: false, reason: 'dist/ does not exist — run `npm run build` first' };
   }
   const newestDist = newest(dist);
+  // Check the error flag before ms===0: a dist/ that could not be READ (permission
+  // error, broken symlink) also computes ms===0, and telling the operator "contains
+  // no files" when the truth is "could not be read" sends them to delete and rebuild
+  // a dist/ that may be fine — message-quality only, this branch still refuses either way.
+  if (newestDist.error) {
+    return {
+      fresh: false,
+      reason: 'dist/ could not be fully read (permission error or a broken symlink) — refusing to call it fresh.',
+    };
+  }
   if (newestDist.ms === 0) {
     return { fresh: false, reason: 'dist/ contains no files — run `npm run build` first' };
   }
