@@ -104,7 +104,73 @@ function formatAge(deltaMs: number): string {
  * a file almost always rewrites others in the same commit with a current mtime, which
  * trips the gate anyway — the gap is specifically a file deleted with nothing else
  * in `src/` touched.
+ *
+ * CLOSED 2026-08-01, and NOT by folding directory mtimes in — that would have bought
+ * the deletion case at the price of firing on unrelated filesystem noise, which is the
+ * trade rejected above. `builtRoutesWithoutSource()` compares the SET of built routes
+ * against the SET of source pages instead, so a failure always names the exact orphaned
+ * route and is always actionable. The paragraph above is left standing because the
+ * reasoning in it is still correct about mtimes; it is the mechanism that changed.
  */
+/**
+ * Routes present in dist/ that have no corresponding file under src/pages/.
+ * Exported so the deletion case can be tested directly rather than only through
+ * checkDistFreshness's message string.
+ *
+ * Route derivation mirrors Astro's default file-based routing: `index.*` maps to its
+ * parent directory, anything else maps to its own stem. Returns [] when either tree is
+ * absent — "cannot compare" is not "found a deletion", and the callers above already
+ * refuse a missing dist/ with a clearer message.
+ */
+export function builtRoutesWithoutSource(root: string = process.cwd()): string[] {
+  const pagesDir = resolve(root, 'src', 'pages');
+  const dist = resolve(root, 'dist');
+  if (!existsSync(pagesDir) || !existsSync(dist)) return [];
+
+  const PAGE_EXT = new Set(['.astro', '.md', '.mdx', '.html']);
+  const src = new Set<string>();
+  const walkPages = (dir: string, prefix: string[]): void => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walkPages(full, [...prefix, entry.name]);
+        continue;
+      }
+      const dot = entry.name.lastIndexOf('.');
+      if (dot < 0) continue;
+      const ext = entry.name.slice(dot);
+      if (!PAGE_EXT.has(ext)) continue;
+      const stem = entry.name.slice(0, dot);
+      src.add((stem === 'index' ? prefix : [...prefix, stem]).join('/'));
+    }
+  };
+  walkPages(pagesDir, []);
+
+  // An EMPTY source set means "could not enumerate the pages", not "every built route
+  // is orphaned". Without this, a src/pages containing only skipped content (a vendored
+  // node_modules tree is the real case) makes every route in dist/ look deleted and the
+  // gate refuses a perfectly good build. That is the false FAIL this check was deferred
+  // over once, and it was caught here by an existing test rather than by review.
+  if (src.size === 0) return [];
+
+  const orphans: string[] = [];
+  const walkDist = (dir: string, prefix: string[]): void => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walkDist(full, [...prefix, entry.name]);
+        continue;
+      }
+      if (entry.name !== 'index.html') continue;
+      const route = prefix.join('/');
+      if (!src.has(route)) orphans.push(route);
+    }
+  };
+  walkDist(dist, []);
+  return orphans.sort();
+}
+
 export function checkDistFreshness(root: string = process.cwd()): Freshness {
   const dist = resolve(root, 'dist');
   if (!existsSync(dist)) {
@@ -123,6 +189,30 @@ export function checkDistFreshness(root: string = process.cwd()): Freshness {
   }
   if (newestDist.ms === 0) {
     return { fresh: false, reason: 'dist/ contains no files — run `npm run build` first' };
+  }
+
+  // Deletion check — closes the blind spot described above WITHOUT the false-FAIL cost
+  // that made the mtime approach a bad trade. mtimes cannot see a deletion: removing a
+  // page from src/ leaves dist/ serving a stale copy while every remaining file's mtime
+  // still says fresh. Folding DIRECTORY mtimes in would catch it but fires on unrelated
+  // filesystem noise, and on this codebase a gate that cries wolf gets ignored forever.
+  //
+  // A set comparison has no such cost: it names the exact orphaned route, so a failure
+  // is always actionable and never ambiguous. Measured on this repo 2026-08-01 —
+  // 108 source routes, 108 built routes, zero discrepancy in either direction, because
+  // the site has no dynamic routes or collection-generated pages. If that ever changes,
+  // this fails loudly with the route name rather than silently, which is the correct
+  // direction for a gate whose whole purpose is refusing to measure a stale build.
+  const orphans = builtRoutesWithoutSource(root);
+  if (orphans.length) {
+    const shown = orphans.slice(0, 5).map((r) => `/${r}/`).join(', ');
+    return {
+      fresh: false,
+      reason:
+        `dist/ serves ${orphans.length} route(s) with no source under src/pages — ` +
+        `the source was deleted and dist/ still has the old build: ${shown}` +
+        `${orphans.length > 5 ? ` (+${orphans.length - 5} more)` : ''}. Run \`npm run build\`.`,
+    };
   }
 
   for (const rel of SOURCES) {
