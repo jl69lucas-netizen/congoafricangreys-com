@@ -338,3 +338,45 @@ test.describe('resetRaw placement — pins the actual production wiring', () => 
     ).not.toContain('resetRaw(');
   });
 });
+
+/**
+ * NAV supplied 337 of the 418 rows in the first baseline (81%) purely by counting
+ * granularity: three checks aggregate to one row per page-viewport, NAV emitted one row
+ * per anchor. A family total is only meaningful if every family counts the same unit.
+ */
+test.describe('nav-jump-target-lands reports causes, not instances', () => {
+  test('a page with many broken anchors yields ONE row per failure mode', async ({
+    page,
+  }, testInfo) => {
+    const viewport = testInfo.project.use.viewport!.width;
+    const anchors = Array.from({ length: 20 }, (_, i) => i + 1);
+    const html =
+      `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>many</title><style>` +
+      `html{scroll-behavior:auto}body{margin:0;font:16px/1.5 system-ui}` +
+      `header{position:sticky;top:0;height:96px;background:#2D6A4F;display:flex;align-items:center}` +
+      `nav a{color:#fff;margin-right:8px;display:inline-block;min-width:44px;min-height:44px}` +
+      `section{min-height:900px}h2{margin:0}</style></head><body><header><nav>` +
+      anchors.map((i) => `<a href="#h${i}">${i}</a>`).join(' ') +
+      `</nav></header>` +
+      anchors.map((i) => `<section><h2 id="h${i}">H${i}</h2></section>`).join('') +
+      `</body></html>`;
+    await page.setContent(html);
+
+    const check = registry.find((c) => c.id === 'nav-jump-target-lands')!;
+    const result = await check.run(page, viewport);
+
+    expect(result.examined, 'must have judged all 20 targets').toBe(20);
+    expect(
+      result.defects.length,
+      `expected at most 3 rows (one per failure mode); got ${result.defects.length}`,
+    ).toBeLessThanOrEqual(3);
+    expect(
+      result.defects.reduce((n, d) => n + (d.count ?? 0), 0),
+      'the rows must still carry the instance count',
+    ).toBeGreaterThan(3);
+    expect(
+      result.defects[0].message,
+      'the row must name the page-level cause',
+    ).toMatch(/scroll-margin-top|scroll-behavior/);
+  });
+});
