@@ -198,34 +198,50 @@ register({
     const r = await page.evaluate(() => {
       const root = document.querySelector('main') || document.body;
       const all = Array.from(root.querySelectorAll<HTMLElement>('*'));
-      const isVisible = (el: HTMLElement) =>
-        el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+
+      // ONE pass, precomputed. The first version tested visibility inside the inner
+      // forward-scan, so every heading re-tested every following element and each test
+      // called getClientRects(), which flushes layout. On a 96-heading page with a few
+      // thousand elements that is O(n^2) forced reflows: the check did not merely run
+      // slowly, it HUNG the page run past its timeout, and a hung check makes a page
+      // score ABSENT rather than fail — the worst outcome this harness has.
+      //
       // An element "carries text" only if it has its OWN text node. Testing textContent
       // would make every wrapping <div> the first text-bearing element after a heading
       // and the check would never see anything else.
-      const ownText = (el: Element) =>
-        Array.from(el.childNodes).some(
-          (n) => n.nodeType === 3 && (n.textContent || '').trim().length > 0,
-        );
+      const visible: boolean[] = [];
+      const carries: boolean[] = [];
+      const owner: (Element | null)[] = [];
+      for (let i = 0; i < all.length; i++) {
+        const el = all[i];
+        const v = el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+        visible[i] = v;
+        carries[i] =
+          v &&
+          Array.from(el.childNodes).some(
+            (n) => n.nodeType === 3 && (n.textContent || '').trim().length > 0,
+          );
+        owner[i] = carries[i] ? el.closest('h1, h2, h3, h4, h5, h6') : null;
+      }
 
       let examined = 0;
       const bad: string[] = [];
       for (let i = 0; i < all.length; i++) {
         const h = all[i];
         if (!/^H[1-6]$/.test(h.tagName)) continue;
-        if (!isVisible(h) || !(h.textContent || '').trim()) continue;
+        if (!visible[i] || !(h.textContent || '').trim()) continue;
 
         // Walk forward in document order to the next element bearing its own visible
-        // text, skipping the heading's own descendants.
-        let next: HTMLElement | null = null;
+        // text, skipping the heading's own descendants. `contains` is cheap and does not
+        // touch layout; everything expensive was precomputed above.
+        let nextIdx = -1;
         for (let j = i + 1; j < all.length; j++) {
-          const el = all[j];
-          if (h.contains(el)) continue;
-          if (!isVisible(el) || !ownText(el)) continue;
-          next = el;
+          if (!carries[j]) continue;
+          if (h.contains(all[j])) continue;
+          nextIdx = j;
           break;
         }
-        if (!next) continue; // the last heading on the page has nothing to judge
+        if (nextIdx < 0) continue; // the last heading on the page has nothing to judge
         examined++;
 
         // The defect is deliberately NARROW: heading immediately followed by another
@@ -234,10 +250,10 @@ register({
         // badge row) — both correct. Measured before choosing the predicate: the wider
         // "must be a <p>" form fired 9 times on available/roys and 9 on
         // congo-vs-timneh, and every one of those was a card, not a missing paragraph.
-        const owner = next.closest('h1, h2, h3, h4, h5, h6');
-        if (owner) {
+        const nextOwner = owner[nextIdx];
+        if (nextOwner) {
           bad.push(
-            `${h.tagName}→${owner.tagName} "${(h.textContent || '').trim().slice(0, 40)}"`,
+            `${h.tagName}→${nextOwner.tagName} "${(h.textContent || '').trim().slice(0, 40)}"`,
           );
         }
       }

@@ -271,7 +271,20 @@ register({
         examined++;
         const actual = getComputedStyle(el).color;
 
-        // Find the rule that actually won for this element.
+        // CHEAP TEST FIRST. Searching every colour rule for a winner is O(components x
+        // rules) with an el.matches() per pair — on a real page that is hundreds of
+        // thousands of selector matches, and the sibling SEM check has already shown
+        // what a check that merely runs slowly does to a page run. Almost every
+        // component's colour is fine, so resolve the declared value against the computed
+        // one first and only pay for the winner search when they actually disagree.
+        const probe = document.createElement('span');
+        probe.style.color = cr.color;
+        document.body.appendChild(probe);
+        const declared = getComputedStyle(probe).color;
+        probe.remove();
+        if (declared === actual) continue;
+
+        // They disagree — now find the rule that actually won for this element.
         let winner: R | null = null;
         for (const r of colorRules) {
           let matches = false;
