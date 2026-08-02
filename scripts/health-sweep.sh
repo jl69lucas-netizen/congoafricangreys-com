@@ -67,7 +67,7 @@ if [ -f scripts/verify_model_tiers.sh ]; then
   if echo "$TIER" | grep -q "FAIL=0"; then pass "Model tiers: $TIER"
   else fail "Model tier mismatch: $TIER"; fi
 fi
-echo "  skills found: $(ls skills/*.md 2>/dev/null | wc -l | tr -d ' ')"
+echo "  skills found: $(( $(ls skills/*.md 2>/dev/null | wc -l) + $(ls -d skills/*/SKILL.md 2>/dev/null | wc -l) ))"  # dir-skills count too, or this line disagrees with the gate below it
 
 if python3 scripts/register_skills.py --check >/tmp/cag-skillreg.log 2>&1; then
   pass "$(tail -1 /tmp/cag-skillreg.log)"
