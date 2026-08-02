@@ -1,5 +1,49 @@
 # Self-Improving Quality Loop — Phase 3 + Phase 4 Execution Plan
 
+> ## STATUS AFTER THE 2026-08-02 SESSION — read this before the plan below
+>
+> | Task | State |
+> |---|---|
+> | 0a  clear the srcset override | **PARTIAL.** Override narrowed and re-stated from a measurement, not cleared. |
+> | 0b  promote the 6 advisory checks | **DONE.** All six are `blocking`. |
+> | 1   SEM + SCHEMA families | **DONE.** 8 checks, both fixtures each. |
+> | 2   CSS + DUP families | **DONE.** 4 checks, both fixtures each. DUP wraps the tuned whitelist rather than forking it. |
+> | 3   retire the superseded static checks | **NOT STARTED** — deliberately. See below. |
+> | 4   `rules/` packs + the CLAUDE.md cut | **DONE.** 87,952 -> 8,604 chars. |
+> | 5   memory re-key to the seven families | **DONE.** |
+>
+> **Task 0a — what actually happened.** The plan assumed the remaining work was
+> regenerating oversized masters. It is not. `scripts/image_srcset_plan.mjs` (new)
+> measured every `<img>` on all 15 target pages **per occurrence** across a sweep that
+> straddles every Tailwind breakpoint: **290 occurrences over 2.0x, of which 3 are
+> constant-painted and 287 are FLUID** and need per-role `srcset` + measured `sizes`.
+> Generating variants is scriptable; patching `sizes` per occurrence is not, because
+> several of these images render from data arrays inside shared components. That is the
+> next session's work and it is the whole of it — the measured plan, the derived `sizes`
+> per role, and the traps are in `docs/reference/technical-seo-fixes-backlog.md`.
+> Two genuinely BROKEN images were found and fixed on the Florida page in the process.
+>
+> **Task 3 — why it was not started.** The plan's own precondition is "only after the
+> replacements are **blocking**". SEM/SCHEMA/CSS/DUP entered as `advisory`, per the
+> promotion rule (fixtures passed AND zero false reports across one full cluster). The
+> cluster run that would earn their promotion is the first thing to do next session; the
+> retirements follow it, each with the re-inject -> confirm FAIL -> remove -> confirm PASS
+> proof. Retiring on a fixture-level argument alone would be the shortcut this repo's
+> rules exist to prevent.
+>
+> **Corrections to this plan's own assumptions**, recorded so they are not re-derived:
+> - §4c says `scripts/quality_report.py` "flags any rule present in both" CLAUDE.md and
+>   the agents. **It does not** — no such check exists. The two-copy problem is instead
+>   recorded in `rules/README.md` with the injector -> pack table.
+> - §0's "33+ assets" was a filename count and implied the wrong fix. See above.
+> - Task 0b listed `layout-tap-target-size` as "still emits 15 rows/page". It was
+>   emitting them for two reasons WCAG itself exempts (label-wrapped controls, isolated
+>   small targets). Both are now implemented and the check was promoted.
+>
+> **Five harness defects were found and fixed this session, and zero pages were edited
+> for any of them** — the ratio the learning loop predicts. They are listed in the commit
+> messages of ffc2c2b, 5839b51 and 8c3db65.
+
 **Written:** 2026-08-01 (end of session), for the NEXT session to start from cold.
 **Spec:** `docs/superpowers/specs/2026-07-31-self-improving-quality-loop-design.md`
 **Status of the spec as of 2026-08-01:** Phases 1 and 2 **DONE and green**. Phases 3 and 4 **NOT STARTED**.
