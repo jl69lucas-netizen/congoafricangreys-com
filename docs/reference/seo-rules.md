@@ -536,7 +536,7 @@ Whenever any agent or skill presents the user options or choices (meta variants,
 1. Mark exactly **one** option **(Recommended)**.
 2. Explain **WHY**, grounded in real data — GSC, competitor analysis, or the codebase — never "feelings" or vague preference.
 3. Stay honest: name the **trade-off / downside** of the recommended pick too.
-In `AskUserQuestion`, the recommended option goes **first** with "(Recommended)" appended to its label. A bare list of options with no reasoned recommendation is an incomplete deliverable. Mirrors CLAUDE.md §Non-Negotiable Rules.
+In `AskUserQuestion`, the recommended option goes **first** with "(Recommended)" appended to its label. A bare list of options with no reasoned recommendation is an incomplete deliverable. Mirrors CLAUDE.md, rule 5 of the twelve (`recommend-plus-why`).
 
 **Rule 64 — Authority Citations on Technical/Clinical Terms (E-E-A-T)**
 Important technical or clinical terms must be cited **once** to a credible **government / NIH** source (prefer `pmc.ncbi.nlm.nih.gov`) or the **canonical industry authority** — at the sentence where the claim is made, not as a footnote.
