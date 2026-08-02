@@ -4,6 +4,41 @@ Executed `docs/superpowers/plans/2026-08-02-quality-loop-phase-3-4-plan.md` cold
 written. The plan's own status table now sits at the top of that file; this brief is the
 working record.
 
+## The measured result
+
+`npm run test:render:pages`, 15 pages x 3 viewports, harness 2.0.0: **45 passed (12.7m)**
+— every page clears all six blocking checks.
+
+| Check | rows | instances |
+|---|---:|---:|
+| css-class-resolves | 45 | 186 |
+| css-no-dead-component-rule | 33 | 147 |
+| img-srcset-within-2x *(overridden)* | 28 | 146 |
+| dup-no-sibling-crossover | 24 | 216 |
+| sem-section-opening-paragraph | 21 | 54 |
+| sem-title-case-headings | 18 | 393 |
+| css-component-color-not-overridden | 12 | 21 |
+| sem-all-six-levels | 6 | 18 |
+| schema-single-product-offer | 3 | 18 |
+| **TOTAL** | **190** | **1,199** |
+
+**LAYOUT and NAV report ZERO rows on all 15 pages.** That is what made promoting them to
+blocking safe, and it is the whole point of Task 0b: before today the harness had one
+blocking check, overridden everywhere.
+
+Every row above belongs to a family that entered TODAY and is `advisory`. They are a
+backlog, not a regression — and each one has already been interrogated once (see below).
+Three findings worth naming:
+
+- **`schema-single-product-offer` on `/african-grey-parrot-adoption-cost/`** — six offered
+  Products outside an `ItemList`. Either they belong in one or the page is advertising six
+  separate offers. This is the SCHEMA family earning its place on its first run.
+- **`sem-title-case-headings`, 393 instances** — the known ~1,099-heading backlog, now
+  measured rather than asserted.
+- **`css-class-resolves`** now names 1-5 genuine orphans per page (`mobile-section`,
+  `text-clay-text` x47 on roys, `counter-snippet`, `key-takeaway-v2`, `cmpe`) — the same
+  defect class as the adoption-cost page putting FAQ text in `.faqC-x`, a 16x16 icon box.
+
 ## What shipped
 
 **Phase 3 — four new invariant families.** `tests/render/` went from 7 checks in 3
@@ -50,7 +85,7 @@ each one earns a test or gets deleted.**
 **Task 5 — memory re-keyed** to the seven families in `MEMORY.md`, as an additional axis
 alongside the existing topic groups.
 
-## Five harness defects found, zero pages edited for them
+## Six harness defects found, zero pages edited for them
 
 The ratio the learning loop predicts. Each was interrogated before being believed.
 
@@ -74,7 +109,15 @@ The ratio the learning loop predicts. Each was interrogated before being believe
 5. **`css-no-dead-component-rule` reported JS-toggled state variants as dead**
    (`.cag-fab.visible`, `.nav-dropdown-btn[aria-expanded="true"] + .nav-dropdown`), and
    **`css-component-color-not-overridden` flagged Tailwind utilities** that Direction D
-   deliberately restyles. Both fired on every page — which is itself the tell.
+   deliberately restyles.
+6. **`css-class-resolves` was blind to CSS-ESCAPED class tokens.** Tailwind writes
+   `.hover\:text-clay:hover`, `.text-white\/80`, `.gap-0\.5`, so a tokeniser that stops
+   at the backslash captures `gap-0` and reports every element carrying `gap-0.5` as
+   unstyled — 45 of the CSS family's 90 rows, all 15 pages, every named orphan a class
+   that IS styled. Eggs page: 58 orphans -> 1.
+
+**Five of the six fired on EVERY page of the site.** That uniformity is the reliable tell,
+and it is now the first thing to check when a new family arrives with a large number.
 
 Plus one that would have been worse than a false report: **`sem-section-opening-paragraph`
 hung the page run.** It tested visibility inside its forward scan, so every heading
