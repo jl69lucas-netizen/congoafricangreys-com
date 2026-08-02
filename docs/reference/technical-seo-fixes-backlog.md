@@ -669,3 +669,76 @@ pages only. **The trade-off of waiting is real**: the eight static checks keep p
 the false positives already documented above (`tap-target-spacing` produced 7 false ERRORs
 on 2026-07-26, `icon-text-baseline-drift` 6), so the duplication has a running cost in
 wasted triage. That cost is smaller than silently dropping an invariant on 93 pages.
+
+---
+
+## 2026-08-02 (third session) — the srcset override is CLEARED
+
+`npm run test:render:pages` now reports **45 passed with no `RENDER_OVERRIDE` at all**, and
+`quality_report.py` §4 prints `OPEN OVERRIDES (0 distinct, suppressing on 0 page-runs)`.
+That is Task 0a's written acceptance, met for the first time since the harness was built.
+
+Start of session: **28 of 45 page-viewports failed** the blocking `img-srcset-within-2x`
+without the override.
+
+### The pipeline, and why each stage exists
+
+| Script | Does | Exists because |
+|---|---|---|
+| `image_srcset_instrument.mjs` | stamps every source `<img>` with `file@offset`, builds, then unstamps | occurrence -> source-tag was the whole difficulty; see below |
+| `image_srcset_plan.mjs` | measures painted width per occurrence across a breakpoint-straddling sweep | `sizes` is a promise about geometry and can only be measured |
+| `image_srcset_map.mjs` | groups occurrences by TAG and derives one `sizes` per tag | you cannot patch an occurrence, only a tag |
+| `image_srcset_variants.py` | cuts the WebP variants | |
+| `image_srcset_apply.mjs` | writes `srcset`+`sizes` by byte offset, back-to-front | patch by tag, never by proximity |
+| `image_srcset_fill_missing.py` | generates any candidate the built site references but does not ship | a missing candidate is a BROKEN IMAGE |
+| `image_srcset_verify.mjs` | measures oversized AND undersized from real file widths | the gate cannot see blur |
+| `build_image_manifest.py` + `src/lib/srcset.ts` | lets a component compute a truthful descriptor from the actual file | a component cannot hardcode a width for an image passed as a prop |
+
+### Five defects found in the tooling, each of which would have shipped a wrong page
+
+1. **The measuring tool's own ratio was fabricated.** `image_srcset_plan.mjs` took
+   `Math.max` of `naturalWidth` across the sweep and divided it by the MINIMUM painted
+   width — pairing the file loaded at 1440 with the box painted at 375, a ratio no viewport
+   experiences. Harmless while `natural` was constant; the dominant error the moment srcset
+   started working. After 212 tags were patched it still reported 274 occurrences over the
+   cap. Fixed to measure per viewport: **292 -> 32**. The patches had been working the whole
+   time and the tool was hiding it.
+2. **229 of 273 `w` descriptors would have been wrong.** `natural` is `naturalWidth`, the
+   width of the candidate the browser CHOSE, not the file named in `src` — off by as much
+   as 1408 vs 900. Descriptors are now read from disk. A `w` descriptor is a factual claim;
+   get it wrong and the browser's whole selection is computed from a lie.
+3. **`naturalWidth` is DENSITY-CORRECTED on a `w`-descriptor image.** A 620px file reported
+   318, 485 and 398 at three viewports — each exactly the `sizes` value there. So
+   `img-srcset-within-2x`, which divides `naturalWidth` by painted width, measures whether
+   `sizes` matches the box, NOT whether the file is oversized. Worth knowing before anyone
+   reads that check's number as bytes.
+4. **Patching a shared component blast-radiuses to 108 pages.** `NewsletterV2` and
+   `BirdCard` take their image as a prop; the first patch hardcoded `${img} 640w` for
+   masters including a 375px file and asked for a `-390` variant of it that cannot exist —
+   15 candidates referenced but absent, i.e. broken images, on pages never measured. Both
+   now compute from `src/data/image-widths.json` and emit only candidates that exist.
+5. **Inference could not do the occurrence -> tag mapping.** Const resolution, template
+   wildcards, an import graph and class matching still left **141 of 292 ambiguous**.
+   Stamping the tag at build time and reading it back resolved **292 of 292, zero
+   ambiguous**. The round trip leaves `src/` byte-identical.
+
+### What remains, stated rather than rounded off
+
+Oversized renders on a 3-page sample fell **293 -> 134** (67 -> 39 distinct files) measured
+against REAL file widths. Undersized (a file smaller than its box, i.e. blur) went **75 ->
+81 renders**, worst case **0.84x** — a 620px file in a 735px box. For scale, the attempt
+that was reverted in August shipped **0.49x**, a 168px file in a 343px box.
+
+The cause of the residual is a feedback loop the pipeline does not yet close: several of
+these images are sized by their own intrinsic width, so changing the served candidate
+changes the painted box, which invalidates the `sizes` that was derived from the previous
+geometry. **The fix is to iterate `plan -> map -> apply` until painted width stops moving**,
+which is mechanical with the scripts above and was not run to convergence here. Several of
+the 81 are also pre-existing masters that were always smaller than their boxes
+(`african-grey-parrot-breeder-midland-tx-hero.webp` is 800px in an 868px box and has no
+srcset at all).
+
+**Nothing in the harness measures the blur direction** — `img-srcset-within-2x` only has an
+upper bound. `image_srcset_verify.mjs` is the only thing that will catch it, so run it after
+any future srcset change. A run that clears the cap by shipping blur has made the page worse
+while making the metric better.
