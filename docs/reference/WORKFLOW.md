@@ -38,6 +38,18 @@ PASS having examined zero pages.
 
 ---
 
+## Where the rules live (changed 2026-08-02)
+
+`CLAUDE.md` no longer carries the rules. It keeps identity, paths, the deploy model and
+the twelve `judgment` rules; everything else moved **verbatim** into `rules/*.md`, indexed
+by `data/quality/rule-index.json` where every rule is `test`, `judgment` or `untested`.
+**`untested` means deletion candidate** and `quality_report.py` §5 prints the list every
+run. Page-type → rule-pack routing is the table in `CLAUDE.md`.
+
+The pixel-level rules are enforced by `tests/render/`, not by a document. When a defect
+escapes, charge it to the harness — add the case to `tests/render/fixtures/known_broken/`,
+watch the meta gate fail, fix the check — and write no new rule.
+
 ## Entry Point & Prerequisites
 
 Before any work begins, verify these exist:
@@ -374,17 +386,38 @@ moment Harden becomes a bullet, it becomes the bullet that gets skipped.*
    → one seam per section; exactly one seamless hero allowed
    → NEVER grep '<section class="sec"' — 6 of 8 for-sale pages don't use that class
 
-3. Runtime probes in PLAYWRIGHT at 375 / 768 / 1280   ← 768 is the one that fails
-   → the Browser pane reports vw:0, so every probe there false-passes
-   → horizontal overflow · full-page contrast · real-ch line length · component sizing
+3. npm run test:render:meta        ← THE GATE THAT CHECKS THE CHECKERS. Run it FIRST.
+   → ~200 tests, ~1 min. Every check must fire on its known_broken fixture, stay
+     silent on known_good, and reach its declared minExamined floor.
+   → A page measured by a failing gate is not evidence. Six harness defects were
+     found on 2026-08-02 alone, five of them firing on EVERY page of the site.
 
-4. python3 scripts/dup_content_audit.py <slug> [<slug>...]
+4. npm run test:render:pages       ← 19 checks x 15 pages x 375/768/1280, ~13 min
+   → BLOCKING families: IMG · LAYOUT · NAV. A blocking row fails the run.
+   → ADVISORY families: SEM · SCHEMA · CSS · DUP (promoted once a full cluster is
+     clean — fixtures passing is not enough).
+   → Refuses to run against a stale dist/. To ship past a blocking row you must write
+     RENDER_OVERRIDE=$'check-id:reason' — it is recorded in the scorecard and printed
+     by quality_report.py on every run, so an override is counted, never hidden.
+
+5. python3 scripts/quality_report.py
+   → rework rate · worst family · OPEN OVERRIDES · rules with no backing test
+
+6. Extra runtime probes in PLAYWRIGHT at 375 / 768 / 1280, for anything the harness
+   does not yet cover   ← 768 is the one that fails
+   → the Browser pane reports vw:0, so every probe there false-passes
+   → full-page contrast · real-ch line length · component sizing
+
+7. python3 scripts/dup_content_audit.py <slug> [<slug>...]
    python3 scripts/dup_content_audit.py --headers <slug> [<slug>...]
    → pass slugs LITERALLY; zsh does not word-split $VAR, and the gate will
      report PASS having compared nothing
 ```
 
 ### Sprint 3 Gate
+- [ ] **`npm run test:render:meta` green BEFORE any page result is trusted**
+- [ ] **`npm run test:render:pages` passes** — every blocking row fixed or overridden with a written reason
+- [ ] **`quality_report.py` §4 read** — an override you did not intend to leave is a defect you decided to ship
 - [ ] `page_hardening_scan` → 0 ERROR; every WARN triaged REAL / DEAD-CODE / FALSE-POSITIVE
 - [ ] **Every finding confirmed on the page before any edit** (`cag-gate-integrity` — 12 checkers have cried wolf here)
 - [ ] **Every gate's own examined count read** — a PASS over 0 pages is not a pass
