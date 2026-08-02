@@ -167,3 +167,110 @@ argument alone would be the shortcut this repo's rules exist to prevent.
   requires the gate-integrity proof procedure; do not widen it casually.
 - **`sem-title-case-headings` confirms the known backlog** of ~1,099 sentence-case
   headings. It is now measured rather than asserted.
+
+---
+
+# Session 2 — same day — promotions, and a blocking check that failed clean pages
+
+Started from the Open Flags above, in their stated order.
+
+## The measured result
+
+`npm run test:render:meta` — **198 passed / 24 skipped** (196 before; +2 pin the fix below).
+`test:render:pages` with the override — **45 passed, twice consecutively**, 190 rows /
+1,199 instances, unchanged from the first session's baseline.
+
+The two consecutive clean runs are the point. The single run recorded in session 1 was not
+evidence of a deterministic gate, and this session found out why.
+
+## `nav-jump-target-lands` was returning different verdicts for the same input
+
+Item (1) of the Open Flags was "re-run and promote if the cluster is clean". The re-run
+failed — and then failed somewhere else, and then somewhere else again, on the SAME commit
+against the SAME `dist/`:
+
+| run | failed | reported |
+|---|---|---|
+| 1 | `adoption-cost` @375 | `#reserve@26059px` |
+| 2 | `timneh` @375 · `hand-raised` @768 | "STILL MOVING when it expired" |
+| 3 + 4 | none | — |
+
+`severity: blocking`. Two bugs, both charged to the harness, **zero pages edited**:
+
+1. **A scroll that has not STARTED looks exactly like one that has FINISHED.**
+   `waitForScrollSettle` treated five unchanged `scrollY` ticks (160ms) as settled, so a
+   fragment navigation whose first animation frame landed later reported `settled: true`
+   at the pre-click position. 26,059px is where `#reserve` sits in the document — the page
+   had never moved. `lastDeltaPx` stays 0, so the check's own moving-vs-stuck partition
+   could not distinguish it either. Fixed with a 400ms start grace applying only while the
+   position is unchanged.
+2. **The gate then failed on a verdict the check itself calls not-a-page-defect** — its
+   message literally reads *"PROBABLY A BUDGET DEFECT, NOT A PAGE DEFECT; raise maxMs
+   before touching the page"*. A target still in flight now keeps waiting (5000ms, capped
+   at 4 per page-viewport), so only one still unsettled after the extension is reported.
+   Bounded on purpose: an unbounded wait trades false failures for a page that writes no
+   partial, and a page with no partial scores ABSENT.
+
+`fixtures/known_broken/scroll-late-start.html` + 2 meta tests pin it, and the test was
+**verified to FAIL with the grace disabled** before being kept — a pin that passes either
+way pins nothing.
+
+**The lesson is a new one for §3's trap list.** Every number here looked plausible; no
+count was suspiciously high. What exposed it was the same input producing different
+verdicts. A gate whose result changes between runs is broken even when its numbers look
+sane.
+
+## Promotions — 4 of 12, and why not the other 8
+
+The bar applied is the one that made LAYOUT/NAV safe: zero rows across all 15 pages **AND
+a non-zero examined count** — never zero rows alone, which is how a check that examines
+nothing passes forever. Promoted: `sem-heading-order` (2,993 headings, the same
+denominator its two firing siblings use), `schema-date-modified-present` (162 JSON-LD
+blocks), `schema-no-visible-date`, `schema-sold-not-instock`.
+
+The last one examines **zero on 7 of 15 pages** — deliberately, since its scope note
+restricts it to single-listing pages. That is nothing-to-check, not a check that no-opped,
+and the distinction is written at the flag so its zero is never read as corpus-wide proof.
+
+The other 8 carry live real defects (CSS 90 rows, DUP 24, SEM 45, SCHEMA 3). Promoting
+them would red the gate on every page and force exactly the blanket override Task 0b
+removed. **`data/quality/rule-index.json` now carries `severity` + `why_advisory` per
+rule** — that field did not exist, so Task 0b's "record the reason in the rule row" had
+been unmet since it was written. Severity is parsed from the check sources, not typed by
+hand, so it cannot drift.
+
+## Task 3 — 0 of 8 retirements, 6 on the plan's own precondition
+
+Six replacements are still `advisory`, or (for the two srcset checks) blocking but
+overridden on all 15 pages — retiring those would drop the invariant to zero enforcement.
+
+The two that DO pass the precondition still should not be retired, for a reason the plan
+does not model: **`page_hardening_scan.py` covers all 108 built pages and the render
+harness covers 15.** Retiring trades 108-page enforcement for 15-page. Sampled rather than
+assumed — three non-target comparison pages return 29 ERROR · 30 WARN. And
+`smooth-scroll-breaks-anchors` is backstopping `nav-jump-target-lands`, the check found
+flaky in this same session.
+
+## Two harness gaps closed in passing
+
+- **Scorecards now record `examined_by_check`.** They kept only how MANY checks ran, so
+  "did this zero-row check examine anything?" needed a 13-minute re-run to answer. Guard 2
+  in `build_scorecard.mjs` only proves a check examined something SOMEWHERE in the corpus.
+- **`npm run test:render:pages` cannot pass as written.** `RENDER_OVERRIDE` is a shell env
+  var the npm script never sets, so the documented command fails 28 page-viewports and the
+  "45 passed" baseline was not reproducible from the repo alone. The reproducing command
+  is now in the backlog. Related: a same-day re-run overwrites that day's scorecards, so a
+  run without the override erases the override record and `quality_report.py` then reads
+  "0 open overrides".
+
+## Open Flags
+
+- **Next session, in order:** (1) the 287 fluid srcset occurrences — unchanged, and now
+  the largest single piece of open work; (2) the CSS family's 90 rows, which
+  `quality_report.py` names as the worst family; (3) Task 3 only once the coverage
+  question above is answered.
+- **Unchanged from session 1:** DUP's whitelist gap against mandated text; the ~1,099
+  sentence-case heading backlog behind `sem-title-case-headings`.
+- **Not investigated:** why a smooth scroll on these pages can still be moving at 3000ms
+  when Chromium was measured capping programmatic smooth-scroll at ~1500ms. The extension
+  makes it harmless, but the underlying cause is unexplained.

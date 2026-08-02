@@ -22,7 +22,11 @@ const HEADING_SEL = 'h1, h2, h3, h4, h5, h6';
 register({
   id: 'sem-heading-order',
   family: 'SEM',
-  severity: 'advisory',
+  // Promoted 2026-08-02. Zero rows across all 15 corpus pages having examined 2,993
+  // headings — the SAME denominator as sem-all-six-levels and sem-title-case-headings,
+  // which fire 6 and 18 rows off it. That shared denominator is the evidence: a check
+  // reporting zero from a population its siblings find defects in is clean, not silent.
+  severity: 'blocking',
   describe: 'headings descend one level at a time — H2→H4 and H3→H6 are defects',
   minExamined: 6,
   async run(page: Page, viewport: number): Promise<CheckResult> {

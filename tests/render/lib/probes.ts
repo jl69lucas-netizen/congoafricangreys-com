@@ -255,7 +255,7 @@ export interface ScrollSettle {
  */
 export async function waitForScrollSettle(
   page: Page,
-  opts: { maxMs?: number; stableTicks?: number; tickMs?: number } = {},
+  opts: { maxMs?: number; stableTicks?: number; tickMs?: number; startGraceMs?: number } = {},
 ): Promise<ScrollSettle> {
   // 3000ms, not 5000. Chromium caps programmatic smooth-scroll DURATION rather than
   // scaling it with distance — measured on this harness's own fixture, 23,284px took
@@ -264,29 +264,52 @@ export async function waitForScrollSettle(
   // 120s test: at 5000ms, 18 targets could spend 90s in NAV alone, blow the test timeout,
   // and write no partial — and a page with no partial scores ABSENT rather than failed,
   // which probes.ts already calls the worst failure mode this harness has.
-  const { maxMs = 3000, stableTicks = 5, tickMs = 32 } = opts;
+  // `startGraceMs`: a scroll that has NOT STARTED is indistinguishable from one that has
+  // FINISHED, and without this the difference decided a blocking check at random.
+  //
+  // Measured 2026-08-02 on /african-grey-parrot-adoption-cost/ @375: two runs of the same
+  // commit against the same dist/, one clean, one failing `nav-jump-target-lands` with
+  // `#reserve@26059px` — the target's raw document offset, i.e. the page had never moved.
+  // `el.click()` requests a smooth scroll, but the first animation frame can land later
+  // than stableTicks*tickMs (5*32 = 160ms) on a 36,359px document under main-thread load.
+  // scrollY then equals its pre-click value for five straight ticks, `stable` reaches the
+  // threshold, and the probe reports `settled: true` at y=0 having never moved at all.
+  // `lastDeltaPx` stays 0, so the caller's moving-vs-stuck partition cannot tell either.
+  //
+  // The grace applies ONLY while the position is unchanged from where the click left it,
+  // so it costs nothing on the common path (a scroll that starts promptly settles exactly
+  // as before) and does not slow a legitimately no-op click beyond the grace itself.
+  const { maxMs = 3000, stableTicks = 5, tickMs = 32, startGraceMs = 400 } = opts;
   return page.evaluate(
-    ({ maxMs, stableTicks, tickMs }) =>
+    ({ maxMs, stableTicks, tickMs, startGraceMs }) =>
       new Promise<{ y: number; settled: boolean; ms: number; lastDeltaPx: number }>((resolve) => {
         const t0 = Date.now();
+        const y0 = window.scrollY;
         let last = window.scrollY;
         let stable = 0;
         let lastDeltaPx = 0;
+        let everMoved = false;
         const tick = () => {
           const y = window.scrollY;
           if (y === last) stable++;
           else {
             stable = 0;
+            everMoved = true;
             lastDeltaPx = Math.abs(y - last);
             last = y;
           }
           const ms = Date.now() - t0;
-          if (stable >= stableTicks) return resolve({ y, settled: true, ms, lastDeltaPx });
+          // Withhold the "settled" verdict while the page still sits exactly where the
+          // click left it and the grace has not expired — that is the un-started case.
+          const mayBeUnstarted = !everMoved && y === y0 && ms < startGraceMs;
+          if (stable >= stableTicks && !mayBeUnstarted) {
+            return resolve({ y, settled: true, ms, lastDeltaPx });
+          }
           if (ms >= maxMs) return resolve({ y, settled: false, ms, lastDeltaPx });
           setTimeout(tick, tickMs);
         };
         setTimeout(tick, tickMs);
       }),
-    { maxMs, stableTicks, tickMs },
+    { maxMs, stableTicks, tickMs, startGraceMs },
   );
 }

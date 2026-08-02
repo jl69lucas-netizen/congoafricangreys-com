@@ -72,9 +72,23 @@ for (const [slug, parts] of bySlug) {
   const defectsByFamily = {};
   const instancesByFamily = {};
   const examined = { pages: 1, checks: 0 };
+  // Per-check examined counts, summed across this page's viewports.
+  //
+  // Guard 2 above only proves a check examined something SOMEWHERE across the whole
+  // corpus, so a check examining 500 units on one page and 0 on the other 14 passes it.
+  // That is not enough to promote a check to `blocking` on the strength of "it reported
+  // zero rows": zero rows from a check that examined nothing is the exact failure this
+  // harness was built after (`rule.cssRules` truthy on every rule skipped every rule in
+  // the document, and two CSS checks reported a clean pass having examined ZERO). Keeping
+  // the per-check number in the card makes that judgement auditable after the run, instead
+  // of requiring a 13-minute re-run to ask the question.
+  const examinedByCheck = {};
   const details = [];
   for (const part of parts) {
     examined.checks = Math.max(examined.checks, Object.keys(part.examined).length);
+    for (const [checkId, n] of Object.entries(part.examined)) {
+      examinedByCheck[checkId] = (examinedByCheck[checkId] ?? 0) + n;
+    }
     for (const d of part.defects) {
       defectsByFamily[d.family] = (defectsByFamily[d.family] || 0) + 1;
       instancesByFamily[d.family] = (instancesByFamily[d.family] || 0) + (d.count ?? 1);
@@ -97,6 +111,7 @@ for (const [slug, parts] of bySlug) {
     harness_version: '2.0.0',
     viewports: parts.map((p) => p.viewport).sort((a, b) => a - b),
     examined,
+    examined_by_check: examinedByCheck,
     defects: defectsByFamily,
     instances: instancesByFamily,
     total,

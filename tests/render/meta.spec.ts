@@ -18,7 +18,7 @@ import { registry, MAX_DEFECT_ROWS, type Check, type Defect } from './lib/regist
 import { runCheck } from './lib/runCheck.js';
 import { flattenSlug } from './lib/scorecard.js';
 import { fixtureUrl, FIXTURE_BASE } from './lib/servers.js';
-import { measureTopChrome } from './lib/probes.js';
+import { measureTopChrome, waitForScrollSettle } from './lib/probes.js';
 import { checkDistFreshness, builtRoutesWithoutSource } from './lib/freshness.js';
 import { fixtureCorpus } from './lib/dupCorpus.js';
 import { resetRaw } from './lib/scorecard.js';
@@ -647,6 +647,52 @@ test.describe('measureTopChrome is deterministic and finds late-pinning chrome',
 
     expect(afterDeepScroll.height).toBe(fresh.height);
     expect(afterReset.height).toBe(fresh.height);
+  });
+});
+
+test.describe('waitForScrollSettle does not call an UNSTARTED scroll settled', () => {
+  const onlyOnce = (testInfo: { project: { name: string }; config: { projects: { name: string }[] } }) =>
+    test.skip(
+      testInfo.project.name !== testInfo.config.projects[0].name,
+      `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
+    );
+
+  const URL = `${FIXTURE_BASE}/tests/render/fixtures/known_broken/scroll-late-start.html`;
+
+  test('waits out a scroll whose first frame lands after the stability threshold', async ({
+    page,
+  }, testInfo) => {
+    onlyOnce(testInfo);
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto(URL);
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }));
+
+    await page.evaluate(() => document.getElementById('jump')!.click());
+    const settle = await waitForScrollSettle(page);
+
+    // Without the start grace this resolves settled:true at y=0 after ~160ms, and
+    // nav-jump-target-lands then reports the target at its raw document offset — the
+    // exact `#reserve@26059px` row that failed a clean page on the live site.
+    expect(settle.settled).toBe(true);
+    expect(settle.y).toBeGreaterThan(1000);
+
+    const top = await page.evaluate(() =>
+      Math.round(document.getElementById('reserve')!.getBoundingClientRect().top),
+    );
+    expect(Math.abs(top)).toBeLessThan(60);
+  });
+
+  test('still settles promptly when the scroll never needed to move', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto(URL);
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }));
+
+    // The grace must not turn every no-op into a 3s timeout: a click that legitimately
+    // moves nothing should still report settled, bounded by the grace and not by maxMs.
+    const settle = await waitForScrollSettle(page);
+    expect(settle.settled).toBe(true);
+    expect(settle.ms).toBeLessThan(1500);
   });
 });
 
