@@ -40,8 +40,18 @@ register({
         for (const rule of Array.from(rules)) {
           const anyRule = rule as CSSStyleRule & { cssRules?: CSSRuleList };
           if (anyRule.selectorText) {
-            for (const m of anyRule.selectorText.matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)) {
-              styled.add(m[1]);
+            // Class tokens in a selector are CSS-ESCAPED. Tailwind's variant and
+            // fractional utilities are written `.hover\\:text-clay:hover`,
+            // `.text-white\\/80`, `.gap-0\\.5` — so a naive `\\.(-?[_a-zA-Z][\\w-]*)`
+            // stops at the backslash, captures `gap-0`, and every element carrying
+            // `gap-0.5` is reported as having no rule. That was 45 of this family's 90
+            // rows on the first real-page run: the check fired on all 15 pages and every
+            // named orphan was a class that IS styled. Consume escape pairs, then
+            // unescape.
+            for (const m of anyRule.selectorText.matchAll(
+              /\.((?:\\.|[^\s.,>+~:#[\]()"'\\])+)/g,
+            )) {
+              styled.add(m[1].replace(/\\(.)/g, '$1'));
             }
           }
           if (anyRule.cssRules && anyRule.cssRules.length) collect(anyRule.cssRules); // @media, @supports, @layer
