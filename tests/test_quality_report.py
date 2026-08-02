@@ -46,6 +46,33 @@ def test_a_test_backed_rule_pointing_at_a_real_check_is_not_broken():
     assert Q.broken_test_links(index, {"img-srcset-within-2x"}) == []
 
 
+def test_the_delta_follows_the_number_that_is_printed():
+    """After the split the headline is page_rate, so the delta must come from page_rate.
+
+    Taking it from the union `rate` would print a movement next to a figure it does not
+    describe: in the real 2026-08-03 window the union rose 4.0 points while page rework
+    FELL 0.8, so the report would have shown a decline annotated as a regression.
+    """
+    led = {"windows": [
+        {"from": "2026-06-01", "to": "2026-07-01", "rate": 0.228, "page_rate": 0.145},
+        {"from": "2026-07-04", "to": "2026-08-03", "rate": 0.267, "page_rate": 0.137},
+    ]}
+    cur, delta = Q.trend(led)
+    assert cur["from"] == "2026-07-04"
+    assert delta < 0, "page rework fell; the delta must say so"
+    assert abs(delta - (0.137 - 0.145)) < 1e-9
+
+
+def test_a_pre_split_window_pair_still_gets_a_delta_from_the_union_rate():
+    """Windows recorded before the split carry no page_rate. Falling back beats crashing."""
+    led = {"windows": [
+        {"from": "2026-05-01", "to": "2026-06-01", "rate": 0.248},
+        {"from": "2026-06-01", "to": "2026-07-01", "rate": 0.228},
+    ]}
+    _, delta = Q.trend(led)
+    assert abs(delta - (0.228 - 0.248)) < 1e-9
+
+
 def test_a_rule_backed_by_a_real_TEST_FILE_is_not_a_broken_link():
     """Not every rule is enforced by a render check.
 
