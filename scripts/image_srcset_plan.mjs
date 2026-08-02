@@ -129,8 +129,17 @@ for (const slug of slugs) {
         srcset: r.srcset,
         sizes: r.sizes,
         painted: {},
+        naturalAt: {},
       };
       e.painted[vp] = r.painted;
+      // Natural width PER VIEWPORT. Taking the max across the sweep and dividing it by the
+      // minimum painted width pairs the file loaded at 1440 with the box painted at 375 —
+      // a ratio no viewport ever experiences. That was harmless while `natural` was
+      // constant (one file, no srcset) and became the dominant error the moment srcset
+      // started working: after patching 212 tags the tool still reported 274 occurrences
+      // over the cap, because it was measuring the fix against a ratio it had invented.
+      // Each viewport is a fresh `goto`, so the per-viewport reading is the honest one.
+      e.naturalAt[vp] = r.natural || null;
       if (r.natural) e.natural = Math.max(e.natural, r.natural);
       occ.set(r.key, e);
     }
@@ -170,43 +179,82 @@ console.log(`\n${total} occurrence(s) planned across ${Object.keys(plan.pages).l
 function derive(e) {
   const paintedVals = SWEEP.map((v) => e.painted[v]).filter((x) => x != null);
   if (!paintedVals.length || !e.natural) return { needsWork: false };
-  const worstRatio = e.natural / Math.min(...paintedVals);
+  // Per viewport: the file the browser actually loaded THERE against the box it painted
+  // THERE. `e.natural` (the max across the sweep) is kept only as the master-width
+  // reference for planning candidate widths, never as a numerator for the ratio.
+  const ratios = SWEEP.filter((v) => e.painted[v] != null && e.naturalAt?.[v])
+    .map((v) => e.naturalAt[v] / e.painted[v]);
+  const worstRatio = ratios.length ? Math.max(...ratios) : e.natural / Math.min(...paintedVals);
 
-  const segs = [];
-  for (const band of BANDS) {
-    const pts = band.pts.filter((v) => e.painted[v] != null);
-    if (!pts.length) continue;
-    const px = pts.map((v) => e.painted[v]);
-    const lo = Math.min(...px);
-    const hi = Math.max(...px);
-    // FIXED vs FLUID. A band whose painted width barely moves across its own width range
-    // is a fixed panel and must be declared in px — declaring vw there would shrink the
-    // request on narrow screens inside the band. A band where painted tracks the viewport
-    // must be declared in vw — declaring px there is the reverted bug.
-    const fluid = (hi - lo) / hi > 0.12;
-    if (fluid) {
-      const vw = Math.ceil(Math.max(...pts.map((v) => e.painted[v] / v)) * 100);
-      segs.push({ band, value: `${vw}vw`, maxPx: hi });
-    } else {
-      segs.push({ band, value: `${Math.ceil(hi)}px`, maxPx: hi });
-    }
-  }
-  if (!segs.length) return { needsWork: false };
+  // SEGMENT ADAPTIVELY FROM THE MEASURED SWEEP, not into the four fixed Tailwind bands.
+  //
+  // The fixed-band form could not be satisfied for 68 of 292 occurrences, and adding more
+  // variant files could never have fixed them. A band takes the MAXIMUM vw across its own
+  // points, so when one band contains viewports whose painted width differs by more than
+  // 2x — measured up to 3.70x on the congo-pair cards, 157.73px at one end and 407.17px at
+  // the other — the declaration over-states at the narrow end by more than 2x. Every
+  // candidate must satisfy `c >= declared`, so `c >= declared > 2 * painted` makes the cap
+  // unreachable by construction. The granularity of `sizes` is the defect, not the ladder.
+  //
+  // So grow segments greedily instead: extend a segment only while ONE declaration still
+  // fits every point in it, under two constraints that encode which way it is safe to be
+  // wrong.
+  //
+  //   declared >= painted   — never under-declare. Under-declaring is the reverted bug:
+  //                           the browser fetches a file smaller than the box and the page
+  //                           ships visible blur. Bytes are recoverable; blur is not.
+  //   declared <= 1.5x painted — leave room for a candidate to exist under the 2.0x cap.
+  //
+  // Boundaries land on measured sweep points, and SWEEP straddles every Tailwind
+  // breakpoint (639/640, 767/768, 1023/1024), so a boundary is never interpolated across
+  // the discontinuity where the layout actually switches.
+  const pts = SWEEP.filter((v) => e.painted[v] != null);
+  if (!pts.length) return { needsWork: false };
 
-  // Merge adjacent bands that resolve to the same value, so `sizes` stays readable.
+  /** The one declaration that covers every point in `run`, or null if none does. */
+  const fit = (run) => {
+    // Prefer vw when the painted width tracks the viewport, px when it does not; try both
+    // and keep whichever satisfies the constraints for EVERY point.
+    const vwNeeded = Math.max(...run.map((v) => e.painted[v] / v));
+    const vw = Math.ceil(vwNeeded * 1000) / 10; // 0.1vw resolution
+    const vwOk = run.every((v) => {
+      const d = (vw / 100) * v;
+      return d >= e.painted[v] - 0.5 && d <= e.painted[v] * 1.5;
+    });
+    if (vwOk) return { value: `${vw}vw`, kind: 'vw', vw };
+
+    const pxNeeded = Math.max(...run.map((v) => e.painted[v]));
+    const px = Math.ceil(pxNeeded);
+    const pxOk = run.every((v) => px >= e.painted[v] - 0.5 && px <= e.painted[v] * 1.5);
+    if (pxOk) return { value: `${px}px`, kind: 'px', px };
+
+    return null;
+  };
+
   const merged = [];
-  for (const s of segs) {
-    const last = merged[merged.length - 1];
-    if (last && last.value === s.value) {
-      last.hi = s.band.hi;
-      last.maxPx = Math.max(last.maxPx, s.maxPx);
-    } else merged.push({ hi: s.band.hi, value: s.value, maxPx: s.maxPx });
+  let i = 0;
+  while (i < pts.length) {
+    let run = [pts[i]];
+    let best = fit(run);
+    let j = i + 1;
+    while (j < pts.length) {
+      const next = fit([...run, pts[j]]);
+      if (!next) break;
+      run = [...run, pts[j]];
+      best = next;
+      j++;
+    }
+    // A single point always fits itself (declared === painted), so `best` cannot be null.
+    merged.push({ hi: run[run.length - 1], value: best.value, pts: run });
+    i = j;
   }
+
   const sizesValue = merged
-    .map((m, i) =>
-      i === merged.length - 1 ? m.value : `(max-width:${m.hi}px) ${m.value}`,
-    )
+    .map((m, k) => (k === merged.length - 1 ? m.value : `(max-width:${m.hi}px) ${m.value}`))
     .join(', ');
+
+  // Re-shape into the {band:{pts}} form the demand loop below already expects.
+  const segs = merged.map((m) => ({ band: { pts: m.pts }, value: m.value, maxPx: Math.max(...m.pts.map((v) => e.painted[v])) }));
 
   // What the browser will actually ASK FOR at each measured viewport, given the `sizes`
   // above. At DPR 1 it then picks the smallest candidate >= that number, so this is the
@@ -219,7 +267,11 @@ function derive(e) {
       const declared = s.value.endsWith('vw')
         ? (parseFloat(s.value) / 100) * v
         : parseFloat(s.value);
-      demands.push({ vp: v, painted, declared: Math.ceil(declared / 20) * 20 });
+      // Round the demand UP to a tidy variant width, but proportionally: a flat 20px step
+      // is 1.4% of a 1408px feature image and 143% of a 14px emoji, and rounding a 21px
+      // demand up to 40 puts a 2.86x file in the box the rounding was meant to protect.
+      const step = declared < 120 ? 4 : declared < 400 ? 10 : 20;
+      demands.push({ vp: v, painted, declared: Math.ceil(declared / step) * step });
     }
   }
 

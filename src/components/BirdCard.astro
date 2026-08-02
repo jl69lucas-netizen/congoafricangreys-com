@@ -1,4 +1,6 @@
 ---
+import { srcsetFor } from '../lib/srcset';
+
 interface Props {
   id: string;
   name: string;
@@ -44,6 +46,8 @@ const tagClass = tagColors[tagType] ?? tagColors.new;
       loading="lazy"
       width="400"
       height="256"
+      srcset={srcsetFor(image, [310, 579])}
+      sizes="(max-width:639px) 94.7vw, (max-width:1024px) 47.1vw, 31.1vw"
     />
     <span class={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${tagClass}`}>
       {tag}

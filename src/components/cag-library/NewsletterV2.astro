@@ -1,4 +1,5 @@
 ---
+import { srcsetFor } from '../../lib/srcset';
 // cag-newsletter (NEW CAG COMPONENTS · Component 7) — 3 variants, now copy-driven.
 //   'top'    — light banner, headline + inline email (1100px)
 //   'middle' — dark split: bird photo + email form (1100px)
@@ -82,13 +83,15 @@ const botCta = cta ?? 'Notify me';
       <div class={midMedia} style="background:linear-gradient(160deg,#3a2a22,#2a1f1a);">
         <img src={img} alt={imgAlt}
           width="520" height="320" loading="lazy" decoding="async"
+          srcset={srcsetFor(img, [390])}
+          sizes="(max-width:767px) 87.9vw, 386px"
           class="h-full w-full object-cover opacity-90" />
         <div class="absolute inset-0" style="background:linear-gradient(180deg,transparent 40%,rgba(28,26,24,0.6));"></div>
         <div class="absolute bottom-4 left-4 font-sora text-[13px] font-semibold text-white">{imgCaption}</div>
       </div>
       <div>
         <span class="mb-3 inline-flex items-center gap-1.5 rounded-full bg-clay/15 px-3 py-1 font-sora text-xs font-bold uppercase tracking-[0.12em]" style="color:#f08070;">
-          <img src="/emoji/cag-congo-64.webp" alt="" width="14" height="14" style="width:14px;height:14px;object-fit:contain;" loading="lazy" /> {eyebrow}
+          <img src="/emoji/cag-congo-64.webp" alt="" width="14" height="14" style="width:14px;height:14px;object-fit:contain;" loading="lazy"  srcset="/emoji/cag-congo-24.webp 1x, /emoji/cag-congo-64.webp 2x" /> {eyebrow}
         </span>
         <h2 class={midTitle} style="color:#faf7f4;">{midHeading}</h2>
         <p class={midSubCls} style="color:#b0a59b;max-width:44ch;">{midSub}</p>
