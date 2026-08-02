@@ -169,6 +169,14 @@ register({
     const unsettledStuck: string[] = [];
     const untestable: string[] = [];
 
+    // Extension budget for a scroll still in flight at the base budget. 5000ms is ~3x the
+    // 1494ms Chromium was measured taking for 23,284px, and the cap of 4 keeps the worst
+    // case (4 * 5000 = 20s of extension) well inside the 120s this page+viewport gets for
+    // ALL of its checks. In practice one target per page has needed it, never four.
+    const SETTLE_EXTENSION_MS = 5000;
+    const MAX_SETTLE_EXTENSIONS = 4;
+    let extensionsUsed = 0;
+
     for (const href of targets) {
       try {
         await resetScrollInstant(page);
@@ -194,7 +202,29 @@ register({
           continue;
         }
 
-        const settle = await waitForScrollSettle(page);
+        let settle = await waitForScrollSettle(page);
+
+        // A scroll that is STILL MOVING when the budget expires is not evidence of a page
+        // defect, and this check's own message says so ("PROBABLY A BUDGET DEFECT, NOT A
+        // PAGE DEFECT; raise maxMs before touching the page"). Failing a BLOCKING gate on
+        // that verdict is incoherent, and it was measured doing exactly that on 2026-08-02:
+        // three consecutive runs of the same commit against the same dist/ failed on three
+        // different page/viewport pairs — adoption-cost@375, then timneh@375 and
+        // hand-raised@768 — each time one link out of eighteen.
+        //
+        // So keep waiting instead of guessing. The scroll is already in flight, so a second
+        // wait simply continues it; only a target that is STILL unsettled after the
+        // extension is reported, which turns "probably the budget" into "definitely not".
+        // Bounded twice over — a per-target extension and a per-page cap on how many
+        // targets may use one — because pages.spec runs every check for one page+viewport
+        // inside a single 120s test, and an unbounded extension would trade false failures
+        // for pages that write no partial at all. A page with no partial scores ABSENT,
+        // which probes.ts already calls the worst failure mode this harness has.
+        if (!settle.settled && settle.lastDeltaPx > 0 && extensionsUsed < MAX_SETTLE_EXTENSIONS) {
+          extensionsUsed++;
+          settle = await waitForScrollSettle(page, { maxMs: SETTLE_EXTENSION_MS });
+        }
+
         if (!settle.settled) {
           const detail = `${href} (gave up at ${settle.ms}ms, y=${settle.y}, last tick ${settle.lastDeltaPx}px)`;
           if (settle.lastDeltaPx > 0) unsettledMoving.push(detail);

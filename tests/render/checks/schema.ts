@@ -149,7 +149,15 @@ register({
 register({
   id: 'schema-sold-not-instock',
   family: 'SCHEMA',
-  severity: 'advisory',
+  // Promoted 2026-08-02, with its vacuity stated so nobody later reads its zero as
+  // corpus-wide proof. It reported zero rows over 8 of 15 pages (24 page-viewports) and
+  // examined ZERO on the other 7 — deliberately: the scope note below restricts it to
+  // pages declaring exactly one standalone offered Product, and the other 7 are hubs,
+  // guides and multi-listing pages. That is nothing-to-check, not a check that no-opped,
+  // which is the distinction `minExamined` exists to police. Worth blocking on despite the
+  // narrow scope: the defect it catches is a bird shown Sold while its Offer still says
+  // InStock, which is a commercial error, not a cosmetic one.
+  severity: 'blocking',
   describe: 'a listing the page shows as sold may not declare InStock',
   minExamined: 1,
   async run(page: Page, viewport: number): Promise<CheckResult> {
@@ -206,7 +214,10 @@ register({
 register({
   id: 'schema-date-modified-present',
   family: 'SCHEMA',
-  severity: 'advisory',
+  // Promoted 2026-08-02. Zero rows across all 15 corpus pages having examined 162 JSON-LD
+  // blocks, non-zero on every page. Nothing conditional about it — every page carries
+  // schema, so a future page shipping without `dateModified` cannot slip through silently.
+  severity: 'blocking',
   describe: 'the page declares dateModified in JSON-LD — freshness lives in schema, only there',
   minExamined: 1,
   async run(page: Page, viewport: number): Promise<CheckResult> {
@@ -243,7 +254,11 @@ register({
 register({
   id: 'schema-no-visible-date',
   family: 'SCHEMA',
-  severity: 'advisory',
+  // Promoted 2026-08-02. Zero rows across all 15 corpus pages, examined non-zero on every
+  // one. Its examined unit is the page's rendered text, so it contributes exactly 1 per
+  // page-viewport (45 total) rather than a large count — a coarse denominator, but a
+  // present one on every page, which is the property promotion actually requires.
+  severity: 'blocking',
   describe: 'no freshness stamp is rendered as visible text — schema carries it, the page never does',
   minExamined: 1,
   async run(page: Page, viewport: number): Promise<CheckResult> {

@@ -532,3 +532,140 @@ Two variants per image, every band under the 2.0x cap with margin.
   tag, not by proximity.
 - Several images appear more than once per page at different painted sizes; a
   `replace(..., 1)` fixes only the first, and the two occurrences want different `sizes`.
+
+---
+
+## 2026-08-02 (second session) — a BLOCKING check was failing clean pages at random
+
+### `nav-jump-target-lands` was nondeterministic — two distinct bugs, zero page edits
+
+Re-running the gate on the SAME commit against the SAME `dist/` failed three times on
+three different page/viewport pairs, one link out of eighteen each time:
+
+| run | failed | reported |
+|---|---|---|
+| 1 | `african-grey-parrot-adoption-cost` @375 | `#reserve@26059px` — the target's raw document offset |
+| 2 | `timneh` @375 · `hand-raised` @768 | "STILL MOVING when it expired" |
+
+Same input, different verdict, on a check with `severity: blocking`. Charged to the
+harness; **no page was edited for any of it.**
+
+**Bug 1 — a scroll that has NOT STARTED is indistinguishable from one that has FINISHED.**
+`waitForScrollSettle` counted five unchanged `scrollY` ticks (5 × 32ms = 160ms) as
+settled. `el.click()` requests a smooth scroll whose first animation frame can land later
+than that on a 36,359px document under main-thread load, so the probe returned
+`settled: true` at the PRE-CLICK position and the check recorded the target as missed at
+its raw document offset — 26,059px, i.e. the page had never moved. `lastDeltaPx` stays 0
+in that case, so the check's own moving-vs-stuck partition could not tell either.
+Fixed with a 400ms start grace that applies ONLY while the position is unchanged, so the
+common path costs nothing. Pinned by `fixtures/known_broken/scroll-late-start.html` and
+two meta tests; **verified to FAIL with the grace disabled** before being kept.
+
+**Bug 2 — the gate failed on a verdict the check itself calls not-a-page-defect.** With
+bug 1 fixed the false landing became an honest "never stopped scrolling", whose message
+reads *"PROBABLY A BUDGET DEFECT, NOT A PAGE DEFECT; raise maxMs before touching the
+page"*. Failing a blocking gate on that is incoherent. A target still in flight at the
+base budget now simply keeps waiting (`SETTLE_EXTENSION_MS` 5000, cap 4 per
+page-viewport), so only a target still unsettled AFTER the extension is reported — which
+turns "probably the budget" into "definitely not". Bounded deliberately: an unbounded
+extension would trade false failures for a page that writes no partial, and a page with
+no partial scores ABSENT, the worst failure mode this harness has.
+
+**Reading worth keeping:** the tell here was NOT a suspiciously high count — it was the
+same input producing different verdicts. A gate whose result changes between runs is
+broken even when every individual number looks plausible.
+
+### `npm run test:render:pages` cannot pass as written
+
+`RENDER_OVERRIDE` is read from the environment by `pages.spec.ts` and the npm script never
+sets it, so the bare command fails all 28 `img-srcset-within-2x` page-viewports. The
+recorded "45 passed" baseline was produced with the variable set at the shell, and nothing
+in the repo records that — this session could not reproduce the baseline from the repo
+alone until the string was recovered from a scorecard. Until the srcset work lands, the
+reproducing command is:
+
+```bash
+export RENDER_OVERRIDE="img-srcset-within-2x:$(python3 -c "import json;print(json.load(open('data/quality/scorecards/congo-african-grey-for-sale-2026-08-02.json'))['overrides'][0]['reason'])")" && npm run test:render:pages
+```
+
+Note also that a same-day re-run OVERWRITES that day's scorecards, so a run without the
+override erases the override record from the cards — which then reads as "0 open
+overrides" in `quality_report.py`. That is the already-recorded "scorecard filenames carry
+no run label" follow-up, now with a second consequence attached.
+
+### Scorecards now carry `examined_by_check`
+
+`build_scorecard.mjs` kept only `{pages, checks}` — how MANY checks ran, not how much each
+examined. Guard 2 proves a check examined something SOMEWHERE across the corpus, so a
+check examining 500 units on one page and 0 on the other 14 passes it. That is not enough
+to promote a check on the strength of "it reported zero rows", which is the exact failure
+this harness was built after. The per-check number is now in every card, so the question
+is answerable after the run instead of needing a 13-minute re-run.
+
+### Promotions: 4 of 12, on measured evidence
+
+`sem-heading-order`, `schema-date-modified-present`, `schema-no-visible-date` and
+`schema-sold-not-instock` are now `blocking`. The bar applied is the one that made the
+LAYOUT/NAV promotion safe — **zero rows across all 15 corpus pages AND a non-zero
+examined count** — not zero rows alone.
+
+| promoted | rows | examined | note |
+|---|---:|---|---|
+| `sem-heading-order` | 0 | 2,993 headings, 15/15 pages | same denominator its two firing siblings use |
+| `schema-date-modified-present` | 0 | 162 JSON-LD blocks, 15/15 | unconditional |
+| `schema-no-visible-date` | 0 | 45 = 1 page-text unit per page-viewport | coarse unit, present everywhere |
+| `schema-sold-not-instock` | 0 | 24 over 8/15 pages, **0 on the other 7** | vacuous by design — see below |
+
+`schema-sold-not-instock`'s zero on 7 pages is nothing-to-check, not a check that
+no-opped: its own scope note restricts it to pages declaring exactly ONE standalone
+offered Product, because a rendered "Sold" badge cannot be attributed to a particular
+Offer on a multi-listing page. Promoted anyway — the defect it catches is a bird shown
+Sold whose Offer still says InStock, a commercial error rather than a cosmetic one — with
+the vacuity written at the flag so nobody later reads its zero as corpus-wide proof.
+
+**The other 8 stay advisory, each with its reason now recorded in
+`data/quality/rule-index.json` (`severity` + `why_advisory`)** — that field did not exist
+before, so Task 0b's requirement to record "any check deliberately left advisory with the
+reason in the rule row" was unmet. `severity` is parsed from the check sources by the
+updating script rather than hand-maintained, so it cannot drift from the code.
+Promoting any of the 8 today would red the gate on every page and force exactly the
+blanket override Task 0b removed: `css-class-resolves` 45 rows, `css-no-dead-component-rule`
+33, `dup-no-sibling-crossover` 24 (whose whitelist has a KNOWN gap against mandated text),
+`sem-section-opening-paragraph` 21, `sem-title-case-headings` 18 (the ~1,099-heading
+backlog), `css-component-color-not-overridden` 12, `sem-all-six-levels` 6,
+`schema-single-product-offer` 3.
+
+### Task 3 — 0 of 8 retirements were safe, and the plan's table needs a third column
+
+Six candidates fail the plan's own precondition ("only after the replacements are
+blocking"):
+
+| static check | replacement | replacement severity | verdict |
+|---|---|---|---|
+| `img-no-srcset`, `hero-preload-srcset-drift` | `img-srcset-within-2x` | blocking but **overridden on all 15** | retiring these drops srcset enforcement to zero |
+| `header-not-title-case` | `sem-title-case-headings` | advisory | precondition unmet |
+| `markup-css-drift` | `css-class-resolves` | advisory | precondition unmet |
+| `markup-css-orphan` | `css-no-dead-component-rule` | advisory | precondition unmet |
+| `component-color-loses-to-descendant` | `css-component-color-not-overridden` | advisory | precondition unmet |
+| `tap-target-spacing` | `layout-tap-target-size` | blocking, 0 rows | precondition MET — but see below |
+| `smooth-scroll-breaks-anchors` | `nav-jump-target-lands` | blocking, 0 rows | precondition MET — but see below |
+
+**The two that pass the precondition still should not be retired, for a reason the plan
+does not model: the two tools do not cover the same pages.** `page_hardening_scan.py`
+defaults to every `dist/**/index.html` — **108 pages**. The render harness runs
+`tests/render/targets.json` — **15**. Retiring a static check therefore trades enforcement
+on 108 pages for enforcement on 15, leaving 93 pages with no coverage of that invariant at
+all. Sampled to confirm rather than argued from structure: scanning three comparison pages
+that are NOT harness targets (`african-grey-vs-macaw`, `-vs-cockatoo`,
+`african-grey-parrot-pros-and-cons`) returns **29 ERROR · 30 WARN**.
+
+And `smooth-scroll-breaks-anchors` is superseded by `nav-jump-target-lands` — the check
+found flaky in this very session. Retiring a static backstop in favour of a check whose
+race was fixed hours earlier is not a trade worth making yet.
+
+**Recommendation (one, with its trade-off).** Retire nothing until either the harness
+covers the pages the static scan covers, or each retirement is scoped to the 15 target
+pages only. **The trade-off of waiting is real**: the eight static checks keep producing
+the false positives already documented above (`tap-target-spacing` produced 7 false ERRORs
+on 2026-07-26, `icon-text-baseline-drift` 6), so the duplication has a running cost in
+wasted triage. That cost is smaller than silently dropping an invariant on 93 pages.

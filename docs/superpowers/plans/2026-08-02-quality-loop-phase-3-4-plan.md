@@ -1,6 +1,43 @@
 # Self-Improving Quality Loop — Phase 3 + Phase 4 Execution Plan
 
-> ## STATUS AFTER THE 2026-08-02 SESSION — read this before the plan below
+> ## STATUS AFTER THE SECOND 2026-08-02 SESSION — read this first
+>
+> | Task | State |
+> |---|---|
+> | promote SEM/SCHEMA/CSS/DUP | **4 of 12 promoted.** `sem-heading-order`, `schema-date-modified-present`, `schema-no-visible-date`, `schema-sold-not-instock` are `blocking`. The other 8 stay advisory with `severity` + `why_advisory` now recorded per rule. |
+> | 3  retire the superseded static checks | **NOT DONE — and 6 of 8 are still blocked by the plan's own precondition.** The other 2 hit a coverage problem this plan does not model. See below. |
+> | 0a  the 287 fluid srcset occurrences | **UNCHANGED.** Still the largest single piece of open work. |
+>
+> **The session's real finding was a flaky BLOCKING check.** `nav-jump-target-lands`
+> returned different verdicts across three runs of the SAME commit against the SAME
+> `dist/` — adoption-cost@375, then timneh@375 + hand-raised@768. Two distinct bugs: a
+> settle probe that could not tell an UNSTARTED scroll from a FINISHED one (it reported a
+> target at its raw 26,059px document offset, i.e. the page never moved), and then a gate
+> failing on a verdict whose own message says *"PROBABLY A BUDGET DEFECT, NOT A PAGE
+> DEFECT"*. Both fixed in the harness; **zero pages were edited.** Full write-up, and the
+> new `known_broken/scroll-late-start.html` fixture proved to fail without the fix, in
+> `docs/reference/technical-seo-fixes-backlog.md`.
+>
+> **The tell was not a high count.** Every individual number looked plausible; what
+> exposed it was the same input producing different verdicts. Add that to §3's trap list:
+> a gate whose result changes between runs is broken even when its numbers look sane.
+>
+> **Task 3's table needs a third column — page coverage.** `page_hardening_scan.py`
+> defaults to all **108** built pages; the render harness runs **15**. Retiring a static
+> check trades 108-page enforcement for 15-page enforcement, leaving 93 pages uncovered
+> for that invariant. Sampled to confirm: three non-target comparison pages return 29
+> ERROR · 30 WARN. Recommendation: retire nothing until the harness covers those pages or
+> the retirement is scoped to the 15; the trade-off of waiting is the running triage cost
+> of the static checks' known false positives.
+>
+> **`npm run test:render:pages` cannot pass as written** — `RENDER_OVERRIDE` is a shell
+> env var the npm script never sets, so the documented gate command fails 28
+> page-viewports and the recorded baseline is not reproducible from the repo alone. The
+> reproducing command is in the backlog.
+>
+> ---
+>
+> ## STATUS AFTER THE FIRST 2026-08-02 SESSION
 >
 > | Task | State |
 > |---|---|
