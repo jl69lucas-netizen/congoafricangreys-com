@@ -75,7 +75,7 @@ register({
 register({
   id: 'img-alt-present-and-unique',
   family: 'IMG',
-  severity: 'advisory',
+  severity: 'blocking',
   describe: 'every rendered image declares alt; non-decorative alts are unique on the page',
   minExamined: 3,
   async run(page: Page, viewport: number): Promise<CheckResult> {

@@ -20,9 +20,29 @@ import { flattenSlug } from './lib/scorecard.js';
 import { fixtureUrl, FIXTURE_BASE } from './lib/servers.js';
 import { measureTopChrome } from './lib/probes.js';
 import { checkDistFreshness, builtRoutesWithoutSource } from './lib/freshness.js';
+import { fixtureCorpus } from './lib/dupCorpus.js';
 import { resetRaw } from './lib/scorecard.js';
 import './checks/index.js';
 
+
+/**
+ * Fixtures are judged under the STRICTEST page type, not a neutral one.
+ *
+ * `pageType` only reaches checks that condition on it, and today that is SCHEMA, where
+ * `bird` is the tightest branch (exactly one Product/Offer, never AggregateOffer). Passing
+ * something laxer here would let a SCHEMA check pass its fixtures through a branch it never
+ * takes on the page type it was written for — the fixture pair would then be proving a
+ * property nobody relies on.
+ */
+const FIXTURE_CTX = {
+  pageType: 'bird',
+  slug: 'fixture',
+  // A REAL corpus, not a stub. DUP's whole predicate is "does this page share copy with
+  // another page", so a fixture pair that compared against an empty sibling set would
+  // prove only that the check does nothing. tests/render/fixtures/dup_corpus/ holds the
+  // sibling the known_broken fixture is supposed to collide with.
+  siblings: async () => fixtureCorpus('tests/render/fixtures/dup_corpus'),
+};
 
 test('the registry is not empty', () => {
   expect(
@@ -37,7 +57,7 @@ for (const check of registry) {
       const viewport = testInfo.project.use.viewport!.width;
       const res = await page.goto(fixtureUrl('known_broken', check.id));
       expect(res?.status(), 'known_broken fixture must exist').toBe(200);
-      const result = await runCheck(check, page, viewport);
+      const result = await runCheck(check, page, viewport, FIXTURE_CTX);
       expect(
         result.examined,
         `examined must reach the declared floor (${check.minExamined}) — a check cannot pass by inflating its own count`,
@@ -52,7 +72,7 @@ for (const check of registry) {
       const viewport = testInfo.project.use.viewport!.width;
       const res = await page.goto(fixtureUrl('known_good', check.id));
       expect(res?.status(), 'known_good fixture must exist').toBe(200);
-      const result = await runCheck(check, page, viewport);
+      const result = await runCheck(check, page, viewport, FIXTURE_CTX);
       expect(
         result.examined,
         `examined must reach the declared floor (${check.minExamined})`,
@@ -421,7 +441,7 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
     onlyOnce(testInfo);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-overshoot.html`);
-    const r = await runCheck(check(), page, 1280);
+    const r = await runCheck(check(), page, 1280, FIXTURE_CTX);
 
     expect(r.defects.length).toBe(1);
     // The whole point of this fixture: the cause must not blame a too-SMALL margin.
@@ -433,7 +453,7 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
     onlyOnce(testInfo);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_good/nav-overshoot-fixed.html`);
-    const r = await runCheck(check(), page, 1280);
+    const r = await runCheck(check(), page, 1280, FIXTURE_CTX);
 
     expect(r.defects.length).toBe(0);
   });
@@ -449,7 +469,7 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
     onlyOnce(testInfo);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(`${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-overshoot-mixed.html`);
-    const r = await runCheck(check(), page, 1280);
+    const r = await runCheck(check(), page, 1280, FIXTURE_CTX);
 
     expect(r.defects.length).toBe(1);
     // The measured real-page failure: 1 small target among 19 was reported as THE
@@ -470,7 +490,7 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
     await page.goto(
       `${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-undershoot-minority.html`,
     );
-    const r = await runCheck(check(), page, 1280);
+    const r = await runCheck(check(), page, 1280, FIXTURE_CTX);
 
     expect(r.defects.length).toBe(1);
     // Guards the fourth quadrant: 18 targets sit correctly IN-BAND and one undershoots.
@@ -515,36 +535,36 @@ test.describe('the check-result contract', () => {
   });
 
   test('accepts a well-formed result', async ({ page }) => {
-    const r = await runCheck(fake([row()]), page, 375);
+    const r = await runCheck(fake([row()]), page, 375, FIXTURE_CTX);
     expect(r.defects.length).toBe(1);
   });
 
   test('rejects more rows than MAX_DEFECT_ROWS', async ({ page }) => {
     const many = Array.from({ length: MAX_DEFECT_ROWS + 1 }, () => row());
-    await expect(runCheck(fake(many), page, 375)).rejects.toThrow(/rows/i);
+    await expect(runCheck(fake(many), page, 375, FIXTURE_CTX)).rejects.toThrow(/rows/i);
   });
 
   test('rejects a row with no count', async ({ page }) => {
-    await expect(runCheck(fake([row({ count: undefined })]), page, 375)).rejects.toThrow(/count/i);
+    await expect(runCheck(fake([row({ count: undefined })]), page, 375, FIXTURE_CTX)).rejects.toThrow(/count/i);
   });
 
   test('rejects count: 0 — a defect row describes at least one failure', async ({ page }) => {
-    await expect(runCheck(fake([row({ count: 0 })]), page, 375)).rejects.toThrow(/count/i);
+    await expect(runCheck(fake([row({ count: 0 })]), page, 375, FIXTURE_CTX)).rejects.toThrow(/count/i);
   });
 
   test('rejects a row attributed to a different check', async ({ page }) => {
-    await expect(runCheck(fake([row({ checkId: 'someone-else' })]), page, 375)).rejects.toThrow(
+    await expect(runCheck(fake([row({ checkId: 'someone-else' })]), page, 375, FIXTURE_CTX)).rejects.toThrow(
       /checkId/i,
     );
   });
 
   test('rejects a row attributed to a different family', async ({ page }) => {
-    await expect(runCheck(fake([row({ family: 'IMG' })]), page, 375)).rejects.toThrow(/family/i);
+    await expect(runCheck(fake([row({ family: 'IMG' })]), page, 375, FIXTURE_CTX)).rejects.toThrow(/family/i);
   });
 
   test('rejects a negative examined count', async ({ page }) => {
     const bad: Check = { ...fake([]), async run() { return { examined: -1, defects: [] }; } };
-    await expect(runCheck(bad, page, 375)).rejects.toThrow(/examined/i);
+    await expect(runCheck(bad, page, 375, FIXTURE_CTX)).rejects.toThrow(/examined/i);
   });
 });
 
@@ -661,20 +681,33 @@ test.describe('layout-tap-target-size honours WCAG 2.5.8 exemptions', () => {
       `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
     );
 
-  test('is silent on skip links and inline prose links', async ({ page }, testInfo) => {
+  test('is silent on skip links, prose links, labelled inputs and isolated targets', async ({
+    page,
+  }, testInfo) => {
     onlyOnce(testInfo);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(
       `${FIXTURE_BASE}/tests/render/fixtures/known_good/layout-tap-target-exemptions.html`,
     );
     const check = registry.find((c) => c.id === 'layout-tap-target-size')!;
-    const r = await runCheck(check, page, 1280);
+    const r = await runCheck(check, page, 1280, FIXTURE_CTX);
 
-    // Both categories are WCAG's OWN exemptions, and both were being reported as
-    // defects on every page: the 1x1 clipped skip link appeared in all 45 LAYOUT
-    // rows of the 2026-08-01 baseline, and inline prose links supplied the bulk of
-    // every message. SC 2.5.8 exempts a target that is "in a sentence or block of
-    // text". Flagging them made this check elect itself worst family.
+    // Four categories, all of them WCAG's OWN exemptions, and all four were reported
+    // as defects on live pages:
+    //   - the 1x1 clipped skip link appeared in all 45 LAYOUT rows of the 2026-08-01
+    //     baseline;
+    //   - inline prose links supplied the bulk of every message (SC 2.5.8 exempts a
+    //     target "in a sentence or block of text");
+    //   - 12 rows on the care-guide and health-guarantee pages were 13x13 checkboxes
+    //     and radios wrapped in 86x47 to 341x62 <label>s — the label IS the target;
+    //   - 6 rows per page were card-title links, 18px tall and alone in their card,
+    //     which the SPACING exception covers explicitly.
+    //
+    // Each of the four is pinned independently: the fixture puts a flush button beside
+    // the labelled checkbox so the spacing exception cannot cover it, and isolates the
+    // card link so the label rule cannot. Verified by deleting each rule in turn and
+    // watching this test go red — an earlier fixture passed with the label rule
+    // deleted, because spacing was silently covering that case too.
     expect(r.defects.map((d) => d.message)).toEqual([]);
     // ...and it must still have judged the real controls, not skipped everything.
     expect(r.examined).toBeGreaterThanOrEqual(2);

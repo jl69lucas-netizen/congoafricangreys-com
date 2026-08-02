@@ -39,6 +39,35 @@ export interface CheckResult {
   defects: Defect[];
 }
 
+/**
+ * What the harness knows about the page being measured that the page itself does not say.
+ *
+ * Only `pageType` so far, and it exists because SCHEMA invariants are genuinely page-type
+ * conditioned: a bird listing must carry EXACTLY ONE Product/Offer, while a hub legitimately
+ * carries an ItemList of many, and a page cannot be trusted to self-declare which it is —
+ * the defect this catches is precisely a page whose schema does not match its role. Every
+ * other check ignores this argument.
+ *
+ * `targets.json` is the authority for the value; on fixtures the meta gate supplies the
+ * strictest type so a check cannot pass its fixtures under a laxer branch than it will meet
+ * on a real page.
+ */
+export interface CheckContext {
+  pageType: string;
+  /** The page's own slug, as written in targets.json. */
+  slug: string;
+  /**
+   * The other pages this one must not read like — resolved by the CALLER, not the check.
+   *
+   * DUP is the one family that cannot be answered from a single painted page, and how the
+   * sibling set is chosen is a policy decision (same page type, per CLAUDE.md's
+   * sibling-cluster rule) that belongs with the target list rather than buried in a check.
+   * Passing it as a callback also gives the meta gate a real corpus to fire against, so
+   * the fixture pair tests the actual comparison rather than a mocked one.
+   */
+  siblings(): Promise<{ slug: string; text: string }[]>;
+}
+
 export interface Check {
   id: string;
   family: Family;
@@ -51,7 +80,7 @@ export interface Check {
    * cannot pass the gate by inflating its own count.
    */
   minExamined: number;
-  run(page: Page, viewport: number): Promise<CheckResult>;
+  run(page: Page, viewport: number, ctx: CheckContext): Promise<CheckResult>;
 }
 
 export const registry: Check[] = [];

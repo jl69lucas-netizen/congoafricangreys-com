@@ -8,6 +8,7 @@ import { writePartial } from './lib/scorecard.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import { runCheck } from './lib/runCheck.js';
 import { resetScrollInstant } from './lib/probes.js';
+import { distText } from './lib/dupCorpus.js';
 import type { Defect } from './lib/registry.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -109,7 +110,21 @@ for (const target of targets.pages) {
       // baseline measuring its own animation instead of the page.
       await resetScrollInstant(page);
       await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur?.());
-      const result = await runCheck(check, page, viewport);
+      const result = await runCheck(check, page, viewport, {
+        pageType: target.page_type,
+        slug: target.slug,
+        // The sibling set is the same page type, per CLAUDE.md's sibling-cluster rule:
+        // a for-sale page must not read like another for-sale page. Deliberately NOT
+        // every page on the site — the ~5,857 sitewide crossovers across the location
+        // pages are a known, separate piece of work, and folding them in here would
+        // bury the sibling signal this rule exists to protect under a backlog it
+        // cannot act on.
+        siblings: async () =>
+          targets.pages
+            .filter((p) => p.page_type === target.page_type && p.slug !== target.slug)
+            .map((p) => ({ slug: p.slug, text: distText(p.slug) ?? '' }))
+            .filter((p) => p.text),
+      });
       examined[check.id] = result.examined;
       defects.push(...result.defects);
     }

@@ -5,7 +5,7 @@ import type { Page } from '@playwright/test';
 register({
   id: 'nav-anchors-resolve',
   family: 'NAV',
-  severity: 'advisory',
+  severity: 'blocking',
   describe: 'every in-page #anchor points at an element that exists',
   minExamined: 2,
   async run(page: Page, viewport: number): Promise<CheckResult> {
@@ -112,7 +112,7 @@ async function diagnoseLandingCause(
 register({
   id: 'nav-jump-target-lands',
   family: 'NAV',
-  severity: 'advisory',
+  severity: 'blocking',
   describe: 'clicking an in-page link must leave its target visible below the sticky chrome',
   minExamined: 2,
   async run(page: Page, viewport: number): Promise<CheckResult> {
