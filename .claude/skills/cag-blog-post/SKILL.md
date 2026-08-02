@@ -85,7 +85,7 @@ All 8 are Direction-D themed by inheritance (do NOT re-implement per page). Colo
 
 ### 4. Voice, Humor & Length
 
-- **Voice:** First-person plural C.A.Gs — "we / us / our / here at C.A.Gs." Encyclopedic exceptions for taxonomy/cited research only. See CLAUDE.md §First-Person Brand Voice.
+- **Voice:** First-person plural C.A.Gs — "we / us / our / here at C.A.Gs." Encyclopedic exceptions for taxonomy/cited research only. See CLAUDE.md, rule 1 of the twelve.
 - **Humor:** Style-2 dry/transparent. **≤1 beat per section, gated.** Permitted on commercial/comparison/lighter pages (price, vs-Eclectus, beginners, best-place-to-buy). **ZERO humor on health-problems and any medical/legal/CITES content.**
 - **Length:** **1,800–2,500 words, intent-scaled** — comparison/price leaner; care guides (cage/health/training) fuller. Long-tail 6+ word + conversational/voice query weighting throughout.
 - **Content posture:** transactional/commercial/comparison-led. AI-overview-resistant via breeder moat + buyer-advocate framing + strategic CTAs.
@@ -94,7 +94,7 @@ All 8 are Direction-D themed by inheritance (do NOT re-implement per page). Colo
 
 ### 5. Baked-in Gates (non-negotiable, every blog page)
 
-- **Heading Outline Gate** — present full H1→H6 outline (all six levels, sequential, ≥5 H5 AND ≥5 H6) + get explicit approval **BEFORE any page code**. No skipped levels. See CLAUDE.md §Heading Hierarchy Outline Gate.
+- **Heading Outline Gate** — present full H1→H6 outline (all six levels, sequential, ≥5 H5 AND ≥5 H6) + get explicit approval **BEFORE any page code**. No skipped levels. See `rules/headings.md` (`heading-hierarchy-outline-gate`); the rule moved out of CLAUDE.md on 2026-08-02.
 - **Line-icons not emoji** — Feather-style SVGs (`1em`, `currentColor`). Keep only ✔ ✗ ★ text glyphs. Never use 💡 ⚠ or any pictograph emoji.
 - **Shipping line on every card** — `Ships nationwide · $185 airport · $350 home`. Pull from `data/financial-entities.json`. No hardcoded figures.
 - **Schema visible + verified in `dist/`** — extend existing JSON-LD, never duplicate. Verify with grep on `dist/` output, not source files.
