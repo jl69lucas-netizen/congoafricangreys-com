@@ -139,13 +139,21 @@ def open_overrides(cards: list) -> list:
 
 
 def trend(ledger: dict):
-    """(most recent window, delta vs the one before it or None)."""
+    """(most recent window, delta vs the one before it or None).
+
+    The delta is computed on the SAME number that gets printed. After the 2026-08-03
+    split the headline is `page_rate`, so a delta taken from the union `rate` would sit
+    next to the page figure and describe something else entirely — the union moved
+    +4.0 points in the window where page rework moved -0.8. Both windows must carry the
+    key, or there is nothing comparable to subtract.
+    """
     w = sorted(ledger.get("windows", []), key=lambda x: x["from"])
     if not w:
         return (None, None)
     if len(w) == 1:
         return (w[-1], None)
-    return (w[-1], w[-1]["rate"] - w[-2]["rate"])
+    key = "page_rate" if "page_rate" in w[-1] and "page_rate" in w[-2] else "rate"
+    return (w[-1], w[-1][key] - w[-2][key])
 
 
 def _read(path: pathlib.Path, default):
@@ -175,7 +183,20 @@ def main(argv=None) -> int:
         print("   no windows recorded — run scripts/rework_ledger.py --last-30-days")
     else:
         arrow = "" if delta is None else f"  ({delta:+.1%} vs previous window)"
-        print(f"   {cur['from']} .. {cur['to']}   {cur['rework']}/{cur['total']} = {cur['rate']:.1%}{arrow}")
+        # PAGE rework is the headline. Harness self-repair is printed beside it, never
+        # folded in: the learning loop REQUIRES escaped defects to be charged to the
+        # harness, so counting checker fixes here would make the number worse every time
+        # the loop works. Split 2026-08-03; every historical window was recomputed then.
+        # `page_rate` is absent from windows recorded before the split — fall back rather
+        # than crash, and say which number is being shown.
+        if "page_rate" in cur:
+            print(f"   {cur['from']} .. {cur['to']}   "
+                  f"PAGE {cur['page_rework']}/{cur['total']} = {cur['page_rate']:.1%}{arrow}")
+            print(f"   {'':<24}harness self-repair {cur['harness_rework']} = "
+                  f"{cur['harness_rate']:.1%}  (checker fixes, no page edited)")
+        else:
+            print(f"   {cur['from']} .. {cur['to']}   {cur['rework']}/{cur['total']} = "
+                  f"{cur['rate']:.1%}{arrow}   [pre-split window: page and harness combined]")
 
     print(f"\n2. FIRST-RUN DEFECTS  (leading — most recent {args.limit} pages)")
     if not cards:

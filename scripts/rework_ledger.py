@@ -61,33 +61,73 @@ def classify(subject: str) -> list:
     return [name for name, pat in DOMAIN_PATTERNS if re.search(pat, subject, re.IGNORECASE)]
 
 
-def git_subjects(frm: str, to: str, cwd: pathlib.Path = ROOT) -> list:
-    """Commit subjects in [frm, to). Raises rather than returning [] on a git error —
-    an empty list would be recorded as a 0% rework window, which is a lie shaped
-    exactly like success."""
+def git_commits(frm: str, to: str, cwd: pathlib.Path = ROOT) -> list:
+    """(subject, files) for every commit in [frm, to).
+
+    The file list is what separates PAGE rework from HARNESS self-repair. Without it the
+    metric counts a checker fix the same as a page fix — and since the learning loop
+    REQUIRES escaped defects to be charged to the harness, the headline then worsens
+    every time the loop works as designed. Measured 2026-08-03: of 74 rework commits in
+    the 30-day window, 36 edited no page at all.
+
+    Raises rather than returning [] on a git error — an empty list would be recorded as a
+    0% rework window, which is a lie shaped exactly like success.
+    """
     out = subprocess.run(
-        ["git", "log", f"--since={frm}", f"--until={to}", "--pretty=format:%s"],
-        cwd=cwd,
-        capture_output=True,
-        text=True,
-        check=True,
+        ["git", "log", f"--since={frm}", f"--until={to}",
+         "--pretty=format:\x01%s", "--name-only"],
+        cwd=cwd, capture_output=True, text=True, check=True,
     )
-    return [line for line in out.stdout.splitlines() if line.strip()]
+    commits = []
+    for chunk in out.stdout.split("\x01"):
+        if not chunk.strip():
+            continue
+        lines = chunk.splitlines()
+        subject, files = lines[0].strip(), [f for f in lines[1:] if f.strip()]
+        if subject:
+            commits.append((subject, files))
+    return commits
 
 
-def window(frm: str, to: str, subjects: list) -> dict:
-    total = len(subjects)
-    rework = [s for s in subjects if is_rework(s)]
+# A commit is PAGE work when it changes something the visitor can load. Anything else —
+# tests/, scripts/, docs/, rules/, .claude/ — is tooling: real work, but not the rework
+# this metric exists to drive down.
+PAGE_PREFIXES = ("src/", "public/", "site/")
+
+
+def touches_page(files: list) -> bool:
+    return any(f.startswith(PAGE_PREFIXES) for f in files)
+
+
+def window(frm: str, to: str, commits: list) -> dict:
+    """Two rates, one regex.
+
+    `page_rate` is the headline — rework that changed something a visitor loads. It is
+    what the harness is meant to drive down. `harness_rate` is self-repair, tracked
+    separately because it is a DESIGNED output of the learning loop rather than a defect
+    in the pages, and folding it into the headline inverts the incentive: improving the
+    harness would make the number worse. `rate` is retained as the union so the series
+    stays comparable with windows recorded before 2026-08-03.
+    """
+    total = len(commits)
+    rework = [(s_, f) for s_, f in commits if is_rework(s_)]
+    page = [(s_, f) for s_, f in rework if touches_page(f)]
+    harness = [(s_, f) for s_, f in rework if not touches_page(f)]
     by_domain = {}
-    for s in rework:
-        for d in classify(s):
+    for s_, _ in page:
+        for d in classify(s_):
             by_domain[d] = by_domain.get(d, 0) + 1
+    rate = lambda n: round(n / total, 4) if total else 0.0
     return {
         "from": frm,
         "to": to,
         "total": total,
         "rework": len(rework),
-        "rate": round(len(rework) / total, 4) if total else 0.0,
+        "rate": rate(len(rework)),
+        "page_rework": len(page),
+        "page_rate": rate(len(page)),
+        "harness_rework": len(harness),
+        "harness_rate": rate(len(harness)),
         "by_domain": by_domain,
     }
 
@@ -122,8 +162,9 @@ def main(argv=None) -> int:
     else:
         ap.error("give --from and --to, or --last-30-days")
 
-    w = window(frm, to, git_subjects(frm, to))
-    print(f"{frm} .. {to}: {w['rework']}/{w['total']} = {w['rate']:.1%} rework")
+    w = window(frm, to, git_commits(frm, to))
+    print(f"{frm} .. {to}: PAGE {w['page_rework']}/{w['total']} = {w['page_rate']:.1%}"
+          f"  ·  harness self-repair {w['harness_rework']} = {w['harness_rate']:.1%}")
     for d, n in sorted(w["by_domain"].items(), key=lambda kv: -kv[1]):
         print(f"  {d:<8}{n:>5}")
     if args.dry_run:
