@@ -56,9 +56,26 @@ def broken_test_links(index: dict, check_ids: set) -> list:
     for r in index.get("rules", []):
         if r.get("enforced") != "test":
             continue
-        named = (r.get("test") or "").split("::")[-1]
-        if named not in check_ids:
+        ref = (r.get("test") or "").strip()
+        ids = re.findall(r"::([\w-]+)", ref)
+        if ids:
+            # A `file::check` reference is a claim about a CHECK, and the check id is the
+            # whole claim — file existence proves nothing, because the file can outlive
+            # the check that was renamed out of it. Every named id must be registered:
+            # a rule enforced by two checks (heading-hierarchy-outline-gate) must not pass
+            # on the strength of the second one alone.
+            if all(i in check_ids for i in ids):
+                continue
             out.append(r["id"])
+            continue
+        # No `::` — the reference names a TEST FILE. `no-test-no-rule` is held up by
+        # tests/test_quality_report.py, this module's own suite, and before this branch
+        # existed any such rule was unrepresentable: the validator knew only render-check
+        # ids, so a real, passing pytest file read as a broken link. Verified on disk so
+        # the branch can still fail.
+        if ref and (ROOT / ref).exists():
+            continue
+        out.append(r["id"])
     return out
 
 

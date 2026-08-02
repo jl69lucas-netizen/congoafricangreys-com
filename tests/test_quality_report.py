@@ -46,6 +46,28 @@ def test_a_test_backed_rule_pointing_at_a_real_check_is_not_broken():
     assert Q.broken_test_links(index, {"img-srcset-within-2x"}) == []
 
 
+def test_a_rule_backed_by_a_real_TEST_FILE_is_not_a_broken_link():
+    """Not every rule is enforced by a render check.
+
+    `no-test-no-rule` is held up by this very file. Before the file branch existed the
+    validator only knew render-check ids, so a rule pointing at a real, passing pytest
+    file was reported BROKEN and quality_report.py exited non-zero — which would have
+    pushed the next person to either delete the rule or fake a check id for it.
+    """
+    index = {"judgment_cap": 12, "rules": [
+        {"id": "no-test-no-rule", "enforced": "test", "test": "tests/test_quality_report.py"},
+    ]}
+    assert Q.broken_test_links(index, set()) == []
+
+
+def test_a_rule_pointing_at_a_test_file_that_does_NOT_exist_is_still_broken():
+    """The file branch must be able to fail, or it is an exemption rather than a check."""
+    index = {"judgment_cap": 12, "rules": [
+        {"id": "phantom", "enforced": "test", "test": "tests/test_deleted_months_ago.py"},
+    ]}
+    assert Q.broken_test_links(index, set()) == ["phantom"]
+
+
 def test_a_rule_with_neither_a_test_nor_a_judgment_class_is_a_deletion_candidate():
     index = {"judgment_cap": 12, "rules": [
         {"id": "orphan", "family": "SEM"},
