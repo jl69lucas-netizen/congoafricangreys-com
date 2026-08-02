@@ -4,7 +4,12 @@
 Idempotent. Inserts as the first blockquote line under `## Golden Rule`, matching
 scripts/add_title_case_rule.py so the five injected rules stay in one place.
 
-Re-run after adding any agent (CLAUDE.md: a rule with no injector is 0/68).
+Re-run after adding any agent — a rule with no injector is 0/68.
+
+NOTE (2026-08-02): the rule TEXT now lives in rules/headings.md, not CLAUDE.md. It is
+deliberately in two places — the pack is the source, the 68 agent Golden Rules are
+injected copies — so an edit to the rule means editing the pack AND re-running this
+script. Nothing detects the drift automatically; that is a known gap, not a design.
 
 Usage: python3 scripts/add_header_style_rule.py [--dry-run]
 """

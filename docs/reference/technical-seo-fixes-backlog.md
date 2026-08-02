@@ -461,3 +461,74 @@ applied to every landing rather than re-measured per landing; check ORDER is loa
 and unpinned (`settlePage` mutates the DOM at check #4, so LAYOUT measures an unsettled
 document); scorecard filenames carry no run label, so a same-day recheck overwrites the
 first-run card; `harness_version` is written and never read.
+
+
+---
+
+## 2026-08-02 — the srcset work, measured instead of guessed
+
+**The override is narrowed, not cleared, and the reason changed because the measurement
+changed.** It previously read "33+ assets decode above 2x their painted width" — a
+filename count, which implied the fix was "regenerate 33 masters". It is not.
+
+`scripts/image_srcset_plan.mjs` measured every `<img>` on all 15 target pages, **per
+occurrence**, across a sweep that straddles every Tailwind breakpoint
+(375 / 414 / 480 / **639 / 640** / **767 / 768** / 900 / **1023 / 1024** / 1280 / 1440).
+
+| | count |
+|---|---:|
+| image occurrences over 2.0x | **290** |
+| of those, CONSTANT painted width (regen the master, no markup change) | **3** |
+| of those, FLUID painted width (need per-role `srcset` + measured `sizes`) | **287** |
+
+The three constant ones are `/emoji/cag-congo-64.webp`, `/emoji/cag-timneh-64.webp`
+(60px master, painted 14–30px depending on the component) and
+`ida-brim-nashville-tn-review.webp` (96 → 40). Even these are **not** a simple downscale:
+the emoji paints at 30px inside `Footer.astro` and 14px inside `NewsletterV2.astro`, so
+shrinking the master to satisfy a DPR-1 metric would soften it on every retina screen.
+They want an `x`-descriptor `srcset`, not a smaller file. Shipping blur to satisfy a byte
+metric is the trade that got the last attempt reverted.
+
+### Why straddling the breakpoints is load-bearing
+
+Painted width is **not monotonic** across a breakpoint. A gallery cell on
+`/available/roys/` paints **608px at 640** and **260px at 768** — the grid goes 1-col →
+2-col → 3-col. A sweep that samples 640 and 768 but not 639 and 767 cannot tell a fluid
+band from a fixed one, and a `sizes` interpolated between those two points is wrong
+across the entire 640–767 range.
+
+### The shape the tool derives (verified against its own numbers before any file is cut)
+
+| Role | measured sweep | derived `sizes` | variants | worst after |
+|---|---|---|---|---|
+| full-bleed feature | 343 → 608 → 736 → 768 | `(max-width:767px) 92vw, 768px` | +440 | 1.28x |
+| gallery / sidebar cell | 343 → 608 → 260 → 354 | `(max-width:639px) 46vw, (max-width:1023px) 32vw, 354px` | +200, +380 | 1.78x |
+| 3-col card grid | 341 → 605 → 358 → 354 | `(max-width:639px) 95vw, (max-width:1023px) 48vw, 354px` | +360, +620 | 1.73x |
+
+Two variants per image, every band under the 2.0x cap with margin.
+
+### What was actually done on 2026-08-02
+
+- The tool exists, is committed, and prints `*** PLAN DOES NOT CLEAR THE CAP ***` on any
+  occurrence its own plan fails to fix — so a bad plan cannot be applied silently.
+- `/african-grey-parrot-for-sale-florida/` had **two broken images**: `<img>` tags still
+  pointing at `https://congoafricangreys.com/wp-content/uploads/…`, a path that now 301s
+  to the homepage and serves HTML. The render harness reported them as "failed to decode
+  and could not be measured" — the row that exists for exactly this. Replaced with local
+  WebP at measured sizes.
+- **NOT done: the 287 fluid occurrences.** Generating variants is scriptable; patching
+  `sizes` per occurrence is not, because several of these images are rendered from data
+  arrays inside shared components, so the patch has to land on the component and the
+  occurrence-to-source mapping has to be established per component. That is the next
+  session's work, and it is the whole of it.
+
+### Traps banked from the reverted attempt — re-read before retrying
+
+- **One blanket `sizes` for every image is the bug**, not a shortcut. Per-role only.
+- The correct variant width is **2x the painted box**. A 680w for a 341px box is exactly
+  2.00x and passes; 720w misses at 2.11x.
+- A patch guard that scans the following 200 characters for `srcset=` sees a
+  **neighbouring** image's srcset and silently skips the tag it meant to patch. Patch by
+  tag, not by proximity.
+- Several images appear more than once per page at different painted sizes; a
+  `replace(..., 1)` fixes only the first, and the two occurrences want different `sizes`.
