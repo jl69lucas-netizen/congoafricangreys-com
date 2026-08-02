@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { MAX_DEFECT_ROWS, type Check, type CheckResult } from './registry.js';
+import { MAX_DEFECT_ROWS, type Check, type CheckContext, type CheckResult } from './registry.js';
 
 /**
  * The single call site for every check, in both meta.spec and pages.spec.
@@ -9,8 +9,13 @@ import { MAX_DEFECT_ROWS, type Check, type CheckResult } from './registry.js';
  * Every violation throws with the check id in the message, because a malformed result that
  * merely warns becomes a permanent skew in the ledger nobody can see.
  */
-export async function runCheck(check: Check, page: Page, viewport: number): Promise<CheckResult> {
-  const result = await check.run(page, viewport);
+export async function runCheck(
+  check: Check,
+  page: Page,
+  viewport: number,
+  ctx: CheckContext,
+): Promise<CheckResult> {
+  const result = await check.run(page, viewport, ctx);
 
   if (!Number.isInteger(result.examined) || result.examined < 0) {
     throw new Error(

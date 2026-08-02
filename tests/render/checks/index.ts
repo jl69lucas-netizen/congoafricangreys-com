@@ -2,4 +2,8 @@
 import './layout.js';
 import './img.js';
 import './nav.js';
+import './sem.js';
+import './schema.js';
+import './css.js';
+import './dup.js';
 export {};
