@@ -1,12 +1,33 @@
 # Self-Improving Quality Loop — Phase 3 + Phase 4 Execution Plan
 
-> ## STATUS AFTER THE SECOND 2026-08-02 SESSION — read this first
+> ## STATUS AFTER THE 2026-08-02 SESSIONS — read this first
 >
 > | Task | State |
 > |---|---|
+> | 0a  clear the srcset override | **DONE.** `npm run test:render:pages` reports **45 passed with no `RENDER_OVERRIDE`**, twice consecutively, and `quality_report.py` §4 prints `OPEN OVERRIDES (0 distinct, suppressing on 0 page-runs)`. Started the session at 28 of 45 failing. |
 > | promote SEM/SCHEMA/CSS/DUP | **4 of 12 promoted.** `sem-heading-order`, `schema-date-modified-present`, `schema-no-visible-date`, `schema-sold-not-instock` are `blocking`. The other 8 stay advisory with `severity` + `why_advisory` now recorded per rule. |
 > | 3  retire the superseded static checks | **NOT DONE — and 6 of 8 are still blocked by the plan's own precondition.** The other 2 hit a coverage problem this plan does not model. See below. |
-> | 0a  the 287 fluid srcset occurrences | **UNCHANGED.** Still the largest single piece of open work. |
+>
+> **Task 0a — how it was actually done, and the five tooling defects on the way.** The
+> occurrence -> source-tag mapping is the whole difficulty (data arrays inside shared
+> components), and inference left 141 of 292 ambiguous; stamping each source `<img>` at
+> build time and reading the stamp back resolved 292 of 292. Then: the plan tool's own
+> ratio was fabricated (max `naturalWidth` over min painted — it reported 274 still failing
+> after 212 tags were correctly patched); 229 of 273 `w` descriptors would have been wrong
+> because `natural` is the chosen candidate, not the file in `src`; `naturalWidth` is
+> DENSITY-CORRECTED on a `w`-descriptor image, so `img-srcset-within-2x` measures whether
+> `sizes` matches the box rather than whether the file is oversized; patching a shared
+> component reaches all 108 pages and shipped 15 referenced-but-absent candidates (broken
+> images) on pages never measured; and a missing candidate is worse than the oversized one
+> being fixed. Full write-up and the eight-script pipeline:
+> `docs/reference/technical-seo-fixes-backlog.md`.
+>
+> **Still open on images:** undersized (blur) went 75 -> 81 renders on a 3-page sample,
+> worst 0.84x, against the reverted attempt's 0.49x. Cause is a feedback loop — images
+> sized by their intrinsic width change their painted box when the served candidate
+> changes. Close it by iterating `plan -> map -> apply` to convergence. **Nothing in the
+> harness measures the blur direction**; `scripts/image_srcset_verify.mjs` is the only
+> thing that will catch it.
 >
 > **The session's real finding was a flaky BLOCKING check.** `nav-jump-target-lands`
 > returned different verdicts across three runs of the SAME commit against the SAME
