@@ -51,9 +51,21 @@ register({
         try {
           collect(sheet.cssRules);
         } catch {
-          // A cross-origin sheet throws on .cssRules. Reporting orphans while blind to
-          // one sheet would invent defects, so refuse rather than guess.
-          return { blocked: true, examined: 0, orphans: [] as string[], count: 0 };
+          // A cross-origin sheet throws on .cssRules. The first version refused
+          // outright, and the result was that the check refused on EVERY page of the
+          // site and judged nothing: the unreadable sheet is always
+          // fonts.googleapis.com, which contains @font-face and no class selectors at
+          // all. A blanket refusal that never fires is indistinguishable from a check
+          // that does not exist.
+          //
+          // So: an unreadable THIRD-PARTY sheet is skipped, an unreadable SAME-ORIGIN
+          // sheet still refuses — that one would be a real blind spot, because our own
+          // classes could be styled in it.
+          const href = sheet.href || '';
+          const sameOrigin = !href || new URL(href, location.href).origin === location.origin;
+          if (sameOrigin) {
+            return { blocked: true, examined: 0, orphans: [] as string[], count: 0 };
+          }
         }
       }
 
@@ -162,7 +174,35 @@ register({
               break;
             }
           }
-          if (!matched) dead.push(sel.replace(/\[data-astro-cid-[^\]]*\]/g, '').slice(0, 60));
+          if (matched) continue;
+          // A STATE selector matches nothing until the state happens. `.cag-fab.visible`,
+          // `.cag-sheet-scrim.open` and `.nav-dropdown-btn[aria-expanded="true"] +
+          // .nav-dropdown` are toggled by JS and were reported as dead on every page of
+          // the site by the first version — the component exists, its state variant is
+          // simply not active while a static probe looks.
+          //
+          // Judged structurally rather than by class NAME (`.visible`, `.open`, `.is-*`
+          // are conventions, and name-matching selectors is how several checkers here
+          // have cried wolf): strip every state qualifier — attribute selectors and all
+          // but the first class — and re-test. If the BASE component is on the page, the
+          // rule is a live state variant. If the base matches nothing either, the
+          // component genuinely was never rendered, which is the defect.
+          const base = testable
+            .map((s) =>
+              s
+                .replace(/\[(?!data-astro-cid)[^\]]*\]/g, '')
+                .replace(/(\.[-\w]+)(\.[-\w]+)+/g, '$1')
+                .trim(),
+            )
+            .filter(Boolean);
+          let baseMatched = false;
+          for (const s of base) {
+            try {
+              if (document.querySelector(s)) { baseMatched = true; break; }
+            } catch { baseMatched = true; break; }
+          }
+          if (baseMatched) continue;
+          dead.push(sel.replace(/\[data-astro-cid-[^\]]*\]/g, '').slice(0, 60));
         }
       };
       for (const sheet of Array.from(document.styleSheets)) {
@@ -251,9 +291,20 @@ register({
         }
       }
 
-      // A "component rule" is a bare single-class selector that sets colour.
-      const componentRules = colorRules.filter((r) =>
-        /^\.[-\w]+(\[data-astro-cid-[^\]]*\])?$/.test(r.sel),
+      // A "component rule" is a bare single-class selector that sets colour — and NOT a
+      // Tailwind utility. `.text-stone-500` is a utility, not a component, and Direction
+      // D deliberately restyles lead paragraphs on top of it
+      // (`body.theme-d h2 + p:not(...)`), so reporting that as "a component colour lost
+      // to a descendant" describes the theme working as designed. The first version
+      // flagged it on every page that uses a text-* utility, which is all of them.
+      const isUtility = (cls: string) =>
+        /^(text|bg|border|from|via|to|decoration|divide|outline|ring|placeholder|caret|accent|fill|stroke|shadow)-/.test(
+          cls,
+        );
+      const componentRules = colorRules.filter(
+        (r) =>
+          /^\.[-\w]+(\[data-astro-cid-[^\]]*\])?$/.test(r.sel) &&
+          !isUtility((r.sel.match(/^\.([-\w]+)/) as RegExpMatchArray)[1]),
       );
       let examined = 0;
       const bad: string[] = [];
