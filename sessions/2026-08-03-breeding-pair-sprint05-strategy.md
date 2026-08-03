@@ -110,9 +110,10 @@ the sales content, not before it.
 2. **Publishing the standard constrains us permanently.** Once we define *proven* as *has hatched a
    fertile clutch*, we can never market an unproven pair as proven — on this page or any future one.
    That is a real, ongoing restriction on how future stock can be sold.
-3. **It will talk some buyers out of a purchase.** Stating that breeder stock is not tame, that
-   relocation can stop production, and that pairing is not guaranteed will cost inquiries. Consistent
-   with the congo-pair decision, where the step-down was ruled a feature.
+3. **It will still talk some buyers out of a purchase** — those who want a companion bird rather than
+   breeder stock get an explicit route to the single-bird pages. Consistent with the congo-pair
+   decision, where the step-down was ruled a feature. This is a narrower cost than first drafted: see
+   §7a, where three supposed risk disclosures turned out to be counter-positions.
 
 **The alternative I rejected outright.** Chasing Cluster E (`african grey breeders`, ~462 impressions at
 position 50–99). It is bigger than this page's own cluster and tempting, but it is **find-a-breeder**
@@ -134,8 +135,9 @@ Grouped per the distribution matrix. Full H1–H6 outline comes at Sprint 1, aft
 | 4 | How Old Must African Greys Be Before They Can Breed? | COMPETITOR-BASED | Corrected arithmetic; destroys the #1 result's 15-month claim |
 | 5 | What Has Each Pair Actually Produced? | MANDATORY | Clutch records; the evidence behind §2 |
 | 6 | What Does a Proven Pair Cost Elsewhere in the United States? | COMPETITOR-BASED | Market comparison; Texas $5,500 / Tulsa $9,495 comparable |
-| 7 | Why Breeder Stock Is Not a Pet, and Should Not Be Sold as One | SUGGESTED | royalbirdcompany's position, occupied indexed |
-| 8 | What Happens to a Producing Pair When You Move It? | SUGGESTED | Relocation risk, stated before the sale |
+| 7 | Why Are Our Proven Pairs Still Tame When Most Breeder Stock Is Not? | SUGGESTED | **Direct counter-position.** The market's proven pairs are parent-fed and untame; ours are hand-raised and stayed cuddly |
+| 8 | How Do You Move a Proven Pair Without Stopping Production? | SUGGESTED | Expertise framing. Relocation stops production when handled badly — we have done it many times |
+| 8b | Why Does Random Pairing Fail When Experienced Pairing Works? | SUGGESTED | Pairing is not luck; it is method. Why you buy an already-paired proven pair |
 | 9 | What Housing and Nest Box Does a Breeding Pair Need? | COMPETITOR-BASED | WPT specs: 12″×12″×24″ box, 3 m minimum flight |
 | 10 | What Paperwork Comes With Each Pair? | MANDATORY | Bands + clutch history; the **no-DNA-certificate** statement lives here |
 | 11 | How Does a Breeding Pair Travel to You? | MANDATORY | **Two crates, never one** — differs from every companion-bird shipping section on the site |
@@ -191,6 +193,32 @@ Pure HTML/CSS + minimal vanilla JS. No frameworks, no CDNs. Live figures read fr
 - **Honest scarcity only:** three pairs, stated as three. No countdowns, no fabricated urgency.
 - **Deliberate step-down path:** buyers who want a companion, not breeder stock, get a clear route to
   the single-bird pages and to the companion-pair sibling — framed as fit, not as a lesser option.
+
+---
+
+## 7a · 🔴 Breeder correction 2026-08-03 — three "risks" are actually counter-positions
+
+The draft imported three claims from `royalbirdcompany` as if they were facts about the category. The
+breeder corrected all three: **they are true of the market's breeder stock, and false of ours.** Each
+now flips from a risk disclosure to a differentiator, and each is stronger for it.
+
+| Draft said | Correct position | Evidence we can put beside it |
+|---|---|---|
+| "Breeder stock is not tame and does not become tame" | **Our proven pairs are hand-raised and still tame and cuddly.** That is the exception, not the rule | royalbirdcompany's own AG listing: *"Proven male… **Not tame**… does growl when approached… not handled for 15 years"* — the market norm, in a competitor's words |
+| "Relocation can stop production" | **Relocation stops production when it is done badly.** We have moved producing pairs many times and know how | royalbirdcompany: *"we moved some of our own proven breeders… **the results were not the same**"* — a breeder admitting they lack the method |
+| "Pairing is not guaranteed" | **Random pairing is not guaranteed. Experienced pairing is a method.** That is precisely why you buy an already-bonded proven pair rather than two singles | Lafeber: *"There is no way to predict if they will get along… introduce them and see what happens"* — the hobbyist reality · Shades of Greys, MN: a 15-yr hen sold at $2,500 because *"my male is just not into having a companion"* — a failed self-pairing, dated and public |
+
+**Why this is a better page, not a softer one.** The honest fact stays intact in every case — these
+things genuinely do go wrong. What changes is the attributed cause: **inexperience, not inevitability.**
+We are not claiming a guarantee; we are claiming a method, and we name the failures around us to show
+what happens without one.
+
+**Guard against overcorrection.** This must not slide into puffery. Three hard limits:
+1. **No breeding guarantee, ever.** We say we know how to move a pair; we never promise a clutch.
+2. **Tameness is stated as our first-hand account of our own birds**, not as a species claim. Breeder
+   stock in general is still untame and the page still says so — that is what makes ours notable.
+3. **The step-down path stays.** A tame pair is still breeder stock, and a buyer who wants one
+   companion bird is still routed to the singles.
 
 ---
 
