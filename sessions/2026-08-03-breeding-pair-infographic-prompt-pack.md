@@ -1,204 +1,253 @@
 # Infographic Prompt Pack — `/african-grey-breeding-pair-for-sale/`
 
 **Date:** 2026-08-03 · **Sprint 2 · ASSET GATE** · **7 infographics**
-**The page build starts only after these are dropped in and the breeder says "start."**
 
 ---
 
-## 0 · READ BEFORE GENERATING — failures already shipped on this site
+## HOW THIS WORKS — you only do two things
 
-| # | What happened | Rule it produced |
-|---|---|---|
-| 1 | An infographic shipped reading **"BREDDER"**; another had **"HOME HOME"**; a third set "Polyomavirus" too tight to read | **Read every word on the returned image before accepting it.** The generator misspells baked-in type |
-| 2 | The generator baked **prompt instructions** in as visible labels — "green tick", "clay cross" appeared *on the image* | **LITERAL TEXT (render exactly) is separated from STYLE (never render).** Do not paste style notes into the text block |
-| 3 | British **"colour"** appeared on a US page | **US spelling throughout.** The literal blocks below are already US-spelled — do not retype them |
-| 4 | An infographic's axis labels were bird prices and shipping tiers, so it was rejected at harden | **Every axis and label below is specified.** Do not let the generator invent one |
+1. **Copy a prompt below** (each one is complete — paste the whole block, nothing to fill in) into your
+   image generator.
+2. **Save the returned image** into `assets/1WORKING-ON/FOR-SALE-PAGES/BREEDING PAIR/`
+   with the filename given under each prompt.
 
-### Universal rules — all 7
+**That is all.** Resizing, compressing, renaming, the `-760` siblings, the under-95 KB ceiling and the
+spelling check are mine. Do not run any script.
 
-- **Canvas 1408 × 768, 16:9.** Ships `<95 KB` WebP + a `-760.webp` sibling, baked with `reframe_og.py`.
-- **Render ONLY the strings in each `LITERAL TEXT` block.** No other words anywhere. No invented title.
-- **Spelling to check on delivery:** BREEDER · CLUTCH · PROVEN · UNPROVEN · CITES · Appendix I ·
-  Psittacus erithacus · Midland · nest box · closed band.
-- **Palette (never rendered as words):** forest green `#2D6A4F`, clay `#e8604c`, cream `#faf7f4`,
-  charcoal `#3a2f2a`, warm beige.
-- **Bird marks:** real African Grey — grey body, **red** tail (Congo). **Never a generic green parrot.
-  Never the 🦜 emoji.**
-- **Negative list, append to every prompt:** *no text other than the literal strings listed, no
-  watermarks, no logos, no captions, no UI chrome, no other parrot species, no generic green parrot,
-  no cold blue or clinical lighting, no distorted or extra limbs or beaks, no jungle or wild-capture
-  context, no cluttered background, no misspelled words, no placeholder text.*
-- **Style wrapper:** *Clean flat editorial infographic, warm cream background, forest-green and clay
-  accents, generous margins, one clear visual hierarchy, high legibility at 760px wide, no drop
-  shadows, no gradients on text.*
+**Name them exactly as listed** (`inf-1-what-proven-means.png` etc.) so I can tell which is which —
+any image format is fine, and any size at or above 1408 × 768.
 
-### 🔴 Two facts that MUST be right on these images
+### The one thing worth your eyes before you save
 
-1. **The corrected maturity arithmetic.** Maturity **by about 4 years**; earliest documented fertile
-   eggs **about 3**; **commonly 5–6** in practice. **Never render "5–6 minimum"** — our own Sally is 4
-   with a clutch and the page says so.
-2. **No DNA certificate.** These pairs are **closed-banded with clutch history on request.** No image
-   may show a DNA certificate, a lab report, or the words "DNA sexed" / "DNA certified."
+The generator misspells baked-in text. It has previously shipped **"BREDDER"** for BREEDER and a
+doubled **"HOME HOME"** onto this site. **Read the words on the image before you save it.** If a word
+is wrong, regenerate — do not save it and hope.
+
+**Two facts that must be right, because they are the page's spine:**
+- **INF-3:** the *15 months* marker must sit **to the LEFT of** the *3 years* marker. If it lands
+  between 3 and 4, regenerate.
+- **No image may show a DNA certificate, a lab report, or the words "DNA sexed" / "DNA certified."**
+  These pairs are closed-banded with clutch history on request.
 
 ---
 
-## 1 · Slot map — photos are already baked, do NOT generate for these
+## INF-1 — What "Proven" Actually Means
+**Save as:** `inf-1-what-proven-means.png`
 
-All 17 real photos are baked in `public/images/breeding-pair-page/`:
+```
+Clean flat editorial infographic, 1408 x 768 pixels, 16:9 landscape, warm cream background (#faf7f4).
+Three equal vertical columns. Each column is headed by a small illustrated African Grey parrot
+silhouette with a grey body and a red tail. The first column is framed in forest green (#2D6A4F) with
+a filled check mark at its top. The second and third columns are framed in muted charcoal (#3a2f2a)
+with an open outline mark. A single thin horizontal rule separates the column headings from the body
+text. Generous margins, one clear visual hierarchy, high legibility when viewed 760 pixels wide, flat
+design, no drop shadows, no gradients on text.
 
-| Section | Baked photo |
+Render ONLY these words, exactly as written, and no others:
+Column 1 heading: PROVEN
+Column 1 body: Has hatched a fertile clutch
+Column 1 footer: Ask for the clutch dates
+Column 2 heading: UNPROVEN
+Column 2 body: Mature and paired but no clutch has hatched
+Column 2 footer: Ask what is still missing
+Column 3 heading: BONDED ONLY
+Column 3 body: A pair that sits together but has never nested
+Column 3 footer: Ask if they have ever laid at all
+
+Do not render: any text other than the words listed above, no title, no watermarks, no logos, no
+captions, no user interface elements, no other parrot species, no generic green parrot, no cold blue
+or clinical lighting, no distorted or extra limbs or beaks, no jungle or wild-capture setting, no
+cluttered background, no misspelled words, no placeholder text. US spelling only.
+```
+
+---
+
+## INF-2 — Why the Fewest Clutches Costs the Most
+**Save as:** `inf-2-price-ladder.png`
+
+```
+Flat editorial chart infographic, 1408 x 768 pixels, 16:9 landscape, warm cream background (#faf7f4).
+Three ascending steps running left to right, each step taller than the last. Above each step sits a
+small illustrated pair of African Grey parrots, grey bodies with red tails. Across the same three
+steps run two contrasting bars: a clay orange bar (#e8604c) that rises left to right, and a forest
+green bar (#2D6A4F) that falls left to right, so the inverse relationship between the two is obvious
+at a glance. One line of summary text runs along the bottom edge. Generous margins, flat design, high
+legibility at 760 pixels wide, no drop shadows, no gradients on text.
+
+Render ONLY these words, exactly as written, and no others:
+Step 1 label: TALKER & JANE
+Step 1 detail: 4 clutches
+Step 1 price: $3,000
+Step 2 label: MARI & LAKE
+Step 2 detail: 2 clutches
+Step 2 price: $4,500
+Step 3 label: SALLY & ODIN
+Step 3 detail: 1 clutch
+Step 3 price: $5,500
+Bottom line: You are buying breeding years ahead, not clutches behind
+
+Do not render: any text other than the words listed above, no title, no watermarks, no logos, no
+captions, no user interface elements, no other parrot species, no generic green parrot, no cold blue
+or clinical lighting, no distorted or extra limbs or beaks, no jungle or wild-capture setting, no
+cluttered background, no misspelled words, no placeholder text. US spelling only.
+```
+
+---
+
+## INF-3 — How Old Before They Can Breed
+**Save as:** `inf-3-breeding-age-timeline.png`
+**⚠️ Check before saving: the 15 MONTHS marker must sit to the LEFT of the 3 YEARS marker.**
+
+```
+Flat editorial timeline infographic, 1408 x 768 pixels, 16:9 landscape, warm cream background
+(#faf7f4). A single horizontal forest green (#2D6A4F) axis line runs left to right across the middle
+with four labelled stops on it. Far to the LEFT of the first stop, clearly separated and clearly
+earlier, sits a single clay orange (#e8604c) marker flagged with an open warning outline. The four
+green stops are evenly spaced. Labels sit above the axis, short descriptions below it. Generous
+margins, flat design, high legibility at 760 pixels wide, no drop shadows, no gradients on text.
+
+Render ONLY these words, exactly as written, and no others:
+Clay marker, positioned furthest left: 15 MONTHS
+Clay marker description: Advertised as proven by some sellers. Not possible
+Stop 1: 3 YEARS
+Stop 1 description: Earliest fertile eggs on record
+Stop 2: 4 YEARS
+Stop 2 description: Sexual maturity reached
+Stop 3: 5 TO 6 YEARS
+Stop 3 description: Commonly producing
+
+Do not render: any text other than the words listed above, no title, no watermarks, no logos, no
+captions, no user interface elements, no other parrot species, no generic green parrot, no cold blue
+or clinical lighting, no distorted or extra limbs or beaks, no jungle or wild-capture setting, no
+cluttered background, no misspelled words, no placeholder text. US spelling only.
+```
+
+---
+
+## INF-4 — Moving a Proven Pair Without Stopping Production
+**Save as:** `inf-4-moving-a-pair.png`
+
+```
+Flat editorial process-flow infographic, 1408 x 768 pixels, 16:9 landscape, warm cream background
+(#faf7f4). Five steps arranged left to right, connected by one continuous forest green (#2D6A4F) line.
+Each step has a round clay orange (#e8604c) node containing its number, a short heading above, and a
+short description below. Generous margins, flat design, high legibility at 760 pixels wide, no drop
+shadows, no gradients on text.
+
+Render ONLY these words, exactly as written, and no others:
+Node 1: 1 — TRAVEL TOGETHER — Two crates, never one
+Node 2: 2 — SAME SETUP — Match the cage and diet
+Node 3: 3 — QUIET WEEKS — No handling, no visitors
+Node 4: 4 — NEST BOX LAST — Offer the box only when settled
+Node 5: 5 — LET THEM SETTLE — Production returns on their clock
+
+Do not render: any text other than the words listed above, no title, no watermarks, no logos, no
+captions, no user interface elements, no other parrot species, no generic green parrot, no cold blue
+or clinical lighting, no distorted or extra limbs or beaks, no jungle or wild-capture setting, no
+cluttered background, no misspelled words, no placeholder text. US spelling only.
+```
+
+---
+
+## INF-5 — Random Pairing Versus Experienced Pairing
+**Save as:** `inf-5-pairing-method.png`
+
+```
+Flat editorial two-column comparison infographic, 1408 x 768 pixels, 16:9 landscape, warm cream
+background (#faf7f4). The left column is muted charcoal (#3a2f2a) with an open outline mark at its
+top; the right column is forest green (#2D6A4F) with a filled check mark at its top. At the top of the
+left column, two illustrated African Grey parrots with grey bodies and red tails face away from each
+other. At the top of the right column, the same two parrots face toward each other. Four short lines
+of text run down each column. Generous margins, flat design, high legibility at 760 pixels wide, no
+drop shadows, no gradients on text.
+
+Render ONLY these words, exactly as written, and no others:
+Left column heading: PUT TWO BIRDS TOGETHER
+Left column lines: Guess the sexes / Hope they bond / Wait years for a clutch / No record either way
+Right column heading: MATCH A COCK TO A HEN
+Right column lines: Confirm the sexes first / Watch before committing / Buy a pair already producing /
+Clutch dates on request
+
+Do not render: any text other than the words listed above, no title, no watermarks, no logos, no
+captions, no user interface elements, no other parrot species, no generic green parrot, no cold blue
+or clinical lighting, no distorted or extra limbs or beaks, no jungle or wild-capture setting, no
+cluttered background, no misspelled words, no placeholder text. US spelling only.
+```
+
+---
+
+## INF-6 — What a Proven Pair Costs Elsewhere
+**Save as:** `inf-6-market-prices.png`
+
+```
+Flat editorial horizontal bar chart, 1408 x 768 pixels, 16:9 landscape, warm cream background
+(#faf7f4). Five horizontal bars stacked vertically, longest at the top and shortest at the bottom. The
+four upper bars are neutral warm beige. The bottom bar is forest green (#2D6A4F) and visually
+emphasised. Each bar has its location label to the left and its price value at the end of the bar. One
+short heading sits above the chart. Generous margins, flat design, high legibility at 760 pixels wide,
+no drop shadows, no gradients on text.
+
+Render ONLY these words, exactly as written, and no others:
+Heading: LISTED PRICES FOR A PROVEN OR BONDED PAIR
+Bar 1: Tulsa, Oklahoma — $9,495
+Bar 2: Stone Mountain, Georgia — $8,000
+Bar 3: Gwynnoak, Maryland — $6,500
+Bar 4: Texas, proven pair — $5,500
+Bar 5: C.A.Gs, Midland Texas — $3,000 to $5,500
+
+Do not render: any text other than the words listed above, no extra title, no words such as average or
+market rate, no watermarks, no logos, no captions, no user interface elements, no other parrot species,
+no generic green parrot, no cold blue or clinical lighting, no distorted or extra limbs or beaks, no
+jungle or wild-capture setting, no cluttered background, no misspelled words, no placeholder text.
+US spelling only.
+```
+
+---
+
+## INF-7 — Housing and Nest Box a Breeding Pair Needs
+**Save as:** `inf-7-housing-nest-box.png`
+
+```
+Flat editorial four-cell grid infographic, 1408 x 768 pixels, 16:9 landscape, warm cream background
+(#faf7f4). Four equal cells in a single row, each with a simple line icon drawn in forest green
+(#2D6A4F) strokes: a wide flight cage outline, a tall vertical nest box, a thermometer, and a water
+droplet. Numerals are set in clay orange (#e8604c). A short label sits above each icon and the figure
+below it. Generous margins, flat design, high legibility at 760 pixels wide, no drop shadows, no
+gradients on text.
+
+Render ONLY these words, exactly as written, and no others:
+Cell 1: FLIGHT LENGTH — 3 meters minimum — 9.8 feet
+Cell 2: NEST BOX — 12 x 12 x 24 inches — vertical, mounted outside the cage
+Cell 3: TEMPERATURE — 68 to 80 F
+Cell 4: HUMIDITY — 50 to 65 percent
+
+Do not render: any text other than the words listed above, no title, no watermarks, no logos, no
+captions, no user interface elements, no other parrot species, no generic green parrot, no cold blue
+or clinical lighting, no distorted or extra limbs or beaks, no jungle or wild-capture setting, no
+cluttered background, no misspelled words, no placeholder text. US spelling only.
+```
+
+---
+
+## When all seven are in the folder
+
+Say **start**. I bake them, run the spelling and layout checks, and write the page from the approved
+outline.
+
+### Reference — where each one lands
+
+| File | Section |
 |---|---|
-| §1 Hero | `hero-african-grey-breeding-pair-for-sale-aviary-cage` |
-| §2 Pair cards | `talker-jane-…` · `mari-lake-…` · `sally-odin-…` |
-| §6 What each pair produced | `proven-african-grey-hen-on-nest-with-eggs` |
-| §7 Tame breeder stock | `congo-african-grey-breeding-pair-tame-hand-reared` · `breeding-pair-of-african-grey-parrots-for-sale-perched` |
-| §11 Housing | `african-grey-breeding-pair-flight-cage-housing` |
-| §12 Paperwork / health | `african-grey-breeding-pair-health-check-nail-trim` |
-| §13 Shipping | `african-grey-breeding-pair-shipping-two-crates` |
-| §14 Singles + eggs | `african-grey-parrot-fertile-eggs-in-incubator` · `candled-fertile-…-egg-for-sale` · `hand-fed-congo-…-chick` · `hand-held-…-weaned-chick` |
-| §16 Reviews | `breeder-review-african-grey-breeding-pair-buyer` |
-| Spare | `african-grey-breeding-pair-available-now-midland-texas` · `timneh-and-congo-…-together` |
+| `inf-1-what-proven-means.png` | §3 What "Proven" Actually Means |
+| `inf-2-price-ladder.png` | §4 Why the Fewest Clutches Costs the Most |
+| `inf-3-breeding-age-timeline.png` | §5 How Old Before They Can Breed |
+| `inf-4-moving-a-pair.png` | §8 Moving a Pair Without Stopping Production |
+| `inf-5-pairing-method.png` | §9 Random Versus Experienced Pairing |
+| `inf-6-market-prices.png` | §10 What a Proven Pair Costs Elsewhere |
+| `inf-7-housing-nest-box.png` | §11 Housing and Nest Box |
 
-**The 7 below fill the analytical slots only.**
+### Source note — every figure traces to a file, none is invented
 
----
-
-## INF-1 · §3 — What "Proven" Actually Means · *Comparison, 3 columns*
-
-**PROMPT:** Clean flat editorial infographic, three equal columns on warm cream, each column headed by a
-small African Grey silhouette with a red tail. Column one framed in forest green with a filled check
-mark; columns two and three framed in muted charcoal with an open outline mark. A single horizontal
-rule separates headings from body. [style wrapper] [negative list]
-
-```
-LITERAL TEXT
-PROVEN          UNPROVEN            BONDED ONLY
-Has hatched     Mature and paired   A pair that sits
-a fertile       but no clutch       together but has
-clutch          has hatched         never nested
-Ask for the     Ask what is         Ask if they have
-clutch dates    still missing       ever laid at all
-```
-
----
-
-## INF-2 · §4 — Why the Fewest Clutches Costs the Most · *Comparison, ascending ladder*
-
-**PROMPT:** Flat editorial chart, three ascending steps left to right on warm cream. Step height rises
-with price; a clay bar rises while a separate forest-green bar falls across the same three steps, making
-the inverse relationship visible at a glance. Small African Grey pair silhouette above each step.
-[style wrapper] [negative list]
-
-```
-LITERAL TEXT
-TALKER & JANE     MARI & LAKE     SALLY & ODIN
-4 clutches        2 clutches      1 clutch
-$3,000            $4,500          $5,500
-You are buying breeding years ahead, not clutches behind
-```
-
----
-
-## INF-3 · §5 — How Old Before They Can Breed · *Process Flow, horizontal timeline*
-
-**PROMPT:** Flat horizontal timeline on warm cream, left to right, with four marked stops on a single
-forest-green axis. One clay marker sits far left, clearly before the first stop, flagged with an open
-warning outline. [style wrapper] [negative list]
-
-**🔴 Check on delivery: the clay marker must sit BEFORE the 3-year stop, never between 3 and 4.**
-
-```
-LITERAL TEXT
-15 MONTHS        3 YEARS            4 YEARS          5 TO 6 YEARS
-Advertised as    Earliest fertile   Sexual maturity  Commonly
-proven by some   eggs on record     reached          producing
-sellers
-Not possible
-```
-
----
-
-## INF-4 · §8 — Moving a Proven Pair Without Stopping Production · *Process Flow, 5 steps*
-
-**PROMPT:** Flat five-step process flow on warm cream, connected by a single forest-green line with
-round numbered nodes in clay. Each step gets one short label beneath its node. [style wrapper]
-[negative list]
-
-```
-LITERAL TEXT
-1 TRAVEL TOGETHER   2 SAME SETUP    3 QUIET WEEKS   4 NEST BOX LAST   5 LET THEM SETTLE
-Two crates,         Match the       No handling,    Offer the box     Production returns
-never one           cage and diet   no visitors     only when settled on their clock
-```
-
----
-
-## INF-5 · §9 — Random Pairing Versus Experienced Pairing · *Comparison, 2 columns*
-
-**PROMPT:** Flat two-column comparison on warm cream. Left column muted charcoal with an open outline
-mark, right column forest green with a filled check mark. Two African Grey silhouettes face away from
-each other on the left, and toward each other on the right. [style wrapper] [negative list]
-
-```
-LITERAL TEXT
-PUT TWO BIRDS TOGETHER      MATCH A COCK TO A HEN
-Guess the sexes             Confirm the sexes first
-Hope they bond              Watch before committing
-Wait years for a clutch     Buy a pair already producing
-No record either way        Clutch dates on request
-```
-
----
-
-## INF-6 · §10 — What a Proven Pair Costs Elsewhere · *Comparison, horizontal bars*
-
-**PROMPT:** Flat horizontal bar chart on warm cream, five bars, longest at top. The bottom bar is
-forest green and clearly labeled as ours; the four above are neutral warm beige. Value labels sit at the
-end of each bar. [style wrapper] [negative list]
-
-**🔴 These are observed live listings, not a survey. The label wording below is exact — do not soften
-it to "average" or "market rate."**
-
-```
-LITERAL TEXT
-LISTED PRICES FOR A PROVEN OR BONDED PAIR
-Tulsa, Oklahoma          $9,495
-Stone Mountain, Georgia  $8,000
-Gwynnoak, Maryland       $6,500
-Texas, proven pair       $5,500
-C.A.Gs, Midland Texas    $3,000 to $5,500
-```
-
----
-
-## INF-7 · §11 — Housing and Nest Box a Breeding Pair Needs · *Feature Grid, 4 cells*
-
-**PROMPT:** Flat four-cell grid on warm cream, each cell with a simple line icon — a flight cage
-outline, a vertical nest box, a thermometer, a water droplet. Forest-green icon strokes, clay numerals.
-[style wrapper] [negative list]
-
-**Source: World Parrot Trust, *Psittacus erithacus*. Do not alter these numbers.**
-
-```
-LITERAL TEXT
-FLIGHT LENGTH        NEST BOX             TEMPERATURE       HUMIDITY
-3 meters minimum     12 x 12 x 24 inches  68 to 80 F        50 to 65 percent
-9.8 feet             vertical, mounted
-                     outside the cage
-```
-
----
-
-## 2 · Delivery checklist
-
-☐ 7 images returned at 1408 × 768
-☐ **Every word read** — no BREDDER, no doubled words, no British spelling
-☐ **No prompt instructions rendered** as visible labels
-☐ INF-3: the 15-month marker sits **before** the 3-year stop
-☐ INF-6: says **listed prices**, not average or market rate
-☐ No DNA certificate, lab report, or the words "DNA sexed" anywhere
-☐ No generic green parrot; Congo tails are red
-☐ Baked through `reframe_og.py` → `<95 KB` + `-760.webp` sibling
-☐ Dropped into `public/images/breeding-pair-page/`
-
-**Then say "start" and Sprint 2 writes the page.**
+Pair names, ages, clutch counts and prices: `data/price-matrix.json`. Housing, nest box, temperature
+and humidity: World Parrot Trust, *Psittacus erithacus*. Market prices: live dated listings on
+birdsnow, captured 2026-08-03. Breeding ages: Tony Silva and BirdTracks, per Sprint 0 §5.
