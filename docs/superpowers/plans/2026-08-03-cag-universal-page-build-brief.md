@@ -251,6 +251,21 @@ problem when they target the same query set. Verify against the query rows befor
 ☐ **Reddit / forum thread mining** — real buyer language, objections, and the phrasing they use.
   Log each thread in the Thread Ledger so it is not re-mined.
 
+### 5a · The competitor-registry sweep — MANDATORY, never skipped
+
+**This step is not optional and no judgement call may substitute for it.** It was skipped once, on
+2026-08-03, on the reasoning that it "would not change the angle." Run it, then decide.
+
+☐ Load the full competitor registry and sweep the **target keyword** against **every** domain in it.
+  The efficient method is one search restricted to the registry's domains, not one search per domain.
+☐ Produce the **compete / does-not-compete table** — one row per registry domain, with the evidence
+  for each verdict. "No breeding-pair page" is a finding, not an omission.
+☐ **Add every new direct competitor** the SERP surfaced that is not already registered, with tier,
+  discovery date, the keyword set, and a grounded note. Only direct competitors for *this* keyword.
+☐ Record the sweep date and keyword on the registry itself, so the next page can see when it last ran.
+☐ Harvest the sweep's **pricing and positioning intel** — in-state and in-category comparables are
+  worth more than out-of-state ones and are usually only found this way.
+
 ### 5a · Sprint 0 output artifacts
 
 One dated research doc containing, in order: SERP snapshot table · query fan-out list ·
