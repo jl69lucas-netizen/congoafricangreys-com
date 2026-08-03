@@ -25,7 +25,8 @@
 | Community | ✅ **FETCHED (snippets)** | parrotforums, Quora, 3 Facebook breeder groups. **Full thread bodies not scraped** |
 | Live market pricing | ✅ **FETCHED** | hookbillsforsale classifieds (dated 06/21–08/01/2026), birdsnow index via prior session |
 | Instagram / YouTube | ⚠️ **PARTIAL** | 1 IG reel + 1 YT video surfaced in SERP; neither analysed |
-| 30-competitor registry sweep | ❌ **NOT RUN** | |
+| **30-competitor registry sweep** | ✅ **RUN** | Keyword swept against all 30 registry domains; **6 compete, 24 do not**; **14 new direct competitors added** (registry 30 → 44). Full result §14 |
+| Authority clutch figures | ✅ **FETCHED** | World Parrot Trust `parrots.org/encyclopedia/grey-parrot/` — closes open flag #3, §5a |
 | LLM visibility | ❌ **NOT RUN** | Sprint 5 per the pipeline — not a Sprint 0 deliverable |
 
 **Sprint 0 is substantially complete.** §13 lists what a full sweep would still add; my judgement is that
@@ -34,9 +35,57 @@ full competitor scrapes and five authority sources.
 
 ---
 
-## 1 · 🔴 BLOCKING FINDING — the product does not exist in any data file
+## 1 · ✅ RESOLVED 2026-08-03 — three real proven pairs
 
-This is the one thing that must be answered before Sprint 1.
+**Breeder answered route (a).** Three proven pairs, each sold only as a pair:
+
+| Pair | Birds | Clutches hatched | Price | Image asset |
+|---|---|---|---|---|
+| **Talker & Jane** | Talker ♂ 12 · Jane ♀ 10 | **4** | **$3,000** | `talker-jane-african-grey-breeding-pair-sale-nearby.webp` |
+| **Mari & Lake** | Mari ♀ 6 · Lake ♂ 7 | **2** | **$4,500** | `mari-lake-african grey breeding pair for sale.jpg` |
+| **Sally & Odin** | Sally ♀ 4 · Odin ♂ 5 | **1** | **$5,500** | `sally-odin-breeding pair of african greys for sale.jpg` |
+
+**Documentation, breeder-stated:** **no DNA certificates.** Band numbers on every bird; **clutch
+history supplied on request.** This is now recorded in all three data files and every page claiming
+otherwise has been corrected (§14).
+
+### 1a · 🟢 The pricing ladder is inverse — and it is the page's best original content
+
+Price rises as clutches fall: 4 clutches → $3,000; 2 → $4,500; 1 → $5,500. That reads backwards to a
+naive buyer and is exactly right to a breeder: **you are buying remaining productive years, not past
+output.** Sally & Odin have decades of laying ahead; Talker & Jane have a proven four-clutch record and
+fewer years left.
+
+**No competitor in the 44-domain registry explains this.** It earns its own section plus an
+infographic, and it converts a "why is the cheaper pair better?" objection into proof of expertise.
+
+### 1b · 🔴 CORRECTION to the approved angle — the maturity arithmetic was mine, not the sources'
+
+The Sprint 0 draft said *"a genuine proven pair is **5–6 years old at minimum**."* **Sally is 4 and has
+hatched a clutch.** Published as written, our own listing would fail our own test.
+
+Re-reading the sources, the floor was my inference, not their claim:
+
+| Source | What it actually says |
+|---|---|
+| Tony Silva | maturity *"**by** four years of age"* — at or before 4, not from 5 |
+| Tony Silva | *"third generation Timnehs produce fertile eggs at **three years**"* |
+| BirdTracks | a pair *"**may** take another 1 to 2 years"* — typical lag, not a floor |
+
+**Corrected framing, and it is stronger:** maturity **by about four**; earliest documented fertile eggs
+**around three**; **commonly five to six** in practice. Sally at 4 with one clutch sits legitimately at
+the early end and we say so. The #1 result's **15-month** pair still collapses — that is under half the
+earliest age anyone has documented — so the counter-positioning survives intact while our own listing
+stays inside the standard we publish.
+
+**Every heading, FAQ answer and infographic must use the corrected numbers.** The "5–6 minimum" phrasing
+is banned on this page.
+
+---
+
+## 1c · The original blocking finding, for the record
+
+*(Resolved above. Retained because it is why the question was asked.)*
 
 | Source | What it says |
 |---|---|
@@ -76,7 +125,7 @@ Both legacy URLs 301 to the target in **one hop**; verified live 2026-07-30 and 
 **Recommendation: change nothing.** The redirect direction is correct — it consolidates a WooCommerce
 legacy path into the cluster-native slug that owns the demand and the internal links. The target reads
 1 click because it is a 3.6 KB stub, not because the URL is weak. Reversing costs a re-crawl cycle and
-strands 28 links. **Trade-off:** GSC will keep reporting under the old URLs until the 16-month window
+strands 29 links. **Trade-off:** GSC will keep reporting under the old URLs until the 16-month window
 rolls off, so post-launch measurement must sum the family, not read the target row alone.
 
 **Bing:** every breeding-pair URL is **absent** from the 58-row page report. Only the *companion*-pair
@@ -185,17 +234,33 @@ Sourced, and it decides the page:
 | **hookbillsforsale** | African Greys are *"obligate monogamists… fledging period lasts up to 12 weeks"*; *"cavity nesters"* |
 | **royalbirdcompany** (breeder) | *"when selling proven breeders there is no guarantees on future breeding once moved. We have moved some of our own proven breeders of many years… and the results were not the same."* |
 
-**Synthesis, and it is the page's spine:**
+**Synthesis, and it is the page's spine — corrected per §1b:**
 
-> Sexual maturity at ~4 years, plus 1–2 more years to a first fertile clutch, means **a genuine proven
-> pair is 5–6 years old at minimum**. The #1 result sells a **15-month-old** pair and calls it *proven*.
-> That is not a rounding error — it is biologically impossible, and it is the top-ranked page in the
-> category.
+> Greys reach sexual maturity **by about four years**, with the earliest documented fertile eggs around
+> **three**; many pairs take a further one to two years to produce, so proven pairs are **commonly five
+> to six**. The #1 result sells a **15-month-old** pair and calls it *proven* — under half the earliest
+> age anyone has documented, and self-contradicted on its own page, which also calls the same birds
+> *"of prime breeding age."*
 
-⚠️ **Ledger note.** Clutch size and frequency figures (2–3 eggs, 1–2 clutches/yr, 26–30 day incubation,
-50–65 day fledging) currently trace to classified copy and a Facebook post. **Cite Lafeber, World Parrot
-Trust, or the Watchbird/TAMU paper, or drop the numbers.** Carried forward from the congo-pair open
-flag #6 — still unresolved.
+### 5a · ✅ Clutch figures RESOLVED — World Parrot Trust, fetched 2026-08-03
+
+Open flag #3 closed. `parrots.org/encyclopedia/grey-parrot/` (*Psittacus erithacus*), citing Forshaw,
+Low *Parrots in Aviculture*, and Schubot/Clubb *Psittacine Aviculture*:
+
+| Figure | WPT value |
+|---|---|
+| **Clutch size** | **2 to 3** eggs |
+| **Egg size** | 39.5 × 31.0 mm, rounded ovate |
+| **Fledging age** | **11–12 weeks** |
+| **Nest box size** | **Vertical, 12″ × 12″ × 24″** (30.5 × 30.5 × 61 cm) |
+| **Housing** | Aviary or suspended cage, **minimum length 3 m (9.8 ft)** |
+| **Longevity** | 50–60 yrs |
+| **Breeding season** | Dry-season breeder; nests in a cavity in a tall living tree |
+| **IUCN / CITES** | **Endangered** / **Appendix I** ✓ confirms our standing framing |
+
+**Still unsourced and therefore DROPPED from the page: incubation days.** WPT does not publish it and
+the 26–30 day figure traces only to a Facebook post. Do not print an incubation number. *(Lafeber's
+external-mount nest-box guidance stands alongside the WPT box dimensions.)*
 
 ---
 
@@ -474,3 +539,92 @@ YouTube $13k video · full Reddit thread bodies rather than snippets · buyafric
 birdsbyjoe teardowns. **Judgement: none of it changes the recommended angle**, which rests on measured
 GSC demand, two fetched SERPs, three full competitor scrapes and five cited authorities. It would
 sharpen the section inventory and the geo set. Say the word and it runs before Sprint 0.5.
+
+---
+
+## 14 · 30-competitor registry sweep — RUN 2026-08-03
+
+Run against the target keyword per breeder direction: *"only research the target keyword against all
+the 30+ in the list, add any new competitors not on the list, just direct competitors for the keyword."*
+**This is now a standing, non-skippable Sprint 0 step** and has been written into the build brief §5.
+
+### 14a · Which of the 30 actually compete for `african grey breeding pair for sale`
+
+| Registry competitor | Tier | Competes? | Evidence |
+|---|---|---|---|
+| **birdsnow** | 2 | 🔴 **DOMINANT** | Owns the space: `/bondedpairafricangreyparrot.htm` (18 live ads) plus `/bondedpair.htm`, `/bondedpairparrot.htm`, `/bondedpairtexas.htm`, `/redbondedpair.htm` and per-state pages |
+| **birdbreeders** | 2 | 🔴 **YES** | Category pages + breeder directory; Congo listings $400–$8,500 |
+| **hoobly** | 2 | 🟡 YES | *"Proven pair of African grey parrot both are fully feathered dna tested"* |
+| **petzlover** | 2 | 🟡 YES | *"rehoming a lovely bonded pair of African Grey"* |
+| **exoticParrotsPlanet** | 1 | 🟡 WEAK | Generic AG product page only — no breeding-pair page |
+| **shadesOfGreys** | 1 | 🟡 INDIRECT | Trades as *Fifty Shades of African Greys*, MN — source of the failed-pairing artifact (§6) |
+| Other 24 (afrigreyparrots, exoticParrotPetstore, afroBirdsFarm, africanGrayParrotsForSale, silvergateBirdFarm, birdsForSales, williamsAfricanGreys, africanGreyAviaries, compoundExotics, qualityBirdsOnline, parrotAlert, petClassifieds, exoticPetsAvenue + all tier-3/4) | 1–4 | ⚪ **NO** | No breeding-pair page; do not compete on this keyword |
+
+**Only 6 of 30 registry domains compete here, and 4 of those are classifieds.** Not one registry
+competitor holds an editorial breeding-pair page. The finding stands and is now measured rather than
+asserted.
+
+### 14b · 14 new direct competitors added to `data/competitors.json` (registry 30 → 44)
+
+exoticGlobalParrotsFarm *(SERP #1)* · royalBirdCompany · denimixaniPetsParadise · buyAfricanGreyParrots
+· hookbillsForSale · grayBreedersFoundation · theAvianExchange · **jcAviary (Austin TX — closest
+in-state rival)** · anasParrots · parrotStars · birdsByJoe · midnightParrotPlace · handRearedParrots ·
+featherHeadz. Each carries its tier, discovery date, keyword set and a grounded note.
+
+### 14c · New market pricing the sweep produced — proven pairs specifically
+
+| Listing | Detail | Price |
+|---|---|---|
+| **Atlas & Sophie, TEXAS** (birdsnow) | *"bonded pair… approximately 7 years old, **Proven Pair**"* | **$5,500** |
+| Tulsa OK (birdsnow) | Proven Congo Grey Pair | **$9,495** |
+| Sand Springs / Checotah OK | *"Proven congo grey pair Female 8 male 10"* | listed |
+| Cedar Falls IA | *"Bonded proven breeding pair **9 babies raised this year**"* | SOLD |
+| JC Aviary, Austin TX | Congo, each | $6,800 / $7,500 |
+| WestBranchAviary TN | Congo, each | $6,500 |
+| PETGrove Miami FL | Congo | $5,999 |
+
+> **Our ladder against the market.** Sally & Odin at **$5,500** is exactly the Texas proven-pair asking
+> price (Atlas & Sophie, ~7 yrs, $5,500) and well under Tulsa's $9,495. Talker & Jane at **$3,000** is
+> roughly **half** the market for a documented proven pair. The 2026-07-30 pricing decision — publish
+> the comparison, prices unchanged, reason always in the same paragraph — applies unchanged, and now
+> has an in-state comparable, which is far stronger than the out-of-state ones.
+
+---
+
+## 15 · Propagation — built pages updated 2026-08-03
+
+Breeder direction: update every already-built page mentioning a breeding pair, **excluding location
+pages and `buy-` prefixed pages** (handled when those are built).
+
+| Change | Scope |
+|---|---|
+| Removed **DNA-certified / DNA-sexed** claims on the **breeding pair** | **16 replacements across 11 pages** — homepage, adoption, faq, parrot-for-sale, guide, captive-bred, cites-documentation, congo-pair, scams, male-vs-female, trusted-breeders |
+| Replaced flat **$3,000** with **From $3,000 / $3,000–$5,500** | **28 replacements across 15 pages** + the shared `cag-inquiry-form` component (propagated to 17 more pages) |
+| Comparison-page pair cards + alt text | 4 pages, each given a **distinct** alt (Rule 50b) |
+| `available/` hub | 3 DNA assertions corrected |
+| Target stub | title, meta, hero, price band; schema `Offer` → **`AggregateOffer`** with `offerCount 3`, `lowPrice 3000`, `highPrice 5500` |
+| `price-matrix.json` | `breeding_pair` rewritten — 3 pairs, ages, sexes, clutch counts, images, inverse-price note, explicit *no DNA certificate* |
+| `bird-inventory.json` | new `breeding_pairs[]` section |
+| `clutch-inventory.json` | **deliberately NOT added** — see below |
+
+**Left untouched, correctly:** every DNA-sexed claim about **individual hand-raised birds** (Roys, Amie,
+Bery, Elad, Evie) and about **Jins & Jeni** — those birds *are* DNA-sexed and the claim is Ledger-backed.
+
+⚠️ **Trap found and banked.** Adding the pairs to `clutch-inventory.json birds[]` **broke the build** —
+`/african-grey-parrot-adoption-cost/` does `birdImg[b.id].src` unguarded over every available bird, so
+a bird with no image mapping threw `Cannot read properties of undefined`. Root cause is not the missing
+image: **breeder stock is not pet inventory**, and pet-facing grids iterate that array. Breeding pairs
+now live only in `bird-inventory.breeding_pairs[]` and `price-matrix.variants.breeding_pair.pairs[]`.
+Verified: `npx astro build` → **108 pages**, and `dist/` scan → **0** unqualified flat $3,000
+breeding-pair claims.
+
+## 16 · Assets confirmed — 17 files in `assets/1WORKING-ON/FOR-SALE-PAGES/BREEDING PAIR/`
+
+Per-pair portraits for all three pairs · hero (`hero-african-grey-breeding-pair-sale-nearby-cage`) ·
+review (`review-breeding-male-and-female-…`) · incubator (`african-grey-parrot-eggs-in-incubator`,
+breeder-specified) · proven hen on nest with eggs · fertile egg · hand-fed chick · hand-held baby ·
+shipping · nail-trim/health · aviary cage · Timneh+Congo pair.
+
+**Asset Gate blockers to clear before Sprint 2:** `talker-jane-…webp` is **305 KB**, over triple the
+95 KB ceiling — must go through the bake. Four filenames contain **spaces** and need renaming to the
+SEO convention. Section assignment happens after the Sprint 1 outline, never before.
