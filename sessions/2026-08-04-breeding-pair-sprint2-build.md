@@ -110,6 +110,46 @@ to it would move the quality trend baseline.
 
 ---
 
+## Gate results — every gate run twice, verdicts identical
+
+| Gate | Result | Examined |
+|---|---|---|
+| `test:render:meta` | **PASS** | 198 passed, 24 skipped |
+| `test:render:pages` (this page) | **PASS ×2** | 3 tests, vp375 / vp768 / vp1280 |
+| `dup_content_audit` body | **PASS ×2** | 0 crossovers involving this page (5,749 sitewide are pre-existing on other pages) |
+| `dup_content_audit --headers` | **PASS ×2** | 0 crossover groups involving this page |
+| `final_page_audit` | **PASS-WITH-WARNINGS ×2** | 1 WARN: `wordcount_in_band` |
+| `page_hardening_scan` | **1 ERROR / 0 WARN** | ERROR is `fs-video`, see FLAG-4 |
+
+### Two gate-integrity findings worth banking
+
+1. **The render harness had never examined this page.** `test:render:pages` exited 0 while the slug
+   was absent from `tests/render/targets.json`. Registering it immediately surfaced a real blocking
+   defect at all three viewports (a visible `2026-08-03` date stamp). *A PASS is worthless until you
+   confirm the gate examined your page.*
+2. **The full-suite run is non-deterministic and bails early.** Run 1 failed `blog/cage-setup` +
+   this page; run 2 failed `florida` + `blog` + `congo-pair` and reported **"35 did not run"** —
+   this page was never reached. A targeted `-g <slug>` run is the only trustworthy second run.
+
+### Visual defect no gate caught
+
+The hero mosaic tiles cropped the 16:9 in-body masters (baked `blurfill --mobcrop 4:5`) into a
+portrait box, so they rendered the **blurred filler instead of the birds** — Sally & Odin read as an
+out-of-focus photo. Only looking at the page found it. Fixed with three dedicated 600×450 tile
+masters at 4:3, matching the sources' own 1.00 / 1.33 / 1.32 ratios.
+
+---
+
 ## What's Next
 
-*(filled at session close)*
+**Blocked on the breeder:**
+1. **FLAG-1** — regenerate `inf-2` + `inf-7`, then run the one-command swap. Blocks the final push.
+2. **FLAG-4** — is there a video for `.fs-video`? Yes → drop it in the asset folder. No → strip the
+   CSS for this page and record a page-type exemption.
+3. **§16 reviews** — real named buyer quotes, or the `TODO(breeder)` marker ships as-is.
+
+**Remaining sprints:**
+- **Sprint 5** — LLM visibility baseline across 5 engines × 6 queries. Not started.
+- **Sprint 6** — sitemaps, push, live 200, IndexNow, lessons doc.
+
+**Not pushed yet.** Push is deploy, and deploying now would put the two defective infographics live.
