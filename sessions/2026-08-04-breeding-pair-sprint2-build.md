@@ -48,6 +48,44 @@ logged so it is a deliberate accept rather than an oversight.
 
 Wants compacting as its own pass. Not part of this build.
 
+### 🔴 FLAG-4 — OPEN QUESTION: the page has no video, and `.fs-video` is spec-mandated
+
+`page_hardening_scan.py` reports **1 ERROR**: `fs-video` is styled but never rendered, and the
+scanner classes it as a SPEC-MANDATED component — "Render them. Do NOT delete the CSS — that
+hides a spec violation."
+
+There is **no video asset** for this page in `assets/1WORKING-ON/FOR-SALE-PAGES/BREEDING PAIR/`.
+The nine shipped siblings carry one; this page cannot without a file. Per the 97% confidence gate
+the build continued and everything not blocked by this is finished.
+
+**The one question for the breeder:** is there a video of the pairs — a clip of Talker and Jane in
+the flight, a nest-box check, a pair being crated — that should ship in `.fs-video`? If yes, drop
+it in the asset folder and it goes in. If no, the `.fs-video` CSS should be removed from this page
+only, and the scanner's "spec-mandated" list needs this page-type exemption recorded so the ERROR
+does not recur on every future for-sale page without footage.
+
+Until answered, this is the single ERROR standing between the page and a clean hardening scan.
+
+### ⚪ NOTED — keyword density is deliberately below the nominal band
+
+Tag placement is fully on-spec: primary in `<title>` ×1, `<h1>` ×1, `<h2>` ×4 (band is 2–4),
+`alt` ×1, `<meta>` ×1, and present in the first 100 body words. Total keyword coverage is **545
+mentions across 65 distinct terms** against a spec of 85–105 across 40+ — well over.
+
+What is under: **primary-family density at 0.2%** against a nominal 1–2%. That band assumes a
+~2,000-word page. At **7,855 body words**, reaching 1% would require ~78 primary mentions and 2%
+would require ~157. The same rule ends "never stuffed", so the two halves of it cannot both be
+satisfied here. **Deliberate deviation: placement honoured, density not padded.** Recorded rather
+than silently accepted.
+
+### ⚪ NOTED — the render harness had never examined this page
+
+`tests/render/targets.json` did not list `african-grey-breeding-pair-for-sale`, so
+`npm run test:render:pages` was exiting 0 without measuring it. Registered as
+`{"slug":"african-grey-breeding-pair-for-sale","page_type":"for-sale","corpus":false}` —
+`corpus:false` on purpose, because the corpus is a frozen one-page-per-type benchmark and adding
+to it would move the quality trend baseline.
+
 ---
 
 ## Verified at session open
