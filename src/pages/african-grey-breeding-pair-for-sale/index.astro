@@ -22,6 +22,9 @@ const pairs = [
     tier: 'Most Proven',
     img: `${IMG}/talker-jane-proven-african-grey-breeding-pair`,
     alt: 'Talker and Jane, the twelve and ten year old proven pair from C.A.Gs, perched on an aviary branch',
+    /* Rule 50b: the primary keyword lives in the LCP image's alt and nowhere else.
+       Hero-C is a mosaic, so tile 1 is the primary image — not a separate hero photo. */
+    heroAlt: 'African grey breeding pair for sale — Talker and Jane in our Midland, Texas flight aviary',
     blurb: 'Our longest-producing pair, and the one we point first-time breeding buyers toward. Four clutches hatched and reared here, with the dates available before you pay.',
     sub: 'Four clutches hatched · closed-banded',
   },
@@ -35,6 +38,7 @@ const pairs = [
     tier: 'Mid Ladder',
     img: `${IMG}/mari-lake-african-grey-breeding-pair-two-clutches`,
     alt: 'Mari and Lake, a bonded Congo grey cock and hen with two hatched clutches on record',
+    heroAlt: 'Mari and Lake at six and seven years old, the middle pair on our production ladder',
     blurb: 'Two hatched clutches settles the question a single clutch leaves open, and this pair still has most of its productive years in front of it.',
     sub: 'Two clutches hatched · closed-banded',
   },
@@ -48,6 +52,7 @@ const pairs = [
     tier: 'Most Years Ahead',
     img: `${IMG}/sally-odin-youngest-proven-african-grey-pair`,
     alt: 'Sally and Odin, the youngest proven Congo grey pair we have placed, four and five years old',
+    heroAlt: 'Sally and Odin in the aviary, the pair with the most breeding years still ahead of them',
     blurb: 'The youngest pair we have ever placed as proven. Sally sits at the early end of the breeding range, and we would rather say that plainly than let you find it out later.',
     sub: 'One clutch hatched · closed-banded',
   },
@@ -89,6 +94,87 @@ const stops = [
 
 /* One Product + Offer per real pair. AggregateOffer belongs on group and hub pages; this
    page sells three discrete, individually-priced pairs, so it ships three Product nodes. */
+
+/* FAQPage — extracted from the rendered <details> blocks in §18 so the schema and the
+   visible answers can never drift apart. Regenerate if the FAQ copy changes. */
+const faqSchema = {
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      "@type": "Question",
+      "name": "How do I know a pair is really proven?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ask for the clutch record and the band numbers, and ask before you pay. A proven pair has dates behind it — when the hen went down, how many eggs, how many hatched, how many fledged. Talker and Jane have four clutches recorded, Lake and Mari two, Odin and Sally one. If a seller answers that question with adjectives instead of dates, you are looking at a bonded pair at best and two housemates at worst."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How old are greys before they'll actually breed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It varies more than people expect, and we will not hand you a threshold number as if it were a rule. Our six range from Sally at four to Talker at twelve, and every one has been part of a recorded clutch. Some pairs go down early, some take years longer, and a few well-matched greys never take an interest. Age is one input; setup, diet and how well the two birds get along matter as much."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are the pair birds tame? Can I handle them?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, and you should not plan on it. These are aviary birds bonded to each other, not hand-raised companions bonded to people. They tolerate us at feeding and inspection, and that is the extent of it. A cock guarding a box will absolutely come at your hand. If you want a grey who steps up and talks, buy one of our hand-raised singles instead — that is a completely different bird raised on a completely different routine."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if they stop laying after the move?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Expect a pause. A pair that has just flown across the country and been rehoused will usually go quiet for weeks or months before either bird looks at the box again, and that is normal behavior rather than a defect. Get the flight right, hold temperature and humidity in range, feed them well and leave them alone. We do not guarantee production — nobody honestly can — but we will talk through your setup with you for as long as it takes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why don't these pairs come with a DNA certificate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because we never sent samples to a lab for them. We know the sexes from years of watching these birds breed, and each has produced with us. A certificate confirms which bird is the hen; it says nothing about whether the pair functions. Run your own test after arrival if you want the document — any avian lab will take the sample."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What size nest box do I need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Twelve by twelve by twenty-four inches, vertical, mounted on the outside of the flight. Depth is the part people cut, and it is the part that matters — a grey hen wants a dark bottom to settle into, not a shallow shelf. Outside mounting keeps your floor space and lets you inspect through a hatch instead of reaching past a defensive cock. A few inches of pine shavings, and then leave it alone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I buy just the hen, or just the cock?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Each pair sells as a pair, and we do not split them for any price. These birds are bonded to each other and their value is entirely in that bond — a proven hen sold alone is just a hen, and the cock left behind loses a partner he has already produced with. Splitting a working pair to close two sales instead of one is exactly the kind of thing we started this aviary to avoid doing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does shipping work, and do they fly together?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Two crates, same flight, never one crate for the two of them. We ship cargo on Delta, United and American under IATA Live Animals Regulations, and both crates arrive on the same aircraft. Airport cargo is $185 for the pair, home delivery is $350 for the pair, and pickup in Midland is free if you are within two or three hours of us. Documentation travels with the crates, not separately."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the 72-hour guarantee actually cover?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our guarantee is written as 72 hours from arrival — not three days, and the wording matters because it is measured from the moment you take possession. If a bird arrives in trouble, you call us inside that window and we deal with it. Have an avian vet lined up before the crates land rather than after, and get both birds looked at during the window. That is the single most useful thing a new pair owner can do."
+      }
+    }
+  ],
+};
+
 const productSchemas = pairs.map((p) => ({
   '@type': 'Product',
   name: `${p.name} — Proven African Grey Breeding Pair`,
@@ -107,7 +193,10 @@ const productSchemas = pairs.map((p) => ({
 }));
 ---
 
-<BaseLayout {title} {description} {canonical} hideGlobalCta>
+<BaseLayout {title} {description} {canonical} hideGlobalCta
+  heroPreload={`${IMG}/talker-jane-proven-african-grey-breeding-pair.webp`}
+  heroPreloadSrcset={`${IMG}/talker-jane-proven-african-grey-breeding-pair-760.webp 760w, ${IMG}/talker-jane-proven-african-grey-breeding-pair.webp 1408w`}
+  heroPreloadSizes="(max-width:980px) 33vw, 190px">
   <div class="bpair">
     <div class="container">
       <Breadcrumb items={[
@@ -145,7 +234,7 @@ const productSchemas = pairs.map((p) => ({
                 src={`${p.img}.webp`}
                 srcset={`${p.img}-760.webp 760w, ${p.img}.webp 1408w`}
                 sizes="(max-width:980px) 33vw, 190px"
-                alt={p.alt}
+                alt={p.heroAlt}
                 width="1408" height="768"
                 loading={i === 0 ? 'eager' : 'lazy'}
                 fetchpriority={i === 0 ? 'high' : undefined}
@@ -166,6 +255,17 @@ const productSchemas = pairs.map((p) => ({
         ))}
       </div>
     </div>
+
+    <!-- ══ Rail B green ticker — mobile only, sticky to the TOP under the header ══
+         Sibling used Rail A clay chips. Sticky-bottom was rejected: it covers the
+         reserve CTA on short viewports. -->
+    <nav class="railB" aria-label="Jump to section">
+      <div class="railB-track">
+        {stops.map((s) => (
+          <a href={`#${s.id}`} data-stop={s.id}><span class="rn">{s.n}</span>{s.t}</a>
+        ))}
+      </div>
+    </nav>
 
     <div class="container bpair-body">
 
@@ -217,15 +317,581 @@ const productSchemas = pairs.map((p) => ({
           </div>
         </section>
 
-        <!-- SECTIONS_3_TO_19 -->
+<div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+
+<section id="proven">
+  <h2 class="cag-h2">What Does "Proven" Actually Mean on a Breeding Pair?</h2>
+  <p>Proven means the pair has hatched a fertile clutch. Not paired, not seen mating, not two birds sitting shoulder to shoulder looking devoted — hatched, with chicks that came out of the box alive. Here at C.A.Gs we hold that line hard, and we count the clutches, because that single word is the whole reason a pair costs more than two singles. You are not paying for feathers. You are paying for the one question a single bird can never answer for you.</p>
+
+  <div class="k3">
+    <p class="k3-k">The Standard, in Five Lines</p>
+    <ul class="k3-list">
+      <li>Proven = a fertile clutch already hatched, and someone can tell you when.</li>
+      <li>Bonded = the two birds tolerate and prefer each other. That is a start, not a record.</li>
+      <li>Unproven = no clutch yet, for any reason, including age.</li>
+      <li>Our three pairs are closed-banded, and we send the clutch history on request.</li>
+      <li>Method is what we promise. A clutch on your schedule is not something anyone can promise.</li>
+    </ul>
+  </div>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img inf-img" src="/images/breeding-pair/inf-1-what-proven-means.webp"
+         srcset="/images/breeding-pair/inf-1-what-proven-means-760.webp 760w, /images/breeding-pair/inf-1-what-proven-means.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Chart showing what proven means on a parrot pair, compared against unproven and bonded only" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Only one of these three has hatched a fertile clutch. Ask which one you are being sold.</figcaption>
+  </figure>
+
+  <h3 class="cag-h3">The Definition Working Breeders Use</h3>
+  <p>Among people who actually run boxes, the word has a narrow meaning and nobody argues about it. A pair is proven when it has produced chicks that hatched. Eggs alone do not do it — a hen can lay a full clutch of clears every season for years, and clear eggs prove she is a hen and nothing more. We have watched newer buyers pay a proven-pair price for exactly that bird.</p>
+
+  <h4 class="cag-h4">Proven, Unproven, and Simply Bonded</h4>
+  <p>Three different states get sold under one word, and only one of them carries a record. Unproven is honest and usually cheap: two birds of confirmed sex, no clutch behind them. Bonded is a behavioral description of how they get along. Proven is a production fact with dates attached. A seller who slides between the three in one paragraph is telling you something about their bookkeeping.</p>
+
+  <h5 class="cag-h5">Why a Bonded Pair Is Not Automatically a Breeding Pair</h5>
+  <p>Bonding and breeding are two separate hurdles, and the second one is taller. A bonded pair preens, feeds each other, sleeps flush against the same perch and screams when separated. None of that requires either bird to ever enter a nest box. We sell one companion pair here that is deeply bonded and has never laid a thing, and we say so on its page rather than letting the word do quiet work for us.</p>
+
+  <h6 class="cag-h6">From the Nest Box: A Pair Can Bond for Years and Never Lay</h6>
+  <p>We have had two Congos share a flight for three seasons, model behavior all the way through, and produce nothing. Nothing was wrong with either bird. The box placement was wrong, and when we moved it the following winter, that changed. The lesson we took is that a bond is a precondition, not a prediction, and anyone selling you the bond as if it were the outcome has skipped the hard part.</p>
+
+  <h3 class="cag-h3">What a Seller Should Be Able to Show You</h3>
+  <p>Ask for the paperwork before you ask for the price. A breeder who has actually produced from a pair can answer four questions without stalling: which bird is the cock, what the band numbers read, when each clutch hatched, and who fed the chicks. If any of those four produce a pause, you are talking to a reseller who bought the pair last month and is repeating what they were told.</p>
+
+  <h4 class="cag-h4">Band Numbers, Clutch Dates, and Who Reared the Chicks</h4>
+  <p>Our pairs are closed-banded, and the band is the anchor for everything else. A closed band goes on a chick in the first days of life and cannot be slipped on an adult later, so it ties the bird to a hatch year and a breeder. <a href="/how-to-avoid-african-grey-parrot-scams/">Our scam-avoidance guide</a> walks through the rest of the document trail. We keep clutch dates in writing and we send them on request, and we will tell you plainly which chicks we pulled and hand-fed ourselves.</p>
+</section>
+
+<div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+
+<section id="ladder">
+  <h2 class="cag-h2">Why Does the Pair With the Fewest Clutches Cost the Most?</h2>
+  <p>It looks backwards on the price sheet, so here is the reasoning. Talker and Jane, twelve and ten years old, have hatched four clutches and sell for $3,000. Sally and Odin, four and five, have hatched one, and they sell for $5,500. The evidence you are buying is the clutch that proves the pair works; the asset you are buying is every season after that one. Older birds carry a longer record and a shorter runway, and the price follows the runway. We set the ladder this way so that nobody pays a premium for history they cannot use.</p>
+
+  <div class="k5"><p class="k5-t">Four hatched clutches prove more than one does — but one clutch at age four proves the same thing with a decade of seasons still in front of it.</p></div>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img inf-img" src="/images/breeding-pair/inf-2-price-ladder.webp"
+         srcset="/images/breeding-pair/inf-2-price-ladder-760.webp 760w, /images/breeding-pair/inf-2-price-ladder.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Price ladder showing our three Congo grey pairs, where fewer hatched clutches costs more" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Prices rise as clutch counts fall, because you are buying breeding years ahead.</figcaption>
+  </figure>
+
+  <h3 class="cag-h3">You Are Buying Breeding Years, Not Past Output</h3>
+  <p>The clutches already hatched belong to us. They are the proof, and proof is worth something, but you will never sell a chick from a clutch that hatched in 2021. What you take home is the seasons in front of the pair, and that number is set almost entirely by how old the two birds are on the day they land at your place. Read the ladder as a rental on remaining years, priced by how many are left.</p>
+
+  <h4 class="cag-h4">How the Ladder Works Across Our Three Pairs</h4>
+  <p>Three pairs, three points on the same curve, and the arithmetic is visible in both directions. Talker and Jane hold the longest record of the three and sit at the bottom of the price ladder at $3,000, because at twelve and ten they have the fewest seasons ahead. Mari and Lake, six and seven with two clutches hatched, sit in the middle at $4,500. Sally and Odin are the youngest and least-recorded pair we have, and they cost the most at $5,500 for exactly that reason. <a href="/african-grey-parrot-price/">Our full pricing guide</a> shows how these sit against our single-bird prices.</p>
+
+  <h5 class="cag-h5">When the Cheapest Pair Is the Right Buy</h5>
+  <p>Talker and Jane are the correct purchase more often than the price suggests, and we will argue for them out loud. A pair with four hatched clutches has been through the whole cycle repeatedly, and there is very little left to discover about whether they will use a box. If your goal this year is to learn the work — candling, pulling chicks, the timing of it — you want the pair that has already done it four times, not the one still writing its second chapter.</p>
+
+  <h6 class="cag-h6">Breeder's Note: Most First-Time Aviaries Should Start at the Bottom of This Ladder</h6>
+  <p>Twelve years in, our honest advice to a first aviary is to buy the record and not the runway. A first-time setup usually loses its first season to things that have nothing to do with the birds: a box hung too low, a room with too much traffic, a light schedule that swings. Those mistakes are cheaper to make with an experienced pair that shrugs them off than with a young pair you would rather not unsettle. Buy the runway on your second pair, once your room has proven itself too.</p>
+
+  <p class="ctaline"><a href="#reserve" class="btn-clay">Reserve a proven pair</a></p>
+</section>
+
+<div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+
+<section id="age">
+  <h2 class="cag-h2">How Old Must African Greys Be Before They Can Breed?</h2>
+  <p>Sexual maturity in African Greys arrives around four years, and the earliest fertile eggs on record show up near three. Steady production usually comes later still, with most pairs settling into a rhythm around five or six. That gap between "capable" and "producing" is the number that matters to a buyer, because it is the gap a young pair still has to cross on your feed bill. Knowing it also gives you a fast test for any listing you are shown.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img inf-img" src="/images/breeding-pair/inf-3-breeding-age-timeline.webp"
+         srcset="/images/breeding-pair/inf-3-breeding-age-timeline-760.webp 760w, /images/breeding-pair/inf-3-breeding-age-timeline.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Timeline of how old African greys must be before they can breed, from three to six years" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Fertile eggs are on record at three years. A fifteen-month "proven" pair cannot exist.</figcaption>
+  </figure>
+
+  <h3 class="cag-h3">Maturity, and the Gap Before the First Fertile Clutch</h3>
+  <p>A grey reaching maturity is not a grey ready to raise chicks. The bird's body arrives at the threshold first and the behavior catches up afterward, which is why young pairs so often produce a clear clutch, then a broken one, then finally a good one. Psittacus erithacus is a slow species in every direction — slow to fledge, slow to mature, long-lived at the far end. <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener">The World Parrot Trust's Grey Parrot species page</a> lays out the general life history behind that pattern.</p>
+
+  <h4 class="cag-h4">What the Published Record Says</h4>
+  <p>Tony Silva, whose aviculture records are among the most cited in the field, documents fertile eggs from greys at roughly three years of age, with sexual maturity around four and consistent production commonly arriving at five to six. Those are the published outer edges, not a schedule your pair owes you. We treat three as the floor of what is physically possible and four as the age at which a first clutch stops being remarkable.</p>
+
+  <h5 class="cag-h5">Why a Fifteen-Month "Proven Pair" Cannot Exist</h5>
+  <p>Do the subtraction and the listing collapses. A pair advertised as proven at fifteen months would have had to hatch a clutch before either bird was old enough to lay a fertile egg, and no record supports that. This is the most useful arithmetic on the page, because it takes five seconds and it does not require you to see the birds. We have watched this exact claim run on marketplaces for years, unchallenged, mostly because buyers assume the seller knows something they do not.</p>
+
+  <h6 class="cag-h6">From the Nest Box: Silva Records Fertile Eggs at Three Years</h6>
+  <p>Three years is the earliest we would credit, and we have never seen it here. Our own youngest producing pair, Sally and Odin, hatched their first clutch with Sally at four — which is early by our aviary's standards and entirely ordinary against the published record. When a bird beats the average we say so and we do not build the price around it.</p>
+</section>
+
+<div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+
+<section id="record">
+  <h2 class="cag-h2">What Has Each of Our Pairs Actually Produced?</h2>
+  <p>Seven hatched clutches across three pairs, and we can tell you which pair produced each one. That is the entire claim this page makes about production, and there is no fourth pair held back in a shed somewhere. All six birds are Congo African Greys, captive-bred in the United States, closed-banded, and living here in Midland. Everything in the table below traces to birds we hatched and reared ourselves in an aviary we started in 2014.</p>
+
+  <div class="tH-wrap">
+  <table class="tH">
+    <caption>Production Record — Every Figure From Our Own Aviary</caption>
+    <thead><tr><th>Pair</th><th>Ages</th><th>Clutches Hatched</th><th>Years Proven</th><th>Productive Years Ahead</th><th>Price</th></tr></thead>
+    <tbody>
+      <tr><th>Talker &amp; Jane</th><td data-label="Ages">12 and 10</td><td data-label="Clutches Hatched" class="num">4</td><td data-label="Years Proven">~6 years</td><td data-label="Productive Years Ahead">Fewest of the three</td><td data-label="Price" class="num">$3,000</td></tr>
+      <tr><th>Mari &amp; Lake</th><td data-label="Ages">6 and 7</td><td data-label="Clutches Hatched" class="num">2</td><td data-label="Years Proven">~3 years</td><td data-label="Productive Years Ahead">Middle of the three</td><td data-label="Price" class="num">$4,500</td></tr>
+      <tr><th>Sally &amp; Odin</th><td data-label="Ages">4 and 5</td><td data-label="Clutches Hatched" class="num">1</td><td data-label="Years Proven">~1 year</td><td data-label="Productive Years Ahead">Most of the three</td><td data-label="Price" class="num">$5,500</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img og-photo" src="/images/breeding-pair/congo-african-grey-breeding-pair-production-record.webp"
+         srcset="/images/breeding-pair/congo-african-grey-breeding-pair-production-record-760.webp 760w, /images/breeding-pair/congo-african-grey-breeding-pair-production-record.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Congo greys in our breeding aviary, the birds behind the clutch records on this page" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Every clutch figure on this page traces to birds we hatched and reared ourselves.</figcaption>
+  </figure>
+
+  <p>Notice what the table does not have: a hatch-rate percentage, an eggs-per-clutch average, a projection for next season. We could calculate all three and they would look impressive in a column, and they would be dressing up a sample of seven. The honest version is the count, the ages, and the dates behind them, which we will send you in writing.</p>
+
+  <p>Every bird in this table is captive-bred in the USA with full documentation. <a href="https://www.cites.org/eng/app/appendices.php" target="_blank" rel="noopener">The CITES appendices</a> have carried African Greys on Appendix I since the CoP17 uplisting took effect in January 2017, which is the strictest tier the convention has, and it is why paperwork matters more in this species than in almost anything else you could put in an aviary. <a href="/congo-african-grey-for-sale/">Our Congo African Grey listings</a> carry the same documentation on the single birds.</p>
+
+  <p class="ctaline"><a href="#reserve" class="btn-clay">See what each pair has produced</a></p>
+</section>
+
+<div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+
+<section id="tame">
+  <h2 class="cag-h2">Why Are Our Proven Pairs Still Tame When Most Breeder Stock Is Not?</h2>
+  <p>Most breeder stock is not tame, and the sellers who are honest about it say so in the listing. Royal Bird Company describes one of its own African Greys as a proven male that is not tame, that growls when approached, and that has not been handled in fifteen years. That is a normal outcome, not a scandal — and it is also what you inherit, every day, for the life of the bird. Ours came out differently because they started differently: every one of our six breeders was hand-reared here before it was ever paired.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img og-photo" src="/images/breeding-pair/tame-hand-raised-african-grey-breeder-stock.webp"
+         srcset="/images/breeding-pair/tame-hand-raised-african-grey-breeder-stock-760.webp 760w, /images/breeding-pair/tame-hand-raised-african-grey-breeder-stock.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Hand-raised Congo greys that went on to breed, still tame and steady around people" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Ours were hand-reared before they were paired, which is why they stayed steady.</figcaption>
+  </figure>
+
+  <h3 class="cag-h3">Hand-Reared Birds That Went On to Breed</h3>
+  <p>These six were raised under The Benjamin Home-Raising Protocol, which is our own name for how we do it: chicks pulled and hand-fed, weaned onto solids without being rushed, and held back until the twelve-to-sixteen-week gate before they go anywhere. They were also handled under The Midland Socialization Method — family handling in the house, daily out-of-cage time, ordinary noise. Those are our labels for our own practice, not a certification anybody issued us. What they buy you is a breeder bird that learned people were boring long before it learned it was a parent.</p>
+
+  <h4 class="cag-h4">What Parent-Fed Breeder Stock Is Usually Like</h4>
+  <p>Parent-fed birds pulled straight into a breeding flight never form that association, and they are the majority of the breeder stock on the market. A typical bird of that background lunges at the cage front, growls when a hand comes near, and treats every service visit as a threat. You can absolutely run a productive aviary that way, and thousands of people do. But you will be catching birds with a towel for the next thirty years, and vet visits become a two-person operation with a plan.</p>
+
+  <h5 class="cag-h5">Handling a Pair Without Disturbing the Nest</h5>
+  <p>Tame does not mean you should be handling a pair mid-season, and here the two goals actually fight each other. Once a hen is sitting, we go in for food and water and nothing else. The value of tameness at that point is not that you get to hold them — it is that a nest check does not detonate the room, and that a bird you need to catch in December will step up instead of running the flight. Save the handling for the months between clutches.</p>
+
+  <h6 class="cag-h6">Breeder's Note: Tame Is Our Account of Our Own Birds, Not a Claim About the Species</h6>
+  <p>We want the boundary on this one stated plainly. Everything above describes six specific Congo greys that we hatched, fed and paired, and we are telling you how they behave with us. It is not a claim about African Greys generally, and it is not a promise about how any of them will act in a strange room in the first month. Ask us what a specific pair is like and you will get a specific answer about that pair.</p>
+
+  <p class="ctaline"><a href="#reserve" class="btn-clay">Ask for the clutch record</a></p>
+</section>
+
+<div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+
+<section id="moving">
+  <h2 class="cag-h2">How Do You Move a Proven Pair Without Stopping Production?</h2>
+  <p>Relocation stops production constantly, and the people who admit it are the ones worth listening to. Royal Bird Company writes that when they moved some of their own proven breeders, the results were not the same. We believe them, because we have done it too. The difference between a pair that resumes and a pair that sulks for a year is almost never the birds — it is how much was changed at once, and how fast someone reached for the nest box.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img inf-img" src="/images/breeding-pair/inf-4-moving-a-pair.webp"
+         srcset="/images/breeding-pair/inf-4-moving-a-pair-760.webp 760w, /images/breeding-pair/inf-4-moving-a-pair.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Five step process flow for relocating a producing parrot pair without stopping production" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Five steps, in order. The nest box is offered last, never first.</figcaption>
+  </figure>
+
+  <h3 class="cag-h3">What Goes Wrong When a Pair Is Moved Badly</h3>
+  <p>The classic failure is enthusiasm. A pair arrives on Tuesday, goes into an unfamiliar cage in a busy room, gets a new diet the same week, and finds a nest box waiting on the wall — and then the new owner checks it every day to see whether anything happened. What that pair learns in its first fortnight is that the box is a place where a face appears. Add a diet swap on top and you have changed food, light, sound, cage and neighbors simultaneously, with no way to tell which one is the problem.</p>
+
+  <h4 class="cag-h4">The Settling Sequence We Use</h4>
+  <p>We have moved producing pairs more times than we can count, and the ones that kept laying all had the same few weeks of being left alone. First, the pair goes into its permanent cage in a low-traffic room and stays there — no rearranging later. Second, we hold the diet they arrived on and change nothing for the first weeks. Third, we keep the light and dark hours steady rather than easing them into a new schedule. Fourth, we service food and water at the same hour daily so the birds can predict us. The nest box goes up last, once the pair is eating normally and ignoring us, and then we leave it alone.</p>
+
+  <h5 class="cag-h5">Why We Never Promise a Clutch, and What We Do Promise</h5>
+  <p>We do not guarantee production, and we will not be talked into it. Any breeder who guarantees a clutch in your first season is either guessing or planning to argue with you later. What we promise is method and record: the clutch history in writing, the birds shipped in two crates rather than one under IATA Live Animals Regulations, our 72-hour health guarantee, and Mark on the phone for the settling period. Outcome belongs to the birds.</p>
+
+  <p class="ctaline"><a href="#reserve" class="btn-clay">Talk to Mark about breeder stock</a></p>
+</section>
+
+<div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+
+<section id="pairing">
+  <h2 class="cag-h2">Why Does Random Pairing Fail When Experienced Pairing Works?</h2>
+  <p>Before: you buy two greys you like the look of, put them in a flight, and wait. Lafeber's veterinary guidance on pairing is blunt about what happens next — there is no way to predict if they will get along, so you introduce them and see what happens. After: you buy two birds that already chose each other and have hatched chicks together, and the entire question is closed on the day of purchase. The bridge between those two positions is the only real argument for buying a pair instead of two singles.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img inf-img" src="/images/breeding-pair/inf-5-pairing-method.webp"
+         srcset="/images/breeding-pair/inf-5-pairing-method-760.webp 760w, /images/breeding-pair/inf-5-pairing-method.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Comparison of random bird pairing against matching a cock to a hen by method" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">The difference is not luck. It is whether anyone confirmed the sexes first.</figcaption>
+  </figure>
+
+  <h3 class="cag-h3">What Hobbyists Try, and Why It Usually Does Not Take</h3>
+  <p>Self-pairing fails in two ordinary ways, and both are expensive. The first is sex: greys are not visually dimorphic, so a hopeful owner buys two birds by head shape and eye ring and ends up with two hens, or two cocks, and a year lost before anybody checks. The second is temperament, and it does not care what the paperwork says. A Minnesota breeder, Shades of Greys, listed a fifteen-year-old hen at $2,500 with the plain explanation that their male was just not into having a companion — a bird in its prime, on the market, because the pairing did not take. That is what a failed self-pairing looks like written down.</p>
+
+  <h4 class="cag-h4">How We Match a Cock to a Hen</h4>
+  <p>Our matching is not a gift, it is bookkeeping plus patience. We know which of our birds is the hen because we watched her lay, and we know which is the cock the same way — the clutch itself settles the question that hobbyists are still guessing at. From there we house candidates within sight of each other before they ever share a cage, and we watch for the things that decide it: who feeds whom, who moves off a perch, whether either bird is spending the day pinned in a corner. Pairs that do not take get separated and tried again another season. The three pairs on this page are the ones that took, and that is the difference you are actually paying for.</p>
+</section>
+<section id="market">
+  <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+  <h2 class="cag-h2">What Does a Proven African Grey Pair Cost Elsewhere in the United States?</h2>
+  <p>A proven pair of Congo African Greys is one of the few purchases in this hobby where the sticker price tells you almost nothing on its own. Two sellers can both write "proven pair" and mean completely different animals — one has a hen who has raised four clutches under a band you can read, the other has two adult greys who happened to share a flight and once produced a cracked egg. We have bred Congos in Midland since 2014, and the question we field most from people shopping around is why our three pairs sit under almost everything listed nationally. Here are the actual numbers.</p>
+
+  <h3 class="cag-h3">What Documented Pairs Are Currently Listed At</h3>
+  <p>We pulled live, dated listings on 2026-08-03 from birdsnow, quoted exactly as they appeared rather than as a range we invented afterward. A pair in Tulsa, Oklahoma was listed at $9,495. Stone Mountain, Georgia was $8,000. Gwynnoak, Maryland was $6,500. Another Texas seller had a proven pair at $5,500. Ours run $3,000 to $5,500 out of Midland — Talker and Jane at $3,000 with four clutches behind them, Lake and Mari at $4,500 with two, Odin and Sally at $5,500 with one. That is the whole range, top to bottom.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img inf-img" src="/images/breeding-pair/inf-6-market-prices.webp"
+         srcset="/images/breeding-pair/inf-6-market-prices-760.webp 760w, /images/breeding-pair/inf-6-market-prices.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Bar chart of listed United States prices for a proven or bonded parrot pair by location" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Live listings from Tulsa, Stone Mountain, Gwynnoak and Texas, set beside ours.</figcaption>
+  </figure>
+
+  <h4 class="cag-h4">Why Ours Sit Below Those Numbers</h4>
+  <p>The reason is boring, and we would rather give you the boring true answer than a clever one: we bred these birds ourselves. Talker, Jane, Lake, Mari, Odin and Sally all came up in our aviary, so there is no acquisition cost sitting underneath our price and no middle party who needs to clear a margin on top of what they paid somebody else. We only have to price above what it costs us to keep a pair fed, housed and healthy. That is the entire gap. Our prices do not move, there is no was-now framing anywhere on this site, and nobody has ever gotten a different number out of us by asking twice.</p>
+
+  <h5 class="cag-h5">Why a Low Price With No Paperwork Is Still a Warning Sign</h5>
+  <p>Cheap is not the same as honest, and we will not pretend otherwise just because we are the cheaper listing on this page. A $3,000 pair with readable band numbers and a written clutch record is a different purchase from a $3,000 pair advertised in three sentences by somebody who will not photograph the birds on their own perch. If a seller cannot produce bands, hatch records and CITES captive-bred documentation, the low price is not a bargain — it is the cost of the missing paperwork, moved onto you.</p>
+
+  <p class="ctaline"><a href="#reserve" class="btn-clay">See what each pair has produced</a></p>
+</section>
+
+<section id="housing">
+  <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+  <h2 class="cag-h2">What Housing and Nest Box Does a Breeding Pair Need?</h2>
+  <p>Before a pair leaves here we want to know where they are going, and the setup question is the one that decides it. A breeding pair is not a companion bird in a bigger cage. They need room to fly, a box they can defend, and air that is not fighting them. The World Parrot Trust publishes housing figures for <em>Psittacus erithacus</em> that match what twelve years in our own flights has taught us, and we hold every buyer to them because a pair in the wrong enclosure will simply stop — no eggs, more feather damage, and a hen who spends her day on the cage floor.</p>
+
+  <h3 class="cag-h3">Flight Space Before Nest Box</h3>
+  <p>People get this backwards constantly. They buy the nest box first, mount it on a parrot cage from a big-box store, and then wonder why nothing happens for two years. Flight length comes first and it is not negotiable in our sale: three metres, which is 9.8 feet, is the minimum run a pair needs to actually fly rather than hop. Temperature and humidity matter nearly as much, and in West Texas the humidity number is the one that catches people out — our dry summers will pull a flight well under range without a humidifier running.</p>
+
+  <table class="tH">
+    <caption>The four housing specifications we hold every breeding-pair buyer to, per World Parrot Trust guidance for <em>Psittacus erithacus</em>.</caption>
+    <thead>
+      <tr><th scope="col">Specification</th><th scope="col">Requirement</th></tr>
+    </thead>
+    <tbody>
+      <tr><td data-label="Specification">Flight length</td><td data-label="Requirement">3 metres minimum (9.8 feet)</td></tr>
+      <tr><td data-label="Specification">Nest box</td><td data-label="Requirement">12 × 12 × 24 inches, vertical, mounted outside the cage</td></tr>
+      <tr><td data-label="Specification">Temperature</td><td data-label="Requirement">68–80&deg;F</td></tr>
+      <tr><td data-label="Specification">Humidity</td><td data-label="Requirement">50–65%</td></tr>
+    </tbody>
+  </table>
+
+  <p><a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener">The World Parrot Trust's Grey Parrot species entry</a> is where those figures come from, and we would rather you read it directly than take our word for it. Nothing on that page is proprietary to us. It is simply the clearest published summary of what the species needs, and a buyer who has read it asks us better questions.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img inf-img" src="/images/breeding-pair/inf-7-housing-nest-box.webp"
+         srcset="/images/breeding-pair/inf-7-housing-nest-box-760.webp 760w, /images/breeding-pair/inf-7-housing-nest-box.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Housing and nest box specifications a breeding parrot pair needs, with flight length and humidity" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Flight length comes before the nest box. A box in a small cage is not a setup.</figcaption>
+  </figure>
+
+  <h4 class="cag-h4">Nest Box Dimensions and Placement</h4>
+  <p>Our boxes are 12 by 12 by 24 inches, oriented vertically, and mounted on the outside of the flight rather than inside it. Vertical matters because a grey hen wants depth and darkness at the bottom, not a shallow tray. Outside mounting matters for two reasons: it gives the pair back the floor space the box would have stolen, and it lets you inspect through an access hatch without putting your arm into the space a defensive cock bird is guarding. Add a few inches of pine shavings, leave the pair alone, and resist the urge to check it hourly. Greys are private about this, and a hen who feels watched is a hen who abandons.</p>
+
+  <p class="ctaline"><a href="#reserve" class="btn-clay">Talk to Mark about breeder stock</a></p>
+</section>
+
+<section id="paperwork">
+  <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+  <h2 class="cag-h2">What Paperwork Comes With Each Pair?</h2>
+  <p>Congo African Greys are CITES Appendix I, uplisted at CoP17 and effective January 2017, and the IUCN lists the species as Endangered. That places real documentation obligations on anyone breeding or selling them, and it is the part of this transaction where we are least casual. Every bird we sell is captive-bred here in our own facility. Below is what travels with a pair — and, just as importantly, what does not.</p>
+
+  <h3 class="cag-h3">Closed Bands and the Clutch Record</h3>
+  <p>Both birds in every pair wear a closed band with a readable number, and a closed band makes a specific claim: it goes on a chick's leg in the first days of life and cannot be slipped onto an adult later. That is the whole point of it — physical evidence that a bird hatched in captivity rather than being imported and re-labeled. Alongside the bands we keep the clutch record for each pair, dates and counts and what hatched, and we send it before you pay anything.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img og-photo" src="/images/breeding-pair/proven-african-grey-hen-on-nest-with-eggs.webp"
+         srcset="/images/breeding-pair/proven-african-grey-hen-on-nest-with-eggs-760.webp 760w, /images/breeding-pair/proven-african-grey-hen-on-nest-with-eggs.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="A proven Congo grey hen sitting her clutch inside the nest box in our aviary" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">A sitting hen in our nest boxes, photographed without disturbing the nest.</figcaption>
+  </figure>
+
+  <h4 class="cag-h4">What We Hold, and What We Do Not</h4>
+  <p>Here is the full list, and we would rather it be short and true than long and padded. We hold closed bands with numbers on both birds, the clutch record available on request, CITES Appendix I captive-bred documentation, and hatch records for all six of these adults. We run a USDA Animal Welfare Act licensed facility. <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">The CITES appendices themselves</a> are published openly if you want to confirm the Appendix I listing rather than trust a breeder's summary of it.</p>
+
+  <h5 class="cag-h5">Why These Pairs Carry No DNA Certificate</h5>
+  <p>Plainly: these three pairs do not come with a DNA certificate, and we are not going to imply otherwise by staying quiet about it. Nobody sent a feather or a blood card to a lab for Talker, Jane, Lake, Mari, Odin or Sally. We know their sexes because we have watched them breed, and every one of the six has been part of a clutch we recorded. A lab result tells you which bird is the hen. It does not tell you whether she will sit, whether the cock will feed her, or whether the two tolerate each other well enough to raise anything.</p>
+
+  <h6 class="cag-h6">Clutch Record: Four Hatched Clutches Is Itself a Demonstration of a Functional Pair</h6>
+  <p>Talker and Jane have raised four clutches, and that record does more work than a certificate could, because it is a functional test rather than a genetic one — four separate times, this cock and this hen went to nest and brought chicks out of the box. Lake and Mari have done it twice. Odin and Sally once. Seven clutches across the three pairs. If you want the document for your own records, run a test after the birds arrive; any avian lab will take the sample. We are simply not going to charge you for paperwork we did not produce.</p>
+
+  <p class="ctaline"><a href="#reserve" class="btn-clay">Ask for the clutch record</a></p>
+</section>
+
+<section id="travel">
+  <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+  <h2 class="cag-h2">How Does an African Grey Breeding Pair Travel to You?</h2>
+  <p>Moving two bonded adult greys across the country is a different job from shipping a weaned baby, and we plan it that way. Adults are heavier, stronger, and far more inclined to take out their stress on whatever is nearest — which, in a shared crate, is each other. We fly pairs as cargo on Delta, United and American under the IATA Live Animals Regulations, and we book the routing ourselves rather than handing you a tracking number and wishing you luck.</p>
+
+  <h3 class="cag-h3">Two Crates, Never One</h3>
+  <p>A pair travels in two crates. Not one large crate, not one crate with a divider — two separate crates, every time, with no exceptions we have ever made. Bonded birds who are perfectly civil to each other in a three-metre flight are a genuine risk to one another inside a dark box on a loud tarmac, and a bitten foot or a broken blood feather at 30,000 feet has no remedy until landing. The two crates fly on the same aircraft and arrive together, so the pair is separated for hours, not days. <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener">The IATA Live Animals Regulations</a> govern the container standards, and every crate we send meets them.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img og-photo" src="/images/breeding-pair/african-grey-breeding-pair-two-crate-shipping.webp"
+         srcset="/images/breeding-pair/african-grey-breeding-pair-two-crate-shipping-760.webp 760w, /images/breeding-pair/african-grey-breeding-pair-two-crate-shipping.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Airline shipping crates used to fly a bonded parrot pair to buyers across the United States" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">A pair always travels in two crates. One crate for two adults is how birds get hurt.</figcaption>
+  </figure>
+
+  <h4 class="cag-h4">Airport Cargo, Home Delivery, or Midland Pickup</h4>
+  <p>Three ways to get your pair, and the right one depends mostly on how far you are from us. Airport cargo is $185 — we fly the birds into your nearest served airport and you collect them from the cargo counter, usually within a couple of hours of landing. Home delivery is $350 and ends with the crates at your door. Pickup in Midland, Texas is free and is what we recommend if you are within two or three hours of us, because it removes the flight entirely and lets you see the flight the pair came out of. Both shipping figures are flat and cover the whole pair, not each bird.</p>
+
+  <p>The birds ship with their documentation, and the paperwork does not follow separately in the mail a week later. Band numbers, hatch records and CITES captive-bred documentation travel with the crates.</p>
+</section>
+
+<section id="singles">
+  <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+  <h2 class="cag-h2">Which Single Greys and Fertile Eggs Can You Add?</h2>
+  <p>Not everybody who lands on this page needs two adults in a flight. Some of you are building an aviary and want to add unrelated bloodline to what you already keep. Some of you incubate your own and would rather start at the egg. And a fair number of you came here looking for a talking companion and found breeder stock by accident, which is a different bird entirely. We keep singles and eggs available alongside the pairs for exactly those reasons.</p>
+
+  <h3 class="cag-h3">Available Singles From Our Own Lines</h3>
+  <p>Every single we offer came out of our own flights, hand-fed here and raised under the same two methods we apply to every chick. <strong>The Benjamin Home-Raising Protocol</strong> is our name for how we hand-feed, wean and hold a bird to the 12–16-week gate — no chick leaves before it is eating on its own and holding weight. <strong>The Midland Socialization Method</strong> is the second half: family handling, daily out-of-cage routine, and household noise, so a bird is not startled by a vacuum on day one. Neither label is a third-party certification and we have never claimed one; they are what we call our own process. <a href="/congo-african-grey-for-sale/">Our Congo singles</a> — Bery, Amie and Roys — sit in the $1,500 to $3,500 range that runs across the site. <a href="/timneh-african-grey-for-sale/">Our two Timnehs</a>, Elad at $1,600 and Evie at $1,500, are the smaller, rustier-tailed cousin and often the better first grey.</p>
+
+  <h3 class="cag-h3">Candled Fertile Eggs for Incubating Breeders</h3>
+  <p>For breeders who run their own incubator, we sell candled fertile eggs from these same lines. Candled means we have held the egg to light and confirmed development before it is offered — we do not sell eggs on hope. This is the option for someone who already has the equipment, the brooder and the hand-feeding experience, and who would rather bring chicks up under their own protocol than buy a producing pair outright. It is also, honestly, the option with the most ways to go wrong, so we talk it through with every buyer rather than just boxing eggs. Ask us for current availability; egg supply moves with what is in our boxes that month.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img og-photo" src="/images/breeding-pair/candled-fertile-african-grey-eggs-incubator.webp"
+         srcset="/images/breeding-pair/candled-fertile-african-grey-eggs-incubator-760.webp 760w, /images/breeding-pair/candled-fertile-african-grey-eggs-incubator.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Candled fertile grey parrot eggs in an incubator, available to breeders who hatch their own" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">For breeders who would rather incubate than buy a pair outright.</figcaption>
+  </figure>
+
+  <div class="xsell">
+    <p class="xsell-k">Not Buying Breeder Stock?</p>
+    <p>A proven pair is the wrong bird for a living room, and we say that to people every week. Talker and Jane are bonded to each other, not to you — that is exactly what makes them worth $3,000 as breeders and a poor fit as a companion. If you want a grey who talks to you and learns your household, a hand-raised single is the bird you came for. Bery, Amie and Roys are Congos out of our lines; Elad and Evie are Timnehs. Same aviary, same protocol, completely different job.</p>
+  </div>
+
+  <p class="ctaline"><a href="#reserve" class="btn-clay">Reserve a proven pair</a></p>
+</section>
+        <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async" /></div>
+
+        <!-- ══ §15 · The tool — six-question verification checklist ══
+             Chosen over a productive-years calculator because it works against ANY
+             seller's listing, ours included, which is what makes it linkable. One tool
+             per page; remaining productive years stays a card element, not a second module. -->
+        <section id="checklist">
+          <h2 class="cag-h2">Which Six Questions Separate a Proven Pair From a Claimed One?</h2>
+          <p class="lead">Every question below can be answered by any honest seller in about a minute, and none of them requires trusting us. Run the list against our three pairs, then run it against the next listing you open. The point is not that we score well; it is that most listings cannot answer question one.</p>
+
+          <h3 class="cag-h3">Six Questions to Ask Before You Pay</h3>
+          <p>Tick each one you can get a straight answer to. The tally underneath tells you what you are actually looking at, and nothing you enter leaves your browser.</p>
+
+          <div class="chk">
+            <p class="chk-k">Is This Pair Actually Proven?</p>
+            <p class="chk-sub">Six questions · tick the ones the seller can answer</p>
+            <ul class="chk-list">
+              <li><label><input type="checkbox" data-chk><span>Has this pair hatched a fertile clutch, and when?</span></label></li>
+              <li><label><input type="checkbox" data-chk><span>How old is each bird?</span></label></li>
+              <li><label><input type="checkbox" data-chk><span>Are both birds closed-banded, and what are the band numbers?</span></label></li>
+              <li><label><input type="checkbox" data-chk><span>Can you see the clutch record before you pay?</span></label></li>
+              <li><label><input type="checkbox" data-chk><span>Is the pair sold together, and never split?</span></label></li>
+              <li><label><input type="checkbox" data-chk><span>Will the seller say what happens if the pair stops producing after the move?</span></label></li>
+            </ul>
+            <div class="chk-out" id="chkOut" role="status" aria-live="polite">
+              <p class="chk-score" id="chkScore">0 of 6 answered</p>
+              <p class="chk-verdict" id="chkVerdict">Tick a question once you have a straight answer to it.</p>
+            </div>
+          </div>
+
+          <h4 class="cag-h4">What a Straight Answer Looks Like</h4>
+          <p>A straight answer carries a date, a number, or a plain no. "Yes, proven" is not an answer to question one; "she hatched three in the spring of last year and two the spring before, and I will send you the dates" is. When a seller answers question six with silence, that silence is the answer, and it is worth more than anything in the listing photos.</p>
+          <p>We answer all six on this page, in public, before anyone asks. Talker and Jane have four hatched clutches with dates, Mari and Lake two, Sally and Odin one. Both birds in each pair wear closed bands we can read out over the phone. No pair here is ever split. And on question six, our answer is the one nobody likes giving: we do not promise a clutch, because no honest breeder can — what we promise is the method we use to move a pair and the fact that we will stay on the phone with you while it settles.</p>
+
+          <p class="ctaline"><a href="#reserve" class="btn-clay">Ask for the clutch record</a></p>
+        </section>
+
+<section id="reviews">
+  <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+  <h2 class="cag-h2">What Have Breeders Said After Their Pair Arrived?</h2>
+  <p>We are going to be careful here, because this is the section where most breeder sites quietly invent people. We will not print a quote we cannot attribute to a real buyer who agreed to it, and we would rather this section look thin than look fabricated. What we can tell you is the shape of what comes back to us after a pair lands. The two-crate arrival is the thing buyers mention first, usually with some surprise that both birds walked out steady. The clutch record is second — more than one buyer has told us they only understood what they had bought once the dates were in front of them. And the settling period comes up constantly, because a moved pair typically goes quiet for weeks before either bird looks at the box, and knowing that in advance is the difference between patience and panic. When we have named quotes we can stand behind, they will go here, and not before.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img og-photo" src="/images/breeding-pair/breeder-review-african-grey-pair-arrived.webp"
+         srcset="/images/breeding-pair/breeder-review-african-grey-pair-arrived-760.webp 760w, /images/breeding-pair/breeder-review-african-grey-pair-arrived.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Photo from a breeder who bought a pair from Mark and Teri Benjamin at C.A.Gs" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Sent to us by a buyer after their pair settled in.</figcaption>
+  </figure>
+
+  <!-- TODO(breeder): real named buyer quotes go here. Do not ship invented testimonials. -->
+</section>
+
+<section id="reading">
+  <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+  <h2 class="cag-h2">Keep Reading Before You Reserve a Breeding Pair</h2>
+  <p>Three pages worth your time before you send a deposit anywhere — ours or anyone else's. The first sets expectations on what greys cost across the board, so a listing price stops being an abstract number and starts being comparable. The second is the one we wish every buyer read first, because the scam patterns in this species are consistent, repetitive and easy to spot once somebody names them out loud. The third covers our Congo singles, in case the pair turns out not to be the bird you needed. <a href="/african-grey-parrot-breeders-comparison/">Our breeder comparison page</a> is the fourth, if you want to see how documentation practices differ seller to seller before you commit to any of us.</p>
+
+  <div class="read-cards">
+    <a href="/african-grey-parrot-price/"><img src="/images/breeding-pair/inf-3-breeding-age-timeline-760.webp" alt="Timeline graphic showing when captive Congo greys reach breeding condition" width="760" height="415" loading="lazy" decoding="async"><span>What African Greys Cost</span></a>
+    <a href="/how-to-avoid-african-grey-parrot-scams/"><img src="/images/breeding-pair/inf-7-housing-nest-box-760.webp" alt="Aviary setup diagram used to check whether a seller's housing claims hold up" width="760" height="415" loading="lazy" decoding="async">
+    <span>How to Spot a Parrot Scam</span></a>
+    <a href="/congo-african-grey-for-sale/"><img src="/images/breeding-pair/candled-fertile-african-grey-eggs-incubator-760.webp" alt="Fertile Congo grey eggs under candling light in our incubator room" width="760" height="415" loading="lazy" decoding="async"><span>Congo Greys for Sale</span></a>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+  <h2 class="cag-h2">Questions Breeders Ask Us About Proven Pairs</h2>
+  <p>These nine come up on nearly every call, answered the way we answer them on the phone. If yours is not here, ask us directly.</p>
+
+  <div class="faqA">
+    <details class="faqA-i"><summary><span class="faqA-band">01</span><span>How do I know a pair is really proven?</span></summary><p>Ask for the clutch record and the band numbers, and ask before you pay. A proven pair has dates behind it — when the hen went down, how many eggs, how many hatched, how many fledged. Talker and Jane have four clutches recorded, Lake and Mari two, Odin and Sally one. If a seller answers that question with adjectives instead of dates, you are looking at a bonded pair at best and two housemates at worst.</p></details>
+
+    <details class="faqA-i"><summary><span class="faqA-band">02</span><span>How old are greys before they'll actually breed?</span></summary><p>It varies more than people expect, and we will not hand you a threshold number as if it were a rule. Our six range from Sally at four to Talker at twelve, and every one has been part of a recorded clutch. Some pairs go down early, some take years longer, and a few well-matched greys never take an interest. Age is one input; setup, diet and how well the two birds get along matter as much.</p></details>
+
+    <details class="faqA-i"><summary><span class="faqA-band">03</span><span>Are the pair birds tame? Can I handle them?</span></summary><p>No, and you should not plan on it. These are aviary birds bonded to each other, not hand-raised companions bonded to people. They tolerate us at feeding and inspection, and that is the extent of it. A cock guarding a box will absolutely come at your hand. If you want a grey who steps up and talks, buy one of our hand-raised singles instead — that is a completely different bird raised on a completely different routine.</p></details>
+
+    <details class="faqA-i"><summary><span class="faqA-band">04</span><span>What if they stop laying after the move?</span></summary><p>Expect a pause. A pair that has just flown across the country and been rehoused will usually go quiet for weeks or months before either bird looks at the box again, and that is normal behavior rather than a defect. Get the flight right, hold temperature and humidity in range, feed them well and leave them alone. We do not guarantee production — nobody honestly can — but we will talk through your setup with you for as long as it takes.</p></details>
+
+    <details class="faqA-i"><summary><span class="faqA-band">05</span><span>Why don't these pairs come with a DNA certificate?</span></summary><p>Because we never sent samples to a lab for them. We know the sexes from years of watching these birds breed, and each has produced with us. A certificate confirms which bird is the hen; it says nothing about whether the pair functions. Run your own test after arrival if you want the document — any avian lab will take the sample.</p></details>
+
+    <details class="faqA-i"><summary><span class="faqA-band">06</span><span>What size nest box do I need?</span></summary><p>Twelve by twelve by twenty-four inches, vertical, mounted on the outside of the flight. Depth is the part people cut, and it is the part that matters — a grey hen wants a dark bottom to settle into, not a shallow shelf. Outside mounting keeps your floor space and lets you inspect through a hatch instead of reaching past a defensive cock. A few inches of pine shavings, and then leave it alone.</p></details>
+
+    <details class="faqA-i"><summary><span class="faqA-band">07</span><span>Can I buy just the hen, or just the cock?</span></summary><p>No. Each pair sells as a pair, and we do not split them for any price. These birds are bonded to each other and their value is entirely in that bond — a proven hen sold alone is just a hen, and the cock left behind loses a partner he has already produced with. Splitting a working pair to close two sales instead of one is exactly the kind of thing we started this aviary to avoid doing.</p></details>
+
+    <details class="faqA-i"><summary><span class="faqA-band">08</span><span>How does shipping work, and do they fly together?</span></summary><p>Two crates, same flight, never one crate for the two of them. We ship cargo on Delta, United and American under IATA Live Animals Regulations, and both crates arrive on the same aircraft. Airport cargo is $185 for the pair, home delivery is $350 for the pair, and pickup in Midland is free if you are within two or three hours of us. Documentation travels with the crates, not separately.</p></details>
+
+    <details class="faqA-i"><summary><span class="faqA-band">09</span><span>What does the 72-hour guarantee actually cover?</span></summary><p>Our guarantee is written as 72 hours from arrival — not three days, and the wording matters because it is measured from the moment you take possession. If a bird arrives in trouble, you call us inside that window and we deal with it. Have an avian vet lined up before the crates land rather than after, and get both birds looked at during the window. That is the single most useful thing a new pair owner can do.</p></details>
+  </div>
+</section>
+
+<section id="reserve">
+  <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
+  <h2 class="cag-h2">Reserve a Proven African Grey Breeding Pair</h2>
+  <p>Three pairs. That is the whole inventory as of this writing, and when one goes it is gone until a pair of ours comes into condition — we are not restocking from anyone else's aviary to keep a number on this page. Talker and Jane at $3,000 with four clutches, Lake and Mari at $4,500 with two, Odin and Sally at $5,500 with one. Tell us which one you are looking at and where you are, and we will send the clutch record for that pair before we talk about a deposit. Tell us about your flight too — the length, where the box will mount, how you hold humidity — because that conversation decides more about how the pair does than the price does. If you would rather ask about a single grey or about fertile eggs, use the same form. It comes to Mark and Teri directly, not to an inbox nobody reads, and one of us answers it.</p>
+
+  <div class="fs-form">
+    <aside class="form-side">
+      <p class="fsx-k">Available Now</p>
+      <ul class="fsx-list">
+        <li><span>Talker &amp; Jane — 4 clutches</span><span>$3,000</span></li>
+        <li><span>Mari &amp; Lake — 2 clutches</span><span>$4,500</span></li>
+        <li><span>Sally &amp; Odin — 1 clutch</span><span>$5,500</span></li>
+        <li><span>Elad — Timneh single</span><span>$1,600</span></li>
+        <li><span>Evie — Timneh single</span><span>$1,500</span></li>
+        <li><span>Candled fertile eggs</span><span>Ask</span></li>
+      </ul>
+      <p class="fsx-ship">Ships nationwide · $185 airport · $350 home</p>
+      <p class="fsx-note">Pickup in Midland, TX — if you live within 2–3 hours of us</p>
+    </aside>
+    <form class="fs-fields" action="/contact-us/" method="get">
+      <div class="fld2"><label>First name<input type="text" name="fname" autocomplete="given-name"></label><label>Last name<input type="text" name="lname" autocomplete="family-name"></label></div>
+      <label class="fld">Email<input type="email" name="email" autocomplete="email" required></label>
+      <label class="fld">Which pair or bird<select name="bird">
+        <option>Talker &amp; Jane — $3,000</option>
+        <option>Mari &amp; Lake — $4,500</option>
+        <option>Sally &amp; Odin — $5,500</option>
+        <option>Bery — Congo single</option>
+        <option>Amie — Congo single</option>
+        <option>Roys — Congo single</option>
+        <option>Elad — Timneh, $1,600</option>
+        <option>Evie — Timneh, $1,500</option>
+        <option>Candled fertile eggs</option>
+        <option>Not sure yet — need advice</option>
+      </select></label>
+      <label class="fld">Delivery<select name="delivery"><option>Airport cargo — $185</option><option>Home delivery — $350</option><option>Pickup in Midland, TX</option></select></label>
+      <label class="fld">Anything you want us to know<textarea name="msg" rows="3"></textarea></label>
+      <button type="submit" class="btn-clay bfull">Reserve a proven pair</button>
+      <p class="fs-fine">Mark or Teri answers every inquiry personally, usually the same day.</p>
+    </form>
+  </div>
+</section>
 
       </main>
     </div>
   </div>
 
   {productSchemas.map((s) => <Schema type="product" data={s} />)}
+  <Schema type="faq" data={faqSchema} />
   <Schema type="organization" />
 </BaseLayout>
+
+<script is:inline>
+(function () {
+  /* ── The six-question checklist ──────────────────────────────────────────
+     Pure vanilla, no dependencies. The output band has a min-height floor in
+     CSS so swapping its text can never reflow the page (CLS). */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-chk]'));
+  var out = document.getElementById('chkOut');
+  var score = document.getElementById('chkScore');
+  var verdict = document.getElementById('chkVerdict');
+
+  if (boxes.length && out && score && verdict) {
+    var VERDICTS = [
+      'Tick a question once you have a straight answer to it.',
+      'One answer is not a record. Ask for the clutch dates before anything else.',
+      'Still thin. A pair with no documented clutch is unproven, whatever the listing says.',
+      'Halfway. Push on the clutch record and the band numbers — those two are the hard ones.',
+      'Reasonable. Ask what happens if the pair stops producing after the move.',
+      'Strong. One question left, and it is usually the one that separates breeders from resellers.',
+      'All six answered. That is what a documented proven pair looks like.'
+    ];
+    var update = function () {
+      var n = boxes.filter(function (b) { return b.checked; }).length;
+      score.textContent = n + ' of 6 answered';
+      verdict.textContent = VERDICTS[n];
+      out.classList.toggle('ok', n >= 5);
+      out.classList.toggle('warn', n > 0 && n <= 2);
+    };
+    boxes.forEach(function (b) { b.addEventListener('change', update); });
+    update();
+  }
+
+  /* ── Scroll-spy for the Dial 1 ring + Rail B ticker ──────────────────────
+     Two banked traps this avoids:
+     1. The LAST intersecting entry wins if you just take entries[0] — so we
+        track a live set and pick the topmost visible section every time.
+     2. A rAF-gated handler latches on a non-painting page. No rAF gate here;
+        the IO callback writes directly. Verified in Playwright, not in a pane. */
+  var sections = Array.prototype.slice.call(
+    document.querySelectorAll('.bpair-main section[id]')
+  );
+  if (!sections.length) return;
+
+  var links = Array.prototype.slice.call(
+    document.querySelectorAll('.tdial-list a[data-stop], .railB a[data-stop]')
+  );
+  var ring = document.getElementById('ring');
+  var tnum = document.getElementById('tnum');
+  var total = sections.length;
+  var visible = new Set();
+  var current = null;
+
+  function paint(id) {
+    if (id === current) return;
+    current = id;
+    var idx = sections.findIndex(function (s) { return s.id === id; });
+    if (idx < 0) return;
+
+    links.forEach(function (a) {
+      var on = a.getAttribute('data-stop') === id;
+      a.classList.toggle('on', on);
+      if (on && a.closest('.railB-track')) {
+        a.scrollIntoView({ block: 'nearest', inline: 'center' });
+      }
+    });
+    if (tnum) tnum.textContent = String(idx + 1);
+    if (ring) ring.style.setProperty('--p', String(Math.round(((idx + 1) / total) * 100)));
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible.add(e.target); else visible.delete(e.target);
+    });
+    if (!visible.size) return;
+    /* topmost visible section wins, not "whichever entry fired last" */
+    var top = null;
+    visible.forEach(function (el) {
+      if (!top || el.getBoundingClientRect().top < top.getBoundingClientRect().top) top = el;
+    });
+    if (top) paint(top.id);
+  }, { rootMargin: '-96px 0px -55% 0px', threshold: 0 });
+
+  sections.forEach(function (s) { io.observe(s); });
+})();
+</script>
 
 <style>
 :root { --bp-ink:#1c1a18; --bp-mid:#5a5248; --bp-bd:#ede5dc; --bp-green:#2D6A4F; --bp-clay:#e8604c; --bp-clayink:#c8472f; --bp-claytext:#b04228; --bp-cream:#faf7f4; }
@@ -719,6 +1385,7 @@ const productSchemas = pairs.map((p) => ({
 /* ── §15 the checklist tool ── */
 .bpair .chk { background:#fff; border:1px solid var(--bp-bd); border-radius:20px; padding:16px 18px; margin:1.1rem 0; box-shadow:0 2px 12px rgba(60,30,10,.05); }
 .bpair p.chk-k { font-size:clamp(0.79rem,1vw,0.82rem); letter-spacing:.16em; text-transform:uppercase; color:var(--bp-green); font-weight:700; margin:0 0 4px; max-width:none; }
+.bpair p.chk-sub { font-size:.84rem; color:var(--bp-mid); margin:0; max-width:none; }
 .bpair .chk-list { list-style:none; margin:.6rem 0 0; padding:0; display:grid; gap:2px; }
 .bpair .chk-list li { margin:0; }
 .bpair .chk-list label { display:grid; grid-template-columns:22px minmax(0,1fr); gap:10px; align-items:start;
