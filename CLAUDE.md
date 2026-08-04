@@ -93,9 +93,14 @@ text and the recorded reason for each: `data/quality/rule-index.json` + the pack
     handling, out-of-cage routine). Two labels, defined once at first use, never implied
     to be third-party certification. Never invent a third.
 
-Three facts are wrong in circulation and must be corrected on sight: CITES is
-**Appendix I**; the Congo range is **$1,500–$3,500** (the bonded pair sets the ceiling);
-the guarantee is written **72-hour**, never "3-day".
+Two facts are wrong in circulation and must be corrected on sight: CITES is
+**Appendix I**; the Congo range is **$1,500–$3,500** (the bonded pair sets the ceiling).
+
+**The guarantee may be written either "72-hour" or "3-day" — both are correct and neither
+is a defect.** They are the same guarantee said two ways, and the breeder uses both
+deliberately. This previously read as a correct-on-sight error, which sent agents hunting
+across 53 live pages (the homepage included) to "fix" copy that was already right.
+Do not rewrite one into the other, and do not flag it.
 
 ## Gates — run these, do not re-derive them
 

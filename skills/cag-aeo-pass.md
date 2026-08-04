@@ -37,7 +37,7 @@ Three claims in circulation are wrong. Never write them, and correct them on sig
 |---|---|---|
 | "CITES **Appendix II**" | **CITES Appendix I** | Uplisted at CoP17, effective Jan 2017. The live pages say Appendix I **25×**; CLAUDE.md records this exact correction being made on 2026-05-29 per World Parrot Trust. Appendix II is a compliance-sensitive regression that was already fixed once. |
 | "$1,500 to **$3,000**" | **$1,500–$3,500** | `price-matrix.json` and the adoption-cost price ladder top out at $3,500 (the bonded pair). |
-| "**3-day** health guarantee" | **72-hour** (and the 24-hour window) | 72 h is three days, but the health-guarantee page uses "72-hour" **25×** and "3-day" **zero** times; its whole voice lever is the enforceable 72-hr / 24-hr windows. Use the house register. |
+| ~~"**3-day** health guarantee"~~ NOT A DEFECT | **both "72-hour" and "3-day" are correct** | 72 h is three days, but the health-guarantee page uses "72-hour" **25×** and "3-day" **zero** times; its whole voice lever is the enforceable 72-hr / 24-hr windows. Use the house register. |
 
 Verified safe to use: `Mark & Teri Benjamin` · `Midland, TX` · `USDA AWA licensed` ·
 `IATA` · "all 50 states" (claimed on 19 pages) · `Psittacus erithacus` (Congo) ·

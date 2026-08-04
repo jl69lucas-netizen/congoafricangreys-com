@@ -69,8 +69,8 @@ live 200 → IndexNow → lessons doc → memory.
 5. A page "verified" by grepping source instead of reading `dist/`.
 6. Work left on a branch, or committed without a push. Push **is** deploy.
 7. A fabricated number, review, credential, or claim outside the Verified-Claim Ledger.
-8. CITES written as Appendix II, a "3-day" guarantee, or a flat Congo price. Appendix **I**,
-   **72-hour**, **$1,500–$3,500**.
+8. CITES written as Appendix II, or a flat Congo price. Appendix **I**, **$1,500–$3,500**.
+   ("72-hour" and "3-day" are both correct — leave whichever is written.)
 9. Any bird-card label opaque enough to cover a head, face, beak, or eyes.
 
 **Card labels — near-transparent, always.** Chip fill no more than **28% alpha** over the photo,

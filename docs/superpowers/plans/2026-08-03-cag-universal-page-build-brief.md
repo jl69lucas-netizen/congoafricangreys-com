@@ -80,7 +80,7 @@ These bind every page, every sprint, every agent. Correct any contradiction **on
 | Wrong in the wild | Correct, always |
 |---|---|
 | CITES **Appendix II** | **Appendix I** — uplisted at CoP17, effective January 2017 |
-| "3-day guarantee" | **72-hour** guarantee, written |
+| — | **72-hour** and **"3-day"** are BOTH correct; never rewrite one into the other |
 | A single flat Congo price | **Congo range $1,500–$3,500** — the bonded pair sets the ceiling |
 
 Also standing: **IUCN Endangered** (Congo) / **Vulnerable** (Timneh). All our birds are **captive-bred
