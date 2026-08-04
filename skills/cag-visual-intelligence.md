@@ -252,7 +252,7 @@ Endangered (Congo) / Vulnerable (Timneh), and every bird is captive-bred in the 
 **5c. Three fact predicates are checked on sight** (all three have regressed before):
 `PRICED_AT` Congo = **$1,500–$3,500** (never a flat $3,000; the bonded pair sets the
 ceiling) · `CERTIFIED_BY` = **Appendix I**, never II · `GUARANTEED_FOR` = **72-hour**
-(plus the 24-hour window), never "3-day".
+(plus the 24-hour window). **"72-hour" and "3-day" are both correct — never rewrite one into the other.**
 
 **5d. Brand-owned predicates.** `The Benjamin Home-Raising Protocol` and `The Midland
 Socialization Method` are the only two approved method labels — never invent a third,

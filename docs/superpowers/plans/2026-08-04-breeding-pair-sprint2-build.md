@@ -448,7 +448,7 @@ on request. No DNA-sexed or DNA-certified claim about the pairs appears anywhere
 ```bash
 cd /Users/apple/Downloads/CAG
 npx astro build >/dev/null 2>&1
-for p in "5-6 years minimum" "5–6 years minimum" "DNA certified" "DNA-certified" "DNA sexed" "DNA-sexed" "Appendix II" "3-day"; do
+for p in "5-6 years minimum" "5–6 years minimum" "DNA certified" "DNA-certified" "DNA sexed" "DNA-sexed" "Appendix II"; do
   n=$(grep -ic "$p" dist/african-grey-breeding-pair-for-sale/index.html || true)
   printf "%-24s %s\n" "$p" "$n"
 done

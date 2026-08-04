@@ -147,7 +147,7 @@ board-certification and any un-listed clinical claim are not.
 |---|---|---|
 | `CERTIFIED_BY` | CITES **Appendix I** (CoP17, effective Jan 2017) | "Appendix II" |
 | `PRICED_AT` (Congo) | **$1,500–$3,500** — the bonded pair sets the ceiling | a flat "$3,000" |
-| `GUARANTEED_FOR` | **72-hour** (plus the 24-hour window) | "3-day" |
+| `GUARANTEED_FOR` | **72-hour** or **"3-day"** — both correct (plus the 24-hour window) | — |
 
 **3c. Blacklist — any hit is a hard FAIL on the page, not a low score:**
 `WILD_CAUGHT · IMPORTED_FROM · CAUGHT_IN · SMUGGLED · UNDOCUMENTED_SALE`, or any phrasing
