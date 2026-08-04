@@ -14,6 +14,7 @@ const IMG = '/images/breeding-pair';
 const pairs = [
   {
     id: 'talker-jane',
+    tile: `${IMG}/talker-jane-tile`,
     name: 'Talker & Jane',
     cock: 'Talker', hen: 'Jane',
     ages: 'Twelve and ten years old',
@@ -30,6 +31,7 @@ const pairs = [
   },
   {
     id: 'mari-lake',
+    tile: `${IMG}/mari-lake-tile`,
     name: 'Mari & Lake',
     cock: 'Lake', hen: 'Mari',
     ages: 'Six and seven years old',
@@ -44,6 +46,7 @@ const pairs = [
   },
   {
     id: 'sally-odin',
+    tile: `${IMG}/sally-odin-tile`,
     name: 'Sally & Odin',
     cock: 'Odin', hen: 'Sally',
     ages: 'Four and five years old',
@@ -194,9 +197,9 @@ const productSchemas = pairs.map((p) => ({
 ---
 
 <BaseLayout {title} {description} {canonical} hideGlobalCta
-  heroPreload={`${IMG}/talker-jane-proven-african-grey-breeding-pair.webp`}
-  heroPreloadSrcset={`${IMG}/talker-jane-proven-african-grey-breeding-pair-760.webp 760w, ${IMG}/talker-jane-proven-african-grey-breeding-pair.webp 1408w`}
-  heroPreloadSizes="(max-width:980px) 33vw, 190px">
+  heroPreload={`${IMG}/talker-jane-tile.webp`}
+  heroPreloadSrcset={`${IMG}/talker-jane-tile-300.webp 300w, ${IMG}/talker-jane-tile.webp 600w`}
+  heroPreloadSizes="(max-width:980px) 31vw, 190px">
   <div class="bpair">
     <div class="container">
       <Breadcrumb items={[
@@ -231,11 +234,11 @@ const productSchemas = pairs.map((p) => ({
           {pairs.map((p, i) => (
             <figure class={`ptile ptile-${i + 1}`}>
               <img
-                src={`${p.img}.webp`}
-                srcset={`${p.img}-760.webp 760w, ${p.img}.webp 1408w`}
-                sizes="(max-width:980px) 33vw, 190px"
+                src={`${p.tile}.webp`}
+                srcset={`${p.tile}-300.webp 300w, ${p.tile}.webp 600w`}
+                sizes="(max-width:980px) 31vw, 190px"
                 alt={p.heroAlt}
-                width="1408" height="768"
+                width="600" height="450"
                 loading={i === 0 ? 'eager' : 'lazy'}
                 fetchpriority={i === 0 ? 'high' : undefined}
                 decoding="async"
@@ -1168,7 +1171,11 @@ const productSchemas = pairs.map((p) => ({
    nothing to unwind at mobile (the trap that collapsed Hero-A's inset). */
 .bpair .phero-mosaic { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; align-content:center; }
 .bpair .ptile { position:relative; margin:0; border-radius:14px; overflow:hidden; border:1px solid var(--bp-bd); background:#fff; box-shadow:0 3px 14px rgba(60,30,10,.07); }
-.bpair .ptile img { width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; display:block; }
+/* 4:3 on a DEDICATED tile master, not the 16:9 in-body master. The three sources measure
+   1.00 / 1.33 / 1.32, so a 4:3 box fits them with almost no filler. Cropping the in-body
+   masters (blurfill --mobcrop 4:5) to a portrait tile showed their blurred filler instead
+   of the birds — Sally & Odin read as an out-of-focus photo. Measured, not guessed. */
+.bpair .ptile img { width:100%; height:auto; aspect-ratio:4/3; object-fit:cover; display:block; }
 .bpair .ptile-2 { margin-top:14px; }
 .bpair .ptile-3 { margin-top:28px; }
 /* Clutch chip: the same near-transparent treatment as .rbadge — text on a scrim,
