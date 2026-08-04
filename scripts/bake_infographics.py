@@ -43,7 +43,19 @@ def bake(src, dst_dir, stem):
     return im.width, im.height
 
 
+def resolve(src_dir, stem):
+    """Find the master for a stem. The generator emits PNG as often as WebP and the
+    prompt packs tell the breeder any format is fine, so accept any of them."""
+    for ext in (".webp", ".png", ".jpg", ".jpeg"):
+        p = src_dir / f"{stem}{ext}"
+        if p.exists():
+            return p
+    raise SystemExit(
+        f"no master for '{stem}' in {src_dir} (tried .webp .png .jpg .jpeg)"
+    )
+
+
 if __name__ == "__main__":
     src_dir, dst_dir = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
     for name in sys.argv[3:]:
-        bake(src_dir / f"{name}.webp", dst_dir, name)
+        bake(resolve(src_dir, name), dst_dir, name)
