@@ -121,6 +121,17 @@ are.** Note that the worst family is ranked by ROWS, not instances — ranking b
 would permanently elect whichever check enumerates the most nodes, which is a fact about
 the check, not the site.
 
+## Banked triggers — reach for these before re-deriving them
+
+| When you see… | Reach for | Why |
+|---|---|---|
+| a page that **names our birds in prose** with no visuals | `src/components/cag-library/MiniBirdCard.astro` | the breeding-pair §singles row shipped five named birds as text only. Style 1 (4:5 + frosted label), per-bird `objectPos`, 2-up at ≤600px, `width`/`height` mandatory or `final_page_audit` `img_dims` fails the whole page. `project_minibirdcard_component` |
+| a **caption or table defect on mobile** | the `display:block` list in the page's `.tH` mobile block | `caption` is the member everyone forgets. Left at `display:table-caption` inside a table whose other children are blocks, the browser shrink-to-fits it into a narrow column. One rule, two visible defects, and it hits every future `.tH`. `reference_table_caption_mobile_stacking` |
+| a **further-reading / Keep-Reading thumbnail** | `scripts/bake_read_card_thumbs.py --audit` | the thumb must be a crop of the linked page's OWN hero, never the source page's art. 24 of 35 were wrong site-wide on 2026-08-07. `reference_read_card_thumb_is_target_hero` |
+| **"the component is styled but nothing shows"** | the component's own contract, before the content | `Schema.astro`'s `organization` branch was the only one of four ignoring its `data` prop, so a real review was silently dropped; and the page styled `.quote-c` with no base component. Check the contract first |
+| a **contrast / PageSpeed finding** | `skills/cag-perf-gate.md`, then `a11y-text-contrast-aa` | the harness check answers in ~2s; Lighthouse takes ~25s and needs ≥5 runs before you may attribute CLS |
+| an **ordering probe** reporting a big number | re-read the probe | on 2026-08-07 an H3 image-order probe claimed 15 offenders; the real number was 4. It counted decorative seams and ran past section boundaries. Filter to `.sec-img`, split on `<h2\|<h3` |
+
 ## What does NOT go through this loop
 
 Rules classed `enforced: judgment` in `data/quality/rule-index.json` — voice, CITES
