@@ -113,9 +113,11 @@ def audit():
             # so a filename that does not carry the full target slug is not verifiable.
             # An earlier, looser heuristic (`hero stem's first segment appears in stem`)
             # passed a hand-named file that no machine could tie back to its target.
-            ok = bool(hero) and (
-                src == hero or target.replace("-", "") in stem.replace("-", "")
-            )
+            # Nested targets (blog/<post>) are flattened to `-` in the filename, so the
+            # comparison must flatten the slug the same way — otherwise the `/` never
+            # matches and a correctly-named cut reads as a mismatch.
+            flat = target.replace("/", "-").replace("-", "")
+            ok = bool(hero) and (src == hero or flat in stem.replace("-", ""))
             if not ok:
                 bad += 1
                 print(f"  MISMATCH  /{slug}/ card -> {href}")
