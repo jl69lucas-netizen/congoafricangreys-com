@@ -1643,7 +1643,7 @@ git add scripts/perf_audit.py skills/cag-perf-gate.md tests/render/checks/a11y.t
 **Files:**
 - Create: `sessions/2026-08-07-breeding-pair-sprint5-llm-visibility.md`
 
-- [ ] **Step 1: Run the baseline**
+- [x] **Step 1: Run the baseline** — done 2026-08-07. 24 of 30 cells fetched; Claude's 6 are `NOT FETCHED` (hard login wall at `claude.ai/new`, no `ANTHROPIC_API_KEY`). Nothing inferred.
 
 Invoke the `cag-llm-keyword-intel` agent for slug `african-grey-breeding-pair-for-sale` across 5 engines (ChatGPT, Claude, Gemini, Perplexity, Google AIO) × 6 queries:
 
@@ -1654,7 +1654,7 @@ Invoke the `cag-llm-keyword-intel` agent for slug `african-grey-breeding-pair-fo
 5. `where to buy a proven congo african grey pair usa`
 6. `what does a proven breeding pair of african greys cost`
 
-- [ ] **Step 2: Record raw results, never inferred ones**
+- [x] **Step 2: Record raw results, never inferred ones** — done. Baseline number for future runs: **CAG cited in 6 of 24 fetched cells (25%)**; the target page itself in **3 of 24**, all Perplexity. Two report claims were re-verified against our own source before the brief was trusted — see the `## Open Flags` entry on the DNA collision.
 
 Write the brief with one row per engine × query: cited / not cited, competitors cited, and the answer structure. Any engine that could not be reached is written `NOT FETCHED` — CLAUDE.md rule 10. Do not infer a score.
 
@@ -1750,6 +1750,9 @@ Expected: `200`. Then re-check `https://pagespeed.web.dev/` for the live URL and
 ## Open Flags
 
 - ~~**`Mart` vs `Mark` in the Joshua Erwin review.**~~ **RESOLVED 2026-08-07 — breeder decision: ship as "Mark".** Treated as a transcription slip; every other page, the NAP record and `credentials.md` say Mark Benjamin, and a live testimonial naming "Mart" reads as fabricated to anyone checking. Task 4 is unblocked — no further question.
+- ~~**`fs-video` styled but never rendered**~~ **RESOLVED 2026-08-07 — breeder: "no video for now".** The dead rules were removed (commit `127b18b`) rather than left shipping. Deliberate departure from `page_hardening_scan`'s "do not delete a mandated component's CSS": the only pair footage on disk is not of Talker & Jane, Mari & Lake or Sally & Odin, so rendering it would have captioned a pair the video does not show. Scan is now clean, 0 ERROR / 0 WARN. Restore from any sibling for-sale page when real footage of these three pairs exists.
+- **The DNA collision has a SECOND source the Sprint 5 report missed, and it is on the target page itself.** Verified 2026-08-07 against source, not taken from the agent. The report blames retrieval bleed from the sibling `/congo-african-grey-parrot-pair-for-sale/` page, and that half checks out — the sibling does say "its own DNA sexing certificate" twice and does carry the $1,500 floor. But the singles cross-sell row **we shipped last session** (Task 6, commit `6dca9b1`, `index.astro:17–42`) puts five `DNA-sexed` trust labels — Bery, Amie, Roys, Elad, Evie — on the breeding-pair page itself, against one H5 and one FAQ item saying the pairs carry no DNA certificate. An engine reading this single page sees "DNA-sexed" 5× as card metadata and the disclaimer twice in prose. Report Action 1 (disambiguate the two pages) does **not** fix this; only a same-page fix does. Breeder ruling needed before any edit.
+- **Report Action 2 overstates the gap and should be re-scoped before it is actioned.** It says the DNA answer is "one FAQ item near the bottom." There are in fact two placements: FAQ item 05 (`index.astro:854`) *and* a dedicated H5 "Why These Pairs Carry No DNA Certificate" (`index.astro:670`), which sits mid-page inside the "What Paperwork Comes With Each Pair?" H2 — section 11 of 19, not the bottom. The real weakness is structural, not absence: the answer has no H2 or H3 of its own, so it is a weak retrieval target.
 - **`wordcount_in_band`** stays warned and accepted at 8,627 words, per explicit breeder instruction. Not a defect on this page.
 - **`/70de/` source maps** — Cloudflare Rocket Loader, dashboard-only, Unscored. Documented as known-ignored in `skills/cag-perf-gate.md`; no code task exists.
 - **Gate A blocks Tasks 5, 6 and 7 only.** Everything else in Phases B, C, D and E runs regardless.
