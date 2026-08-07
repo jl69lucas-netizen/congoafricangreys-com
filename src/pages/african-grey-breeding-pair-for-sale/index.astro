@@ -567,10 +567,10 @@ const productSchemas = pairs.map((p) => ({
   <p>Before a pair leaves here we want to know where they are going, and the setup question is the one that decides it. A breeding pair is not a companion bird in a bigger cage. They need room to fly, a box they can defend, and air that is not fighting them. The World Parrot Trust publishes housing figures for <em>Psittacus erithacus</em> that match what twelve years in our own flights has taught us, and we hold every buyer to them because a pair in the wrong enclosure will simply stop — no eggs, more feather damage, and a hen who spends her day on the cage floor.</p>
 
   <h3 class="cag-h3">Flight Space Before Nest Box</h3>
-  <p>People get this backwards constantly. They buy the nest box first, mount it on a parrot cage from a big-box store, and then wonder why nothing happens for two years. Flight length comes first and it is not negotiable in our sale: three metres, which is 9.8 feet, is the minimum run a pair needs to actually fly rather than hop. Temperature and humidity matter nearly as much, and in West Texas the humidity number is the one that catches people out — our dry summers will pull a flight well under range without a humidifier running.</p>
+  <p>People get this backwards constantly. They buy the nest box first, mount it on a parrot cage from a big-box store, and then wonder why nothing happens for two years. Flight length comes first and it is not negotiable in our sale: three metres, which is 9.8 feet, is the minimum run a pair needs to actually fly rather than hop. Temperature and humidity matter nearly as much, and in West Texas the humidity number is the one that catches people out — our dry summers will pull a flight well under range without a humidifier running. These four figures follow <a href="https://www.parrottrust.org/" target="_blank" rel="noopener">World Parrot Trust</a> guidance for <em>Psittacus erithacus</em>, not our preference.</p>
 
   <table class="tH">
-    <caption>The four housing specifications we hold every breeding-pair buyer to, per World Parrot Trust guidance for <em>Psittacus erithacus</em>.</caption>
+    <caption>The Four Housing Specifications We Require</caption>
     <thead>
       <tr><th scope="col">Specification</th><th scope="col">Requirement</th></tr>
     </thead>
@@ -1307,7 +1307,16 @@ const productSchemas = pairs.map((p) => ({
   /* Seam gutters −40% on mobile, per the polish playbook. */
   .bpair .seam-wrap { margin:.9rem 0 .65rem; }
   /* Table H stacks: one card per row, data-label on every td. Never a ::before on <tr>. */
-  .bpair .tH, .bpair .tH thead, .bpair .tH tbody, .bpair .tH th, .bpair .tH td, .bpair .tH tr { display:block; }
+  /* `caption` MUST be in this list. Left as display:table-caption inside a table whose
+     other children are blocks, the browser shrink-to-fits it into a narrow column with
+     dead space beside it — the defect the breeder screenshotted 2026-08-07. */
+  .bpair .tH, .bpair .tH caption, .bpair .tH thead, .bpair .tH tbody, .bpair .tH th, .bpair .tH td, .bpair .tH tr { display:block; }
+  /* Uppercase + .1em tracking is a desktop label style; at 375px it forces one word
+     per line. Sentence case, normal tracking, full width, horizontal. */
+  .bpair .tH caption { width:auto; padding:11px 14px; text-align:left;
+    text-transform:none; letter-spacing:0; font-size:clamp(0.86rem, 3.4vw, 0.95rem);
+    line-height:1.35; font-weight:700; border-radius:14px 14px 0 0; }
+  .bpair .tH caption em { font-style:italic; }
   .bpair .tH thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
   .bpair .tH tbody tr { border:1px solid var(--bp-bd); border-radius:14px; margin:0 0 10px; padding:4px 0; background:#fff; }
   .bpair .tH tbody th { box-shadow:none !important; border-bottom:1px dashed var(--bp-bd); }
