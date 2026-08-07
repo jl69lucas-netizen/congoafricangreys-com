@@ -30,3 +30,19 @@ family: CSS
      - Plain text / email / JS string contexts: use `[CAG]` or `[TAG]` as text markers — HTML img not possible in strings
 8. **Anti-copy:** NEVER add `user-select: none` CSS or JS.
 9. **Infographic widths:** `760px` wrapper for species guides / blogs / care pages; `1100px` wrapper for homepage / location pages / hero sections. Height always `400px` fixed on desktop, `auto` on mobile. Never use `900px` or `max-w-4xl` — those are legacy values. See `docs/reference/page-width.md §Infographic Width Rules`.
+
+---
+id: layout-hero-counter-separation
+enforced: test
+family: LAYOUT
+---
+
+- **Hero and counter strip must be visually separated (ALWAYS — breeder, 2026-08-07)** — A counter/stat strip placed directly under a hero on one continuous background reads as hero furniture, and the figures stop registering as claims. Every page carrying both MUST put a visible boundary between them: at minimum a **background-tone shift AND a 1px rule**; at most a `.cag-seam` divider. Never zero separation, and never whitespace alone. On the for-sale cluster the marker is a 3px `--bp-green → --bp-clay` gradient bar on `.counter-wrap::before` plus a `#f6efe8` bed. Enforced by `tests/render/checks/layout.ts::layout-hero-counter-separation`, with both fixture halves — a page with a tone shift but no rule still fails.
+
+---
+id: layout-h3-image-first
+enforced: test
+family: LAYOUT
+---
+
+- **Under an H3, the image comes before the prose (ALWAYS — breeder, 2026-08-07)** — In the for-sale cluster a sectional image sits immediately after its `</h3>` and before that block's first `<p>`, so the reader gets the subject before the argument. **H2 blocks keep lead-paragraph-first** — this rule is H3-scoped, deliberately, and a check that flags H2s is over-broad. Only `.sec-img` counts; seam emblems and icons are decorative and must never register as "the image". An H3 that owns no image is not a violation and must not be counted as examined. Enforced by `tests/render/checks/layout.ts::layout-h3-image-first`.

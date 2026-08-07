@@ -24,3 +24,11 @@ family: COPY
 ---
 
 - **Shipping cost on every card + shipping section (ALWAYS) — applies to every card/section builder** — Any bird/listing card MUST display shipping cost directly (canonical line under the trust badges: `Ships nationwide · $185 airport · $350 home`), and every shipping section MUST show the two delivery tiers (**Airport Pickup $185** · **Home Delivery $350**, IATA LAR, Delta/United/American). Figures live in `data/financial-entities.json` (`delivery_options`) + `data/price-matrix.json` — read them, never hardcode a different number. Never ship a card without the cost line.
+
+---
+id: for-sale-component-order
+enforced: test
+family: LAYOUT
+---
+
+- **Component order in the for-sale cluster (ALWAYS — breeder, 2026-08-07)** — Three ordering rules ship together, each with a check: (1) **Hero → separator → counters**, per `rules/design.md` `layout-hero-counter-separation`; a page tuple that names a counter strip must also name its separator. (2) **H3 → image → prose**, per `rules/design.md` `layout-h3-image-first`. (3) **On mobile the hero IMAGE comes first** — in a one-column hero grid the copy column is first in the DOM, which pushes the birds below the fold on a phone; move the image with CSS `order`, never by reordering the DOM, so the H1 stays first in the reading order for assistive tech and for SEO. (4) **Further-reading thumbnails are the target page's hero**, per `rules/images.md` `read-card-thumb-is-target-hero`.

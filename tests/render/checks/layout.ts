@@ -248,3 +248,132 @@ register({
     };
   },
 });
+
+/**
+ * Breeder rule, 2026-08-07 (rules/design.md `layout-hero-counter-separation`).
+ *
+ * A counter/stat strip flush against the hero on one continuous background reads as hero
+ * furniture and the figures stop registering. The rule asks for a visible boundary:
+ * a background-tone shift AND a rule (border or a seam/gradient bar).
+ *
+ * Judged unit: the ONE counter strip, against its own previous sibling. Not the cards
+ * inside it — a page with eight stat cards would otherwise report examined=8 having
+ * evaluated a single expression, which is the exact inflation the registry warns about.
+ */
+register({
+  id: 'layout-hero-counter-separation',
+  family: 'LAYOUT',
+  severity: 'advisory',
+  describe: 'a counter/stat strip must be visually separated from the hero above it',
+  minExamined: 1,
+  async run(page: Page, viewport: number): Promise<CheckResult> {
+    const r = await page.evaluate(() => {
+      const strip = document.querySelector<HTMLElement>('.counter-wrap, .counter-strip, [data-counters]');
+      if (!strip) return { examined: 0, hasTone: false, hasRule: false };
+      const prev = strip.previousElementSibling as HTMLElement | null;
+      const cs = getComputedStyle(strip);
+      const before = getComputedStyle(strip, '::before');
+
+      // Walk up for the hero's EFFECTIVE background: a transparent header inherits the
+      // page surface, and comparing against rgba(0,0,0,0) would call every page separated.
+      const opaque = (el: Element | null): string => {
+        let n: Element | null = el;
+        while (n && n !== document.documentElement) {
+          const bg = getComputedStyle(n).backgroundColor;
+          if (bg && !/rgba\(\s*0,\s*0,\s*0,\s*0\s*\)/.test(bg) && bg !== 'transparent') return bg;
+          n = n.parentElement;
+        }
+        return getComputedStyle(document.documentElement).backgroundColor || 'rgb(255,255,255)';
+      };
+
+      const hasTone = opaque(strip) !== opaque(prev);
+      const borderPx = parseFloat(cs.borderTopWidth) || 0;
+      const barPx = parseFloat(before.height) || 0;
+      const hasBar = before.content !== 'none' && barPx > 0;
+      const hasSeam = !!strip.querySelector(':scope > .cag-seam, :scope > .seam-wrap, :scope > .seam');
+      return { examined: 1, hasTone, hasRule: borderPx > 0 || hasBar || hasSeam };
+    });
+
+    if (r.examined === 0) return { examined: 0, defects: [] };
+
+    const missing: string[] = [];
+    if (!r.hasTone) missing.push('background tone shift');
+    if (!r.hasRule) missing.push('border/seam/gradient rule');
+
+    return {
+      examined: 1,
+      defects: missing.length
+        ? [
+            {
+              checkId: 'layout-hero-counter-separation',
+              family: 'LAYOUT' as const,
+              viewport,
+              count: 1,
+              message: `counter strip is flush against the hero — missing ${missing.join(' and ')}`,
+            },
+          ]
+        : [],
+    };
+  },
+});
+
+/**
+ * Breeder rule, 2026-08-07 (rules/design.md `layout-h3-image-first`).
+ *
+ * Under an H3, the sectional image comes before the prose. H2 blocks keep
+ * lead-paragraph-first — this rule is H3-scoped, deliberately.
+ *
+ * Judged unit: H3 blocks that OWN a `.sec-img`. An H3 with no image of its own is not a
+ * violation of an ordering rule, so counting it would inflate `examined` with units the
+ * predicate never ran against. Seam emblems and icons are excluded on purpose: they are
+ * decorative and would otherwise register as "the image" and fail every clean page.
+ */
+register({
+  id: 'layout-h3-image-first',
+  family: 'LAYOUT',
+  severity: 'advisory',
+  describe: 'a sectional image under an H3 must precede that block’s prose',
+  minExamined: 1,
+  async run(page: Page, viewport: number): Promise<CheckResult> {
+    const r = await page.evaluate(() => {
+      const scope = document.querySelector('main') ?? document.body;
+      const heads = Array.from(scope.querySelectorAll<HTMLElement>('h3'));
+      const offenders: string[] = [];
+      let examined = 0;
+
+      for (const h of heads) {
+        let imgAt = -1;
+        let proseAt = -1;
+        let i = 0;
+        // The block ends at the next heading of equal or higher rank.
+        for (let n = h.nextElementSibling; n && !/^H[123]$/.test(n.tagName); n = n.nextElementSibling) {
+          i++;
+          const isImg =
+            (n.tagName === 'IMG' && n.classList.contains('sec-img')) || !!n.querySelector?.('img.sec-img');
+          if (isImg && imgAt === -1) imgAt = i;
+          const isProse = n.tagName === 'P' && (n.textContent ?? '').trim().length > 40;
+          if (isProse && proseAt === -1) proseAt = i;
+        }
+        if (imgAt === -1) continue; // block owns no sectional image — nothing to order
+        examined++;
+        if (proseAt !== -1 && proseAt < imgAt) offenders.push((h.textContent ?? '').trim().slice(0, 50));
+      }
+      return { examined, offenders: offenders.slice(0, 6), total: offenders.length };
+    });
+
+    return {
+      examined: r.examined,
+      defects: r.total
+        ? [
+            {
+              checkId: 'layout-h3-image-first',
+              family: 'LAYOUT' as const,
+              viewport,
+              count: r.total,
+              message: `${r.total} H3 block(s) put prose before their image: ${r.offenders.join(' | ')}`,
+            },
+          ]
+        : [],
+    };
+  },
+});

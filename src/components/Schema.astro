@@ -49,7 +49,11 @@ const ORG_SCHEMA = {
 
 const { type, data = {} } = Astro.props;
 
-let schema: Record<string, unknown> = ORG_SCHEMA;
+// `organization` was the one branch that ignored `data`, so any caller passing extra
+// nodes (a Review, an award, a sameAs) had them silently dropped — caught 2026-08-07 when
+// a real buyer review never reached the built JSON-LD. Spreading `{}` is a no-op, so every
+// existing `<Schema type="organization" />` call renders byte-identical output.
+let schema: Record<string, unknown> = { ...ORG_SCHEMA, ...data };
 if (type === 'local-business') {
   schema = { ...ORG_SCHEMA, "@type": ["LocalBusiness", "PetStore"], ...data };
 } else if (type === 'product') {
