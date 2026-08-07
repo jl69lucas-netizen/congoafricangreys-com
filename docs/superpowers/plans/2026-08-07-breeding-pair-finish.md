@@ -655,6 +655,14 @@ git add src/pages/african-grey-breeding-pair-for-sale/index.astro && git commit 
 
 ## Task 5: Fertile-Egg Image and the Egg-Page Link
 
+> **✅ DONE 2026-08-07 — commit `6dca9b1`, pushed.** Two deviations from the steps below,
+> both deliberate: (1) the figure is tagged `og-scene`, not `og-tall` — the master is a
+> top-down nest shot, and `IMAGE-DESIGNS.md §7` reserves the mobile 4:5 full-bleed frame
+> for single-bird/pair portraits; a landscape subject in a tall frame is the exact bug
+> Task 15 fixed. Baked with `--mobcrop 5:4` to stay dual-safe. (2) the figure sits
+> directly after the `</h3>`, before the prose, per the breeder's images-first rule
+> (Task 8) — the incubator figure keeps its place after the paragraph.
+
 *Depends on Gate A (OG style).* The section has an incubator photo but never uses the supplied egg master and never links the egg page.
 
 **Files:**
@@ -719,6 +727,18 @@ git add public/images/breeding-pair/fertile-african-grey-parrot-egg-for-sale.web
 ```
 
 ## Task 6: The `MiniBirdCard` Component and the Singles Row
+
+> **✅ DONE 2026-08-07 — commit `6dca9b1`, pushed.** Shipped as Style 1 per Gate A.
+> **The Step-2 roster below was wrong on every field** — corrected against
+> `data/clutch-inventory.json` + the live `/available/` pages: Bery **$1,700**,
+> Amie **$2,500**, Roys **$2,300**, Elad $1,600, Evie $1,500, Jins & Jeni **$3,500**
+> at **`/available/jins-jeni/`** (not `jins-and-jeni`), and every photo lives under
+> **`/birds/<slug>/`**, not `/images/birds/`. Three defects found in the browser:
+> `auto-fill` orphaned the 5th card (now explicit 5/3/2 columns); the trust line wrapped
+> and grew the glass label to ~40% of the photo (`.62rem/.04em` → one line, 35%); and
+> `roys-gallery-1` has Roys head-down so the label covered his head (→ `gallery-3`).
+> `objectPos` is per-bird as banked. Card `<img>` needs `width`/`height` — `img_dims`
+> in `final_page_audit.py` fails the whole page without them.
 
 *Depends on Gate A (bird-card style).* `§singles` names Bery, Amie, Roys, Elad and Evie in prose with zero visuals. The breeder asked for this as a **reusable** component, not a one-off.
 
