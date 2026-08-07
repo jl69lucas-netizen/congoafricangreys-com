@@ -121,13 +121,15 @@ That guard is doing exactly the job it was written for.
 
 ## Open, not done
 
-- **`fs-video` is styled on the breeding-pair page and never rendered**, and it is in the
-  hardening scanner's `SPEC_MANDATED` set. Sibling pages do ship it (congo 2, egg 2,
-  hand-raised 1). There are pair videos on disk — `rony-and-rose-proof-of-life-midland-tx.mp4`,
-  `video/congo-pair-socialization.mp4` — but none of them is Talker & Jane, Mari & Lake or
-  Sally & Odin, and captioning footage as a pair it does not show would be a fabricated
-  claim. **Needs a breeder answer: which video, if any, belongs on this page.** The CSS was
-  left in place per the scanner's own instruction not to delete a mandated component's rules.
+- ~~**`fs-video` styled and never rendered**~~ **RESOLVED 2026-08-07 — breeder decision:
+  no video on this page for now.** The dead `.fs-video` rules were removed rather than left
+  shipping to every visitor. This is a deliberate departure from the scanner's own advice
+  ("Render them. Do NOT delete the CSS"), and the reason is recorded in the CSS itself: the
+  only pair footage on disk (`rony-and-rose-*`, `video/congo-pair-socialization.mp4`) shows
+  birds that are **not** Talker & Jane, Mari & Lake or Sally & Odin, so rendering it would
+  have meant captioning a pair the video does not show. The scanner has no waiver mechanism,
+  so the alternative was a standing ERROR nobody could ever clear. To restore, copy the block
+  from any sibling for-sale page once there is real footage of these three pairs.
 - **Images-first is shipped on breeding-pair only.** A cluster-wide rollout is a change of
   house style, not a bug fix.
 - **`wordcount_in_band`** stays warned and accepted at ~8,600 words, per explicit breeder
