@@ -21,7 +21,18 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 DIST = ROOT / "dist"
-MIGRATED = ["african-grey-breeding-pair-for-sale"]
+MIGRATED = [
+    "african-grey-breeding-pair-for-sale",
+    "african-grey-parrot-bird-eggs-for-sale-usa",
+    "african-greys-for-sale-with-health-guarantee",
+    "timneh-african-grey-for-sale",
+    "congo-african-grey-for-sale",
+    "dna-tested-african-grey-for-sale",
+    "hand-raised-african-grey-parrot-for-sale",
+    "baby-african-grey-parrot-for-sale",
+    "congo-african-grey-parrot-pair-for-sale",
+    "african-grey-parrot-adoption-cost",
+]
 
 pytestmark = pytest.mark.skipif(
     not DIST.exists(), reason="dist/ not built — gates measure dist, never source"
@@ -94,7 +105,9 @@ def test_migrated_pages_use_their_targets_hero(slug):
         hero = m.hero_and_alt(target)[0] if hasattr(m, "hero_and_alt") else m.hero_of(target)
         assert hero, f"{slug}: no hero resolved for {href}"
         stem = pathlib.Path(src).stem.replace("-320", "").replace("-760", "")
-        assert target.replace("-", "") in stem.replace("-", "") or src == hero, (
+        # Nested slugs (blog/<post>) flatten to `-` in the filename; flatten both sides.
+        flat = target.replace("/", "-").replace("-", "")
+        assert flat in stem.replace("-", "") or src == hero, (
             f"{slug}: card -> {href} shows {src}, which is not cut from that page's "
             f"hero {hero}"
         )
