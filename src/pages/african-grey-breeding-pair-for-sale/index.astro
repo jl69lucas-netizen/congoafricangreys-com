@@ -2,12 +2,44 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Schema from '../../components/Schema.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import MiniBirdCard from '../../components/cag-library/MiniBirdCard.astro';
 
 const title = 'Proven African Grey Breeding Pairs for Sale | Three Bonded Pairs, Seven Clutches on Record, From $3,000 | Closed-Banded, CITES Appendix I Captive-Bred | C.A.Gs — Midland, Texas Aviary Since 2014';
 const description = 'Three proven African Grey breeding pairs for sale from our Midland, Texas aviary — Talker & Jane, Mari & Lake, Sally & Odin, from $3,000. Every pair is closed-banded with its clutch record on request, hand-reared and still tame, and ships in two crates. See what each pair has produced.';
 const canonical = 'https://congoafricangreys.com/african-grey-breeding-pair-for-sale/';
 
 const IMG = '/images/breeding-pair';
+
+/* §14 singles row. Every slug, price and photo path is resolved from
+   data/clutch-inventory.json + the live /available/<slug>/ pages — none typed from memory.
+   objectPos is the per-bird 4:5 crop anchor (project_birdcard_patterns.md): these are real
+   photos with the bird off-centre, so a flat 50% would clip a beak or a tail. */
+const singles = [
+  { name: 'Bery', price: '$1,700', href: '/available/bery/',
+    img: '/birds/bery/bery-hero.webp', img390: '/birds/bery/bery-hero-390.webp',
+    alt: 'Bery, a hand-fed Congo African Grey hen taking a treat from Teri in our Midland home',
+    trust: 'Congo · DNA-sexed hen', objectPos: '60% 50%' },
+  { name: 'Amie', price: '$2,500', href: '/available/amie/',
+    img: '/birds/amie/amie-hero.webp', img390: '/birds/amie/amie-hero-390.webp',
+    alt: 'Amie, a Congo African Grey hen out of James and Lois, footing a piece of red pepper',
+    trust: 'Congo · DNA-sexed hen', objectPos: '62% 50%' },
+  { name: 'Roys', price: '$2,300', href: '/available/roys/',
+    /* gallery-1 has Roys bent over a food dish — his head sits low in frame and the glass
+       label covered it. gallery-3 is the same bird head-up. Verified in the browser. */
+    img: '/birds/roys/roys-gallery-3.webp', img390: '/birds/roys/roys-gallery-3-390.webp',
+    alt: 'Roys, Amie&rsquo;s sibling and a hand-raised Congo African Grey cock, standing over a foot toy',
+    trust: 'Congo · DNA-sexed cock', objectPos: '50% 50%' },
+  { name: 'Elad', price: '$1,600', href: '/available/elad/',
+    img: '/birds/elad/elad-timneh-african-grey-male-hero.webp',
+    img390: '/birds/elad/elad-timneh-african-grey-male-hero-390.webp',
+    alt: 'Elad, a Timneh African Grey cock bird out of Levi and Rily, stepping onto a hand',
+    trust: 'Timneh · DNA-sexed cock', objectPos: '50% 50%' },
+  { name: 'Evie', price: '$1,500', href: '/available/evie/',
+    img: '/birds/evie/evie-timneh-african-grey-portrait.webp',
+    img390: '/birds/evie/evie-timneh-african-grey-portrait-390.webp',
+    alt: 'Evie, the smaller of our two Timneh African Greys, riding on a shoulder indoors',
+    trust: 'Timneh · DNA-sexed hen', objectPos: '50% 50%' },
+];
 
 /* Live from data/price-matrix.json. Ages, clutch counts and prices are the breeder's own
    record — none is estimated, and the clutch total (7) is 4 + 2 + 1, not a rounded claim. */
@@ -660,10 +692,27 @@ const productSchemas = pairs.map((p) => ({
   <p>Not everybody who lands on this page needs two adults in a flight. Some of you are building an aviary and want to add unrelated bloodline to what you already keep. Some of you incubate your own and would rather start at the egg. And a fair number of you came here looking for a talking companion and found breeder stock by accident, which is a different bird entirely. We keep singles and eggs available alongside the pairs for exactly those reasons.</p>
 
   <h3 class="cag-h3">Available Singles From Our Own Lines</h3>
+
+  <div class="mbc-row">
+    {singles.map((b) => <MiniBirdCard {...b} />)}
+  </div>
+  <p class="img-note">Every bird above came out of our own flights. Prices are what we ask today; shipping is $185 to your airport or $350 door-to-door.</p>
+
   <p>Every single we offer came out of our own flights, hand-fed here and raised under the same two methods we apply to every chick. <strong>The Benjamin Home-Raising Protocol</strong> is our name for how we hand-feed, wean and hold a bird to the 12–16-week gate — no chick leaves before it is eating on its own and holding weight. <strong>The Midland Socialization Method</strong> is the second half: family handling, daily out-of-cage routine, and household noise, so a bird is not startled by a vacuum on day one. Neither label is a third-party certification and we have never claimed one; they are what we call our own process. <a href="/congo-african-grey-for-sale/">Our Congo singles</a> — Bery, Amie and Roys — sit in the $1,500 to $3,500 range that runs across the site. <a href="/timneh-african-grey-for-sale/">Our two Timnehs</a>, Elad at $1,600 and Evie at $1,500, are the smaller, rustier-tailed cousin and often the better first grey.</p>
 
   <h3 class="cag-h3">Candled Fertile Eggs for Incubating Breeders</h3>
-  <p>For breeders who run their own incubator, we sell candled fertile eggs from these same lines. Candled means we have held the egg to light and confirmed development before it is offered — we do not sell eggs on hope. This is the option for someone who already has the equipment, the brooder and the hand-feeding experience, and who would rather bring chicks up under their own protocol than buy a producing pair outright. It is also, honestly, the option with the most ways to go wrong, so we talk it through with every buyer rather than just boxing eggs. Ask us for current availability; egg supply moves with what is in our boxes that month.</p>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img og-photo og-scene" src="/images/breeding-pair/fertile-african-grey-parrot-egg-for-sale.webp"
+         srcset="/images/breeding-pair/fertile-african-grey-parrot-egg-for-sale-760.webp 760w, /images/breeding-pair/fertile-african-grey-parrot-egg-for-sale.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Three fertile African Grey parrot eggs on nest-box bedding at our Midland Texas aviary"
+         title="Fertile African Grey eggs — candled and confirmed developing before we offer them"
+         width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">A clutch of three in the box. <a href="/african-grey-parrot-bird-eggs-for-sale-usa/">See what we can offer incubating breeders</a>.</figcaption>
+  </figure>
+
+  <p><a href="/african-grey-parrot-bird-eggs-for-sale-usa/">Our candled fertile African Grey eggs</a> come from these same lines, for breeders who run their own incubator. Candled means we have held the egg to light and confirmed development before it is offered — we do not sell eggs on hope. This is the option for someone who already has the equipment, the brooder and the hand-feeding experience, and who would rather bring chicks up under their own protocol than buy a producing pair outright. It is also, honestly, the option with the most ways to go wrong, so we talk it through with every buyer rather than just boxing eggs. Ask us for current availability; egg supply moves with what is in our boxes that month.</p>
 
   <figure class="sec-img-wrap">
     <img class="sec-img og-photo og-scene" src="/images/breeding-pair/candled-fertile-african-grey-eggs-incubator.webp"
@@ -676,6 +725,13 @@ const productSchemas = pairs.map((p) => ({
   <div class="xsell">
     <p class="xsell-k">Not Buying Breeder Stock?</p>
     <p>A proven pair is the wrong bird for a living room, and we say that to people every week. Talker and Jane are bonded to each other, not to you — that is exactly what makes them worth $3,000 as breeders and a poor fit as a companion. If you want a grey who talks to you and learns your household, a hand-raised single is the bird you came for. Bery, Amie and Roys are Congos out of our lines; Elad and Evie are Timnehs. Same aviary, same protocol, completely different job.</p>
+    <div class="mbc-row mbc-row-1">
+      <MiniBirdCard name="Jins &amp; Jeni" price="$3,500" href="/available/jins-jeni/"
+        img="/birds/jins-jeni/jins-jeni-pair-1.webp"
+        img390="/birds/jins-jeni/jins-jeni-pair-1-390.webp"
+        alt="Jins and Jeni, an unrelated companion pair of Congo African Greys offered together"
+        trust="Companion pair · not breeder stock" />
+    </div>
   </div>
 
   <p class="ctaline"><a href="#reserve" class="btn-clay">Reserve a proven pair</a></p>
@@ -1001,6 +1057,16 @@ const productSchemas = pairs.map((p) => ({
 /* Infographics carry baked-in type: native ratio, contained, NEVER cover-cropped (§1c). */
 .sec-img.inf-img { max-width:760px; width:100%; height:auto; aspect-ratio:auto; object-fit:contain; background:#fff; }
 .sec-img.inf-tall { max-width:420px; }
+/* §14 singles row. Explicit column counts, not auto-fill: with five birds, auto-fill
+   landed 4-up and orphaned the fifth on its own line. Two-up at ≤600px on purpose —
+   five cards in one column is a scroll wall on a 375px phone. */
+.bpair .mbc-row { display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:12px; margin:14px 0 10px; }
+.bpair .mbc-row-1 { grid-template-columns:minmax(0, 220px); margin:12px 0 2px; }
+@media (max-width:1000px) { .bpair .mbc-row { grid-template-columns:repeat(3, minmax(0,1fr)); } }
+@media (max-width:600px) {
+  .bpair .mbc-row { grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; }
+  .bpair .mbc-row-1 { grid-template-columns:minmax(0, 1fr); }
+}
 /* Framed seam, not a floating logo: two clay hairlines flanking the wordmark (§4).
    Gutters cut ~40% (2.4/1.7rem → 1.45/1.05rem, plus the .5rem first-heading rule below).
    Measured seam-emblem-to-H2 distance: 100px → 60px. The seam is a punctuation mark
