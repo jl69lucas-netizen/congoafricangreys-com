@@ -1200,6 +1200,11 @@ const productSchemas = pairs.map((p) => ({
 .bpair .tdial-list { border-top:1px dashed var(--bp-bd); }
 .bpair .tdial-list a { color:var(--bp-mid); }
 .bpair .tdial-list a:hover, .bpair .tdial-list a.on { background:#f3ece4; }
+/* The existing `.bpair .ti { color:#9a8f83 }` two lines down is ALREADY a light-theme
+   override, not the dark-theme #7ba98d leaking through — but #9a8f83 on white is only
+   3.17:1, still short of AA 4.5:1, the 10 Lighthouse contrast failures of 2026-08-07.
+   #5d7d6a is 4.56:1 on #fff. Verified arithmetically, not eyeballed. */
+.bpair .tdial-list a .ti { color:#5d7d6a; }
 .bpair .tdial-list a.on .ti { color:var(--bp-clay); }
 .bpair .tdial-list a.on .tt { color:var(--bp-ink); }
 .bpair .ti { color:#9a8f83; }
