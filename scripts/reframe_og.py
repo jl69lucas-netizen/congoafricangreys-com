@@ -19,7 +19,7 @@ The subject is centered full-HEIGHT, so any later COVER crop to a taller mobile 
 (4:5, 1:1) keeps the whole bird (only blurred/padded sides crop away).
 """
 import sys, argparse, io
-from PIL import Image, ImageOps, ImageFilter, ImageEnhance
+from PIL import Image, ImageOps, ImageFilter, ImageEnhance, ImageDraw
 
 def load(p): return Image.open(p).convert("RGB")
 
@@ -59,6 +59,62 @@ def gradient(W, H):
         for x in range(W): px[x, y] = (r, gg, b)
     return g
 
+# CAG palette beds. "neutral" reproduces today's greyish/black blur so every new
+# style keeps the old look as an option; the rest tint toward DESIGN.md colours.
+TINTS = {
+    "neutral": None,                 # no tint — the current greyish bed
+    "green":   (45, 106, 79),        # #2D6A4F  brand green
+    "clay":    (232, 96, 76),        # #e8604c  brand clay
+    "cream":   (250, 247, 244),      # #faf7f4  page surface
+}
+
+def apply_tint(bed, tint, strength):
+    """Blend a blurred bed toward a brand colour without flattening it to a swatch."""
+    rgb = TINTS.get(tint)
+    if rgb is None:
+        return bed
+    wash = Image.new("RGB", bed.size, rgb)
+    return Image.blend(bed, wash, strength)
+
+def brandblur(im, W, H, blur, fgw, fgh, tint, strength, fgscale, fgup=False):
+    """Style F — thin brand-tinted blur bed, subject scaled UP to fill the frame."""
+    bed = ImageOps.fit(im, (W, H), Image.LANCZOS).filter(ImageFilter.GaussianBlur(blur))
+    bed = ImageEnhance.Brightness(bed).enhance(0.95)
+    bed = apply_tint(bed, tint, strength)
+    fg = fit_subject(im, int(fgw * fgscale), int(fgh * fgscale), True)
+    canvas = bed.copy()
+    canvas.paste(fg, ((W - fg.width) // 2, (H - fg.height) // 2))
+    return canvas
+
+def duotone(im, W, H, fgw, fgh, tint, strength, fgscale, fgup=False):
+    """Style G — no blur at all. Subject over a clean two-stop brand wash."""
+    rgb = TINTS.get(tint) or (243, 236, 228)
+    top = tuple(min(255, int(c + (255 - c) * 0.72)) for c in rgb)
+    bed = Image.new("RGB", (W, H))
+    px = bed.load()
+    for y in range(H):
+        t = y / (H - 1)
+        row = tuple(int(top[i] + (rgb[i] - top[i]) * t * strength) for i in range(3))
+        for x in range(W):
+            px[x, y] = row
+    fg = fit_subject(im, int(fgw * fgscale), int(fgh * fgscale), True)
+    bed.paste(fg, ((W - fg.width) // 2, (H - fg.height) // 2))
+    return bed
+
+def framed(im, W, H, blur, fgw, fgh, tint, strength, fgscale, fgup=False):
+    """Style I — thin blur bed + inset brand hairline. Subject biggest of the three."""
+    bed = ImageOps.fit(im, (W, H), Image.LANCZOS).filter(ImageFilter.GaussianBlur(blur))
+    bed = ImageEnhance.Brightness(bed).enhance(0.90)
+    bed = apply_tint(bed, tint, strength)
+    fg = fit_subject(im, int(fgw * fgscale), int(fgh * fgscale), True)
+    canvas = bed.copy()
+    canvas.paste(fg, ((W - fg.width) // 2, (H - fg.height) // 2))
+    line = TINTS.get(tint) or (45, 106, 79)
+    d = ImageDraw.Draw(canvas)
+    inset = max(6, W // 120)
+    d.rectangle([inset, inset, W - inset - 1, H - inset - 1], outline=line, width=max(2, W // 470))
+    return canvas
+
 def contain(im, W, H):
     canvas = gradient(W, H)
     fg = im.copy(); pad = 0.90
@@ -81,9 +137,15 @@ def save_webp(img, path, maxkb):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("src"); ap.add_argument("out")
-    ap.add_argument("--style", default="blurfill", choices=["blurfill","contain","topcover"])
+    ap.add_argument("--style", default="blurfill",
+                    choices=["blurfill", "contain", "topcover", "brandblur", "duotone", "framed"])
+    ap.add_argument("--tint", default="neutral", choices=["neutral", "green", "clay", "cream"])
+    ap.add_argument("--tint-strength", type=float, default=0.28)
+    # The breeder's note: "birds appear too small". 0.82 was the effective old value.
+    ap.add_argument("--fgscale", type=float, default=0.94)
     ap.add_argument("--w", type=int, default=1408); ap.add_argument("--h", type=int, default=768)
-    ap.add_argument("--blur", type=int, default=30)
+    # Breeder 2026-08-07: "Reduce the blur; thin blurr". 30 read as fog behind a small bird.
+    ap.add_argument("--blur", type=int, default=14)
     ap.add_argument("--sib", default=""); ap.add_argument("--sibw", type=int, default=760); ap.add_argument("--sibh", type=int, default=415)
     ap.add_argument("--maxkb", type=int, default=95)
     # dual-safe: constrain the sharp subject so a later mobile 4:5 cover crop (central 4/5*H wide)
@@ -97,9 +159,12 @@ def main():
     elif a.mobcrop:
         rw, rh = (int(x) for x in a.mobcrop.split(":")); fgw = int(a.h * rw / rh)
     im = load(a.src)
-    fn = {"blurfill": lambda: blurfill(im, a.w, a.h, a.blur, fgw, fgh, a.fgup),
-          "contain":  lambda: contain(im, a.w, a.h),
-          "topcover": lambda: topcover(im, a.w, a.h)}[a.style]
+    fn = {"blurfill":  lambda: blurfill(im, a.w, a.h, a.blur, fgw, fgh, a.fgup),
+          "contain":   lambda: contain(im, a.w, a.h),
+          "topcover":  lambda: topcover(im, a.w, a.h),
+          "brandblur": lambda: brandblur(im, a.w, a.h, a.blur, fgw, fgh, a.tint, a.tint_strength, a.fgscale, a.fgup),
+          "duotone":   lambda: duotone(im, a.w, a.h, fgw, fgh, a.tint, a.tint_strength, a.fgscale, a.fgup),
+          "framed":    lambda: framed(im, a.w, a.h, a.blur, fgw, fgh, a.tint, a.tint_strength, a.fgscale, a.fgup)}[a.style]
     out = fn()
     kb, q = save_webp(out, a.out, a.maxkb)
     print(f"  {a.out}  {a.w}x{a.h}  {kb}KB q{q}  [{a.style}]")
