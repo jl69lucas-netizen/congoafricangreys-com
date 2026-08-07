@@ -56,10 +56,18 @@ const { name, price, href, img, img390, alt, trust, objectPos = '50% 18%', eager
   background:rgba(255,255,255,.82); backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px); }
 .mbc-nm { margin:0; font-weight:700; font-size:.95rem; color:#2b2018; line-height:1.25; }
 .mbc-pr { margin:0; font-weight:700; font-size:.9rem; color:#b04228; line-height:1.3; }
-/* .62rem/.04em, not .7/.06: at the 5-up desktop column (~166px) the trust line wrapped to
-   two lines, which grew the glass label to ~40% of the photo and started hiding low-set
-   heads. One line keeps the label at roughly a third of the frame. */
-.mbc-tr { margin:3px 0 0; font-size:.62rem; letter-spacing:.04em; text-transform:uppercase;
-  color:#5c544c; line-height:1.35; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* The trust line has to hold ONE line at the 5-up desktop column (~166px) — two lines grow
+   the glass label to ~40% of the photo and start hiding low-set heads. My first answer was
+   to shrink the type, .7rem then .62rem, and BOTH are below this site's 12.5px floor
+   (layout-min-font-size, blocking) — .62rem renders 9.92px. The width came from
+   `text-transform:uppercase`, not from the font size: uppercase is roughly 25% wider at the
+   same px. Dropping it fits the same string on one line at a legal 12.8px. */
+/* No `nowrap`/ellipsis: at 12.8px four of the six strings overflow the 142px column by
+   2-10px, and truncating "Timneh · DNA-sexed cock" to "...DNA-sexed co…" throws away the
+   credential to save three pixels. Wrapping is the honest trade. It costs a second line on
+   some cards, which was unsafe when the label could cover a low-set head — that risk is
+   gone now the photos are chosen head-up (see the Roys swap). */
+.mbc-tr { margin:3px 0 0; font-size:.8rem; letter-spacing:.01em;
+  color:#5c544c; line-height:1.3; text-wrap:pretty; }
 @media (prefers-reduced-motion:reduce) { .mbc { transition:none; } }
 </style>
