@@ -6,4 +6,5 @@ import './sem.js';
 import './schema.js';
 import './css.js';
 import './dup.js';
+import './a11y.js';
 export {};

@@ -898,6 +898,15 @@ git add src/components/cag-library/MiniBirdCard.astro src/pages/african-grey-bre
 
 ## Task 7: Differentiate the Key Takeaway From the Congo-Pair Page
 
+> **✅ NO ACTION NEEDED 2026-08-07 — verified, not assumed.** The premise no longer holds.
+> A direct ≥12-word shingle comparison of the two built pages (8,470 vs 6,783 words) finds
+> **2 shared shingles, both the whitelisted Midland-pickup delivery line**. `dup_content_audit.py`
+> and `--headers` both report zero breeding-pair crossover. The `.bluf` at `:325` already
+> carries this page's own inverse price/clutch angle ("the price rises as the clutch count
+> falls"), and the congo-pair takeaway is a different argument entirely — five facts about
+> bonding, workload and separate paperwork for a *companion* pair. Rewriting approved prose
+> to satisfy a step whose defect does not exist would be churn. Steps below left for the record.
+
 `congo-african-grey-parrot-pair-for-sale/index.astro:292` has `<section id="takeaway">`. The breeding-pair page's equivalent is the `.bluf` at `:293`. Whatever overlaps must go — this is `dup-no-sibling-crossover`, and CLAUDE.md rule 9 says the fix is to rewrite from *this* page's outline, not to reword the sibling's sentences.
 
 **Files:**

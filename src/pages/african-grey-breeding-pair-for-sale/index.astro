@@ -1094,7 +1094,11 @@ const productSchemas = pairs.map((p) => ({
 /* ── Images ── */
 .sec-img-wrap { margin:1.2rem 0; }
 .sec-img { display:block; width:100%; max-width:760px; aspect-ratio:1408/768; object-fit:cover; height:auto; border-radius:16px; border:1px solid var(--bp-bd); }
-.img-note { font-size:.8rem; color:var(--bp-mid); margin:.45rem 0 0; max-width:70ch; }
+/* Qualified with `.bpair p` on purpose: bare `.img-note` (0,1,0) loses its `color` to
+   `.bpair p` (0,1,1) at :1017. Both happen to resolve to --bp-mid today, so nothing is
+   visibly wrong — but the component colour is being discarded, and the day --bp-mid moves
+   for one and not the other it breaks silently. Same §1l collision class as .ship-tier. */
+.bpair p.img-note, figcaption.img-note { font-size:.8rem; color:var(--bp-mid); margin:.45rem 0 0; max-width:70ch; }
 /* Infographics carry baked-in type: native ratio, contained, NEVER cover-cropped (§1c). */
 .sec-img.inf-img { max-width:760px; width:100%; height:auto; aspect-ratio:auto; object-fit:contain; background:#fff; }
 .sec-img.inf-tall { max-width:420px; }
