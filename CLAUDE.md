@@ -24,11 +24,11 @@ paragraph that asks nicely.
 | Pack | Covers |
 |---|---|
 | [`rules/headings.md`](rules/headings.md) | H1–H6 outline gate, Title Case, header style |
-| [`rules/images.md`](rules/images.md) | uniform in-body sizing, alt-text keyword spread |
+| [`rules/images.md`](rules/images.md) | uniform in-body sizing, alt-text keyword spread, further-reading thumbs = the target's own hero |
 | [`rules/schema.md`](rules/schema.md) | structured data, schema-only freshness |
 | [`rules/links.md`](rules/links.md) | Link-First anchor placement |
 | [`rules/copy.md`](rules/copy.md) | voice, originality, entity method, claims |
-| [`rules/design.md`](rules/design.md) | the nine non-negotiable visual rules |
+| [`rules/design.md`](rules/design.md) | the nine non-negotiable visual rules + hero/counter separation, H3-image-first |
 | [`rules/gates.md`](rules/gates.md) | pre/post-build process gates |
 | [`rules/deploy.md`](rules/deploy.md) | where work lands and how it ships |
 | [`rules/for-sale.md`](rules/for-sale.md) | the transactional cluster's own rules |

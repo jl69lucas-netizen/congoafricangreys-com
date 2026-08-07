@@ -210,6 +210,21 @@ const faqSchema = {
   ],
 };
 
+/* One real, named, attributed buyer review (2026-08-07). It hangs off the BUSINESS, not off
+   a Product node: Joshua's quote is about working with Mark and Teri, and we do not know
+   which of the three pairs he took — attaching it to all three would claim three reviews
+   from one buyer. No aggregateRating: one review is not an aggregate, and inventing a count
+   is the exact failure recorded in project_testimonials_fabricated_removed. */
+const reviewSchema = {
+  review: [{
+    '@type': 'Review',
+    reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+    author: { '@type': 'Person', name: 'Joshua Erwin' },
+    itemReviewed: { '@id': 'https://congoafricangreys.com/#organization' },
+    reviewBody: "Finding trustworthy African Grey breeding pairs for sale was important to me, and working with Mark and Teri made the process much easier. They were straightforward, helpful, and very knowledgeable about their birds. They provided clear information, answered my questions patiently, and made sure I understood the process before moving forward. I'm pleased with the breeding African Grey pair I received and appreciate the professionalism and care Mark and Teri showed throughout the experience.",
+  }],
+};
+
 const productSchemas = pairs.map((p) => ({
   '@type': 'Product',
   name: `${p.name} — Proven African Grey Breeding Pair`,
@@ -574,7 +589,6 @@ const productSchemas = pairs.map((p) => ({
   <p>A proven pair of Congo African Greys is one of the few purchases in this hobby where the sticker price tells you almost nothing on its own. Two sellers can both write "proven pair" and mean completely different animals — one has a hen who has raised four clutches under a band you can read, the other has two adult greys who happened to share a flight and once produced a cracked egg. We have bred Congos in Midland since 2014, and the question we field most from people shopping around is why our three pairs sit under almost everything listed nationally. Here are the actual numbers.</p>
 
   <h3 class="cag-h3">What Documented Pairs Are Currently Listed At</h3>
-  <p>We pulled these from live, dated listings on birdsnow, quoted exactly as they appeared rather than as a range we invented afterward. A pair in Tulsa, Oklahoma was listed at $9,495. Stone Mountain, Georgia was $8,000. Gwynnoak, Maryland was $6,500. Another Texas seller had a proven pair at $5,500. Ours run $3,000 to $5,500 out of Midland — Talker and Jane at $3,000 with four clutches behind them, Lake and Mari at $4,500 with two, Odin and Sally at $5,500 with one. That is the whole range, top to bottom.</p>
 
   <figure class="sec-img-wrap">
     <img class="sec-img inf-img" src="/images/breeding-pair/inf-6-market-prices.webp"
@@ -583,6 +597,8 @@ const productSchemas = pairs.map((p) => ({
          alt="Bar chart of listed United States prices for a proven or bonded parrot pair by location" width="1408" height="768" loading="lazy" decoding="async">
     <figcaption class="img-note">Live listings from Tulsa, Stone Mountain, Gwynnoak and Texas, set beside ours.</figcaption>
   </figure>
+
+  <p>We pulled these from live, dated listings on birdsnow, quoted exactly as they appeared rather than as a range we invented afterward. A pair in Tulsa, Oklahoma was listed at $9,495. Stone Mountain, Georgia was $8,000. Gwynnoak, Maryland was $6,500. Another Texas seller had a proven pair at $5,500. Ours run $3,000 to $5,500 out of Midland — Talker and Jane at $3,000 with four clutches behind them, Lake and Mari at $4,500 with two, Odin and Sally at $5,500 with one. That is the whole range, top to bottom.</p>
 
   <h4 class="cag-h4">Why Ours Sit Below Those Numbers</h4>
   <p>The reason is boring, and we would rather give you the boring true answer than a clever one: we bred these birds ourselves. Talker, Jane, Lake, Mari, Odin and Sally all came up in our aviary, so there is no acquisition cost sitting underneath our price and no middle party who needs to clear a margin on top of what they paid somebody else. We only have to price above what it costs us to keep a pair fed, housed and healthy. That is the entire gap. Our prices do not move, there is no was-now framing anywhere on this site, and nobody has ever gotten a different number out of us by asking twice.</p>
@@ -599,6 +615,15 @@ const productSchemas = pairs.map((p) => ({
   <p>Before a pair leaves here we want to know where they are going, and the setup question is the one that decides it. A breeding pair is not a companion bird in a bigger cage. They need room to fly, a box they can defend, and air that is not fighting them. The World Parrot Trust publishes housing figures for <em>Psittacus erithacus</em> that match what twelve years in our own flights has taught us, and we hold every buyer to them because a pair in the wrong enclosure will simply stop — no eggs, more feather damage, and a hen who spends her day on the cage floor.</p>
 
   <h3 class="cag-h3">Flight Space Before Nest Box</h3>
+
+  <figure class="sec-img-wrap">
+    <img class="sec-img inf-img" src="/images/breeding-pair/inf-7-housing-nest-box.webp"
+         srcset="/images/breeding-pair/inf-7-housing-nest-box-760.webp 760w, /images/breeding-pair/inf-7-housing-nest-box.webp 1408w"
+         sizes="(max-width:980px) 92vw, 760px"
+         alt="Housing and nest box specifications a breeding parrot pair needs, with flight length and humidity" width="1408" height="768" loading="lazy" decoding="async">
+    <figcaption class="img-note">Flight length comes before the nest box. A box in a small cage is not a setup.</figcaption>
+  </figure>
+
   <p>People get this backwards constantly. They buy the nest box first, mount it on a parrot cage from a big-box store, and then wonder why nothing happens for two years. Flight length comes first and it is not negotiable in our sale: three metres, which is 9.8 feet, is the minimum run a pair needs to actually fly rather than hop. Temperature and humidity matter nearly as much, and in West Texas the humidity number is the one that catches people out — our dry summers will pull a flight well under range without a humidifier running. These four figures follow <a href="https://www.parrottrust.org/" target="_blank" rel="noopener">World Parrot Trust</a> guidance for <em>Psittacus erithacus</em>, not our preference.</p>
 
   <table class="tH">
@@ -616,14 +641,6 @@ const productSchemas = pairs.map((p) => ({
 
   <p><a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener">The World Parrot Trust's Grey Parrot species entry</a> is where those figures come from, and we would rather you read it directly than take our word for it. Nothing on that page is proprietary to us. It is simply the clearest published summary of what the species needs, and a buyer who has read it asks us better questions.</p>
 
-  <figure class="sec-img-wrap">
-    <img class="sec-img inf-img" src="/images/breeding-pair/inf-7-housing-nest-box.webp"
-         srcset="/images/breeding-pair/inf-7-housing-nest-box-760.webp 760w, /images/breeding-pair/inf-7-housing-nest-box.webp 1408w"
-         sizes="(max-width:980px) 92vw, 760px"
-         alt="Housing and nest box specifications a breeding parrot pair needs, with flight length and humidity" width="1408" height="768" loading="lazy" decoding="async">
-    <figcaption class="img-note">Flight length comes before the nest box. A box in a small cage is not a setup.</figcaption>
-  </figure>
-
   <h4 class="cag-h4">Nest Box Dimensions and Placement</h4>
   <p>Our boxes are 12 by 12 by 24 inches, oriented vertically, and mounted on the outside of the flight rather than inside it. Vertical matters because a grey hen wants depth and darkness at the bottom, not a shallow tray. Outside mounting matters for two reasons: it gives the pair back the floor space the box would have stolen, and it lets you inspect through an access hatch without putting your arm into the space a defensive cock bird is guarding. Add a few inches of pine shavings, leave the pair alone, and resist the urge to check it hourly. Greys are private about this, and a hen who feels watched is a hen who abandons.</p>
 
@@ -636,7 +653,6 @@ const productSchemas = pairs.map((p) => ({
   <p>Congo African Greys are CITES Appendix I, uplisted at CoP17 and effective January 2017, and the IUCN lists the species as Endangered. That places real documentation obligations on anyone breeding or selling them, and it is the part of this transaction where we are least casual. Every bird we sell is captive-bred here in our own facility. Below is what travels with a pair — and, just as importantly, what does not.</p>
 
   <h3 class="cag-h3">Closed Bands and the Clutch Record</h3>
-  <p>Both birds in every pair wear a closed band with a readable number, and a closed band makes a specific claim: it goes on a chick's leg in the first days of life and cannot be slipped onto an adult later. That is the whole point of it — physical evidence that a bird hatched in captivity rather than being imported and re-labeled. Alongside the bands we keep the clutch record for each pair, dates and counts and what hatched, and we send it before you pay anything.</p>
 
   <figure class="sec-img-wrap">
     <img class="sec-img og-photo og-tall" src="/images/breeding-pair/proven-african-grey-hen-on-nest-with-eggs.webp"
@@ -645,6 +661,8 @@ const productSchemas = pairs.map((p) => ({
          alt="A proven Congo grey hen sitting her clutch inside the nest box in our aviary" width="1408" height="768" loading="lazy" decoding="async">
     <figcaption class="img-note">A sitting hen in our nest boxes, photographed without disturbing the nest.</figcaption>
   </figure>
+
+  <p>Both birds in every pair wear a closed band with a readable number, and a closed band makes a specific claim: it goes on a chick's leg in the first days of life and cannot be slipped onto an adult later. That is the whole point of it — physical evidence that a bird hatched in captivity rather than being imported and re-labeled. Alongside the bands we keep the clutch record for each pair, dates and counts and what hatched, and we send it before you pay anything.</p>
 
   <h4 class="cag-h4">What We Hold, and What We Do Not</h4>
   <p>Here is the full list, and we would rather it be short and true than long and padded. We hold closed bands with numbers on both birds, the clutch record available on request, CITES Appendix I captive-bred documentation, and hatch records for all six of these adults. We run a USDA Animal Welfare Act licensed facility. <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener">The CITES appendices themselves</a> are published openly if you want to confirm the Appendix I listing rather than trust a breeder's summary of it.</p>
@@ -664,7 +682,6 @@ const productSchemas = pairs.map((p) => ({
   <p>Moving two bonded adult greys across the country is a different job from shipping a weaned baby, and we plan it that way. Adults are heavier, stronger, and far more inclined to take out their stress on whatever is nearest — which, in a shared crate, is each other. We fly pairs as cargo on Delta, United and American under the IATA Live Animals Regulations, and we book the routing ourselves rather than handing you a tracking number and wishing you luck.</p>
 
   <h3 class="cag-h3">Two Crates, Never One</h3>
-  <p>A pair travels in two crates. Not one large crate, not one crate with a divider — two separate crates, every time, with no exceptions we have ever made. Bonded birds who are perfectly civil to each other in a three-metre flight are a genuine risk to one another inside a dark box on a loud tarmac, and a bitten foot or a broken blood feather at 30,000 feet has no remedy until landing. The two crates fly on the same aircraft and arrive together, so the pair is separated for hours, not days. <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener">The IATA Live Animals Regulations</a> govern the container standards, and every crate we send meets them.</p>
 
   <figure class="sec-img-wrap">
     <img class="sec-img og-photo og-scene" src="/images/breeding-pair/african-grey-breeding-pair-two-crate-shipping.webp"
@@ -673,6 +690,8 @@ const productSchemas = pairs.map((p) => ({
          alt="Airline shipping crates used to fly a bonded parrot pair to buyers across the United States" width="1408" height="768" loading="lazy" decoding="async">
     <figcaption class="img-note">A pair always travels in two crates. One crate for two adults is how birds get hurt.</figcaption>
   </figure>
+
+  <p>A pair travels in two crates. Not one large crate, not one crate with a divider — two separate crates, every time, with no exceptions we have ever made. Bonded birds who are perfectly civil to each other in a three-metre flight are a genuine risk to one another inside a dark box on a loud tarmac, and a bitten foot or a broken blood feather at 30,000 feet has no remedy until landing. The two crates fly on the same aircraft and arrive together, so the pair is separated for hours, not days. <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener">The IATA Live Animals Regulations</a> govern the container standards, and every crate we send meets them.</p>
 
   <h4 class="cag-h4">Airport Cargo, Home Delivery, or Midland Pickup</h4>
   <p>Three ways to get your pair, and the right one depends mostly on how far you are from us. Airport cargo is $185 — we fly the birds into your nearest served airport and you collect them from the cargo counter, usually within a couple of hours of landing. Home delivery is $350 and ends with the crates at your door. Pickup in Midland, Texas is free and is what we recommend if you are within two or three hours of us, because it removes the flight entirely and lets you see the flight the pair came out of. Both shipping figures are flat and cover the whole pair, not each bird.</p>
@@ -776,7 +795,18 @@ const productSchemas = pairs.map((p) => ({
 <section id="reviews">
   <div class="seam-wrap" aria-hidden="true"><img class="seam" src="/cag-fs-seam-emblem.webp" alt="" width="182" height="60" loading="lazy" decoding="async"></div>
   <h2 class="cag-h2">What Have Breeders Said After Their Pair Arrived?</h2>
-  <p>We are going to be careful here, because this is the section where most breeder sites quietly invent people. We will not print a quote we cannot attribute to a real buyer who agreed to it, and we would rather this section look thin than look fabricated. What we can tell you is the shape of what comes back to us after a pair lands. The two-crate arrival is the thing buyers mention first, usually with some surprise that both birds walked out steady. The clutch record is second — more than one buyer has told us they only understood what they had bought once the dates were in front of them. And the settling period comes up constantly, because a moved pair typically goes quiet for weeks before either bird looks at the box, and knowing that in advance is the difference between patience and panic. When we have named quotes we can stand behind, they will go here, and not before.</p>
+  <p>We are careful in this section, because this is where most breeder sites quietly invent people. We will not print a quote we cannot attribute to a real buyer who agreed to it, which is why there is one below and not twelve. What comes back to us after a pair lands has a consistent shape. The two-crate arrival is what buyers mention first, usually with some surprise that both birds walked out steady. The clutch record is second — more than one buyer has told us they only understood what they had bought once the dates were in front of them. And the settling period comes up constantly, because a moved pair typically goes quiet for weeks before either bird looks at the box, and knowing that in advance is the difference between patience and panic.</p>
+
+  <figure class="quote-c">
+    <blockquote>
+      <p>Finding trustworthy African Grey breeding pairs for sale was important to me, and working with Mark and Teri made the process much easier. They were straightforward, helpful, and very knowledgeable about their birds. They provided clear information, answered my questions patiently, and made sure I understood the process before moving forward. I&rsquo;m pleased with the breeding African Grey pair I received and appreciate the professionalism and care Mark and Teri showed throughout the experience.</p>
+    </blockquote>
+    <figcaption>
+      <span class="q-stars" aria-label="Rated 5 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <span class="q-who">Joshua Erwin</span>
+      <span class="q-where">San Bernardino, California</span>
+    </figcaption>
+  </figure>
 
   <figure class="sec-img-wrap">
     <img class="sec-img og-photo og-tall" src="/images/breeding-pair/breeder-review-african-grey-pair-arrived.webp"
@@ -786,7 +816,8 @@ const productSchemas = pairs.map((p) => ({
     <figcaption class="img-note">Sent to us by a buyer after their pair settled in.</figcaption>
   </figure>
 
-  <!-- TODO(breeder): real named buyer quotes go here. Do not ship invented testimonials. -->
+  <!-- One real, named, attributed quote (Joshua Erwin, 2026-08-07). Any further quote must
+       come from a named buyer who agreed to it — see project_testimonials_fabricated_removed. -->
 </section>
 
 <section id="reading">
@@ -794,11 +825,15 @@ const productSchemas = pairs.map((p) => ({
   <h2 class="cag-h2">Keep Reading Before You Reserve a Breeding Pair</h2>
   <p>Three pages worth your time before you send a deposit anywhere — ours or anyone else's. The first sets expectations on what greys cost across the board, so a listing price stops being an abstract number and starts being comparable. The second is the one we wish every buyer read first, because the scam patterns in this species are consistent, repetitive and easy to spot once somebody names them out loud. The third covers our Congo singles, in case the pair turns out not to be the bird you needed. <a href="/african-grey-parrot-breeders-comparison/">Our breeder comparison page</a> is the fourth, if you want to see how documentation practices differ seller to seller before you commit to any of us.</p>
 
+  <!-- RULE (breeder 2026-08-07, rules/images.md `read-card-thumb-is-target-hero`): every
+       further-reading thumbnail is cut from the ACTUAL hero image of the page it links to.
+       These three previously showed this page's own infographics, which promises the reader
+       one destination and delivers another. Cut with scripts/bake_read_card_thumbs.py. -->
   <div class="read-cards">
-    <a href="/african-grey-parrot-price/"><img src="/images/breeding-pair/inf-3-breeding-age-timeline-320.webp" srcset="/images/breeding-pair/inf-3-breeding-age-timeline-320.webp 320w, /images/breeding-pair/inf-3-breeding-age-timeline-760.webp 760w" sizes="(max-width:640px) 92vw, 240px" alt="Timeline graphic showing when captive Congo greys reach breeding condition" width="320" height="175" loading="lazy" decoding="async"><span>What African Greys Cost</span></a>
-    <a href="/how-to-avoid-african-grey-parrot-scams/"><img src="/images/breeding-pair/inf-7-housing-nest-box-320.webp" srcset="/images/breeding-pair/inf-7-housing-nest-box-320.webp 320w, /images/breeding-pair/inf-7-housing-nest-box-760.webp 760w" sizes="(max-width:640px) 92vw, 240px" alt="Aviary setup diagram used to check whether a seller's housing claims hold up" width="320" height="175" loading="lazy" decoding="async">
+    <a href="/african-grey-parrot-price/"><img src="/images/breeding-pair/read-african-grey-parrot-price-hero-320.webp" srcset="/images/breeding-pair/read-african-grey-parrot-price-hero-320.webp 320w, /images/breeding-pair/read-african-grey-parrot-price-hero-760.webp 760w" sizes="(max-width:640px) 92vw, 240px" alt="Hand-fed African Grey baby from the C.A.Gs price guide on what a grey costs" width="320" height="175" loading="lazy" decoding="async"><span>What African Greys Cost</span></a>
+    <a href="/how-to-avoid-african-grey-parrot-scams/"><img src="/images/breeding-pair/read-how-to-avoid-african-grey-parrot-scams-hero-320.webp" srcset="/images/breeding-pair/read-how-to-avoid-african-grey-parrot-scams-hero-320.webp 320w, /images/breeding-pair/read-how-to-avoid-african-grey-parrot-scams-hero-760.webp 760w" sizes="(max-width:640px) 92vw, 240px" alt="Opening panel of our parrot-scam guide on spotting a fake African Grey seller" width="320" height="175" loading="lazy" decoding="async">
     <span>How to Spot a Parrot Scam</span></a>
-    <a href="/congo-african-grey-for-sale/"><img src="/images/breeding-pair/candled-fertile-african-grey-eggs-incubator-320.webp" srcset="/images/breeding-pair/candled-fertile-african-grey-eggs-incubator-320.webp 320w, /images/breeding-pair/candled-fertile-african-grey-eggs-incubator-760.webp 760w" sizes="(max-width:640px) 92vw, 240px" alt="Fertile Congo grey eggs under candling light in our incubator room" width="320" height="175" loading="lazy" decoding="async"><span>Congo Greys for Sale</span></a>
+    <a href="/congo-african-grey-for-sale/"><img src="/images/breeding-pair/read-congo-african-grey-for-sale-hero-320.webp" srcset="/images/breeding-pair/read-congo-african-grey-for-sale-hero-320.webp 320w, /images/breeding-pair/read-congo-african-grey-for-sale-hero-760.webp 760w" sizes="(max-width:640px) 92vw, 240px" alt="Congo African Grey from our for-sale page for buyers wanting a single companion" width="320" height="175" loading="lazy" decoding="async"><span>Congo Greys for Sale</span></a>
   </div>
 </section>
 
@@ -876,7 +911,7 @@ const productSchemas = pairs.map((p) => ({
 
   {productSchemas.map((s) => <Schema type="product" data={s} />)}
   <Schema type="faq" data={faqSchema} />
-  <Schema type="organization" />
+  <Schema type="organization" data={reviewSchema} />
 </BaseLayout>
 
 <script is:inline>
@@ -992,7 +1027,13 @@ const productSchemas = pairs.map((p) => ({
 .phero-cta { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:.85rem; }
 
 /* ── Counter strip, 6 cards, CLS-safe ── */
-.counter-wrap { padding:6px 0 18px; }
+/* RULE (breeder 2026-08-07, rules/design.md §10): the counter strip must never read as
+   hero furniture. Flush against .phero on one background, the figures stop registering.
+   Tone shift + hairline is the minimum; the 3px brand gradient is this page's marker. */
+.counter-wrap { position:relative; padding:20px 0 22px; background:#f6efe8;
+  border-top:1px solid var(--bp-bd); border-bottom:1px solid var(--bp-bd); }
+.counter-wrap::before { content:''; position:absolute; inset:0 0 auto 0; height:3px;
+  background:linear-gradient(90deg, var(--bp-green) 0%, var(--bp-clay) 100%); }
 .counter-row { display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:10px; }
 .cs { min-height:74px; padding:10px 13px; border-radius:12px; background:#fff; border:1px solid var(--bp-bd); display:flex; flex-direction:column; justify-content:center; }
 .cs .num { font-family:var(--font-lora, Georgia, serif); font-size:1.35rem; color:var(--bp-claytext); line-height:1.1; }
@@ -1151,6 +1192,19 @@ const productSchemas = pairs.map((p) => ({
   .bpair .sec-img.og-tall { width:100vw; max-width:100vw; margin-left:calc(50% - 50vw);
     aspect-ratio:4/5; border-radius:0; border-left:0; border-right:0; }
 }
+/* ── Named buyer quote (§reviews). One real attributed review; never a wall of invented
+      ones — project_testimonials_fabricated_removed. The clay rule on the left is the
+      for-sale cluster's quote marker, distinct from the comparison cluster's card. ── */
+.quote-c { margin:1.1rem 0 .6rem; padding:16px 18px 14px; background:#fff;
+  border:1px solid var(--bp-bd); border-left:4px solid var(--bp-clay); border-radius:14px;
+  box-shadow:0 3px 14px rgba(60,30,10,.06); }
+.quote-c blockquote { margin:0; }
+.quote-c blockquote p { margin:0; font-size:.92rem; line-height:1.6; }
+.quote-c figcaption { margin-top:11px; padding-top:10px; border-top:1px dashed var(--bp-bd);
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; }
+.q-stars { color:var(--bp-claytext); letter-spacing:.08em; }
+.q-who { font-weight:700; color:var(--bp-ink); }
+.q-where { color:var(--bp-mid); }
 .bpair .quote-c blockquote p { color:var(--bp-ink); }
 
 /* Body links underlined + external arrow */
@@ -1368,7 +1422,11 @@ const productSchemas = pairs.map((p) => ({
   .bpair .bpair-body { grid-template-columns:minmax(0,1fr); gap:0; }
   .bpair .tdial { display:none; }
   .bpair .phero-grid { grid-template-columns:minmax(0,1fr); max-height:none; gap:18px; }
-  .bpair .phero-mosaic { grid-template-columns:repeat(3, minmax(0,1fr)); }
+  /* Breeder 2026-08-07: the hero IMAGE comes first on mobile. In a one-column grid the
+     copy column is first in the DOM, which put the birds below the fold on a phone.
+     `order` moves it visually and leaves the H1 first in the reading order for AT/SEO. */
+  .bpair .phero-mosaic { grid-template-columns:repeat(3, minmax(0,1fr)); order:-1; }
+  .bpair .phero-copy { order:0; }
   .bpair .ptile-2, .bpair .ptile-3 { margin-top:0; }
   .bpair .counter-row { grid-template-columns:repeat(4, minmax(0,1fr)); }
   /* Rail B: a green ticker bar, sticky to the TOP under the header, never the bottom. */
