@@ -1071,7 +1071,20 @@ const productSchemas = pairs.map((p) => ({
 /* The BLUF block is what answer engines extract — give it visible weight. */
 .bpair p.bluf { background:#fff; border:1px solid var(--bp-bd); border-left:0; border-radius:14px; padding:14px 16px; margin:.6rem 0 1rem; font-size:clamp(.95rem,1.7vw,1.06rem); color:var(--bp-ink); box-shadow:0 2px 12px rgba(60,30,10,.05); }
 /* OG photos take the taller 4:5 frame on mobile; infographics never do (they lose baked-in text). */
-@media (max-width:640px) { .bpair .sec-img.og-photo { aspect-ratio:4/5; } }
+/* IMAGE-DESIGNS.md §7 sets this system at ≤900px, and the reference implementation
+   (/timneh-african-grey-for-sale/) uses @media(max-width:900px). This page had the whole
+   og-photo treatment gated at ≤640px, so tablets in portrait (768px) fell through to the
+   desktop box and the birds stayed small there — the breeder named tablets explicitly. */
+@media (max-width:900px) {
+  .bpair .sec-img.og-photo { aspect-ratio:4/5; }
+  /* beats .og-photo's 4:5 on specificity, not on source order */
+  .bpair .sec-img.og-photo.og-scene { aspect-ratio:5/4; }
+  /* Standing default: single-bird/pair portraits get the full-bleed edge-to-edge 4:5 frame.
+     .bpair already carries overflow-x:clip, which this rule depends on — without it the
+     negative margin-left causes a horizontal scrollbar. */
+  .bpair .sec-img.og-tall { width:100vw; max-width:100vw; margin-left:calc(50% - 50vw);
+    aspect-ratio:4/5; border-radius:0; border-left:0; border-right:0; }
+}
 .bpair .quote-c blockquote p { color:var(--bp-ink); }
 
 /* Body links underlined + external arrow */
@@ -1147,12 +1160,7 @@ const productSchemas = pairs.map((p) => ({
   .sec-img { border-radius:12px; }
   /* Scene photos (a room, people, several birds) take the wider 5:4 mobile frame;
      single-bird portraits keep the taller 4:5 above. Infographics take neither. */
-  .bpair .sec-img.og-photo.og-scene { aspect-ratio:5/4; }   /* beats .og-photo's 4:5 on specificity, not on source order */
-  /* Standing default (IMAGE-DESIGNS.md §7): single-bird/pair portraits get the full-bleed
-     edge-to-edge mobile 4:5 frame. .bpair already carries overflow-x:clip (line 924), which
-     this rule depends on — without it the negative margin-left causes a horizontal scrollbar. */
-  .bpair .sec-img.og-tall { width:100vw; max-width:100vw; margin-left:calc(50% - 50vw);
-    aspect-ratio:4/5; border-radius:0; border-left:0; border-right:0; }
+  /* og-photo / og-scene / og-tall moved up to the ≤900px block so tablets get them too. */
   .bpair .sec-img.inf-img { width:100vw; margin-left:calc(50% - 50vw); max-width:none; border-radius:0; border-left:0; border-right:0; }
   .bpair .sec-img.inf-tall { width:auto; margin-left:0; max-width:100%; border-radius:12px; border:1px solid var(--bp-bd); }}
 @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
