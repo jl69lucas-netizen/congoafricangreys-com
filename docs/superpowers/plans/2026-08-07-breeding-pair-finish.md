@@ -430,7 +430,19 @@ git add sessions/2026-08-07-birdcard-style-preview.html && git commit -m "feat(p
 
 ---
 
-## ⛔ GATE A — BREEDER DECISION REQUIRED
+## ✅ GATE A — RESOLVED 2026-08-07
+
+**Breeder decisions, locked. Do not re-litigate these.**
+
+| Decision | Choice | Concrete value |
+|---|---|---|
+| OG framing style | **F · Brand Blur, neutral bed** | `--style brandblur --tint neutral --mobcrop 4:5` (defaults `--blur 14`, `--fgscale 0.94`) |
+| Bird-card style | **Style 1 · Full-Bleed Portrait + Glass Label** | 4:5, `object-position:50% 18%`, `rgba(255,255,255,.76)` + `backdrop-filter:blur(9px)` label |
+
+Wherever this plan says `<CHOSEN_STYLE>` read `brandblur`; `<CHOSEN_TINT>` read `neutral`.
+`MiniBirdCard.astro` in Task 6 is already written as Style 1 — ship it as specified.
+
+<details><summary>Original gate text (kept for the record)</summary>
 
 **Do not start Task 5, 6 or 7. Do not touch any OG image on the page.**
 
@@ -441,9 +453,74 @@ Present, with a recommendation per CLAUDE.md rule 5:
 
 Phases B, C and D below do **not** depend on this gate and may proceed in parallel.
 
+</details>
+
 ---
 
 # PHASE B — Content and Structure
+
+## Task 15: Re-Bake All 8 Existing OG Photos + Apply the Mobile `og-tall` Standard
+
+**Plan gap, caught at Gate A 2026-08-07.** Task 5 baked only the *new* egg photo. But the breeder's complaint — "makes the birds appear too small on desktop/mobile/tablets" — is about the **8 photos already on the page**. Without this task the page keeps 8 old blur-fill images and gains one new-style one, which is worse than either. This task must land before Task 11 (impeccable pass).
+
+Second, independent defect: `grep -c og-tall` on this page returns **0**. `IMAGE-DESIGNS.md §7` makes mobile full-bleed 4:5 the standing default for single-bird/pair portrait OG photos, and it was never applied here. That is the other half of "birds look small on mobile".
+
+**Files:**
+- Modify: the 8 `og-photo` `.webp` pairs under `public/images/breeding-pair/`
+- Modify: `src/pages/african-grey-breeding-pair-for-sale/index.astro` (add `og-tall` to portrait photos only)
+
+- [ ] **Step 1: Enumerate the 8 photos and locate each one's ORIGINAL master**
+
+```bash
+cd /Users/apple/Downloads/CAG && grep -n 'class="sec-img og-photo' src/pages/african-grey-breeding-pair-for-sale/index.astro
+ls "assets/1WORKING-ON/FOR-SALE-PAGES/BREEDING PAIR/"
+cat sessions/2026-08-04-breeding-pair-image-metadata.md
+```
+
+**Critical:** re-baking a shipped `.webp` re-processes an already-blurred file and compounds the blur. Every re-bake MUST start from the original master in `assets/`. If a photo's master cannot be found, leave that photo alone and report it — `IMAGE-DESIGNS.md §7` is explicit that an already-baked file cannot be recovered by reframing.
+
+- [ ] **Step 2: Re-bake each one from its master**
+
+For each photo, with `<master>` and `<name>` substituted:
+
+```bash
+cd /Users/apple/Downloads/CAG && python3 scripts/reframe_og.py "assets/1WORKING-ON/FOR-SALE-PAGES/BREEDING PAIR/<master>" "public/images/breeding-pair/<name>.webp" --style brandblur --tint neutral --mobcrop 4:5 --sib "public/images/breeding-pair/<name>-760.webp"
+```
+
+Infographics (`inf-*`) are **excluded** — the breeder said the infographics are perfect and need no style change.
+
+- [ ] **Step 3: Classify each photo portrait vs scene, then tag**
+
+Per `IMAGE-DESIGNS.md §7` clause 2: single-bird/pair **portraits** get mobile 4:5 full-bleed; **wide/scene/documentation** shots must NOT (a landscape subject in a tall frame reads as a small photo floating in blur — the exact bug being fixed).
+
+Open each of the 8 baked files with the Read tool and classify by what you see. Then:
+- portrait → `class="sec-img og-photo og-tall"`
+- scene → `class="sec-img og-photo og-scene"` (the page already has a `.og-scene` 5:4 rule at `:1150`)
+
+- [ ] **Step 4: Add the `og-tall` mobile rule if absent**
+
+Check first: `grep -n "og-tall" src/pages/african-grey-breeding-pair-for-sale/index.astro`. If there is no CSS rule, add inside the ≤900px block:
+
+```css
+  .bpair .sec-img.og-tall { width:100vw; max-width:100vw; margin-left:calc(50% - 50vw);
+    aspect-ratio:4/5; border-radius:0; border-left:0; border-right:0; }
+```
+
+Confirm the page root has `overflow-x:clip` — if not, adding this causes a horizontal scrollbar. Verify with `document.documentElement.scrollWidth <= window.innerWidth` at 375px.
+
+- [ ] **Step 5: Verify at all three widths in a real browser**
+
+```bash
+cd /Users/apple/Downloads/CAG && npx astro build
+```
+
+At 375, 768 and 1280: confirm no head/beak/tail is cut on any of the 8, no horizontal scroll at 375, and every file is under 95 KB. Read at least three of the baked files directly and compare against the pre-change versions in git.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add public/images/breeding-pair/ src/pages/african-grey-breeding-pair-for-sale/index.astro && git commit -m "feat(breeding-pair): re-bake all 8 OG photos as brandblur/neutral from masters + apply the og-tall mobile 4:5 standard"
+```
 
 ## Task 3: Re-Bake the Two Corrected Infographics
 
