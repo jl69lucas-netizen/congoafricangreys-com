@@ -38,7 +38,23 @@ All three were reverted and hand-edited. **Nothing damaged reached `main`** — 
 because I diffed after every automated pass. The rule for next time: scope the regex to the
 component block first, then rewrite whole tags, never attributes inside template literals.
 
-## 3. Two component bugs were the real cause of "it's not showing"
+## 3. I pushed a blocking-gate failure because I ran the gate concurrently with a build
+
+`layout-min-font-size` (blocking, 12.5px floor) caught `.mbc-tr` at **9.92px** on all three
+viewports — a defect I introduced and then **pushed**, because the two page-gate runs before
+it had been polluted: one by `npx astro build` running while the gate read `dist/`, the
+other by `generate_sitemaps.py` writing into `public/` after the build. Both tripped the
+freshness guard, both looked like "5 failed", and I read them as environmental rather than
+waiting for one clean run.
+
+The underlying design error is worth more than the process one: I tried to solve a *width*
+problem by shrinking *type*, twice (`.7rem` → `.62rem`), and both values were already below
+the floor. The width came from `text-transform:uppercase` — roughly 25% wider at the same
+px. Dropping uppercase fit the same string at a legal 12.8px.
+
+**Rule for next time: one clean gate run before push, and never a build in parallel with it.**
+
+## 4. Two component bugs were the real cause of "it's not showing"
 
 The breeder reported the review was missing. It was, and for two reasons neither of which
 was the review copy:
@@ -51,7 +67,7 @@ was the review copy:
 
 When something "doesn't show", check the component contract before the content.
 
-## 4. A rule justified by "like the other pages" that no other page follows
+## 5. A rule justified by "like the other pages" that no other page follows
 
 The breeder's images-first rule was stated as *"just like on other for-sale pages."* The
 built pages disagree: congo-pair 13 prose-first H3s, congo 9, timneh 6, egg 4, and **zero
@@ -62,7 +78,7 @@ Recording this because the *justification* was measurably false while the *instr
 stood. Both facts matter: a future session reading only the rule text would "restore
 consistency" by reverting it.
 
-## 5. The perf gate did not exist, and an agent is not a gate
+## 6. The perf gate did not exist, and an agent is not a gate
 
 `package.json` had no perf script; `skills/` had no perf skill; `tests/render/checks/` had
 no A11Y family. What existed were two *agents*. An agent runs when someone remembers to
@@ -76,7 +92,7 @@ call it, produces prose, and nothing fails. Now:
   because CLS here is bimodal.
 - `skills/cag-perf-gate.md` → the fix bank, keyed by audit id.
 
-## 6. Rules ship with checks, or they are deletion candidates
+## 7. Rules ship with checks, or they are deletion candidates
 
 Four rules were added this session. Every one has a backing test and both fixture halves:
 
@@ -92,7 +108,7 @@ read-card rule pointed `test:` at a shell command with an argument, and the repo
 as a **BROKEN test link** — the validator resolves a `::`-less reference as a file on disk.
 That guard is doing exactly the job it was written for.
 
-## 7. Ordering hazards worth remembering
+## 8. Ordering hazards worth remembering
 
 - `generate_sitemaps.py` writes into `public/`, which makes `dist/` stale and the render
   harness **correctly refuses to measure**. Order is: build → sitemaps → build again.
