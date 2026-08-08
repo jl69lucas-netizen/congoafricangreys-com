@@ -1374,6 +1374,38 @@ tbody tr:hover { background: var(--surface); }
   margin-right: .4rem;
 }
 
+/* editable §0 target block — same box as a code fence, but you can type in it */
+.tgt-edit {
+  display: block;
+  width: 100%;
+  margin: 0 0 .55rem;
+  padding: .95rem 1.1rem;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--clay-fill);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: .82rem;
+  line-height: 1.6;
+  resize: vertical;
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 2;
+}
+.tgt-edit:focus { outline: 2px solid var(--green); outline-offset: -2px; }
+.tgt-note {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin: 0 0 1.2rem;
+  font-family: var(--mono);
+  font-size: .68rem;
+  color: var(--ink-faint);
+}
+
 .toast {
   position: fixed;
   left: 50%;
@@ -1621,6 +1653,24 @@ tbody tr:hover { background: var(--surface); }
   var frag = document.createDocumentFragment();
   var sections = [];
 
+  /* §0's target block is editable; every copy path reads the live value, not the
+     baked-in one, so what you copy is what you typed. */
+  var TGT_RE = /```\n([\s\S]*?)\n```/;
+  var TGT_KEY = "cags-brief-target";
+  var tgtBox = null;
+
+  function currentTarget() {
+    return tgtBox ? tgtBox.value.replace(/\s+$/, "") : null;
+  }
+
+  function sectionMd(i) {
+    var md = sections[i];
+    if (i !== 0) { return md; }
+    var v = currentTarget();
+    if (v === null) { return md; }
+    return md.replace(TGT_RE, function () { return "```\n" + v + "\n```"; });
+  }
+
   parts.forEach(function (part, idx) {
     var nl = part.indexOf("\n");
     var heading = (nl === -1 ? part : part.slice(0, nl)).trim();
@@ -1648,7 +1698,7 @@ tbody tr:hover { background: var(--surface); }
     cb.type = "button";
     cb.className = "copy-sec";
     cb.textContent = "Copy §" + num;
-    cb.addEventListener("click", function () { copy(md, cb, "Copy §" + num); });
+    cb.addEventListener("click", function () { copy(sectionMd(idx), cb, "Copy §" + num); });
     head.appendChild(sn);
     head.appendChild(h2);
     head.appendChild(cb);
@@ -1664,6 +1714,65 @@ tbody tr:hover { background: var(--surface); }
   });
 
   doc.appendChild(frag);
+
+  /* ---------- swap §0's code fence for an editable field ---------- */
+
+  (function () {
+    var sec0 = document.getElementById("s0");
+    if (!sec0) { return; }
+    var pre = sec0.querySelector("pre");
+    if (!pre) { return; }
+
+    var baked = (TGT_RE.exec(sections[0]) || [])[1] || pre.textContent.replace(/\s+$/, "");
+    var saved = null;
+    try { saved = localStorage.getItem(TGT_KEY); } catch (e) {}
+
+    tgtBox = document.createElement("textarea");
+    tgtBox.className = "tgt-edit";
+    tgtBox.spellcheck = false;
+    tgtBox.setAttribute("aria-label", "Target block — editable");
+    tgtBox.value = saved !== null ? saved : baked;
+    tgtBox.rows = tgtBox.value.split("\n").length + 1;
+
+    var note = document.createElement("p");
+    note.className = "tgt-note";
+    var stat = document.createElement("span");
+    var reset = document.createElement("button");
+    reset.type = "button";
+    reset.textContent = "Reset to verified";
+    note.appendChild(stat);
+    note.appendChild(reset);
+
+    function mark(saving) {
+      var edited = tgtBox.value.replace(/\s+$/, "") !== baked;
+      stat.textContent = edited
+        ? (saving ? "Edited · saving…" : "Edited · saved in this browser")
+        : "Unedited — the verified values from the repo";
+    }
+
+    var t = null;
+    tgtBox.addEventListener("input", function () {
+      tgtBox.rows = Math.max(6, tgtBox.value.split("\n").length + 1);
+      mark(true);
+      clearTimeout(t);
+      t = setTimeout(function () {
+        try { localStorage.setItem(TGT_KEY, tgtBox.value); } catch (e) {}
+        mark(false);
+      }, 300);
+    });
+
+    reset.addEventListener("click", function () {
+      tgtBox.value = baked;
+      tgtBox.rows = baked.split("\n").length + 1;
+      try { localStorage.removeItem(TGT_KEY); } catch (e) {}
+      mark(false);
+      say("Target block reset");
+    });
+
+    pre.replaceWith(tgtBox);
+    tgtBox.after(note);
+    mark(false);
+  })();
 
   /* ---------- interactive checks, persisted by content hash ---------- */
 
@@ -1840,7 +1949,7 @@ tbody tr:hover { background: var(--surface); }
     return "# C.A.Gs — Universal Page Build Brief (Portable Edition v2.0)\n\n" +
       "> Self-contained. No repo access required. Inside the repo, the repo's own rule packs and\n" +
       "> skills are authoritative where they are more specific.\n\n" +
-      sections.join("\n---\n\n");
+      sections.map(function (_, i) { return sectionMd(i); }).join("\n---\n\n");
   }
 
   function notesBlock() {
