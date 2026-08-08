@@ -1,0 +1,397 @@
+<title>Gate 1 — /affordable-.../ and /male-african-gray-for-sale/</title>
+
+<script type="text/markdown" id="src">
+## 0 · Verdict
+
+**Neither page is worth a build sprint. Both should be consolidated — to different targets.**
+
+| Candidate | On disk | Own-keyword impressions | Inbound links | Verdict |
+|---|---|---|---|---|
+| `/affordable-african-grey-birds-for-sale/` | 7,242 B · 2 H2 | 161 across 15 queries, **2 clicks** | 1 | **301 → `/african-grey-parrot-price/`** |
+| `/male-african-gray-for-sale/` | 10,438 B · 4 H2 | **13** on its exact query | **0** | **301 → `/male-vs-female-african-grey-parrots-for-sale/`** |
+
+The reasoning differs. The affordable page targets an intent **C.A.Gs structurally cannot
+serve** at a $1,500 floor. The male page targets an intent **a stronger sibling already owns**,
+in a format **no ranking competitor uses**.
+
+One implementation detail changes the work: a legacy `/product/` URL carrying **431
+impressions** already points at the affordable page, so a naive redirect creates a two-hop
+chain. §4.
+
+---
+
+## 1 · Data Sources, and What Is Missing
+
+| Source | File | Coverage |
+|---|---|---|
+| Google pages | `GSC-extracted/Pages.csv` | 123 rows |
+| Google queries | `GSC-extracted/Queries.csv` | 792 rows · 192 clicks · 15,348 impressions |
+| Bing pages | `BING-…PageTrafficReport_7_20_2026.csv` | 57 rows |
+| Bing trend | `Fresh-Bing-DADA-as-of-16-07-2026.csv` | date series only |
+| SERP | Firecrawl Search, US, 2026-08-08 | 10 results per query |
+
+**`NOT FETCHED`, barrier named:** *Bing query-level data.* The Bing export in the research
+folder is a `Date,Clicks,Impressions,CTR` time series — there are no query rows in it. Every
+query-level claim below is Google-only.
+
+**Not mixed:** this Jul 19 export is a different window from `data/analytics/`. The two
+disagree on absolute figures (the Congo page reads 0 clicks here, 84 across two queries there).
+Everything below is from the Jul 19 export unless stated, and the windows are never averaged.
+
+---
+
+## 2 · Candidate A — `/affordable-african-grey-birds-for-sale/`
+
+### 2a · The numbers
+
+| Metric | Google | Bing |
+|---|---|---|
+| The page | 1 clk · 242 imp · 0.41% · **pos 13.29** | 0 clk · 4 imp · **pos 4.25** |
+| Legacy `/product/` twin | 1 clk · **431 imp** · 0.23% · pos 64.71 | — |
+| Intent cluster (affordable/cheap/$200/$500) | **15 queries · 2 clicks · 161 imp** | `NOT FETCHED` |
+
+The cluster in full: `african grey for sale $200` (60 imp, pos 48) · `cheap african grey parrots
+for sale` (25 imp, pos 78.3) · `african grey for sale $500 in ohio` (12 imp, pos 1) · `african
+grey for sale $200 near me` (9 imp, **2 clicks**, pos 17.9) · then eleven more, all zero clicks.
+
+### 2b · What the SERP says
+
+Not one result is built on a *budget* intent. Google returns the same generic African Grey pages
+it returns for the head term — and the **position-1 result lists birds at $5,200–$6,500**. The
+rest of page one is aggregators (birdsnow, birdbreeders), marketplaces at $800–$950
+(exoticparrotpetstore), Craigslist at $200, a Facebook group asking *"What is the cheapest
+talking bird?"*, a YouTube video titled *"I SPENT $13k on My African Grey Parrots"*, and
+**Adopt-a-Pet at #10** — *"Why buy when you can adopt?"*
+
+### 2c · Why this is not buildable
+
+**The intent and the business are incompatible.** The queries are `$200`, `$500`, `cheapest`.
+Our floor is **$1,500**. A page that ranks for them collects traffic that cannot convert — which
+is what the data already shows: 242 impressions producing one click at 0.41%.
+
+The position-13.29 row looks like the strongest signal in this analysis and is the most
+misleading number in it. Ranking 13th for queries we cannot answer is not equity; it is a page
+absorbing bargain-hunter demand and returning nothing.
+
+**And the intent is already owned, twice over:**
+
+- `/african-grey-parrot-price/` — **76,642 B · 12 H2 · 34 inbound links** — answers the honest
+  cost question.
+- `/how-to-avoid-african-grey-parrot-scams/` — **198,596 B · 21 H2 · 32 inbound links** — owns
+  the "a $200 African Grey is the scam" framing.
+
+A built-out affordable page would be a third money-intent page competing with both.
+
+### 2d · The target, and the one I rejected
+
+**`/african-grey-parrot-price/` (Recommended).** The page's entire intent is *what does this
+cost*, and the price page answers exactly that with 34 inbound links behind it.
+
+**Rejected: the scams page.** The dominant modifier in the cluster is price (`$200`, `$500`,
+`cheapest`), not fraud. Sending price-intent traffic to a fraud page answers a question nobody
+asked; the price page already links to the scam cluster for the users who need it.
+
+---
+
+## 3 · Candidate B — `/male-african-gray-for-sale/`
+
+### 3a · The numbers
+
+| Metric | Google | Bing |
+|---|---|---|
+| The page | 1 clk · 22 imp · 4.55% · **pos 7.91** | 1 clk · 4 imp · 25% · **pos 4.50** |
+| `male african grey parrot for sale` | 0 clk · **13 imp** · pos 38.31 | `NOT FETCHED` |
+| Whole gender cluster | 40 queries · 2 clicks · 326 imp | `NOT FETCHED` |
+
+### 3b · The gender cluster is not a male cluster
+
+Ranked by impressions, the cluster is dominated by **female** and **comparison** queries, not by
+male-transactional ones:
+
+| Query | Impr. | Position |
+|---|---|---|
+| female african grey parrot for sale | 45 | 38.91 |
+| female african grey for sale | 29 | 44.21 |
+| which is better male or female african grey parrot? | 28 | 25.36 |
+| female african grey | 21 | 64.86 |
+| female african grey parrot | 15 | 70.20 |
+| african grey male or female | 14 | 30.79 |
+| african grey parrot male or female | 14 | 41.29 |
+| **male african grey parrot for sale** | **13** | 38.31 |
+
+`/male-vs-female-african-grey-parrots-for-sale/` already owns this: **120,693 B · 22 H2 · 13
+clicks · 1,818 impressions · pos 21.37**, plus **eight anchor-level rows** each holding position
+**10.5–11.0**. That page out-impresses the male stub **83 to 1**.
+
+### 3c · What the SERP says
+
+**No competitor ships a "male" category page.** The intent is served by individual named-bird
+listings — *Cory Male African Grey For Sale* ($2,600), *Sperry Male baby African Grey For Sale*
+($1,800), *Sunny Male baby African Grey For Sale* ($1,600) — plus classifieds and Facebook posts
+where buyers ask for a specific male bird.
+
+That format already exists here: `/available/<slug>/`. The transactional male intent belongs on a
+real bird's page with a real price and real photos, not on a category stub.
+
+### 3d · Additional defects on disk
+
+- **0 inbound internal links** — fully orphaned.
+- **4 occurrences of the stale gold palette** (`text-gold` / `bg-logo-dark`), against the locked
+  green/clay/cream.
+- The slug spells it **`gray`** where the site standard is **`grey`**.
+
+### 3e · The target
+
+**`/male-vs-female-african-grey-parrots-for-sale/`.** It owns the cluster, its slug already ends
+in `-for-sale`, and it holds eight page-1 anchor positions the stub cannot reach.
+
+---
+
+## 4 · The Chain That Must Be Flattened
+
+`site/content/_redirects` lines 13–14 already send the legacy WooCommerce URL to the affordable
+page:
+
+```
+/product/affordable-african-grey-birds-for-sale  /affordable-african-grey-birds-for-sale/  301
+/product/affordable-african-grey-birds-for-sale/ /affordable-african-grey-birds-for-sale/  301
+```
+
+That legacy URL carries **431 impressions** — the single largest number in this analysis, larger
+than either live page. Redirecting the affordable page without touching it produces:
+
+```
+/product/affordable-…  →  /affordable-…/  →  /african-grey-parrot-price/
+```
+
+A two-hop chain, which §4 of the build brief requires flattening. **Both legacy lines must be
+repointed directly at `/african-grey-parrot-price/`** in the same change.
+
+No equivalent chain exists for the male page — nothing redirects to it, and
+`/male-african-gray-for-sale-chicago-il/` is a different slug already resolving to
+`/african-grey-parrot-for-sale-chicago/` in one hop.
+
+---
+
+## 5 · The Change, Exactly
+
+1. **Flatten the legacy chain** — repoint `_redirects` lines 13–14 to
+   `/african-grey-parrot-price/`.
+2. **301** `/affordable-african-grey-birds-for-sale/` → `/african-grey-parrot-price/`
+3. **301** `/male-african-gray-for-sale/` → `/male-vs-female-african-grey-parrots-for-sale/`
+4. Remove both directories from `src/pages/`.
+5. Drop both slugs from `TIER_09` in `generate_sitemaps.py`; regenerate shards.
+6. Remove both from `data/page-dates.json`; mark both `status: consolidated` in
+   `data/page-map.json` with `redirects_to` and a **do-NOT-rebuild** note.
+7. Repoint the **one** inbound internal link to the affordable page.
+8. Build, verify in `dist/`, confirm one-hop live, commit, push.
+
+**The trade-off being accepted.** Four page-1 rankings are given up: Google 13.29 / Bing 4.25 on
+affordable, Google 7.91 / Bing 4.50 on male. Combined they produced **2 clicks** across the
+window on **268 impressions**, and both sit on intents that either cannot convert at our price
+floor or are already held by a sibling with 83× the reach. The 431-impression legacy URL is not
+lost — flattening the chain hands it to a 76 KB page that answers its question.
+
+**What would change this verdict:** Bing query-level data. Bing shows both pages at positions
+4.25 and 4.50, far better than Google, but with 4 impressions each and no query breakdown
+available. If Bing volume is materially higher than the page report suggests, the male page in
+particular deserves a second look before removal.
+
+`▣ APPROVAL GATE 1` — breeder approves, rejects, or splits the decision per page.
+
+---
+
+## 6 · What I Have Not Done
+
+- **No files changed.** This is analysis only; nothing is redirected or deleted yet.
+- **No sitewide work.** The `/.astro/` sitemap defect, the stale-palette sweep, and the pending
+  IndexNow submission for the previous consolidation are all still open and deliberately
+  untouched.
+- **Not re-run:** the §5 research depth from the build brief — section and visual inventory per
+  competitor, PAA to three levels, autosuggest, Reddit mining. None of it changes a
+  consolidate-or-build verdict, and all of it would be wasted on a page that gets redirected.
+</script>
+
+<style>
+:root{color-scheme:light dark;
+--ink:#2f2621;--ink-soft:#6d5f56;--ink-faint:#97877c;
+--ground:#f7f3ee;--surface:#fffdfa;--surface-2:#f1ece5;--line:#e2d9ce;--line-soft:#ece5db;
+--green:#2d6a4f;--green-soft:#e6efe9;--clay:#b04228;--clay-fill:#e8604c;--clay-soft:#fbeae5;
+--serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+--sans:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+--mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{
+--ink:#ece2d8;--ink-soft:#a99a8d;--ink-faint:#7d7066;
+--ground:#191512;--surface:#221d19;--surface-2:#2b2520;--line:#3a322c;--line-soft:#2f2823;
+--green:#6fb392;--green-soft:#1f3a2e;--clay:#f08070;--clay-soft:#3a231d}}
+:root[data-theme="dark"]{--ink:#ece2d8;--ink-soft:#a99a8d;--ink-faint:#7d7066;
+--ground:#191512;--surface:#221d19;--surface-2:#2b2520;--line:#3a322c;--line-soft:#2f2823;
+--green:#6fb392;--green-soft:#1f3a2e;--clay:#f08070;--clay-soft:#3a231d}
+:root[data-theme="light"]{--ink:#2f2621;--ink-soft:#6d5f56;--ink-faint:#97877c;
+--ground:#f7f3ee;--surface:#fffdfa;--surface-2:#f1ece5;--line:#e2d9ce;--line-soft:#ece5db;
+--green:#2d6a4f;--green-soft:#e6efe9;--clay:#b04228;--clay-soft:#fbeae5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem) 5rem}
+.mast{padding:clamp(2.2rem,6vw,3.6rem) 0 1.4rem;border-bottom:1px solid var(--line)}
+.kick{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+color:var(--green);margin:0 0 .8rem}
+.mast h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.7rem,4.6vw,2.5rem);
+line-height:1.12;letter-spacing:-.015em;margin:0 0 .7rem;text-wrap:balance}
+.mast p{margin:0;max-width:62ch;color:var(--ink-soft)}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem .9rem;margin-top:1.2rem;font-family:var(--mono);
+font-size:.72rem;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.meta b{color:var(--ink-soft)}
+.bar{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.6rem 0 0}
+button{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);
+padding:.45rem .75rem;border-radius:3px;cursor:pointer;transition:all .13s}
+button:hover{border-color:var(--green);color:var(--green)}
+button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+button.primary{background:var(--green);border-color:var(--green);color:var(--surface)}
+button.done{border-color:var(--clay);color:var(--clay)}
+section.sec{padding:2.4rem 0 .4rem;border-top:1px solid var(--line-soft)}
+section.sec:first-of-type{border-top:0}
+.sh{display:flex;align-items:baseline;gap:.85rem;margin-bottom:1rem}
+.sn{font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--clay);
+font-variant-numeric:tabular-nums;flex:none;padding-top:.3rem}
+.sh h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.28rem,2.9vw,1.75rem);
+line-height:1.18;margin:0;flex:1 1 auto;text-wrap:balance}
+.sb h3{font-family:var(--sans);font-size:.95rem;font-weight:700;margin:1.8rem 0 .55rem;color:var(--green)}
+.sb p{margin:0 0 1rem;max-width:72ch}
+.sb ul,.sb ol{margin:0 0 1rem;padding-left:1.3rem;max-width:72ch}
+.sb li{margin-bottom:.4rem}
+.sb em{font-style:italic;color:var(--ink-soft)}
+code{font-family:var(--mono);font-size:.86em;background:var(--surface-2);padding:.12em .34em;
+border-radius:2px;color:var(--clay)}
+pre{margin:0 0 1.2rem;padding:.9rem 1.05rem;background:var(--surface);border:1px solid var(--line);
+border-left:3px solid var(--green);border-radius:3px;overflow-x:auto}
+pre code{background:none;padding:0;color:var(--ink);font-size:.79rem;line-height:1.6}
+.tw{overflow-x:auto;margin:0 0 1.3rem}
+table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:.5rem .65rem;border-bottom:1px solid var(--line-soft)}
+th{font-size:.71rem;text-transform:uppercase;letter-spacing:.06em;color:var(--green);
+border-bottom:1.5px solid var(--line);white-space:nowrap}
+tbody tr:hover{background:var(--surface)}
+hr{border:0;border-top:1px dashed var(--line);margin:1.7rem 0}
+.gate{display:block;margin:1.3rem 0;padding:.8rem 1rem;background:var(--clay-soft);
+border-left:3px solid var(--clay-fill);border-radius:0 3px 3px 0;font-weight:600;font-size:.9rem}
+.gate .gm{font-family:var(--mono);color:var(--clay);font-weight:700;margin-right:.4rem}
+.toast{position:fixed;left:50%;bottom:1.6rem;transform:translate(-50%,1.5rem);background:var(--green);
+color:#fff;font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;
+padding:.55rem 1rem;border-radius:3px;opacity:0;pointer-events:none;transition:all .18s;z-index:50}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:640px){table{font-size:.8rem}th,td{padding:.4rem .45rem}}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="kick">C.A.Gs · Gate 1 · Build-or-Consolidate</p>
+    <h1>Two Slugs, Two Verdicts</h1>
+    <p>Whether <code>/affordable-african-grey-birds-for-sale/</code> and
+    <code>/male-african-gray-for-sale/</code> earn a build sprint. Google + Bing from the research
+    folder, SERP via Firecrawl Search.</p>
+    <div class="meta">
+      <span><b>2026-08-08</b></span>
+      <span><b>792</b> query rows</span>
+      <span><b>2</b> clicks between them</span>
+      <span><b>268</b> impressions</span>
+      <span>Bing queries <b>NOT FETCHED</b></span>
+    </div>
+    <div class="bar">
+      <button type="button" id="all" class="primary">Copy full analysis</button>
+      <button type="button" id="md">Download .md</button>
+    </div>
+  </header>
+  <main id="doc"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+var SRC=document.getElementById("src").textContent.replace(/^\n/,"");
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function inline(s){return esc(s)
+ .replace(/`([^`]+)`/g,function(_,c){return "<code>"+c+"</code>"})
+ .replace(/\*\*([\s\S]+?)\*\*/g,"<strong>$1</strong>")
+ .replace(/(^|[\s(])\*([^*\n]+)\*/g,"$1<em>$2</em>")}
+function tbl(rows){
+ var head=rows[0].slice(1,-1).split("|").map(function(c){return c.trim()});
+ var h='<div class="tw"><table><thead><tr>';
+ head.forEach(function(c){h+="<th>"+inline(c)+"</th>"});h+="</tr></thead><tbody>";
+ rows.slice(2).forEach(function(r){var c=r.slice(1,-1).split("|");h+="<tr>";
+  for(var i=0;i<head.length;i++){h+="<td>"+inline((c[i]||"").trim())+"</td>"}h+="</tr>"});
+ return h+"</tbody></table></div>"}
+function render(md){
+ var L=md.split("\n"),out="",i=0,p=[],list=null;
+ function fp(){if(p.length){out+="<p>"+inline(p.join(" "))+"</p>";p=[]}}
+ function fl(){if(!list)return;var t=list.t==="ol"?"ol":"ul";out+="<"+t+">";
+  list.items.forEach(function(x){out+="<li>"+inline(x)+"</li>"});out+="</"+t+">";list=null}
+ function fa(){fp();fl()}
+ while(i<L.length){var ln=L[i];
+  if(/^```/.test(ln)){fa();var b=[];i++;
+   while(i<L.length&&!/^```/.test(L[i])){b.push(L[i]);i++}i++;
+   out+="<pre><code>"+esc(b.join("\n"))+"</code></pre>";continue}
+  if(/^\|/.test(ln)){fa();var r=[];while(i<L.length&&/^\|/.test(L[i])){r.push(L[i].trim());i++}
+   if(r.length>=2)out+=tbl(r);continue}
+  if(/^\s*$/.test(ln)){fa();i++;continue}
+  if(/^---+\s*$/.test(ln)){fa();out+="<hr>";i++;continue}
+  var h=/^(#{3,4})\s+(.*)$/.exec(ln);
+  if(h){fa();out+="<h"+h[1].length+">"+inline(h[2])+"</h"+h[1].length+">";i++;continue}
+  if(/^`?▣/.test(ln.trim())){fa();
+   out+='<p class="gate"><span class="gm">▣</span>'+inline(ln.trim().replace(/`/g,"").replace(/^▣\s*/,""))+"</p>";i++;continue}
+  var b2=/^[-*]\s+(.*)$/.exec(ln);
+  if(b2){fp();if(!list||list.t!=="ul"){fl();list={t:"ul",items:[]}}
+   var bt=b2[1];while(i+1<L.length&&/^\s{2,}\S/.test(L[i+1])&&!/^\s*[-*]\s/.test(L[i+1])){bt+=" "+L[i+1].trim();i++}
+   list.items.push(bt);i++;continue}
+  var n=/^\d+\.\s+(.*)$/.exec(ln);
+  if(n){fp();if(!list||list.t!=="ol"){fl();list={t:"ol",items:[]}}
+   var nt=n[1];while(i+1<L.length&&/^\s{2,}\S/.test(L[i+1])&&!/^\s*\d+\.\s/.test(L[i+1])){nt+=" "+L[i+1].trim();i++}
+   list.items.push(nt);i++;continue}
+  fl();p.push(ln.trim());i++}
+ fa();return out}
+
+var parts=SRC.split(/^## /m).filter(function(x){return x.trim().length});
+var doc=document.getElementById("doc"),secs=[];
+parts.forEach(function(part){
+ var nl=part.indexOf("\n"),head=(nl===-1?part:part.slice(0,nl)).trim();
+ var body=nl===-1?"":part.slice(nl+1);
+ var md=("## "+head+"\n"+body).replace(/\s+$/,"")+"\n";secs.push(md);
+ var m=/^(\d+)\s*·\s*(.*)$/.exec(head),num=m?m[1]:"",title=m?m[2]:head;
+ var sec=document.createElement("section");sec.className="sec";sec.id="s"+num;
+ var sh=document.createElement("div");sh.className="sh";
+ var sn=document.createElement("span");sn.className="sn";sn.textContent="§"+num;
+ var h2=document.createElement("h2");h2.textContent=title;
+ var cb=document.createElement("button");cb.type="button";cb.textContent="Copy §"+num;
+ cb.addEventListener("click",function(){copy(md,cb,"Copy §"+num)});
+ sh.appendChild(sn);sh.appendChild(h2);sh.appendChild(cb);
+ var sb=document.createElement("div");sb.className="sb";sb.innerHTML=render(body);
+ sec.appendChild(sh);sec.appendChild(sb);doc.appendChild(sec)});
+
+var toast=document.getElementById("toast"),tt;
+function say(m){toast.textContent=m;toast.classList.add("on");clearTimeout(tt);
+ tt=setTimeout(function(){toast.classList.remove("on")},1600)}
+function copy(text,btn,restore){
+ var done=function(ok){say(ok?"Copied":"Copy failed");
+  if(btn){btn.textContent=ok?"Copied":"Failed";btn.classList.toggle("done",ok);
+   setTimeout(function(){btn.textContent=restore;btn.classList.remove("done")},1400)}};
+ if(navigator.clipboard&&navigator.clipboard.writeText){
+  navigator.clipboard.writeText(text).then(function(){done(true)},function(){fb(text,done)})}
+ else fb(text,done)}
+function fb(text,done){var ta=document.createElement("textarea");ta.value=text;
+ ta.style.cssText="position:fixed;opacity:0";document.body.appendChild(ta);ta.select();
+ var ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);done(ok)}
+function full(){return "# Gate 1 — /affordable-african-grey-birds-for-sale/ and /male-african-gray-for-sale/\n\n"+
+ "> Google from GSC-extracted (Jul 19). Bing pages from the Jul 20 report; Bing QUERIES: NOT FETCHED.\n"+
+ "> SERP via Firecrawl Search, US, 2026-08-08. Analysis only — no files changed.\n\n"+secs.join("\n---\n\n")}
+document.getElementById("all").addEventListener("click",function(){copy(full(),this,"Copy full analysis")});
+document.getElementById("md").addEventListener("click",function(){
+ var b=new Blob([full()],{type:"text/markdown"}),a=document.createElement("a");
+ a.href=URL.createObjectURL(b);a.download="gate1-affordable-and-male-slugs.md";
+ document.body.appendChild(a);a.click();document.body.removeChild(a);
+ setTimeout(function(){URL.revokeObjectURL(a.href)},2000);say("Downloaded .md")});
+})();
+</script>
