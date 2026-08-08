@@ -1,0 +1,1884 @@
+<title>C.A.Gs Universal Page Build Brief</title>
+
+<script type="text/markdown" id="brief-src">
+## 0 · Target Block
+
+*Fill in only this section. Everything below is standing law.*
+
+```
+TARGET URL      : https://congoafricangreys.com/grey-african-parrots-for-sale/
+PAGE TYPE       : for-sale (transactional profile)
+POSITION        : Page 10 of 22 in the for-sale cluster
+MODE            : REBUILD — thin live page, stale palette, stale price floor
+ON DISK         : src/pages/grey-african-parrots-for-sale/index.astro — 8,172 B — 128 lines — modified 2026-05-31
+LIVE STATUS     : HTTP 200, no redirect, 164,502 B rendered
+SITEMAP         : page-sitemap.xml, TIER_09, priority 0.9, changefreq weekly
+PRIMARY KEYWORD : grey african parrots for sale
+BASELINE (GSC)  : NOT FETCHED
+BASELINE (Bing) : NOT FETCHED
+INBOUND LINKS   : NOT FETCHED
+ASSET FOLDER    : assets/1WORKING-ON/FOR-SALE-PAGES/1GREY-PARROT — 13 files, 1 is .mp4
+SIBLINGS        : every shipped for-sale page + the comparison cluster
+```
+
+**Three defects already found on disk, before Sprint 0 opens.** These are recorded here so the
+rebuild does not re-derive them:
+
+| Found | Line | Why it is wrong |
+|---|---|---|
+| `text-gold`, `bg-logo-dark` | hero | Stale gold palette. `DESIGN.md` locks green/clay/cream. Reconcile on intake. |
+| `From $1,600` (title, meta, hero, schema `lowPrice`) | 4, 5, 19, 40 | Congo range is **$1,500–$3,500**. The floor is wrong in four places including JSON-LD. |
+| `AggregateOffer` + `InStock` | 16–22 | Truthful only if real birds back it. Verify against live inventory before it ships again. |
+
+**Mode is determined by looking, not by assuming.** `ls -la` the path and read the file before
+declaring the mode. A page that shipped last week is not a stub because the brief says so — and a
+page that returns 200 is not finished because it returns 200.
+
+`▣ APPROVAL GATE 0` — breeder confirms the Target Block before Sprint 0 opens.
+
+---
+
+## 1 · Non-Negotiable Facts and Brand Constants
+
+These bind every page, every sprint, every agent. Correct any contradiction **on sight**.
+
+### 1a · What is actually wrong in circulation — and what only looks wrong
+
+| Claim | Ruling |
+|---|---|
+| CITES **Appendix II** | **WRONG.** Appendix I — uplisted at CoP17, effective January 2017. Correct on sight. |
+| A single flat Congo price | **WRONG.** Congo range **$1,500–$3,500**; the bonded pair sets the ceiling. |
+| Timneh as a subspecies of *P. erithacus* | **WRONG.** *Psittacus timneh* is a full species. Fixed 2026-08-08. |
+| "72-hour" vs "3-day" guarantee | **BOTH CORRECT. NOT A DEFECT.** Do not rewrite one into the other. Do not flag it. |
+
+The guarantee row is in this table because the previous edition of this brief listed "3-day" as an
+error. That single wrong row once sent agents across 53 live pages — the homepage included — hunting
+copy that was already right. The breeder uses both phrasings deliberately.
+
+Also standing: **IUCN Endangered** (Congo) / **Vulnerable** (Timneh). All our birds are
+**captive-bred in the USA with full documentation**. Never imply wild-caught or illegal trade.
+
+### 1b · Facts live in two tenses — sweep both
+
+`dist/` is the **past tense**: what already shipped. `data/` and the generation layer are the
+**future tense**: what the next build will emit. A fact corrected only in `dist/` regresses on the
+next `astro build`. A fact corrected only in `data/` leaves the live page wrong until a rebuild.
+
+**Every correctness fix sweeps both.** This is how a CITES status and a Timneh taxonomy survived a
+`dist/`-only fix and had to be caught twice.
+
+### 1c · Voice
+
+**First-person breeder voice** — *we / us / our / here at C.A.Gs*. Our birds and credentials are
+framed as ours, never described from outside. Neutral encyclopedic register is correct **only** for
+species/taxonomy facts and cited research.
+
+### 1d · The Verified-Claim Ledger
+
+Every health and credential claim is bounded by the Ledger. In it: **PBFD / Polyomavirus PCR
+screening · DNA sexing · psittacosis · UV-B/D3**. Anything not in it is **not assertable**.
+
+**DNA sexing is bird-specific, and the two statements that look contradictory are both true.** Every
+single bird is DNA-sexed. The breeding pairs carry no DNA certificate. A page may carry `DNA-sexed`
+trust labels on a singles row and prose saying the pairs have none — that is correct, not a defect.
+Recorded as **resolved, do not re-raise**.
+
+### 1e · Brand-owned method labels — exactly two, never a third
+
+- **The Benjamin Home-Raising Protocol** — hand-feeding, weaning, the 12–16-week gate.
+- **The Midland Socialization Method** — family handling, out-of-cage routine.
+
+Each is defined once at first use. Neither is ever implied to be third-party certification.
+
+### 1f · No fabricated anything
+
+Never invent credentials, prices, reviews, ratings, review counts, test results, competitor metrics,
+or buyer stories. Un-fetched data is written **`NOT FETCHED`** with the barrier named, never
+inferred. No fabricated scarcity or urgency.
+
+### 1g · Palette and identity
+
+Forest green `#2D6A4F` · clay `#e8604c` (accent, sparing) · warm cream `#faf7f4` · soft beige and
+warm wood · charcoal `#3a2f2a` text. Small clay on light uses `#b04228` for AA; clay on dark uses
+`#f08070`. Any incoming kit or draft is **reconciled to this palette on intake** — a stale gold
+palette is a known drift vector and is live on the target page right now.
+
+Species markers use `/emoji/cag-congo.png` and `/emoji/cag-timneh.png` — **never 🦜**.
+
+### 1h · Working rules
+
+- **Work on `main`.** Only `main` auto-deploys. Finished work on a branch is a live 404 that looks done.
+- **Commit *and push* after every build.** Push *is* deploy.
+- `src/pages/<slug>/index.astro` is what ships. Every gate measures **`dist/`**, never source.
+- **Confidence gate, 97%.** Below it, do not dead-stop: write finished work to disk, log the open
+  question under `## Open Flags`, ask exactly **one** narrow question, keep building the rest.
+- **Restate the brief before building** — goal · scope · gates · definition of done · out of scope.
+- **Preview before apply.** A redesign is previewed and approved before it touches site files, and
+  never adds or removes content — visual layer only.
+- **Recommend + Why.** Every set of options gets exactly one **(Recommended)**, justified from real
+  data (GSC, Bing, competitors, the codebase — never taste), with the trade-off named.
+- **No test, no rule.** A rule nothing enforces is a deletion candidate. When a defect escapes,
+  charge it to the harness — add the case to the known-broken fixtures, watch the meta gate fail,
+  fix the check, and write **no new rule**.
+
+---
+
+## 2 · Skill and Agent Routing by Sprint
+
+Invoke, do not paraphrase. If a skill exists for the step, it is not optional.
+
+| Sprint | Invoke |
+|---|---|
+| **Session open** | `grill-me` · `superpowers:writing-plans` · page-type builder skill |
+| **0 Research** | Firecrawl **Search** endpoint first · `keyword-cluster` · `cag-branded-hybrid-keywords` · `cag-branded-search-skill` · `cag-entity-agent` · `cag-entity-graph` · `research-recency` · `reddit-strategy` · agents: `cag-competitor-intel`, `cag-competitive-keyword-gap-agent`, `cag-framework-agent`, `cag-paa-agent` |
+| **0.5 Strategy** | agent: `cag-strategy-synthesizer` · `cag-cta-strategy` |
+| **1 Plan** | `framework-heading-hierarchy` · `framework-eebp` · `cag-component-refresh` · `cag-seo-master-checklist` · `cag-visual-intelligence` |
+| **Asset Gate** | `cag-image-generation` · `cag-infographic` · `image-prompt-generator` · `image-metadata` · `cag-asset-proofing` |
+| **2 Build** | page-type builder skill · `anti-ai-writing` · `cag-duplicate-content-gate` · `internal-link-agent` · agents: `cag-non-commodity-content-agent`, `cag-entity-incorporation-agent` |
+| **3 Harden** | `cag-page-hardening` · `impeccable` · `frontend-design` |
+| **4 Gates** | `cag-gate-integrity` **first** · `cag-perf-gate` · `cag-final-page-pass` · `cags-comprehensive-page-audit-system` · `cag-aeo-pass` · `section-auditor` · `manual-auditor-check` |
+| **5 Visibility** | agent: `cag-llm-keyword-intel` · `framework-aio-geo` |
+| **6 Close** | `sitemap-agent` · `cag-indexing` · `session-closer` · `cag-learning-loop` · `superpowers:verification-before-completion` |
+
+**Page type → builder skill:** for-sale/buy → `cag-for-sale-page-builder` · bird `/available/<slug>/`
+→ `cag-bird-listing-page` + `cag-bird-page-excellence` · comparison → `cag-comparison-page-builder`
+· interior/care/trust → the manual interior checklist · location → `cag-location-page-builder` ·
+blog → `cag-blog-post` · Reddit modifier → `reddit-strategy`.
+
+---
+
+## 3 · The Seven-Sprint Pipeline
+
+```
+☐ Sprint 0    Research      → research doc, keyword universe, entity map, gap matrix, PAA set
+☐ Sprint 0.5  Strategy      → two strategies + one blended, ONE recommended, breeder picks
+☐ Sprint 1    Plan          → distribution matrix, H1–H6 outline, component tuple, meta sets
+☐ Asset Gate  HARD STOP     → breeder drops OG photos + infographics and says "start"
+☐ Sprint 2    Build         → section-by-section, on main, verified in dist/
+☐ Sprint 3    Harden        → hardening scan + impeccable/frontend polish, mobile-first
+☐ Sprint 4    Gates         → meta gate FIRST · dup · final audit · seam parity · a11y · perf
+☐ Sprint 5    Visibility    → LLM visibility measurement + AEO/GEO pass
+☐ Sprint 6    Deploy/Close  → sitemaps, push, live 200, IndexNow, lessons doc, memory
+```
+
+Each sprint ends at an `▣ APPROVAL GATE`. **Nothing from a later sprint starts early** — no HTML is
+written before the Asset Gate clears, and no images are baked before the outline is approved.
+
+---
+
+## 4 · URL, Canonical and Redirect Decision Gate
+
+Before any research, resolve the URL family. Deliverable: **one table, one recommendation.**
+
+☐ Enumerate **every** URL in the family — legacy `/product/` paths, `-nearby` / `-near-me` variants,
+  singular/plural, `buy-` prefixes, and the `grey`/`gray` spelling split. Search the GSC Pages export
+  and the Bing page-traffic CSV for the keyword stem, not just the exact slug.
+
+☐ For each URL pull **clicks · impressions · CTR · average position**, from **both** Google and Bing.
+  A URL absent from an engine is recorded `NOT PRESENT`, never assumed zero.
+
+☐ Pull the **query-level** rows for the family stem. Page-level clicks tell you where equity landed;
+  query-level tells you what people actually search. That is the decisive evidence.
+
+☐ Read the live `_redirects` file. Map the chains. Flag any chain of length ≥ 2 (A→B→C must be
+  flattened to A→C) and any redirect whose target does not exist on disk.
+
+☐ Count **inbound internal links** to each candidate. A slug with 28 internal links is not freely
+  swappable.
+
+### 4a · The decision rule
+
+Consolidate **toward the clean, cluster-native slug** — the one matching the cluster's naming
+convention that internal links already point at. Legacy `/product/` paths are WooCommerce artifacts
+and are never a consolidation target.
+
+**Low clicks on a redirect target is not evidence the URL is weak.** If the destination is a thin
+stub, the equity arrived at an empty room — which is exactly the situation on the current target.
+Diagnose the page before blaming the slug. Reversing a settled 301 costs a re-crawl cycle and strands
+internal links; reverse only when the slug is genuinely off-intent, never to chase a click count.
+
+**Distinct intents get distinct pages.** Two URLs in a family are only cannibalizing when they target
+the same query set. Verify against the query rows before merging anything.
+
+`▣ APPROVAL GATE 1` — breeder approves the canonical URL, the redirect map, and any changes.
+
+---
+
+## 5 · Competitor Research and Query Fan-Out
+
+**No research may be skipped.** Un-fetchable source = `NOT FETCHED` with the barrier named.
+
+### 5a · Firecrawl Search is the first move, not the fallback
+
+Open Sprint 0 with the Firecrawl **Search** endpoint. One call returns ranked results *with scraped
+content*, which collapses the old two-step — search, then scrape each result — into a single pass.
+Use it for the SERP snapshot, the variation sweep, and competitor discovery.
+
+**Sequence, in order:**
+
+1. **Search** — primary keyword + top 5 variations, `limit` 10, content in markdown. This is the SERP
+   snapshot and the first pass of the section inventory at once.
+2. **Map** — only for competitors that clear the relevance bar, to enumerate their URL space.
+3. **Scrape** — only for pages Search returned thin or truncated.
+4. **Extract** — only where a typed schema genuinely beats reading the markdown.
+
+**The ladder still applies when Search comes back empty or blocked:** retry with a UA header, then
+Firecrawl scrape, then Playwright. **A 403 from curl is not a dead link.** Record what you tried.
+
+☐ **SERP snapshot** — Google *and* Bing top 10 for primary + top 5 variations. Record: URL, title,
+  meta, word count, H2 count, image count, video presence, schema types, page type.
+
+☐ **Query fan-out** — every query the primary expands into. Mine from GSC Queries (all rows with the
+  stem), Bing query data, Google PAA expanded three levels, autosuggest A–Z, Related searches,
+  Reddit/Quora/Facebook thread titles, YouTube titles, and competitor H2/H3 text. **Every 6+-word
+  conversational query is captured** — those are the AEO/voice targets.
+
+☐ **Section inventory per competitor** — every H2/H3 they ship, in order, with word counts.
+
+☐ **Visual inventory per competitor** — image count and type (photo / infographic / chart / table),
+  video count and length, interactive tools, comparison tables.
+
+☐ **Recency sweep** — last-30-days signal via `research-recency`.
+
+☐ **Reddit / forum thread mining** — real buyer language and objections, logged in the Thread Ledger
+  so it is not re-mined.
+
+### 5b · Sprint 0 output artifact
+
+One dated research doc containing, in order: SERP snapshot · query fan-out · section inventory ·
+visual inventory · gap matrix · keyword universe · entity map · PAA set · recency notes ·
+`NOT FETCHED` list with barriers named.
+
+`▣ APPROVAL GATE 2` — breeder reviews the research doc before strategy opens.
+
+---
+
+## 6 · Keyword Deliverables and Metrics
+
+*Every metric below is a deliverable reported as a number — for **our planned page** and for **each
+top-5 competitor**.*
+
+### 6a · Required metric table — ours vs each competitor
+
+| Metric | Definition | Our target |
+|---|---|---|
+| Unique keyword count | Distinct keywords/phrases present at least once | 85–105 mentions across 40+ distinct terms |
+| Variation count | Distinct surface variations of the primary keyword | ≥ 12 |
+| Variation density, top 30 KB | Variation mentions ÷ words over the **first 30 KB of HTML** | 1–2% primary; never stuffed |
+| Exact matches in HTML tags | Exact-match primary in `title`, `h1`–`h6`, `a`, `img alt`, `meta` | Title 1 · H1 1 · H2s 2–4 · alt 1 (primary image only) |
+| Clean keyword density in tags | Tag-only density, stopwords stripped, boilerplate excluded | Report the number; flag > 3% as stuffing |
+| First-100-words placement | Primary keyword in the first 100 rendered words | Required |
+| Header keyword spread | % of H2/H3 carrying a distinct keyword type | ≥ 80%, no two headers on the same type |
+
+### 6b · Keyword type distribution (~85–105 total mentions)
+
+| Type | Count | Placement note |
+|---|---|---|
+| Primary keyword | 30–35 | front-loaded in title, H1, first 100 words |
+| LSI | 20–25 | spread across variations |
+| Long-tail, 6+ words, conversational | 15–20 | headers + opening paragraphs |
+| Branded (C.A.Gs, Mark & Teri Benjamin, reviews/pricing) | 10–15 | branded + hybrid search targets |
+| Conversational / voice | ~23 | headers + PAA answers |
+| Comparison (Congo vs Timneh, male vs female) | 5–8 | link to the comparison cluster |
+| Solution (scam-free, with health guarantee) | 5–10 | |
+| Transactional (reserve, deposit, available now) | ~15 | honest only |
+
+**The `usa` token decides US retrieval.** Measured on the breeding-pair baseline: queries carrying an
+explicit US geo token surfaced our pages where the bare query did not. Carry a geo token in at least
+one H2 and the meta description.
+
+### 6c · Competitor keyword deliverables
+
+☐ Keywords each top-5 competitor **has** that we do not — listed with placement (title / H1 / H2 /
+  body / alt).
+☐ Keywords **nobody** in the top 10 covers — the open gap, ranked by impression potential.
+☐ Their header text verbatim, so ours can be provably different.
+☐ Their image alt text and filenames — usually their weakest layer.
+☐ Their video presence and what it covers.
+
+### 6d · Meta
+
+Three sets per page (Educational / Benefit-Solution / Transactional-Urgency), one **(Recommended)**
+with why and trade-off.
+
+- **Title** ≤ 205 chars: `Primary Keyword | Related Conversational Query | Number + Positive Word | Brand — LSI/NLP terms`
+- **Description** F1 ≤ 185 or F2 ≤ 300: `Primary Benefit | Secondary Benefit | Trust Signal + CTA`
+- Front-load the primary keyword. Real price floor, real credentials. Never short-form.
+
+### 6e · Counter snippets
+
+8 per page, **< 4 words**, number-led, Ledger-verified only: `12+ Yrs Aviary` · `100% CITES Papered`
+· `$1,500 Floor Price` · `24h Reply` · `0 Wild-Caught`. Never a fabricated count.
+
+---
+
+## 7 · Entity Relationships and Co-Occurrence
+
+☐ **85–112 distinct entities** per page, each mentioned a natural number of times. The anti-pattern
+  this prevents: the business name in every sentence — unreadable and unrankable.
+
+☐ Entity classes: birds by name · Midland/TX geo · CITES Appendix I · USDA AWA · DNA-sexing labs ·
+  PBFD / Polyomavirus PCR · Delta / United / American cargo · IATA LAR · pellet brands · avian-vet
+  terminology · the two brand-owned method labels.
+
+☐ **Frequency targets:** brand 5–10× · full location 1–2× plus city/state 5–8× · each bird named in
+  its card plus 1–2 body mentions.
+
+☐ **Co-occurrence map** — which entities top-ranking pages mention *together*, as pairs. This is what
+  topical-authority scoring reads. Deliver as a pair-frequency table.
+
+☐ **Predicate extraction** — the subject→predicate→object triples each competitor asserts. Ours must
+  assert more, and every one traces to the Ledger or a data file.
+
+☐ **Schema drift check** — schema types the top 10 ship vs ours. Ours extends existing JSON-LD, never
+  duplicates it, and is verified in `dist/`.
+
+☐ **EEBP under every header** — Entity → Evidence → Benefit → Purpose, first-person, 1–2 sentences.
+  Distinct from `framework-ebp`; do not substitute.
+
+---
+
+## 8 · Competitor Gaps, Angles and Voice Tones
+
+For each top-5 competitor:
+
+| Field | What to record |
+|---|---|
+| Why they rank | The specific mechanism — authority, exact-match slug, depth, freshness, schema, backlinks. Name it. |
+| Content gaps | Sections and questions they do not answer at all |
+| Depth gaps | Sections they answer thinly, by word count, that we can own |
+| Trust gaps | Missing credentials, documentation, real photos, named people |
+| Voice / tone | Their register. Ours must be distinguishable at one paragraph. |
+| Angle | The single frame their page is built on |
+| Visual gaps | Missing infographics, tables, video, tools |
+| Weaknesses | Stale dates, broken elements, thin schema, no author, no location |
+
+Then one synthesis paragraph: **how we beat them** — a specific defensible mechanism, not "we'll
+write better content."
+
+---
+
+## 9 · Strategy — Two Plus One Blended
+
+☐ Two complete transactional strategies plus one blended, each with: angle, target query set, H2-level
+  section architecture, conversion path, risk.
+☐ Exactly **one (Recommended)**, justified from real data — never taste — with the trade-off named.
+☐ CTA strategy: cadence, anchor text, destination, and the one-global-CTA rule.
+
+`▣ APPROVAL GATE 3` — breeder picks the strategy.
+
+---
+
+## 10 · Section Distribution Matrix
+
+**Mandatory before any outline.** One row per planned section:
+
+| # | Section | Group | Angle | Framework | Entities | Keyword types | Image type | Words | Why (grounded) |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | | MANDATORY | | EEBP | | | OG | | |
+| 2 | | COMPETITOR-BASED | | QAB | | | Infographic | | |
+| 3 | | SUGGESTED-RECOMMENDED | | BAB | | | Table | | |
+
+**Groups are required labels:** MANDATORY (the page type demands it) · COMPETITOR-BASED (the top 10
+have it and we'd be visibly thinner — cite which competitor) · SUGGESTED-RECOMMENDED (our
+differentiator — justify the space).
+
+Every *Why* is grounded in Sprint 0 with the source named. Target 22+ sections for a full
+transactional page.
+
+`▣ APPROVAL GATE 4` — breeder approves the matrix.
+
+---
+
+## 11 · Heading Outline Gate — H1 to H6
+
+**The full H1→H6 outline is approved before a single line of page code is written.** An outline
+approved after the fact is not an outline.
+
+☐ All six levels present. No skipped levels — an H4 never follows an H2 directly.
+☐ **≥ 5 H5 and ≥ 5 H6.**
+☐ **Title Case on every H1–H6** (AP style). FAQ `summary` stays conversational and is exempt.
+☐ Conversational Q&A headers — What / How / Is / Can / Where / Why.
+☐ **Two-Keyword Headers** — each major header carries two distinct keyword types.
+☐ Semantic map: H1 topic · H2 search intents · H3 subtopics · H4 PAA/micro-intents · H5 supporting
+  facts and warnings · H6 breeder notes and citations.
+☐ **Inline H6 must follow an H5** — a breeder-note H6 cannot be the first heading after an H4.
+☐ **Header dup-gate runs BEFORE approval** — zero exact or template crossover with any sibling.
+☐ 5 A/B variants for the H1 and each major H2; breeder picks.
+☐ **Conversational opening paragraph under every header** — no header is ever followed immediately by
+  a list, table, or image.
+☐ Declare which registered header style this page uses. H2s carry the clay rule treatment.
+☐ **Heading hierarchy band** — H3 renders at 40–50px equivalent; fix H4–H6 gaps by adding depth, not
+  by shrinking. Watch the clamp-inversion trap: the `vw` term decides ordering, so verify **computed**
+  sizes at 375 / 768 / 1280, not the declarations.
+
+`▣ APPROVAL GATE 5` — breeder approves the full outline. **Hard gate before any code.**
+
+---
+
+## 12 · Component Selection and Hero Refresh
+
+☐ **Every page ships a distinct component tuple**, recorded in the component-map ledger: hero · dial
+  style · rail · stepper · key-takeaway · TOC · table · FAQ style · newsletter placement.
+
+☐ **When the hero pool is exhausted**, do not invent a sixth and do not silently reuse. Run
+  `cag-component-refresh` and ship a **delta spec** against the chosen reuse.
+  - **Allowed deltas:** layout arrangement, accent placement, motif, image grid shape, eyebrow
+    treatment, ribbon vs chips, stat-strip presence, crop ratio, entrance motion.
+  - **Never a delta:** the palette. Refresh changes arrangement, not brand color.
+  - Deliver the reuse recommendation **with** the delta spec at Sprint 1, as one **(Recommended)**
+    pick with the trade-off named.
+
+☐ **Hero and counter strip are separate elements.** They do not share a background, a padding block,
+  or a border. Enforced by `layout-hero-counter-separation`.
+
+☐ **H3 sections are image-first.** The image precedes the prose in source order under an H3.
+  Enforced by `layout-h3-image-first`.
+
+☐ **Component fidelity** — the cluster's own kit only. Never import another cluster's hero, counter
+  strip, newsletter, or seam.
+
+☐ **Dial TOC must actually work** — the conic ring's `--p` is driven by an IntersectionObserver
+  scroll-spy that also highlights the active item and updates the `x of N` counter. A static ring
+  reads as broken. Two known traps: the last-intersecting entry wins, and a rAF-gated handler latches
+  on a non-painting page. Verify in Playwright, not in an occluded browser pane.
+
+☐ **Dial compact spec** — 196px sidebar in `grid 196px minmax(0,1fr); gap:28px`; plain `#fff` card,
+  radius 16px, padding `12px 10px`, shadow `0 3px 12px rgba(60,30,10,.05)`, sticky at
+  `calc(var(--hdr) + 16px)`, `max-height:calc(100vh - var(--hdr) - 32px)`, thin scrollbar. Ring
+  **64px** (inner 50, number 15px serif, "of N" 7px). Links `.74rem/1.25`, padding `5px 7px`, radius
+  8px. **18-stop cap** — beyond that it must be grouped.
+
+☐ **Seam dividers** — 4–8 per page, one before every section. Decorative `alt=""` + lazy + explicit
+  CLS dimensions.
+
+☐ **`scroll-behavior: auto`** on any page with jump links — `smooth` cancels `#anchor` navigation.
+  Set `--hdr` and a matching `scroll-margin-top` on every target.
+
+☐ **No page-level sidebar.** Sticky filters are section-level only; a sticky mobile CTA bar covers
+  persistent-CTA needs.
+
+---
+
+## 13 · Tool / Special Element Decision
+
+**A tool or special element is required unless the page type genuinely does not support one.**
+
+☐ Decide from: what the SERP shows (do the top 10 ship calculators, quizzes, checklists, tables?),
+  the query intent (does the fan-out contain "how much", "which", "checklist", "compare"?), and PAA.
+☐ Candidates: cost calculator · fit quiz · documentation checklist · shipping-timeline estimator ·
+  verification guide · interactive comparison table · decision tree.
+☐ Constraints: pure HTML/CSS with minimal vanilla JS. **No frameworks, no dependencies, no external
+  CDNs.** Live data reads from real data files, never hardcoded.
+☐ Deliver: chosen element + SERP/query evidence + one **(Recommended)** with the trade-off. If the
+  answer is "no tool", say so and name the evidence.
+☐ **GEO fact tables** are near-always warranted — they signal answerability and are cheap to ship.
+
+---
+
+## 14 · OG Images, Infographics and the Asset Gate
+
+### 14a · Sizing — the rule that keeps getting reworked
+
+**Every in-body image — OG photo AND infographic alike — renders in the same box:**
+
+```
+.sec-img.inf-img {
+  max-width: 760px;
+  aspect-ratio: 1408 / 768;   /* 16:9 */
+  object-fit: cover;
+  height: auto;
+}
+```
+
+Identical at mobile, tablet, and desktop. Do **not** give OG photos smaller or variable boxes. Tune
+**`object-position` per photo** so the bird is not cropped out — the box never changes, only the
+focal point.
+
+**Bake pipeline (exact):** `PIL.ImageOps.fit(src, (1408,768), LANCZOS, centering=per-image)` → WebP
+`method=6`, quality-walk from 82 downward **until under 95 KB** → emit the `-760.webp` sibling → ship
+`srcset` + measured `sizes`. Ceiling **< 100 KB**, target **< 95 KB**.
+
+**Portrait OG framing (locked default):** bake single-bird and pair portraits with
+`--style blurfill --mobcrop 4:5` from the **original master**. Never focal-point cover-crop a
+portrait — it cuts heads. Tag `class="sec-img og-photo og-tall"` and ship the mobile full-bleed rule:
+
+```
+.sec-img.og-tall { width:100vw; margin-left:calc(50% - 50vw); aspect-ratio:4/5; border-radius:0 }
+```
+
+**The breakpoint is 900px, not 640px.** Gating the og-photo system at 640 drops tablets through to
+the desktop box. Page root needs `overflow-x: clip` so full-bleed never causes horizontal scroll.
+
+**`sizes` is measured, not guessed** — `sizes`-first ordering is what cut 205 KiB on the last pass.
+`naturalWidth` is density-corrected; do not read it as the served width.
+
+### 14b · Coverage and alt text
+
+☐ **Every H2, every H3, and every key H4 gets an image** — OG photo, infographic, or generated.
+☐ **Rule 50b alt rotation** — the primary keyword goes in the **primary image's alt only**. Every
+  other image rotates a **different** keyword type. **No two images on a page share an alt.**
+☐ **Image SEO 5-element, none optional** — filename · alt · title · caption · description.
+☐ **Further-reading thumbnails are the target page's own hero.** Binding. A thumbnail that shows
+  something other than the page it links to is a defect.
+☐ Lazy-load below the fold; the LCP image gets `fetchpriority="high"` + preload, never
+  `loading="lazy"`. Conditional renders still need the lazy attribute.
+☐ Infographics need a **reserved box** (explicit dimensions) or they cause CLS.
+☐ **Check generated infographics for duplicate labels** before assignment — the generator has emitted
+  the same label twice on a chart more than once.
+
+### 14c · The Asset Gate — a hard stop
+
+☐ **List the asset folder and open every file** before assigning anything. Check `assets/brand/`
+  before declaring an image missing.
+☐ **Analyze each OG image**, then assign to a section — **after** the research and the approved
+  outline exist, never before.
+☐ Produce the **infographic prompt pack**: one prompt per section that needs one, with the type
+  (Comparison / Feature Grid / Process Flow) and the 300–350px height target.
+☐ **HARD STOP.** No page HTML is written until the breeder has dropped every generated infographic
+  **and explicitly said "start."**
+
+`▣ APPROVAL GATE 6` — breeder drops assets and says start.
+
+---
+
+## 15 · Build Rules — Write From Outline
+
+### 15a · The non-negotiable
+
+**Write from the outline, never from a sibling.** Reuse components, CSS classes and structural
+patterns freely — that *is* the kit. But every page's **prose** is written fresh from its own
+approved outline. **Never open a sibling's file to copy paragraphs.**
+
+A page that is copied and then reworded **passes the automated dup check and still breaks the rule.**
+The rule is about method, not about the score.
+
+### 15b · Dedup is a pre-write discipline
+
+Run the dup gate on **your own draft, before it is done** — body **and** `--headers` — pairwise
+against **every** sibling in the cluster, the comparison cluster, and the variant pages. Target zero
+non-whitelist crossover.
+
+**Whitelist (may match verbatim):** the shipping line, documentation badge lists, the counter strip,
+the CITES notice, CTA labels, real reviews, real page-name link labels. Nothing else.
+
+### 15c · Prose standards
+
+☐ First-person breeder voice throughout.
+☐ `anti-ai-writing` pass — strip AI-tell phrases, robotic rhythm, generic structure.
+☐ Non-commodity check — would a generic model have written this? If yes, it fails.
+☐ **Humor: Style-2 dry, ≤ 1 beat per section, never on legal or health content.**
+☐ **Link-First anchors** — external and internal anchors go at the **start** of a sentence. Branded
+  CTA action anchors are exempt.
+☐ Internal links same-tab; external new-tab with ↗. Pull anchors from the Anchor Diversity Ledger.
+☐ External links: 6–7 diverse authorities, citing the **specific resource page**, not the homepage.
+☐ Every claim traces to the Ledger or a data file. `NOT FETCHED` where it does not.
+
+### 15d · Transactional layer (for-sale and buy pages)
+
+☐ Real bird cards near the fold, from live inventory and the price matrix. **Every card carries the
+  shipping line:** `Ships nationwide · $185 airport · $350 home`. Never a card without it.
+☐ One `Product` + `Offer` per real bird. `AggregateOffer` **only** on group and hub pages. A sold bird
+  is **never** `InStock`. Extend existing JSON-LD; verify in `dist/`.
+☐ Reserve/inquire CTA every 500–700 words, clay pill, branded action anchor, anchored to `#reserve`.
+  Respect one-CTA-per-page via `hideGlobalCta` when the page ships its own band.
+☐ Honest scarcity only — real counts, real waitlist.
+☐ Contact form lists **every actual available bird with its real price** as select options, plus
+  `Pickup in Midland, TX — if you live within 2–3 hours of us`.
+☐ Negative-keyword counter-positioning — wild-caught, scam and "cheap" handled head-on with
+  green-flag framing, linking to the scam cluster.
+
+---
+
+## 16 · Responsive Typography, Spacing and Scroll
+
+Verified at **375 / 768 / 1280** in a real browser, on the built page.
+
+☐ **Fluid clamp scale** for all headings. No `text-3xl`-class utilities on H2/H3. Verify computed
+  sizes — the `vw` term decides ordering and can invert the hierarchy at one breakpoint.
+☐ **No oversized headers.** H2 clamps down on mobile; nothing overflows its container.
+☐ **Even paragraph rhythm** — consistent measure and leading, no orphan lines from `text-wrap:
+  balance` on short strings.
+☐ **Measure a real `ch`** when checking line length. `0.5em` over-reports by ~20% and once triggered
+  a needless cluster-wide reflow.
+☐ **Tables stack on mobile** — one card per row at ≤ 640px, `data-label` on every `td`. Never a
+  `::before` on `tr`; it shifts columns.
+☐ **When a table converts to blocks, the child selector list must be exhaustive — `caption` included.**
+  `caption` is the child everyone forgets because it is the only one that is not a row, cell, or
+  row-group. Left at `display:table-caption` among blocks it shrink-fits into a narrow column. Drop
+  its uppercase/tracking label style at mobile too.
+☐ **Cards go horizontal below 640px** where the playbook specifies; one fact per line.
+☐ **Seam gutters −40%** on mobile versus desktop.
+☐ **Tap targets ≥ 24px** with real spacing between them.
+☐ **Minimum rendered text size is 12.5px.** A trust line that computes to 9.92px is a defect.
+☐ **`flex: 1 0 100%` will not break a line past a `max-width`** — use grid.
+☐ **A scoped `* { margin: 0 }` reset zeroes Tailwind's `px-`/`py-`** — never ship one page-scoped.
+☐ **`clamp()` and `calc()` need spaces around `+` and `-`** or the declaration is silently dropped.
+☐ Nothing is cut off at the screen edge; no horizontal scroll at any width.
+
+---
+
+## 17 · Harden Pass
+
+Sprint 3 is its own sprint. It is not folded into build or into gates.
+
+☐ Run the hardening scan for the slug. Then **verify each finding on the built page** before editing.
+☐ **Markup ↔ CSS drift check** — a clean hardening scan is not a clean page. Class-diff every ported
+  section against the source component.
+☐ **After any scoped re-theme, re-check every descendant that sets its own colour against the new
+  background.** The scan cannot infer which ones matter. A dial re-themed onto white left an inactive
+  state at sage `#7ba98d` — **2.66:1** — and that is where ten contrast failures came from.
+☐ **Contrast ratios are written down from a calculation, not from the draft that proposed one.** The
+  plan predicted 4.62:1; the shipped value recomputed to 4.56:1. Both clear AA; only one is true.
+☐ **Contrast floors:** stone-600 body floor · small clay on light `#b04228` · clay on dark `#f08070`
+  · footer text on green `white/80` minimum · no opacity-based dimming for text.
+☐ **Color specificity check** — a 1.19:1 result usually comes from a losing specificity battle, not
+  from a wrong token.
+☐ **Impeccable + frontend-design pass** — visual hierarchy, information architecture, cognitive load,
+  spacing, alignment, motion, micro-interactions, error and empty states, UX copy.
+☐ **Verify in a painting page.** IntersectionObserver reads static in an occluded browser pane;
+  scroll-spy and animation checks run in Playwright.
+
+---
+
+## 18 · Gates and Pass Checks
+
+### 18a · Run these
+
+```bash
+npm run test:render:meta
+```
+
+```bash
+npm run test:render:pages
+```
+
+```bash
+python3 scripts/quality_report.py
+```
+
+```bash
+python3 scripts/perf_audit.py
+```
+
+Plus, per page: the duplicate-content audit (body **and** `--headers`), the final page audit for the
+correct page-type profile, the seam-parity check, the page hardening scan, and the AEO audit.
+
+### 18b · Gate integrity — read this before believing any gate
+
+**A gate's output is a hypothesis about the page, not a fact about it.** Twelve checkers have cried
+wolf on this site, and two reported PASS having examined **zero pages**.
+
+☐ **Run the meta gate first** — it is the gate that checks the checkers.
+☐ **Before editing in response to a finding, confirm the defect on the built page.**
+☐ **Before believing a PASS, read the gate's own examined count.** A PASS over zero items is not a PASS.
+☐ **Run every gate twice.** One clean run proves nothing — the same input has produced different verdicts.
+☐ **Perf conclusions need ≥ 5 runs.** CLS here is bimodal. Report the warm median of at least 3 and
+  look at the distribution.
+☐ **When a defect escapes a gate that should have caught it, fix the harness, not the page — and
+  write no new rule.**
+
+### 18c · Registering a check is not shipping a check
+
+The most expensive lesson of the last sprint. `a11y-text-contrast-aa` shipped as a **blocking** check
+with a passing known-broken fixture, an entry in `rule-index.json`, and no `untested` flag. It
+examined **zero nodes on every page of the site, for a full day.**
+
+The mechanism: `pages.spec.ts` filters the registry by `targets.json > families_by_page_type`. The
+family was registered in code and wired to no page type. Nothing asserted the two agreed.
+
+**The three-part rule now in force:**
+
+1. **A check is shipped when it has examined a non-zero count on a real page** — never when its
+   fixtures pass. `minExamined` is enforced against the fixture, not against the site.
+2. **The meta gate asserts wiring in both directions** — a family registered in code but wired to no
+   page type fails; a family declared in `targets.json` that no check registers also fails.
+3. **New checks enter as `advisory` and are promoted only after zero false reports across one full
+   cluster.** Skipping advisory is what let a zero-examined gate look shipped.
+
+**A false-positive rate is a property of the check, not of the site.** When a11y was finally wired it
+reported 1,783 nodes below AA and **zero clean page-viewports**. Two false-positive classes were
+confirmed against built CSS before anything was "fixed":
+
+- **Out-of-flow labels over photos.** `backdrop()` walks DOM ancestors; an absolutely positioned
+  element's ancestors are not what it visually covers, so the walk sails past the image to a white
+  section and reports exactly 1:1.
+- **Translucent foregrounds.** `text-cream/80` renders `rgb(… / 0.8)`; the helper discards alpha
+  unless it is exactly 0, so a composited foreground is judged as opaque.
+
+Clay/gold on light at 3.17–3.38:1 against a 4.5 requirement is the one family that looks real.
+
+☐ **A still-loading image is not a broken one.** Give stragglers a `decode()` budget, then classify
+  the two states apart. Collapsing them manufactures defects.
+
+### 18d · Manual pass list
+
+☐ 400px-class hero · staggered hero image sizing
+☐ Hero and counter strip visually separate
+☐ H3 sections image-first
+☐ Unique newsletter image and one-line title per page
+☐ Opening paragraph under **every** header
+☐ Uniform OG boxes throughout; og-photo gating at 900px
+☐ Separate blog and contact H2s
+☐ Mobile table stacking verified, `caption` included
+☐ Jump-rail `scroll-margin` verified; jump links actually jump
+☐ Further-reading cards show the target page's own hero
+☐ Seam count matches section count
+☐ Schema verified in `dist/` — types, no duplicates, no false `InStock`
+☐ No visible dates in body copy (schema-only freshness)
+☐ All six heading levels, ≥ 5 H5, ≥ 5 H6
+☐ Lighthouse warm median-of-3 recorded
+☐ Verified in **`dist/`**, never by grepping source
+
+---
+
+## 19 · Measurement Ledger — What Gets Counted
+
+*Added in v2.0. Every row is a number that must appear in the close-out, not a box that gets ticked.
+These are the measurements the breeding-pair sprint proved were missing.*
+
+| # | Measurement | Unit | Pass condition | Why it exists |
+|---|---|---|---|---|
+| M1 | Nodes examined, per check, on real pages | count | **> 0** for every registered check | A blocking gate ran on zero nodes for a day |
+| M2 | Families registered vs families wired | two sets | Symmetric difference **= ∅** | Registration is not wiring |
+| M3 | Advisory findings vs blocking failures | two counts | Reported separately, never summed | 1,783 advisory leads is not 1,783 defects |
+| M4 | False-positive classes confirmed against built CSS | count + names | Named before any "fix" | Zero clean pages was a fact about the check |
+| M5 | Contrast ratio, computed | `n.nn:1` | ≥ 4.5 small / 3.0 large, **recomputed at ship time** | Predicted 4.62, shipped 4.56 |
+| M6 | Minimum rendered text size | px | ≥ **12.5** | A trust line shipped at 9.92px |
+| M7 | Lighthouse warm median | median-of-3, ≥ 5 runs where CLS matters | Recorded with the distribution | CLS here is bimodal |
+| M8 | Gate runs per gate | count | **≥ 2**, both clean | Same input, different verdict |
+| M9 | Rework rate | two numbers | Page-edit rework vs harness self-repair, never merged | A harness fix is not a page defect |
+| M10 | Dup crossover, body and headers | count | **0** non-whitelist | Reworded copy passes and still breaks the rule |
+| M11 | Seam count vs section count | two counts | Equal | Seam parity |
+| M12 | LLM visibility cells fetched / total | `n / 30` | Denominator is what was **fetched** | Baseline was 24/30; barriers named, nothing inferred |
+| M13 | Slugs whose **rendered** output changed | count | Equals the IndexNow submission count | A shared-component edit propagates |
+| M14 | Fact-fix coverage across tenses | 2 checks | `dist/` **and** `data/` both swept | A `dist/`-only fix regresses on next build |
+| M15 | Image decode budget applied before classifying | ms | Applied; loading ≠ broken | The img check called them the same thing |
+| M16 | Heading computed sizes at 3 widths | px × 3 | Monotonic H1 > H2 > H3… at each | The `vw` term can invert the hierarchy |
+| M17 | `sizes` measured, not guessed | px per breakpoint | Measured from layout | `sizes`-first cut 205 KiB |
+| M18 | Untested rules in `rule-index.json` | count | Reported; each is a deletion candidate | A rule nothing enforces |
+
+---
+
+## 20 · LLM Visibility Measurement
+
+**Mandatory for every page.** A required deliverable, not an optional extra.
+
+☐ Query **ChatGPT, Claude, Gemini, Perplexity, and Google AIO** for the primary keyword and its top 5
+  variations — 30 cells.
+☐ Record per engine: are we cited · which URL · position in the answer · which competitors are cited
+  instead · what phrasing the answer uses.
+☐ **Write `NOT FETCHED` with the barrier named for any cell you cannot reach**, and compare future
+  runs against the fetched count, not the nominal 30. The breeding-pair baseline is **24/30** —
+  Claude's six blocked by a hard login wall with no API key. Nothing was inferred to fill them.
+☐ Extract the **answer structure** each engine returns — that structure is the AEO target.
+☐ Extract the **keywords the engines themselves use** that our page does not contain.
+☐ Produce an **LLM Visibility score** and record it against the page.
+☐ Route gaps: missing keywords → keyword verifier; missing questions → FAQ builder; missing structure
+  → the AIO/GEO framework.
+☐ Re-measure after deploy to establish the delta.
+
+**Verify an agent's report against source before acting on it.** A well-formed 30-cell brief
+overstated one gap — it described content as absent that existed in two placements, and acting on it
+as written would have duplicated existing content. **And hold your own verification to the same bar:**
+finding that two statements coexist on a page does not establish that they conflict. That takes domain
+knowledge. Log the ruling under `## Open Flags` as **resolved, do not re-raise**.
+
+---
+
+## 21 · Deploy and Session Close
+
+☐ Build, then verify the **built** page — content, schema, images, links.
+☐ Regenerate sitemaps after any page is added or removed: `python3 scripts/generate_sitemaps.py`
+☐ **Commit and push.** Push is deploy. On `main` only.
+☐ Confirm live HTTP 200 at the canonical URL, and every redirect in the family resolving in one hop.
+☐ **Submit to IndexNow — after the deploy is live, never before.**
+
+```bash
+python3 scripts/indexnow_submit.py <slug>
+```
+
+  **Submit every slug whose *rendered* output changed, not just the one you edited.** A
+  shared-component edit propagates across the cluster. This step existed as a rule for months and
+  never once ran; it now has a working script and tests that keep it performable.
+☐ Write the **lessons doc** — what broke, the root cause, the reusable fix.
+☐ Run the learning loop: if a defect escaped a gate, the harness gets the fix.
+☐ Update the session brief's *What's Next*; save durable, non-obvious findings to memory.
+☐ **All deliverables ship as an Artifact with copy buttons, plus `.md`.** Never as chat prose the
+  breeder has to select by hand.
+
+---
+
+## 22 · Master Deliverables Index
+
+**Each one is a document or a table — not a claim that it was considered.**
+
+**Sprint 0 — Research (16):** URL family table (both engines) · query-level table · redirect map with
+chain lengths · inbound link count per candidate · SERP snapshot top 10 × 2 engines, 9 fields ·
+query fan-out with PAA to 3 levels · section inventory per competitor · visual inventory · gap matrix
+· keyword universe by the 8 types · entity map 85–112 · co-occurrence pair table · predicate table ·
+PAA set · thread ledger entries · `NOT FETCHED` list with barriers.
+
+**Sprint 0.5 — Strategy (2):** two strategies + one blended with one **(Recommended)** · CTA strategy.
+
+**Sprint 1 — Plan (9):** distribution matrix, 10 columns, grouped · full H1–H6 outline · 5 A/B
+variants for H1 and each major H2 · header dup-gate result, pre-approval · component tuple + hero
+delta spec · tool decision + evidence · 3 meta sets · 8 counter snippets · visual companion.
+
+**Asset Gate (4):** folder inventory, every file opened · per-image analysis + section assignment ·
+infographic prompt pack · image metadata set with no duplicate alts.
+
+**Sprint 2 — Build (5):** the built page verified in `dist/` · pre-write dup-gate result · keyword
+metric table ours vs top-5 · entity count verification · schema block verified in `dist/`.
+
+**Sprint 3 — Harden (5):** hardening scan + per-finding verification note · markup↔CSS class-diff ·
+re-theme descendant colour audit · contrast audit at 3 widths with computed ratios · polish notes.
+
+**Sprint 4 — Gates (9):** meta gate first · render pages at 375/768/1280 · quality report · perf audit
+· final page audit verdict + fix list · seam parity · manual pass list · Lighthouse warm median ·
+**gate-integrity note: examined counts, wiring symmetry, second-run confirmation**.
+
+**Sprint 5 — Visibility (4):** LLM table 5 engines × 6 queries with fetched denominator ·
+answer-structure extraction · engine-keyword gap list + routing · visibility score.
+
+**Sprint 6 — Close (6):** sitemap regeneration · live 200 + one-hop redirects · **IndexNow submission
+count = rendered-changed slug count** · lessons doc · memory entries · Artifact + `.md` deliverable.
+
+---
+
+## 23 · Reference Library and Banked Traps
+
+| When | Document |
+|---|---|
+| Before UI/UX polish on a live for-sale page | the for-sale UI/UX polish playbook — 18-stop dial cap, two scroll-spy failure modes, one-fact-per-line cards, −40% seam gutters, `sizes`-first sequence |
+| Before starting a new for-sale group | the for-sale cluster impeccable lessons — cross-sell spec, Anchor Diversity Ledger, corrected measurement probes |
+| Before any image work | the image-designs art-direction source of truth |
+| Before any design or content work | the strategic product doc and the visual design doc |
+| Before trusting any gate | the gate-integrity skill |
+| Before promoting any check | `targets.json` promotion rule — advisory until zero false reports across one cluster |
+| Standard of done | the most recently shipped page in the same cluster |
+
+**Banked traps:** `smooth-scroll` kills jump links · `CSSStyleRule.cssRules` is truthy on every rule ·
+`behavior:'instant'` ≠ `'auto'` · Playwright loads a spec once per **worker** · lazy images do not
+load by scrolling · a hung check makes a page score ABSENT · zsh will not word-split `$VAR` · a static
+scan covers 108 pages where the harness covers 15 · the design-system CSS file is **not** globally
+imported · `caption` is the forgotten table child · an absolutely positioned label is a sibling of the
+photo, so `position:relative` belongs on the card · registered ≠ wired · a still-loading image is not
+a broken one.
+
+---
+
+## 24 · Open Flags
+
+*Carried forward. A flag marked resolved is never re-raised.*
+
+| Flag | State |
+|---|---|
+| `a11y-text-contrast-aa` demoted to advisory; 1,783 leads to triage as its own sprint | OPEN — own sprint |
+| Clay/gold on light at 3.17–3.38:1 | OPEN — real family, needs a palette decision |
+| `/70de/` source maps — Cloudflare Rocket Loader, dashboard-only | KNOWN-IGNORED, do not re-diagnose |
+| `page-sitemap.xml` emits `https://congoafricangreys.com/.astro/` — a build cache dir, not a page | OPEN — queued for the end of this build |
+| DNA: singles yes, pairs no — reads like a contradiction, is not | **RESOLVED, do not re-raise** |
+| "72-hour" and "3-day" both correct | **RESOLVED, do not re-raise** |
+| GSC / Bing baselines for the target page | NOT FETCHED — needed for Gate 1 |
+
+---
+
+## 25 · From Brief to Web Tool — the Path
+
+*This document is already a data structure pretending to be prose. The path to a tool is to stop
+pretending.*
+
+**Where it stands (v2.0).** The brief is a single markdown source rendered to HTML, with every section
+copyable as its own markdown slice and the whole thing downloadable as `.md`. The notes console
+persists to `localStorage`. That is stage 1 of 4 and it is done.
+
+**Stage 2 — the Target Block becomes a form.** The only section that changes per page is §0. Turn its
+ten fields into inputs, and the brief templates itself: the slug propagates into every command in
+§18 and §21, the page type selects the right builder skill in §2, and the cluster picks the sibling
+list for the dup gate. Nothing new is authored — the same markdown gets interpolated.
+
+**Stage 3 — the checkboxes become state.** Every `☐` is already a discrete task with a sprint number.
+Persist them, and the page becomes a run tracker: which gate is open, which deliverable is
+outstanding, which approval is unsigned. The seven-sprint pipeline in §3 turns into a progress rail
+that reflects real state instead of describing an ideal one.
+
+**Stage 4 — the ledger reads from the repo.** §19 is eighteen numbers that a script already computes:
+`quality_report.py`, `perf_audit.py`, and the render harness emit every one of them. A small JSON
+endpoint written by the close-out step, fetched by this page, turns the Measurement Ledger from a
+checklist into a dashboard — examined counts, wiring symmetry, rework rate, untested-rule list, live.
+
+**The honest trade-off.** Stages 2 and 3 are self-contained and cheap. Stage 4 requires the close-out
+to write a machine-readable artifact every run, which is a change to the pipeline, not to this page —
+worth doing only once the pipeline runs clean enough that the numbers are worth watching.
+</script>
+
+<style>
+:root {
+  color-scheme: light dark;
+
+  --ink:        #2f2621;
+  --ink-soft:   #6d5f56;
+  --ink-faint:  #97877c;
+  --ground:     #f7f3ee;
+  --surface:    #fffdfa;
+  --surface-2:  #f1ece5;
+  --line:       #e2d9ce;
+  --line-soft:  #ece5db;
+
+  --green:      #2d6a4f;
+  --green-soft: #e6efe9;
+  --clay:       #b04228;
+  --clay-fill:  #e8604c;
+  --clay-soft:  #fbeae5;
+
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --sans: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --measure: 68ch;
+  --pad: clamp(1rem, 4vw, 2.5rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink:        #ece2d8;
+    --ink-soft:   #a99a8d;
+    --ink-faint:  #7d7066;
+    --ground:     #191512;
+    --surface:    #221d19;
+    --surface-2:  #2b2520;
+    --line:       #3a322c;
+    --line-soft:  #2f2823;
+
+    --green:      #6fb392;
+    --green-soft: #1f3a2e;
+    --clay:       #f08070;
+    --clay-fill:  #e8604c;
+    --clay-soft:  #3a231d;
+  }
+}
+:root[data-theme="dark"] {
+  --ink:        #ece2d8;
+  --ink-soft:   #a99a8d;
+  --ink-faint:  #7d7066;
+  --ground:     #191512;
+  --surface:    #221d19;
+  --surface-2:  #2b2520;
+  --line:       #3a322c;
+  --line-soft:  #2f2823;
+  --green:      #6fb392;
+  --green-soft: #1f3a2e;
+  --clay:       #f08070;
+  --clay-fill:  #e8604c;
+  --clay-soft:  #3a231d;
+}
+:root[data-theme="light"] {
+  --ink:        #2f2621;
+  --ink-soft:   #6d5f56;
+  --ink-faint:  #97877c;
+  --ground:     #f7f3ee;
+  --surface:    #fffdfa;
+  --surface-2:  #f1ece5;
+  --line:       #e2d9ce;
+  --line-soft:  #ece5db;
+  --green:      #2d6a4f;
+  --green-soft: #e6efe9;
+  --clay:       #b04228;
+  --clay-fill:  #e8604c;
+  --clay-soft:  #fbeae5;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 var(--pad) 6rem;
+}
+
+/* ---------- rail + doc ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 2.6rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; gap: 1.4rem; }
+}
+
+.rail {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  font-size: .78rem;
+  padding-top: 2.6rem;
+}
+@media (max-width: 900px) {
+  .rail {
+    position: static;
+    max-height: none;
+    padding: .9rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+  }
+}
+.rail-prog {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  font-family: var(--mono);
+  font-size: .68rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  padding: .45rem .55rem;
+  margin-bottom: .6rem;
+  border: 1px dashed var(--line);
+  border-radius: 3px;
+}
+.rail-prog b { color: var(--green); }
+.rail a {
+  display: flex;
+  gap: .55rem;
+  align-items: baseline;
+  padding: .28rem .5rem;
+  border-radius: 3px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  line-height: 1.3;
+}
+.rail a:hover { background: var(--green-soft); color: var(--green); }
+.rail a.on { background: var(--green-soft); color: var(--green); font-weight: 700; }
+.rail a .n {
+  font-family: var(--mono);
+  font-size: .66rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  min-width: 1.5em;
+  flex: none;
+}
+.rail a.on .n { color: var(--green); }
+
+/* ---------- masthead ---------- */
+
+.mast {
+  padding: clamp(2.5rem, 7vw, 4.5rem) 0 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+.mast-kicker {
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 0 0 .9rem;
+}
+.mast h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2rem, 5.5vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+  margin: 0 0 .85rem;
+}
+.mast p {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+}
+.mast-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem .9rem;
+  margin-top: 1.4rem;
+  font-family: var(--mono);
+  font-size: .72rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.mast-meta span { white-space: nowrap; }
+.mast-meta b { color: var(--ink-soft); font-weight: 600; }
+
+/* ---------- console ---------- */
+
+.console {
+  margin: 2rem 0 2.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.console-bar {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+  padding: .7rem .9rem;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line);
+}
+.console-title {
+  font-family: var(--mono);
+  font-size: .74rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--green);
+}
+.console-hint {
+  font-size: .78rem;
+  color: var(--ink-faint);
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+.console textarea {
+  display: block;
+  width: 100%;
+  min-height: 8.5rem;
+  resize: vertical;
+  border: 0;
+  padding: 1rem 1.1rem;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: .88rem;
+  line-height: 1.65;
+}
+.console textarea:focus { outline: 2px solid var(--green); outline-offset: -2px; }
+.console textarea::placeholder { color: var(--ink-faint); }
+.console-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  flex-wrap: wrap;
+  padding: .6rem .9rem;
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--mono);
+  font-size: .72rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.console-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+/* ---------- buttons ---------- */
+
+button {
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  padding: .42rem .7rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background .13s, color .13s, border-color .13s;
+}
+button:hover { border-color: var(--green); color: var(--green); }
+button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+button.primary {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--surface);
+}
+button.primary:hover { filter: brightness(1.12); color: var(--surface); }
+button.done { border-color: var(--clay); color: var(--clay); }
+
+/* ---------- sections ---------- */
+
+section.sec {
+  position: relative;
+  padding: 2.6rem 0 .5rem;
+  border-top: 1px solid var(--line-soft);
+  scroll-margin-top: 1rem;   /* jump links land clear of the top edge */
+}
+section.sec:first-of-type { border-top: 0; }
+
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: .9rem;
+  margin-bottom: 1.1rem;
+}
+.sec-num {
+  font-family: var(--mono);
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--clay);
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+  padding-top: .35rem;
+}
+.sec-head h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  line-height: 1.18;
+  letter-spacing: -.01em;
+  margin: 0;
+  flex: 1 1 auto;
+  text-wrap: balance;
+}
+.sec-head .copy-sec { flex: 0 0 auto; align-self: center; }
+
+.sec-body { max-width: var(--measure); }
+.sec-body.wide { max-width: 100%; }
+
+.sec-body h3 {
+  font-family: var(--sans);
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+  margin: 2rem 0 .6rem;
+  color: var(--green);
+}
+.sec-body h4 {
+  font-family: var(--sans);
+  font-size: .84rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin: 1.6rem 0 .5rem;
+  color: var(--ink-soft);
+}
+.sec-body p { margin: 0 0 1rem; }
+.sec-body ul, .sec-body ol { margin: 0 0 1rem; padding-left: 1.3rem; }
+.sec-body li { margin-bottom: .42rem; }
+.sec-body ul.tasks { list-style: none; padding-left: 0; }
+.sec-body ul.tasks > li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .65rem;
+  align-items: start;
+  padding: .3rem 0;
+  margin: 0;
+  border-bottom: 1px dashed var(--line-soft);
+}
+.sec-body ul.tasks > li:last-child { border-bottom: 0; }
+.sec-body ul.tasks input[type="checkbox"] {
+  margin: .34em 0 0;
+  width: 15px;
+  height: 15px;
+  flex: none;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+.sec-body ul.tasks > li.ticked > span {
+  color: var(--ink-faint);
+  text-decoration: line-through;
+  text-decoration-color: var(--line);
+}
+.sec-body strong { font-weight: 700; }
+.sec-body em { font-style: italic; color: var(--ink-soft); }
+.sec-body a { color: var(--green); text-underline-offset: 2px; }
+
+code {
+  font-family: var(--mono);
+  font-size: .86em;
+  background: var(--surface-2);
+  padding: .12em .34em;
+  border-radius: 2px;
+  color: var(--clay);
+}
+pre {
+  margin: 0 0 1.2rem;
+  padding: .95rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--green);
+  border-radius: 3px;
+  overflow-x: auto;
+}
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--ink);
+  font-size: .82rem;
+  line-height: 1.6;
+}
+
+blockquote {
+  margin: 0 0 1.2rem;
+  padding: .1rem 0 .1rem 1.1rem;
+  border-left: 3px solid var(--clay-fill);
+  color: var(--ink-soft);
+}
+blockquote p:last-child { margin-bottom: 0; }
+
+hr {
+  border: 0;
+  border-top: 1px dashed var(--line);
+  margin: 1.8rem 0;
+}
+
+.tw { overflow-x: auto; margin: 0 0 1.3rem; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: .87rem;
+  font-variant-numeric: tabular-nums;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: .55rem .7rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+th {
+  font-family: var(--sans);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--green);
+  border-bottom: 1.5px solid var(--line);
+  white-space: nowrap;
+}
+tbody tr:hover { background: var(--surface); }
+
+/* gates */
+.gate {
+  display: block;
+  margin: 1.4rem 0;
+  padding: .8rem 1rem;
+  background: var(--clay-soft);
+  border-left: 3px solid var(--clay-fill);
+  border-radius: 0 3px 3px 0;
+  font-family: var(--sans);
+  font-size: .9rem;
+  font-weight: 600;
+}
+.gate .g-mark {
+  font-family: var(--mono);
+  color: var(--clay);
+  font-weight: 700;
+  margin-right: .4rem;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.6rem;
+  transform: translate(-50%, 1.5rem);
+  background: var(--green);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: .74rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: .55rem 1rem;
+  border-radius: 3px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s, transform .18s;
+  z-index: 50;
+}
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+@media (max-width: 640px) {
+  .sec-head { flex-wrap: wrap; gap: .5rem; }
+  .sec-head .copy-sec { order: 3; }
+  table { font-size: .8rem; }
+  th, td { padding: .45rem .5rem; }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="mast-kicker">C.A.Gs · Portable Build System</p>
+    <h1>Universal Page Build Brief</h1>
+    <p>One self-contained brief for any CongoAfricanGreys.com page. Fill in §0. Everything below is
+    standing law, ordered by dependency. Nothing is written, coded, or deployed until every approval
+    gate is signed off by an explicit reply — never by silence.</p>
+    <div class="mast-meta">
+      <span><b>v2.0</b> · 2026-08-08</span>
+      <span><b id="m-secs">—</b> sections</span>
+      <span><b id="m-tasks">—</b> checks</span>
+      <span><b id="m-gates">—</b> gates</span>
+      <span><b>18</b> measurements</span>
+      <span>target: <b>/grey-african-parrots-for-sale/</b></span>
+    </div>
+  </header>
+
+  <div class="console">
+    <div class="console-bar">
+      <span class="console-title">MyTEXT-2-CLAUDE</span>
+      <span class="console-hint">Type or paste any context, guidance, corrections, or rules for this
+      build. Saved in this browser as you type — then copy and hand the whole thing over.</span>
+    </div>
+    <textarea id="notes" spellcheck="true" placeholder="e.g.
+- Use the Mark-with-the-parrots photo for §2, not the hero.
+- Skip the calculator on this one, the SERP has none.
+- Amie and Roys are siblings — don't cross-sell them as a pair.
+- Price floor is $1,500, the on-disk $1,600 is stale."></textarea>
+    <div class="console-foot">
+      <span id="notes-stat">0 characters · not yet saved</span>
+      <span class="console-actions">
+        <button type="button" id="btn-notes">Copy my notes</button>
+        <button type="button" id="btn-merge" class="primary">Copy brief + my notes</button>
+        <button type="button" id="btn-md">Download .md</button>
+        <button type="button" id="btn-clear">Clear</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="shell">
+    <nav class="rail" id="rail" aria-label="Section index">
+      <div class="rail-prog"><span>Checks</span><span><b id="p-done">0</b> / <span id="p-all">0</span></span></div>
+      <div id="rail-in"></div>
+    </nav>
+    <main id="doc"></main>
+  </div>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SRC = document.getElementById("brief-src").textContent.replace(/^\n/, "");
+
+  /* ---------- markdown → html (the subset this document uses) ---------- */
+
+  function esc(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function inline(s) {
+    return esc(s)
+      .replace(/`([^`]+)`/g, function (_, c) { return "<code>" + c + "</code>"; })
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+      // non-greedy so bold survives a nested *em* or a literal * inside a code span
+      .replace(/\*\*([\s\S]+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/(^|[\s(])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+  }
+
+  function renderTable(rows) {
+    var head = rows[0].slice(1, -1).split("|").map(function (c) { return c.trim(); });
+    var body = rows.slice(2);
+    var h = '<div class="tw"><table><thead><tr>';
+    head.forEach(function (c) { h += "<th>" + inline(c) + "</th>"; });
+    h += "</tr></thead><tbody>";
+    body.forEach(function (r) {
+      var cells = r.slice(1, -1).split("|");
+      h += "<tr>";
+      for (var i = 0; i < head.length; i++) {
+        h += "<td>" + inline((cells[i] || "").trim()) + "</td>";
+      }
+      h += "</tr>";
+    });
+    return h + "</tbody></table></div>";
+  }
+
+  function render(md) {
+    var lines = md.split("\n");
+    var out = "";
+    var i = 0;
+    var para = [];
+    var list = null;    // {type:'ul'|'ol'|'tasks', items:[]}
+    var quote = [];
+
+    function flushPara() {
+      if (para.length) { out += "<p>" + inline(para.join(" ")) + "</p>"; para = []; }
+    }
+    function flushList() {
+      if (!list) return;
+      var tag = list.type === "ol" ? "ol" : "ul";
+      var cls = list.type === "tasks" ? ' class="tasks"' : "";
+      out += "<" + tag + cls + ">";
+      list.items.forEach(function (it) { out += "<li>" + inline(it) + "</li>"; });
+      out += "</" + tag + ">";
+      list = null;
+    }
+    function flushQuote() {
+      if (!quote.length) return;
+      out += "<blockquote><p>" + inline(quote.join(" ")) + "</p></blockquote>";
+      quote = [];
+    }
+    function flushAll() { flushPara(); flushList(); flushQuote(); }
+
+    while (i < lines.length) {
+      var ln = lines[i];
+
+      if (/^```/.test(ln)) {
+        flushAll();
+        var buf = [];
+        i++;
+        while (i < lines.length && !/^```/.test(lines[i])) { buf.push(lines[i]); i++; }
+        i++;
+        out += "<pre><code>" + esc(buf.join("\n")) + "</code></pre>";
+        continue;
+      }
+
+      if (/^\|/.test(ln)) {
+        flushAll();
+        var rows = [];
+        while (i < lines.length && /^\|/.test(lines[i])) { rows.push(lines[i].trim()); i++; }
+        if (rows.length >= 2) { out += renderTable(rows); }
+        continue;
+      }
+
+      if (/^\s*$/.test(ln)) { flushAll(); i++; continue; }
+
+      if (/^---+\s*$/.test(ln)) { flushAll(); out += "<hr>"; i++; continue; }
+
+      var h = /^(#{3,4})\s+(.*)$/.exec(ln);
+      if (h) {
+        flushAll();
+        var lvl = h[1].length;
+        out += "<h" + lvl + ">" + inline(h[2]) + "</h" + lvl + ">";
+        i++;
+        continue;
+      }
+
+      if (/^>\s?/.test(ln)) { flushPara(); flushList(); quote.push(ln.replace(/^>\s?/, "")); i++; continue; }
+
+      if (/^`?▣/.test(ln.trim())) {
+        flushAll();
+        var g = ln.trim().replace(/`/g, "").replace(/^▣\s*/, "");
+        out += '<p class="gate"><span class="g-mark">▣</span>' + inline(g) + "</p>";
+        i++;
+        continue;
+      }
+
+      var t = /^☐\s+(.*)$/.exec(ln);
+      if (t) {
+        flushPara(); flushQuote();
+        if (!list || list.type !== "tasks") { flushList(); list = { type: "tasks", items: [] }; }
+        var txt = t[1];
+        while (i + 1 < lines.length && /^\s{2,}\S/.test(lines[i + 1]) && !/^\s*☐/.test(lines[i + 1])) {
+          txt += " " + lines[i + 1].trim(); i++;
+        }
+        list.items.push(txt);
+        i++;
+        continue;
+      }
+
+      var b = /^[-*]\s+(.*)$/.exec(ln);
+      if (b) {
+        flushPara(); flushQuote();
+        if (!list || list.type !== "ul") { flushList(); list = { type: "ul", items: [] }; }
+        var bt = b[1];
+        while (i + 1 < lines.length && /^\s{2,}\S/.test(lines[i + 1]) && !/^\s*[-*]\s/.test(lines[i + 1])) {
+          bt += " " + lines[i + 1].trim(); i++;
+        }
+        list.items.push(bt);
+        i++;
+        continue;
+      }
+
+      var n = /^\d+\.\s+(.*)$/.exec(ln);
+      if (n) {
+        flushPara(); flushQuote();
+        if (!list || list.type !== "ol") { flushList(); list = { type: "ol", items: [] }; }
+        var nt = n[1];
+        while (i + 1 < lines.length && /^\s{2,}\S/.test(lines[i + 1]) && !/^\s*\d+\.\s/.test(lines[i + 1])) {
+          nt += " " + lines[i + 1].trim(); i++;
+        }
+        list.items.push(nt);
+        i++;
+        continue;
+      }
+
+      flushList(); flushQuote();
+      para.push(ln.trim());
+      i++;
+    }
+    flushAll();
+    return out;
+  }
+
+  /* ---------- split into sections, build the document ---------- */
+
+  var parts = SRC.split(/^## /m).filter(function (p) { return p.trim().length; });
+  var doc = document.getElementById("doc");
+  var frag = document.createDocumentFragment();
+  var sections = [];
+
+  parts.forEach(function (part, idx) {
+    var nl = part.indexOf("\n");
+    var heading = (nl === -1 ? part : part.slice(0, nl)).trim();
+    var body = nl === -1 ? "" : part.slice(nl + 1);
+    var md = "## " + heading + "\n" + body;
+    md = md.replace(/\s+$/, "") + "\n";
+    sections.push(md);
+
+    var m = /^(\d+)\s*·\s*(.*)$/.exec(heading);
+    var num = m ? m[1] : String(idx);
+    var title = m ? m[2] : heading;
+
+    var sec = document.createElement("section");
+    sec.className = "sec";
+    sec.id = "s" + num;
+
+    var head = document.createElement("div");
+    head.className = "sec-head";
+    var sn = document.createElement("span");
+    sn.className = "sec-num";
+    sn.textContent = "§" + num;
+    var h2 = document.createElement("h2");
+    h2.textContent = title;
+    var cb = document.createElement("button");
+    cb.type = "button";
+    cb.className = "copy-sec";
+    cb.textContent = "Copy §" + num;
+    cb.addEventListener("click", function () { copy(md, cb, "Copy §" + num); });
+    head.appendChild(sn);
+    head.appendChild(h2);
+    head.appendChild(cb);
+
+    var bodyEl = document.createElement("div");
+    bodyEl.className = "sec-body";
+    bodyEl.innerHTML = render(body);
+    if (bodyEl.querySelector("table")) { bodyEl.classList.add("wide"); }
+
+    sec.appendChild(head);
+    sec.appendChild(bodyEl);
+    frag.appendChild(sec);
+  });
+
+  doc.appendChild(frag);
+
+  /* ---------- interactive checks, persisted by content hash ---------- */
+
+  var CKEY = "cags-brief-checks";
+  var checkState = {};
+  try { checkState = JSON.parse(localStorage.getItem(CKEY) || "{}") || {}; } catch (e) { checkState = {}; }
+
+  function hash(s) {
+    var h = 5381;
+    for (var i = 0; i < s.length; i++) { h = ((h << 5) + h + s.charCodeAt(i)) | 0; }
+    return "c" + (h >>> 0).toString(36);
+  }
+
+  var pDone = document.getElementById("p-done");
+  var pAll = document.getElementById("p-all");
+  var allChecks = [];
+
+  document.querySelectorAll("ul.tasks > li").forEach(function (li) {
+    var id = hash(li.textContent.trim().slice(0, 120));
+    var span = document.createElement("span");
+    while (li.firstChild) { span.appendChild(li.firstChild); }
+    var box = document.createElement("input");
+    box.type = "checkbox";
+    box.id = id;
+    box.checked = !!checkState[id];
+    li.classList.toggle("ticked", box.checked);
+    li.appendChild(box);
+    li.appendChild(span);
+    box.addEventListener("change", function () {
+      li.classList.toggle("ticked", box.checked);
+      if (box.checked) { checkState[id] = 1; } else { delete checkState[id]; }
+      try { localStorage.setItem(CKEY, JSON.stringify(checkState)); } catch (e) {}
+      tally();
+    });
+    allChecks.push(box);
+  });
+
+  function tally() {
+    var n = allChecks.filter(function (b) { return b.checked; }).length;
+    pDone.textContent = n;
+    pAll.textContent = allChecks.length;
+  }
+  tally();
+
+  /* ---------- rail + scroll-spy ---------- */
+
+  var railIn = document.getElementById("rail-in");
+  var secEls = [].slice.call(document.querySelectorAll("section.sec"));
+  var links = secEls.map(function (sec) {
+    var a = document.createElement("a");
+    a.href = "#" + sec.id;
+    var n = document.createElement("span");
+    n.className = "n";
+    n.textContent = sec.querySelector(".sec-num").textContent.replace("§", "");
+    var t = document.createElement("span");
+    t.textContent = sec.querySelector("h2").textContent;
+    a.appendChild(n);
+    a.appendChild(t);
+    railIn.appendChild(a);
+    return a;
+  });
+
+  // The published page renders in a full-height iframe, so an in-frame scroll
+  // event may never fire. Highlight on click so the marker always reflects a
+  // real action instead of going stale on §0.
+  links.forEach(function (a, i) {
+    a.addEventListener("click", function () {
+      links.forEach(function (o, j) { o.classList.toggle("on", i === j); });
+    });
+  });
+
+  // deterministic: the last section whose top has passed the offset wins.
+  // Avoids the IntersectionObserver traps (last-intersecting-entry, non-painting page).
+  var spyT = null;
+  function spy() {
+    spyT = null;
+    var off = 90;
+    var active = 0;
+    for (var i = 0; i < secEls.length; i++) {
+      if (secEls[i].getBoundingClientRect().top - off <= 0) { active = i; } else { break; }
+    }
+    links.forEach(function (a, i) { a.classList.toggle("on", i === active); });
+    var cur = links[active];
+    if (cur && cur.offsetParent) {
+      var r = cur.getBoundingClientRect();
+      var rr = railIn.parentElement.getBoundingClientRect();
+      if (r.top < rr.top || r.bottom > rr.bottom) { cur.scrollIntoView({ block: "nearest" }); }
+    }
+  }
+  addEventListener("scroll", function () {
+    if (spyT === null) { spyT = requestAnimationFrame(spy); }
+  }, { passive: true });
+  spy();
+
+  document.getElementById("m-secs").textContent = sections.length;
+  document.getElementById("m-tasks").textContent = (SRC.match(/^☐/gm) || []).length;
+  // only lines that OPEN with the marker are gates; §3 mentions the phrase in prose
+  document.getElementById("m-gates").textContent = (SRC.match(/^`?▣ APPROVAL GATE/gm) || []).length;
+
+  /* ---------- clipboard + toast ---------- */
+
+  var toast = document.getElementById("toast");
+  var toastT;
+  function say(msg) {
+    toast.textContent = msg;
+    toast.classList.add("on");
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toast.classList.remove("on"); }, 1600);
+  }
+
+  function copy(text, btn, restore) {
+    var done = function (ok) {
+      say(ok ? "Copied" : "Copy failed — select and copy manually");
+      if (btn) {
+        btn.textContent = ok ? "Copied" : "Failed";
+        btn.classList.toggle("done", ok);
+        setTimeout(function () {
+          btn.textContent = restore;
+          btn.classList.remove("done");
+        }, 1400);
+      }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { fallback(text, done); });
+    } else {
+      fallback(text, done);
+    }
+  }
+
+  function fallback(text, done) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    done(ok);
+  }
+
+  /* ---------- notes console ---------- */
+
+  var KEY = "cags-brief-notes";
+  var notes = document.getElementById("notes");
+  var stat = document.getElementById("notes-stat");
+
+  try {
+    var saved = localStorage.getItem(KEY);
+    if (saved) { notes.value = saved; }
+  } catch (e) {}
+
+  function stamp(savedNow) {
+    var n = notes.value.length;
+    var t = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    stat.textContent = n + (n === 1 ? " character" : " characters") +
+      (n === 0 ? " · nothing to copy yet" : savedNow ? " · saved " + t : " · saved in this browser");
+  }
+
+  var saveT;
+  notes.addEventListener("input", function () {
+    clearTimeout(saveT);
+    saveT = setTimeout(function () {
+      try { localStorage.setItem(KEY, notes.value); } catch (e) {}
+      stamp(true);
+    }, 350);
+    stamp(false);
+  });
+  stamp(false);
+
+  function fullBrief() {
+    return "# C.A.Gs — Universal Page Build Brief (Portable Edition v2.0)\n\n" +
+      "> Self-contained. No repo access required. Inside the repo, the repo's own rule packs and\n" +
+      "> skills are authoritative where they are more specific.\n\n" +
+      sections.join("\n---\n\n");
+  }
+
+  function notesBlock() {
+    var v = notes.value.trim();
+    return v ? "## MyTEXT-2-CLAUDE — breeder context for this build\n\n" + v + "\n" : "";
+  }
+
+  document.getElementById("btn-notes").addEventListener("click", function () {
+    var v = notes.value.trim();
+    if (!v) { say("Nothing typed yet"); return; }
+    copy(notesBlock(), this, "Copy my notes");
+  });
+
+  document.getElementById("btn-merge").addEventListener("click", function () {
+    var nb = notesBlock();
+    copy(fullBrief() + (nb ? "\n---\n\n" + nb : ""), this, "Copy brief + my notes");
+  });
+
+  document.getElementById("btn-md").addEventListener("click", function () {
+    var nb = notesBlock();
+    var blob = new Blob([fullBrief() + (nb ? "\n---\n\n" + nb : "")], { type: "text/markdown" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "cags-universal-page-build-brief-v2.md";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    say("Downloaded .md");
+  });
+
+  document.getElementById("btn-clear").addEventListener("click", function () {
+    if (!notes.value) { say("Already empty"); return; }
+    notes.value = "";
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    stamp(false);
+    notes.focus();
+    say("Cleared");
+  });
+})();
+</script>

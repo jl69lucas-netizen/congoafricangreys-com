@@ -55,9 +55,9 @@ paragraph that asks nicely.
 
 Full task→entry-point table: [`docs/reference/quick-start.md`](docs/reference/quick-start.md).
 
-## The twelve rules that stay here
+## The thirteen rules that stay here
 
-These twelve have **no mechanical decision procedure**, which is exactly why they cannot
+These thirteen have **no mechanical decision procedure**, which is exactly why they cannot
 be delegated to a test and must stay in context. Every other rule moved to a pack. Full
 text and the recorded reason for each: `data/quality/rule-index.json` + the packs.
 
@@ -96,6 +96,17 @@ text and the recorded reason for each: `data/quality/rule-index.json` + the pack
     weaning, the 12–16-week gate) and *The Midland Socialization Method* (family
     handling, out-of-cage routine). Two labels, defined once at first use, never implied
     to be third-party certification. Never invent a third.
+13. **Every deliverable ships as an Artifact with copy buttons, plus `.md`.** Research
+    docs, outlines, keyword tables, meta sets, infographic prompt packs, gate reports,
+    lessons docs — the deliverable is a published Artifact whose sections each carry a
+    copy button and which downloads as `.md`, not prose in the chat the breeder has to
+    select by hand. Update the existing Artifact in place (pass its `url`) when one
+    already covers the topic; mint a new URL only for genuinely new work. The build
+    brief lives at `docs/artifacts/cags-universal-page-build-brief.html` →
+    [artifact `f63b8e4f`](https://claude.ai/code/artifact/f63b8e4f-3bf0-43e7-af6e-7632255cdfe0);
+    keep the HTML source in `docs/artifacts/` so it is versioned and re-publishable.
+    **Author the content once as markdown inside the page and render it** — that is what
+    makes a section's copy button emit exact markdown instead of scraped HTML.
 
 Two facts are wrong in circulation and must be corrected on sight: CITES is
 **Appendix I**; the Congo range is **$1,500–$3,500** (the bonded pair sets the ceiling).
