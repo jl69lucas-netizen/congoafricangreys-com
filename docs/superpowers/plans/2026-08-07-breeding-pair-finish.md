@@ -38,11 +38,31 @@ evidence that was checked on disk or in `git log`, not a recollection.
 
 ### What is actually still open
 
-1. **Task 14 Step 1 — three of the four named passes are unevidenced.** `final_page_audit.py`
-   ran (PASS-WITH-WARNINGS, `wordcount_in_band` sole warning) and the non-commodity pass ran
-   (it produced two of the Open Flags below). **`anti-ai-writing`, `cag-entity-incorporation-agent`
-   and `cag-keyword-verifier` leave no trace in the lessons doc or any session file.** Treat them
-   as not run rather than assuming they were.
+1. ~~**Task 14 Step 1 — three of the four named passes are unevidenced.**~~ **DONE 2026-08-08.**
+   All four passes have now run. Results:
+   - **`anti-ai-writing` (§14 + §16)** — blacklist grep clean across the whole page, zero banned
+     phrases. Three real *rhythm* violations found and fixed in §14: one paragraph carried
+     **3 em-dashes** against the max-1 rule with a flat 24/34/28/20/21/21 cadence; two paragraphs
+     had no sentence under 8 words. §16 needed nothing — the rewritten review intro passes every
+     rule, and the only other flag was the **buyer's verbatim quote**, which the skill excludes
+     and which must never be edited (it would falsify a named person's testimony).
+   - **`cag-keyword-verifier` (whole page)** — 15/18 PASS. Its single FAIL ("Review schema absent")
+     was a **false positive**: `Review` is present on the `PetStore`/`Organization` node with
+     author Joshua Erwin and rating 5, and correctly carries no `aggregateRating`. The agent
+     enumerated only the three `Product` blocks and missed it. No action taken. 13th checker to
+     cry wolf here. Its 4 warnings were informational (mostly Rule 18's 30–35× density target
+     conflicting with Rule 35's no-stuffing rule — not re-litigated on an approved page).
+   - **`cag-entity-incorporation-agent` (§14)** — the pass that earned its keep. Roster verified
+     against `clutch-inventory.json` (6 available, 3 sold correctly absent, every price matching).
+     Three genuine gaps, all fixed: PBFD/polyomavirus PCR (a dedicated H2 on all five linked
+     `/available/` pages, absent here — a thinner health signal for the *same birds* one click
+     away); the fertile-egg product discussed at length with **zero price** while five birds above
+     it state exact prices ($95 each, free US shipping on five, from `price-matrix.json`); and the
+     mandated shipping line missing from the Jins & Jeni card while present on the 5-card row.
+     *Psittacus timneh* added as a bonus, consistent with the same-day taxonomy sweep. **Declined**
+     its riskier suggestion to lengthen all five card trust labels to "PCR DNA-sexed" — the labels
+     are already near overflow at the 12.8px floor, and none of the birds' own pages use that phrase.
+   - **`cag-non-commodity-content-agent`** — had already run; it produced two of the Open Flags below.
 2. **Task 14 Step 3 — IndexNow submission never happened.** No IndexNow script exists in
    `scripts/`. Sitemaps *were* regenerated (109 URLs, no phantoms). Submission is an
    outward-facing call to Bing/Yandex and needs the breeder's go-ahead.
@@ -1801,6 +1821,26 @@ Expected: `200`. Then re-check `https://pagespeed.web.dev/` for the live URL and
 - **`wordcount_in_band`** stays warned and accepted at 8,627 words, per explicit breeder instruction. Not a defect on this page.
 - **`/70de/` source maps** — Cloudflare Rocket Loader, dashboard-only, Unscored. Documented as known-ignored in `skills/cag-perf-gate.md`; no code task exists.
 - **Gate A blocks Tasks 5, 6 and 7 only.** Everything else in Phases B, C, D and E runs regardless.
+- **UNEXPLAINED single pages-gate failure, 2026-08-08 — assertion lost, watch for a recurrence.**
+  On the run immediately after the Task-14 entity edits, `test:render:pages` reported
+  **47 passed / 1 failed — `[vp375] african-grey-breeding-pair-for-sale`**. The failure's
+  assertion message was **discarded because the command piped through `tail -6`**, so the
+  blocking check that fired was never captured. That is a process defect on our side, not a
+  finding about the page. What is known: the page passes a blocking check only when an
+  IMG/LAYOUT/NAV defect is emitted; the vp375 raw scorecard shows **0 blocking rows**; an
+  isolated vp375 re-run passed; and a subsequent **full 48-test suite with complete output
+  captured passed 48/48, npm exit 0**. The `img-srcset-within-2x` fix is *not* implicated —
+  the still-loading decode-budget log never fired once across the whole captured run, so no
+  image was ever in flight at judgement time. Net: 5 passing runs, 1 unreproduced failure of
+  unknown cause. Consistent with [[reference_same_input_different_verdict]], but do NOT record
+  it as diagnosed. **Never pipe a gate through `tail` again — capture full output to a file and
+  grep it**, or the next failure is equally unreadable.
+- **Sub-12-word sibling crossover bit us again, and was caught by hand, not by the gate.** The
+  new PBFD sentence initially shared a **7-word** span with the congo-pair sibling
+  ("is PCR screened for PBFD and polyomavirus"). `dup_content_audit.py` uses ≥12-word shingles
+  and reported **zero** crossover. Reworded `screened`→`tested`; now unique to one page. This is
+  the second recorded instance of the same blind spot (the first was an 8-word Key-Takeaway
+  collision). Two hits is a pattern — worth charging to the gate before the next for-sale build.
 - **CITES Appendix II asserted as CURRENT status in three data files — found and fixed 2026-08-08.**
   Not a page defect: `dist/` carries `Appendix II` only in the correct historical framing
   ("uplisted *from* Appendix II *to* Appendix I at CoP17"), on `cites-african-grey-documentation`
