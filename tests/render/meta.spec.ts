@@ -822,3 +822,70 @@ test.describe('dist/ freshness sees a DELETED source page', () => {
     expect(builtRoutesWithoutSource(resolve(dirname(fileURLToPath(import.meta.url)), '..', '..'))).toEqual([]);
   });
 });
+
+/**
+ * A check can be written, registered, fixture-tested, declared `blocking`, and still run
+ * on ZERO pages — because `pages.spec.ts:88` filters the registry by
+ * `targets.json > families_by_page_type`, and nothing required a registered family to
+ * appear there.
+ *
+ * That is not hypothetical. `a11y-text-contrast-aa` shipped 2026-08-07 as a blocking
+ * check with a known_broken fixture, and the A11Y family was never added to any page
+ * type. It examined nothing on every page of the site for a full day while reporting as
+ * a shipped gate — the same "PASS in 0 pages" costume as
+ * reference_gate_examined_zero_pages and reference_cssrules_truthy_on_every_rule.
+ *
+ * `build_scorecard.mjs` Guard 2 caught it only AFTER a full 13-minute run. These tests
+ * catch it in milliseconds, before the run.
+ */
+test.describe('every registered family is actually wired into targets.json', () => {
+  const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
+  const readTargets = (root = repoRoot) =>
+    JSON.parse(readFileSync(join(root, 'tests', 'render', 'targets.json'), 'utf8')) as {
+      families_by_page_type: Record<string, string[]>;
+    };
+
+  /** Families that exist in code but no page type will ever run. */
+  const unwiredFamilies = (
+    registered: string[],
+    byPageType: Record<string, string[]>,
+  ): string[] => {
+    const wired = new Set(Object.values(byPageType).flat());
+    return [...new Set(registered)].filter((f) => !wired.has(f)).sort();
+  };
+
+  test('the predicate names a family that is registered but wired nowhere', () => {
+    expect(
+      unwiredFamilies(['IMG', 'A11Y'], { 'for-sale': ['IMG'], bird: ['IMG'] }),
+    ).toEqual(['A11Y']);
+  });
+
+  test('a family wired into even one page type is not reported', () => {
+    // Deliberately asymmetric: A11Y runs on for-sale only. That is a scoping decision,
+    // not a defect, and this invariant must not force every family onto every page type.
+    expect(unwiredFamilies(['IMG', 'A11Y'], { 'for-sale': ['IMG', 'A11Y'], bird: ['IMG'] })).toEqual(
+      [],
+    );
+  });
+
+  test('the REAL repo wires every family it registers', () => {
+    const registered = registry.map((c) => c.family);
+    const unwired = unwiredFamilies(registered, readTargets().families_by_page_type);
+    expect(
+      unwired,
+      `registered but wired to no page type: ${unwired.join(', ')} — ` +
+        `these checks run on zero pages while looking shipped`,
+    ).toEqual([]);
+  });
+
+  test('targets.json declares no family that no check registers', () => {
+    // The mirror failure: a typo'd or retired family name in targets.json silently
+    // widens nothing and hides that a family is misspelled.
+    const registered = new Set(registry.map((c) => c.family));
+    const declared = [...new Set(Object.values(readTargets().families_by_page_type).flat())];
+    const phantom = declared.filter((f) => !registered.has(f)).sort();
+    expect(phantom, `declared in targets.json but no check registers it: ${phantom.join(', ')}`).toEqual(
+      [],
+    );
+  });
+});

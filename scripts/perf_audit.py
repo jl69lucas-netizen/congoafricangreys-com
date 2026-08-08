@@ -12,8 +12,9 @@ definition: the defect is already live when it is found. This runs Lighthouse ag
 
 Why a CLI and not only a harness check: Lighthouse costs ~25s per page against the render
 harness's ~2s checks, so it cannot run on every page on every commit. The fast contrast
-invariant lives in `tests/render/checks/a11y.ts` (`a11y-text-contrast-aa`, blocking) and
-runs in the harness; this runs on a named page, on demand, before push.
+invariant lives in `tests/render/checks/a11y.ts` (`a11y-text-contrast-aa`, ADVISORY until
+its two confirmed false-positive classes are fixed — see that file and skills/cag-perf-gate.md)
+and runs in the harness; this runs on a named page, on demand, before push.
 
 KNOWN-IGNORED, do not chase in code:
   `valid-source-maps` pointing at /70de/ — that path is Cloudflare Rocket Loader, injected

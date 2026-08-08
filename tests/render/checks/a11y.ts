@@ -19,7 +19,27 @@ import type { Page } from '@playwright/test';
 register({
   id: 'a11y-text-contrast-aa',
   family: 'A11Y',
-  severity: 'blocking',
+  // ADVISORY, not blocking — 2026-08-08, breeder decision, per the promotion rule in
+  // targets.json: a check is promoted once it has passed its fixtures AND produced zero
+  // false reports across one full cluster. This one shipped 2026-08-07 declared blocking
+  // on day one, which skipped that bar; its two same-day siblings
+  // (layout-hero-counter-separation, layout-h3-image-first) correctly entered advisory.
+  //
+  // Wiring it in (it had been running on ZERO pages — see targets.json) produced 1,783
+  // reports across 45 of 45 page-viewports, 0 clean. Two false-positive classes are
+  // confirmed and MUST be fixed before promotion:
+  //  1. Out-of-flow labels over photos (.rbadge, .absolute.top-3) report ~1:1. They are
+  //     position:absolute with background:none and a dark text-shadow, sitting over an
+  //     image; backdrop() walks DOM ancestors, never meets the photo, and compares white
+  //     against the white section behind it. The check already declines to judge text
+  //     over a background-image — it just cannot detect that case out of flow.
+  //  2. Translucent FOREGROUNDS (e.g. Tailwind text-cream/80) report ~1.1:1, because
+  //     rgb() above returns the colour channels and ignores foreground alpha unless it
+  //     is exactly 0. A composited foreground needs the same "not judgeable" treatment
+  //     the translucent BACKDROP already gets.
+  // A third, likely-real family also surfaced: clay/gold on light at 3.17–3.38:1.
+  // Triage is its own sprint. reference_registered_is_not_wired.
+  severity: 'advisory',
   describe: 'rendered text must meet WCAG AA contrast against its own backdrop',
   // The known_broken fixture carries 4 judgeable spans (2 failing, 2 passing); the floor is
   // set to that so the check cannot pass the meta gate by judging one element and skipping

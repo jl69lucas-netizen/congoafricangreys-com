@@ -1,138 +1,215 @@
-# Breeding-Pair Finish — Lessons, 2026-08-07
+# Lessons — `/african-grey-breeding-pair-for-sale/` Finish Sprint
 
-Session scope: `/african-grey-breeding-pair-for-sale/` from "shipped but rough" to done,
-plus four breeder corrections raised mid-session and one rule rolled out cluster-wide.
+**Date:** 2026-08-07 (closed out 2026-08-08)
+**Plan:** `docs/superpowers/plans/2026-08-07-breeding-pair-finish.md`
+**Scope:** Tasks 1–14 — OG re-bakes, bird cards, the review, the singles row, two missed
+design rules, two mobile defects, ten contrast failures, a perf gate that did not exist,
+and the Sprint 5 LLM visibility baseline.
 
 ---
 
-## 1. Every probe I wrote was wrong before it was right
+## 1. One missing word in a selector list, two separate screenshotted defects
 
-Three separate measurement bugs, each of which would have caused real damage if trusted:
+`caption` was absent from the mobile `display:block` list on `.bpair .tH`. Every other
+table child — `thead`, `tbody`, `th`, `td`, `tr` — was there.
 
-| Probe | What it claimed | Truth | Why it lied |
-|---|---|---|---|
-| H3 image-order | **15** prose-first H3s | **4** | counted decorative seam emblems as "the section image", and ran past the section boundary into the next block |
-| read-card auditor | "4 thumbnails checked" | 35 across 11 pages | `(.*?)</div>` truncated the block at the first nested `<div>`, so it examined 2 of 11 pages |
-| read-card name match | one correct thumb read as a mismatch | correct | did not flatten `/` in nested `blog/<post>` slugs before comparing |
+Left at its default `display:table-caption` inside a table whose other children had all
+become blocks, the browser shrink-to-fits the caption into a narrow column with dead space
+beside it. Compounding it, the caption kept a desktop label style — uppercase with `.1em`
+tracking — which at 375px forces roughly one word per line.
 
-**The pattern:** a checker that examines a fraction of its corpus is indistinguishable from
-a passing one. Both print a number. `reference_gate_examined_zero_pages` says read the
-examined count — this session says also *verify the count is the whole corpus*. The
-read-card pytest now pins the parser against a nested-div fixture and asserts the auditor
-sees every page that has a read-cards block.
+The breeder screenshotted these as two problems. They were one omission.
 
-Had I acted on the first probe, I would have moved 15 figures, 11 of them needlessly.
+**The transferable part:** when a rule converts a table to blocks at a breakpoint, the
+child list must be exhaustive, and `caption` is the element everyone forgets because it is
+the only table child that is not a row, cell or row-group. This would have hit every future
+`.tH` on the site, not just this page.
 
-## 2. Automating a cluster-wide edit broke three live pages
+Banked as `reference_table_caption_mobile_stacking.md`.
 
-Rolling the read-card rule across 9 pages, my patchers damaged three before I stopped:
+## 2. `.ti` — markup↔CSS drift, again
 
-1. **Whole-file substitution on an image stem** rewrote an *unrelated* in-body infographic's
-   `srcset` on `congo-african-grey-for-sale`. Anchor every rewrite to the card's `href`.
-2. **`srcset=\{[^}]*\}`** stops at the first `}` inside a nested Astro template expression
-   and leaves debris that fails the build (`congo-african-grey-parrot-pair-for-sale`).
-3. **Matching an `<img>` by filename fragment** hit an in-body nursery photo instead of the
-   read-card (`baby-african-grey-parrot-for-sale`).
+`.bpair` re-themed the dial onto a white bed, but `.ti` kept its dark-theme sage `#7ba98d`.
+On white that is **2.66:1** — the ten Lighthouse contrast failures the breeder hit.
 
-All three were reverted and hand-edited. **Nothing damaged reached `main`** — but only
-because I diffed after every automated pass. The rule for next time: scope the regex to the
-component block first, then rewrite whole tags, never attributes inside template literals.
+The re-theme touched the container and every element that looked like it needed touching.
+`.ti` did not look like it needed touching, because on the old dark bed it was fine. Nothing
+in the change was wrong on its own; the defect lives in the gap between a re-themed parent
+and a child that inherited an assumption about its background.
 
-## 3. I pushed a blocking-gate failure because I ran the gate concurrently with a build
+Fixed with `#5d7d6a` — **4.56:1** on `#fff`, computed rather than eyeballed. Worth noting
+the plan predicted 4.62:1 and the shipped comment records 4.56:1; the shipped number is the
+recomputed one. Both clear AA, but the lesson is that the ratio gets written down from a
+calculation, not from the draft that proposed it.
 
-`layout-min-font-size` (blocking, 12.5px floor) caught `.mbc-tr` at **9.92px** on all three
-viewports — a defect I introduced and then **pushed**, because the two page-gate runs before
-it had been polluted: one by `npx astro build` running while the gate read `dist/`, the
-other by `generate_sitemaps.py` writing into `public/` after the build. Both tripped the
-freshness guard, both looked like "5 failed", and I read them as environmental rather than
-waiting for one clean run.
+This is the same failure class as `reference_markup_css_drift.md`: a clean hardening scan is
+not a clean page. When a scoped re-theme changes a background, every descendant that sets its
+own colour has to be re-checked against the new bed — the scan cannot infer which ones matter.
 
-The underlying design error is worth more than the process one: I tried to solve a *width*
-problem by shrinking *type*, twice (`.7rem` → `.62rem`), and both values were already below
-the floor. The width came from `text-transform:uppercase` — roughly 25% wider at the same
-px. Dropping uppercase fit the same string at a legal 12.8px.
+## 3. Both new rules shipped WITH checks and a known-broken fixture
 
-**Rule for next time: one clean gate run before push, and never a build in parallel with it.**
+Task 8 surfaced two design rules the site had been following by habit and never encoded:
+hero/counter separation, and image-first H3s.
 
-## 4. Two component bugs were the real cause of "it's not showing"
+Neither shipped as a paragraph in a rules pack. Both shipped as:
 
-The breeder reported the review was missing. It was, and for two reasons neither of which
-was the review copy:
+- a check in `tests/render/checks/layout.ts` — `layout-hero-counter-separation` and
+  `layout-h3-image-first`
+- a fixture in `tests/render/fixtures/known_broken/` that the check must catch
+- an entry in `data/quality/rule-index.json` pointing at the test
 
-- **`Schema.astro`'s `organization` branch was the only one of four that ignored its `data`
-  prop.** Any caller passing extra nodes had them silently dropped. Fixed at the component;
-  spreading `{}` is a no-op, verified byte-identical output on two unrelated pages.
-- The page had **two orphan `.quote-c` overrides and no base component** — styling a
-  component that was never written.
+Confirmed at close-out: `quality_report.py` §5 lists neither as `untested`, so neither is a
+deletion candidate.
 
-When something "doesn't show", check the component contract before the content.
+**Why this matters more than the two rules do.** CLAUDE.md's own history is the evidence —
+that file once carried ~37 rules in 88,000 characters and the measured result was that rules
+were re-asserted rather than enforced. A rule with a failing check is worth more than a
+paragraph that asks nicely. When a defect escapes, the charge goes to the harness, not to a
+new rule.
 
-## 5. A rule justified by "like the other pages" that no other page follows
+## 4. There was no perf gate — so the fix was a gate, not a skill
 
-The breeder's images-first rule was stated as *"just like on other for-sale pages."* The
-built pages disagree: congo-pair 13 prose-first H3s, congo 9, timneh 6, egg 4, and **zero
-image-first anywhere in the cluster**. The instruction was reaffirmed and shipped on
-breeding-pair, which is now the only page that follows it.
+The ten contrast failures reached the breeder because **nothing measured contrast**. The
+honest diagnosis was not "we should be more careful"; it was that the invariant had no
+enforcement.
 
-Recording this because the *justification* was measurably false while the *instruction*
-stood. Both facts matter: a future session reading only the rule text would "restore
-consistency" by reverting it.
+What shipped (Task 12):
 
-## 6. The perf gate did not exist, and an agent is not a gate
+- `a11y-text-contrast-aa` — a **blocking** harness check, so a regression fails the build
+- `scripts/perf_audit.py`
+- `skills/cag-perf-gate.md`
 
-`package.json` had no perf script; `skills/` had no perf skill; `tests/render/checks/` had
-no A11Y family. What existed were two *agents*. An agent runs when someone remembers to
-call it, produces prose, and nothing fails. Now:
+A bare skill would have been the cheaper answer and the wrong one: a skill is guidance an
+agent may or may not read, and this defect class had already proven it survives guidance.
+The blocking check is what actually closes it.
 
-- `tests/render/checks/a11y.ts` → `a11y-text-contrast-aa`, **blocking**, ~2s, computes
-  contrast from rendered colours. Skips text over images, gradients and translucent layers
-  because no honest backdrop colour exists there — and **skipped is excluded from
-  `examined`**, so the count reports what the predicate actually ran against.
-- `scripts/perf_audit.py` → Lighthouse against `dist/`, `--runs N` reports median + spread
-  because CLS here is bimodal.
-- `skills/cag-perf-gate.md` → the fix bank, keyed by audit id.
+`/70de/` source maps stay **known-ignored** — Cloudflare Rocket Loader, dashboard-only, no
+code task exists. Recorded so a future run does not re-diagnose it.
 
-## 7. Rules ship with checks, or they are deletion candidates
+## 5. The gate we shipped to stop contrast regressions was running on ZERO pages
 
-Four rules were added this session. Every one has a backing test and both fixture halves:
+Found at close-out, 2026-08-08, and it is the most important thing in this document.
 
-| Rule | Check |
+`a11y-text-contrast-aa` shipped 2026-08-07 as a **blocking** check with a known-broken
+fixture and an entry in `rule-index.json`. It passed its fixtures. It appeared in the
+manifest. `quality_report.py` did not list it as untested. Every signal said "shipped
+gate."
+
+It examined **zero nodes on every page of the site**, for a full day.
+
+**The mechanism.** `pages.spec.ts:88` filters the registry by
+`targets.json > families_by_page_type`. The A11Y family was registered in code and added
+to no page type. Registering a check does not wire it in, and nothing asserted the two
+agreed.
+
+**What caught it, and how late.** `build_scorecard.mjs` Guard 2 — seeded from the manifest
+rather than from the partials, precisely so a check that ran nowhere cannot be invisible.
+It works, and it is the reason this was found at all. But it only speaks *after* a full
+13-minute page run, and its verdict is one line at the very end of thousands of lines of
+web-server noise. The run before it reported `48 passed` immediately above the failure.
+
+**Why this is the same bug as three already in the memory bank.**
+`reference_gate_examined_zero_pages`, `reference_cssrules_truthy_on_every_rule` and
+`reference_promote_check_needs_examined_count` are all one failure: *a check that judged
+nothing reporting as a check that judged everything*. This is the fourth instance and the
+first where the check itself was flawless — only its wiring was missing. `minExamined: 4`
+did not save it either, because that floor is enforced against the fixture, not against
+the site.
+
+**The fix is a harness invariant, not a rule and not a fixture.** Added to `meta.spec.ts`:
+
+- a family registered in code but wired to no page type fails the meta gate
+- a family declared in `targets.json` that no check registers also fails (the mirror
+  typo case)
+- both asserted against the real repo, in milliseconds, *before* a 13-minute run
+
+Verified the honest way: the predicate was run against `git show HEAD:tests/render/targets.json`
+and reports `['A11Y']` on yesterday's state, `[]` after the fix. The test fails on the
+real defect, which is the only evidence that a regression test is worth anything.
+
+**The transferable rule:** *a check is not shipped when it is registered; it is shipped
+when it has examined a non-zero count on a real page.* Promotion should be gated on the
+examined count from a live run, never on fixtures passing.
+
+### What wiring it in actually found — and why it is now advisory
+
+| | |
 |---|---|
-| `layout-hero-counter-separation` | `tests/render/checks/layout.ts` |
-| `layout-h3-image-first` | `tests/render/checks/layout.ts` |
-| `read-card-thumb-is-target-hero` | `tests/test_read_card_thumbs.py` |
-| `a11y-text-contrast-aa` | `tests/render/checks/a11y.ts` |
+| Page-viewports measured | 45 |
+| Text nodes examined | 19,685 |
+| Reported below AA | 1,783 |
+| Clean page-viewports | **0** |
 
-`quality_report.py` §5 lists none of them as untested. The first attempt at registering the
-read-card rule pointed `test:` at a shell command with an argument, and the report caught it
-as a **BROKEN test link** — the validator resolves a `::`-less reference as a file on disk.
-That guard is doing exactly the job it was written for.
+**Zero clean pages is a fact about the check, not about the site.** Two false-positive
+classes were confirmed against the built CSS before anything was "fixed":
 
-## 8. Ordering hazards worth remembering
+1. **Out-of-flow labels over photos** — `.rbadge` is `position:absolute; background:none;
+   color:#ffffffe0` with `text-shadow:0 1px 4px rgba(20,14,10,.7)`. It is white text over a
+   *photo*, legible because of the shadow. `backdrop()` walks DOM ancestors, and an
+   absolutely positioned element's ancestors are not the thing it visually covers — so the
+   walk sails past the image to a white section and reports white-on-white, exactly 1:1.
+   The check's own docstring already says it will not judge text over a background-image;
+   it simply cannot detect that case out of flow.
+2. **Translucent foregrounds** — Tailwind `text-cream/80` renders `rgb(… / 0.8)`. The
+   check's `rgb()` helper returns the three colour channels and discards alpha unless it is
+   exactly 0, so a composited foreground is judged as if it were opaque. The translucent
+   *backdrop* already gets a "not judgeable" skip; the foreground needs the same.
 
-- `generate_sitemaps.py` writes into `public/`, which makes `dist/` stale and the render
-  harness **correctly refuses to measure**. Order is: build → sitemaps → build again.
-- Running `npx astro build` while the page gate is reading `dist/` trips the same guard.
-  Five "failures" in this session were that, not defects.
-- `.claude/launch.json` runs `astro preview`, which serves `dist/` — **there is no HMR**.
-  Every source edit needs a rebuild before the browser shows it.
+A third family looks real: clay/gold on light at **3.17–3.38:1** against a 4.5 requirement,
+consistent with the clay-contrast issue already banked in
+`reference_forsale_dial_rail_contrast` and `reference_aa_contrast_and_perf_fixes`.
+
+**Decision (breeder, 2026-08-08): demote to `advisory`, close out, triage as its own
+sprint.** The justification is the project's own promotion rule, quoted in `targets.json`:
+*a check is promoted once it has passed its fixtures AND produced zero false reports across
+one full cluster.* A11Y has not met that bar. Its two same-day siblings —
+`layout-hero-counter-separation` and `layout-h3-image-first` — both entered advisory
+correctly; only the contrast check skipped the step, and skipping it is what let a
+zero-examined gate look shipped.
+
+Advisory is strictly better than what shipped yesterday: the check was already stopping
+nothing, and now it counts 1,783 leads instead of reporting silence.
+
+## 6. Sprint 5 — verify an agent's report against source before acting on it
+
+The `cag-llm-keyword-intel` run produced a well-formed 30-cell brief. Two of its
+load-bearing claims were re-checked against our own files before any of it was trusted, and
+that check changed two findings:
+
+- **Report Action 2 overstated its gap.** It described the DNA answer as "one FAQ item near
+  the bottom." There are two placements — an H5 at `:670`, mid-page inside the paperwork H2,
+  and FAQ 05 at `:854`. The real weakness is structural (no H2/H3 of its own), not absence.
+  Acting on the report as written would have added content that already existed.
+
+- **A suspected same-page contradiction was not one.** Verification found five `DNA-sexed`
+  trust labels on the singles cross-sell row against two prose statements saying the pairs
+  carry no DNA certificate. This looked like a factual defect. The breeder's ruling: *all the
+  single birds are DNA sexed; only the three breeding pairs have no DNA.* **Both statements
+  are true of different birds.** There was no defect and no edit to make.
+
+**The transferable part, and it cuts twice.** A gate's output is a hypothesis about the page;
+so is an agent's report. But the second bullet is the sharper lesson — *my own* verification
+finding was also only a hypothesis, and it took the breeder's domain knowledge to falsify it.
+Confirming that text X and text Y coexist on a page does not establish that they contradict;
+that requires knowing which birds each refers to. This is the same trap as the 72-hour /
+3-day guarantee, which once sent agents across 53 live pages to "fix" copy that was already
+correct. The flag is now recorded in the plan's `## Open Flags` as **resolved, do not
+re-raise**.
+
+The baseline itself is honest: **24 of 30 cells fetched**, Claude's 6 written `NOT FETCHED`
+with the barrier named (hard login wall, no API key). Nothing was inferred to fill them, so
+future runs compare against 24, not 30.
 
 ---
 
-## Open, not done
+## What a future session should carry forward
 
-- ~~**`fs-video` styled and never rendered**~~ **RESOLVED 2026-08-07 — breeder decision:
-  no video on this page for now.** The dead `.fs-video` rules were removed rather than left
-  shipping to every visitor. This is a deliberate departure from the scanner's own advice
-  ("Render them. Do NOT delete the CSS"), and the reason is recorded in the CSS itself: the
-  only pair footage on disk (`rony-and-rose-*`, `video/congo-pair-socialization.mp4`) shows
-  birds that are **not** Talker & Jane, Mari & Lake or Sally & Odin, so rendering it would
-  have meant captioning a pair the video does not show. The scanner has no waiver mechanism,
-  so the alternative was a standing ERROR nobody could ever clear. To restore, copy the block
-  from any sibling for-sale page once there is real footage of these three pairs.
-- **Images-first is shipped on breeding-pair only.** A cluster-wide rollout is a change of
-  house style, not a bug fix.
-- **`wordcount_in_band`** stays warned and accepted at ~8,600 words, per explicit breeder
-  instruction. Not a defect on this page.
-- **`/70de/` source maps** — Cloudflare Rocket Loader, dashboard-only, Unscored. Documented
-  as known-ignored in `skills/cag-perf-gate.md`; no code task exists.
+1. Exhaustive child lists when a table becomes blocks — `caption` included.
+2. After any scoped re-theme, re-check every descendant that sets its own colour against the
+   new background. The scan will not find it for you.
+3. New rule ⇒ check + known-broken fixture + `rule-index.json` entry, in the same commit.
+4. When a defect class reaches the breeder, ask what *measured* it. If the answer is nothing,
+   build the gate.
+5. Verify an agent's findings against source before acting — and hold your own verification
+   to the same bar, because "these two statements coexist" is not "these two statements
+   conflict."
