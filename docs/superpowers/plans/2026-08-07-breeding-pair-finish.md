@@ -10,6 +10,50 @@
 
 ---
 
+## Completion Ledger — audited 2026-08-08 against the repo, not against the checkboxes
+
+**The `- [ ]` checkboxes in this file are stale and must not be read as status.** 88 of 96 are
+unticked while their work is shipped and pushed — the earlier sessions recorded completion in
+prose banners instead of ticking boxes. This table is the audited state; every row names the
+evidence that was checked on disk or in `git log`, not a recollection.
+
+| Task | State | Evidence checked 2026-08-08 |
+|---|---|---|
+| 1 · 3 new baked OG styles + preview | **DONE** | `reframe_og.py` defines `brandblur`/`duotone`/`framed`; `--tint`, `--fgscale` default `0.94`, `--blur` default `14`; `sessions/2026-08-07-og-style-preview.html` exists |
+| 2 · 3 bird-card styles + preview | **DONE** | `sessions/2026-08-07-birdcard-style-preview.html` exists |
+| GATE A · breeder visual decisions | **RESOLVED** | brandblur/neutral + bird-card Style 1, locked in this file |
+| 15 · re-bake 8 OG photos + `og-tall` | **DONE** | commits `025dceef`, `1048e93a`; `og-tall` ×6 / `og-photo` ×12 on the page |
+| 3 · re-bake inf-2 + inf-7 | **DONE** | commit `ede7c751`; all 5 `.webp` dated Aug 7 13:30, each under 95 KB |
+| 4 · Joshua Erwin review | **DONE** | 3 `Joshua Erwin` occurrences in source (prose + caption + schema) |
+| 5 · fertile-egg image + egg-page link | **DONE** | commit `6dca9b15` (2 recorded deviations) |
+| 6 · `MiniBirdCard` + singles row | **DONE** | commit `6dca9b15`; component exists, roster corrected against `clutch-inventory.json` |
+| 7 · differentiate the Key Takeaway | **NO ACTION NEEDED** | re-verified: 2 shared shingles, both whitelisted furniture |
+| 8 · hero/counter separator + images-first | **DONE** | commit `50ce4419`; `.counter-wrap` carries both the `#f6efe8` tone shift and the 3px `::before` rule the check requires; both rules live in `rules/design.md` + `rules/for-sale.md` |
+| 9 · both mobile caption defects | **DONE** | commit `36c6605b`; `caption` is in the `display:block` list at `:1468` |
+| 10 · 10 `.ti` contrast failures | **DONE** | commit `ba18f37b`; `.bpair .ti { color:#9a8f83 }` light-theme override present |
+| 11 · impeccable / frontend pass | **DONE** | commit `6bee11a6`; hardening scan clean, 0 ERROR / 0 WARN |
+| 12 · `perf_audit.py` + `cag-perf-gate` | **DONE** | `scripts/perf_audit.py`, `skills/cag-perf-gate.md`, `tests/render/checks/a11y.ts`, `test:perf` + `test:perf:mobile` scripts; `A11Y` wired into `targets.json` on 2026-08-08 (commit `2d741388`) after shipping unwired for a day |
+| 13 · Sprint 5 LLM visibility baseline | **DONE, pushed** | commit `c49160d2`; 24/30 cells fetched, Claude's 6 `NOT FETCHED` |
+| 14 · Sprint 6 close-out | **PARTIAL — see below** | steps 2, 4, 5, 6, 7 done; steps 1, 3, 8 open |
+
+### What is actually still open
+
+1. **Task 14 Step 1 — three of the four named passes are unevidenced.** `final_page_audit.py`
+   ran (PASS-WITH-WARNINGS, `wordcount_in_band` sole warning) and the non-commodity pass ran
+   (it produced two of the Open Flags below). **`anti-ai-writing`, `cag-entity-incorporation-agent`
+   and `cag-keyword-verifier` leave no trace in the lessons doc or any session file.** Treat them
+   as not run rather than assuming they were.
+2. **Task 14 Step 3 — IndexNow submission never happened.** No IndexNow script exists in
+   `scripts/`. Sitemaps *were* regenerated (109 URLs, no phantoms). Submission is an
+   outward-facing call to Bing/Yandex and needs the breeder's go-ahead.
+3. **Task 14 Step 8 — the final push.** Resolved 2026-08-08; see the entry below.
+4. **The 11 Next Actions in the Sprint 5 report are findings, not work.** None have been
+   applied to the page, by design — the report states they are for the breeder to rule on.
+   The DNA/Jins-&-Jeni retrieval collision (Action 1) is a factual-accuracy issue and should
+   be ruled on before any further optimisation of this cluster.
+
+---
+
 ## Verified Starting State
 
 Every claim below was confirmed against the working tree on 2026-08-07, not inferred.
@@ -1757,3 +1801,16 @@ Expected: `200`. Then re-check `https://pagespeed.web.dev/` for the live URL and
 - **`wordcount_in_band`** stays warned and accepted at 8,627 words, per explicit breeder instruction. Not a defect on this page.
 - **`/70de/` source maps** — Cloudflare Rocket Loader, dashboard-only, Unscored. Documented as known-ignored in `skills/cag-perf-gate.md`; no code task exists.
 - **Gate A blocks Tasks 5, 6 and 7 only.** Everything else in Phases B, C, D and E runs regardless.
+- **CITES Appendix II asserted as CURRENT status in three data files — found and fixed 2026-08-08.**
+  Not a page defect: `dist/` carries `Appendix II` only in the correct historical framing
+  ("uplisted *from* Appendix II *to* Appendix I at CoP17"), on `cites-african-grey-documentation`
+  and `african-grey-parrot-guide`. But `data/parrot-image-schema.json` (×3),
+  `data/image-specs.json` (×1) and `data/breeder-comparison.json` (×1) stated it as the birds'
+  *present* status, and all three are read by the generation layer —
+  `cag-image-generation`, `cag-infographic`, `cag-photo-ingest`, `cag-infographic-builder`,
+  `cag-content-architect` and six other agents. Left alone it would have re-seeded the exact
+  regression `rules/copy.md` records as already fixed once on 2026-05-29, into alt text and
+  trust badges on pages not yet built. Corrected to Appendix I; all three files still parse;
+  `grep -rn "Appendix II" data/` now returns nothing. **This is the latent-defect class worth
+  watching: a rule can be enforced on every live page and still be false in the data that
+  generates the next one.**

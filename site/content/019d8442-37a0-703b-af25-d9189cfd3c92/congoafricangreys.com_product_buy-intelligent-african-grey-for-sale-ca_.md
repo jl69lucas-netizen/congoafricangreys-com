@@ -88,7 +88,7 @@ If you’re seeking a talking African Grey for sale, our Congo Greys are known f
 
 ## Timneh African Grey Parrots: A Gentle and Intelligent Choice
 
-While our current focus is primarily on Congo African Greys, we also recognize the wonderful qualities of the Timneh African Grey parrot ( **[Psittacus erithacus timneh](https://en.wikipedia.org/wiki/Timneh_parrot "Timneh African Grey Parrrot")**). Known for their slightly smaller size and often described as being more laid-back, Timnehs are also intelligent and capable talkers.
+While our current focus is primarily on Congo African Greys, we also recognize the wonderful qualities of the Timneh African Grey parrot ( **[Psittacus timneh](https://en.wikipedia.org/wiki/Timneh_parrot "Timneh African Grey Parrrot")**). Known for their slightly smaller size and often described as being more laid-back, Timnehs are also intelligent and capable talkers.
 
 Timnehs often mature earlier in their talking abilities and can be a wonderful choice for those seeking a slightly less demanding companion in terms of sheer size. Please inquire about the future availability of Timneh African Grey parrots for sale in California.
 
