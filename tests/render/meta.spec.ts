@@ -954,3 +954,58 @@ test.describe('img-srcset-within-2x separates broken from still-loading', () => 
     }
   });
 });
+
+/**
+ * The IndexNow submission tooling must stay usable.
+ *
+ * Not a page invariant — a TOOLING one, and it exists because the documented
+ * procedure was broken for months while looking perfectly fine to a reader.
+ * `skills/cag-indexing.md` STEP 4 carried inline Python with a placeholder key
+ * ("a1b2c3d4e5f6789012345678african grey parrots"), a sitemap regex whose domain
+ * contained SPACES, and a SITE_ROOT pointing at /Users/apple/Downloads/MFS/site2 —
+ * a path that EXISTS, so a run would have read another project's sitemaps. Any
+ * execution POSTed an empty urlList under an invalid key and printed success.
+ *
+ * The rule `indexnow-after-every-page-build` cannot be tested directly (no check
+ * can observe an external POST), but the reason it silently never ran CAN be:
+ * these assertions fail the moment the tooling stops being able to work.
+ */
+test.describe('IndexNow tooling is intact', () => {
+  const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
+  const KEY_RE = /^[0-9a-f]{32}$/;
+
+  test('the submission script exists', () => {
+    expect(
+      existsSync(join(repoRoot, 'scripts', 'indexnow_submit.py')),
+      'scripts/indexnow_submit.py is the only supported submission path',
+    ).toBe(true);
+  });
+
+  test('exactly one key file exists and its body equals its filename', () => {
+    const keyFiles = readdirSync(join(repoRoot, 'public'))
+      .filter((f) => f.endsWith('.txt') && KEY_RE.test(f.replace(/\.txt$/, '')));
+    expect(keyFiles, 'public/ must hold exactly one 32-hex IndexNow key file').toHaveLength(1);
+    const stem = keyFiles[0].replace(/\.txt$/, '');
+    const body = readFileSync(join(repoRoot, 'public', keyFiles[0]), 'utf8').trim();
+    // IndexNow's own requirement. A mismatch makes every submission a 403.
+    expect(body, `${keyFiles[0]} body must equal its filename stem`).toBe(stem);
+  });
+
+  test('the script never hardcodes a key — it reads the key file', () => {
+    const src = readFileSync(join(repoRoot, 'scripts', 'indexnow_submit.py'), 'utf8');
+    // Defect 1 was a typed key. Any 32-hex literal in an assignment is that defect back.
+    const assigned = src.match(/^\s*(?:INDEXNOW_)?KEY\s*=\s*["'][0-9a-f]{32}["']/m);
+    expect(assigned, 'the key must come from public/<key>.txt, never a literal').toBeNull();
+    expect(src, 'the script must resolve the key from disk').toMatch(/def find_key/);
+  });
+
+  test('no live code in the indexing skill still points at the MFS project', () => {
+    const skill = readFileSync(join(repoRoot, 'skills', 'cag-indexing.md'), 'utf8');
+    // Blockquote lines are the historical write-up of the defect and must survive;
+    // anything else naming that path is live code aimed at the wrong site.
+    const offenders = skill
+      .split('\n')
+      .filter((l) => l.includes('MFS/site2') && !l.trimStart().startsWith('>'));
+    expect(offenders, `live code still reads the MFS project: ${offenders.join(' | ')}`).toEqual([]);
+  });
+});

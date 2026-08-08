@@ -26,6 +26,16 @@ family: GATE
 - **Always commit + push after build** — After any agent or skill completes a build/edit, commit and `git push` immediately. Push = deploy (GitHub Actions → Cloudflare Pages, auto on push to `main`). Do not leave finished work uncommitted or unpushed. Applies to all agents.
 
 ---
+id: indexnow-tooling-intact
+enforced: test
+family: GATE
+---
+
+- **IndexNow-submit at the end of EVERY page build (ALWAYS — breeder, 2026-08-08)** — After the push has deployed and the page returns HTTP 200 live, submit it: `python3 scripts/indexnow_submit.py <slug>` (or `npm run indexnow -- <slug>`; `--changed` derives slugs from git). **Order matters — submit only after the deploy is live**, because the script verifies each URL returns 200 and refuses dead ones; submitting before Cloudflare finishes building asks Bing to crawl the old copy. **Submit every page whose rendered output changed, not just the one you edited** — a shared-component edit propagates: the 2026-08-08 Timneh taxonomy fix touched `CityPageLayout.astro` and changed 15 city pages plus the 3 edited directly, so all 18 were submitted. The key is read from `public/<key>.txt`; never type it inline.
+
+  **What the test enforces, precisely.** No check can observe that an external POST to `api.indexnow.org` happened — that is a process fact. What `tests/render/meta.spec.ts::IndexNow tooling is intact` does enforce is the reason this step **never once ran before 2026-08-08**: the procedure in `skills/cag-indexing.md` STEP 4 was broken three ways by the MFS→CAG find/replace — a placeholder key (`a1b2c3d4…african grey parrots`) while the real key sat correct in the same file's own table, a sitemap regex whose domain contained **spaces**, and a `SITE_ROOT` pointing at `/Users/apple/Downloads/MFS/site2`, **a path that exists**, so a run would have read another project's sitemaps. Any execution would have POSTed an empty `urlList` under an invalid key and printed a success line. The four assertions fail if the script goes missing, if a key is hardcoded again, if the key file's body stops matching its filename (IndexNow's own 403 condition), or if live code in the skill points back at the MFS project. All three historical defects were mutation-tested against these assertions on 2026-08-08 and each one failed the build as intended. **The process step is the breeder's standing instruction; the test is what keeps the step performable.**
+
+---
 id: work-on-main-not-branches
 enforced: judgment
 family: GATE
