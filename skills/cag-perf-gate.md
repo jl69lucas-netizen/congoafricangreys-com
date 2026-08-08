@@ -23,8 +23,24 @@ The fast half runs in the render harness and needs no Lighthouse:
 npm run test:render:meta && npm run test:render:pages
 ```
 
-`a11y-text-contrast-aa` (A11Y family, **blocking**) computes contrast from rendered colours
+`a11y-text-contrast-aa` (A11Y family, **advisory**) computes contrast from rendered colours
 in ~2s. Run the harness first; run Lighthouse before push.
+
+**Read its output as a lead, not a verdict — it is not promoted yet.** It shipped
+2026-08-07 declared blocking but wired into no page type, so it examined **zero nodes on
+every page for a full day** (`reference_registered_is_not_wired`). Wired in 2026-08-08, it
+reports 1,783 findings across 45 of 45 page-viewports — 0 clean — which is a miscalibrated
+check, not a site that fails AA everywhere. Two false-positive classes are confirmed and
+must be fixed before it is promoted back to blocking:
+
+| Signature | Why it is wrong |
+|---|---|
+| `.rbadge` / `.absolute.top-3` at ~**1:1** | out-of-flow label over a photo: `position:absolute`, `background:none`, dark `text-shadow`. `backdrop()` walks DOM ancestors, never meets the image, and compares white against the white section behind it |
+| Tailwind `text-*/80` at ~**1.1:1** | translucent **foreground**: the check's `rgb()` keeps the colour channels and ignores fg alpha unless it is exactly 0 |
+
+A third family — clay/gold on light at **3.17–3.38:1** against a 4.5 requirement — is
+likely real and matches the known clay-contrast issue (`reference_forsale_dial_rail_contrast`,
+`reference_aa_contrast_and_perf_fixes`). Triage is its own sprint.
 
 ## Before you fix anything
 

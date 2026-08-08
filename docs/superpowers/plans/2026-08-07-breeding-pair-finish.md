@@ -1679,7 +1679,7 @@ Agent: cag-keyword-verifier             → whole page
 
 Scope the first two to the sections this session changed — re-auditing 8,627 approved words wastes the pass and risks a rewrite the breeder did not ask for.
 
-- [ ] **Step 2: Confirm `wordcount_in_band` is the only accepted warning**
+- [x] **Step 2: Confirm `wordcount_in_band` is the only accepted warning** — CONFIRMED 2026-08-08: `final_page_audit.py` reports PASS-WITH-WARNINGS, `wordcount_in_band` the sole warning.
 
 ```bash
 cd /Users/apple/Downloads/CAG && python3 scripts/final_page_audit.py 2>&1 | grep -A20 "breeding-pair"
@@ -1687,7 +1687,7 @@ cd /Users/apple/Downloads/CAG && python3 scripts/final_page_audit.py 2>&1 | grep
 
 Expected: `wordcount_in_band` only. The breeder has explicitly accepted 8,627 words against the 8,000 band — do not cut prose to satisfy it. Any *other* warning is real work.
 
-- [ ] **Step 3: Regenerate sitemaps and submit**
+- [x] **Step 3: Regenerate sitemaps and submit** — sitemaps regenerated: 59 page + 41 local + 9 post = 109 URLs, phantom URLs NONE. `quality_report.py`: page rework 13.7%, harness self-repair 13.0%, 0 open overrides; §5 lists neither new rule as untested. IndexNow submission still outstanding.
 
 ```bash
 cd /Users/apple/Downloads/CAG && python3 scripts/generate_sitemaps.py && python3 scripts/quality_report.py
@@ -1695,7 +1695,7 @@ cd /Users/apple/Downloads/CAG && python3 scripts/generate_sitemaps.py && python3
 
 Then IndexNow-submit the page (Bing/Yandex) per `project_sitemap_llms_tooling.md`.
 
-- [ ] **Step 4: Remove the preview directory**
+- [x] **Step 4: Remove the preview directory** — no-op: `public/_preview` and `dist/_preview` both already absent.
 
 The Gate A previews were published to make them phone-openable. They must not stay in `dist/`.
 
@@ -1703,7 +1703,7 @@ The Gate A previews were published to make them phone-openable. They must not st
 cd /Users/apple/Downloads/CAG && rm -rf public/_preview && npx astro build && test ! -d dist/_preview && echo "preview removed"
 ```
 
-- [ ] **Step 5: Write the lessons doc**
+- [x] **Step 5: Write the lessons doc** — `sessions/2026-08-07-breeding-pair-lessons.md`, 6 sections. Carries one lesson the plan could not have anticipated: the contrast gate was running on zero pages (§5).
 
 Create `sessions/2026-08-07-breeding-pair-lessons.md` covering, at minimum:
 - the `caption` omission from the mobile `display:block` list (one rule, two visible defects, and it would have hit every future `.tH`)
@@ -1711,7 +1711,7 @@ Create `sessions/2026-08-07-breeding-pair-lessons.md` covering, at minimum:
 - that both new breeder rules shipped **with checks and a known-broken fixture**, per the harness-not-rules principle
 - that no perf gate existed and what was built instead of a bare skill
 
-- [ ] **Step 6: Write the memories**
+- [x] **Step 6: Write the memories** — 3 of 5 already existed (`project_perf_gate`, `reference_og_style_palette_beds`, and `project_minibirdcard_component`, which covers the planned `reference_minibirdcard_component` more thoroughly — not duplicated). Created `reference_table_caption_mobile_stacking`, `project_dna_singles_yes_pairs_no`, `project_llm_visibility_baseline_breeding_pair`, `reference_registered_is_not_wired`; updated `project_perf_gate`. MEMORY.md compacted 160→77 lines, all 169 links verified to resolve, no orphaned files. Both new rules confirmed absent from `quality_report.py` §5.
 
 Create these files in `/Users/apple/.claude/projects/-Users-apple-Downloads-CAG/memory/`, each with the required frontmatter, then add one pointer line each to `MEMORY.md`:
 
@@ -1723,7 +1723,7 @@ Create these files in `/Users/apple/.claude/projects/-Users-apple-Downloads-CAG/
 
 Also add the two new rules to `data/quality/rule-index.json` verification: re-run `python3 scripts/quality_report.py` and confirm §5 does **not** list either as `untested`.
 
-- [ ] **Step 7: Bank the lesson in the learning skill**
+- [x] **Step 7: Bank the lesson in the learning skill** — both entries were already present in `skills/cag-learning-loop.md` (MiniBirdCard trigger and the caption/`display:block` trigger).
 
 Append to `skills/cag-learning-loop.md` a "When a page names a bird in prose" entry pointing at `MiniBirdCard.astro`, and a "When a gate reports a caption/table defect on mobile" entry pointing at the `display:block` list.
 
@@ -1751,8 +1751,9 @@ Expected: `200`. Then re-check `https://pagespeed.web.dev/` for the live URL and
 
 - ~~**`Mart` vs `Mark` in the Joshua Erwin review.**~~ **RESOLVED 2026-08-07 — breeder decision: ship as "Mark".** Treated as a transcription slip; every other page, the NAP record and `credentials.md` say Mark Benjamin, and a live testimonial naming "Mart" reads as fabricated to anyone checking. Task 4 is unblocked — no further question.
 - ~~**`fs-video` styled but never rendered**~~ **RESOLVED 2026-08-07 — breeder: "no video for now".** The dead rules were removed (commit `127b18b`) rather than left shipping. Deliberate departure from `page_hardening_scan`'s "do not delete a mandated component's CSS": the only pair footage on disk is not of Talker & Jane, Mari & Lake or Sally & Odin, so rendering it would have captioned a pair the video does not show. Scan is now clean, 0 ERROR / 0 WARN. Restore from any sibling for-sale page when real footage of these three pairs exists.
-- **The DNA collision has a SECOND source the Sprint 5 report missed, and it is on the target page itself.** Verified 2026-08-07 against source, not taken from the agent. The report blames retrieval bleed from the sibling `/congo-african-grey-parrot-pair-for-sale/` page, and that half checks out — the sibling does say "its own DNA sexing certificate" twice and does carry the $1,500 floor. But the singles cross-sell row **we shipped last session** (Task 6, commit `6dca9b1`, `index.astro:17–42`) puts five `DNA-sexed` trust labels — Bery, Amie, Roys, Elad, Evie — on the breeding-pair page itself, against one H5 and one FAQ item saying the pairs carry no DNA certificate. An engine reading this single page sees "DNA-sexed" 5× as card metadata and the disclaimer twice in prose. Report Action 1 (disambiguate the two pages) does **not** fix this; only a same-page fix does. Breeder ruling needed before any edit.
+- **The five `DNA-sexed` singles labels on this page are CORRECT. Do not "fix" them.** **RESOLVED 2026-08-07 — breeder ruling: "all the single birds are DNA sexed, leave it as it is; only the three breeding pairs should have no DNA."** Raised during Sprint 5 verification as a suspected same-page contradiction — the singles cross-sell row (`index.astro:17–42`) carries five `DNA-sexed` trust labels for Bery, Amie, Roys, Elad and Evie, while the H5 at `:670` and FAQ 05 at `:854` say the pairs carry no DNA certificate. **Both statements are true of different birds**, so there is no factual defect and no edit to make. Logged here specifically because it *reads* like a contradiction to anyone scanning the page — the same trap as the 72-hour / 3-day guarantee. An LLM may still conflate the two sets, but that is a retrieval-ambiguity finding for the Sprint 5 follow-up, not a page defect.
 - **Report Action 2 overstates the gap and should be re-scoped before it is actioned.** It says the DNA answer is "one FAQ item near the bottom." There are in fact two placements: FAQ item 05 (`index.astro:854`) *and* a dedicated H5 "Why These Pairs Carry No DNA Certificate" (`index.astro:670`), which sits mid-page inside the "What Paperwork Comes With Each Pair?" H2 — section 11 of 19, not the bottom. The real weakness is structural, not absence: the answer has no H2 or H3 of its own, so it is a weak retrieval target.
+- **NEW SPRINT NEEDED — contrast triage.** Found at close-out 2026-08-08: `a11y-text-contrast-aa` shipped 2026-08-07 declared **blocking** but the `A11Y` family was never added to `targets.json > families_by_page_type`, so it examined **zero nodes on every page for a full day**. Wiring fixed, plus a new `meta.spec.ts` invariant so a registered-but-unwired family can never pass again (verified: reports `['A11Y']` against `git show HEAD:targets.json`, `[]` now). Wired in, it reports **1,783 findings across 45 of 45 page-viewports, 0 clean** — miscalibration, not a site-wide AA failure. **Demoted to `advisory` per breeder decision**, following the promotion rule its two same-day siblings obeyed. Before promotion back to blocking, fix: (1) out-of-flow labels over photos reporting ~1:1 (`backdrop()` walks DOM ancestors, not the visual stack); (2) translucent foregrounds reporting ~1.1:1 (`rgb()` discards fg alpha unless exactly 0). Then triage the likely-real clay/gold-on-light family at 3.17–3.38:1. Full write-up: `sessions/2026-08-07-breeding-pair-lessons.md` §5.
 - **`wordcount_in_band`** stays warned and accepted at 8,627 words, per explicit breeder instruction. Not a defect on this page.
 - **`/70de/` source maps** — Cloudflare Rocket Loader, dashboard-only, Unscored. Documented as known-ignored in `skills/cag-perf-gate.md`; no code task exists.
 - **Gate A blocks Tasks 5, 6 and 7 only.** Everything else in Phases B, C, D and E runs regardless.
