@@ -30,6 +30,8 @@ rebuild does not re-derive them:
 | `From $1,600` (title, meta, hero, schema `lowPrice`) | 4, 5, 19, 40 | Congo range is **$1,500–$3,500**. The floor is wrong in four places including JSON-LD. |
 | `AggregateOffer` + `InStock` | 16–22 | Truthful only if real birds back it. Verify against live inventory before it ships again. |
 
+**Baselines are filled from the inventory in §5, not left blank.** `NOT FETCHED` is only correct after §5 has been run and the data is genuinely absent — write the barrier with it.
+
 **Mode is determined by looking, not by assuming.** `ls -la` the path and read the file before
 declaring the mode. A page that shipped last week is not a stub because the brief says so — and a
 page that returns 200 is not finished because it returns 200.
@@ -204,11 +206,65 @@ the same query set. Verify against the query rows before merging anything.
 
 ---
 
-## 5 · Competitor Research and Query Fan-Out
+## 5 · Research Data on Hand — Inventory Before You Fetch
+
+**`NOT FETCHED` is a verdict, not a default.** It may only be written after the inventory below
+has been run and the data is genuinely absent. Write it with the barrier named.
+
+**Why this section exists.** On 2026-08-08 the Target Block for `/grey-african-parrots-for-sale/`
+recorded the GSC baselines as `NOT FETCHED`. The exports were in the repo the whole time, in two
+separate locations. When they were finally read, the query rows showed the page's own keyword had
+produced **0 clicks across 14 queries** — and the recommendation reversed from *build* to
+*consolidate*. The cost of not looking was a nearly-wasted build sprint.
+
+### 5a · Run this before Sprint 0 opens
+
+```bash
+ls data/analytics/ && \
+find assets -maxdepth 3 -iname "*.csv" -o -maxdepth 3 -iname "*GSC*" -o -maxdepth 3 -iname "*[Bb]ing*" && \
+ls docs/research/ sessions/*research*/ 2>/dev/null
+```
+
+### 5b · Known locations, and what is actually in each
+
+| Location | Contains | Use for |
+|---|---|---|
+| `data/analytics/` | GSC **HTML** exports — `Pages.html`, `Queries.html`, Countries, Devices, Chart, Filters, Search appearance | Page- and query-level Google |
+| `assets/1WORKING-ON/FOR-SALE-PAGES/GSC-extracted/` | GSC **CSV** exports — `Pages.csv`, `Queries.csv`, + the same five siblings | Page- and query-level Google, easier to parse |
+| `assets/1WORKING-ON/FOR-SALE-PAGES/BING-…PageTrafficReport_*.csv` | Bing **page** traffic — impressions, clicks, CTR, avg position | Bing page-level |
+| `assets/1WORKING-ON/FOR-SALE-PAGES/Fresh-Bing-DADA-*.csv` | Bing **date series** — `Date, Clicks, Impressions, CTR` | Trend only. **No query rows.** |
+| `assets/1WORKING-ON/FOR-SALE-PAGES/Fresh-CAGs-GOOGLE-DADA-*/` | Chart, Countries, Devices, Filters, Search appearance | Segment splits. **No Pages or Queries.** |
+| `assets/1WORKING-ON/FOR-SALE-PAGES/<PAGE-FOLDER>/` | Per-page OG masters, infographics, video | The Asset Gate |
+| `docs/research/`, `sessions/for-sale-research/`, `sessions/comparison-research/` | Prior research docs and keyword-gap matrices | Do not re-mine what is already banked |
+
+### 5c · The three traps in this data
+
+☐ **The two Google exports are different windows and they disagree.** One reads the Congo page at
+  0 clicks where the other reads 84 across two queries. **Never average them, never merge them.**
+  State which export every figure came from, and compare like with like.
+
+☐ **A Bing file is not automatically Bing query data.** Check the header row. A
+  `Date,Clicks,Impressions,CTR` file is a time series and cannot answer a query-level question —
+  that is a real `NOT FETCHED`, and it is the barrier to name.
+
+☐ **A page-level row and a query-level row can disagree, and the query row wins.** A page showed
+  position 6.00 at 9.09% CTR while its own keyword sat at position 74.95. Page-level says where
+  equity landed; query-level says what people search. §4 names the second as decisive.
+
+### 5d · Only now may a baseline read `NOT FETCHED`
+
+Record it as `NOT FETCHED — <barrier>`, never bare. Real examples: *no Bing export contains query
+rows*; *hard login wall, no API key*. A future run then compares against what was actually
+fetched — the breeding-pair LLM baseline is **24 of 30 cells**, and that denominator is only
+trustworthy because the six gaps were named rather than filled.
+
+---
+
+## 6 · Competitor Research and Query Fan-Out
 
 **No research may be skipped.** Un-fetchable source = `NOT FETCHED` with the barrier named.
 
-### 5a · Firecrawl Search is the first move, not the fallback
+### 6a · Firecrawl Search is the first move, not the fallback
 
 Open Sprint 0 with the Firecrawl **Search** endpoint. One call returns ranked results *with scraped
 content*, which collapses the old two-step — search, then scrape each result — into a single pass.
@@ -243,7 +299,7 @@ Firecrawl scrape, then Playwright. **A 403 from curl is not a dead link.** Recor
 ☐ **Reddit / forum thread mining** — real buyer language and objections, logged in the Thread Ledger
   so it is not re-mined.
 
-### 5b · Sprint 0 output artifact
+### 6b · Sprint 0 output artifact
 
 One dated research doc containing, in order: SERP snapshot · query fan-out · section inventory ·
 visual inventory · gap matrix · keyword universe · entity map · PAA set · recency notes ·
@@ -253,12 +309,12 @@ visual inventory · gap matrix · keyword universe · entity map · PAA set · r
 
 ---
 
-## 6 · Keyword Deliverables and Metrics
+## 7 · Keyword Deliverables and Metrics
 
 *Every metric below is a deliverable reported as a number — for **our planned page** and for **each
 top-5 competitor**.*
 
-### 6a · Required metric table — ours vs each competitor
+### 7a · Required metric table — ours vs each competitor
 
 | Metric | Definition | Our target |
 |---|---|---|
@@ -270,7 +326,7 @@ top-5 competitor**.*
 | First-100-words placement | Primary keyword in the first 100 rendered words | Required |
 | Header keyword spread | % of H2/H3 carrying a distinct keyword type | ≥ 80%, no two headers on the same type |
 
-### 6b · Keyword type distribution (~85–105 total mentions)
+### 7b · Keyword type distribution (~85–105 total mentions)
 
 | Type | Count | Placement note |
 |---|---|---|
@@ -287,7 +343,7 @@ top-5 competitor**.*
 explicit US geo token surfaced our pages where the bare query did not. Carry a geo token in at least
 one H2 and the meta description.
 
-### 6c · Competitor keyword deliverables
+### 7c · Competitor keyword deliverables
 
 ☐ Keywords each top-5 competitor **has** that we do not — listed with placement (title / H1 / H2 /
   body / alt).
@@ -296,7 +352,7 @@ one H2 and the meta description.
 ☐ Their image alt text and filenames — usually their weakest layer.
 ☐ Their video presence and what it covers.
 
-### 6d · Meta
+### 7d · Meta
 
 Three sets per page (Educational / Benefit-Solution / Transactional-Urgency), one **(Recommended)**
 with why and trade-off.
@@ -305,14 +361,14 @@ with why and trade-off.
 - **Description** F1 ≤ 185 or F2 ≤ 300: `Primary Benefit | Secondary Benefit | Trust Signal + CTA`
 - Front-load the primary keyword. Real price floor, real credentials. Never short-form.
 
-### 6e · Counter snippets
+### 7e · Counter snippets
 
 8 per page, **< 4 words**, number-led, Ledger-verified only: `12+ Yrs Aviary` · `100% CITES Papered`
 · `$1,500 Floor Price` · `24h Reply` · `0 Wild-Caught`. Never a fabricated count.
 
 ---
 
-## 7 · Entity Relationships and Co-Occurrence
+## 8 · Entity Relationships and Co-Occurrence
 
 ☐ **85–112 distinct entities** per page, each mentioned a natural number of times. The anti-pattern
   this prevents: the business name in every sentence — unreadable and unrankable.
@@ -338,7 +394,7 @@ with why and trade-off.
 
 ---
 
-## 8 · Competitor Gaps, Angles and Voice Tones
+## 9 · Competitor Gaps, Angles and Voice Tones
 
 For each top-5 competitor:
 
@@ -358,7 +414,7 @@ write better content."
 
 ---
 
-## 9 · Strategy — Two Plus One Blended
+## 10 · Strategy — Two Plus One Blended
 
 ☐ Two complete transactional strategies plus one blended, each with: angle, target query set, H2-level
   section architecture, conversion path, risk.
@@ -369,7 +425,7 @@ write better content."
 
 ---
 
-## 10 · Section Distribution Matrix
+## 11 · Section Distribution Matrix
 
 **Mandatory before any outline.** One row per planned section:
 
@@ -390,7 +446,7 @@ transactional page.
 
 ---
 
-## 11 · Heading Outline Gate — H1 to H6
+## 12 · Heading Outline Gate — H1 to H6
 
 **The full H1→H6 outline is approved before a single line of page code is written.** An outline
 approved after the fact is not an outline.
@@ -416,7 +472,7 @@ approved after the fact is not an outline.
 
 ---
 
-## 12 · Component Selection and Hero Refresh
+## 13 · Component Selection and Hero Refresh
 
 ☐ **Every page ships a distinct component tuple**, recorded in the component-map ledger: hero · dial
   style · rail · stepper · key-takeaway · TOC · table · FAQ style · newsletter placement.
@@ -460,7 +516,7 @@ approved after the fact is not an outline.
 
 ---
 
-## 13 · Tool / Special Element Decision
+## 14 · Tool / Special Element Decision
 
 **A tool or special element is required unless the page type genuinely does not support one.**
 
@@ -476,9 +532,9 @@ approved after the fact is not an outline.
 
 ---
 
-## 14 · OG Images, Infographics and the Asset Gate
+## 15 · OG Images, Infographics and the Asset Gate
 
-### 14a · Sizing — the rule that keeps getting reworked
+### 15a · Sizing — the rule that keeps getting reworked
 
 **Every in-body image — OG photo AND infographic alike — renders in the same box:**
 
@@ -513,7 +569,7 @@ the desktop box. Page root needs `overflow-x: clip` so full-bleed never causes h
 **`sizes` is measured, not guessed** — `sizes`-first ordering is what cut 205 KiB on the last pass.
 `naturalWidth` is density-corrected; do not read it as the served width.
 
-### 14b · Coverage and alt text
+### 15b · Coverage and alt text
 
 ☐ **Every H2, every H3, and every key H4 gets an image** — OG photo, infographic, or generated.
 ☐ **Rule 50b alt rotation** — the primary keyword goes in the **primary image's alt only**. Every
@@ -527,7 +583,7 @@ the desktop box. Page root needs `overflow-x: clip` so full-bleed never causes h
 ☐ **Check generated infographics for duplicate labels** before assignment — the generator has emitted
   the same label twice on a chart more than once.
 
-### 14c · The Asset Gate — a hard stop
+### 15c · The Asset Gate — a hard stop
 
 ☐ **List the asset folder and open every file** before assigning anything. Check `assets/brand/`
   before declaring an image missing.
@@ -542,9 +598,9 @@ the desktop box. Page root needs `overflow-x: clip` so full-bleed never causes h
 
 ---
 
-## 15 · Build Rules — Write From Outline
+## 16 · Build Rules — Write From Outline
 
-### 15a · The non-negotiable
+### 16a · The non-negotiable
 
 **Write from the outline, never from a sibling.** Reuse components, CSS classes and structural
 patterns freely — that *is* the kit. But every page's **prose** is written fresh from its own
@@ -553,7 +609,7 @@ approved outline. **Never open a sibling's file to copy paragraphs.**
 A page that is copied and then reworded **passes the automated dup check and still breaks the rule.**
 The rule is about method, not about the score.
 
-### 15b · Dedup is a pre-write discipline
+### 16b · Dedup is a pre-write discipline
 
 Run the dup gate on **your own draft, before it is done** — body **and** `--headers` — pairwise
 against **every** sibling in the cluster, the comparison cluster, and the variant pages. Target zero
@@ -562,7 +618,7 @@ non-whitelist crossover.
 **Whitelist (may match verbatim):** the shipping line, documentation badge lists, the counter strip,
 the CITES notice, CTA labels, real reviews, real page-name link labels. Nothing else.
 
-### 15c · Prose standards
+### 16c · Prose standards
 
 ☐ First-person breeder voice throughout.
 ☐ `anti-ai-writing` pass — strip AI-tell phrases, robotic rhythm, generic structure.
@@ -574,7 +630,7 @@ the CITES notice, CTA labels, real reviews, real page-name link labels. Nothing 
 ☐ External links: 6–7 diverse authorities, citing the **specific resource page**, not the homepage.
 ☐ Every claim traces to the Ledger or a data file. `NOT FETCHED` where it does not.
 
-### 15d · Transactional layer (for-sale and buy pages)
+### 16d · Transactional layer (for-sale and buy pages)
 
 ☐ Real bird cards near the fold, from live inventory and the price matrix. **Every card carries the
   shipping line:** `Ships nationwide · $185 airport · $350 home`. Never a card without it.
@@ -590,7 +646,7 @@ the CITES notice, CTA labels, real reviews, real page-name link labels. Nothing 
 
 ---
 
-## 16 · Responsive Typography, Spacing and Scroll
+## 17 · Responsive Typography, Spacing and Scroll
 
 Verified at **375 / 768 / 1280** in a real browser, on the built page.
 
@@ -618,7 +674,7 @@ Verified at **375 / 768 / 1280** in a real browser, on the built page.
 
 ---
 
-## 17 · Harden Pass
+## 18 · Harden Pass
 
 Sprint 3 is its own sprint. It is not folded into build or into gates.
 
@@ -641,9 +697,9 @@ Sprint 3 is its own sprint. It is not folded into build or into gates.
 
 ---
 
-## 18 · Gates and Pass Checks
+## 19 · Gates and Pass Checks
 
-### 18a · Run these
+### 19a · Run these
 
 ```bash
 npm run test:render:meta
@@ -664,7 +720,7 @@ python3 scripts/perf_audit.py
 Plus, per page: the duplicate-content audit (body **and** `--headers`), the final page audit for the
 correct page-type profile, the seam-parity check, the page hardening scan, and the AEO audit.
 
-### 18b · Gate integrity — read this before believing any gate
+### 19b · Gate integrity — read this before believing any gate
 
 **A gate's output is a hypothesis about the page, not a fact about it.** Twelve checkers have cried
 wolf on this site, and two reported PASS having examined **zero pages**.
@@ -678,7 +734,7 @@ wolf on this site, and two reported PASS having examined **zero pages**.
 ☐ **When a defect escapes a gate that should have caught it, fix the harness, not the page — and
   write no new rule.**
 
-### 18c · Registering a check is not shipping a check
+### 19c · Registering a check is not shipping a check
 
 The most expensive lesson of the last sprint. `a11y-text-contrast-aa` shipped as a **blocking** check
 with a passing known-broken fixture, an entry in `rule-index.json`, and no `untested` flag. It
@@ -711,7 +767,7 @@ Clay/gold on light at 3.17–3.38:1 against a 4.5 requirement is the one family 
 ☐ **A still-loading image is not a broken one.** Give stragglers a `decode()` budget, then classify
   the two states apart. Collapsing them manufactures defects.
 
-### 18d · Manual pass list
+### 19d · Manual pass list
 
 ☐ 400px-class hero · staggered hero image sizing
 ☐ Hero and counter strip visually separate
@@ -732,7 +788,7 @@ Clay/gold on light at 3.17–3.38:1 against a 4.5 requirement is the one family 
 
 ---
 
-## 19 · Measurement Ledger — What Gets Counted
+## 20 · Measurement Ledger — What Gets Counted
 
 *Added in v2.0. Every row is a number that must appear in the close-out, not a box that gets ticked.
 These are the measurements the breeding-pair sprint proved were missing.*
@@ -760,7 +816,7 @@ These are the measurements the breeding-pair sprint proved were missing.*
 
 ---
 
-## 20 · LLM Visibility Measurement
+## 21 · LLM Visibility Measurement
 
 **Mandatory for every page.** A required deliverable, not an optional extra.
 
@@ -786,7 +842,7 @@ knowledge. Log the ruling under `## Open Flags` as **resolved, do not re-raise**
 
 ---
 
-## 21 · Deploy and Session Close
+## 22 · Deploy and Session Close
 
 ☐ Build, then verify the **built** page — content, schema, images, links.
 ☐ Regenerate sitemaps after any page is added or removed: `python3 scripts/generate_sitemaps.py`
@@ -809,7 +865,7 @@ python3 scripts/indexnow_submit.py <slug>
 
 ---
 
-## 22 · Master Deliverables Index
+## 23 · Master Deliverables Index
 
 **Each one is a document or a table — not a claim that it was considered.**
 
@@ -846,7 +902,7 @@ count = rendered-changed slug count** · lessons doc · memory entries · Artifa
 
 ---
 
-## 23 · Reference Library and Banked Traps
+## 24 · Reference Library and Banked Traps
 
 | When | Document |
 |---|---|
@@ -868,7 +924,7 @@ a broken one.
 
 ---
 
-## 24 · Open Flags
+## 25 · Open Flags
 
 *Carried forward. A flag marked resolved is never re-raised.*
 
@@ -884,7 +940,7 @@ a broken one.
 
 ---
 
-## 25 · From Brief to Web Tool — the Path
+## 26 · From Brief to Web Tool — the Path
 
 *This document is already a data structure pretending to be prose. The path to a tool is to stop
 pretending.*
@@ -895,7 +951,7 @@ persists to `localStorage`. That is stage 1 of 4 and it is done.
 
 **Stage 2 — the Target Block becomes a form.** The only section that changes per page is §0. Turn its
 ten fields into inputs, and the brief templates itself: the slug propagates into every command in
-§18 and §21, the page type selects the right builder skill in §2, and the cluster picks the sibling
+§19 and §22, the page type selects the right builder skill in §2, and the cluster picks the sibling
 list for the dup gate. Nothing new is authored — the same markdown gets interpolated.
 
 **Stage 3 — the checkboxes become state.** Every `☐` is already a discrete task with a sprint number.
@@ -903,7 +959,7 @@ Persist them, and the page becomes a run tracker: which gate is open, which deli
 outstanding, which approval is unsigned. The seven-sprint pipeline in §3 turns into a progress rail
 that reflects real state instead of describing an ideal one.
 
-**Stage 4 — the ledger reads from the repo.** §19 is eighteen numbers that a script already computes:
+**Stage 4 — the ledger reads from the repo.** §20 is eighteen numbers that a script already computes:
 `quality_report.py`, `perf_audit.py`, and the render harness emit every one of them. A small JSON
 endpoint written by the close-out step, fetched by this page, turns the Measurement Ledger from a
 checklist into a dashboard — examined counts, wiring symmetry, rework rate, untested-rule list, live.
@@ -1447,7 +1503,7 @@ tbody tr:hover { background: var(--surface); }
     standing law, ordered by dependency. Nothing is written, coded, or deployed until every approval
     gate is signed off by an explicit reply — never by silence.</p>
     <div class="mast-meta">
-      <span><b>v2.0</b> · 2026-08-08</span>
+      <span><b>v2.2</b> · 2026-08-08</span>
       <span><b id="m-secs">—</b> sections</span>
       <span><b id="m-tasks">—</b> checks</span>
       <span><b id="m-gates">—</b> gates</span>
@@ -1946,7 +2002,7 @@ tbody tr:hover { background: var(--surface); }
   stamp(false);
 
   function fullBrief() {
-    return "# C.A.Gs — Universal Page Build Brief (Portable Edition v2.0)\n\n" +
+    return "# C.A.Gs — Universal Page Build Brief (Portable Edition v2.2)\n\n" +
       "> Self-contained. No repo access required. Inside the repo, the repo's own rule packs and\n" +
       "> skills are authoritative where they are more specific.\n\n" +
       sections.map(function (_, i) { return sectionMd(i); }).join("\n---\n\n");
