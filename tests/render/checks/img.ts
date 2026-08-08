@@ -10,18 +10,48 @@ register({
   minExamined: 1,
   async run(page: Page, viewport: number): Promise<CheckResult> {
     await settlePage(page);
+
+    /**
+     * A still-loading image is NOT a broken image, and this check used to call them the
+     * same thing. `settlePage` caps its wait at 3s; on the heaviest page in the suite
+     * (congo-pair, 58 images) the eager `decoding="async"` hero candidate was still in
+     * flight at that cap and got reported as "failed to decode" — wording that reads as
+     * a 404. It failed at vp375 only, because `sizes` resolves to ~170px there and that
+     * is the sole viewport selecting the 230w candidate; the same page passed at 768 and
+     * 1280 in the same run. The file was valid the whole time (6,294-byte WebP, decodes
+     * to 230x144). reference_same_input_different_verdict.
+     *
+     * So: give the stragglers a real `decode()` budget before judging anything.
+     */
+    await page.evaluate(async () => {
+      const pending = Array.from(document.images).filter((i) => !i.complete);
+      await Promise.race([
+        Promise.allSettled(pending.map((i) => i.decode().catch(() => null))),
+        new Promise((res) => setTimeout(res, 5000)),
+      ]);
+    });
+
     const r = await page.evaluate(() => {
       const dpr = window.devicePixelRatio || 1;
       let examined = 0;
       const bad: string[] = [];
       const skipped: string[] = [];
+      const unmeasured: string[] = [];
       for (const img of Array.from(document.images)) {
         const box = img.getBoundingClientRect();
         if (box.width < 1) continue;
-        if (!img.complete || img.naturalWidth === 0) {
-          // A 404'd image has complete === true and naturalWidth === 0.
+        const name = (img.currentSrc || img.src || '(no src)').split('/').pop() as string;
+        if (img.complete && img.naturalWidth === 0) {
+          // GENUINELY BROKEN. A 404'd image has complete === true and naturalWidth === 0.
           // Silently dropping it is how a broken page scores clean, so surface it.
-          skipped.push((img.currentSrc || img.src || '(no src)').split('/').pop() as string);
+          skipped.push(name);
+          continue;
+        }
+        if (!img.complete) {
+          // STILL LOADING after the decode budget above — a limit of our measurement,
+          // not a fact about the page. Counted and named so the run is honest about its
+          // own coverage, but never asserted as breakage on a blocking check.
+          unmeasured.push(name);
           continue;
         }
         examined++;
@@ -44,6 +74,8 @@ register({
         count: bad.length,
         skipped: skipped.slice(0, 10),
         skippedTotal: skipped.length,
+        unmeasured: unmeasured.slice(0, 10),
+        unmeasuredTotal: unmeasured.length,
       };
     });
 
@@ -63,10 +95,19 @@ register({
         family: 'IMG' as const,
         viewport,
         count: r.skippedTotal,
-        message: `${r.skippedTotal} image(s) failed to decode and could not be measured: ${r.skipped.join(', ')}${
+        message: `${r.skippedTotal} image(s) failed to LOAD (complete, naturalWidth 0 — 404 or corrupt): ${r.skipped.join(', ')}${
           r.skippedTotal > r.skipped.length ? ` (+${r.skippedTotal - r.skipped.length} more)` : ''
         }`,
       });
+    }
+    // Deliberately NOT a defect row. These images were still in flight after a 5s
+    // decode budget, which is a statement about this run, not about the page — and
+    // this check is `blocking`, so emitting it would fail a build over harness timing.
+    // Logged instead, so the run never silently claims coverage it did not have.
+    if (r.unmeasuredTotal) {
+      console.log(
+        `[img-srcset-within-2x] ${r.unmeasuredTotal} image(s) still loading after the decode budget @ ${viewport}px, excluded from examined: ${r.unmeasured.join(', ')}`,
+      );
     }
     return { examined: r.examined, defects };
   },

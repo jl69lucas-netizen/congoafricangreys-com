@@ -889,3 +889,68 @@ test.describe('every registered family is actually wired into targets.json', () 
     );
   });
 });
+
+/**
+ * `img-srcset-within-2x` conflated two unrelated states under one message,
+ * "failed to decode and could not be measured":
+ *
+ *   - `complete === true && naturalWidth === 0` — a real 404 or corrupt file.
+ *   - `complete === false` — still in flight when we happened to look.
+ *
+ * The second is a fact about the run, not the page. On 2026-08-08 it failed
+ * `congo-african-grey-parrot-pair-for-sale` at **vp375 only**, on a 6,294-byte WebP that
+ * decodes perfectly to 230x144 — that page has 58 images, the file is the eager
+ * `decoding="async"` hero, and 375px is the one viewport whose `sizes` (~170px) selects
+ * the 230w candidate. It passed at 768 and 1280 in the same run.
+ * reference_same_input_different_verdict.
+ *
+ * Because the check is `blocking`, that flake fails builds at random. These tests pin the
+ * distinction so the two states can never be merged back together.
+ */
+test.describe('img-srcset-within-2x separates broken from still-loading', () => {
+  const imgCheck = () => {
+    const c = registry.find((x) => x.id === 'img-srcset-within-2x');
+    if (!c) throw new Error('img-srcset-within-2x is not registered');
+    return c;
+  };
+
+  test('a 404 image is still reported — a broken page must not score clean', async ({
+    page,
+  }, testInfo) => {
+    const res0 = await page.goto(fixtureUrl('known_broken', 'img-broken-vs-still-loading'));
+    // Assert the fixture actually loaded. A mistyped fixture URL yields an empty page,
+    // zero images, and a green "no defects" — a pass that proves nothing.
+    expect(res0?.status(), 'fixture must load').toBe(200);
+    const res = await runCheck(imgCheck(), page, testInfo.project.use.viewport!.width);
+    const msg = res.defects.map((d) => d.message).join(' | ');
+    expect(msg, 'the 404 must be named').toContain('definitely-not-a-real-image-404.webp');
+    expect(msg, 'and described as a LOAD failure, not a decode failure').toMatch(/failed to LOAD/);
+  });
+
+  test('the decodable image is examined, not skipped', async ({ page }, testInfo) => {
+    const res0 = await page.goto(fixtureUrl('known_broken', 'img-broken-vs-still-loading'));
+    // Assert the fixture actually loaded. A mistyped fixture URL yields an empty page,
+    // zero images, and a green "no defects" — a pass that proves nothing.
+    expect(res0?.status(), 'fixture must load').toBe(200);
+    const res = await runCheck(imgCheck(), page, testInfo.project.use.viewport!.width);
+    // The good image must land in `examined`; if it did not, the check is judging nothing
+    // and would pass on zero. reference_gate_examined_zero_pages.
+    expect(res.examined, 'the decodable image must be examined').toBeGreaterThanOrEqual(1);
+  });
+
+  test('no defect row ever describes an image as merely still loading', async ({
+    page,
+  }, testInfo) => {
+    const res0 = await page.goto(fixtureUrl('known_broken', 'img-broken-vs-still-loading'));
+    // Assert the fixture actually loaded. A mistyped fixture URL yields an empty page,
+    // zero images, and a green "no defects" — a pass that proves nothing.
+    expect(res0?.status(), 'fixture must load').toBe(200);
+    const res = await runCheck(imgCheck(), page, testInfo.project.use.viewport!.width);
+    for (const d of res.defects) {
+      expect(
+        d.message,
+        'still-loading is a statement about the run, not a defect on a blocking check',
+      ).not.toMatch(/still loading/i);
+    }
+  });
+});
