@@ -49,7 +49,8 @@ Before submitting, always audit for issues that block indexing:
 ```python
 import re, glob
 
-SITE_ROOT = "/Users/apple/Downloads/MFS/site2"
+# dist/, not site/content/ and NOT the MFS project: gates measure the BUILT page.
+SITE_ROOT = "/Users/apple/Downloads/CAG/dist"
 DOMAIN = "https://congoafricangreys.com"
 
 issues = []
@@ -84,7 +85,7 @@ for i in issues:
 ```python
 import re, glob
 
-SITE_ROOT = "/Users/apple/Downloads/MFS/site2"
+SITE_ROOT = "/Users/apple/Downloads/CAG/public"
 for fpath in glob.glob(f"{SITE_ROOT}/*.xml"):
     with open(fpath) as f:
         content = f.read()
@@ -102,7 +103,9 @@ for fpath in glob.glob(f"{SITE_ROOT}/*.xml"):
 ```python
 import re, glob, os
 
-SITE_ROOT = "/Users/apple/Downloads/MFS/site2"
+# public/ is where CAG's sitemaps live. This block WRITES — pointed at the old
+# MFS path it would have rewritten a different project's sitemaps in place.
+SITE_ROOT = "/Users/apple/Downloads/CAG/public"
 DOMAIN = "https://congoafricangreys.com"
 
 def fix_sitemap(content):
@@ -203,69 +206,49 @@ curl -X POST https://oauth2.googleapis.com/token \
 
 ## STEP 4: SUBMIT ALL URLS VIA INDEXNOW
 
-IndexNow covers Bing, Yandex, and (via api.indexnow.org) partially Google. Use for both bulk submissions and individual new pages.
+IndexNow covers Bing, Yandex, and (via `api.indexnow.org`) partially Google.
 
-```python
-import json, urllib.request, re, glob
+**Use the committed script. Do NOT paste inline Python for this.**
 
-SITE_ROOT = "/Users/apple/Downloads/MFS/site2"
-INDEXNOW_KEY = "a1b2c3d4e5f6789012345678african grey parrots"
-NOINDEX_PATHS = ['/admin/', '/form/', '/tag/', '/thank-you/', '/cag-african grey parrotsforsale-com/']
-
-# Get all indexable URLs from sitemaps
-urls = []
-for fname in ['page-sitemap.xml', 'post-sitemap.xml']:
-    with open(f'{SITE_ROOT}/{fname}') as f:
-        content = f.read()
-    urls += re.findall(r'<loc>(https://african grey parrotsforsale\.com/[^<]*)</loc>', content)
-
-indexable = [u for u in urls if not any(n in u for n in NOINDEX_PATHS)]
-print(f"Submitting {len(indexable)} URLs to IndexNow...")
-
-payload = json.dumps({
-    "host": "congoafricangreys.com",
-    "key": INDEXNOW_KEY,
-    "keyLocation": f"https://congoafricangreys.com/{INDEXNOW_KEY}.txt",
-    "urlList": indexable
-}).encode()
-
-req = urllib.request.Request(
-    "https://api.indexnow.org/indexnow",
-    data=payload,
-    headers={"Content-Type": "application/json; charset=utf-8"},
-    method="POST"
-)
-with urllib.request.urlopen(req) as r:
-    print(f"IndexNow: {r.status} {r.reason}")
+```bash
+python3 scripts/indexnow_submit.py <slug> [<slug> ...]
 ```
 
-### Submit a single new page (use after creating any new page):
-```python
-import json, urllib.request
-
-INDEXNOW_KEY = "a1b2c3d4e5f6789012345678african grey parrots"
-
-def submit_url(url: str):
-    payload = json.dumps({
-        "host": "congoafricangreys.com",
-        "key": INDEXNOW_KEY,
-        "keyLocation": f"https://congoafricangreys.com/{INDEXNOW_KEY}.txt",
-        "urlList": [url]
-    }).encode()
-    req = urllib.request.Request(
-        "https://api.indexnow.org/indexnow",
-        data=payload,
-        headers={"Content-Type": "application/json; charset=utf-8"},
-        method="POST"
-    )
-    with urllib.request.urlopen(req) as r:
-        print(f"IndexNow: {r.status} for {url}")
-
-# Example:
-submit_url("https://congoafricangreys.com/new-page-slug/")
+```bash
+python3 scripts/indexnow_submit.py --changed
 ```
 
----
+```bash
+python3 scripts/indexnow_submit.py --dry-run <slug>
+```
+
+`--all` submits every sitemap URL. `--dry-run` prints the payload and sends nothing.
+
+What the script guarantees, and why each guard exists:
+
+- **The key is read from `public/<key>.txt` on disk, never typed.** It also asserts the
+  file body equals the filename stem (IndexNow's own requirement) and that the file
+  returns HTTP 200 live before anything is sent.
+- **Every URL must return 200 before submission.** Submitting 404s is a negative trust
+  signal about the host, so a dead URL is reported and dropped, not sent.
+- **Build artifacts are filtered** — `/.astro/`, `/_preview/`, `/admin/`, `/form/`,
+  `/tag/`, `/thank-you/`. `page-sitemap.xml` currently emits `/.astro/`, which is a
+  `generate_sitemaps.py` defect, not a page.
+- **Response codes are interpreted**: 200 OK · 202 accepted, key validation pending ·
+  400 bad payload · 403 key invalid for host · 422 URLs not on this host · 429 throttled.
+
+> **This STEP used to be broken and nobody could have noticed by reading it.** Until
+> 2026-08-08 it carried inline Python with three defects from the MFS→CAG find/replace:
+> `INDEXNOW_KEY = "a1b2c3d4e5f6789012345678african grey parrots"` (a placeholder with the
+> brand string substituted in — while the REAL key sat correct in the site-context table
+> 170 lines above); a sitemap regex of `https://african grey parrotsforsale\.com/`, a
+> domain containing spaces, which matches nothing; and `SITE_ROOT` pointing at
+> `/Users/apple/Downloads/MFS/site2`, **a path that exists**, so a run would have read a
+> different site's sitemaps. Any execution would have POSTed an empty `urlList` under an
+> invalid key and printed a success line. That is why the close-out step never actually
+> ran on any page. The key now lives in exactly one place — the key file — so defect 1
+> cannot come back.
+
 
 ## STEP 5: FIX ROBOTS.TXT
 
@@ -362,5 +345,5 @@ This is the **Indexing Agent** in the MFS multi-agent system:
 
 ### Credentials required:
 - GSC: `/Users/apple/cag-dashboard/.env.local` (GSC_CLIENT_ID, GSC_CLIENT_SECRET, GSC_REFRESH_TOKEN)
-- IndexNow key: `a1b2c3d4e5f6789012345678african grey parrots` (no auth needed)
+- IndexNow key: read it from `public/<key>.txt` — never typed inline. Currently `f8071f0dbdb94257934a690f4a18fa59` (no auth needed).
 - Bing Webmaster API: Not yet configured (IndexNow covers Bing submissions)

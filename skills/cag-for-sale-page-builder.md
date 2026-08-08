@@ -103,7 +103,7 @@ Link-First anchors (sentence START, never mid/end; branded ACTION anchors on CTA
 2. `python3 scripts/final_page_audit.py` — PASS required (all_six_levels, min 5 H5/5 H6, no visible dates, schema, meta).
 3. Manual gate list (comparison contract, restated): 400px heroes · unique newsletter image + one-liner title per page (no shared images) · opening paragraph under every header · uniform OG boxes · separate blog/contact H2s · mobile table stacking · jump-rail scroll-margin · further-reading cards with real thumbnails · AA contrast (`--clay-ink` fills, `#b04228` small clay on light) · Lighthouse warm median-of-3.
 4. First-person voice sweep + anti-ai-writing pass + non-commodity check.
-5. Verify in `dist/`, never source greps. Commit + push = deploy; work on `main` only.
+5. Verify in `dist/`, never source greps. Commit + push = deploy; work on `main` only. **Then, once the deploy is live and the page returns 200, IndexNow-submit it — every page build ends here** (breeder, 2026-08-08): `python3 scripts/indexnow_submit.py <slug>`. Submit every slug whose *rendered* output changed, not only the one you edited — a shared-component edit propagates. Submit only AFTER the deploy is live; the script refuses non-200 URLs. See `rules/deploy.md` → `indexnow-tooling-intact`.
 6. **Seam parity** — house idiom is one seam emblem before **every** section. health-guarantee shipped 7
    across 17 sections and it read as unfinished. Check before calling a page done:
    `echo "seams=$(grep -c 'class=\"seam\"' <page>) sections=$(grep -c '<section class=\"sec\"' <page>)"`.

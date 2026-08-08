@@ -13,6 +13,10 @@ and location pages take inquiries, care and comparison pages earn the traffic.
   Finished work on any other branch is live-404 while looking done.
 - Commit **and push** after every build. Push *is* deploy.
 - After adding or removing a page: `python3 scripts/generate_sitemaps.py`.
+- **Every page build ends with an IndexNow submission** (breeder, 2026-08-08), *after* the
+  deploy is live: `python3 scripts/indexnow_submit.py <slug>`. Submit every slug whose
+  **rendered** output changed, not just the one edited — a shared-component edit propagates.
+  `rules/deploy.md` → `indexnow-tooling-intact`.
 
 ## The rules live in `rules/`, not here
 
