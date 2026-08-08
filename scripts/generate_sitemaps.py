@@ -59,7 +59,7 @@ TIER_09 = {"buy-african-grey-parrot-near-me", "african-grey-parrot-price",
            "hand-raised-african-grey-parrot-for-sale", "dna-tested-african-grey-for-sale",
            "captive-bred-african-grey-parrot", "where-to-buy-african-greys-near-me",
            "african-grey-parrots-for-sale-near-me", "african-grey-parrot-for-sale-near-me",
-           "affordable-african-grey-birds-for-sale", "grey-african-parrots-for-sale",
+           "affordable-african-grey-birds-for-sale",
            "male-african-gray-for-sale", "congo-african-grey-parrot-pair-for-sale",
            "african-grey-parrot-bird-eggs-for-sale-usa", "contact-us",
            "buy-african-grey-parrots-with-shipping"}
