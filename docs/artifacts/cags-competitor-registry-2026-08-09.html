@@ -1,0 +1,576 @@
+<title>C.A.Gs Competitor Registry Repair — 2026-08-09</title>
+<style>
+  :root{
+    --paper:#fbfaf7; --raise:#ffffff; --ink:#17201c; --ink-2:#41504a; --ink-3:#6d7c75;
+    --rule:#e2e5e0; --rule-2:#eef0ec;
+    --accent:#2d6a4f; --accent-soft:#e8f0ea; --accent-ink:#1f4a37;
+    --critical:#a83226; --critical-soft:#fbeceb; --critical-ink:#8a291f;
+    --warn:#8a6410; --warn-soft:#faf3e2;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --wrap:74rem; --prose:68ch;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#121613; --raise:#1a201c; --ink:#e8ede9; --ink-2:#adbab3; --ink-3:#7e8d86;
+      --rule:#2b332e; --rule-2:#222a25;
+      --accent:#6bbd92; --accent-soft:#1c2a23; --accent-ink:#8fd3ae;
+      --critical:#e8756a; --critical-soft:#2c1c1a; --critical-ink:#f09a91;
+      --warn:#d9ab4f; --warn-soft:#2a2318;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#121613; --raise:#1a201c; --ink:#e8ede9; --ink-2:#adbab3; --ink-3:#7e8d86;
+    --rule:#2b332e; --rule-2:#222a25;
+    --accent:#6bbd92; --accent-soft:#1c2a23; --accent-ink:#8fd3ae;
+    --critical:#e8756a; --critical-soft:#2c1c1a; --critical-ink:#f09a91;
+    --warn:#d9ab4f; --warn-soft:#2a2318;
+  }
+  :root[data-theme="light"]{
+    --paper:#fbfaf7; --raise:#ffffff; --ink:#17201c; --ink-2:#41504a; --ink-3:#6d7c75;
+    --rule:#e2e5e0; --rule-2:#eef0ec;
+    --accent:#2d6a4f; --accent-soft:#e8f0ea; --accent-ink:#1f4a37;
+    --critical:#a83226; --critical-soft:#fbeceb; --critical-ink:#8a291f;
+    --warn:#8a6410; --warn-soft:#faf3e2;
+  }
+
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+       font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  .shell{max-width:var(--wrap);margin:0 auto;padding:clamp(1.5rem,4vw,3.5rem) clamp(1.1rem,4vw,2.5rem) 5rem;}
+
+  /* ---- masthead ---- */
+  .mast{border-bottom:2px solid var(--ink);padding-bottom:1.4rem;margin-bottom:.9rem;
+        display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:flex-end;justify-content:space-between;}
+  .mast h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,4.2vw,3rem);
+           line-height:1.08;letter-spacing:-.015em;text-wrap:balance;max-width:22ch;}
+  .mast .meta{font-family:var(--mono);font-size:.72rem;line-height:1.9;color:var(--ink-3);
+              text-transform:uppercase;letter-spacing:.09em;text-align:right;}
+  .mast .meta b{color:var(--ink-2);font-weight:600;}
+  .standfirst{font-family:var(--serif);font-size:clamp(1.02rem,1.9vw,1.24rem);color:var(--ink-2);
+              max-width:var(--prose);margin-bottom:2.2rem;line-height:1.6;}
+
+  /* ---- scoreboard ---- */
+  .board{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:1px;
+         background:var(--rule);border:1px solid var(--rule);margin-bottom:2.6rem;}
+  .cell{background:var(--raise);padding:1rem 1.1rem;}
+  .cell .n{font-family:var(--mono);font-size:1.6rem;font-weight:600;letter-spacing:-.02em;
+           font-variant-numeric:tabular-nums;display:block;}
+  .cell .k{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;
+           color:var(--ink-3);margin-top:.2rem;display:block;}
+  .cell.is-crit .n{color:var(--critical);}
+  .cell.is-good .n{color:var(--accent);}
+
+  /* ---- sections ---- */
+  .sec{background:var(--raise);border:1px solid var(--rule);margin-bottom:1.5rem;}
+  .sec.crit{border-color:var(--critical);border-left-width:4px;}
+  .sec.flag{border-left:4px solid var(--warn);}
+  .sec>header{display:flex;gap:1rem;align-items:center;justify-content:space-between;
+              padding:.85rem 1.3rem;border-bottom:1px solid var(--rule-2);background:var(--paper);}
+  .sec>header h2{font-family:var(--mono);font-size:.76rem;font-weight:600;text-transform:uppercase;
+                 letter-spacing:.13em;color:var(--ink-2);}
+  .sec.crit>header h2{color:var(--critical-ink);}
+  .body{padding:1.4rem clamp(1.1rem,2.4vw,1.9rem) 1.8rem;}
+
+  /* ---- rendered markdown ---- */
+  .md>*+*{margin-top:.95rem;}
+  .md h3{font-family:var(--serif);font-size:1.5rem;font-weight:600;line-height:1.2;
+         letter-spacing:-.01em;text-wrap:balance;max-width:34ch;margin-top:1.8rem;}
+  .md h4{font-family:var(--sans);font-size:.79rem;font-weight:700;text-transform:uppercase;
+         letter-spacing:.1em;color:var(--ink-3);margin-top:1.7rem;}
+  .md p,.md li{max-width:var(--prose);}
+  .md ul,.md ol{padding-left:1.15rem;}
+  .md li+li{margin-top:.4rem;}
+  .md li::marker{color:var(--accent);}
+  .md strong{font-weight:670;color:var(--ink);}
+  .md a{color:var(--accent-ink);text-underline-offset:.18em;}
+  .md code{font-family:var(--mono);font-size:.855em;background:var(--accent-soft);
+           padding:.1em .38em;border-radius:2px;word-break:break-word;}
+  .md blockquote{border-left:3px solid var(--accent);padding:.15rem 0 .15rem 1rem;
+                 color:var(--ink-2);font-family:var(--serif);font-size:1.04rem;max-width:var(--prose);}
+  .md hr{border:0;border-top:1px solid var(--rule);margin:1.8rem 0;}
+  .scroll{overflow-x:auto;border:1px solid var(--rule);}
+  .md table{border-collapse:collapse;width:100%;font-size:.87rem;}
+  .md th,.md td{text-align:left;padding:.5rem .8rem;border-bottom:1px solid var(--rule-2);
+                vertical-align:top;font-variant-numeric:tabular-nums;}
+  .md th{font-family:var(--mono);font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;
+         color:var(--ink-3);background:var(--paper);white-space:nowrap;border-bottom:1px solid var(--rule);}
+  .md tbody tr:last-child td{border-bottom:0;}
+  .md td code{white-space:nowrap;}
+
+  /* ---- buttons ---- */
+  button{font:inherit;cursor:pointer;}
+  .copy{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;
+        background:transparent;color:var(--ink-3);border:1px solid var(--rule);
+        padding:.36rem .7rem;border-radius:3px;white-space:nowrap;transition:.14s;}
+  .copy:hover{color:var(--accent-ink);border-color:var(--accent);background:var(--accent-soft);}
+  .copy.ok{color:var(--accent-ink);border-color:var(--accent);background:var(--accent-soft);}
+  .actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:2.4rem;}
+  .dl{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;
+      background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+      padding:.6rem 1.1rem;border-radius:3px;transition:.14s;}
+  .dl:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+  footer.end{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--rule);
+             font-family:var(--mono);font-size:.7rem;color:var(--ink-3);line-height:1.8;}
+</style>
+
+<div class="shell">
+  <div class="mast">
+    <h1>Competitor Registry Repair</h1>
+    <div class="meta">
+      <div><b>2026-08-09</b></div>
+      <div>congoafricangreys.com</div>
+      <div>research + registry</div>
+    </div>
+  </div>
+
+  <p class="standfirst">Eight structural defects fixed in the registry nine agents read as ground
+  truth, sixteen competitors added, and one finding that changes how the egg cluster should be
+  understood: four of its “competitors” are one operator.</p>
+
+  <div class="board">
+    <div class="cell"><span class="n">44→60</span><span class="k">registry entries</span></div>
+    <div class="cell is-good"><span class="n">10/10</span><span class="k">invariants green</span></div>
+    <div class="cell"><span class="n">8</span><span class="k">defects repaired</span></div>
+    <div class="cell is-crit"><span class="n">5</span><span class="k">domains, one IP</span></div>
+    <div class="cell is-crit"><span class="n">1</span><span class="k">hijacked competitor</span></div>
+    <div class="cell"><span class="n">14</span><span class="k">identities resolved</span></div>
+  </div>
+
+  <div class="actions">
+    <button class="dl" id="dl">Download .md</button>
+    <button class="dl" id="copyall" style="background:transparent;color:var(--ink-2);border-color:var(--rule)">Copy everything</button>
+  </div>
+
+  <div id="out"></div>
+
+  <footer class="end">
+    Source: <code>docs/artifacts/cags-competitor-registry-2026-08-09.html</code> · registry at
+    <code>data/competitors.json</code> · gate at <code>tests/test_competitors_registry.py</code><br>
+    Every figure here was measured on 2026-08-09. Unretrieved values are written NOT FETCHED with the barrier named.
+  </footer>
+</div>
+
+<script type="text/markdown" data-title="Summary — what changed">
+### The registry was wrong in eight ways, and is now guarded
+
+`data/competitors.json` is the source of truth that nine agents read. Before this session it
+carried eight structural defects, none of which any test would have caught, because there were no
+tests. There are now ten.
+
+| # | Defect | Fix |
+|---|---|---|
+| 1 | `_meta.total_competitors` said **30**; the file held **44**. Description repeated the wrong number. | Both resynced, and a test now asserts the description states the real count |
+| 2 | 14 entries used a legacy `domain` key instead of `url` | Normalised to `url` |
+| 3 | Those same 14 had no `name` | Backfilled from the identity resolution |
+| 4 | Those same 14 lacked 9 further schema keys | Full 13-key schema backfilled |
+| 5 | `handRearedParrots` pointed at `handrearedparrots.com` — **no DNS record** | Corrected to `handraredparrots.com` (verified 200) |
+| 6 | `denimixaniPetsParadise` name split the brand wrongly | Corrected to **Denimix Anipets Paradise** |
+| 7 | `mariettaBirdShop` registered as a live competitor while hijacked | Flagged `compromised_redirect`, evidence recorded |
+| 8 | `parrotAlert` was `tier: 2` labelled `non_commercial` — a label absent from the tier map | Honoured its own notes: re-tiered to a new tier 5 `non_commercial` |
+
+Defect 8 was not in the research. It surfaced only when the patch script ran, which is the argument
+for writing the script before trusting the report.
+
+**Method.** The tests were written first and failed 8-of-9 against the unpatched file. One
+idempotent script then made them pass. Both migrations are one-shot and recorded in
+`_meta.migrations_applied`, so re-running can never clobber a later sweep's dates or notes.
+</script>
+
+<script type="text/markdown" data-title="Marietta Bird Shop — hijacked into a casino chain" data-tone="crit">
+### Their only African Grey URL redirects off-domain to an Indonesian casino
+
+`mariettabirdshop.com/product/african-grey-parrot` — the single African Grey URL on the site — no
+longer serves bird content. It serves a server-side redirect chain.
+
+```
+/product/african-grey-parrot
+  → 301 → /product/african-grey-parrot/        (normal trailing-slash hop)
+  → 301 → jellyrollskidswear.com/collections/dummies   (injected)
+  → … 14 redirects total …
+  → 200   www.mysteryinktattoos.com
+          <title>THOR138 # Game Online Resmi …</title>
+```
+
+**Verification.** Reproduced independently on the build machine on 2026-08-09, in addition to the
+research pass's own 3/3 runs and a separate Firecrawl reproduction. The destination page contains
+**zero** occurrences of "african grey". The control URL `/product/cockatiel` is clean: 200, zero
+redirects.
+
+**Blast radius is exactly one URL, and it is the African Grey one.** Of 15 URLs tested, 14 are
+clean. Because the redirect is a server-side 301 rather than JavaScript, **Googlebot receives the
+same redirect.**
+
+#### What was done
+
+`mariettaBirdShop` now carries `access_status: compromised_redirect`, `threat_level: none`,
+`priority: low`, and a note recording the full chain. A test locks the flag so a future sweep
+cannot quietly mark it healthy again.
+
+#### What must not happen
+
+Never link to this site from any C.A.Gs page, and never cite it as a competitor price benchmark.
+It is neither a live African Grey competitor nor a safe outbound destination.
+</script>
+
+<script type="text/markdown" data-title="Five domains, one London residential IP" data-tone="crit">
+### The egg cluster is not an under-documented market — it is substantially one operator
+
+The plan expected the egg cluster to be our least-documented competitive picture, and treated that
+as a gap to close. A DNS lookup inverted the conclusion.
+
+| Domain | A record | Status |
+|---|---|---|
+| **exoticglobalparrotsfarm.com** | **81.99.162.48** | **was registered tier 1 direct_breeder** |
+| sherrybirds.org | 81.99.162.48 | held-back candidate (Timneh listing) |
+| paradisebirdsfarmaviary.com | 81.99.162.48 | held-back candidate (Congo eggs $100) |
+| exoticparrotfarms.com | 81.99.162.48 | held-back candidate (fertile grey eggs) |
+| parrotsfarm.com | 81.99.162.48 | held-back candidate (Congo eggs $60) |
+| rainforestaviaries.com | 74.208.236.200 | unrelated host, still unreachable |
+| sunnyvaleaviary.com | 109.106.251.28 | unrelated host, **live**, registered |
+| ourpetstars.com | *(no A record)* | **no DNS — closed, not pending** |
+
+`81.99.162.48` reverse-resolves to `lang-sspiprxy.network.virginmedia.net` — a **Virgin Media
+residential broadband line in London, GB**. The page-5 sweep had independently recorded the same IP
+for `exoticGlobalParrotsFarm`.
+
+Compounding signals already on record for that entry: three separate African Greys listed at the
+identical age "1 year 3 months old", add-to-cart checkout offering **worldwide delivery of a CITES
+Appendix I species**, and a US "farm" presentation served from UK residential broadband.
+
+#### Consequences
+
+1. **No price benchmarking.** Averaging four of these egg prices would have manufactured a "market
+   rate" from one seller's pricing.
+2. **`exoticGlobalParrotsFarm` was re-tiered** from tier 1 `direct_breeder` to a new tier 6
+   `suspect_seller`, with the evidence in its notes. It stays in the registry — tracked, not trusted.
+3. **All five are documented evidence** for `/how-to-avoid-african-grey-parrot-scams/`. A
+   reproducible shared-IP finding is far stronger material than a generic warning about cheap birds.
+
+#### The limit of this finding
+
+Shared hosting is established by DNS; **common ownership is not**. WHOIS was not queried. State the
+measurable facts — shared IP, residential line, geography against claimed location — and do not
+name an operator or allege fraud.
+
+Reproduce with: `dig +short A <domain>` and `dig +short -x 81.99.162.48`
+</script>
+
+<script type="text/markdown" data-title="Identity resolution — the 14 stub entries">
+### 14 of 14 resolved, 0 unresolved, 0 removed on identity grounds
+
+These entries carried a bare `domain`, a tier and a note — no `name`, no `url`, and none of the
+other schema keys. Each `domain` acted as a hypothesis that an independent name search then
+confirmed, corrected, or would have falsified. One domain and one business name were corrected;
+nothing was falsified.
+
+| id | Resolved name | URL | Confidence |
+|---|---|---|---|
+| `exoticGlobalParrotsFarm` | Exotic Global Parrots Farm | exoticglobalparrotsfarm.com | High — *now tier 6, see the shared-IP finding* |
+| `royalBirdCompany` | Royal Bird Company | royalbirdcompany.com | High — Lincolnton NC, 40+ years |
+| `denimixaniPetsParadise` | **Denimix Anipets Paradise** | denimixanipetsparadise.com | High — *id misspelled the brand* |
+| `buyAfricanGreyParrots` | Buy African Grey Parrots | buyafricangreyparrots.com | High — Shopify, claims USDA-licensed FL |
+| `hookbillsForSale` | Hookbills For Sale | hookbillsforsale.com | High — cited in a CEC parrot-trade report |
+| `grayBreedersFoundation` | Gray Breeders Foundation | graybreedersfoundation.yolasite.com | Medium-High — self-asserted MAP claim |
+| `theAvianExchange` | The Avian Exchange | theavianexchange.com | High — 71 breeders, 28 greys, state+city pages |
+| `jcAviary` | JC Aviary | jcaviary.com | High — Austin TX, AFA member, 89.2K TikTok |
+| `anasParrots` | Ana's Parrots & Supplies | anasparrots.com | High — Stroudsburg PA, est. 2012 |
+| `parrotStars` | Parrot Stars | parrotstars.com | High — Arlington Heights IL storefront |
+| `birdsByJoe` | Birds By Joe | birdsbyjoe.com | High — Green Brook NJ |
+| `midnightParrotPlace` | Midnight Parrot Place | midnightparrotplace.com | High — Roselle IL |
+| `handRearedParrots` | Hand Reared Parrots For Sale | **handraredparrots.com** | High — *registry domain was dead* |
+| `featherHeadz` | Feather Headz Aviary | featherheadz.com | High — Miami FL |
+
+#### Two corrections worth keeping
+
+**`handRearedParrots` was dead as written.** `handrearedparrots.com` has no DNS A record. The live
+business is at `handra**re**dparrots.com` — *handra-red*, not *hand-reared*. Without the fix, every
+future sweep would log the entry as dead. A test now locks the live domain.
+
+**Ana's Parrots — a stale scam warning.** A 2019 Reddit thread warns that the "real" site is
+`anasparrotsandsupplies.com`. Measured today that has inverted: the old domain serves a bare
+`Index of /` directory listing, while `anasparrots.com` serves the full site with client
+testimonials. Do not cite the old warning as evidence against it.
+
+#### Competitive read
+
+When r/parrots is asked for reputable breeders, two names come back unprompted: **JC Aviary (TX)**
+and **Parrot Stars (IL)**. JC Aviary is our closest in-state rival and already owns Texas
+word-of-mouth. C.A.Gs has no comparable Reddit footprint — that is the gap.
+</script>
+
+<script type="text/markdown" data-title="16 competitors added, 1 re-tiered">
+### Registry 44 → 60
+
+Fifteen from the cross-platform discovery pass, each re-fetched at HTTP 200 with African Grey
+inventory visible on the page, plus one promoted by the re-fetch pass.
+
+| Name | Tier | Why it competes |
+|---|---|---|
+| **Todd Marcus Birds Exotic** | 4 | 43-year NJ storefront. Found on **all five platforms**; the only new name Reddit names unprompted. `priority: high` |
+| Golden Cockatoo | 4 | Congo grey at **$7,499** — the high anchor our $1,500–$3,500 is measured against |
+| Florida Parrot | 1 | "hand raised … African greys", nationwide delivery — duplicates our shipping proposition |
+| North Shore Greys LLC | 1 | Grey-specific brand competing for our head term |
+| GreyWing Aviary | 1 | ⚠ Named inventory at **$600 each** — scam signal. SERP tracking only |
+| The Parrot and Bird Emporium | 1 | Posts specific baby greys in target training |
+| African Grey Parrots For Sale | 1 | **Exact-match domain**, 62 on-page grey mentions |
+| Forestry Parrots Breeder | 1 | Dedicated grey product page, ranks top-20 for the head term |
+| Uncle Tom's Bird Farm | 1 | Breeding pairs **and** eggs at $65 — hits two of our pages |
+| Exotic Live Parrots | 1 | Grey eggs $99.98–$619.98 against our $95 |
+| Exotic Birds For Sales | 1 | Same dual bird+egg model we run |
+| Featherland Breeders Hub | 1 | "GREY CONGO $2,700–$5,300" — overlaps our range's top |
+| ParrotCrown | 1 | Congo grey at $7,000 with age banding |
+| Pet Birds Breeders | 1 | Greys as a headline species |
+| CP Birds | 1 | Orlando FL — breeding pairs, eggs, and egg-buyer education at once |
+| Sunnyvale Aviary | 1 | Promoted after returning 200 with 4 grey mentions from the build machine |
+
+Registering a site is not endorsing it. GreyWing is worth tracking **because** it ranks while being
+untrustworthy.
+
+#### Flagged in their notes, permanently
+
+- **GreyWing Aviary** — $600/bird is far below market for a captive-bred Congo. Never a price benchmark.
+- **exoticGlobalParrotsFarm** — re-tiered 1 → 6 `suspect_seller`; shared-IP evidence recorded.
+
+#### Two new tiers
+
+The taxonomy gained `5: non_commercial` (for Parrot Alert, a lost-and-stolen-bird registry that had
+been mislabelled a classified aggregator) and `6: suspect_seller`. Both were added rather than
+forcing entries into tiers that misdescribe them.
+</script>
+
+<script type="text/markdown" data-title="Barriers — what could not be fetched" data-tone="flag">
+### Recorded as NOT FETCHED, with the specific barrier
+
+No figure anywhere in this work was inferred. Where a source could not be retrieved it is named as
+unretrieved, with the reason.
+
+| Source | Status | Barrier |
+|---|---|---|
+| Instagram | **NOT FETCHED** | Hashtag pages return 200 with a login-wall body, no post grid. Firecrawl refuses instagram.com. No hashtag enumeration was possible for any of the four requested tags. |
+| Reddit comment bodies | **PARTIAL** | 403 on `www.reddit.com/*.json`, `old.reddit.com`, and via the r.jina.ai proxy. Firecrawl: "we do not support this site". Titles and index snippets only. |
+| Facebook | **PARTIAL** | Direct page fetch returns HTTP 400 without a session. Post text and addresses recovered only via the search index. |
+| Avian Avenue forum | **NOT FETCHED** | Thread URLs return 403 + login form even to a stealth proxy; threads are `robots: noindex`. Zero forum-only candidates were proposed. |
+| Bing organic top 10 | **NOT FETCHED** | Bing truncates the query to its first token for automated clients — every method returned results for *"Africa"*. Verified four ways: Firecrawl, curl with cookies, a Playwright session, and Bing RSS. |
+| Google PAA, 3 levels | **NOT FETCHED** | `/sorry/` CAPTCHA interstitial, HTTP 429, after 2 automated requests. |
+| 5 held-back candidate domains | **NOT FETCHED** | Unreachable from two independent networks. DNS distinguishes them: four resolve to the shared London IP, one (`ourpetstars.com`) has no A record at all. |
+
+#### To unblock the next pass
+
+A logged-in Playwright profile for Instagram and Avian Avenue, plus official Reddit API
+credentials, would convert three of these from PARTIAL/NOT FETCHED to full coverage. The single
+highest-value target behind those walls is the Avian Avenue thread **"A List of Breeders and Band
+Numbers"** (14+ pages) — effectively a community-maintained competitor directory.
+
+One caution worth carrying forward: **a 403 is not a dead site.** Cloudflare returns 403 to curl
+for sites that load perfectly in a browser. Only `000` with no DNS A record is evidence of dead.
+</script>
+
+<script type="text/markdown" data-title="Open questions for the breeder" data-tone="flag">
+### Three decisions that are yours, not ours
+
+**1. Brick-and-mortar tiering is internally inconsistent.**
+Shops that sell live greys — **Parrot Stars** (Arlington Heights IL) and **Birds By Joe** (Green
+Brook NJ) — are tier 1 `direct_breeder`, while `mariettaBirdShop`, the same business model, is tier
+4 `marketplace_retailer`. Todd Marcus and Golden Cockatoo were added as tier 4 to match the
+Marietta precedent. The answer changes their monitoring cadence and which gap matrix they land in.
+
+**2. Should the scam-prevention page be updated?**
+Four documented items are now available for `/how-to-avoid-african-grey-parrot-scams/`: the
+Marietta redirect hijack, the five-domain shared-IP cluster, the $600 GreyWing pricing, and
+WhatsApp-only egg ordering. This was deliberately **not** done here — editing that page is a page
+build requiring the interior checklist, a heading-outline gate, a dup-content gate, a render-harness
+run and an IndexNow submission. It is a separate piece of work.
+
+**3. The two remaining suspect entries.**
+`denimixaniPetsParadise` (sells African Greys alongside macaque monkeys at $3,500, claims 1–4 day
+international shipping of an Appendix I bird, returns policy on live birds) and
+`grayBreedersFoundation` (free site builder, flat pricing, a self-asserted "MAP certified" claim
+with no verifiable registration) both fit the new tier 6 `suspect_seller`. Only
+`exoticGlobalParrotsFarm` was re-tiered, because only it was approved. These two are candidates.
+</script>
+
+<script type="text/markdown" data-title="How to verify any of this yourself">
+### Nothing here asks to be taken on trust
+
+Every claim in this document is reproducible from the repository or the open internet.
+
+**The registry gate**
+
+```
+python3 -m pytest tests/test_competitors_registry.py -v
+```
+Expect 10 passed. The gate asserts schema completeness, unique ids, absolute URLs, tier-label
+agreement, a description matching the real count, a shrink floor, and two fact-locks: the live
+`handRearedParrots` domain and the Marietta compromised flag.
+
+**That the patch cannot be re-run destructively**
+
+```
+python3 scripts/patch_competitor_registry.py
+python3 scripts/patch_competitor_registry.py --add-approved
+```
+Both print `No changes — registry already patched.` Each is a one-shot migration recorded in
+`_meta.migrations_applied`, so a later sweep's dates, notes and names can never be clobbered by
+these dated 2026-08-09 values.
+
+**The Marietta hijack** — note the absence of `-L`, so curl reports the hop instead of following it:
+
+```
+curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" \
+  "https://mariettabirdshop.com/product/african-grey-parrot/"
+```
+
+**The shared-IP cluster**
+
+```
+for d in exoticglobalparrotsfarm.com sherrybirds.org paradisebirdsfarmaviary.com \
+         exoticparrotfarms.com parrotsfarm.com; do dig +short A $d; done
+dig +short -x 81.99.162.48
+```
+
+**The blocked-candidate verdicts**
+
+```
+bash scripts/refetch_blocked_candidates.sh
+```
+
+#### Source documents
+
+- `docs/research/competitor-discovery-crossplatform-2026-08-09.md` — the 28-candidate cross-platform pass
+- `docs/research/competitor-sweep-page5-2026-08-09.md` — marketplaces + the 14-entry identity resolution
+- `docs/research/competitor-refetch-verdicts-2026-08-09.md` — second-network verdicts and the DNS finding
+- `docs/superpowers/plans/2026-08-09-competitor-registry-repair.md` — the plan this executed
+</script>
+
+<script>
+(function(){
+  var esc = function(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
+
+  function inline(s){
+    return esc(s)
+      .replace(/`([^`]+)`/g,function(_,c){return "<code>"+c+"</code>";})
+      .replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>")
+      .replace(/(^|[\s(])\*([^*\n]+)\*/g,"$1<em>$2</em>")
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2">$1</a>');
+  }
+
+  function render(md){
+    var lines = md.replace(/\r/g,"").split("\n"), out = [], i = 0;
+
+    function row(l){
+      var c = l.trim().replace(/^\|/,"").replace(/\|$/,"").split("|");
+      return c.map(function(x){return x.trim();});
+    }
+
+    while(i < lines.length){
+      var l = lines[i];
+
+      if(/^\s*$/.test(l)){ i++; continue; }
+
+      if(/^```/.test(l)){
+        var buf = []; i++;
+        while(i < lines.length && !/^```/.test(lines[i])){ buf.push(lines[i]); i++; }
+        i++;
+        out.push('<div class="scroll"><pre style="padding:.9rem 1.1rem;font-family:var(--mono);font-size:.8rem;line-height:1.6">'+esc(buf.join("\n"))+"</pre></div>");
+        continue;
+      }
+
+      var h = l.match(/^(#{2,5})\s+(.*)$/);
+      if(h){ var lv = h[1].length + 1; out.push("<h"+lv+">"+inline(h[2])+"</h"+lv+">"); i++; continue; }
+
+      if(/^\|/.test(l) && i+1 < lines.length && /^\|[\s:|-]+\|?\s*$/.test(lines[i+1])){
+        var head = row(l); i += 2;
+        var body = [];
+        while(i < lines.length && /^\|/.test(lines[i])){ body.push(row(lines[i])); i++; }
+        var t = '<div class="scroll"><table><thead><tr>'
+              + head.map(function(c){return "<th>"+inline(c)+"</th>";}).join("")
+              + "</tr></thead><tbody>"
+              + body.map(function(r){
+                  return "<tr>"+r.map(function(c){return "<td>"+inline(c)+"</td>";}).join("")+"</tr>";
+                }).join("")
+              + "</tbody></table></div>";
+        out.push(t); continue;
+      }
+
+      if(/^>\s?/.test(l)){
+        var q = [];
+        while(i < lines.length && /^>\s?/.test(lines[i])){ q.push(lines[i].replace(/^>\s?/,"")); i++; }
+        out.push("<blockquote>"+inline(q.join(" "))+"</blockquote>"); continue;
+      }
+
+      if(/^\s*([-*]|\d+\.)\s+/.test(l)){
+        var ord = /^\s*\d+\./.test(l), items = [], cur = null;
+        while(i < lines.length && (/^\s*([-*]|\d+\.)\s+/.test(lines[i]) || (/^\s{2,}\S/.test(lines[i]) && cur !== null))){
+          var m = lines[i].match(/^\s*(?:[-*]|\d+\.)\s+(.*)$/);
+          if(m){ if(cur !== null) items.push(cur); cur = m[1]; }
+          else { cur += " " + lines[i].trim(); }
+          i++;
+        }
+        if(cur !== null) items.push(cur);
+        var tag = ord ? "ol" : "ul";
+        out.push("<"+tag+">"+items.map(function(x){return "<li>"+inline(x)+"</li>";}).join("")+"</"+tag+">");
+        continue;
+      }
+
+      if(/^---+\s*$/.test(l)){ out.push("<hr>"); i++; continue; }
+
+      var p = [];
+      while(i < lines.length && !/^\s*$/.test(lines[i]) && !/^(\||>|```|#{2,5}\s|---+\s*$)/.test(lines[i])
+            && !/^\s*([-*]|\d+\.)\s+/.test(lines[i])){ p.push(lines[i]); i++; }
+      if(p.length) out.push("<p>"+inline(p.join(" "))+"</p>");
+    }
+    return out.join("\n");
+  }
+
+  var blocks = [].slice.call(document.querySelectorAll('script[type="text/markdown"]'));
+  var out = document.getElementById("out");
+  var all = [];
+
+  blocks.forEach(function(b, n){
+    var md = b.textContent.replace(/^\n/,"").replace(/\s+$/,"");
+    var title = b.dataset.title || ("Section " + (n+1));
+    var tone = b.dataset.tone || "";
+    all.push("## " + title + "\n\n" + md);
+
+    var sec = document.createElement("section");
+    sec.className = "sec" + (tone ? " " + tone : "");
+    sec.innerHTML =
+      '<header><h2>' + esc(title) + '</h2>'
+      + '<button class="copy" type="button">Copy markdown</button></header>'
+      + '<div class="body md">' + render(md) + "</div>";
+
+    sec.querySelector(".copy").addEventListener("click", function(){
+      var btn = this;
+      navigator.clipboard.writeText("## " + title + "\n\n" + md).then(function(){
+        btn.textContent = "Copied"; btn.classList.add("ok");
+        setTimeout(function(){ btn.textContent = "Copy markdown"; btn.classList.remove("ok"); }, 1600);
+      });
+    });
+    out.appendChild(sec);
+  });
+
+  var doc = "# C.A.Gs Competitor Registry Repair — 2026-08-09\n\n"
+          + "Registry 44 → 60 entries · 8 defects repaired · 10/10 invariants green.\n"
+          + "Every figure measured 2026-08-09; unretrieved values are written NOT FETCHED with the barrier named.\n\n"
+          + all.join("\n\n---\n\n") + "\n";
+
+  document.getElementById("dl").addEventListener("click", function(){
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([doc], {type:"text/markdown"}));
+    a.download = "cags-competitor-registry-2026-08-09.md";
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+
+  document.getElementById("copyall").addEventListener("click", function(){
+    var btn = this;
+    navigator.clipboard.writeText(doc).then(function(){
+      btn.textContent = "Copied everything";
+      setTimeout(function(){ btn.textContent = "Copy everything"; }, 1600);
+    });
+  });
+})();
+</script>
