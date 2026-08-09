@@ -7,7 +7,13 @@ second verdict from the build machine, which is on a different network.
 
 **Reading the codes:** 2xx/3xx = live. 403/429 = live behind a bot challenge (Cloudflare
 returns 403 to curl on sites that are perfectly reachable in a browser) — this is NOT
-evidence of a dead site. 000 = no connection or no DNS record; only this is evidence of dead.
+evidence of a dead site. 000 = no connection or no DNS record.
+
+**`000` is two different findings and they must not be merged.** A domain with no DNS A
+record is dead or never existed. A domain that resolves but refuses the connection is a
+live registration whose server is down, firewalled, or filtering us. The first verdict
+table below does not make that distinction; the DNS section that follows does, and it is
+the one that changed the conclusion of this pass.
 
 ## Verdicts
 
@@ -35,6 +41,51 @@ returned `000` on this network too, so no homepage content could be fetched and 
 mention count exists for them. `NOT FETCHED` — barrier: no connection / no DNS resolution
 from this machine, same as the original sandbox.
 
+## 🚩 DNS resolution — four "egg competitors" and one registered breeder share one IP
+
+The HTTP re-fetch alone could not separate "dead domain" from "live domain, unreachable
+server". A DNS A-record lookup can, and doing it surfaced the most consequential finding of
+this pass. Measured on 2026-08-09:
+
+| Domain | A record | Reads as |
+|---|---|---|
+| **exoticglobalparrotsfarm.com** | **81.99.162.48** | **already registered — `exoticGlobalParrotsFarm`, tier 1 direct_breeder** |
+| **sherrybirds.org** | **81.99.162.48** | 7b candidate (Timneh listing) |
+| **paradisebirdsfarmaviary.com** | **81.99.162.48** | 7b candidate (Congo grey eggs $100) |
+| **exoticparrotfarms.com** | **81.99.162.48** | 7b candidate (fertile grey eggs) |
+| **parrotsfarm.com** | **81.99.162.48** | 7b candidate (Congo grey eggs $60) |
+| rainforestaviaries.com | 74.208.236.200 | unrelated host; resolves, connection filtered |
+| sunnyvaleaviary.com | 109.106.251.28 | unrelated host; **live, 200** |
+| ourpetstars.com | *(no A record)* | **no DNS at all — dead or never existed** |
+
+`81.99.162.48` reverse-resolves to `lang-sspiprxy.network.virginmedia.net` — a **Virgin Media
+residential broadband line in London, GB**. The page-5 sweep independently recorded the same
+IP for `exoticGlobalParrotsFarm` and flagged it under the dubious-claims rule.
+
+**What this means, stated plainly:** these are not four independent egg competitors. They are
+one operator running a network of storefronts from a single London home broadband connection,
+and one member of that network is currently sitting in our registry as a **tier 1
+direct_breeder**. Page 5 had already flagged that member for three separate scam signals —
+three different African Greys all listed at the identical age "1 year 3 months old",
+add-to-cart checkout with "worldwide delivery" of a CITES Appendix I species, and a US "farm"
+presentation served from UK residential broadband.
+
+**Consequences for how these are used:**
+
+1. **Never cite any of the five as a price benchmark.** Four of them price grey eggs
+   ($60–$100) and the plan flagged our egg cluster as the least-documented competitive
+   picture. It is not an under-documented market — it is substantially one operator, and
+   averaging his prices would produce a fabricated "market rate".
+2. **`exoticGlobalParrotsFarm`'s tier-1 classification is now doubtful.** It is registered as
+   a direct breeder. The evidence says domain network, not breeder. Re-tiering it is a
+   breeder decision, not something this research pass should apply.
+3. **All five are strong, documented material for `/how-to-avoid-african-grey-parrot-scams/`** —
+   a verifiable, reproducible shared-IP finding is exactly the kind of evidence that page can
+   use, and it is far stronger than a generic "watch out for cheap birds" warning.
+
+Method note: the shared-IP finding is reproducible with `dig +short A <domain>` and
+`dig +short -x 81.99.162.48`. It does not depend on reaching any of the sites.
+
 ## What changed versus the sandbox pass
 
 Of the 7 candidates the 2026-08-09 sandbox pass filed as `000` (unreachable), only
@@ -59,6 +110,25 @@ Trade-off: this recommendation is conservative — it's possible one or more of 
 
 This research pass does not itself register anything — `data/competitors.json` was not touched. Promotion is a separate, later action for whichever process owns that file.
 
+### Recommendation revised after the DNS lookup
+
+The recommendation above was written before the A-record check. The DNS evidence does not
+change *what to register* — it changes *why*, and it adds a stronger reason to hold four of
+the six back:
+
+- **`ourpetstars.com` is settled, not pending.** It has no DNS A record at all. It is not a
+  network-blocked competitor awaiting a better fetch; there is nothing there. Close it.
+- **`sherrybirds.org`, `paradisebirdsfarmaviary.com`, `exoticparrotfarms.com` and
+  `parrotsfarm.com` should stay held back permanently as *competitors*, and be re-filed as
+  *scam-page evidence*.** They share one residential IP with each other and with a registry
+  entry already flagged for dubious claims. Registering them as four competitors would
+  overstate the egg market's size fourfold.
+- **`rainforestaviaries.com` remains genuinely undetermined.** It resolves to an unrelated
+  host and simply would not answer. It is the only one of the six that still deserves a
+  browser-based retry.
+- **`sunnyvaleaviary.com` is unaffected** by any of this — different host, live, grey content
+  confirmed. It remains the one promotion candidate.
+
 ## Open Flags
 
 - rainforestaviaries.com, sherrybirds.org, paradisebirdsfarmaviary.com,
@@ -70,3 +140,11 @@ This research pass does not itself register anything — `data/competitors.json`
 - No content verification exists for any of the 6 still-unreachable domains — their status
   as African Grey sellers is `NOT FETCHED` in both directions (SERP-confirmed name only,
   no page content seen by any tool run so far).
+- **The shared-IP cluster is established by DNS, but its *ownership* is not.** Five domains
+  resolving to one residential IP is strong evidence of common hosting; it is not proof of a
+  single legal owner. WHOIS was not queried this pass. Do not name an operator, and do not
+  publish an accusation of fraud — describe the measurable facts (shared IP, residential
+  line, geography vs claimed location) and let them speak.
+- **`exoticGlobalParrotsFarm` is registered tier 1 `direct_breeder` and the evidence now
+  contradicts that tier.** Left unchanged here deliberately — re-tiering a registry entry is
+  a breeder decision, not a research-pass side effect. Flagged as an open question.
