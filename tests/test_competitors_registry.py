@@ -121,4 +121,4 @@ def test_registry_has_not_shrunk():
     Raise this floor deliberately when competitors are added. Never lower it to make
     a test pass — a falling count means a writer lost data.
     """
-    assert len(load()["competitors"]) >= 44
+    assert len(load()["competitors"]) >= 60
