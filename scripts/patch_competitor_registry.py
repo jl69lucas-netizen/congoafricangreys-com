@@ -2,9 +2,9 @@
 """Repair data/competitors.json — the seven defects recorded in
 docs/superpowers/plans/2026-08-09-competitor-registry-repair.md
 
-Idempotent by construction: it reads the file, applies a fixed set of
-transformations that are all "set to this value", and writes it back. Running it
-twice produces a byte-identical file.
+One-shot migration, recorded in _meta.migrations_applied. Re-running after it has
+been applied is a no-op, so a later legitimate sweep's dates, notes and names can
+never be clobbered by these dated 2026-08-09 values.
 
 Usage:
     python3 scripts/patch_competitor_registry.py --check   # report, write nothing
@@ -17,6 +17,8 @@ import pathlib
 import sys
 
 REGISTRY = pathlib.Path(__file__).resolve().parents[1] / "data" / "competitors.json"
+
+MIGRATION_ID = "2026-08-09-registry-repair"
 
 # --- Defect 2/3/4: the 14 entries that carry `domain` and no `name` ---------
 # id -> (resolved name, canonical url, states_active)
@@ -65,8 +67,17 @@ SWEPT_2026_08_09 = ("chewy", "petFinder", "mariettaBirdShop")
 
 def patch(data):
     """Return (data, list_of_changes). Pure apart from mutating the dict it is given."""
+    applied = data["_meta"].setdefault("migrations_applied", [])
+    if MIGRATION_ID in applied:
+        # One-shot migration. Re-running must never clobber a later legitimate sweep's
+        # last_analyzed dates, notes, or resolved names with these dated 2026-08-09 values.
+        return data, []
+
     changes = []
     tier_map = data["_meta"]["tiers"]
+    if "5" not in tier_map:
+        tier_map["5"] = "non_commercial"
+        changes.append("_meta.tiers += 5: non_commercial")
 
     for entry in data["competitors"]:
         cid = entry["id"]
@@ -99,6 +110,13 @@ def patch(data):
         entry.setdefault("priority", "medium")
         entry.setdefault("notes", "")
         entry.setdefault("social", dict(EMPTY_SOCIAL))
+
+        # parrotAlert is a lost-and-stolen-bird registry, not a seller. Its notes have
+        # said so since before this migration ("Tier should be reclassified as
+        # non-commercial"). Honour that rather than normalising the label away.
+        if cid == "parrotAlert" and entry.get("tier") != 5:
+            entry["tier"] = 5
+            changes.append(f"{cid}: tier 2 -> 5 (non_commercial, per its own notes)")
 
         # tier_label must always agree with tier.
         expected_label = tier_map[str(entry["tier"])]
@@ -148,6 +166,10 @@ def patch(data):
     if data["_meta"].get("description") != wanted_description:
         data["_meta"]["description"] = wanted_description
         changes.append("_meta.description resynced to actual count")
+
+    if changes:
+        applied.append(MIGRATION_ID)
+        changes.append(f"_meta.migrations_applied += {MIGRATION_ID}")
 
     return data, changes
 

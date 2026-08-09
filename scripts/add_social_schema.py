@@ -33,7 +33,7 @@ def main():
             for k, v in SEED[cid].items():
                 if not c["social"].get(k):
                     c["social"][k] = v
-    PATH.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n")
+    PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
     print(f"social block ensured on all competitors; {changed} newly added")
 
 if __name__ == "__main__":
