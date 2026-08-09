@@ -1207,8 +1207,10 @@ body {
 .console textarea {
   display: block;
   width: 100%;
-  min-height: 8.5rem;
-  resize: vertical;
+  height: 47.6rem;       /* 13.6rem x3.5 per breeder request 2026-08-09 */
+  min-height: 47.6rem;
+  max-height: 82vh;
+  resize: vertical;      /* drag the bottom edge to grow/shrink further */
   border: 0;
   padding: 1rem 1.1rem;
   background: transparent;
@@ -2026,15 +2028,25 @@ tbody tr:hover { background: var(--surface); }
 
   document.getElementById("btn-md").addEventListener("click", function () {
     var nb = notesBlock();
-    var blob = new Blob([fullBrief() + (nb ? "\n---\n\n" + nb : "")], { type: "text/markdown" });
+    var text = fullBrief() + (nb ? "\n---\n\n" + nb : "");
+    var blob = new Blob([text], { type: "text/markdown" });
+    var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
+    a.href = url;
     a.download = "cags-universal-page-build-brief-v2.md";
+    a.rel = "noopener";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
-    say("Downloaded .md");
+    // The sandboxed artifact iframe can silently swallow the download attribute —
+    // always open a backup tab too, so something visible happens either way.
+    var opened = window.open(url, "_blank");
+    if (!opened) {
+      say("Pop-up blocked — allow pop-ups for this download, or use Copy brief + my notes");
+    } else {
+      say("Downloaded .md (also opened a backup tab — Cmd/Ctrl+S there if the download didn't land)");
+    }
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
   });
 
   document.getElementById("btn-clear").addEventListener("click", function () {
