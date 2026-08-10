@@ -1,0 +1,227 @@
+<title>Visual Companion — Near-Me Router (Page B)</title>
+<style>
+  :root{
+    --green:#2D6A4F; --green-dk:#1b4332; --clay:#e8604c; --clay-ink:#b04228;
+    --cream:#faf7f4; --ink:#1f2937; --muted:#6b625a; --line:#e7e2db; --card:#ffffff;
+    --shadow:0 3px 12px rgba(60,30,10,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --cream:#16181c; --ink:#e8e6e3; --muted:#9aa0a6; --line:#2c3036; --card:#1e2126; --shadow:0 3px 12px rgba(0,0,0,.4); }
+  }
+  :root[data-theme="dark"]{ --cream:#16181c; --ink:#e8e6e3; --muted:#9aa0a6; --line:#2c3036; --card:#1e2126; --shadow:0 3px 12px rgba(0,0,0,.4); }
+  :root[data-theme="light"]{ --cream:#faf7f4; --ink:#1f2937; --muted:#6b625a; --line:#e7e2db; --card:#ffffff; --shadow:0 3px 12px rgba(60,30,10,.06); }
+
+  body{background:var(--cream);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;padding:24px 16px 64px}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font:700 clamp(1.5rem,3.4vw,2.1rem)/1.2 Georgia,serif;margin:0 0 6px}
+  .sub{color:var(--muted);margin:0 0 28px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+  .tag{font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .m{background:var(--green);color:#fff}
+  .c{background:var(--clay);color:#fff}
+  .s{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .browser{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);background:var(--card)}
+  .chrome{display:flex;align-items:center;gap:6px;padding:9px 12px;background:linear-gradient(var(--card),var(--cream));border-bottom:1px solid var(--line)}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--line)}
+  .url{flex:1;margin-left:8px;font-size:.72rem;color:var(--muted);background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:3px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .band{border-bottom:1px dashed var(--line);padding:16px 18px}
+  .band:last-child{border-bottom:0}
+  .bhead{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:8px}
+  .bnum{font:700 .72rem/1 system-ui;color:var(--muted);background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:4px 7px;min-width:22px;text-align:center}
+  .btitle{font-weight:700;font-size:.95rem}
+  .comp{font-size:.7rem;color:var(--clay-ink);font-weight:700}
+  @media (prefers-color-scheme: dark){ .comp{color:#ff8a73} }
+  .skel{display:grid;gap:8px;margin-top:10px}
+  .line{height:9px;border-radius:5px;background:linear-gradient(90deg,var(--line),transparent)}
+  .line.w80{width:80%}.line.w60{width:60%}.line.w45{width:45%}
+  .imgslot{border:2px dashed var(--line);border-radius:10px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.72rem;font-weight:600;text-align:center;padding:8px}
+  .row{display:grid;gap:10px}
+  .row.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .row.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .row.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media(max-width:640px){ .row.c2,.row.c3,.row.c4{grid-template-columns:1fr} }
+  .card{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--cream)}
+  .price{color:var(--clay-ink);font-weight:800;font-size:.9rem}
+  @media (prefers-color-scheme: dark){ .price{color:#ff8a73} }
+  .ship{font-size:.66rem;color:var(--muted);border-top:1px dotted var(--line);margin-top:7px;padding-top:6px}
+  .heroC{background:var(--green);color:#fff;border-radius:10px;padding:16px}
+  .mosaic{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:12px}
+  @media(max-width:640px){.mosaic{grid-template-columns:repeat(4,1fr)}}
+  .mtile{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:6px 3px;text-align:center;font-size:.6rem;font-weight:700}
+  .mtile b{display:block;font-size:.72rem}
+  .statstrip{display:flex;flex-wrap:wrap;gap:14px;margin-top:4px}
+  .statstrip div{font-size:.66rem;opacity:.9}
+  .statstrip b{display:block;font:700 1.1rem Georgia,serif}
+  .layout{display:grid;grid-template-columns:196px minmax(0,1fr);gap:20px;padding:16px 18px}
+  @media(max-width:900px){.layout{grid-template-columns:1fr}}
+  .dial{border:1px solid var(--line);border-radius:14px;padding:12px 10px;background:var(--card);position:sticky;top:12px;align-self:start}
+  .ring{width:64px;height:64px;border-radius:50%;margin:0 auto 8px;background:conic-gradient(var(--clay) 22%, var(--line) 0);display:flex;align-items:center;justify-content:center}
+  .ring i{width:50px;height:50px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;font-style:normal}
+  .ring b{font:700 15px Georgia,serif}
+  .ring s{font-size:7px;color:var(--muted);text-decoration:none}
+  .tocl{list-style:none;margin:8px 0 0;padding:8px 0 0;border-top:1px dashed var(--line);font-size:.74rem}
+  .tocl li{padding:5px 7px;border-radius:8px;color:var(--muted)}
+  .tocl li.on{background:var(--cream);color:var(--clay-ink);font-weight:700}
+  .seam{text-align:center;color:var(--muted);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;padding:9px 0}
+  .seam:before,.seam:after{content:"";display:inline-block;width:52px;height:1px;background:var(--clay);vertical-align:middle;margin:0 9px;opacity:.5}
+  .note{font-size:.74rem;color:var(--muted);background:var(--cream);border-left:3px solid var(--clay);padding:8px 11px;border-radius:0 8px 8px 0;margin-top:10px}
+  .chipcloud{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+  .sc{font-size:.66rem;font-weight:700;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:var(--muted);background:var(--card)}
+  .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:9px}
+  @media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .gcell{border:1px solid var(--line);border-radius:8px;padding:7px 9px;background:var(--card);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;gap:6px}
+  .gcell span{color:var(--muted);font-size:.62rem}
+  .tbl{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:8px}
+  .tbl th,.tbl td{border:1px solid var(--line);padding:5px 7px;text-align:left}
+  .tbl th{background:var(--cream);font-weight:700}
+  .cta{background:var(--clay);color:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:.76rem;display:inline-block}
+  .pass{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .pass span{font-size:.63rem;border:1px solid var(--line);border-radius:6px;padding:3px 7px;color:var(--muted)}
+  .warn{border-left-color:var(--green)}
+</style>
+
+<div class="wrap">
+  <h1>Visual Companion — Page B</h1>
+  <p class="sub"><code>/african-grey-parrots-for-sale-near-me/</code> · Strategy B-3 “Router With a Reason” · Tuple 12 · <strong>Skeleton only — layout and component placement, no final copy.</strong></p>
+
+  <div class="legend">
+    <span class="tag m">MANDATORY</span>
+    <span class="tag c">COMPETITOR-BASED</span>
+    <span class="tag s">SUGGESTED-RECOMMENDED</span>
+  </div>
+
+  <div class="browser">
+    <div class="chrome"><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+      <div class="url">congoafricangreys.com/african-grey-parrots-for-sale-near-me/</div>
+    </div>
+
+    <div>
+      <div class="band">
+        <div class="bhead"><span class="bnum">1</span><span class="btitle">Hero</span><span class="tag m">MANDATORY</span><span class="comp">Hero-C Mosaic Metrics — REFRESHED: geographic tile field</span></div>
+        <div class="heroC">
+          <div style="font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85">Eyebrow</div>
+          <div style="font:700 1.2rem/1.25 Georgia,serif;margin:6px 0">H1 — African Grey Parrots for Sale Near You</div>
+          <div class="statstrip">
+            <div><b>39</b>pages</div><div><b>24</b>states</div><div><b>15</b>metros</div><div><b>50</b>states shipped</div>
+          </div>
+          <div class="mosaic">
+            <div class="mtile"><b>TX</b>home</div><div class="mtile"><b>FL</b>4</div><div class="mtile"><b>CA</b>3</div>
+            <div class="mtile"><b>NY</b>2</div><div class="mtile"><b>OH</b>2</div><div class="mtile"><b>MD</b>1</div>
+          </div>
+          <div style="margin-top:12px"><span class="cta">Find your state</span></div>
+        </div>
+        <div class="note">Refresh delta: dna-tested’s mosaic carried lab metrics — this one carries geography, so the hero previews the page’s own function.</div>
+      </div>
+
+      <div class="layout">
+        <aside class="dial">
+          <div class="ring"><i><b>2</b><s>of 9</s></i></div>
+          <ul class="tocl">
+            <li>1 · What “near me” returns</li>
+            <li class="on">2 · Your state or metro</li>
+            <li>3 · How close, really</li>
+            <li>4 · Birds you could match</li>
+            <li>5 · Why “cheap” is a scam</li>
+            <li>6 · What arrives</li>
+            <li>7 · If something’s wrong</li>
+            <li>8 · FAQ</li>
+            <li>9 · Tell us where you are</li>
+          </ul>
+          <div style="font-size:.6rem;color:var(--muted);margin-top:8px;text-align:center">Dial 1 Clay<br>+ Rail B ticker on mobile</div>
+        </aside>
+
+        <div>
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 1</span><span class="btitle">What “African Grey Parrot for Sale Near Me” Actually Returns</span><span class="tag m">MANDATORY</span></div>
+            <div class="row c2"><div class="imgslot">INFOGRAPHIC · near-me SERP anatomy</div><div class="skel"><div class="line"></div><div class="line w80"></div><div class="line w45"></div></div></div>
+            <div class="note warn"><strong>Must stay SHORT.</strong> Two short paragraphs. Every word here delays the routing click, and if this grows the page becomes the “write it like a local page” strategy that was rejected.</div>
+          </div>
+
+          <div class="seam">seam 1</div>
+
+          <div class="band" style="padding:0 0 16px;border-left:3px solid var(--green);padding-left:12px">
+            <div class="bhead"><span class="bnum">H2 2</span><span class="btitle">Choose Your State or Metro Area</span><span class="tag m">MANDATORY</span><span class="comp">T2 REFRESHED — state-chip cloud + the grid</span></div>
+            <div class="chipcloud">
+              <span class="sc">AZ</span><span class="sc">CO</span><span class="sc">FL</span><span class="sc">GA</span><span class="sc">IL</span><span class="sc">IN</span><span class="sc">IA</span><span class="sc">KY</span><span class="sc">MD</span><span class="sc">MA</span><span class="sc">MI</span><span class="sc">MN</span><span class="sc">MO</span><span class="sc">NJ</span><span class="sc">NY</span><span class="sc">NC</span><span class="sc">OH</span><span class="sc">OR</span><span class="sc">PA</span><span class="sc">TN</span><span class="sc">TX</span><span class="sc">VA</span><span class="sc">WA</span><span class="sc">WI</span><span class="sc">CA*</span>
+            </div>
+            <div class="grid">
+              <div class="gcell">Texas <span>→ page</span></div><div class="gcell">Florida <span>→ page</span></div>
+              <div class="gcell">Ohio <span>→ page</span></div><div class="gcell">Maryland <span>→ page</span></div>
+              <div class="gcell">Houston <span>metro</span></div><div class="gcell">NYC <span>metro</span></div>
+              <div class="gcell">Chicago <span>metro</span></div><div class="gcell">Bay Area <span>metro</span></div>
+            </div>
+            <div class="note"><strong>40 destinations, all verified to build.</strong> 24 states + 15 metros + California via <code>buy-intelligent-african-grey-for-sale-ca</code>. This is the <strong>sole enumeration site on the website</strong> — the hub sheds its grid in Task 13. Chip cloud doubles as a second entry into the grid.</div>
+          </div>
+
+          <div class="seam">seam 2</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 3</span><span class="btitle">How Close Are We to You, Really?</span><span class="tag m">MANDATORY</span><span class="comp">NEW Table I “Distance Ledger”</span></div>
+            <div class="imgslot">INFOGRAPHIC · drive-or-fly radius from Midland</div>
+            <table class="tbl">
+              <tr><th>Your state</th><th>Nearest cargo airport</th><th>Route</th><th>Cost</th></tr>
+              <tr><td>Texas (within 2–3 hrs)</td><td>—</td><td>Pickup in Midland</td><td>—</td></tr>
+              <tr><td>Maryland</td><td>BWI</td><td>Direct cargo</td><td>$185</td></tr>
+              <tr><td>Any state</td><td>—</td><td>Door delivery</td><td>$350</td></tr>
+            </table>
+            <div class="note">No competitor on this SERP states a service radius at all.</div>
+          </div>
+
+          <div class="seam">seam 3</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 4</span><span class="btitle">The Birds You Could Be Matched With</span><span class="tag m">MANDATORY</span></div>
+            <div class="row c3">
+              <div class="card"><div class="imgslot" style="aspect-ratio:4/5">OG · bird</div><div style="font:700 .8rem Georgia,serif;margin-top:6px">AMIE</div><div class="price">$2,500</div><div class="ship">Ships nationwide · $185 airport · $350 home</div></div>
+              <div class="card"><div class="imgslot" style="aspect-ratio:4/5">OG · bird</div><div style="font:700 .8rem Georgia,serif;margin-top:6px">ELAD</div><div class="price">$1,600</div><div class="ship">Ships nationwide · $185 airport · $350 home</div></div>
+              <div class="card"><div class="imgslot" style="aspect-ratio:4/5">OG · pair</div><div style="font:700 .8rem Georgia,serif;margin-top:6px">JINS &amp; JENI</div><div class="price">$3,500</div><div class="ship">Ships nationwide · $185 airport · $350 home</div></div>
+            </div>
+          </div>
+
+          <div class="seam">seam 4</div>
+
+          <div class="band" style="padding:0 0 16px;border-left:3px solid var(--clay);padding-left:12px">
+            <div class="bhead"><span class="bnum">H2 5</span><span class="btitle">Why Are “Cheap” African Greys Near You Usually a Scam?</span><span class="tag s">SUGGESTED → ADOPTED</span></div>
+            <div class="imgslot">INFOGRAPHIC · one seller, three platforms, three prices</div>
+            <div class="note"><strong>Below the grid, by design.</strong> Routing is the page’s job; this section serves the <code>cheap</code> / <code>craigslist</code> searcher — <code>cheap</code> recurs on all 5 autosuggest stems, Craigslist ranks #4. Reuses the price-artifact evidence with <strong>different prose from Page A</strong>, and links the scam cluster rather than duplicating it.</div>
+          </div>
+
+          <div class="seam">seam 5</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 6–7</span><span class="btitle">What Arrives With Every Bird · If Something Is Wrong on Arrival</span><span class="tag m">MANDATORY</span></div>
+            <div class="row c2"><div class="imgslot">OG · document set</div><div class="imgslot">INFOGRAPHIC · first 72 hours</div></div>
+            <div class="note"><code>has_org</code> currently FAILS on this page — LocalBusiness/Organization schema is required here.</div>
+          </div>
+
+          <div class="seam">seam 6</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 8</span><span class="btitle">FAQ</span><span class="tag m">MANDATORY</span><span class="comp">FAQ-B REFRESHED — map-pin register</span></div>
+            <div class="skel"><div class="line"></div><div class="line w80"></div><div class="line w60"></div></div>
+            <div class="note"><strong>3-3-3 rule stays OUT</strong> until sourced to the Verified-Claim Ledger.</div>
+          </div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">·</span><span class="btitle">Newsletter + Keep reading</span><span class="tag m">MANDATORY</span></div>
+            <div class="row c2"><div class="imgslot">NEWSLETTER · unique image (never shared with Page A)</div><div class="card" style="display:flex;gap:8px;align-items:center"><div class="imgslot" style="width:70px;aspect-ratio:1">thumb</div><div style="font-size:.7rem">Read-card — thumb = target’s own hero</div></div></div>
+          </div>
+
+          <div class="band" style="padding:0">
+            <div class="bhead"><span class="bnum">H2 9</span><span class="btitle">Tell Us Where You Are — contact form</span><span class="tag m">MANDATORY</span></div>
+            <div class="row c2">
+              <div class="card" style="background:var(--green-dk);color:#fff"><div style="font-size:.72rem">Dark form-side panel — every reservable bird + price + Midland pickup option</div></div>
+              <div class="skel"><div class="line"></div><div class="line"></div><div class="line w80"></div><div class="line w45"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pass">
+    <span>seams = sections</span><span>≥5 H5 · ≥5 H6 (7/7)</span><span>shipping line on every card</span>
+    <span>real hero image</span><span>brand in title</span><span>has_org schema</span>
+    <span>grid enumerated ONCE site-wide</span><span>no two alts alike</span><span>scroll-behavior:auto on the rail</span>
+  </div>
+</div>
