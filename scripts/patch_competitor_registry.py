@@ -28,6 +28,7 @@ REGISTRY = pathlib.Path(__file__).resolve().parents[1] / "data" / "competitors.j
 MIGRATION_ID = "2026-08-09-registry-repair"
 ADDITIONS_MIGRATION_ID = "2026-08-09-approved-additions"
 DNS_CORRECTION_MIGRATION_ID = "2026-08-10-dns-finding-retraction"
+PAGE2_MIGRATION_ID = "2026-08-10-page2-corrections"
 TIER_SUSPECT = 6
 
 # --- Defect 2/3/4: the 14 entries that carry `domain` and no `name` ---------
@@ -73,6 +74,88 @@ MARIETTA_NOTE = (
 )
 
 SWEPT_2026_08_09 = ("chewy", "petFinder", "mariettaBirdShop")
+
+# --- Fourth one-shot migration: page-2 sweep baseline corrections -------------
+# Every value below was reproduced from the build machine on 2026-08-10 through
+# public DNS before being written here. See correct_page2() for the measurements.
+PAGE2_CORRECTIONS = {
+    "afroBirdsFarm": {
+        "url": "https://afrobirdsfarm.com",
+        "access_status": "accessible",
+        "last_analyzed": "2026-08-10",
+        "notes": (
+            "NOT DEAD — the 2026-05-15 'CONFIRMED DEAD, permanently down' verdict was wrong, and it "
+            "was wrong about the HOST, not the business. The registry stored the www host: "
+            "www.afrobirdsfarm.com resolves to a Hostinger address and returns 000, while the apex "
+            "afrobirdsfarm.com is on Cloudflare and returns 200. Re-verified 2026-08-10 through "
+            "public DNS. URL corrected to the apex. Content-wise this is one of the more developed "
+            "tier-1 sites: a 47-post blog carrying a price cluster, a cage silo, comparison posts "
+            "and Spanish-language posts. Treat the old dead_confirmed note as a cautionary example "
+            "— check the apex before declaring any domain dead."
+        ),
+    },
+    "williamsAfricanGreys": {
+        "url": "https://williamsafricangreys.com",
+        "access_status": "accessible",
+        "last_analyzed": "2026-08-10",
+        "notes": (
+            "Specialist breeder focused on African Greys; notable brand-name domain. ACCESS "
+            "CORRECTED 2026-08-10: previously filed 'inaccessible — expired SSL, likely dead'. It "
+            "returns 200 on Cloudflare with priced inventory. The SSL error came from our own "
+            "resolver and was recorded twice from a single transport, which is why it looked "
+            "confirmed. Re-verified through public DNS."
+        ),
+    },
+    "shadesOfGreys": {
+        "name": "Fifty Shades of African Greys",
+        "url": "https://www.shadesofgreys.com",
+        "states_active": ["MN"],
+        "access_status": "accessible",
+        "last_analyzed": "2026-08-10",
+        "notes": (
+            "CORRECTED 2026-08-10: trades as 'Fifty Shades of African Greys' and is in MINNESOTA, "
+            "not Georgia. Re-verified 200 with the title 'Fifty Shades of African Greys | Parrot "
+            "and Exotic Bird Breeder' and Minnesota on the page. The page-2 sweep additionally "
+            "recorded Congo $7,000 / Timneh $6,500, DNA plus Borna/Pacheco's/Chlamydia/PBFD/Polyoma "
+            "screening, and LocalBusiness schema — those figures are from that sweep, not "
+            "re-measured here. It is the strongest-ranking site in its group. Its pricing sits far "
+            "above our $1,500-$3,500 range; how to frame that is an open breeder decision, so do "
+            "not treat $7,000 as 'the market rate' on any page yet."
+        ),
+    },
+    "africanGreyAviaries": {
+        "url": "https://www.africangreyaviaries.com",
+        "access_status": "compromised_redirect",
+        "priority": "low",
+        "threat_level": "none",
+        "last_analyzed": "2026-08-10",
+        "notes": (
+            "NO LONGER A BIRD SITE — NEVER LINK TO IT. Reproduced 2026-08-10: africangreyaviaries.com "
+            "returns 200 serving 'SUSUN4D: Panduan Slot DANA Withdraw 24 Jam dan Batas Penarikan', "
+            "an Indonesian online-gambling page. The fetched HTML contains ZERO occurrences of "
+            "'african grey' and 116 gambling tokens. The domain appears to have expired and been "
+            "re-registered as a gambling PBN while still carrying a competitor's name in our "
+            "registry. This is the same never-link-to-this class as mariettaBirdShop, but a "
+            "different mechanism: Marietta is a hijacked URL on a live bird site, this is the whole "
+            "domain repurposed. The prior 'inactive — expired, no further analysis needed' note "
+            "understated it. Not a competitor; retained only so no future sweep re-adds it as one."
+        ),
+    },
+    "exoticParrotsPlanet": {
+        "url": "https://exoticparrotsplanet.com",
+        "access_status": "accessible",
+        "last_analyzed": "2026-08-10",
+        "notes": (
+            "Direct breeder; covers both variants. REBUILT since the 2026-05-11 baseline, which "
+            "recorded '~421 words, zero schema, no pages' — that description is stale. Re-verified "
+            "200 on 2026-08-10. The page-2 sweep recorded a full store with a $800 Congo, Western "
+            "Union and Bitcoin checkout, an LA address paired with an El Paso (915) phone number, "
+            "and a 'since 1994' claim on a 2025 site. Those are that sweep's figures, not "
+            "re-measured here. On those signals this is a tier-6 suspect_seller candidate, but "
+            "re-tiering is a breeder decision and none has been applied."
+        ),
+    },
+}
 
 # --- Third one-shot migration: retract the withdrawn shared-IP finding --------
 # Replaces the 2026-08-09 re-tier note, whose lead justification was disproved on
@@ -605,6 +688,45 @@ def correct_dns_finding(data):
     return data, changes
 
 
+def correct_page2(data):
+    """Fourth one-shot migration: the page-2 sweep's baseline corrections.
+
+    Corrections to EXISTING rows, not additions, so no approval gate applies —
+    but every one was independently reproduced on 2026-08-10 before being
+    written here, resolving through public DNS (see correct_dns_finding for why
+    that matters on this machine). Tiers and priorities are left alone except
+    where a site stopped being a bird site altogether.
+
+    Measured:
+      afrobirdsfarm.com          apex 200 / www 000 — registry stored the www host
+      williamsafricangreys.com   200 — registry said inaccessible
+      shadesofgreys.com          200, "Fifty Shades of African Greys", Minnesota
+      africangreyaviaries.com    200 serving SUSUN4D, an Indonesian slots page:
+                                 0 occurrences of "african grey", 116 gambling tokens
+      exoticparrotsplanet.com    200 — rebuilt since the 2026-05-11 baseline
+    """
+    applied = data["_meta"].setdefault("migrations_applied", [])
+    if PAGE2_MIGRATION_ID in applied:
+        return data, []
+
+    changes = []
+    for entry in data["competitors"]:
+        cid = entry["id"]
+        if cid not in PAGE2_CORRECTIONS:
+            continue
+        for key, value in PAGE2_CORRECTIONS[cid].items():
+            if entry.get(key) != value:
+                entry[key] = value
+                shown = value if not isinstance(value, str) or len(value) < 48 else value[:45] + "..."
+                changes.append(f"{cid}: {key} = {shown!r}")
+
+    if changes:
+        applied.append(PAGE2_MIGRATION_ID)
+        changes.append(f"_meta.migrations_applied += {PAGE2_MIGRATION_ID}")
+
+    return data, changes
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="report changes, write nothing")
@@ -618,10 +740,17 @@ def main():
         action="store_true",
         help="run the 2026-08-10 retraction of the withdrawn shared-IP finding",
     )
+    parser.add_argument(
+        "--correct-page2",
+        action="store_true",
+        help="run the 2026-08-10 page-2 sweep baseline corrections",
+    )
     args = parser.parse_args()
 
     data = json.loads(REGISTRY.read_text())
-    if args.correct_dns_finding:
+    if args.correct_page2:
+        migration = correct_page2
+    elif args.correct_dns_finding:
         migration = correct_dns_finding
     elif args.add_approved:
         migration = add_approved
