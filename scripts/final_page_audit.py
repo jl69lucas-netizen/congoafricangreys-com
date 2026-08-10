@@ -367,10 +367,15 @@ FORSALE = ["african-grey-parrot-bird-eggs-for-sale-usa",
            "baby-african-grey-parrot-for-sale",
            "african-grey-parrot-adoption-cost",
            "congo-african-grey-parrot-pair-for-sale",
-           "affordable-african-grey-birds-for-sale",
-           "grey-african-parrots-for-sale",
-           "male-african-gray-for-sale",
-           "african-grey-breeding-pair-for-sale"]  # for-sale cluster, expanded as pages rebuild
+           "african-grey-breeding-pair-for-sale",
+           # 2026-08-10: the last two spokes + the hub they feed. None of the three was
+           # ever in this list, so none of them could fail a gate.
+           # affordable- / grey-african-parrots- / male-african-gray- REMOVED: they were
+           # consolidated 2026-08-08, they 301, and they have no dist/ output — they were
+           # printing "dist/ MISSING" as if the build were broken.
+           "buy-african-grey-parrots-with-shipping",
+           "african-grey-parrots-for-sale-near-me",
+           "african-grey-parrots-for-sale"]  # for-sale cluster, expanded as pages rebuild
 
 def blog_targets():
     """Discover the /blog/ hub (dist/blog/index.html) + every dist/blog/<slug>/ post."""

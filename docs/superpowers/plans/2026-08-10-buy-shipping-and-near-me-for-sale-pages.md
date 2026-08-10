@@ -235,10 +235,27 @@ FORSALE = ["african-grey-parrot-bird-eggs-for-sale-usa",
 cd /Users/apple/Downloads/CAG && npx astro build >/dev/null 2>&1 && python3 scripts/final_page_audit.py --for-sale 2>&1 | grep -E "buy-african-grey-parrots-with-shipping|african-grey-parrots-for-sale-near-me"
 ```
 
-Expected: two `[FAIL]` rows. `african-grey-parrots-for-sale-near-me` must show `H2:1` and fail at least
-`min_h5_5`, `min_h6_5`. `buy-african-grey-parrots-with-shipping` must show `H2:4` and fail the same two.
-**If either row reports PASS, stop and read `skills/cag-gate-integrity.md` — a stub cannot pass this gate,
-so a PASS means the check is broken, not the page.** Also confirm the three `dist/ MISSING` lines are gone.
+Expected: three `[FAIL]` rows, and the summary moving from `0 PASS · 10 PASS-WITH-WARNINGS · 0 FAIL (of 13)`
+to `0 PASS · 10 PASS-WITH-WARNINGS · 3 FAIL (of 13)`. **The before-state is the finding: the gate claimed 13
+targets while examining 10, and reported zero failures because the two broken pages were not in its list.**
+**If any row reports PASS, stop and read `skills/cag-gate-integrity.md` — a stub cannot pass this gate, so a
+PASS means the check is broken, not the page.** Also confirm the three `dist/ MISSING` lines are gone.
+
+**Actual result, 2026-08-10 — record these, they extend §0d:**
+
+```
+[FAIL] buy-african-grey-parrots-with-shipping   H1:1 H2:5 H3:10 H4:0 H5:0 H6:0
+    FAIL → all_h1_h4, all_six_levels, min_h5_5, min_h6_5, shipping_line, real_hero_image, brand_in_title
+[FAIL] african-grey-parrots-for-sale-near-me    H1:1 H2:2 H3:4  H4:0 H5:0 H6:0
+    FAIL → all_h1_h4, all_six_levels, min_h5_5, min_h6_5, has_org, shipping_line, real_hero_image, brand_in_title
+[FAIL] african-grey-parrots-for-sale            H1:1 H2:6 H3:8  H4:0 H5:0 H6:0
+    FAIL → all_h1_h4, all_six_levels, min_h5_5, min_h6_5, has_org, shipping_line, real_hero_image
+```
+
+Four failures were **not** in the §0d catalogue and are now build requirements: **`shipping_line` fails on all
+three** (the `$185 airport · $350 home` rule), **`real_hero_image` fails on all three**, **`has_org`** is
+missing on the near-me page and the hub, and **`brand_in_title`** on the two spokes. Counts are read from
+`dist/`, so they differ slightly from source greps — dist is the truth.
 
 - [ ] **Step 4: Register both pages in the render harness**
 
@@ -249,9 +266,25 @@ In `tests/render/targets.json`, add to `pages`:
     { "slug": "african-grey-parrots-for-sale-near-me",  "page_type": "for-sale" }
 ```
 
-Match the existing entries' exact key names and ordering before writing — read a neighbouring entry first and
-mirror it. `families_by_page_type["for-sale"]` already resolves to `IMG, LAYOUT, NAV, SEM, SCHEMA, CSS, DUP,
-A11Y`, so no second switch needs touching.
+Entries take three keys — `slug`, `page_type`, `corpus` — and both of these get `"corpus": false`. `corpus:
+true` marks the frozen benchmark sample, one page per page type; these are targets, not benchmarks.
+`families_by_page_type["for-sale"]` already resolves to `IMG, LAYOUT, NAV, SEM, SCHEMA, CSS, DUP, A11Y`, so
+no second switch needs touching.
+
+**Do NOT add `african-grey-parrots-for-sale` here.** *(Recorded 2026-08-10 after doing exactly that.)* The hub
+is **already registered**, as `{"slug": "african-grey-parrots-for-sale", "page_type": "hub", "corpus": true}`
+— it is the frozen benchmark page for the `hub` page type, and `hub` maps to all eight families. Adding a
+second `for-sale` row for it creates a duplicate slug and would shadow the benchmark. Verify after editing:
+
+```bash
+cd /Users/apple/Downloads/CAG && python3 -c "
+import json,collections
+d=json.load(open('tests/render/targets.json'))
+c=collections.Counter(p['slug'] for p in d['pages'])
+print('duplicates:',{k:v for k,v in c.items() if v>1} or 'none')"
+```
+
+Expected: `duplicates: none`. Task 13 inherits this — the hub needs **no** targets.json edit.
 
 - [ ] **Step 5: Run the meta gate — the gate that checks the checkers**
 
