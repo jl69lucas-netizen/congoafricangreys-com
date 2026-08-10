@@ -111,3 +111,56 @@ for p in <slugs>; do printf "%-46s " "$p"; \
 | Seams | 4–8, movement boundaries, small footer-logo | Cluster standard |
 
 **Header dup-gate run BEFORE outline approval** (trap #6): 98 proposed headings vs 606 sibling headings across all 8 shipped pages → **0 exact, 0 template crossovers.** Counts machine-verified: H1 1 · H2 23 · H3 38 · H4 18 · **H5 10** · **H6 8**; all six levels present.
+
+---
+
+# Tuples 11 and 12 — the last two spokes (LOCKED 2026-08-10)
+
+**Correction to the breeding-pair row above (2026-08-03).** That row records **"T3 Boarding-Pass ⭐ first use
+in the cluster."** It is not true. `dist/african-grey-breeding-pair-for-sale/index.html` ships `phero-ledger`
+and `ptile-chip`; a grep for `boarding|bpass|tocT3|toc-t3` across **all** built pages returns nothing.
+**T3 has never been built.** This is the second time this table has recorded a component claim the built page
+does not support — the dna-tested row carries the same warning. *Verify against `dist/`, not against this
+table.*
+
+Consequence: **T3 Boarding-Pass is free, and the spec reserves it for shipping-heavy pages — naming
+`buy-with-shipping` and `near-me` explicitly.** Page A claims the genuine first use.
+
+## Measured inventory across the 10 shipped pages (2026-08-10, from `dist/`)
+
+| Axis | Spent |
+|---|---|
+| TOC shells | T5 `stepper` (congo, baby) · T2 `chipcloud` (dna) · T4 `t4-grid` (hand-raised, health-guarantee) · T1 `t1m` refreshed (adoption-cost) · **T3 — UNUSED** |
+| Rails | `railA` ×7 · `railB` ×3 |
+| FAQ | `faqA` ×4 · `faqB` ×4 · `faqC` ×3 — **all three shells spent; new pages must refresh** |
+| Takeaway **pairs** | (1,2) (1,3) (1,5) (2,3) (2,4) (2,5) (3,4) (3,5) (4,5) — **only (1,4) is unused** |
+| Tables | `tblA` (dna, health-guarantee) · `tblC` (hand-raised) · `tblD` (dna) · `tblE` (health-guarantee) |
+
+## Tuple 11 — `/buy-african-grey-parrots-with-shipping/`
+
+| Axis | Pick | Why it is distinct |
+|---|---|---|
+| Hero | **Split-Hero A trust ribbon — REFRESHED**: ribbon chips become **price-transparency chips** (`$1,500 floor` · `every price shown` · `CITES Appendix I` · `72-hr guarantee`) where health-guarantee's ribbon carried guarantee chips | Split-Hero A spent once; differentiation is a refresh delta, not a new shell |
+| Dial + Rail | **Dial 2 Dark-Aviary + Rail B** | Split-Hero A is light, so Dial 2 is legal. health-guarantee shipped Split-Hero A + Dial 1 + Rail A → **new triple** |
+| TOC | **T3 Boarding-Pass ⭐ GENUINE first use** | Never built. Spec reserves T3 for shipping-heavy pages and names this slug |
+| Takeaway | **K1 Receipt + K4 Clipboard** | **The only unused pair in the cluster** |
+| Table | **NEW Table H "Price Ladder"** — source · price · date measured · what the price includes | Carries the MANDATORY price-artifact proof; no sibling has a cross-vendor price table |
+| FAQ | **FAQ-A REFRESHED → price-chip register** (clay `$` chip replacing the check-circle) | All three FAQ shells spent; adoption-cost used a clay `$` chip on **FAQ-C**, so the chip on **FAQ-A** is a new pairing |
+| H6 prefixes | `Price Check:` · `On the Paperwork:` · `What We Measured:` | Clear of all 19 spent prefixes |
+| Geo | IA · KY · MD · TN · WI | The only five unspent by any built sibling |
+
+## Tuple 12 — `/african-grey-parrots-for-sale-near-me/`
+
+| Axis | Pick | Why it is distinct |
+|---|---|---|
+| Hero | **Hero-C Mosaic Metrics — REFRESHED**: the mosaic tiles become a **geographic tile field** (state/metro tiles with live counts) where dna-tested's mosaic carried lab metrics | Hero-C spent once; refresh delta, and it previews the page's own function |
+| Dial + Rail | **Dial 1 Clay + Rail B green ticker** | dna-tested shipped Hero-C + Dial 1 + **Rail A** → **new triple**. Ledger rotates Rail B onto hub/near-me pages |
+| TOC | **T2 Chip Cloud — REFRESHED to a state-chip cloud** (chips are state and metro abbreviations that jump into the grid) | T2 spent once by dna-tested as a topic cloud; a *navigational geographic* chip cloud is a real functional delta, and it doubles as a second entry into the grid |
+| Takeaway | **K3 Green Ledger + K4 Clipboard + K5 Capsule** | Every pair except (1,4) is spent and (1,4) goes to Page A; the triple (3,4,5) is unused — timneh's (2,3,5) is the only other triple |
+| Table | **NEW Table I "Distance Ledger"** — state · nearest cargo airport · route · cost tier | No sibling ships a geography-to-logistics table |
+| FAQ | **FAQ-B REFRESHED → map-pin register** (pin glyph replacing timneh's clay number chip) | FAQ-B spent by timneh, baby and congo-pair; the pin is the delta and it matches the page's job |
+| H6 prefixes | `Distance Note:` · `From Midland:` · `Ask Before You Drive:` | Clear of all 19 spent prefixes and of Page A's three |
+| Geo | **All 39 shallowly** — 24 states + 15 metros, each once in the grid | Depth belongs to the state page itself; Page B owns breadth, never depth |
+
+**Cross-check: tuples 11 and 12 share no axis.** Different hero shell, different dial, different TOC,
+disjoint takeaway sets, different new table, different FAQ refresh, disjoint H6 prefixes.
