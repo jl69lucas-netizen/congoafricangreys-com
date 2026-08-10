@@ -1,0 +1,240 @@
+<title>Visual Companion — Buy With Shipping (Page A)</title>
+<style>
+  :root{
+    --green:#2D6A4F; --green-dk:#1b4332; --clay:#e8604c; --clay-ink:#b04228;
+    --cream:#faf7f4; --ink:#1f2937; --muted:#6b625a; --line:#e7e2db; --card:#ffffff;
+    --shadow:0 3px 12px rgba(60,30,10,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --cream:#16181c; --ink:#e8e6e3; --muted:#9aa0a6; --line:#2c3036; --card:#1e2126; --shadow:0 3px 12px rgba(0,0,0,.4); }
+  }
+  :root[data-theme="dark"]{ --cream:#16181c; --ink:#e8e6e3; --muted:#9aa0a6; --line:#2c3036; --card:#1e2126; --shadow:0 3px 12px rgba(0,0,0,.4); }
+  :root[data-theme="light"]{ --cream:#faf7f4; --ink:#1f2937; --muted:#6b625a; --line:#e7e2db; --card:#ffffff; --shadow:0 3px 12px rgba(60,30,10,.06); }
+
+  body{background:var(--cream);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;padding:24px 16px 64px}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font:700 clamp(1.5rem,3.4vw,2.1rem)/1.2 Georgia,serif;margin:0 0 6px}
+  .sub{color:var(--muted);margin:0 0 28px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+  .tag{font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .m{background:var(--green);color:#fff}
+  .c{background:var(--clay);color:#fff}
+  .s{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .browser{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);background:var(--card)}
+  .chrome{display:flex;align-items:center;gap:6px;padding:9px 12px;background:linear-gradient(var(--card),var(--cream));border-bottom:1px solid var(--line)}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--line)}
+  .url{flex:1;margin-left:8px;font-size:.72rem;color:var(--muted);background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:3px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .page{padding:0}
+  .band{border-bottom:1px dashed var(--line);padding:16px 18px;position:relative}
+  .band:last-child{border-bottom:0}
+  .bhead{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:8px}
+  .bnum{font:700 .72rem/1 system-ui;color:var(--muted);background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:4px 7px;min-width:22px;text-align:center}
+  .btitle{font-weight:700;font-size:.95rem}
+  .comp{font-size:.7rem;color:var(--clay-ink);font-weight:700}
+  @media (prefers-color-scheme: dark){ .comp{color:#ff8a73} }
+  .skel{display:grid;gap:8px;margin-top:10px}
+  .line{height:9px;border-radius:5px;background:linear-gradient(90deg,var(--line),transparent);}
+  .line.w80{width:80%}.line.w60{width:60%}.line.w45{width:45%}
+  .imgslot{border:2px dashed var(--line);border-radius:10px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.72rem;font-weight:600;text-align:center;padding:8px}
+  .row{display:grid;gap:10px}
+  .row.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .row.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .row.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media(max-width:640px){ .row.c2,.row.c3,.row.c4{grid-template-columns:1fr} }
+  .card{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--cream)}
+  .price{color:var(--clay-ink);font-weight:800;font-size:.9rem}
+  @media (prefers-color-scheme: dark){ .price{color:#ff8a73} }
+  .ship{font-size:.66rem;color:var(--muted);border-top:1px dotted var(--line);margin-top:7px;padding-top:6px}
+  .hero{background:var(--green);color:#fff;border-radius:10px;padding:18px;display:grid;grid-template-columns:1.1fr .9fr;gap:14px;align-items:center}
+  @media(max-width:640px){.hero{grid-template-columns:1fr}}
+  .ribbon{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .chip{font-size:.63rem;font-weight:700;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px 8px}
+  .heroimg{border:2px dashed rgba(255,255,255,.4);border-radius:8px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:.7rem;opacity:.85;text-align:center;padding:6px}
+  .layout{display:grid;grid-template-columns:196px minmax(0,1fr);gap:20px;padding:16px 18px}
+  @media(max-width:900px){.layout{grid-template-columns:1fr}}
+  .dial{border:1px solid var(--line);border-radius:14px;padding:12px 10px;background:var(--card);position:sticky;top:12px;align-self:start}
+  .ring{width:64px;height:64px;border-radius:50%;margin:0 auto 8px;background:conic-gradient(var(--clay) 32%, var(--line) 0);display:flex;align-items:center;justify-content:center}
+  .ring i{width:50px;height:50px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;font-style:normal}
+  .ring b{font:700 15px Georgia,serif}
+  .ring s{font-size:7px;color:var(--muted);text-decoration:none}
+  .tocl{list-style:none;margin:8px 0 0;padding:8px 0 0;border-top:1px dashed var(--line);font-size:.74rem}
+  .tocl li{padding:5px 7px;border-radius:8px;color:var(--muted)}
+  .tocl li.on{background:var(--cream);color:var(--clay-ink);font-weight:700}
+  .seam{text-align:center;color:var(--muted);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;padding:9px 0}
+  .seam:before,.seam:after{content:"";display:inline-block;width:52px;height:1px;background:var(--clay);vertical-align:middle;margin:0 9px;opacity:.5}
+  .note{font-size:.74rem;color:var(--muted);background:var(--cream);border-left:3px solid var(--clay);padding:8px 11px;border-radius:0 8px 8px 0;margin-top:10px}
+  .tbl{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:8px}
+  .tbl th,.tbl td{border:1px solid var(--line);padding:5px 7px;text-align:left}
+  .tbl th{background:var(--cream);font-weight:700}
+  .cta{background:var(--clay);color:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:.76rem;display:inline-block}
+  .pass{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .pass span{font-size:.63rem;border:1px solid var(--line);border-radius:6px;padding:3px 7px;color:var(--muted)}
+</style>
+
+<div class="wrap">
+  <h1>Visual Companion — Page A</h1>
+  <p class="sub"><code>/buy-african-grey-parrots-with-shipping/</code> · Strategy A-3 “Proof-of-Price Storefront” · Tuple 11 · <strong>Skeleton only — layout and component placement, no final copy.</strong></p>
+
+  <div class="legend">
+    <span class="tag m">MANDATORY</span>
+    <span class="tag c">COMPETITOR-BASED</span>
+    <span class="tag s">SUGGESTED-RECOMMENDED</span>
+  </div>
+
+  <div class="browser">
+    <div class="chrome"><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+      <div class="url">congoafricangreys.com/buy-african-grey-parrots-with-shipping/</div>
+    </div>
+
+    <div class="page">
+
+      <div class="band">
+        <div class="bhead"><span class="bnum">1</span><span class="btitle">Hero</span><span class="tag m">MANDATORY</span><span class="comp">Split-Hero A — REFRESHED: price-transparency ribbon</span></div>
+        <div class="hero">
+          <div>
+            <div style="font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85">Eyebrow — small clay</div>
+            <div style="font:700 1.2rem/1.25 Georgia,serif;margin:6px 0">H1 — Buy an African Grey Parrot Online</div>
+            <div class="line w80" style="background:rgba(255,255,255,.28)"></div>
+            <div class="ribbon">
+              <span class="chip">$1,500 floor</span><span class="chip">Every price shown</span>
+              <span class="chip">CITES Appendix I</span><span class="chip">72-hr guarantee</span>
+            </div>
+            <div style="margin-top:12px"><span class="cta">Reserve a bird</span></div>
+          </div>
+          <div class="heroimg">HERO IMG<br>~400px class</div>
+        </div>
+        <div class="note">Ribbon chips are the refresh delta — health-guarantee’s Split-Hero A carried guarantee chips, this one carries price-transparency chips.</div>
+      </div>
+
+      <div class="band">
+        <div class="bhead"><span class="bnum">2</span><span class="btitle">Counter strip — 8 snippets</span><span class="tag m">MANDATORY</span><span class="comp">outlined stat cards on cream, min-height 66px</span></div>
+        <div class="row c4">
+          <div class="card"><div class="price">12+</div><div style="font-size:.66rem;color:var(--muted)">Yrs Aviary</div></div>
+          <div class="card"><div class="price">100%</div><div style="font-size:.66rem;color:var(--muted)">CITES Papered</div></div>
+          <div class="card"><div class="price">$1,500</div><div style="font-size:.66rem;color:var(--muted)">Floor Price</div></div>
+          <div class="card"><div class="price">0</div><div style="font-size:.66rem;color:var(--muted)">Wild-Caught</div></div>
+        </div>
+        <div class="note">Ledger-verified only. Reserve <code>min-height</code> to avoid the counter CLS trap.</div>
+      </div>
+
+      <div class="seam">seam 1</div>
+
+      <div class="layout">
+        <aside class="dial">
+          <div class="ring"><i><b>3</b><s>of 10</s></i></div>
+          <ul class="tocl">
+            <li>1 · Six birds today</li>
+            <li class="on">2 · Four price tags</li>
+            <li>3 · Paperwork</li>
+            <li>4 · First 72 hours</li>
+            <li>5 · Aviary → your city</li>
+            <li>6 · IA·KY·MD·TN·WI</li>
+            <li>7 · Congo or Timneh</li>
+            <li>8 · Five checks</li>
+            <li>9 · FAQ</li>
+            <li>10 · Reserve</li>
+          </ul>
+          <div style="font-size:.6rem;color:var(--muted);margin-top:8px;text-align:center">Dial 2 Dark-Aviary<br>+ Rail B on mobile</div>
+        </aside>
+
+        <div>
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 1</span><span class="btitle">Six Birds Are Reservable Today</span><span class="tag m">MANDATORY</span></div>
+            <div class="row c3">
+              <div class="card"><div class="imgslot" style="aspect-ratio:4/5">OG · bird</div><div style="font:700 .8rem Georgia,serif;margin-top:6px">BERY</div><div class="price">$1,700</div><div class="ship">Ships nationwide · $185 airport · $350 home</div></div>
+              <div class="card"><div class="imgslot" style="aspect-ratio:4/5">OG · bird</div><div style="font:700 .8rem Georgia,serif;margin-top:6px">ROYS</div><div class="price">$2,300</div><div class="ship">Ships nationwide · $185 airport · $350 home</div></div>
+              <div class="card"><div class="imgslot" style="aspect-ratio:4/5">OG · bird</div><div style="font:700 .8rem Georgia,serif;margin-top:6px">EVIE</div><div class="price">$1,500</div><div class="ship">Ships nationwide · $185 airport · $350 home</div></div>
+            </div>
+            <div class="note">Avail-B section-level filter. Six birds + the bonded pair. <strong>Every card carries the shipping line</strong> — the gate flagged <code>shipping_line</code> FAIL.</div>
+          </div>
+
+          <div class="seam">seam 2</div>
+
+          <div class="band" style="padding:0 0 16px;border-left:3px solid var(--clay);padding-left:12px">
+            <div class="bhead"><span class="bnum">H2 2</span><span class="btitle">Why the Same Bird Carries Four Different Price Tags</span><span class="tag m">MANDATORY</span><span class="comp">NEW Table H “Price Ladder”</span></div>
+            <div class="imgslot">INFOGRAPHIC · the price ladder, $850 → $8,500</div>
+            <table class="tbl">
+              <tr><th>Source</th><th>Price</th><th>Measured</th><th>What it includes</th></tr>
+              <tr><td>Ana’s Parrots — own site</td><td>$7,500</td><td>2026-08-10</td><td>—</td></tr>
+              <tr><td>Same seller — BirdBreeders</td><td>$8,500</td><td>2026-08-10</td><td>—</td></tr>
+              <tr><td>Same seller — Hoobly</td><td>$4,500</td><td>2026-08-10</td><td>—</td></tr>
+              <tr><td><strong>C.A.Gs</strong></td><td><strong>$1,500–$3,500</strong></td><td>live</td><td>DNA · CITES · vet cert</td></tr>
+            </table>
+            <div class="note"><strong>Placement is the argument.</strong> This sits directly BELOW the bird cards so prices arrive as facts first and the explanation second. Wording must be date-durable — “on a single day in August 2026 we recorded…”, never present tense.</div>
+          </div>
+
+          <div class="seam">seam 3</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 3</span><span class="btitle">What Paperwork Comes With an African Grey</span><span class="tag m">MANDATORY</span><span class="comp">.doc-stack</span></div>
+            <div class="row c2"><div class="imgslot">OG · document folder</div><div class="skel"><div class="line"></div><div class="line w80"></div><div class="line w60"></div><div class="line w45"></div></div></div>
+            <div class="note">No ranking competitor mentions CITES anywhere in its heading structure. Unclaimed ground.</div>
+          </div>
+
+          <div class="seam">seam 4</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 4</span><span class="btitle">The First Seventy-Two Hours After Your Bird Lands</span><span class="tag m">MANDATORY</span></div>
+            <div class="imgslot">INFOGRAPHIC · what the 72 hours covers</div>
+            <div class="note">72-hour term stated <strong>plainly first</strong>, enforceability argument second. Both “72-hour” and “3-day” are correct — never rewrite one into the other.</div>
+          </div>
+
+          <div class="seam">seam 5</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 5</span><span class="btitle">Getting Your Bird From Our Aviary to Your City</span><span class="tag c">COMPETITOR-BASED</span><span class="comp">T3 Boarding-Pass TOC anchors here</span></div>
+            <div class="row c3">
+              <div class="card"><div class="imgslot">OG · airport cargo</div><div style="font-weight:700;font-size:.8rem;margin-top:6px">Airport</div><div class="price">$185</div></div>
+              <div class="card"><div class="imgslot">OG · home delivery</div><div style="font-weight:700;font-size:.8rem;margin-top:6px">Home</div><div class="price">$350</div></div>
+              <div class="card"><div class="imgslot">OG · Midland pickup</div><div style="font-weight:700;font-size:.8rem;margin-top:6px">Pickup</div><div class="price">Midland, TX</div></div>
+            </div>
+            <div class="note">Shipping is <strong>proof of process</strong>, never the search target. Resolve the cargo-hold vs cabin contradiction here — FAQ schema and this card must agree.</div>
+          </div>
+
+          <div class="seam">seam 6</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 6</span><span class="btitle">IA · KY · MD · TN · WI</span><span class="tag m">MANDATORY</span></div>
+            <div class="row c2"><div class="imgslot">INFOGRAPHIC · five-state routes</div><div class="skel"><div class="line"></div><div class="line w80"></div><div class="line w60"></div></div></div>
+            <div class="note">The only five states unspent by any built sibling. Replaces the six WordPress town strings.</div>
+          </div>
+
+          <div class="seam">seam 7</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 7–8</span><span class="btitle">Congo or Timneh · Five Checks That Catch a Fake Listing</span><span class="tag c">COMPETITOR-BASED</span><span class="tag s">SUGGESTED</span></div>
+            <div class="row c2"><div class="imgslot">INFOGRAPHIC · Congo vs Timneh</div><div class="imgslot">INFOGRAPHIC · five checks</div></div>
+            <div class="note">Congo-vs-Timneh on a buy page is competitor-proven. Scam module links the scam cluster, never duplicates it.</div>
+          </div>
+
+          <div class="seam">seam 8</div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">H2 9</span><span class="btitle">FAQ</span><span class="tag m">MANDATORY</span><span class="comp">FAQ-A REFRESHED — clay $ chip</span></div>
+            <div class="skel"><div class="line"></div><div class="line w80"></div><div class="line w60"></div></div>
+            <div class="note"><code>&lt;summary&gt;</code> stays conversational — exempt from Title Case. <strong>3-3-3 rule stays OUT</strong> until it is sourced to the Verified-Claim Ledger.</div>
+          </div>
+
+          <div class="band" style="padding:0 0 16px">
+            <div class="bhead"><span class="bnum">·</span><span class="btitle">Newsletter <span style="font-weight:400">(.fs-nl)</span> + Keep reading</span><span class="tag m">MANDATORY</span></div>
+            <div class="row c2"><div class="imgslot">NEWSLETTER · unique image</div><div class="row"><div class="card" style="display:flex;gap:8px;align-items:center"><div class="imgslot" style="width:70px;aspect-ratio:1">thumb</div><div style="font-size:.7rem">Read-card — thumb = target’s own hero</div></div></div></div>
+          </div>
+
+          <div class="band" style="padding:0">
+            <div class="bhead"><span class="bnum">H2 10</span><span class="btitle">Reserve — contact form</span><span class="tag m">MANDATORY</span></div>
+            <div class="row c2">
+              <div class="card" style="background:var(--green-dk);color:#fff"><div style="font-size:.72rem">Dark form-side panel — every reservable bird + price + Midland pickup option</div></div>
+              <div class="skel"><div class="line"></div><div class="line"></div><div class="line w80"></div><div class="line w45"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pass">
+    <span>seams = sections</span><span>≥5 H5 · ≥5 H6 (8/6)</span><span>shipping line on every card</span>
+    <span>real hero image</span><span>brand in title</span><span>Product+Offer per bird</span>
+    <span>uniform 760px 16:9 .sec-img</span><span>no two alts alike</span><span>one CTA band, hideGlobalCta</span>
+  </div>
+</div>
