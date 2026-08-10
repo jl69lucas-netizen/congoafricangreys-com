@@ -128,14 +128,14 @@
   </div>
 
   <p class="standfirst">Eight structural defects fixed in the registry nine agents read as ground
-  truth, sixteen competitors added, and one finding that changes how the egg cluster should be
-  understood: four of its “competitors” are one operator.</p>
+  truth, sixteen competitors added, one competitor found hijacked — and one of this document’s own
+  headline findings retracted the next day, because our network lied to us about DNS.</p>
 
   <div class="board">
     <div class="cell"><span class="n">44→60</span><span class="k">registry entries</span></div>
     <div class="cell is-good"><span class="n">10/10</span><span class="k">invariants green</span></div>
     <div class="cell"><span class="n">8</span><span class="k">defects repaired</span></div>
-    <div class="cell is-crit"><span class="n">5</span><span class="k">domains, one IP</span></div>
+    <div class="cell is-crit"><span class="n">1</span><span class="k">finding retracted</span></div>
     <div class="cell is-crit"><span class="n">1</span><span class="k">hijacked competitor</span></div>
     <div class="cell"><span class="n">14</span><span class="k">identities resolved</span></div>
   </div>
@@ -155,6 +155,12 @@
 </div>
 
 <script type="text/markdown" data-title="Summary — what changed">
+> **Updated 2026-08-10 — one finding in this document has been retracted.** The "five domains, one
+> London residential IP" cluster was a measurement error caused by our own ISP's DNS filter, not a
+> fact about those domains. The retraction section carries the full correction; the registry, the
+> research file and the re-fetch script have all been fixed. Everything else below stands, including
+> the Marietta hijack, which was never DNS-based.
+
 ### The registry was wrong in eight ways, and is now guarded
 
 `data/competitors.json` is the source of truth that nine agents read. Before this session it
@@ -216,47 +222,65 @@ Never link to this site from any C.A.Gs page, and never cite it as a competitor 
 It is neither a live African Grey competitor nor a safe outbound destination.
 </script>
 
-<script type="text/markdown" data-title="Five domains, one London residential IP" data-tone="crit">
-### The egg cluster is not an under-documented market — it is substantially one operator
+<script type="text/markdown" data-title="RETRACTED — the &quot;five domains, one IP&quot; finding" data-tone="crit">
+### Our own broadband filter invented a scam network, and we nearly published it as one
 
-The plan expected the egg cluster to be our least-documented competitive picture, and treated that
-as a gap to close. A DNS lookup inverted the conclusion.
+The 2026-08-09 passes reported that five African Grey domains shared a single London residential IP,
+and read that as *"one operator running a domain network, not five independent breeders."* It was
+the most consequential-looking finding of the session. **It is false, and it is withdrawn.**
 
-| Domain | A record | Status |
-|---|---|---|
-| **exoticglobalparrotsfarm.com** | **81.99.162.48** | **was registered tier 1 direct_breeder** |
-| sherrybirds.org | 81.99.162.48 | held-back candidate (Timneh listing) |
-| paradisebirdsfarmaviary.com | 81.99.162.48 | held-back candidate (Congo eggs $100) |
-| exoticparrotfarms.com | 81.99.162.48 | held-back candidate (fertile grey eggs) |
-| parrotsfarm.com | 81.99.162.48 | held-back candidate (Congo eggs $60) |
-| rainforestaviaries.com | 74.208.236.200 | unrelated host, still unreachable |
-| sunnyvaleaviary.com | 109.106.251.28 | unrelated host, **live**, registered |
-| ourpetstars.com | *(no A record)* | **no DNS — closed, not pending** |
+Measured 2026-08-10, reproducibly:
 
-`81.99.162.48` reverse-resolves to `lang-sspiprxy.network.virginmedia.net` — a **Virgin Media
-residential broadband line in London, GB**. The page-5 sweep had independently recorded the same IP
-for `exoticGlobalParrotsFarm`.
+| Domain | System resolver | Public resolver (1.1.1.1 / 8.8.8.8) | Fetched via public DNS |
+|---|---|---|---|
+| exoticglobalparrotsfarm.com | 81.99.162.48 | 66.45.23.70 | **200** |
+| sherrybirds.org | 81.99.162.48 | 88.222.222.157 | **200**, 3 grey mentions |
+| paradisebirdsfarmaviary.com | 81.99.162.48 | 2.57.91.21 | **200**, 3 grey mentions |
+| exoticparrotfarms.com | 81.99.162.48 | 88.222.222.249 | **200**, 8 grey mentions |
+| parrotsfarm.com | 81.99.162.48 | 213.130.145.185 | **200**, 2 grey mentions |
+| congoafricangreys.com | 172.67.186.48 | *same* | — (control) |
+| jcaviary.com | 185.230.63.107 | *same* | — (control) |
 
-Compounding signals already on record for that entry: three separate African Greys listed at the
-identical age "1 year 3 months old", add-to-cart checkout offering **worldwide delivery of a CITES
-Appendix I species**, and a US "farm" presentation served from UK residential broadband.
+`81.99.162.48` reverse-resolves to `lang-sspiprxy.network.virginmedia.net`. That is not a breeder's
+home broadband — it is **Virgin Media's "Web Safe" content-filter sinkhole**, and this build machine
+sits behind it. The filter *selectively* flags parrot and bird domains and collapses them onto that
+one address, which accepts no connection. Our two control domains pass through untouched, which is
+exactly why the pattern looked like a cluster: the filter had picked the same domains we were
+researching, for the same reason we were researching them.
 
-#### Consequences
+Against public DNS the five resolve to **five different, unrelated hosts**, and repeat lookups
+return *different* addresses per domain — evidence of separate hosting, the opposite of one box.
 
-1. **No price benchmarking.** Averaging four of these egg prices would have manufactured a "market
-   rate" from one seller's pricing.
-2. **`exoticGlobalParrotsFarm` was re-tiered** from tier 1 `direct_breeder` to a new tier 6
-   `suspect_seller`, with the evidence in its notes. It stays in the registry — tracked, not trusted.
-3. **All five are documented evidence** for `/how-to-avoid-african-grey-parrot-scams/`. A
-   reproducible shared-IP finding is far stronger material than a generic warning about cheap birds.
+#### What falls with it
 
-#### The limit of this finding
+- **"Substantially one operator" is withdrawn.** The egg cluster is once again an under-documented
+  competitive picture, which is where the plan started.
+- **Four "genuinely unreachable, do not register" verdicts were wrong.** Those four sites are live,
+  200, with African Grey inventory on the page. They are eligible *candidates* — not registrations;
+  additions still need breeder approval.
+- **"US farm served from UK residential broadband" falls too** — same artifact.
+- **None of this may appear on `/how-to-avoid-african-grey-parrot-scams/`.** It would have been a
+  fabricated allegation against five named businesses.
 
-Shared hosting is established by DNS; **common ownership is not**. WHOIS was not queried. State the
-measurable facts — shared IP, residential line, geography against claimed location — and do not
-name an operator or allege fraud.
+#### What survives, and what it cost
 
-Reproduce with: `dig +short A <domain>` and `dig +short -x 81.99.162.48`
+The **Marietta hijack is unaffected** — it was reproduced through an HTTP redirect chain, never
+through DNS. `ourpetstars.com` really has no A record on either public resolver. And
+`exoticGlobalParrotsFarm` keeps two page-level signals that DNS never touched: three separate greys
+listed at the identical age "1 year 3 months old", and add-to-cart **worldwide delivery of a CITES
+Appendix I species**. Its tier 6 is left standing because the breeder set it — but it now rests on
+two signals rather than three, and whether that still earns tier 6 is an open question below.
+
+#### The lesson, charged to the harness
+
+`scripts/refetch_blocked_candidates.sh` mapped `000` to *"genuinely unreachable, do not register"*
+while using the system resolver. It has been rewritten to resolve through public DNS and fetch with
+`curl --resolve`, so it can no longer produce this class of error. Note that the original research
+document *already carried a correct warning in prose* that `000` means two different things — and
+the wrong verdict was recorded anyway. That is the argument for fixing tools rather than adding
+rules.
+
+Reproduce the retraction: `dig +short A <domain>` against `dig @1.1.1.1 +short A <domain>`
 </script>
 
 <script type="text/markdown" data-title="Identity resolution — the 14 stub entries">
@@ -269,7 +293,7 @@ nothing was falsified.
 
 | id | Resolved name | URL | Confidence |
 |---|---|---|---|
-| `exoticGlobalParrotsFarm` | Exotic Global Parrots Farm | exoticglobalparrotsfarm.com | High — *now tier 6, see the shared-IP finding* |
+| `exoticGlobalParrotsFarm` | Exotic Global Parrots Farm | exoticglobalparrotsfarm.com | High — *tier 6, on partially retracted evidence — see the retraction* |
 | `royalBirdCompany` | Royal Bird Company | royalbirdcompany.com | High — Lincolnton NC, 40+ years |
 | `denimixaniPetsParadise` | **Denimix Anipets Paradise** | denimixanipetsparadise.com | High — *id misspelled the brand* |
 | `buyAfricanGreyParrots` | Buy African Grey Parrots | buyafricangreyparrots.com | High — Shopify, claims USDA-licensed FL |
@@ -333,7 +357,10 @@ untrustworthy.
 #### Flagged in their notes, permanently
 
 - **GreyWing Aviary** — $600/bird is far below market for a captive-bred Congo. Never a price benchmark.
-- **exoticGlobalParrotsFarm** — re-tiered 1 → 6 `suspect_seller`; shared-IP evidence recorded.
+- **exoticGlobalParrotsFarm** — re-tiered 1 → 6 `suspect_seller`. ⚠ **Its lead evidence was retracted
+  on 2026-08-10** (see the retraction section). The tier is left standing, on two surviving
+  page-level signals rather than three, pending breeder review. Its registry note carries the
+  retraction in full.
 
 #### Two new tiers
 
@@ -356,7 +383,9 @@ unretrieved, with the reason.
 | Avian Avenue forum | **NOT FETCHED** | Thread URLs return 403 + login form even to a stealth proxy; threads are `robots: noindex`. Zero forum-only candidates were proposed. |
 | Bing organic top 10 | **NOT FETCHED** | Bing truncates the query to its first token for automated clients — every method returned results for *"Africa"*. Verified four ways: Firecrawl, curl with cookies, a Playwright session, and Bing RSS. |
 | Google PAA, 3 levels | **NOT FETCHED** | `/sorry/` CAPTCHA interstitial, HTTP 429, after 2 automated requests. |
-| 5 held-back candidate domains | **NOT FETCHED** | Unreachable from two independent networks. DNS distinguishes them: four resolve to the shared London IP, one (`ourpetstars.com`) has no A record at all. |
+| 5 held-back candidate domains | **SUPERSEDED 2026-08-10** *(was NOT FETCHED)* | The "unreachable from two independent networks" claim was wrong — both fetches used a filtered resolver. Via public DNS, four are **live at 200 with grey inventory**; `ourpetstars.com` genuinely has no A record; `rainforestaviaries.com` resolves but does not answer (cause unknown, not dead). |
+| Local DNS resolution | **UNRELIABLE ON THIS MACHINE** | The system resolver runs ISP content filtering that selectively sinkholes parrot domains to a dead address. Every reachability figure taken through it is void. Resolve via 1.1.1.1/8.8.8.8 and fetch with `curl --resolve`. |
+| US SERP position | **NOT FETCHED** | This machine's egress is a UK line, so search engines return a UK-localised SERP. No US ranking claim in this document rests on an automated SERP fetch. |
 
 #### To unblock the next pass
 
@@ -370,7 +399,19 @@ for sites that load perfectly in a browser. Only `000` with no DNS A record is e
 </script>
 
 <script type="text/markdown" data-title="Open questions for the breeder" data-tone="flag">
-### Three decisions that are yours, not ours
+### Four decisions that are yours, not ours
+
+**0. Does `exoticGlobalParrotsFarm` still belong in tier 6?** *(New, 2026-08-10.)*
+You approved the re-tier from 1 `direct_breeder` to 6 `suspect_seller` on three signals. One of the
+three — the shared-IP "domain network" — has since been retracted as a measurement error on our
+side. Two survive, both read off the page itself and unaffected by DNS: three separate African Greys
+listed at the identical age "1 year 3 months old", and add-to-cart checkout offering worldwide
+delivery of a CITES Appendix I species. We left the tier at 6 rather than reversing your decision on
+our own. **Recommended: keep it at tier 6.** Worldwide add-to-cart shipping of an Appendix I bird is
+on its own a sufficient reason not to treat a seller as a benchmark, and tier 6 costs us nothing but
+a monitoring cadence. The trade-off is real, though: we are now applying our most severe label on
+thinner evidence than when you approved it, so if you would rather it sat at tier 1 with a caution
+note until someone re-verifies the listings by hand, that is a defensible call and we will apply it.
 
 **1. Brick-and-mortar tiering is internally inconsistent.**
 Shops that sell live greys — **Parrot Stars** (Arlington Heights IL) and **Birds By Joe** (Green
@@ -379,9 +420,11 @@ Brook NJ) — are tier 1 `direct_breeder`, while `mariettaBirdShop`, the same bu
 Marietta precedent. The answer changes their monitoring cadence and which gap matrix they land in.
 
 **2. Should the scam-prevention page be updated?**
-Four documented items are now available for `/how-to-avoid-african-grey-parrot-scams/`: the
-Marietta redirect hijack, the five-domain shared-IP cluster, the $600 GreyWing pricing, and
-WhatsApp-only egg ordering. This was deliberately **not** done here — editing that page is a page
+Three documented items are available for `/how-to-avoid-african-grey-parrot-scams/`: the Marietta
+redirect hijack, the $600 GreyWing pricing, and WhatsApp-only egg ordering. **The five-domain
+shared-IP cluster has been struck from this list** — it was retracted on 2026-08-10 and publishing
+it would have been a fabricated allegation against five named businesses. This was deliberately
+**not** done here — editing that page is a page
 build requiring the interior checklist, a heading-outline gate, a dup-content gate, a render-harness
 run and an IndexNow submission. It is a separate piece of work.
 
@@ -424,12 +467,18 @@ curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" \
   "https://mariettabirdshop.com/product/african-grey-parrot/"
 ```
 
-**The shared-IP cluster**
+**The retraction of the shared-IP finding** — the point is the *disagreement* between the two
+resolvers. The first loop reproduces the false cluster; the second dissolves it.
 
 ```
 for d in exoticglobalparrotsfarm.com sherrybirds.org paradisebirdsfarmaviary.com \
          exoticparrotfarms.com parrotsfarm.com; do dig +short A $d; done
-dig +short -x 81.99.162.48
+dig +short -x 81.99.162.48          # lang-sspiprxy.network.virginmedia.net
+
+for d in exoticglobalparrotsfarm.com sherrybirds.org paradisebirdsfarmaviary.com \
+         exoticparrotfarms.com parrotsfarm.com; do dig @1.1.1.1 +short A $d; done
+
+dig +short A congoafricangreys.com  # control: identical on both resolvers
 ```
 
 **The blocked-candidate verdicts**

@@ -27,6 +27,7 @@ REGISTRY = pathlib.Path(__file__).resolve().parents[1] / "data" / "competitors.j
 
 MIGRATION_ID = "2026-08-09-registry-repair"
 ADDITIONS_MIGRATION_ID = "2026-08-09-approved-additions"
+DNS_CORRECTION_MIGRATION_ID = "2026-08-10-dns-finding-retraction"
 TIER_SUSPECT = 6
 
 # --- Defect 2/3/4: the 14 entries that carry `domain` and no `name` ---------
@@ -72,6 +73,28 @@ MARIETTA_NOTE = (
 )
 
 SWEPT_2026_08_09 = ("chewy", "petFinder", "mariettaBirdShop")
+
+# --- Third one-shot migration: retract the withdrawn shared-IP finding --------
+# Replaces the 2026-08-09 re-tier note, whose lead justification was disproved on
+# 2026-08-10. See correct_dns_finding() for the measurement that disproved it.
+EGPF_CORRECTED_NOTE = (
+    "TIER 6 suspect_seller, on PARTIALLY RETRACTED evidence — re-read before acting on this entry. "
+    "RETRACTED 2026-08-10: the 2026-08-09 claim that this domain shares one London residential IP "
+    "with sherrybirds.org, paradisebirdsfarmaviary.com, exoticparrotfarms.com and parrotsfarm.com, "
+    "and that this proved 'one operator running a domain network', is FALSE. It was an artifact of "
+    "the build machine's own DNS: a Virgin Media UK line running 'Web Safe' filtering that "
+    "selectively sinkholes parrot domains to 81.99.162.48 (lang-sspiprxy.network.virginmedia.net). "
+    "Against 1.1.1.1 and 8.8.8.8 the five resolve to five different unrelated hosts and four return "
+    "HTTP 200 with African Grey content. The 'US farm served from UK residential broadband' signal "
+    "falls with it — same artifact. SURVIVING EVIDENCE, measured on the page itself and unaffected "
+    "by DNS: three separate African Greys all listed at the identical age '1 year 3 months old', and "
+    "an add-to-cart checkout offering 'worldwide delivery' of a CITES Appendix I species. Those two "
+    "still justify caution. The tier is left at 6 because the breeder set it; whether two signals "
+    "rather than three still warrant tier 6 is a BREEDER DECISION, open as of 2026-08-10. Do not "
+    "cite as a price or practice benchmark while that is open. Do NOT re-use the shared-IP story as "
+    "scam-page evidence. Reproduce the retraction with: dig +short A <domain> ; "
+    "dig @1.1.1.1 +short A <domain>"
+)
 
 # --- Second, independent one-shot migration: breeder-approved additions ------
 # 16 competitors discovered in the 2026-08-09 cross-platform sweep, approved by
@@ -533,6 +556,55 @@ def add_approved(data):
     return data, changes
 
 
+def correct_dns_finding(data):
+    """Third one-shot migration: retract the shared-IP claim from 2026-08-09.
+
+    The 2026-08-09 passes concluded that exoticglobalparrotsfarm.com and four
+    other African Grey storefronts shared one London residential IP, and read
+    that as "one operator running a domain network". That conclusion was an
+    artifact of THIS MACHINE'S DNS, not a fact about the domains.
+
+    Measured 2026-08-10, reproducibly:
+      - The system resolver is a Virgin Media UK line running "Web Safe" content
+        filtering. It selectively sinkholes parrot/bird domains to 81.99.162.48
+        (reverse: lang-sspiprxy.network.virginmedia.net), which accepts no
+        connection.
+      - Against 1.1.1.1 and 8.8.8.8 the five domains resolve to five different,
+        unrelated hosts, and four of the five return HTTP 200 with African Grey
+        content. Repeat lookups return different addresses per domain, which is
+        itself evidence of separate hosting rather than one box.
+      - The filter is selective: congoafricangreys.com and jcaviary.com resolve
+        identically on both resolvers.
+
+    This migration rewrites the note so the registry no longer asserts a
+    withdrawn finding. It deliberately does NOT change the tier: tier 6 was a
+    breeder decision, and reversing it is also a breeder decision. What it does
+    is record honestly which evidence survived and which was retracted, so the
+    breeder can re-decide on accurate grounds.
+    """
+    applied = data["_meta"].setdefault("migrations_applied", [])
+    if DNS_CORRECTION_MIGRATION_ID in applied:
+        return data, []
+
+    changes = []
+    for entry in data["competitors"]:
+        if entry["id"] != "exoticGlobalParrotsFarm":
+            continue
+        if entry.get("notes") != EGPF_CORRECTED_NOTE:
+            entry["notes"] = EGPF_CORRECTED_NOTE
+            changes.append(
+                "exoticGlobalParrotsFarm: notes — shared-IP claim RETRACTED, "
+                "surviving evidence kept, tier 6 left standing pending breeder review"
+            )
+        break
+
+    if changes:
+        applied.append(DNS_CORRECTION_MIGRATION_ID)
+        changes.append(f"_meta.migrations_applied += {DNS_CORRECTION_MIGRATION_ID}")
+
+    return data, changes
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="report changes, write nothing")
@@ -541,10 +613,20 @@ def main():
         action="store_true",
         help="run the 2026-08-09-approved-additions migration instead of the registry repair",
     )
+    parser.add_argument(
+        "--correct-dns-finding",
+        action="store_true",
+        help="run the 2026-08-10 retraction of the withdrawn shared-IP finding",
+    )
     args = parser.parse_args()
 
     data = json.loads(REGISTRY.read_text())
-    migration = add_approved if args.add_approved else patch
+    if args.correct_dns_finding:
+        migration = correct_dns_finding
+    elif args.add_approved:
+        migration = add_approved
+    else:
+        migration = patch
     data, changes = migration(data)
 
     if not changes:
