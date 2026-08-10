@@ -5,7 +5,7 @@ Access Status: Page currently redirects to Psittacus genus article (community di
 
 ## Authority Signals
 - Author credentials: Community-edited; cited academic sources
-- CITES permit: CITES Appendix II status documented with full conservation context
+- CITES permit: CITES Appendix I status documented with full conservation context (corrected 2026-08-10 — the article states Appendix I in the infobox, body and page category; the original baseline recorded Appendix II, which is wrong)
 - Founding year: Wikipedia launched 2001
 - Trust badges: N/A — open encyclopedia model
 - Reviews: N/A

@@ -186,7 +186,7 @@ CAG has: FL, TX, CA, IL (4 of 22 states), 1 comparison page, 1 food guide, 1 com
 
 ### CRITICAL — Implement immediately
 
-1. **USDA + CITES compliance page.** birdsforsales.com is the only competitor explicitly stating USDA license and CITES permit. This is the single highest trust differentiator in the market. Create `/why-buy-from-us/` or `/captive-bred-african-grey-documentation/` explicitly naming USDA licensing, CITES Appendix II captive breeding compliance, and health certificates. Add abbreviated USDA/CITES language to every page header or trust bar.
+1. **USDA + CITES compliance page.** birdsforsales.com is the only competitor explicitly stating USDA license and CITES permit. This is the single highest trust differentiator in the market. Create `/why-buy-from-us/` or `/captive-bred-african-grey-documentation/` explicitly naming USDA licensing, CITES Appendix I captive breeding compliance, and health certificates. Add abbreviated USDA/CITES language to every page header or trust bar.
 
 2. **18 missing state landing pages.** CAG covers 4 of 22 target states. Build in this order: NY, GA, OH, NJ, PA, NC, MI, VA, WA, AZ, MA, then TN, IN, MO, MD, CO, MN, SC.
 
