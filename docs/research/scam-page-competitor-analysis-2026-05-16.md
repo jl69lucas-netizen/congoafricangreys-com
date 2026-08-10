@@ -312,7 +312,7 @@
 | cheap african grey parrot | → Price range section: legit birds $1,500–$3,500 |
 | african grey parrot fake breeder | → USDA AWA lookup walkthrough |
 | african grey parrot free shipping scam | → Shipping section: IATA-approved carriers only |
-| wild caught african grey for sale | → CITES Appendix II section |
+| wild caught african grey for sale | → CITES Appendix I section |
 
 ---
 
@@ -354,7 +354,7 @@
 - Midland, TX
 - C.A.Gs - Midland, TX
 - USDA AWA Licensed (since 2014)
-- CITES Appendix II captive-bred certified
+- CITES Appendix I captive-bred certified
 - Congo African Grey ($1,500–$3,500)
 - Timneh African Grey ($1,200–$2,500)
 - DNA sexed + avian vet certified + hatch certificate
@@ -367,13 +367,13 @@
 advance-fee fraud, shipping scam, fake delivery company, deposit theft, bait-and-switch, fake shipping company, insurance fee scam, thermal crate fee, counterfeit documentation, stock photos, stolen images, domain registration date, WHOIS lookup
 
 ### Cluster 2 — Verification & Authentication
-USDA AWA Class A license, CITES Appendix II certificate, closed ring / band number, microchip identification, hatch certificate, DNA sexed, avian vet health certificate, video call verification, in-person visit, breeder facility inspection, reverse image search
+USDA AWA Class A license, CITES Appendix I certificate, closed ring / band number, microchip identification, hatch certificate, DNA sexed, avian vet health certificate, video call verification, in-person visit, breeder facility inspection, reverse image search
 
 ### Cluster 3 — Payment & Protection
 buyer protection, credit card chargeback, PayPal Goods & Services, wire transfer risk, irreversible payment, untraceable payment, refund policy, deposit structure, escrow service
 
 ### Cluster 4 — African Grey Specific
-Congo African Grey, Psittacus erithacus, Timneh African Grey, Psittacus timneh, weaning age 12–16 weeks, legitimate price range $1,500–$3,500, captive-bred, hand-raised, hand-fed, socialized, CITES Appendix I/II, wild-caught prohibition, Appendix II trade restrictions
+Congo African Grey, Psittacus erithacus, Timneh African Grey, Psittacus timneh, weaning age 12–16 weeks, legitimate price range $1,500–$3,500, captive-bred, hand-raised, hand-fed, socialized, CITES Appendix I (uplisted from Appendix II at CoP17, effective Jan 2017), wild-caught prohibition, Appendix I trade restrictions
 
 ### Cluster 5 — Reporting & Recovery
 FBI IC3 complaint, FTC report, BBB complaint, local law enforcement, credit card dispute, PayPal dispute, wire transfer recall, report online fraud
@@ -401,7 +401,7 @@ These are exact-match or near-exact phrases people type in Google, ChatGPT, and 
 - "How do I report a parrot scam?"
 - "Are parrot eggs for sale real?"
 - "Is [specific site] a scam?"
-- "What is CITES Appendix II and why does it matter?"
+- "What is CITES Appendix I and why does it matter?"
 - "What questions should I ask before buying an African Grey?"
 - "How old should an African Grey be before I buy it?"
 
@@ -414,7 +414,7 @@ These are tangential topics that expand the page's semantic authority and captur
 | Fan-Out Topic | Keyword | Content Type | Internal Link Target |
 |---|---|---|---|
 | Pricing reference | "african grey parrot price range" | Price table | /african-grey-parrot-price/ |
-| CITES deep dive | "what is CITES Appendix II" | Explainer section | /cites-documentation/ |
+| CITES deep dive | "what is CITES Appendix I" | Explainer section | /cites-documentation/ |
 | Breeder verification | "how to find reputable african grey breeder" | Step-by-step | /why-choose-cag/ |
 | Wild-caught distinction | "wild caught vs captive bred african grey" | Comparison section | /african-grey-parrot-guide/ |
 | Scam reporting | "how to report online pet scam" | Resource section | IC3.gov external |
@@ -552,7 +552,7 @@ Pick 4 from this list based on final page design:
 ### Target 1 — Paragraph Snippet
 **Query:** "how to avoid african grey parrot scams"
 **Answer (50–70 words):**
-"To avoid African Grey parrot scams, never pay via Zelle, CashApp, Western Union, or gift cards — scammers prefer untraceable payments. Verify the breeder's USDA AWA license at aphis.usda.gov/awa/public-search and confirm CITES Appendix II captive-bred documentation before sending any deposit. Legitimate Congo African Grey parrots cost $1,500–$3,500. Any listing below $800 is a scam."
+"To avoid African Grey parrot scams, never pay via Zelle, CashApp, Western Union, or gift cards — scammers prefer untraceable payments. Verify the breeder's USDA AWA license at aphis.usda.gov/awa/public-search and confirm CITES Appendix I captive-bred documentation before sending any deposit. Legitimate Congo African Grey parrots cost $1,500–$3,500. Any listing below $800 is a scam."
 
 ### Target 2 — List Snippet
 **Query:** "african grey parrot scam red flags"

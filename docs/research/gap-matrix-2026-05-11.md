@@ -38,7 +38,7 @@
 | Competitor | URL | Status | Threat | Key Finding |
 |-----------|-----|--------|--------|-------------|
 | **thesprucePets** | thesprucepets.com | **Active** | **VERY HIGH** | **Dominates ALL African Grey informational queries; vet-reviewed; FAQPage schema; 50+ AG articles** |
-| wikipedia | en.wikipedia.org | Active | HIGH | CITES Appendix II authority; buyers research legal ownership here |
+| wikipedia | en.wikipedia.org | Active | HIGH | CITES Appendix I authority; buyers research legal ownership here |
 | rationalParrot | rationalparrot.com | Active | NONE | Zero African Grey content — 7 other species covered |
 | allAboutParrots | allaboutparrots.com | Active | VERY LOW | One indirect AG mention; no dedicated AG content |
 | smallAnimalAdvice | smallanimaladvice.com | Active | LOW-MEDIUM | 6 dedicated AG articles (care, diet, training, facts, beginner, food) |

@@ -80,7 +80,7 @@
 | Gap | CAG Advantage |
 |-----|--------------|
 | $1,000 pricing signals lower quality | CAG's $3,000 price = premium, documented, family-raised |
-| No CITES or USDA mention | Full compliance story — USDA AWA + CITES Appendix II |
+| No CITES or USDA mention | Full compliance story — USDA AWA + CITES Appendix I |
 | No testimonials or case studies | Build buyer story cluster |
 | No blog or care content | 12+ info pages targeting care/lifespan/talking queries |
 | No FAQ schema | FAQPage JSON-LD captures AI Overviews |

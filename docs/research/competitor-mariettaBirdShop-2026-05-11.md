@@ -5,7 +5,7 @@ Access Status: Blocked (403) — analysis based on known platform data + registr
 
 ## Authority Signals
 - USDA license: UNVERIFIED — retail bird shop; may have USDA dealer license
-- CITES permit: UNVERIFIED — required if selling CITES Appendix II species
+- CITES permit: UNVERIFIED — required if selling CITES Appendix I species
 - Vet affiliation: UNVERIFIED
 - Founded: UNVERIFIED
 - Physical address: Marietta, Georgia (confirmed by business name and registry)

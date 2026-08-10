@@ -21,7 +21,7 @@ Date: 2026-04-28
 - **Conversion:** WooCommerce; prices show $0.00 on homepage; no buyer protection payment methods
 - **Schema:** WebPage, BreadcrumbList, WebSite, Organization. Missing: FAQPage, Product, LocalBusiness
 - **Key gap for CAG:** Uses "cheap" positioning — CAG should counter with trust/quality framing. State blog posts are not proper landing pages — CAG should build dedicated state pages.
-- **CITES flag:** No CITES language. "Cheap" positioning for CITES Appendix II birds — monitor.
+- **CITES flag:** No CITES language. "Cheap" positioning for CITES Appendix I birds — monitor.
 
 ### exoticparrotpetstore.com ⭐ (strongest Tier 1 by content)
 - **Authority:** Phone: +1 (209) 560-6577. Claims 500+ rehomes across 20+ countries, 14-day health guarantee, vet-checked. Named customer reviews (Carlos M., Jasmine R., Samantha L.)
