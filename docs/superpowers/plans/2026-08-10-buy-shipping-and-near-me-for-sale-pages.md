@@ -4,7 +4,7 @@
 
 **Goal:** Close the for-sale cluster. Rebuild the **three** remaining pages — buy-with-shipping, the near-me geo router, and the hub — execute the three near-me retirements verdicted on 2026-08-09 but never applied, and retire the singular `/african-grey-parrot-for-sale/` into the hub. Scope expanded from two pages to three builds + one retirement on 2026-08-10 at breeder request; the analysis behind the role split is §0f–§0g.
 
-**Architecture:** Both pages are pre-standard WordPress-era stubs (15,411 B and 5,583 B against a cluster median of ~114,000 B). They are rebuilt in place at their existing slugs using `skills/cag-for-sale-page-builder` under the TRANSACTIONAL profile — Sprint 0 research → Sprint 0.5 strategy → H1–H6 outline gate → component tuple → visual companion → build → Phase-4 QA. Page A is **retargeted** (shipping is demoted from search target to trust section; the page aims at the unowned buy/buy-online cluster). Page B is built as a **routing hub** that catches near-me query variance and hands buyers to the 22 location pages, then absorbs three retired siblings. Order is load-bearing: **B ships before the three 301s point at it.**
+**Architecture:** Both pages are pre-standard WordPress-era stubs (15,411 B and 5,583 B against a cluster median of ~114,000 B). They are rebuilt in place at their existing slugs using `skills/cag-for-sale-page-builder` under the TRANSACTIONAL profile — Sprint 0 research → Sprint 0.5 strategy → H1–H6 outline gate → component tuple → visual companion → build → Phase-4 QA. Page A is **retargeted** (shipping is demoted from search target to trust section; the page aims at the unowned buy/buy-online cluster). Page B is built as a **routing hub** that catches near-me query variance and hands buyers to the 39 location pages, then absorbs three retired siblings. Order is load-bearing: **B ships before the three 301s point at it.**
 
 **Tech Stack:** Astro (`src/pages/<slug>/index.astro`) · Direction D theme · the for-sale component kit (`assets/1WORKING-ON/FOR-SALE-PAGES/`) · `data/clutch-inventory.json` + `data/price-matrix.json` as the only price/inventory sources · Firecrawl MCP for SERP/competitor fetch · `scripts/final_page_audit.py`, `scripts/dup_content_audit.py`, `scripts/page_hardening_scan.py`, `scripts/generate_sitemaps.py`, `scripts/indexnow_submit.py` · `npm run test:render:meta` / `test:render:pages`.
 
@@ -36,7 +36,7 @@ The Gate-1 document says so in its own words, in §5 "What I Have Not Done":
 - SERP top-10 **section-by-section inventory** for `buy african grey parrot online` and `african grey parrot for sale near me` (which sections the ranking pages ship, in what order, with what visual assets).
 - **PAA to three levels** + **autosuggest** fan-out for both query sets. Neither is in any sweep — the string "People Also Ask" appears 2–4 times per sweep, all in method notes, never as a harvested set.
 - Per-page **entity map** and **visual asset blueprint**.
-- **Local-pack composition** for the near-me SERP (Gate 1 established the SERP is classifieds + local businesses; it did not enumerate what the pack shows or how the 22 location pages compare).
+- **Local-pack composition** for the near-me SERP (Gate 1 established the SERP is classifieds + local businesses; it did not enumerate what the pack shows or how our location pages compare).
 
 **Bing query-level data stays `NOT FETCHED`** — every Bing export is page-level or a date series. Do not infer it.
 
@@ -73,7 +73,7 @@ Task 1 fixes the harness **before** any page work, so that the build is measured
 1. **Internal factual contradiction.** FAQ schema line 21 says birds travel *"in the climate-controlled cargo hold"*; the Delivery Options card line 161 says the bird *"flies in a climate-controlled **cabin**, supervised by experienced pet nannies."* Both are in the rendered page. One is wrong.
 2. **Home Delivery card ships no price** — the `$350 home` tier is missing while `$185 airport` appears five times. Violates the shipping-line rule.
 3. **4 stale-gold occurrences** — `text-gold` (lines 99, 197), `border-gold/30` (158, 168). Gate 1 estimated 2; the real count is 4.
-4. **"Where We Ship" is WordPress residue** — Wausau WI, Oak Ridge TN, Princeton NJ, Asheville NC, Harrison AR. Six unlinked strings, none matching the canonical 22 location pages.
+4. **"Where We Ship" is WordPress residue** — Wausau WI, Oak Ridge TN, Princeton NJ, Asheville NC, Harrison AR. Six unlinked strings, none matching any of our 39 location pages.
 5. **Zero bird cards, zero prices, zero Product/Offer schema, no contact form, no seams, no dial/rail, no in-body images.**
 
 **`/african-grey-parrots-for-sale-near-me/`** — 5,583 B · **1 H2** · no H3–H6 · 2 inbound links:
@@ -133,7 +133,7 @@ Task 9 Step 2 is amended accordingly: **the geo grid is enumerated in exactly on
 | Slug | Role | Change |
 |---|---|---|
 | `/african-grey-parrots-for-sale/` (plural) | **The cluster HUB** — national inventory, `AggregateOffer`, links to every spoke | Rebuilt; **sheds** its state/city grid |
-| `/african-grey-parrots-for-sale-near-me/` | **The geo ROUTER** — sole owner of the 22-state and city grid; keeps the 54-click 301 | Rebuilt (Task 9) |
+| `/african-grey-parrots-for-sale-near-me/` | **The geo ROUTER** — sole owner of the state and metro grid (39 pages / 40 destinations); keeps the 54-click 301 | Rebuilt (Task 9) |
 | `/african-grey-parrot-for-sale/` (singular) | **RETIRED → 301 into the hub** | Its 3 H2s are a strict subset of the hub's job |
 | `/buy-african-grey-parrots-with-shipping/` | Buy / buy-online cluster | Unchanged (Task 8) |
 
@@ -380,7 +380,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git push origin main
 
 **The target the research must serve:** a **routing hub**, not a fourth attempt at ranking a generic national
 page. It catches the grey/gray and singular/plural variance across the 55-query / 575-impression cluster and
-hands the buyer to one of the 22 location pages. It also becomes the landing page for a **54-click** 301.
+hands the buyer to one of the 39 location pages. It also becomes the landing page for a **54-click** 301.
 
 - [ ] **Step 1: SERP snapshot + local-pack composition**
 
@@ -402,15 +402,36 @@ Run PAA and autosuggest for all four spellings: `african grey`/`african gray` ×
 The whole point of the page is that these are one intent; the research has to prove the question sets overlap
 rather than assume it.
 
-- [ ] **Step 4: Audit our own 22 location pages as routing destinations**
+- [ ] **Step 4: Audit our own location pages as routing destinations**
 
 ```bash
-cd /Users/apple/Downloads/CAG && ls -d src/pages/african-grey-parrot-for-sale-* | sed 's|.*for-sale-||' | tr '\n' ' '
+cd /Users/apple/Downloads/CAG && python3 -c "
+import json,os
+d=json.load(open('data/locations.json'))
+def find(o,k):
+    if isinstance(o,dict):
+        if k in o and isinstance(o[k],list): return o[k]
+        for v in o.values():
+            r=find(v,k)
+            if r is not None: return r
+    elif isinstance(o,list):
+        for v in o:
+            r=find(v,k)
+            if r is not None: return r
+def norm(e): return (e if isinstance(e,str) else e.get('slug','')).strip('/')
+miss=[norm(e) for k in ('live_states','cities') for e in find(d,k) if not os.path.exists('dist/'+norm(e)+'/index.html')]
+print('destinations:', sum(len(find(d,k)) for k in ('live_states','cities')), '| not built:', miss or 'none')"
 ```
 
-Expected: 22 slugs. For each, record the state or metro and confirm the slug resolves in `dist/`. Cross-check
-against sweep 3 §C2 "State coverage against the canonical 22" so the routing grid claims only coverage we
-actually have. A routing hub that links to a 404 is worse than no routing hub.
+**Result, 2026-08-10: 40 destinations, none missing.** 24 `african-grey-parrot-for-sale-<state>` + 15
+`<metro>` = **39 on-pattern**, plus California served by `buy-intelligent-african-grey-for-sale-ca` (the known
+California→LA caveat). A routing hub that links to a 404 is worse than no routing hub, so this check is a
+precondition of Task 9 Step 2, not a formality.
+
+**Read `locations.json` for the destination list, not the `src/pages/` glob** — the glob also matches
+`african-grey-parrot-for-sale-near-me`, which is the router itself and must never appear in its own grid.
+**Compare full slugs to full slugs;** the first version of this probe stripped the prefix from one side and
+reported all 40 destinations missing.
 
 - [ ] **Step 5: Redirect-equity map**
 
@@ -633,7 +654,7 @@ flies), and the variance capture.
 
 - [ ] **Step 2: Build the routing grid — and make this the ONLY place it is enumerated**
 
-Every one of the 22 location pages verified in Task 3 Step 4 gets a real link. No link may 404. This is the
+Every one of the 40 routing destinations verified in Task 3 Step 4 gets a real link. No link may 404. This is the
 component the page exists for.
 
 **Amended 2026-08-10 (§0f Finding 3):** `/african-grey-parrots-for-sale/` currently ships this exact grid
