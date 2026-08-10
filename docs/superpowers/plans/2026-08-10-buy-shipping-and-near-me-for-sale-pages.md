@@ -1,8 +1,8 @@
-# The Last Two For-Sale Pages — `/buy-african-grey-parrots-with-shipping/` + `/african-grey-parrots-for-sale-near-me/` — Implementation Plan
+# Closing the For-Sale Cluster — Shipping · Near-Me · Hub — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. **Breeder mandate for this program: work inline, NO subagents** (carried over from `2026-07-19-for-sale-pages-program.md`). Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Rebuild the two remaining unbuilt for-sale pages to the cluster standard, execute the three near-me retirements that were verdicted on 2026-08-09 but never applied, and leave the cluster in a state where the hub `/african-grey-parrots-for-sale/` can be built against a complete, non-cannibalising spoke set.
+**Goal:** Close the for-sale cluster. Rebuild the **three** remaining pages — buy-with-shipping, the near-me geo router, and the hub — execute the three near-me retirements verdicted on 2026-08-09 but never applied, and retire the singular `/african-grey-parrot-for-sale/` into the hub. Scope expanded from two pages to three builds + one retirement on 2026-08-10 at breeder request; the analysis behind the role split is §0f–§0g.
 
 **Architecture:** Both pages are pre-standard WordPress-era stubs (15,411 B and 5,583 B against a cluster median of ~114,000 B). They are rebuilt in place at their existing slugs using `skills/cag-for-sale-page-builder` under the TRANSACTIONAL profile — Sprint 0 research → Sprint 0.5 strategy → H1–H6 outline gate → component tuple → visual companion → build → Phase-4 QA. Page A is **retargeted** (shipping is demoted from search target to trust section; the page aims at the unowned buy/buy-online cluster). Page B is built as a **routing hub** that catches near-me query variance and hands buyers to the 22 location pages, then absorbs three retired siblings. Order is load-bearing: **B ships before the three 301s point at it.**
 
@@ -92,13 +92,70 @@ ships `$1,500–$3,500` for the whole range. **The sweep-3 sentence is the one w
 in Task 12. Write "from $1,500" only when the sentence is about the whole aviary; write "Congo from $1,700"
 whenever the sentence is about Congos.
 
-### 0f · Scope flag — there is a third stub, and this plan does not build it
+### 0f · The singular/plural pair — scope EXPANDED 2026-08-10 at breeder request
 
-`/african-grey-parrot-for-sale/` is **8,930 B** and carries **123 GSC queries / 5,346 impressions** — the
-largest query bucket in the entire cluster — with a page-map note reading *"Variant of main hub — may
-consolidate with `/african-grey-parrots-for-sale/`."* It was never taken through Gate 1. It is **out of scope
-here** because the breeder named two pages, but it must be resolved before the hub is built, or the hub will
-launch into an unresolved cannibalisation pair. Raised in Task 13, not silently absorbed.
+The breeder asked for `/african-grey-parrot-for-sale/` (singular) and `/african-grey-parrots-for-sale/`
+(plural) to be folded into this sprint as the hub work. Analysis below; the decision is §0g.
+
+**Correction to an earlier reading of this plan.** An earlier draft cited the singular page as *"123 queries /
+5,346 impressions — the largest query bucket in the cluster."* **That is a regex-assigned target cluster, not
+earned traffic.** `docs/research/for-sale-keywords-2026-07.md:3` states it plainly: *"Bucket assignment is
+regex-based, first-match; treat as draft until per-page Sprint 0 refines it."* The real page-level rows:
+
+| Page | Google window 1 (123 rows) | Google window 2 (76 rows) | On disk | Inbound links |
+|---|---|---|---|---|
+| `/african-grey-parrot-for-sale/` | 0 clk · **9** imp · pos 7.11 | **absent entirely** | 8,930 B · 3 H2 | 106 |
+| `/african-grey-parrots-for-sale/` | 0 clk · **13** imp · pos 6.23 | **absent entirely** | 16,387 B · 7 H2 | 105 |
+
+Both windows agree. **Neither page is a traffic asset to protect.** Any argument for keeping both must be made
+on structure, not on rankings.
+
+**Finding 1 — the site links them in lockstep.** 105 pages link to **both** slugs. Exactly **one** page links
+to the singular but not the plural, and it is `404.html`. **Zero** pages link to the plural alone. This is the
+cannibalisation engine: every real page on the site points at both slugs together.
+
+**Finding 2 — 105 anchors point the wrong way.** The singular's dominant inbound anchor is **`Baby African
+Grey for Sale` ×105**, emitted by `src/components/Footer.astro:46` on every page. It describes
+`/baby-african-grey-parrot-for-sale/` — a separate, fully built 111,895 B page. The plural's anchors are
+coherent by comparison (`Browse by State` ×210, `African Greys for Sale` ×115).
+
+**Finding 3 — the plural page is ALREADY the near-me router, which collides with Task 9.** Its live headings:
+
+> H1 African Grey Parrots for Sale Near You · H2 How Do You Find an African Grey Parrot for Sale Near You? ·
+> H2 Find an African Grey Parrot for Sale in Your State · H2 African Grey Parrots for Sale by City
+
+That is the exact job Task 9 assigns to `/african-grey-parrots-for-sale-near-me/`. Building near-me as
+originally written would have created a fresh cannibalisation pair with the page intended to become the hub.
+Task 9 Step 2 is amended accordingly: **the geo grid is enumerated in exactly one place.**
+
+### 0g · The role split — decided 2026-08-10
+
+| Slug | Role | Change |
+|---|---|---|
+| `/african-grey-parrots-for-sale/` (plural) | **The cluster HUB** — national inventory, `AggregateOffer`, links to every spoke | Rebuilt; **sheds** its state/city grid |
+| `/african-grey-parrots-for-sale-near-me/` | **The geo ROUTER** — sole owner of the 22-state and city grid; keeps the 54-click 301 | Rebuilt (Task 9) |
+| `/african-grey-parrot-for-sale/` (singular) | **RETIRED → 301 into the hub** | Its 3 H2s are a strict subset of the hub's job |
+| `/buy-african-grey-parrots-with-shipping/` | Buy / buy-online cluster | Unchanged (Task 8) |
+
+**WHY:** the singular has no traffic to lose in either window; its entire job (national inventory + "Current
+Pricing" + "Inquire About Available African Greys") is what the hub must ship regardless; and its 106 inbound
+links are worth more consolidated than split — especially the 105 footer links that currently mis-describe
+their own destination. Splitting hub from geo-router also gives each page a head term matching its content:
+the plural's term is national-commercial, the near-me's term is geographic by definition. Today the plural
+page ranks a national term while serving geographic content.
+
+**TRADE-OFF, named:** the plural holds position 6.23 and the singular 7.11 — both nominally page one.
+Rebuilding one and 301'ing the other puts both through a re-crawl. Accepted because those positions produce
+**0 clicks on 13 and 9 impressions**; it is the same reasoning that retired `/where-to-buy-african-greys-near-me/`
+at position 8.74.
+
+**REJECTED — keep both, singular as a standalone national money page.** 105 of its 106 linking pages link to
+the plural too, and its regex bucket is full of plural-form queries (`african grey parrots sale`, `parrots
+african grey for sale`), meaning Google does not separate them either. Two pages for one intent is exactly
+what Gate 1 retired four near-me pages for.
+
+**Sprint scope is therefore 3 builds + 1 retirement**, in this order:
+**Task 8** buy-with-shipping → **Task 9** near-me (geo router) → **Task 13** the hub (+ singular retired into it).
 
 ---
 
@@ -115,7 +172,11 @@ launch into an unresolved cannibalisation pair. Raised in Task 13, not silently 
 | `sessions/2026-08-10-two-pages-image-prompt-pack.md` | **Create** — infographic + OG prompt pack |
 | `sessions/2026-07-19-for-sale-component-map.md` | **Modify** — append 2 tuple-ledger rows |
 | `src/pages/buy-african-grey-parrots-with-shipping/index.astro` | **Rewrite** — Page A |
-| `src/pages/african-grey-parrots-for-sale-near-me/index.astro` | **Rewrite** — Page B |
+| `src/pages/african-grey-parrots-for-sale-near-me/index.astro` | **Rewrite** — Page B, the geo router |
+| `src/pages/african-grey-parrots-for-sale/index.astro` | **Rewrite** — Page C, the cluster hub |
+| `src/pages/african-grey-parrot-for-sale/` | **Delete** — 301 into the hub |
+| `src/components/Footer.astro:46` | **Modify** — the `Baby African Grey for Sale` anchor points at the wrong page on all 105 pages |
+| `sessions/for-sale-research/african-grey-parrots-for-sale/2026-08-10-sprint0.md` | **Create** — Page C Sprint 0 |
 | `site/content/_redirects` + `public/_redirects` | **Modify** — 3 retirements + 1 chain flatten |
 | `data/page-map.json` | **Modify** — 3 × `consolidated`, 2 × rebuild notes |
 | `docs/research/competitor-sweep-page3-2026-08-09.md` | **Modify** — correct the "$1,500 Congo floor" sentence |
@@ -537,10 +598,22 @@ Same discipline as Task 8 Step 1. This page's own angle is **routing**, not inve
 content is the state grid, the service-radius honesty (Midland pickup within 2–3 hours; everywhere else
 flies), and the variance capture.
 
-- [ ] **Step 2: Build the routing grid**
+- [ ] **Step 2: Build the routing grid — and make this the ONLY place it is enumerated**
 
 Every one of the 22 location pages verified in Task 3 Step 4 gets a real link. No link may 404. This is the
 component the page exists for.
+
+**Amended 2026-08-10 (§0f Finding 3):** `/african-grey-parrots-for-sale/` currently ships this exact grid
+under `H2 Find an African Grey Parrot for Sale in Your State` and `H2 African Grey Parrots for Sale by City`.
+It **sheds** that grid in Task 13. The two pages must not both enumerate states — the hub links to *this*
+page for geography and to the location hub, and enumerates nothing itself. Verify after Task 13 ships:
+
+```bash
+cd /Users/apple/Downloads/CAG && for p in african-grey-parrots-for-sale-near-me african-grey-parrots-for-sale; do echo "$p: $(grep -o 'african-grey-parrot-for-sale-[a-z-]*/' dist/$p/index.html | sort -u | wc -l) state links"; done
+```
+
+Expected: the near-me page reports **22**; the hub reports a small single-digit number (its own cross-links),
+never 22.
 
 - [ ] **Step 3: Fix the two confirmed defects from §0d**
 
@@ -762,28 +835,169 @@ creating a new one.
 
 ---
 
-## Task 13: Hub readiness handoff
+## Task 13: Build Page C — the cluster hub `/african-grey-parrots-for-sale/` — and retire the singular into it
 
-- [ ] **Step 1: Re-run the full for-sale gate and record the cluster state**
+**Runs last, by design.** The hub links every spoke, so it is built once the spokes are final. Do not start
+until Tasks 8–12 are done and both rebuilt spokes return 200 live.
+
+**Files:**
+- Create: `sessions/for-sale-research/african-grey-parrots-for-sale/2026-08-10-sprint0.md`
+- Rewrite: `src/pages/african-grey-parrots-for-sale/index.astro`
+- Delete: `src/pages/african-grey-parrot-for-sale/`
+- Modify: `src/components/Footer.astro:46` · `site/content/_redirects` + `public/_redirects` · `data/page-map.json`
+
+- [ ] **Step 1: Sprint 0 for the hub**
+
+Same protocol as Tasks 2–3, aimed at `african grey parrots for sale` and `african greys for sale`. Additional
+hub-specific work: inventory how the ranking competitors structure a *category* page versus a *listing* page,
+and record which of our own 21 spokes each competitor has an equivalent of. Reuse the banked sweeps; do not
+re-mine Reddit. The keyword bucket for this slug is at `docs/research/for-sale-keywords-2026-07.md:460` —
+**29 queries / 1,370 impressions, regex-assigned, draft.** Treat it as a target list, not as earned traffic;
+§0f explains why that distinction cost this plan a correction already.
+
+- [ ] **Step 2: Outline, tuple, visual companion, images**
+
+The hub goes through the same gates as the spokes: H1–H6 outline (≥5 H5, ≥5 H6) + header dup-gate before
+approval, a tuple recorded in the ledger that no sibling has spent, visual companion, then the image HARD
+STOP. The ledger assigns **Hero-C Mosaic Metrics** to the hub group; dna-tested spent it once, so the hub
+ships a refresh delta.
+
+- [ ] **Step 3: Build the hub — inventory and spokes, NOT geography**
+
+Required: every available bird from `data/clutch-inventory.json` with prices from `data/price-matrix.json`;
+**`AggregateOffer`** (hub pages take AggregateOffer, never per-bird `Offer` — that is the spoke pattern); a
+link to every one of the 21 spokes with anchors drawn from the Anchor Diversity Ledger; the contact form; the
+CTA cadence; seam parity.
+
+**Removed from the current page:** the `Find an African Grey Parrot for Sale in Your State` and `African Grey
+Parrots for Sale by City` grids. Geography now lives on `/african-grey-parrots-for-sale-near-me/` (Task 9
+Step 2). The hub carries one link to that page for geographic intent and enumerates no states itself.
+
+**Absorbed from the singular page:** its "Current Pricing" and "Inquire About Available African Greys" jobs.
+Write the prose fresh from the hub's own outline — do not paste the singular page's copy across, or the
+dup-gate will catch it and the Write-From-Outline rule will have been broken either way.
+
+- [ ] **Step 4: Fix the 105 mis-described footer anchors**
+
+In `src/components/Footer.astro:46`, the link labelled `Baby African Grey for Sale` points at
+`/african-grey-parrot-for-sale/`. Repoint it at the page it names:
+
+```html
+        <li><a href="/baby-african-grey-parrot-for-sale/" class="text-white/80 hover:text-clay transition-colors">Baby African Grey for Sale</a></li>
+```
+
+Check `src/components/Header.astro` for the same defect before moving on — it also references these slugs.
+This single edit changes the rendered output of every page on the site, which matters for Step 8's IndexNow
+submission.
+
+- [ ] **Step 5: Build, verify, push the hub BEFORE the redirect**
+
+```bash
+cd /Users/apple/Downloads/CAG && npx astro build 2>&1 | tail -5 && python3 scripts/final_page_audit.py --for-sale 2>&1 | grep -A2 "^\[.*\] african-grey-parrots-for-sale "
+```
+
+Expected: `[PASS]` or `[PASS-WITH-WARNINGS]`. Then commit and push, and confirm the live page is the rebuilt
+one before Step 6 — same discipline as Task 11 Step 1. Equity must arrive at a finished page.
+
+- [ ] **Step 6: Retire the singular into the hub**
+
+Add to both `site/content/_redirects` and `public/_redirects`:
+
+```
+/african-grey-parrot-for-sale    /african-grey-parrots-for-sale/ 301
+/african-grey-parrot-for-sale/   /african-grey-parrots-for-sale/ 301
+```
+
+**Check for chains before adding** — any existing rule whose target is `/african-grey-parrot-for-sale/` must
+be repointed at the hub directly:
+
+```bash
+cd /Users/apple/Downloads/CAG && grep -n "african-grey-parrot-for-sale/ *$\|african-grey-parrot-for-sale/ 301" site/content/_redirects
+```
+
+Then repoint the 106 inbound internal links. 105 of them are the Footer link already fixed in Step 4; the
+remaining one is `404.html`. Verify nothing is left:
+
+```bash
+cd /Users/apple/Downloads/CAG && npx astro build >/dev/null 2>&1 && grep -rl 'href="/african-grey-parrot-for-sale/"' dist/ | head
+```
+
+Expected: no output.
+
+- [ ] **Step 7: Remove the page and update the data files**
+
+```bash
+cd /Users/apple/Downloads/CAG && rm -rf src/pages/african-grey-parrot-for-sale
+```
+
+In `data/page-map.json`, set `/african-grey-parrot-for-sale/` to `"status": "consolidated"`, `"redirects_to":
+"/african-grey-parrots-for-sale/"`, and a `notes` string recording the measured reason — **0 clicks on 9
+impressions in window 1, absent from window 2 entirely; 105 of its 106 inbound links also pointed at the hub;
+its dominant anchor described a different page** — plus an explicit do-NOT-rebuild. Drop it from `TIER_09` and
+clear `data/page-dates.json`.
+
+**Do not touch `FORSALE` in `scripts/final_page_audit.py` here.** `/african-grey-parrot-for-sale/` was never
+in that list — Task 1 added the *plural* hub, not the singular — so there is nothing to remove and the list
+stays at 13. Adding it and then deleting the page is precisely how the three `dist/ MISSING` lines got there
+in the first place.
+
+- [ ] **Step 8: Sitemaps, deploy, verify, IndexNow**
+
+```bash
+cd /Users/apple/Downloads/CAG && python3 scripts/generate_sitemaps.py && npx astro build 2>&1 | tail -3
+```
+
+Push, then verify the 301 without `-L` so a redirect reads as a redirect:
+
+```bash
+curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" "https://congoafricangreys.com/african-grey-parrot-for-sale/?cb=$RANDOM"
+```
+
+Expected: `301 https://congoafricangreys.com/african-grey-parrots-for-sale/`.
+
+Because Step 4 changed the global footer, **every page's rendered output changed** — submit the whole site,
+not just the hub:
+
+```bash
+cd /Users/apple/Downloads/CAG && python3 scripts/indexnow_submit.py --all
+```
+
+---
+
+## Task 14: Cluster close-out
+
+- [ ] **Step 1: Re-run the full for-sale gate and record the final state**
 
 ```bash
 cd /Users/apple/Downloads/CAG && python3 scripts/final_page_audit.py --for-sale 2>&1 | tail -20
 ```
 
-Expected: 13 targets, zero `dist/ MISSING`, both rebuilt pages passing.
+Expected: **13** targets — the count is unchanged from Task 1, because the singular was never in the list —
+zero `dist/ MISSING`, and all three rebuilt pages passing.
 
-- [ ] **Step 2: Raise the third stub before the hub is planned**
+- [ ] **Step 2: Confirm the cannibalisation is actually gone**
 
-`/african-grey-parrot-for-sale/` is 8,930 B and holds **123 queries / 5,346 impressions** — the largest query
-bucket in the cluster — with a standing page-map note that it may consolidate into the hub. It has never been
-through Gate 1. Put it to the breeder as its own build-or-consolidate decision **before** hub planning starts,
-with the same evidence shape Gate 1 used. Building the hub while this is unresolved means launching the hub
-into an unresolved cannibalisation pair with its closest slug.
+```bash
+cd /Users/apple/Downloads/CAG && for p in african-grey-parrots-for-sale african-grey-parrots-for-sale-near-me buy-african-grey-parrots-with-shipping; do echo "$p → $(grep -o 'african-grey-parrot-for-sale-[a-z-]*/' dist/$p/index.html | sort -u | wc -l) state links"; done
+```
 
-- [ ] **Step 3: Hand off**
+Expected: near-me **22**, hub and shipping page small single digits. If two pages both report 22, the geo grid
+was duplicated and Task 9 Step 2's amendment was not applied.
 
-The hub build reads: this plan's lessons doc, the updated tuple ledger, `skills/cag-for-sale-page-builder`
-(hub pages take `AggregateOffer`, not per-bird `Offer`), and the resolved decision from Step 2.
+- [ ] **Step 3: Update the lessons doc with the singular/plural finding**
+
+Add to `docs/superpowers/sessions/2026-08-10-two-pages-lessons.md`: the regex-bucket-vs-earned-traffic
+correction (a draft keyword bucket was read as page traffic and nearly justified building a fourth page), the
+105/105 lockstep-linking test as a reusable cannibalisation probe, and the footer-anchor defect class — a
+global component anchor that names one page and links to another, multiplied across the whole site.
+
+- [ ] **Step 4: Save memory**
+
+A `reference` memory for the lockstep-linking probe and for "regex-assigned keyword buckets are a target list,
+not earned traffic — always cross-check the page-level GSC row in both windows." A `project` memory for the
+final cluster shape. Update `MEMORY.md`. Check for an existing file covering each before creating a new one.
+
+- [ ] **Step 5: Commit**
 
 ---
 
@@ -791,5 +1005,6 @@ The hub build reads: this plan's lessons doc, the updated tuple ledger, `skills/
 
 1. ~~**Gate-1 approval is the one blocking answer needed before Task 2.**~~ **RESOLVED 2026-08-10 — breeder approved as written: build both, retire three into Page B.** Do not re-raise. Original text kept for the record: the verdict had been written since 2026-08-09 but never approved, and nothing had been executed. Tasks 2–13 all assume approval. **(Recommended: approve as written.)** WHY: the near-me survivor is already the settled 301 target of the 54-click legacy URL, and §4a of the build brief warns against reversing a settled 301 — doing so costs a re-crawl cycle and strands the equity mid-move. **Trade-off, named:** `/where-to-buy-african-greys-near-me/` has the better Google position (8.74 vs 64.90) and the family's only Bing click, and retiring it gives that up. It is still the right call, because that position converts at **0% on 109 impressions**.
 2. ~~**Page A's search target moves.**~~ **RESOLVED 2026-08-10 — breeder approved the retarget.** The rebuild aims the page at the buy/buy-online cluster (40 queries · 443 impressions · positions 34–80) and keeps shipping as a trust section. This is the single largest strategic change in the plan and it is reversible only at the cost of another rebuild. Do not re-raise; do not restore shipping as the search target.
-3. **`/african-grey-parrot-for-sale/` is unresolved** — §0f and Task 13 Step 2. Out of scope for these two pages; blocking for the hub.
+3. ~~**`/african-grey-parrot-for-sale/` is unresolved.**~~ **RESOLVED 2026-08-10 — scope expanded at breeder request.** The singular is retired into the hub (Task 13 Steps 6–7); the plural becomes the hub; geography moves to the near-me router. Full analysis, the rejected alternative, and the named trade-off are in §0f–§0g. Sprint scope is **3 builds + 1 retirement**, not 4 builds. Do not re-raise, and do not rebuild the singular.
+5. **Task 13 Step 4 changes every page on the site.** Repointing the Footer anchor re-renders all 105 pages, which is why Step 8 submits `--all` to IndexNow rather than a slug list. Anyone re-scoping that step should keep the sitewide submission with it.
 4. **Bing query-level data remains `NOT FETCHED`.** Every Bing export the project holds is page-level or a date series. All query claims in this plan are Google-only, and any Sprint 0 table must say so rather than filling the gap.
