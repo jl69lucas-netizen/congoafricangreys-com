@@ -34,7 +34,7 @@ Payment method is `[PAYMENT_METHOD_TBD]` — do NOT hardcode any payment process
 
 1. **Read** `docs/reference/credentials.md` — payment method and form endpoint (when finalized)
 2. **Read** `docs/reference/design-system.md` — form styling tokens
-3. **Ask user:** "Single page audit, full-site form audit, or add new form to a page?"
+3. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Single page audit, full-site form audit, or add new form to a page?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

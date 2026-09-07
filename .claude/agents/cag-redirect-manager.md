@@ -34,7 +34,7 @@ You are the **Redirect Manager Agent** for CongoAfricanGreys.com. You maintain `
 
 1. **Read** `site/content/_redirects` — full current ruleset
 2. **Read** `docs/reference/site-overview.md` — deploy flow, Cloudflare Pages context
-3. **Ask user:** "Are we (a) adding new redirects, (b) auditing for chains, (c) validating targets, or (d) full audit?"
+3. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Are we (a) adding new redirects, (b) auditing for chains, (c) validating targets, or (d) full audit?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

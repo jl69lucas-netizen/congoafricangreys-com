@@ -1,7 +1,7 @@
 ---
 name: cag-google-map
-description: Inserts, fixes, or updates Google Maps embeds on any CAG page. Fixes broken WordPress UAG Google Map block exports and data-src iframe bugs.
-tools: [Read, Write, Bash]
+description: Use when a CAG location or contact page needs a Google Maps embed added, replaced, or repaired — including the WordPress UAG block export bug, data-src iframe bugs and the CSP object-src blocker. Triggers - "add a map", "map is broken", "embed Google Maps", "state map on the location page".
+allowed-tools: [Read, Write, Bash]
 ---
 
 # CAG Google Map Skill
@@ -129,7 +129,7 @@ For state/city location pages, use the city center as the map target:
 import re
 from pathlib import Path
 
-SITE_DIR = Path("/Users/apple/Downloads/MFS/site2")
+SITE_DIR = Path("site/content")
 
 broken_embed = []
 proper_iframe = []
@@ -168,7 +168,7 @@ for p in no_map[:10]:
 import re
 from pathlib import Path
 
-SITE_DIR = Path("/Users/apple/Downloads/MFS/site2")
+SITE_DIR = Path("site/content")
 
 EMBED_RE = re.compile(
     r'<div[^>]*uagb-google-map[^>]*>\s*'
@@ -261,7 +261,7 @@ print(f"Encoded: {encoded}")
 ## Step 5 — Deploy
 
 ```bash
-cd /Users/apple/Downloads/MFS/site2
+cd site/content
 git add [changed files]
 git commit -m "Add/fix Google Maps on [page names]"
 git push origin main

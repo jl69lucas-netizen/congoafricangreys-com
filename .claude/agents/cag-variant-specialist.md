@@ -47,7 +47,7 @@ All three lead with a single trust pillar (DNA-sexed / hand-raised / captive-bre
 1. **Read** `docs/reference/design-system.md` — color tokens, fonts, radius
 2. **Read** `docs/reference/seo-rules.md` — what you must never change
 3. **Read** `data/price-matrix.json` — all variant/price data (never hardcode)
-4. Ask user: **"Which page do we start with — Congo or Timneh?"**
+4. Determine the page from the invocation (slug or "Congo"/"Timneh"); if neither is named, start with Congo and say so — do not stop to ask.
 
 Then read the chosen page:
 - **Run** `grep -n "<h1\|canonical\|ld+json" site/content/[chosen-slug]/*.md 2>/dev/null | head -20`

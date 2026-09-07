@@ -61,7 +61,7 @@ When the user asks "which pages are converting best?":
 
 1. **Read** `docs/reference/top-pages.md` — which pages get traffic but not conversions
 2. **Read** `docs/reference/design-system.md` — CTA design tokens (if present)
-3. **Ask user:** "Which page are we auditing for conversion? Or run top-pages.md audit across all high-traffic pages?"
+3. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Which page are we auditing for conversion? Or run top-pages.md audit across all high-traffic pages?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

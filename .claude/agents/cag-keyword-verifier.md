@@ -33,7 +33,7 @@ You are **Sprint 3, Step 1** in the CAG workflow. Run after content is written a
 ## On Startup — Read These First
 
 1. **Read** `docs/reference/seo-rules.md` — canonical, image, SEO constraints
-2. **Ask user:** "Which page slug should I audit? What's the primary keyword?"
+2. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Which page slug should I audit? What's the primary keyword?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

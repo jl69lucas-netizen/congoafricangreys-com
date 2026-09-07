@@ -1,7 +1,7 @@
 ---
 name: cag-bird-page-build
-description: Builds an individual /available/ bird page to the deep 22-section standard (H1-H6, distribution-matrix approval gate, Hero variants). Supersedes the lean cag-bird-listing-page depth.
-tools: [Read, Write, Bash]
+description: Use when BUILDING a new individual /available/<slug>/ bird page (or rebuilding one from the outline) to the deep 22-section standard — H1–H6 outline gate, distribution-matrix approval, Hero variants. Not for status changes (cag-bird-listing-page) or post-build QA (cag-bird-page-excellence). Triggers - "build the bird page", "new /available/ page", "list <bird name>".
+allowed-tools: [Read, Write, Bash]
 ---
 
 # C.A.Gs Bird Page Build — Deep 22-Section Standard

@@ -31,9 +31,9 @@ You are the **Agent System QA Agent** for CongoAfricanGreys.com. You audit the e
 ## On Startup — Read These First
 
 1. **Read** `CLAUDE.md` — the authoritative registry of all agents and skills
-2. **Read** `docs/architecture/00_SYSTEM_ARCHITECTURE.md` — system overview
-3. **Confirm working directory** is `` before running any bash commands
-4. **Ask user:** "Full audit or targeted check? (full / agents-only / skills-only / claude-md / data-refs)"
+2. **Read** `docs/reference/system-registry.md` — system overview (the old `docs/architecture/00_SYSTEM_ARCHITECTURE.md` no longer exists)
+3. **Confirm working directory** is the repo root: `test -f "$(git rev-parse --show-toplevel)/CLAUDE.md"` — never a hard-coded machine path
+4. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Full audit or targeted check? (full / agents-only / skills-only / claude-md / data-refs)" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 
@@ -68,8 +68,9 @@ echo "=== MISSING: tools ===" && grep -rL "^tools:" .claude/agents/*.md
 ```
 
 Expected values:
-- `model: claude-opus-4-8` (all 66 agents run on Opus 4.8; effort tier is the cost lever — see `data/agent-registry.json`)
-- `tools: [Read, Write, Bash]` (most agents; some may add specific tools)
+- `model: inherit` (all 68 agents follow the session model since 2026-09-07; `effort` — a native field, one of low/medium/high/xhigh/max — is the cost lever, see `data/agent-registry.json`)
+- `tools: [Read, Write, Bash]` (most agents; the three orchestrators add `Agent`; browser/scrape agents add `WebFetch`/`WebSearch`)
+- NO `dynamic_workflow:` key and NO `<!-- EFFORT:START -->` block — both were retired; `python3 scripts/apply_model_tiers.py --dry-run` must report 0 patched
 
 Flag any agent with a missing or unexpected model value.
 
@@ -146,6 +147,24 @@ done
 
 ```bash
 echo "=== SKILL REGISTRATION ===" && python3 scripts/register_skills.py --check
+```
+
+---
+
+### Check 6c — Fable 5.1 Drift (added 2026-09-07)
+
+Every line below must print nothing. Any hit is a FAIL with the file + line.
+
+```bash
+grep -rn 'CLAUDE_CODE_FORK_SUBAGENT' .claude/agents skills docs/reference --exclude=fable-5-1-adaptability-audit.md --exclude=session-log.md | grep -v 'never was\|not a real\|retired'
+grep -rn 'opus48_\|opus47_\|haiku_medium\|sonnet_high\|claude-opus-4-8\|claude-opus-4-7' .claude/agents skills scripts data/agent-registry.json
+grep -rn '/Users/apple' .claude/agents skills
+grep -rln 'Content root:\*\* `site/content/`' .claude/agents
+grep -rn '^tools:' skills/*.md skills/*/SKILL.md            # skills use allowed-tools, not tools
+grep -rn '^[0-9]*\. \*\*Ask user' .claude/agents              # startup interviews were replaced by default-and-state
+grep -rn '/schedule' .claude/agents | grep -v 'not a Claude Code command'
+python3 scripts/apply_model_tiers.py --dry-run | tail -1   # Patched: 0
+python3 scripts/slim_golden_rule.py --dry-run | tail -1    # Changed: 0
 ```
 
 ---
@@ -272,7 +291,7 @@ This agent should be run:
 
 ## Rules
 
-1. **Run all 9 checks before reporting** — partial audits hide failures
+1. **Run all checks (1–9 plus 6b/6c) before reporting** — partial audits hide failures
 2. **Show evidence before claims** — every pass/fail backed by bash output
 3. **Binary files are warnings, not errors** — they can't be patched as markdown
 4. **Never auto-deploy** — QA agent reads and reports; it does not trigger builds

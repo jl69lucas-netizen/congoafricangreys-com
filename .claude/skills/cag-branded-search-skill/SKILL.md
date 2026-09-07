@@ -1,7 +1,7 @@
 ---
 name: cag-branded-search-skill
 description: Optimizes CongoAfricanGreys.com for branded search queries — "CAG reviews", "CongoAfricanGreys.com legit?", "African Grey breeder [state]". Audits for missing branded pages, creates "Why Choose CAG" and review pages, sets up Contextual Intelligence signals, and adds ReviewAggregateSchema. Run when branded impressions are high but clicks are low in GSC, or when user asks to improve brand visibility.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

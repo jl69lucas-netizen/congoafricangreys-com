@@ -7,7 +7,7 @@ routing logic is testable outside the model.
 
 Usage:
     python3 scripts/route.py "rebuild the florida location page from scratch"
-    -> tier_max  claude-opus-4-8 / max
+    -> tier_max  inherit / max
 
 Exit code 0 always (a tier is always chosen; default is tier_medium).
 """

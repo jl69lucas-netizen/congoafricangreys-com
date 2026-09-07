@@ -41,7 +41,7 @@ The canonical footer source is `src/components/Footer.astro`. You never invent f
 grep -l "BaseLayout" src/pages/**/*.astro 2>/dev/null
 ```
 If the page uses BaseLayout, the footer is auto-injected — skip it. Only proceed for legacy `site/content/*.html` pages.
-3. **Ask user:** "Single page, specific batch, or full-site audit?"
+3. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Single page, specific batch, or full-site audit?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

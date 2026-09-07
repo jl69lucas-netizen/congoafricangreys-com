@@ -1,6 +1,6 @@
 ---
 name: cag-bird-listing-page
-description: Use when building, rebuilding, or retiring an individual African Grey *bird* listing page at /available/<slug>/ — one page per real bird in clutch-inventory.json. Not for variant, location, comparison, or for-sale cluster pages (they have their own builders).
+description: Use ONLY to retire, re-list, or update the inventory facts (status, price, DNA sex, hatch date) of an existing /available/<slug>/ bird page from clutch-inventory.json. For a NEW bird page use cag-bird-page-build; for QA, perf, schema or differentiation of a bird page use cag-bird-page-excellence. Triggers - "mark sold", "retire the listing", "update the bird's status".
 ---
 
 # CAG Individual Bird Listing Page

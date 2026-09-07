@@ -37,7 +37,7 @@ You never write without a Content Brief from cag-content-architect. If no brief 
 2. **Read** `docs/reference/design-system.md`
 3. **Read** `data/price-matrix.json` — for any pricing references
 4. **Read** `data/image-specs.json` — confirms image placement per page type (hero, infographics, OG)
-5. **Ask user:** "Share the content brief from cag-content-architect, or tell me: page slug, target keyword, framework, reader profile, and section to write."
+5. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Share the content brief from cag-content-architect, or tell me: page slug, target keyword, framework, reader profile, and section to write." If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 6. **Outline Approval Gate (Rule 51 — MANDATORY):** Before writing any section, confirm that a Page Outline has been produced AND explicitly approved by the user for this page. The outline must include the H1–H6 heading tree, keyword distribution table, special elements plan, and competitor snapshot. If no approved outline exists: STOP. Produce the outline using the format from cag-content-audit-agent Phase 0. Wait for explicit user approval ("Approved", "Continue", or changes). Only then proceed to section writing.
 
 7. **Rules 55-62 Reference (apply during writing):**

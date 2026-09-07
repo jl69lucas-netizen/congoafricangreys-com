@@ -1,7 +1,7 @@
 ---
 name: cag-contact-form
 description: Audits, fixes, and deploys the parrot inquiry contact form and newsletter signup across all CAG pages. Uses [PAYMENT_METHOD_TBD] backend (ID xpqoeazq).
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 # CAG Contact Form & Newsletter Agent Skill
@@ -45,7 +45,7 @@ Run this Python script from `site/content/` to find pages with broken or missing
 import os, re
 from pathlib import Path
 
-SITE_DIR = Path("/Users/apple/Downloads/CAG/site/content")
+SITE_DIR = Path("site/content")
 FORMSPREE_ID = "xpqoeazq"
 
 issues = {"wrong_id": [], "no_form": [], "sureforms": [], "ok": []}
@@ -335,7 +335,7 @@ Run this Python script to insert the contact form into every page that has a con
 import os, re
 from pathlib import Path
 
-SITE_DIR = Path("/Users/apple/Downloads/CAG/site/content")
+SITE_DIR = Path("site/content")
 FORMSPREE_ID = "xpqoeazq"
 
 # CSS block to inject into <head> if missing
@@ -412,7 +412,7 @@ print(f"\nTotal fixed: {fixed} pages")
 ## Step 5 — Deploy After Fixes
 
 ```bash
-cd /Users/apple/Downloads/CAG/site/content
+cd site/content
 # Stage changes and deploy via the CAG deployment process
 # (Deploy method TBD — Phase 2)
 ```

@@ -9,7 +9,9 @@ and location pages take inquiries, care and comparison pages earn the traffic.
 - **`src/pages/<slug>/index.astro` (or `index.html`) is what ships.** `site/content/` is a
   staging area and is never built directly. If both exist, `src/pages/` wins.
 - Build `npx astro build` → `dist/`. Every gate measures `dist/`, never source.
-- **Work on `main`.** Only `main` auto-deploys (GitHub Actions → Cloudflare Pages on push).
+- **Work on `main`** in a local session. Only `main` auto-deploys (GitHub Actions → Cloudflare Pages on push).
+  **In a remote / web session** the harness assigns a branch and cannot push to `main`: commit there,
+  open a **draft PR**, and the breeder's merge is the deploy. IndexNow runs after the merge is live.
   Finished work on any other branch is live-404 while looking done.
 - Commit **and push** after every build. Push *is* deploy.
 - After adding or removing a page: `python3 scripts/generate_sitemaps.py`.
@@ -68,7 +70,8 @@ text and the recorded reason for each: `data/quality/rule-index.json` + the pack
    2017) and IUCN Endangered (Congo) / Vulnerable (Timneh). All our birds are
    captive-bred in the USA with full documentation. Never imply wild-caught or illegal
    trade. "Appendix II" is always wrong and must be corrected on sight.
-3. **Work on `main`, never a feature branch** — see the deploy model above.
+3. **Work on `main`, never a feature branch you chose yourself** — see the deploy model above. A
+   harness-assigned branch in a remote session is the one exception: draft PR, breeder merges.
 4. **Always commit and push after a build.** Do not leave finished work unpushed.
 5. **Recommend + Why.** Whenever you present options, mark exactly one
    **(Recommended)**, justify it from real data (GSC, competitors, the codebase — never

@@ -1,7 +1,7 @@
 ---
 name: social-content
 description: Writes platform-native social media content for CAG — Instagram captions, Facebook posts, TikTok/Reels hooks, Pinterest descriptions. Turns one source asset (talking-bird clip, chick photo, or a site page) into per-platform posts in the C.A.Gs first-person breeder voice. Reads content/social/ for drafts + data/price-matrix.json for pricing. Vocabulary for @cag-social-strategist.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

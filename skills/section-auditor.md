@@ -1,7 +1,7 @@
 ---
 name: section-auditor
 description: Audits individual page sections for content quality, framework compliance, word count, AIO-readiness, and design token compliance for CAG pages. Use before rebuilding a page to identify which sections are weak vs which are strong. Outputs a section-by-section health report with specific improvement tasks.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

@@ -3,6 +3,25 @@
 > **Read this before starting any new page, sprint, or monitoring cycle.**
 > This is the authoritative end-to-end sequence for all 68 agents.
 
+## Running this pipeline under an autonomous model (added 2026-09-07)
+
+Fable 5.1 sessions run with the breeder away: a mid-task question blocks the build. So the
+pipeline has exactly **three places where an agent may stop and ask** — the `[APPROVE]` gates at
+Sprint 0.5 (the brief), Sprint 1 (outline + distribution matrix + header style) and the ASSET GATE.
+Everywhere else the Clarification Checkpoint applies: write the finished part to disk, log the
+question to the brief's `## Open Flags`, ask ONE narrow question, keep building what is not blocked.
+Agents no longer open with a "which mode?" interview; they read the mode from the invocation or the
+latest session brief and state their default. `grill-me --brief <path>` is the autonomous form of
+Sprint 0.5.
+
+**Parallel work is the `Agent` tool** — one call per track / state / page, all in one message.
+There is no `CLAUDE_CODE_FORK_SUBAGENT` variable and never was. A Workflow script (deterministic
+fan-out) may run only when the breeder asks for one in their own words.
+
+**Where the work lands:** on `main` in a local session (push = deploy). In a remote / web session
+the harness assigns a branch and cannot push to `main`: commit there, open a **draft PR**, and the
+breeder's merge is the deploy. IndexNow runs after the merge is live, never after the branch push.
+
 ## The 7-Sprint Page Pipeline (rewritten 2026-07-29)
 
 ```
@@ -69,7 +88,7 @@ Before any work begins, verify these exist:
 ## Sprint 0 — Intelligence Gathering
 *Run once per project, then quarterly. Takes ~1 session.*
 
-### Parallel Tracks (run all three simultaneously)
+### Parallel Tracks (run all three simultaneously — three `Agent` calls in one message, results merged by the parent)
 
 **Track A — Competitive Intelligence**
 ```
@@ -295,7 +314,7 @@ Step 5: cag-content-architect
 ```
 cag-batch-rebuilder
   → Reads data/locations.json
-  → Spawns cag-location-builder for each state (fork-parallel)
+  → One `Agent` call per state to cag-location-builder, all in one message (parallel)
   → Reference template: Florida page (22 sections, 4,500+ words)
   → Each page gets state-specific: Google Maps embed, local regulations note, population data
   → Merges results → deploy → IndexNow
@@ -710,7 +729,7 @@ START: What are you trying to do?
 
 ├── "Build a location page"
 │   └── Single: cag-location-builder [state]
-│       Batch: cag-batch-rebuilder → reads data/locations.json → fork-parallel
+│       Batch: cag-batch-rebuilder → reads data/locations.json → Agent per state
 
 ├── "Write page content"
 │   └── Has cag-content-audit-agent been run? NO → run it first
@@ -763,19 +782,19 @@ START: What are you trying to do?
 
 ## Model Tier System
 
-All agents run on **Opus 4.8** with three effort tiers (max/high/medium). The single source of truth is `data/agent-registry.json`. Each agent's frontmatter carries `model:`, `effort:`, and `dynamic_workflow:` fields written from that registry.
+All 68 agents carry `model: inherit` — the session's model (Fable 5.1 as of 2026-09-07) drives every agent, so a model release never requires editing 68 files again. The per-agent cost lever is `effort`, a **native** Claude Code frontmatter field (`low | medium | high | xhigh | max`). The single source of truth is `data/agent-registry.json`; `scripts/apply_model_tiers.py` writes exactly `model:` + `effort:` from it.
 
 | Tier | Model | Effort | Use For | Count |
 |---|---|---|---|---|
-| `opus48_max` | `claude-opus-4-8` | max | Orchestrators, deep creative, competitor intelligence, high-traffic builds | 15 |
-| `opus48_high` | `claude-opus-4-8` | high | Specialist page builders, narrative/schema content, SEO monitoring, analytics, conversion audits | 25 |
-| `opus48_medium` | `claude-opus-4-8` | medium | Technical audits + pure-mechanical utilities + data monitoring | 26 |
+| `tier_max` | inherit | max | Orchestrators, deep creative, competitor intelligence, high-traffic builds | 16 |
+| `tier_high` | inherit | high | Specialist page builders, narrative/schema content, SEO monitoring, analytics, conversion audits | 26 |
+| `tier_medium` | inherit | medium | Technical audits + pure-mechanical utilities + data monitoring | 26 |
 
-**Effort → extended-thinking budget:** `max` ≈ 10k thinking tokens, `high` ≈ 4k, `medium` = standard inference. Claude Code subagents have no native `effort`/`thinking` frontmatter, so `apply_model_tiers.py` enforces effort *behaviorally* — it injects an `<!-- EFFORT:START -->…<!-- EFFORT:END -->` directive block right after the frontmatter of every `max` and `high` agent (40 agents total: 15 max + 25 high). `medium` agents get no directive. Re-running the script is idempotent — it replaces any existing block.
+Retired on 2026-09-07: the `<!-- EFFORT:START/END -->` prose directive (the native field replaced it), the `dynamic_workflow:` frontmatter key (not a recognized field — the flag lives in the registry only), and the `opus48_*` / `opus47_*` / `haiku_medium` tier names. `xhigh` is available and untested here; try it on the orchestrators and the audit chain and measure rework rate before adopting it.
 
-**Dynamic Workflow:** orchestrators (`cag-content-architect`, `cag-structure-architect`, `cag-batch-rebuilder`) carry `dynamic_workflow: true` and route each task to the right tier at runtime — see the "Dynamic Workflow Routing" section in each agent file. The routing logic is mirrored deterministically in `scripts/route.py` for testing: `python3 scripts/route.py "<task description>"` prints the chosen tier + model/effort (e.g. "rebuild florida page from scratch" → `opus48_max`).
+**Dynamic routing:** the three orchestrators (`cag-content-architect`, `cag-structure-architect`, `cag-batch-rebuilder`) classify each task to a tier and dispatch with the `Agent` tool; `python3 scripts/route.py "<task description>"` prints the tier deterministically (e.g. "rebuild florida page from scratch" → `tier_max`).
 
-**To change models site-wide:** edit `data/agent-registry.json`, then run `python3 scripts/apply_model_tiers.py` → `bash scripts/verify_model_tiers.sh` → commit → push.
+**To change effort site-wide:** edit `data/agent-registry.json`, then `python3 scripts/apply_model_tiers.py` → `bash scripts/verify_model_tiers.sh` → `python3 -m pytest tests/test_apply_model_tiers_idempotent.py` → commit → push.
 
 ---
 

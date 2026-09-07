@@ -31,7 +31,7 @@ You are the **Competitor Pricing Alert Agent** for CongoAfricanGreys.com. Africa
 1. **Read** `data/competitor-prices.json` (if exists) — previous week's snapshot
 2. **Read** `data/price-matrix.json` — CAG current pricing
 3. **Read** `docs/research/` — competitor URLs from intel reports
-4. **Ask user:** "Are we (a) running the weekly price check, (b) adding a new competitor, or (c) reviewing historical trends?"
+4. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Are we (a) running the weekly price check, (b) adding a new competitor, or (c) reviewing historical trends?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: framework-fab
 description: "Reference guide for the FAB (Features → Advantages → Benefits) framework applied to CAG pages. Use when writing spec-bearing content — bird listing details, pricing what's-included rows, cage/diet/setup recommendations, documentation stacks, shipping tiers — so a raw fact never ships without its advantage and its owner-benefit. Also the comparison-row framework (advantage comparison vs competitors/other species)."
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

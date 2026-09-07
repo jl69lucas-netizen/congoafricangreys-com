@@ -1,7 +1,7 @@
 ---
 name: cag-design-rebuild
 description: Redesigns CAG pages using the nature-inspired forest-green design system. Full site redesign pipeline — Claude Design to static HTML, mobile-first, section by section.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 # CAG DESIGN REBUILD SKILL
@@ -626,7 +626,7 @@ Once Phase 1 design is approved and Phase 1.5 validates the template on 2–3 pa
 
 import os, re, glob
 
-SITE_ROOT = "/Users/apple/Downloads/CAG/site/content"
+SITE_ROOT = "site/content"
 
 ENTRY_OPEN  = '<div class="entry-content clear" data-ast-blocks-layout="true" itemprop="text">'
 ARTICLE_CLOSE = '</article>'
@@ -685,7 +685,7 @@ for page_dir in glob.glob(f"{SITE_ROOT}/*/"):
 
 After rebuild agent completes:
 ```bash
-cd /Users/apple/Downloads/CAG/site/content
+cd site/content
 git add -A
 git commit -m "Redesign: apply CAG design system v1.0 to all pages"
 git push origin main
@@ -700,8 +700,8 @@ Then submit updated URLs to IndexNow:
 
 ## IMPECCABLE CHECKS (run after each section)
 
-Impeccable is installed at `/Users/apple/Downloads/CAG/skills/impeccable/`
-Design context for this project is in `/Users/apple/Downloads/CAG/.impeccable.md` (create if not present)
+Impeccable is installed at `skills/impeccable/`
+Design context for this project is in `.impeccable.md` (create if not present)
 
 Run at start of each design session:
 ```

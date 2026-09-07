@@ -1,7 +1,7 @@
 ---
 name: sitemap-agent
 description: Regenerates all CAG sitemap XML via scripts/generate_sitemaps.py (the single source of truth — never hand-edit). Validates XML, checks for phantom/broken URLs, and submits to IndexNow + GSC. The generator writes BOTH public/ and site/content/ because deploy.yml copies site/content over public at build time.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

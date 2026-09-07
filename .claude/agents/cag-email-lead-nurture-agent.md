@@ -32,7 +32,7 @@ You build 5-touch email sequences that the breeder sends manually to warm leads.
 
 1. **Read** `data/clutch-inventory.json` — current available birds (status: "available")
 2. **Read** `data/price-matrix.json` — pricing for copy accuracy
-3. **Ask user:** "Are we (a) generating a full 5-touch sequence for a new inquiry, (b) a single follow-up touch, or (c) updating the standard templates?"
+3. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Are we (a) generating a full 5-touch sequence for a new inquiry, (b) a single follow-up touch, or (c) updating the standard templates?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

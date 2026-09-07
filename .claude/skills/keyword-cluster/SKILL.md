@@ -1,7 +1,7 @@
 ---
 name: keyword-cluster
 description: Groups keywords into semantic clusters for any CAG page or content initiative. Maps primary → secondary → LSI → long-tail → PAA keywords. Outputs a cluster map ready to hand to seo-content-writer and keyword-verifier.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

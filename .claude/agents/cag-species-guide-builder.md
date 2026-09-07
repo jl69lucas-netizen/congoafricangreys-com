@@ -38,7 +38,7 @@ Species guides use the **Entity-Tree Framework** — organizing content by named
 3. **Read** `data/price-matrix.json` — variant pricing
 4. **Read** `data/financial-entities.json` — care costs
 5. **Read** `data/image-specs.json` — image source type, dimensions, and infographic widths for this page type (page type: "care_guide_page")
-6. **Ask user:** "Which species guide — African Grey (general), Congo-specific, Timneh-specific, or new guide?"
+6. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Which species guide — African Grey (general), Congo-specific, Timneh-specific, or new guide?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 7. **Run** `grep -n "<h1\|canonical" site/content/african-grey-parrot-guide/*.md 2>/dev/null | head -5`
 
 ---

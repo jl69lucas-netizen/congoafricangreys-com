@@ -1,10 +1,6 @@
 ---
 name: cag-seo-master-checklist
-description: Master SEO execution guide for all CAG pages (except location pages and comparison pages).
-             4-phase workflow: Pre-Build Research → Planning Gate → Build → Optimization + QA.
-             Invoke via Skill tool BEFORE starting any page build. Version 2.0 — merged from
-             uploaded SEO checklist + existing seo-rules.md. Includes homepage keyword strategy,
-             Internal Linking Library, and full term conversion table.
+description: Use BEFORE starting any interior page build on CongoAfricanGreys.com (homepage, species/care guides, blog, variant, trust, scam, purchase, FAQ, about) — the 4-phase master SEO execution checklist v2.0 (Pre-Build Research → Planning/Outline Gate → 5-Tier Section Form → Optimization + QA), the 10-category keyword fan-out, 150+ entity research, 3 anchor-text strategies and the Internal Linking Library (Appendix A). NOT for location or comparison pages (they have their own builders). Triggers - "run the SEO checklist", "master checklist", "Rule 51 outline gate", "keyword fan-out", "Appendix A links".
 ---
 
 # SKILL: CAG Master SEO Execution Checklist (v2.0)

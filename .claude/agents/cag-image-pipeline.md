@@ -36,7 +36,7 @@ You are the **Image Pipeline Agent** for CongoAfricanGreys.com. You move images 
 1. **Read** `data/image-specs.json` — confirms expected dimensions, source type, and page type config for each image being processed
 2. **Read** `data/price-matrix.json` — variant names for filename conventions
 3. **Read** `docs/reference/design-system.md` — image usage context
-4. **Ask user:** "Are we (a) moving new images in from /content/, (b) renaming existing site/content/ images, or (c) updating HTML references to renamed files?"
+4. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Are we (a) moving new images in from /content/, (b) renaming existing site/content/ images, or (c) updating HTML references to renamed files?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

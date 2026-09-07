@@ -39,7 +39,7 @@ The reference page uses custom CSS classes (`cag-h1`, `cag-h2`) and the CAG desi
 3. **Read** `data/price-matrix.json` — pricing for any variant/species comparisons
 4. **Read** `data/image-specs.json` — image source type, dimensions, and infographic widths for this page type (page type: "comparison_page")
 5. **Read** `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro` — reference design patterns (Astro component format; read lines 1–120 for structure)
-6. **Ask user:** "Which comparison are we building? (e.g. Congo vs Timneh, Male vs Female, African Grey vs Macaw)"
+6. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Which comparison are we building? (e.g. Congo vs Timneh, Male vs Female, African Grey vs Macaw)" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 6. **Research competitor comparison pages** using Firecrawl MCP:
    - Use `firecrawl_search` to find the top 3 ranking pages for the target comparison keyword (e.g. "congo vs timneh african grey")
    - Note: heading structure, table columns, FAQ topics, word count, and what they miss

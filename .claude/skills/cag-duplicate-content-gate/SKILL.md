@@ -1,7 +1,7 @@
 ---
 name: cag-duplicate-content-gate
 description: Use BEFORE building any page that has siblings (comparison spokes, location pages, bird listings, variant/attribute pages, blog posts) and AGAIN before giving any page a final pass — catches word-for-word and template-for-template duplication across pages (headers, paragraphs, sentences, anchors) so it never ships and never has to be rewritten post-hoc. Also use when the breeder says "duplicate content", "same headers", "crossover", or "these pages sound the same".
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 # Duplicate-Content Gate — headers, paragraphs, sentences, anchors
