@@ -7,9 +7,9 @@ routing logic is testable outside the model.
 
 Usage:
     python3 scripts/route.py "rebuild the florida location page from scratch"
-    -> opus48_max  claude-opus-4-8 / max
+    -> tier_max  claude-opus-4-8 / max
 
-Exit code 0 always (a tier is always chosen; default is opus48_medium).
+Exit code 0 always (a tier is always chosen; default is tier_medium).
 """
 import json
 import sys
@@ -20,24 +20,24 @@ REGISTRY = ROOT / "data" / "agent-registry.json"
 
 # Ordered most-specific → least. First tier with a matching signal wins.
 ROUTING = [
-    ("opus48_max", [
+    ("tier_max", [
         "deep audit", "full rebuild", "full silo", "reverse silo",
         "competitor analysis", "competitor url", "architecture rebuild",
         "new page from scratch", "from scratch", "full page build",
     ]),
-    ("opus48_high", [
+    ("tier_high", [
         "section update", "faq only", "faq", "about page", "comparison page",
         "comparison", "hub page", "spoke page", "cluster build", "variant page",
         "monitor", "analytics", "conversion audit", "content calendar",
         "rank track", "keyword gap", "newsletter", "case study",
     ]),
-    ("opus48_medium", [
+    ("tier_medium", [
         "canonical fix", "canonical", "redirect", "footer", "link check",
         "internal link audit", "depth check", "orphan scan", "image rename",
         "deploy", "nap citation", "google map",
     ]),
 ]
-DEFAULT = "opus48_medium"
+DEFAULT = "tier_medium"
 
 
 def route(task: str) -> str:
