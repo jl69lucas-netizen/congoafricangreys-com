@@ -1,7 +1,7 @@
 ---
 name: cag-broken-links
-description: Audits all HTML pages in site/content/ for broken internal links, then fixes them. Checks image src paths, anchor hrefs, and canonical tags.
-tools: [Read, Write, Bash]
+description: Use when any CAG page has a broken internal link, dead image src, wrong canonical, or a 404 in the live-site sweep — audits every built page in dist/ (and legacy site/content/) for broken anchors, image paths and canonicals, then fixes them and records redirects. Triggers - "broken link", "404", "dead image", "link check", "canonical wrong".
+allowed-tools: [Read, Write, Bash]
 ---
 
 # CAG Broken Internal Links Agent Skill
@@ -34,7 +34,7 @@ Run this Python script from inside `site/content/`:
 import os, re
 from pathlib import Path
 
-SITE_DIR = Path("/Users/apple/Downloads/CAG/site/content")
+SITE_DIR = Path("site/content")
 LINK_RE = re.compile(r'href="(/[^"#?]*)"')
 
 # Build set of all valid paths (directories with index.html OR files)
@@ -102,7 +102,7 @@ For each broken link found, decide the fix:
 
 ## Step 3A — Fix: Add Redirects to `_redirects`
 
-Append to `/Users/apple/Downloads/MFS/site/content/_redirects`:
+Append to `site/content/_redirects`:
 
 ```
 # Nested WordPress CPT paths → flat slugs
@@ -182,7 +182,7 @@ python3 audit_links.py 2>/dev/null | grep "BROKEN" | head -1
 ## Step 5 — Deploy
 
 ```bash
-cd /Users/apple/Downloads/CAG/site/content
+cd site/content
 # Stage changes and deploy via the CAG deployment process
 # (Deploy method TBD — Phase 2)
 ```

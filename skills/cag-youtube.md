@@ -1,7 +1,7 @@
 ---
 name: cag-youtube
-description: Audits, fixes, and optimizes all YouTube video embeds on MFS pages. Fixes data-src iframe bugs from WordPress migration and manages the video sitemap.
-tools: [Read, Write, Bash]
+description: Use when a CAG page has a YouTube embed to add, fix or optimize — repairs data-src iframe bugs from the WordPress migration, adds VideoObject schema, and manages video-sitemap.xml. Triggers - "YouTube embed", "video not playing", "video sitemap", "VideoObject schema".
+allowed-tools: [Read, Write, Bash]
 ---
 
 # CAG YouTube Agent Skill
@@ -52,7 +52,7 @@ Run this Python script from inside `site/content/`:
 import os, re
 from pathlib import Path
 
-SITE_DIR = Path("/Users/apple/Downloads/CAG/site/content")
+SITE_DIR = Path("site/content")
 IFRAME_RE = re.compile(r'<iframe[^>]+(?:data-src|src)=["\']([^"\']*youtube[^"\']*)["\'][^>]*>', re.IGNORECASE)
 
 broken = {}  # {page: [video_ids]}
@@ -85,7 +85,7 @@ print(f"\nWorking YouTube iframes (src): {sum(len(v) for v in fixed.values())} a
 import re
 from pathlib import Path
 
-SITE_DIR = Path("/Users/apple/Downloads/CAG/site/content")
+SITE_DIR = Path("site/content")
 
 def fix_youtube_iframes(content):
     """Replace any YouTube iframe using data-src with a proper src iframe."""
@@ -152,7 +152,7 @@ Replace `VIDEO_ID` with the 11-character YouTube ID (from the URL after `watch?v
 
 ## Step 4 — Update video-sitemap.xml
 
-File location: `/Users/apple/Downloads/MFS/site/content/video-sitemap.xml`
+File location: `site/content/video-sitemap.xml`
 
 ### Rules for Google compliance:
 - `<video:uploader info="...">` — `info` must be an **absolute URL** (not relative path)
@@ -206,7 +206,7 @@ File location: `/Users/apple/Downloads/MFS/site/content/video-sitemap.xml`
 import re
 from pathlib import Path
 
-content = Path("/Users/apple/Downloads/MFS/site/content/video-sitemap.xml").read_text()
+content = Path("site/content/video-sitemap.xml").read_text()
 
 # Check for relative info= attributes (should be absolute URLs)
 relative_info = re.findall(r'info="(/[^"]+)"', content)
@@ -236,7 +236,7 @@ print(f"\nTotal video entries: {len(video_blocks)}")
 ## Step 6 — Deploy and Submit
 
 ```bash
-cd /Users/apple/Downloads/MFS/site2
+cd site/content
 git add video-sitemap.xml [any .html files fixed]
 git commit -m "Fix YouTube iframes and video sitemap"
 git push origin main

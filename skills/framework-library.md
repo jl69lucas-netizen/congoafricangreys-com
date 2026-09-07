@@ -1,7 +1,7 @@
 ---
 name: framework-library
 description: "Catalog of the long-tail copywriting frameworks for CAG beyond the dedicated skills — 4Ps, AICPBSAWN, QUEST, ACCA, HIPASI, A-FOREST, String of Pearls, VAD, Setup-Stat-Reframe, The 4 Ss, the 5 Basic Objections, and the objection-handling block. Use when selecting a framework for a page/section and none of the dedicated framework-* skills fits, when writing long-form landing pages for cold traffic, consultative/qualifying content, testimonial structure, or objection-handling blocks. Includes the master routing table by page type + reader awareness level, and the EBP disambiguation note."
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

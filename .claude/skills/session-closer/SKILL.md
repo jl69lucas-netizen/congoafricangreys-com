@@ -1,7 +1,7 @@
 ---
 name: session-closer
 description: End-of-session ritual — reviews what was built, fills the "What's Next" section of today's session brief, proposes next session priorities, and optionally patches CLAUDE.md. Run this before ending any build session. (CongoAfricanGreys.com)
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

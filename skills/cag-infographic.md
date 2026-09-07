@@ -1,6 +1,6 @@
 ---
 name: cag-infographic
-description: Build 400–450px-tall HTML/CSS infographics for CongoAfricanGreys.com pages. Three types: Comparison, Feature Grid, Process Flow. Pure HTML — no images, no external libs. CAG brand colors. Default height: 400px. Use in Astro pages via component import or raw HTML paste in static HTML files.
+description: "Build 400–450px-tall HTML/CSS infographics for CongoAfricanGreys.com pages. Three types: Comparison, Feature Grid, Process Flow. Pure HTML — no images, no external libs. CAG brand colors. Default height: 400px. Use in Astro pages via component import or raw HTML paste in static HTML files."
 ---
 
 # CAG Infographic Skill

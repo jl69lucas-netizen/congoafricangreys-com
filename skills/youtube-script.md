@@ -1,7 +1,7 @@
 ---
 name: youtube-script
 description: Writes YouTube video scripts for CAG — species guides, comparison videos, aviary tour videos, FAQ answer videos, and YouTube Shorts. Reads content/social/CAG-YouTube-Content-Strategy for strategy context. Follows the CAG voice — Lawrence & Cathy telling real stories.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

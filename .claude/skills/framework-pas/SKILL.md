@@ -1,7 +1,7 @@
 ---
 name: framework-pas
 description: "Reference guide for the PAS (Problem → Agitate → Solution) framework applied to CAG pages. Use when the reader arrives already in pain — behavioral issues (plucking, screaming, biting), scam fear, sick-bird fear, diet refusal, hormonal aggression — and needs the fastest path from pain to our documented answer. The fastest-converting framework for problem-aware audiences."
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

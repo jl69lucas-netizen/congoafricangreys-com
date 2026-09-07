@@ -1,7 +1,7 @@
 ---
 name: framework-eeat
 description: "Reference guide for Google's E-E-A-T framework applied to CAG content. Use when auditing or building any page that must signal credibility to Google's quality raters and AI systems. Covers on-page signals, schema, CITES compliance framing, and author attribution."
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

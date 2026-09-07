@@ -1,7 +1,7 @@
 ---
 name: framework-aio-geo
 description: "Reference guide for AIO (AI Overview) and GEO (Generative Engine Optimization) applied to CAG content. Use when building or auditing any page that should be cited by ChatGPT, Perplexity, Google AIO, or other AI answer engines."
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

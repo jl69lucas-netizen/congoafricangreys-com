@@ -1,7 +1,7 @@
 ---
 name: internal-link-agent
 description: Audits and improves internal link structure across CAG pages. ALWAYS starts from the sitemap (the canonical page universe), then finds orphan pages (no inbound links), missing hub-to-spoke links, missing spoke-to-hub links, and anchor text opportunities — enforcing the Anchor Diversity Ledger (no repeated anchors; exact/partial/LSI/natural variation) and the Link-First placement rule. Produces a prioritized fix list with exact HTML insertions. Never modifies H1 or canonical.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

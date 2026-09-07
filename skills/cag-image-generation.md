@@ -79,10 +79,10 @@ command -v cwebp && echo "cwebp ready" || echo "Install: brew install webp"
 ls scripts/generate_image.sh scripts/optimize_images.sh
 ```
 
-If scripts don't exist yet, they live in the MFS project at `/Users/apple/Downloads/MFS/scripts/`. Copy them:
+If scripts don't exist yet, they live in the MFS project at `../MFS/scripts/  # sibling MFS repo, not part of this one: `. Copy them:
 ```bash
-cp /Users/apple/Downloads/MFS/scripts/generate_image.sh scripts/
-cp /Users/apple/Downloads/MFS/scripts/optimize_images.sh scripts/
+cp ../MFS/scripts/  # sibling MFS repo, not part of this one: generate_image.sh scripts/
+cp ../MFS/scripts/  # sibling MFS repo, not part of this one: optimize_images.sh scripts/
 chmod +x scripts/generate_image.sh scripts/optimize_images.sh
 ```
 

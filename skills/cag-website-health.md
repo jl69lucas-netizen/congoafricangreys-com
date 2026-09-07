@@ -1,7 +1,7 @@
 ---
 name: cag-website-health
 description: Technical site audit and auto-fixer for CongoAfricanGreys.com. Astro → Cloudflare Pages. Checks git/deploy state, build, canonicals, images, live site, Core Web Vitals. Runs scripts/health-sweep.sh as the one-command sweep.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 # CAG WEBSITE HEALTH & TECHNICAL FIX SKILL
@@ -29,7 +29,7 @@ tools: [Read, Write, Bash]
 | Headers | `site/content/_headers` → copied to `public/_headers` at deploy |
 | Brand assets | `assets/brand/`, `public/` |
 
-> ⚠️ v1 of this skill hardcoded `/Users/apple/Downloads/MFS/site2`, the domain
+> ⚠️ v1 of this skill hardcoded an absolute path into the sibling MFS repo, the domain
 > "african grey parrotsforsale.com", and Netlify. All three were wrong. Never
 > reintroduce them.
 

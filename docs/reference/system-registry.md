@@ -17,7 +17,7 @@ All three steps completed — outputs in `docs/research/` and `data/competitors.
 ## Phase 2 — Full Agent System (Active)
 
 ### Model Tiers
-All 68 agents run on **Opus 4.8** (`claude-opus-4-8`), with three **effort** tiers (max / high / medium) as the cost lever, driven by `data/agent-registry.json`. Each agent's frontmatter carries `model:`, `effort:`, `dynamic_workflow:`. See `docs/reference/WORKFLOW.md §Model Tier System`. Dynamic Workflow routing is active on the 3 orchestrators (content-architect, structure-architect, batch-rebuilder). To change models/effort site-wide: edit the registry → `python3 scripts/apply_model_tiers.py` → `bash scripts/verify_model_tiers.sh`.
+All 68 agents carry `model: inherit` (the session model — Fable 5.1 since 2026-09-07) with three native **effort** tiers (`tier_max` / `tier_high` / `tier_medium` → max / high / medium) as the cost lever, driven by `data/agent-registry.json`. Each agent's frontmatter carries exactly `model:` + `effort:`; the old EFFORT prose block and `dynamic_workflow:` key are retired. See `docs/reference/WORKFLOW.md §Model Tier System`. The 3 orchestrators (content-architect, structure-architect, batch-rebuilder) carry the `Agent` tool and dispatch children with it. To change effort site-wide: edit the registry → `python3 scripts/apply_model_tiers.py` → `bash scripts/verify_model_tiers.sh`.
 
 ### Skills
 
@@ -73,7 +73,7 @@ All 68 agents run on **Opus 4.8** (`claude-opus-4-8`), with three **effort** tie
 #### Tier 1 — Orchestrators
 - `.claude/agents/cag-content-architect.md` — orchestrates all content creation; selects AIDA/PAS/QAB/BAB/H-S-S framework per page type; routes tasks to specialist agents; reads top-pages.md first
 - `.claude/agents/cag-structure-architect.md` — maps content clusters into Silo/Reverse Silo; generates `data/structure.json`; ensures every page ≤3 clicks from homepage; scans competitor URLs via Playwright
-- `.claude/agents/cag-batch-rebuilder.md` — coordinates batch page rebuilds in parallel (`CLAUDE_CODE_FORK_SUBAGENT=1`); reads `data/locations.json` for location batches; tracks completion + runs final deploy
+- `.claude/agents/cag-batch-rebuilder.md` — coordinates batch page rebuilds in parallel (one `Agent` call per page, all in one message); reads `data/locations.json` for location batches; tracks completion + runs final deploy
 - `.claude/agents/cag-strategy-synthesizer.md` — research → TWO reverse-engineered strategies → recommend ONE with data-grounded WHY + named trade-off → derives concrete artifacts (e.g. the 9 blog topics + hub). Reads research only (no Sprint-0 re-run), never fabricates; hands chosen strategy to cag-content-architect. Runs at Sprint 1, before content-architect.
 
 #### Tier 2 — Page Builders
@@ -172,12 +172,13 @@ Transfer and adapt all MFS agents + skills for African Grey domain.
 
 ## Scripts
 - `scripts/health-sweep.sh` — **FULL SYSTEM HEALTH CHECK** (one command). Covers git/deploy state (incl. secret-leak detection), agent integrity (68 agents + model tiers), Astro build, live-site 200s, and `dist/` output hygiene. Run for any "is the site/system healthy?" request. `--no-build` skips the build. Owned/documented by the `cag-website-health` skill.
-- `scripts/apply_model_tiers.py` + `scripts/verify_model_tiers.sh` — apply/verify the model + effort-tier assignment (all Opus 4.8; max/high/medium effort) from `data/agent-registry.json`
+- `scripts/apply_model_tiers.py` + `scripts/verify_model_tiers.sh` — apply/verify the `model: inherit` + native effort-tier assignment (max/high/medium) from `data/agent-registry.json`; `tests/test_apply_model_tiers_idempotent.py` guards byte-idempotence
 - `scripts/generate_nb_image.sh` — Nano Banana 2 / Imagen image generation (reads `GEMINI_API_KEY` from gitignored `.google-key`)
 - `scripts/generate_sitemaps.py` — regenerates all sitemap shards from `src/pages/` (location/blog/page classification, priority tiers, validates zero phantom URLs). RUN AFTER ADDING/REMOVING ANY PAGE. (Replaced the stale 13-URL hand-maintained sitemap with a 100-URL filesystem-driven one — 2026-06-04.)
 - `scripts/final_page_audit.py` — page-type-aware final QA auditor (nested-slug aware; profiles for bird/interior/for-sale/etc.); supersedes `interior_29_audit.py`. Run `python3 scripts/final_page_audit.py --birds` for the `/available/` cluster. Owned by the `cag-final-page-pass` skill.
-- `scripts/add_first_person_golden_rule.py` — one-off idempotent injection of the First-Person Voice rule into every agent's `## Golden Rule` (applied to all 66, 2026-06-04).
-- `scripts/add_clarification_checkpoint_rule.py` — idempotent injection of the **Clarification Checkpoint** rule into every agent's `## Golden Rule` (applied to all 66, 2026-06-05). Upgrades the <97% Confidence-Gate dead-stop to ask-one-question-log-to-brief-and-continue. Re-run after adding any new agent.
+- `scripts/slim_golden_rule.py` — **2026-09-07**: collapses the duplicated site-wide Golden Rule block in every agent to one pointer at `CLAUDE.md` + `rules/` (352 KB → 88 KB), removes the old stop-and-ask Confidence Gate line, fixes the content root to `src/pages/`, strips hard-coded Mac paths. Idempotent; `tests/test_slim_golden_rule_idempotent.py`. **Supersedes the six `add_*_rule.py` injectors below — do not re-run them; a new site-wide rule goes into `rules/` + `rule-index.json`, not into 68 files.**
+- `scripts/add_first_person_golden_rule.py` — one-off idempotent injection of the First-Person Voice rule into every agent's `## Golden Rule` (applied to all agents at the time, 2026-06-04).
+- `scripts/add_clarification_checkpoint_rule.py` — idempotent injection of the **Clarification Checkpoint** rule into every agent's `## Golden Rule` (applied to all agents at the time, 2026-06-05). Upgrades the <97% Confidence-Gate dead-stop to ask-one-question-log-to-brief-and-continue. Re-run after adding any new agent.
 - `scripts/add_link_first_rule.py` — idempotent injection of the **Link-First** rule (anchors at sentence START — never mid or end) into every agent's `## Golden Rule` (applied to all 68, 2026-07-11). Re-run after adding any new agent.
 - `scripts/add_write_from_outline_rule.py` — idempotent injection of the **Write-From-Outline, NEVER-From-Sibling** rule into every agent's `## Golden Rule` (applied to all 68, 2026-07-23). Re-run after adding any new agent.
 - `scripts/add_heading_outline_gate_rule.py` — idempotent injection of the **Heading Hierarchy Outline Gate** (outline approved before code · no skipped levels · all six levels · ≥5 H5 AND ≥5 H6) into every agent's `## Golden Rule` (applied to all 68, 2026-07-23). Re-run after adding any new agent.

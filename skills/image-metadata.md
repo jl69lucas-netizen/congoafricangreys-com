@@ -1,7 +1,7 @@
 ---
 name: image-metadata
 description: Writes SEO-optimized alt text, file names, title attributes, and caption text for all CAG images. Follows seo-rules.md image constraints. Audits existing pages for missing or weak alt text. Outputs a ready-to-paste metadata block for each image.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule
