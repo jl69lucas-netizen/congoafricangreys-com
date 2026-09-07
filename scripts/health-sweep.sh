@@ -37,6 +37,17 @@ if git remote -v | grep -qE 'ghp_|github_pat_|x-access-token:[^@]+@'; then
 else
   pass "No token embedded in remote URL"
 fi
+# Secret leak: a Cloudflare/API token committed inside tracked Claude settings or scripts.
+if git grep -qE 'CLOUDFLARE_API_TOKEN=[A-Za-z0-9_-]{20,}|cfut_[A-Za-z0-9_-]{20,}' -- ':!*.md' ':!scripts/health-sweep.sh' 2>/dev/null; then
+  fail "API token committed in tracked files (git grep CLOUDFLARE_API_TOKEN= / cfut_) — rotate + purge"
+else
+  pass "No API token committed in tracked files"
+fi
+if git ls-files --error-unmatch .claude/settings.local.json >/dev/null 2>&1; then
+  fail ".claude/settings.local.json is tracked — it is per-machine and must stay gitignored"
+else
+  pass ".claude/settings.local.json is not tracked"
+fi
 
 git fetch -q origin "$BRANCH" 2>/dev/null
 AHEAD=$(git rev-list --count origin/"$BRANCH"..HEAD 2>/dev/null || echo "?")
