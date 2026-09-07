@@ -1,6 +1,6 @@
 ---
 name: cag-page-hardening
-description: Use when a CAG page is built but feels rushed, or before any deploy/final pass, or when the breeder reports a page looks wrong on mobile/desktop — zoomed images, broken or overlapping hero art, a jump-rail that does nothing, buttons that wrap or stretch, text cut off at the screen edge, headings that ignore their CSS, or Lighthouse contrast / link-distinguishability / image-delivery flags. Runs an automatic scan for every UI/UX/perf/a11y defect class that has actually shipped on this site, then applies the banked fix for each. Triggers: "harden this page", "polish the UI", "fix the mobile view", "why is this cut off", "sweep the contrast fix", "make it modern/clean", final-pass QA.
+description: "Use when a CAG page is built but feels rushed, or before any deploy/final pass, or when the breeder reports a page looks wrong on mobile/desktop — zoomed images, broken or overlapping hero art, a jump-rail that does nothing, buttons that wrap or stretch, text cut off at the screen edge, headings that ignore their CSS, or Lighthouse contrast / link-distinguishability / image-delivery flags. Runs an automatic scan for every UI/UX/perf/a11y defect class that has actually shipped on this site, then applies the banked fix for each. Triggers: \"harden this page\", \"polish the UI\", \"fix the mobile view\", \"why is this cut off\", \"sweep the contrast fix\", \"make it modern/clean\", final-pass QA."
 ---
 
 # SKILL: CAG Page Hardening (v2.0 — 2026-07-29)

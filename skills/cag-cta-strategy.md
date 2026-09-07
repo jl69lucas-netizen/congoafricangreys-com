@@ -1,6 +1,6 @@
 ---
 name: cag-cta-strategy
-description: CTA strategy guide for CAG — 22 homepage sections × 3 voice options = 66 conversion-ready CTAs. Three voices: Trust & Security, Direct & Transactional, Ethical & Quality. Use when writing or auditing any page section's CTA copy.
+description: "CTA strategy guide for CAG — 22 homepage sections × 3 voice options = 66 conversion-ready CTAs. Three voices: Trust & Security, Direct & Transactional, Ethical & Quality. Use when writing or auditing any page section's CTA copy."
 allowed-tools: [Read, Write, Bash]
 ---
 

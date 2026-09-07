@@ -1,6 +1,6 @@
 ---
 name: cag-final-page-pass
-description: Use as THE final QA gate at the end of EVERY C.A.Gs page build/rebuild/polish, before you "give the page a pass" or deploy — any page type, including bird /available/ and for-sale pages the interior gate excludes. Runs the mechanical page-type-aware auditor over dist/, routes low scorers to the strategic + subjective checks, and returns one PASS / PASS-WITH-WARNINGS / FAIL verdict with a prioritized, WHY-grounded fix list. Triggers: "final check", "give this page a pass", "is this page done", "audit before deploy", "run the final manual checks".
+description: "Use as THE final QA gate at the end of EVERY C.A.Gs page build/rebuild/polish, before you \"give the page a pass\" or deploy — any page type, including bird /available/ and for-sale pages the interior gate excludes. Runs the mechanical page-type-aware auditor over dist/, routes low scorers to the strategic + subjective checks, and returns one PASS / PASS-WITH-WARNINGS / FAIL verdict with a prioritized, WHY-grounded fix list. Triggers: \"final check\", \"give this page a pass\", \"is this page done\", \"audit before deploy\", \"run the final manual checks\"."
 allowed-tools: [Read, Write, Bash]
 ---
 

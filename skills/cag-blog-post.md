@@ -1,6 +1,6 @@
 ---
 name: cag-blog-post
-description: Use when building or rebuilding any CongoAfricanGreys.com blog post or the /blog/ hub — the 14-step section architecture, desktop+mobile component map, 8 cag-blog-* special-element components, tiered Sprint 0.5 research, Style-2 gated humor, and 1,800–2,500 intent-scaled word counts. Triggers: "write a blog post", "build the blog", "blog hub", "cage setup post", any /blog/<slug> page. Reconciled to DESIGN.md; source of truth docs/superpowers/specs/2026-06-27-cags-blog-cluster-system-design.md.
+description: "Use when building or rebuilding any CongoAfricanGreys.com blog post or the /blog/ hub — the 14-step section architecture, desktop+mobile component map, 8 cag-blog-* special-element components, tiered Sprint 0.5 research, Style-2 gated humor, and 1,800–2,500 intent-scaled word counts. Triggers: \"write a blog post\", \"build the blog\", \"blog hub\", \"cage setup post\", any /blog/<slug> page. Reconciled to DESIGN.md; source of truth docs/superpowers/specs/2026-06-27-cags-blog-cluster-system-design.md."
 allowed-tools: [Read, Write, Bash]
 ---
 
