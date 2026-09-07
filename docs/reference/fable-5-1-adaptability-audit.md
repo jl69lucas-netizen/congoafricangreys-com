@@ -190,7 +190,9 @@ Smaller doc drift to fix in the same pass: WORKFLOW.md is 832 lines and still sa
 
 `.claude/settings.local.json` is tracked in git (last touched in commit `025dcee`) and one of its `permissions.allow` entries embeds a **Cloudflare API token** inside a `wrangler pages deploy` command. `health-sweep.sh` claims secret-leak detection and did not catch it. Rotate the token in the Cloudflare dashboard, remove the entry, add `.claude/settings.local.json` to `.gitignore` (only `.claude/worktrees/` is ignored today), and add the pattern `CLOUDFLARE_API_TOKEN=` to the health sweep. The token value is deliberately not reproduced in this report.
 
-## 9 · Migration Plan
+## 9 · Migration Plan — APPLIED 2026-09-07
+
+**Status: steps 1–9 applied on the audit branch the same day** (commits on `claude/fable-5-1-adaptability-audit-isjqbo`, see the PR). Two items the tree cannot do for itself remain with the breeder: rotate the Cloudflare token in the dashboard (it is out of the tree but still in git history), and decide whether to try `xhigh` effort. The one item deliberately deferred is the per-agent tool fallback ladder for the 17 MCP-listing agents (§3); it is logged in `session-log.md` Known Issues.
 
 Ordered by risk-reduction per minute. Every step is idempotent and gated by an existing check.
 
@@ -209,6 +211,8 @@ Ordered by risk-reduction per minute. Every step is idempotent and gated by an e
 Estimated effort: steps 1–4 are one session; 5–7 are one more; 8–9 are an hour. Nothing here touches `src/pages/` or `dist/`, so no page gate needs to run.
 
 ## 10 · Open Flags
+
+- **Applied, not just proposed.** Everything in §9 except the token rotation and the §3 fallback ladder is now on the branch. Gates at time of writing: `pytest tests/` 134 passed, `verify_model_tiers.sh` 68/68, `register_skills.py --check` 70/70, `apply_model_tiers.py --dry-run` 0, `slim_golden_rule.py --dry-run` 0.
 
 - **Rule 3 conflict in this session.** This audit was produced on the harness-assigned branch, not `main`, because the remote harness does not permit a push to `main`. The deliverable is committed there and opened as a draft PR. §7b is the proposed permanent resolution; until the breeder rules on it, remote sessions will keep hitting this.
 - **`model: inherit` versus pinning** is a breeder decision (§1). The audit recommends `inherit`; if the breeder wants a specific pinned id, `claude-fable-5-1` is valid and the same registry edit applies.

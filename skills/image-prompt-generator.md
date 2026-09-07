@@ -1,7 +1,7 @@
 ---
 name: image-prompt-generator
 description: Generates optimized AI image generation prompts for CAG pages — hero images, parrot portraits, lifestyle shots, infographics. Follows CAG visual brand (warm tones, grey/red-tail parrots, Midland, TX home setting). Reads content/prompts/ for existing prompt templates.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

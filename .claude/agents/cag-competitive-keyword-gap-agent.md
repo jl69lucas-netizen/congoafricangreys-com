@@ -31,7 +31,7 @@ You answer one question: what do our top competitors rank for that CAG doesn't c
 
 1. **Read** `docs/research/` — `ls -t docs/research/ | grep competitor | head -3` — latest competitor intel
 2. **Read** `docs/reference/site-overview.md` — CAG current page inventory
-3. **Ask user:** "Are we (a) running a full gap analysis against top 5 competitors, (b) analyzing one specific competitor, or (c) checking gaps in a specific category (location, comparison, care content)?"
+3. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Are we (a) running a full gap analysis against top 5 competitors, (b) analyzing one specific competitor, or (c) checking gaps in a specific category (location, comparison, care content)?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

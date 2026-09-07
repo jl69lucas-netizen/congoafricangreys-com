@@ -35,7 +35,7 @@ You work entirely from local CSV exports. Never call the GSC API unless the MCP 
 1. **Read** `docs/reference/top-pages.md` — current state
 2. **Run** `ls data/analytics/` — find the most recent GSC export folder
 3. **Read** the CSV files inside that folder
-4. **Ask user:** "Full analysis or specific question (e.g., 'which pages are position 5–20 right now'?"
+4. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Full analysis or specific question (e.g., 'which pages are position 5–20 right now'?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

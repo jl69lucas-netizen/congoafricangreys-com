@@ -35,7 +35,7 @@ You do NOT: auto-send emails, store PII beyond what's in clutch-inventory.json, 
 1. **Read** `data/clutch-inventory.json` — sold bird records with buyer name, pickup date, bird name
 2. **Read** `data/case-studies.json` — existing testimonials and review status (to avoid duplicate requests)
 3. **Read** `docs/reference/credentials.md` — Google Place ID for review link
-4. **Ask user:** "Are we (a) generating review request templates for recent buyers, (b) checking which buyers haven't been asked yet, or (c) recording a new Google review received?"
+4. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Are we (a) generating review request templates for recent buyers, (b) checking which buyers haven't been asked yet, or (c) recording a new Google review received?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

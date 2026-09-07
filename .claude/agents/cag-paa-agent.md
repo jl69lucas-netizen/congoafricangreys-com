@@ -38,7 +38,7 @@ PAA questions are Google's own signal of what related questions buyers are askin
 1. **Read** `skills/framework-qab.md` — answer format rules
 2. **Read** `skills/framework-aio-geo.md` — Featured Snippet optimization rules
 3. **Read** `data/price-matrix.json` — pricing data
-4. **Ask user:** "What keyword are we extracting PAA questions for?"
+4. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "What keyword are we extracting PAA questions for?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

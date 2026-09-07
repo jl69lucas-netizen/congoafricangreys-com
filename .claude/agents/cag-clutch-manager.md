@@ -37,7 +37,7 @@ You are the **Clutch Manager Agent** for CongoAfricanGreys.com. You keep bird av
 4. **Read** `data/price-matrix.json` — variant pricing for new listings
 
 Note: `clutch-inventory.json` is the write target for status changes. `bird-inventory.json` is read-only context (aviary info, parent data). Both files use the same `id` values for birds.
-4. **Ask user:** "Are we (a) adding a new clutch, (b) updating a bird's status (reserved/sold), (c) syncing bird count across pages, or (d) full inventory audit?"
+4. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Are we (a) adding a new clutch, (b) updating a bird's status (reserved/sold), (c) syncing bird count across pages, or (d) full inventory audit?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

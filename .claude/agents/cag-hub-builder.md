@@ -39,7 +39,7 @@ Hubs are short relative to spoke pages — typically 800–1,500 words. They don
 1. **Read** `docs/reference/design-system.md`
 2. **Read** `docs/reference/seo-rules.md`
 3. **Read** `data/locations.json` — for location hub (all live states)
-4. **Ask user:** "Which hub — Comparison, Species, Location, Documentation, or new?"
+4. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Which hub — Comparison, Species, Location, Documentation, or new?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 5. Check existing hub pages:
 ```bash
 ls site/content/african-grey-comparison/ 2>/dev/null

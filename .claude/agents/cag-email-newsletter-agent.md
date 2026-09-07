@@ -34,7 +34,7 @@ You build one polished newsletter per month with four consistent sections.
 2. **Read** `data/case-studies.json` — buyer stories
 3. **Read** `data/price-matrix.json` — current pricing
 4. **Read** `data/seasonal-calendar.json` (if exists) — upcoming seasonal events
-5. **Ask user:** "Are we building (a) this month's newsletter, (b) a specific section only, or (c) reviewing last month's newsletter?"
+5. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Are we building (a) this month's newsletter, (b) a specific section only, or (c) reviewing last month's newsletter?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

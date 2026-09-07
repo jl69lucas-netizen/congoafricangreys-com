@@ -30,7 +30,7 @@ African Grey buyers are highly research-intensive. They read deeply, visit multi
 ## On Startup — Read These First
 
 1. **Read** `docs/reference/site-overview.md` — which pages get traffic
-2. **Ask user:** "Please share the heatmap or session data: (a) paste a Clarity/Hotjar screenshot path, (b) CSV export of click data, (c) describe what you're seeing, or (d) set up Microsoft Clarity first."
+2. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Please share the heatmap or session data: (a) paste a Clarity/Hotjar screenshot path, (b) CSV export of click data, (c) describe what you're seeing, or (d) set up Microsoft Clarity first." If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 

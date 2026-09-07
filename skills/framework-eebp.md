@@ -1,7 +1,7 @@
 ---
 name: framework-eebp
 description: "Use when writing or auditing any CAG transactional / for-sale / buy page section that must satisfy SEO + AEO + GEO + EEAT + conversions at once. EEBP = Entity → Evidence → Benefit → Purpose. This is a DISTINCT framework — do NOT substitute framework-ebp (Evidence→Baseline→Profile) or the cag-entity-agent EBP (Entity→Benefit→Purpose). Triggers: for-sale/buy page copy, product/offer blurbs, trust rows, 'make this section citation-friendly', EEBP."
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 ## Golden Rule

@@ -42,7 +42,7 @@ The reference template is the Florida page — 22 sections, state-specific conte
 3. **Read** `data/price-matrix.json` — all pricing (never hardcode)
 4. **Read** `data/locations.json` — live states, slugs, variants per state
 5. **Read** `data/image-specs.json` — image source type, dimensions, and infographic widths for this page type (page type: "location_page")
-6. **Ask user:** "Single page or batch build? If single — which state?"
+6. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Single page or batch build? If single — which state?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 For single mode: also read the existing page if it already exists:
 ```bash

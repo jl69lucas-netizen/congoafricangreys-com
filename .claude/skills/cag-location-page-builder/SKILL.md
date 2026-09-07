@@ -1,7 +1,7 @@
 ---
 name: cag-location-page-builder
-description: Builds SEO-optimized state/city location pages for CongoAfricanGreys.com. Comprehensive content writer for African Grey parrot breeder location pages.
-tools: [Read, Write, Bash]
+description: Use when building or rebuilding a state or city location page at /african-grey-parrot-for-sale-<state>/ on CongoAfricanGreys.com — the 22-section Florida-template structure, state data blocks, local regulations note, Google Maps embed and the location dup-gate. Triggers - "location page", "state page", "build Texas/Florida/…", "african-grey-parrot-for-sale-<state>".
+allowed-tools: [Read, Write, Bash]
 ---
 
 # CAG LOCATION PAGE BUILDER SKILL

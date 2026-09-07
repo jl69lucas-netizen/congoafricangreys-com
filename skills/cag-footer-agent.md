@@ -1,7 +1,7 @@
 ---
 name: cag-footer-agent
 description: CAG footer specification + audit rules. Source of truth is src/components/Footer.astro (Forest Green, 5-column). Use when building or auditing any page footer, or checking footer completeness.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 # CAG Footer Agent Skill
@@ -25,7 +25,7 @@ The footer is a single Astro component rendered on every page:
   aligns them to this component.
 
 > ⚠️ v1 of this skill described an orange (`#FF8C00`) MFS footer, a dog "Available Puppies" nav
-> column, a `/Users/apple/Downloads/MFS/rebuild_footer.py` script, and a `(531) 368-0538` phone.
+> column, a `scripts/rebuild_footer.py` script, and a `(531) 368-0538` phone.
 > All were stale/wrong. Never reintroduce them.
 
 ---

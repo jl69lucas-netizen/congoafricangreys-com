@@ -28,7 +28,7 @@ Both source logos are 1024×1024 RGBA PNGs. Components:
 ### Regenerate favicons after a new footer logo
 
 ```bash
-cd /Users/apple/Downloads/CAG && python3 - <<'EOF'
+cd python3 - <<'EOF'
 from PIL import Image
 img = Image.open("public/cag-footer-logo.png").convert("RGBA")
 img.resize((16, 16), Image.LANCZOS).save("public/favicon-16.png")

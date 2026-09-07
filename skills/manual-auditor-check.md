@@ -1,7 +1,7 @@
 ---
 name: manual-auditor-check
 description: Use when a page or batch of pages is "done" and needs a final QA pass before you give it a pass / deploy — the last gate after a build, rebuild, or polish rollout. Runs the mechanical 29-check auditor over dist/, then a copy-paste manual checklist for the subjective items. Use when you want a reproducible pass/fail scorecard instead of eyeballing, or when verifying an interior/informational page batch.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 # Manual Auditor Check — Final QA Gate

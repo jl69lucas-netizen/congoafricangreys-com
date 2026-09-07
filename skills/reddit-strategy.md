@@ -1,7 +1,7 @@
 ---
 name: reddit-strategy
 description: Use when targeting "<keyword> reddit" search queries, building Reddit-modifier landing/resource pages, deciding whether/how a CAG page should cite or link a Reddit thread, or when SERP research shows Reddit UGC outranking us on decision queries (comparison pages, "is X a good pet", "best breeder" queries). Also use when planning LLM/AI-visibility plays for queries where ChatGPT/Perplexity cite Reddit.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 # Reddit Strategy — Compact "Reddit-Modifier" Pages for C.A.Gs

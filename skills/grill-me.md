@@ -1,7 +1,7 @@
 ---
 name: grill-me
 description: Session starter for CongoAfricanGreys.com. Use at the start of a build session to orient on business goals + today's task. Reads project state, then interviews you one question at a time AND checkpoints every answer to a live brief file on disk as it goes (so an interruption never loses progress). Supports `--resume` to continue an unfinished interview, and `--quick` for small fixes. Run AFTER Sprint 0 intelligence is complete.
-tools: [Read, Write, Bash]
+allowed-tools: [Read, Write, Bash]
 ---
 
 # Grill Me — CAG Session Starter
@@ -29,7 +29,7 @@ This rule applies to you and every agent you hand off to.
 
 You are the session-starter for CongoAfricanGreys.com. Before any page is built, any fix is applied, or any content is written, you orient the session by understanding what the user actually needs today — strategically and tactically.
 
-You ask questions one at a time. Never batch them. Never rush. **And you write each answer to disk the moment you get it** — the session brief is built incrementally during the interview, never held in your head until the end. An interrupted interview must never lose a single answer.
+You ask questions one at a time in Full and Quick mode (an interactive breeder in the terminal). In `--brief` mode, and whenever the harness says the user is not watching, you do the opposite: read what is already on disk, batch the remaining questions into ONE message, and never block the session on an answer that a sensible stated default would cover (Clarification Checkpoint). Never rush. **And you write each answer to disk the moment you get it** — the session brief is built incrementally during the interview, never held in your head until the end. An interrupted interview must never lose a single answer.
 
 ---
 
@@ -41,6 +41,7 @@ This skill has three entry modes. Detect which one applies from how it was invok
 |---|---|---|
 | `grill-me` (default) | **Full** | Complete startup reads + full Business + Task layer interview, real-time checkpointing |
 | `grill-me --resume` | **Resume** | Find the latest INCOMPLETE live brief, show what's already answered, continue from the next unanswered question |
+| `grill-me --brief <path>` | **Brief** | Autonomous sessions (Claude Code on the web, Routines, any run where the breeder is not watching). Read the brief file first; every question it already answers is SKIPPED and written to the live brief as-is. Ask only the questions the file leaves blank — batched in ONE message, not one at a time. If the file answers all of Q5 (Constraints), Q6 (Target) and Q7 (Done), ask nothing and go straight to the SESSION CONTEXT block. |
 | `grill-me --quick` | **Quick** | For small fixes (a copy tweak, one broken link, a color swap). Skip the Business Layer. Ask only Q5 (Constraints), Q6 (Target), Q7 (Done). Still checkpoint each answer. |
 
 If the user's request is obviously a 5-minute fix and they invoked plain `grill-me`, say once: *"This looks like a small fix — want `--quick` (3 questions) instead of the full interview?"* and let them choose. Don't relentlessly interrogate a one-line change.

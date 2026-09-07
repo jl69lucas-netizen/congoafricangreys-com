@@ -1,7 +1,7 @@
 ---
 name: cag-indexing
-description: Submits URLs to Google Search Console and IndexNow after any page change. Manages page-sitemap.xml, local-sitemap.xml, and sitemap_index.xml.
-tools: [Read, Write, Bash]
+description: Use after ANY page is added, removed, or its rendered output changes — submits the changed URLs to IndexNow (and Google Search Console where connected) and regenerates page-sitemap.xml, local-sitemap.xml and sitemap_index.xml. Triggers - "submit to IndexNow", "index this page", "update the sitemap", end of every Sprint 5 Ship.
+allowed-tools: [Read, Write, Bash]
 ---
 
 # CAG INDEXING & RESUBMISSION SKILL
@@ -33,7 +33,7 @@ You are the **Indexing Agent** for CongoAfricanGreys.com. Your job is to ensure 
 | Property | Value |
 |---|---|
 | Domain | https://congoafricangreys.com |
-| Local files | `/Users/apple/Downloads/CAG/site/content/` |
+| Local files | `site/content/` |
 | Sitemaps | `sitemap_index.xml`, `page-sitemap.xml`, `post-sitemap.xml`, `video-sitemap.xml`, `local-sitemap.xml` |
 | IndexNow key | `f8071f0dbdb94257934a690f4a18fa59` |
 | IndexNow key file | `https://congoafricangreys.com/f8071f0dbdb94257934a690f4a18fa59.txt` |
@@ -50,7 +50,7 @@ Before submitting, always audit for issues that block indexing:
 import re, glob
 
 # dist/, not site/content/ and NOT the MFS project: gates measure the BUILT page.
-SITE_ROOT = "/Users/apple/Downloads/CAG/dist"
+SITE_ROOT = "dist"
 DOMAIN = "https://congoafricangreys.com"
 
 issues = []
@@ -85,7 +85,7 @@ for i in issues:
 ```python
 import re, glob
 
-SITE_ROOT = "/Users/apple/Downloads/CAG/public"
+SITE_ROOT = "public"
 for fpath in glob.glob(f"{SITE_ROOT}/*.xml"):
     with open(fpath) as f:
         content = f.read()
@@ -105,7 +105,7 @@ import re, glob, os
 
 # public/ is where CAG's sitemaps live. This block WRITES — pointed at the old
 # MFS path it would have rewritten a different project's sitemaps in place.
-SITE_ROOT = "/Users/apple/Downloads/CAG/public"
+SITE_ROOT = "public"
 DOMAIN = "https://congoafricangreys.com"
 
 def fix_sitemap(content):
@@ -135,7 +135,7 @@ import urllib.request, urllib.parse, json
 
 # Load credentials
 import os, re
-env = open('/Users/apple/cag-dashboard/.env.local').read()
+env = open('$CAG_DASHBOARD/.env.local').read()
 client_id = re.search(r'GSC_CLIENT_ID=(.+)', env).group(1).strip()
 client_secret = re.search(r'GSC_CLIENT_SECRET=(.+)', env).group(1).strip()
 refresh_token = re.search(r'GSC_REFRESH_TOKEN=(.+)', env).group(1).strip()
@@ -200,7 +200,7 @@ curl -X POST https://oauth2.googleapis.com/token \
   -d "redirect_uri=https://developers.google.com/oauthplayground" \
   -d "grant_type=authorization_code"
 ```
-4. Save the new `refresh_token` to `/Users/apple/cag-dashboard/.env.local` → `GSC_REFRESH_TOKEN=`
+4. Save the new `refresh_token` to `$CAG_DASHBOARD/.env.local` → `GSC_REFRESH_TOKEN=`
 
 ---
 
@@ -243,7 +243,7 @@ What the script guarantees, and why each guard exists:
 > brand string substituted in — while the REAL key sat correct in the site-context table
 > 170 lines above); a sitemap regex of `https://african grey parrotsforsale\.com/`, a
 > domain containing spaces, which matches nothing; and `SITE_ROOT` pointing at
-> `/Users/apple/Downloads/MFS/site2`, **a path that exists**, so a run would have read a
+> `site/content`, **a path that exists**, so a run would have read a
 > different site's sitemaps. Any execution would have POSTed an empty `urlList` under an
 > invalid key and printed a success line. That is why the close-out step never actually
 > ran on any page. The key now lives in exactly one place — the key file — so defect 1
@@ -280,7 +280,7 @@ import re
 from html import unescape
 
 DOMAIN = "https://congoafricangreys.com"
-with open('/Users/apple/Downloads/MFS/site/content/llms.txt') as f:
+with open('site/content/llms.txt') as f:
     content = f.read()
 
 # Fix relative markdown links
@@ -288,7 +288,7 @@ content = re.sub(r'\]\((/[^)]*)\)', lambda m: f']({DOMAIN}{m.group(1)})', conten
 # Decode HTML entities
 content = unescape(content)
 
-with open('/Users/apple/Downloads/MFS/site/content/llms.txt', 'w') as f:
+with open('site/content/llms.txt', 'w') as f:
     f.write(content)
 print("llms.txt fixed")
 ```
@@ -344,6 +344,6 @@ This is the **Indexing Agent** in the MFS multi-agent system:
 - Trigger **after sitemap regeneration** → resubmit to GSC
 
 ### Credentials required:
-- GSC: `/Users/apple/cag-dashboard/.env.local` (GSC_CLIENT_ID, GSC_CLIENT_SECRET, GSC_REFRESH_TOKEN)
+- GSC: `$CAG_DASHBOARD/.env.local` (GSC_CLIENT_ID, GSC_CLIENT_SECRET, GSC_REFRESH_TOKEN)
 - IndexNow key: read it from `public/<key>.txt` — never typed inline. Currently `f8071f0dbdb94257934a690f4a18fa59` (no auth needed).
 - Bing Webmaster API: Not yet configured (IndexNow covers Bing submissions)

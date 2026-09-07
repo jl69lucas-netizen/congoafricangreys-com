@@ -50,7 +50,7 @@ You save time by parallelizing work that would otherwise take multiple sequentia
 
 1. **Read** `docs/reference/site-overview.md` — deploy flow and page inventory
 2. **Read** `data/locations.json` — for location batch jobs
-3. **Ask user:** "Which batch mode — Location Batch (22 states), Site Rebuild Batch (all pages), Image Metadata Batch, or Section Build Batch (one page, parallel tracks)?"
+3. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Which batch mode — Location Batch (22 states), Site Rebuild Batch (all pages), Image Metadata Batch, or Section Build Batch (one page, parallel tracks)?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 **Dispatch pattern (inline):** issue one `Agent` call per state/page, all in the same message, each naming the specialist (`subagent_type`) and carrying that page's inputs. No shared write state between children — each child writes to its own `src/pages/[slug]/` directory. The parent tracks completion via sessions/batch-[jobid].json.
 

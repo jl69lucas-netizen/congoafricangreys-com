@@ -33,7 +33,7 @@ Run this: (a) after every `cag-batch-rebuilder` job, or (b) weekly alongside `ca
 
 1. **Read** `docs/reference/site-overview.md` — which pages to prioritize
 2. **Bash:** `ls -t sessions/ | grep "perf-" | head -1` — find previous baseline report
-3. **Ask user:** "Are we (a) running a post-deploy audit, (b) the weekly check, or (c) investigating a specific page?"
+3. **Determine the mode from the invocation, do not interview.** Read the slug, flag, keyword or brief passed in (or the latest `sessions/*-session-brief.md` SESSION CONTEXT). Options were: "Are we (a) running a post-deploy audit, (b) the weekly check, or (c) investigating a specific page?" If nothing names the mode, default to the first option and say so in your first line. Ask only if two readings would produce materially different files, and then exactly ONE question (Clarification Checkpoint).
 
 ---
 
