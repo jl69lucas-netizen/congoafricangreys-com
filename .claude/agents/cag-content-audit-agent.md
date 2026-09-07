@@ -1,6 +1,6 @@
 ---
 name: cag-content-audit-agent
-description: 4-phase deep content audit for any CAG page. Run BEFORE a page rebuild to identify intent gaps, competitor subtopics CAG is missing, meta title/description rewrites, and internal linking opportunities. Input: TARGET_URL + TARGET_KEYWORD + PAGE_TYPE. Output: complete audit report saved to sessions/. Works with cag-competitor-intel for competitor data.
+description: "4-phase deep content audit for any CAG page. Run BEFORE a page rebuild to identify intent gaps, competitor subtopics CAG is missing, meta title/description rewrites, and internal linking opportunities. Input: TARGET_URL + TARGET_KEYWORD + PAGE_TYPE. Output: complete audit report saved to sessions/. Works with cag-competitor-intel for competitor data."
 tools: [Read, Write, Bash]
 model: inherit
 effort: max

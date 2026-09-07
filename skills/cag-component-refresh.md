@@ -1,6 +1,6 @@
 ---
 name: cag-component-refresh
-description: Use when building or rebuilding any page in a multi-page cluster (comparison spokes, location pages, blog cluster, interior pages) to give each page a controlled "refresh delta" — a small, deliberate layout/style/motif variation per section — so sibling pages don't read as one identical template, WITHOUT breaking the locked palette, uniform image box, sticky offsets, or §11–§13 component contract. Triggers: "refresh the components", "make this page look different from the built ones", "component refresh", "the pages look the same", "differentiate the hero/quick-answer/table".
+description: "Use when building or rebuilding any page in a multi-page cluster (comparison spokes, location pages, blog cluster, interior pages) to give each page a controlled \"refresh delta\" — a small, deliberate layout/style/motif variation per section — so sibling pages don't read as one identical template, WITHOUT breaking the locked palette, uniform image box, sticky offsets, or §11–§13 component contract. Triggers: \"refresh the components\", \"make this page look different from the built ones\", \"component refresh\", \"the pages look the same\", \"differentiate the hero/quick-answer/table\"."
 ---
 
 # SKILL: CAG Component Refresh (the "Refresh Agent")
