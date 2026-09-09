@@ -1,0 +1,22 @@
+---
+/**
+ * StatementLabel — separates the three kinds of statement the site makes.
+ *   fact           sourced species / legal / health fact  → pass `source` (URL) and it renders as a link
+ *   observed       something Mark & Teri have seen here    → pass `n` (birds) and `since` (year) when known
+ *   recommendation our advice, labelled as ours
+ * Renders inline at the start of the sentence it labels. Never used on marketing copy.
+ */
+interface Props { kind: 'fact' | 'observed' | 'recommendation'; source?: string; n?: number; since?: number }
+const { kind, source, n, since } = Astro.props;
+const text = kind === 'fact' ? 'Fact' : kind === 'observed' ? 'Observed here' : 'Our recommendation';
+const detail = kind === 'observed' && (n || since) ? ` · ${n ? `${n} birds` : ''}${n && since ? ', ' : ''}${since ? `since ${since}` : ''}` : '';
+---
+{kind === 'fact' && source
+  ? <a class="stmt-label" data-kind="fact" href={source} target="_blank" rel="noopener">{text} ↗</a>
+  : <span class="stmt-label" data-kind={kind}>{text}{detail}</span>}
+<style is:global>
+  .stmt-label{display:inline-block;font:600 11px/1 'Sora',system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:4px;margin-right:6px;vertical-align:middle;text-decoration:none}
+  .stmt-label[data-kind="fact"]{background:#E3EEE8;color:#2D6A4F}
+  .stmt-label[data-kind="observed"]{background:#FBE7E2;color:#9C3A2A}
+  .stmt-label[data-kind="recommendation"]{background:#F0EEE5;color:#4B5A52}
+</style>

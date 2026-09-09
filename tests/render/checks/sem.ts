@@ -280,3 +280,47 @@ register({
     };
   },
 });
+
+register({
+  id: 'sem-statement-label-visible',
+  family: 'SEM',
+  severity: 'advisory',
+  describe: 'every .stmt-label (Fact / Observed here / Our recommendation) is painted, with a data-kind',
+  // `examined` is the number of labels the page carries. A page with none reports 0 and
+  // is nothing-to-check, the same convention schema-sold-not-instock uses on pages out of
+  // its scope — NOT a padded 1, which would be the examined-inflation the registry
+  // comment forbids. minExamined binds only on the fixtures (meta.spec.ts); pages.spec.ts
+  // never compares against it. Until a targets.json page ships a label, this check
+  // examines 0 across the whole corpus and build_scorecard.mjs Guard 2 will name it.
+  minExamined: 2,
+  async run(page: Page, viewport: number): Promise<CheckResult> {
+    const r = await page.evaluate(() => {
+      const labels = Array.from(document.querySelectorAll<HTMLElement>('main .stmt-label'));
+      const bad: string[] = [];
+      for (const l of labels) {
+        const rect = l.getBoundingClientRect();
+        const cs = getComputedStyle(l);
+        const painted =
+          rect.width > 0 && rect.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none';
+        const kind = l.dataset.kind || '';
+        if (!painted) bad.push(`hidden: "${l.textContent?.trim()}"`);
+        else if (!['fact', 'observed', 'recommendation'].includes(kind)) bad.push(`bad data-kind "${kind}"`);
+      }
+      return { examined: labels.length, bad };
+    });
+    return {
+      examined: r.examined,
+      defects: r.bad.length
+        ? [
+            {
+              checkId: 'sem-statement-label-visible',
+              family: 'SEM' as const,
+              viewport,
+              count: r.bad.length,
+              message: r.bad.join(' | '),
+            },
+          ]
+        : [],
+    };
+  },
+});
