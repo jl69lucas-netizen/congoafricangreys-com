@@ -164,3 +164,10 @@ def test_trend_with_one_window_has_no_delta():
     cur, delta = Q.trend(ledger)
     assert cur["rate"] == 0.3
     assert delta is None
+
+
+def test_registry_check_ids_include_python_audit_ids(tmp_path):
+    import quality_report as Q
+    ids = Q.registry_check_ids()
+    assert "term-budget-per-page" in ids, "evidence_audit.py ids must count as backing tests"
+    assert "review-attribution-unique" in ids

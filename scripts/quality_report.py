@@ -38,10 +38,17 @@ def check_ids_from_source(text: str) -> set:
     return set(CHECK_ID_RE.findall(text))
 
 
+PY_AUDIT_ID_RE = re.compile(r"""\{\s*"id":\s*"([a-z0-9-]+)"\s*\}""")
+
+
 def registry_check_ids(checks_dir: pathlib.Path = CHECKS_DIR) -> set:
     ids = set()
     for p in sorted(checks_dir.glob("*.ts")):
         ids |= check_ids_from_source(p.read_text())
+    # Python audits declare their ids as CHECK_IDS = [{"id": "..."}, ...]; they back
+    # `enforced: test` rows the same way a checks/*.ts id does.
+    for p in sorted((ROOT / "scripts").glob("*_audit.py")):
+        ids |= set(PY_AUDIT_ID_RE.findall(p.read_text()))
     return ids
 
 
