@@ -1,0 +1,198 @@
+<title>Evidence Pass Gate Report</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F7F5EE; --paper:#FFFFFF; --ink:#1E2A24; --ink-2:#4B5A52; --ink-3:#7A867F;
+  --line:#DDD9CC; --green:#2D6A4F; --green-soft:#E3EEE8; --clay:#E8604C; --clay-soft:#FBE7E2;
+  --code-bg:#F0EEE5; --mark:#FFF3C4;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+    --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+    --code-bg:#11161380; --mark:#4A3F16;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+  --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+  --code-bg:#11161380; --mark:#4A3F16;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 96px}
+header.masthead{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;padding-bottom:20px;border-bottom:2px solid var(--green);margin-bottom:28px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:600;margin:0 0 8px}
+h1.title{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+.sub{color:var(--ink-2);margin:10px 0 0;max-width:62ch}
+.meta{font-size:13px;color:var(--ink-3);text-align:right;line-height:1.5}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 28px}
+button.btn{font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:6px;border:1px solid var(--green);background:var(--green);color:#fff;cursor:pointer}
+button.btn.ghost{background:transparent;color:var(--green)}
+button.btn:focus-visible{outline:3px solid var(--clay);outline-offset:2px}
+.toc{font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 36px;padding:0;list-style:none}
+.toc a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a:hover{color:var(--green);border-color:var(--green)}
+section.sec{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:26px 30px 30px;margin:0 0 22px;position:relative}
+section.sec .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:6px}
+section.sec h2{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:24px;margin:0;line-height:1.2;text-wrap:balance}
+section.sec .copy{flex:none;font:inherit;font-size:12px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:5px;border:1px solid var(--line);background:transparent;color:var(--ink-2);cursor:pointer}
+section.sec .copy:hover{border-color:var(--green);color:var(--green)}
+section.sec .copy.done{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.md h3{font-family:"Source Serif 4",Georgia,serif;font-size:18px;margin:26px 0 8px}
+.md h4{font-size:15px;margin:20px 0 6px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+.md p,.md li{max-width:72ch}
+.md ul,.md ol{padding-left:22px}
+.md li{margin:4px 0}
+.md strong{font-weight:600}
+.md code{font:13.5px/1.5 "IBM Plex Mono",ui-monospace,Menlo,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.md pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;font:13px/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
+.md pre code{background:none;padding:0;font-size:inherit}
+.md table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0 18px;display:block;overflow-x:auto}
+.md thead th{text-align:left;font-weight:600;color:var(--ink-2);font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--green);padding:8px 10px;white-space:nowrap}
+.md tbody td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-variant-numeric:tabular-nums}
+.md tbody tr:last-child td{border-bottom:none}
+.md blockquote{margin:14px 0;padding:10px 16px;border-left:4px solid var(--clay);background:var(--clay-soft);border-radius:0 6px 6px 0}
+.md blockquote p{margin:4px 0}
+.md a{color:var(--green)}
+.md mark{background:var(--mark);padding:0 3px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--ground);padding:9px 16px;border-radius:6px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:640px){header.masthead{grid-template-columns:1fr}.meta{text-align:left}section.sec{padding:20px 18px 22px}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<div class="wrap">
+<header class="masthead">
+  <div>
+    <p class="eyebrow">CongoAfricanGreys.com · Gate report</p>
+    <h1 class="title">Evidence Pass Gate Report</h1>
+    <p class="sub">Plan `docs/superpowers/plans/2026-09-09-evidence-pass.md`, executed 2026-09-09 on `main`, commits `3492c4c5` → `de03d165`. Strategy A: sections stay, repetition goes, proof replaces assertion.</p>
+  </div>
+  <div class="meta">Shipped 2026-09-09<br>Source of truth: <code>docs/artifacts/cags-evidence-pass-gate-report.md</code><br>Homepage commit <code>de03d165</code> · live HTTP 200 · IndexNow 200</div>
+</header>
+<div class="toolbar">
+  <button class="btn" id="copy-all">Copy whole document as Markdown</button>
+  <span style="font-size:13px;color:var(--ink-3)">Each section below has its own copy button. Copies are exact Markdown, not scraped HTML. The same text is versioned as <code>.md</code> in the repo.</span>
+</div>
+<ul class="toc" id="toc"></ul>
+<div id="doc"></div>
+</div>
+<div class="toast" id="toast">Copied</div>
+
+<script type="text/markdown" data-title="1. Homepage: before and after">
+Measured on the built page (`dist/index.html`, `<main>` text only) by `python3 scripts/evidence_audit.py index`.
+
+| Term | Before | After | Ceiling |
+|---|---|---|---|
+| C.A.Gs | 66 | 16 | 20 |
+| CITES | 44 | 6 | 6 |
+| DNA | 40 | 6 | 6 |
+| Appendix I | 28 | 2 | 2 |
+| captive-bred | 32 | 6 | 6 |
+| USDA | 19 | 3 | 4 |
+| Midland | 23 | 5 | 5 |
+| scam | 10 | 2 | 2 |
+| legit | 7 | 0 | 0 |
+| Title (chars) | 197 | 54 | 70 |
+| Statement labels | 0 | 32 | — |
+| Sections | 20 | 20 | never fewer |
+
+Verdict: **0 ERROR / 7 WARN**. Every WARN is a claim whose proof object is still NOT FETCHED (see §5) plus one PROXY note on the blog cards.
+
+Eight of the sixteen remaining C.A.Gs mentions sit inside verbatim review quotes and were not edited.
+</script>
+<script type="text/markdown" data-title="2. What shipped, task by task">
+| Task | What it is | Commit |
+|---|---|---|
+| 1 | RED baseline: a subagent under the old rules doubled two sections and raised every trust term | `3492c4c5` |
+| 2 | `evidence-budgets.json` (per-page-type ceilings, proposals until Sprint 0 calibrates) + `evidence-ledger.json` (six claims → proof, all NOT FETCHED) | `bf94786e` |
+| 3 | `scripts/evidence_audit.py`: seven checks, 19 tests, fires on the two known review defects before it was trusted | `106f6687` `1d0d7775` `72f2daba` |
+| 4 | Four rule rows in `rule-index.json`; `quality_report.py` reads ids from `*_audit.py` | `200aede0` |
+| 5 | `StatementLabel.astro` (Fact / Observed here / Our recommendation) + `sem-statement-label-visible` render check with fixture pair | `205a6153` |
+| 6 | `skills/cag-evidence-pass.md`, written against the baseline's fourteen verbatim excuses; GREEN on first run | `79512400` |
+| 7 | Six injector rules retired across 16 files: no keyword floor, Rule 57 = 95–105 distinct entities, Rule 56 = competitor count +5–10, H5/H6 advisory on home + location, alt ≤125, title ≤70 | `2aba161b` |
+| 8 | `data/reviews.json` single source + sweep; the breeder's names applied on 8 pages | `e9674f2a` |
+| 9 | Homepage pass: one-clause title and H1, `#proof` trust section, 32 labels, brand and credential budgets met, homepage added to the render harness | `288b0df0` `de03d165` |
+</script>
+<script type="text/markdown" data-title="3. Review attribution: final">
+| Quote | Buyer | Photo |
+|---|---|---|
+| "I searched for African Grey parrots for sale near me…" | Clifford Hutter, Secaucus, NJ | none on file |
+| "At first I was hesitant about buying a bird online…" | Richard Woodard, Winter Haven, FL | on file |
+| "I ordered a Congo African Grey from C.A.Gs and the experience was flawless…" | Catherine Kempf, Schaumburg, IL | on file |
+| "Finding a healthy and well-socialized female Congo African Grey…" | Archie O'Brien, Farmingdale, NY | on file |
+
+Albert Schroder was the wrong name on two pages and is gone. Archie's photo never sits next to another buyer's words. The stray word "parrot" after the final period in the supplied O'Brien text was treated as a typo. Eight pages changed and were submitted to IndexNow once live.
+</script>
+<script type="text/markdown" data-title="4. Gates run on the shipped homepage">
+| Gate | Result |
+|---|---|
+| evidence_audit (×2) | 0 ERROR / 7 WARN, 1 page examined |
+| pytest tests/ | 170 passed |
+| test:render:meta (×2) | 255 passed, 24 skipped |
+| test:render:pages | 54 passed; homepage blocked by three pre-existing rows (§6) |
+| final_page_audit --type home | has_breadcrumb = FALSE POSITIVE (root page), img_alt_unique = Kempf ×2 (pre-existing), min_h6_5 advisory |
+| dup_content_audit (key `dist`) | PASS body and headers, 1 page |
+| review attribution pytest | 3 passed |
+| Other pages' rendered markup | byte-identical to a HEAD worktree build; only the shared Tailwind bundle gained five homepage-only utilities |
+</script>
+<script type="text/markdown" data-title="5. Open flags for the breeder">
+1. **Proof objects.** All six ledger rows are NOT FETCHED: a redacted USDA AWA record, an example CITES certificate, an example DNA certificate, an example avian-vet certificate, a PBFD/APV PCR result, a hatch certificate or band photo. Each row's link currently reads "How we document it". Supply one image or PDF per row and the audit's six WARNs close.
+2. **Catherine Kempf twice.** Four real quotes fill five review slots, so her quote shows in reviews-mid and in the grid. A fifth verified review removes the duplicate and the duplicate-alt row.
+3. **Blog title lock.** Task 7 changed the 2026-07-02 pipe-stacked blog title pattern to the one-clause form ("retrofit on next touch"). Confirm blogs should follow the newer ruling.
+4. **Rule 21.** seo-rules Rule 21's five-part title formula still sits above the new ≤70 cap; a follow-up pass should reconcile it.
+5. **Budgets are proposals.** `calibrated: null` until Sprint 0 checks them against the pages answer engines actually cite.
+6. **BirdCard badges on the homepage** now read "Documented → #proof · Fully Weaned" instead of the five credential badges; other pages keep the five. Say if you want the homepage cards to match.
+</script>
+<script type="text/markdown" data-title="6. Pre-existing homepage defects the harness now sees">
+The homepage was never a render-harness target. Adding it exposed three blocking rows that predate this pass and are live today:
+
+- **IMG oversized**: 7–12 images served at 2.7×–12.5× their displayed size (hero, candled eggs, breeding pair, habitat, a review avatar). srcset work.
+- **IMG duplicate alt**: "Catherine Kempf" ×2 (flag 2 above).
+- **NAV scroll-margin**: 19–20 in-page links land outside the target band because sections use an 80px scroll margin under a 96px header.
+
+One harness bug surfaced too: the contrast checker parses Tailwind v4 `oklab(… / 0.85)` as near-black and reports false 3.28:1 rows on white text. Needs a `known_broken` fixture; charged to the harness, not to a rule.
+</script>
+<script type="text/markdown" data-title="7. What the next build session does first">
+```bash
+npx astro build && python3 scripts/evidence_audit.py <slug>
+```
+
+The skill `cag-evidence-pass` runs after `anti-ai-writing` and before `cag-final-page-pass` in Sprint 4. Then: Sprint 0 budget calibration; the 14-day LLM-visibility re-probe on the homepage's six queries (Sprint 6); the three render rows in §6; the `/african-grey-reviews/` page carries the same shared-component repetition the budgets will now flag.
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+<script>
+(function(){
+  var blocks = Array.prototype.slice.call(document.querySelectorAll('script[type="text/markdown"]'));
+  var doc = document.getElementById('doc'), toc = document.getElementById('toc'), toast = document.getElementById('toast');
+  var all = [];
+  function dedent(s){ return s.replace(/^\n+|\s+$/g,''); }
+  function copy(text, btn){
+    var done = function(){ if(btn){ btn.classList.add('done'); btn.textContent='Copied'; setTimeout(function(){btn.classList.remove('done'); btn.textContent=btn.getAttribute('data-label');},1400);} toast.classList.add('show'); setTimeout(function(){toast.classList.remove('show');},1200); };
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, function(){ fallback(text); done(); }); } else { fallback(text); done(); }
+  }
+  function fallback(text){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); }
+  blocks.forEach(function(b, i){
+    var title = b.getAttribute('data-title'); var md = dedent(b.textContent);
+    var full = '## ' + title + '\n\n' + md + '\n';
+    all.push(full);
+    var id = 'sec-' + i;
+    var sec = document.createElement('section'); sec.className='sec'; sec.id=id;
+    var head = document.createElement('div'); head.className='sec-head';
+    var h2 = document.createElement('h2'); h2.textContent = title;
+    var btn = document.createElement('button'); btn.className='copy'; btn.type='button'; btn.textContent='Copy section'; btn.setAttribute('data-label','Copy section');
+    btn.addEventListener('click', function(){ copy(full, btn); });
+    head.appendChild(h2); head.appendChild(btn);
+    var body = document.createElement('div'); body.className='md';
+    body.innerHTML = (window.marked ? marked.parse(md) : '<pre>'+md.replace(/</g,'&lt;')+'</pre>');
+    sec.appendChild(head); sec.appendChild(body); doc.appendChild(sec);
+    var li = document.createElement('li'); var a = document.createElement('a'); a.href='#'+id; a.textContent=title; li.appendChild(a); toc.appendChild(li);
+  });
+  document.getElementById('copy-all').addEventListener('click', function(){
+    copy('# Evidence Pass Gate Report\n\n' + all.join('\n'), this);
+  });
+  document.getElementById('copy-all').setAttribute('data-label','Copy whole document as Markdown');
+})();
+</script>

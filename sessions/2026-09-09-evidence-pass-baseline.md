@@ -137,3 +137,8 @@ TrustStats stat cards, InquiryForm) — the H1 itself is hard-coded in `HeroV3.a
 
 Next: 14-day LLM-visibility re-probe (Sprint 6) — `cag-llm-keyword-intel` on the homepage's six queries,
 appended here. Not scheduled yet.
+
+### Shipped
+Commit `de03d165` on `main` (after two review passes: spec + code quality; fixes: meta description 155 chars, Brown University clause restored, hero contrast fixed at source — a page-level `h1 + p` rule forced ink on green — `DUP` dropped from the `home` harness type). Live `HTTP/2 200`; IndexNow `/` → HTTP 200 (note: `indexnow_submit.py index` maps to `/index/` which 308s — submit the homepage as `/`). Live-build audit: 0 ERROR / 7 WARN; C.A.Gs 16/20 · CITES 6/6 · Appendix I 2/2 · DNA 6/6 · captive-bred 6/6 · USDA 3/4 · Midland 5/5 · scam 2/2 · legit 0/0 · title 54 · 32 labels · 20 sections.
+Render harness (homepage now a target): three pre-existing blocking rows remain — IMG oversized (7–12), duplicate alt "Catherine Kempf" ×2, NAV scroll-margin 80px under a 96px header — recorded in `data/quality/scorecards/index-2026-09-09.json`, no override used. Harness bug found: the contrast checker parses Tailwind v4 `oklab(… / 0.85)` as near-black (false 3.28:1 rows on white text) — needs a `known_broken` fixture.
+Gate report: `docs/artifacts/cags-evidence-pass-gate-report.md` → artifact https://claude.ai/code/artifact/8aa37c3b-f5dc-4804-8f6d-941c61787cd7
