@@ -141,7 +141,9 @@ def review_attribution(html):
     for m in BLOCKQUOTE.finditer(body_html):
         if CITE.search(m.group(1)):
             continue
-        tail = re.split(r"<blockquote\b", body_html[m.end(): m.end() + 1500], 1)[0]
+        # stop at the next quote OR the end of this card: a name-first card (figure > name, blockquote)
+        # must not be credited to the NEXT card's name
+        tail = re.split(r"<blockquote\b|</(?:figure|article|li)>", body_html[m.end(): m.end() + 1500], 1)[0]
         nxt = CITE.search(tail)
         if not nxt:
             continue
