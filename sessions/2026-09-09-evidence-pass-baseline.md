@@ -73,3 +73,67 @@ Two judgement calls it made that Task 9 should re-check on the page rather than 
 
 ## REFACTOR run
 Not needed — GREEN passed on the first run: every trust-term count ≤ the original, no heading added, the budget, the ledger and the label each cited by name.
+
+## Homepage after the pass (built, dist/) — Task 9, 2026-09-09
+
+Built locally from `src/pages/index.astro`; **not yet shipped** (status NEEDS_CONTEXT, see below). Counts are
+`python3 scripts/evidence_audit.py index` over `<main>`; words are the audit's own `text_of(main_html())` split.
+
+| term | before | after | ceiling |
+|---|---|---|---|
+| C.A.Gs | 66 | 26 | 20 |
+| CITES | 44 | 16 | 6 |
+| DNA | 40 | 16 | 6 |
+| Appendix I | 28 | 7 | 2 |
+| captive-bred | 32 | 6 | 6 |
+| USDA | 19 | 4 | 4 |
+| scam | 10 | 2 | 2 |
+| legit | 7 | 0 | 0 |
+| Midland | 23 | 13 | 5 |
+| words | 8,830 | 9,088 | none |
+| title chars | 233 | 54 | 70 |
+
+Words rose by 258: the 36 visible statement labels (~100 words), the six credential rows under `#proof`,
+the compare-table source caption, and the 12-flag grid replacing the 8-item compare card. Each answers a
+question the old page did not ("how do you document each bird?", "is this a fact, an observation or advice?").
+
+### Where the remaining mentions sit (nothing left in page prose is over its ceiling on its own)
+Term counts are text-only — `evidence_audit.strip_tags` drops attributes, so alt text never counted.
+
+| term | fixed component text (not editable from index.astro) | verbatim reviews | page prose/props | total |
+|---|---|---|---|---|
+| C.A.Gs | HeroV3 2 · TocV3 8 · OwnerCard 3 = **13** | q1 1 + q3 2 + grid (q2 1, q3 2, q4 2) = **8** | trust H2+H4 2, pricing H2+intro 2, how-to-buy H2 1 = 5 | 26 |
+| CITES | HeroV3 2 · OwnerCard 2 · BirdCard×6 6 · TrustStats card 1 · InquiryForm 1 = **12** | 0 | trust row + Fact sentence 2, FAQ Q+A 2 = 4 | 16 |
+| DNA | HeroV3 2 · OwnerCard 2 · BirdCard×6 6 · TrustStats card 1 · InquiryForm 1 = **12** | 0 | trust row 1, PCR-sexing Fact sentence 1, "DNA-tested" page-name link 1, FAQ Q 1 = 4 | 16 |
+| Appendix I | HeroV3 2 · OwnerCard 2 · TrustStats card 1 = **5** | 0 | trust Fact sentence 1, FAQ answer 1 = 2 | 7 |
+| Midland | HeroV3 1 · TocV3 1 · OwnerCard 1 · BirdCard×6 6 · InquiryForm 1 = **10** | 0 | trust 1, history eyebrow (spec) 1, contact pickup line 1 = 3 | 13 |
+| captive-bred | HeroV3 1 = 1 | 0 | badge 1, trust 2, pricing 2 = 5 | 6 ✓ |
+| USDA | HeroV3 1 · OwnerCard 1 · InquiryForm 1 = 3 | 0 | trust row 1 | 4 ✓ |
+| scam | ScamAwareness grid heading + "SCAM ALERT" tag = 2 | 0 | 0 | 2 ✓ |
+
+Every ceiling still exceeded is exceeded by fixed component text alone (HeroV3, TocV3, OwnerCard, BirdCard,
+TrustStats stat cards, InquiryForm) — the H1 itself is hard-coded in `HeroV3.astro` (no prop), and the rail's
+"18 sections · everything about C.A.Gs" is hard-coded in `TocV3.astro`. Prose alone sits inside every ceiling.
+
+### Step 8 gates (run twice each unless noted)
+- evidence_audit: 5 ERROR (the five component-locked terms above) / 9 WARN — 1 page examined, both runs identical.
+- dup_content_audit: `index` resolves to key `dist` and a single slug compares nothing (PASS on 0 pages = not a pass).
+  Whole-corpus run: 123 homepage rows, all pre-existing shared-component text (InquiryForm, CompareTableE,
+  BirdCard, hero paragraph reused by interior pages) or FAQ questions shared with /african-grey-parrot-faq/;
+  no fresh sentence from this pass appears in any row. Headers: same shared-component set.
+- page_hardening_scan: `index` matches every index.astro/index.html (whole-site scan, hung >9 min CPU). Scoped run
+  (`pages/index.astro dist/index.html`): 29 ERROR, all `header-not-title-case` on conversational FAQ question
+  headings (pre-existing class; the 29th is the ScamAwareness grid H3, replacing the compare variant's equally
+  lowercase H3); 4 WARN (markup-css-orphan Tailwind noise, 3 pre-existing no-srcset images).
+- aeo_audit: `index` and `/` match nothing; `--all` examines 105 pages — homepage 0 ERROR, 3 WARN
+  (pronoun-heavy is the intended direction of this pass; "no brand-owned method name" was 0 before and 0 after).
+- final_page_audit --type home: FAIL has_breadcrumb (FALSE POSITIVE — the homepage is the root of every trail;
+  a one-item BreadcrumbList is not marked up; profile lacks an NA), img_alt_unique (Testimonials emits alt=name,
+  Catherine Kempf appears in reviews-mid and the grid — 4 reviews, 5 slots), img_alt_le190 (HeroV3 alt 365 chars,
+  component-fixed). WARN min_h6_5 (advisory on home), house_method (0 before, 0 after).
+- test:render:meta: 255 passed, 24 skipped — green.
+- review attribution pytest: 3 passed. reviews-top (Hutter q1) and the grid (O'Brien q4, Woodard q2, Kempf q3)
+  share no quote; reviews-mid (Kempf q3) duplicates the grid because four quotes fill five slots.
+
+Next: 14-day LLM-visibility re-probe (Sprint 6) — `cag-llm-keyword-intel` on the homepage's six queries,
+appended here. Not scheduled yet.
