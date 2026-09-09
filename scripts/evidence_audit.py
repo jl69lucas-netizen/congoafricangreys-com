@@ -24,7 +24,7 @@ Usage:
   python3 scripts/evidence_audit.py --all
 Exit 1 on any ERROR, or if the slug filter matched nothing.
 """
-import re, sys, json, glob, pathlib, argparse
+import re, sys, json, pathlib, argparse
 from collections import defaultdict
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -100,17 +100,23 @@ def title_too_long(html, budgets):
 # Lookahead so nested blocks overlap: a wrapper <div> matching up to the first inner </div> must not
 # swallow the <article> that opens inside it (the first grid card on the homepage was skipped that way).
 QUOTE_BLOCK = re.compile(r"(?=(<(blockquote|figure|article|li|div)\b[^>]*>(.*?)</\2>))", re.S | re.I)
+# The class token must END at a word boundary (`cites-good` / `cites-cross` are not <cite>), and
+# `bird-name` / `inq-price-name` are bird-card labels, never a reviewer — two cards sharing a paragraph
+# with different bird names produced a fabricated finding.
 CITE = re.compile(
-    r"<(?:cite|footer|p|span)\b[^>]*class=\"[^\"]*(?:name|author|cite)[^\"]*\"[^>]*>(.*?)</"
+    r"<(?:cite|footer|p|span)\b[^>]*class=\"(?![^\"]*(?:bird-name|price-name))[^\"]*(?:name|author|cite)(?![a-z])[^\"]*\"[^>]*>(.*?)</"
     r"|<cite\b[^>]*>(.*?)</cite>"
     # cag-library/Testimonials.astro prints the buyer name in a <div class="font-display font-bold|font-semibold …">
     r"|<div\b[^>]*class=\"[^\"]*font-display font-(?:bold|semibold)[^\"]*\"[^>]*>(.*?)</div>", re.S | re.I)
 QUOTE_TEXT = re.compile(r"<(blockquote|p)\b[^>]*>(.*?)</\1>", re.S | re.I)
 BLOCKQUOTE = re.compile(r"<blockquote\b[^>]*>(.*?)</blockquote>", re.S | re.I)
+# how far past a name-less <blockquote> to look for its sibling name element: a Testimonials card's
+# rating row + name/location div is a few hundred bytes; 1500 covers it without reaching the next section
+FOLLOW_ON_NAME_WINDOW = 1500
 
 
 def _name(groups):
-    # the grid card prints "Name, City, ST" in one element; keep the name only
+    # the grid card prints "Name, City, ST" in one element; keep everything before the first comma
     return re.sub(r"\s*,.*$", "", text_of("".join(g or "" for g in groups)))
 
 
@@ -143,7 +149,7 @@ def review_attribution(html):
             continue
         # stop at the next quote OR the end of this card: a name-first card (figure > name, blockquote)
         # must not be credited to the NEXT card's name
-        tail = re.split(r"<blockquote\b|</(?:figure|article|li)>", body_html[m.end(): m.end() + 1500], 1)[0]
+        tail = re.split(r"<blockquote\b|</(?:figure|article|li)>", body_html[m.end(): m.end() + FOLLOW_ON_NAME_WINDOW], 1)[0]
         nxt = CITE.search(tail)
         if not nxt:
             continue
@@ -160,6 +166,8 @@ def claim_binding(html, ledger):
     """[(claim_id, mentions, proof)] for ledger claims made 2+ times whose proof is not linked.
 
     proof == "NOT FETCHED" rows are returned so the caller can WARN; a linked proof clears the row.
+    "Linked" is a substring test on the <main> HTML, not href-only: the proof path appearing in an
+    href, src, or data attribute all count.
     """
     body = main_html(html)
     text = text_of(body)
@@ -176,7 +184,8 @@ def claim_binding(html, ledger):
 
 
 # ── statement-labels-present ────────────────────────────────────────────────
-SECTION = re.compile(r"<section\b[^>]*\bid=[\"']([^\"']+)[\"'][^>]*>(.*?)</section>", re.S | re.I)
+# `\sid=` not `\bid=`: `\b` also matches inside `data-id=`
+SECTION = re.compile(r"<section\b[^>]*\sid=[\"']([^\"']+)[\"'][^>]*>(.*?)</section>", re.S | re.I)
 
 
 def missing_statement_labels(html):
@@ -195,11 +204,14 @@ def not_fetched_in_prose(html):
 
 # ── no-unsourced-superlatives ───────────────────────────────────────────────
 def unsourced_superlatives(html, budgets):
+    """Superlatives from budgets["superlatives"] with no link in the same sentence. PROXY: any href in
+    the sentence clears it, whether or not that link is the source. <script>/<style> are stripped
+    first so JSON-LD descriptions do not count as prose."""
     out = []
-    body = main_html(html)
+    body = re.sub(r"<(script|style)\b[^>]*>.*?</\1>", " ", main_html(html), flags=re.S | re.I)
     sentences = re.split(r"(?<=[.!?])\s+", re.sub(r"\s+", " ", unescape(body)))
     for s in sentences:
-        plain = text_of(s).lower()
+        plain = text_of(s).lower().replace("\u2019", "'")
         for sup in budgets.get("superlatives", []):
             if sup in plain and "href=" not in s:
                 out.append(sup)

@@ -102,3 +102,67 @@ def test_audit_returns_error_on_budget_breach_and_exit_code_follows():
     html = page("<p>CITES CITES CITES</p>")
     findings = E.audit("index", html, "home", BUDGETS, LEDGER)
     assert any(sev == "ERROR" and "CITES" in msg for sev, msg in findings)
+
+
+def test_review_attribution_ignores_bird_name_and_cites_class_spans():
+    # CITE class-substring false positive: `bird-name` / `inq-price-name` / `cites-good` / `cites-cross`
+    # are not reviewer names. Two bird cards sharing a paragraph must not be reported.
+    html = page(
+        '<li><p>Hand-fed from three weeks and weaned onto pellets and fresh food.</p><span class="bird-name">Amie</span></li>'
+        '<li><p>Hand-fed from three weeks and weaned onto pellets and fresh food.</p><span class="bird-name">Roys</span></li>')
+    assert E.review_attribution(html) == []
+    html = page(
+        '<li><p>Hand-fed from three weeks and weaned onto pellets and fresh food.</p><span class="inq-price-name">Amie</span></li>'
+        '<li><p>Hand-fed from three weeks and weaned onto pellets and fresh food.</p><span class="inq-price-name">Roys</span></li>')
+    assert E.review_attribution(html) == []
+    html = page(
+        '<li><p>Hand-fed from three weeks and weaned onto pellets and fresh food.</p><span class="cites-good">Appendix I</span></li>'
+        '<li><p>Hand-fed from three weeks and weaned onto pellets and fresh food.</p><span class="cites-cross">Appendix II</span></li>')
+    assert E.review_attribution(html) == []
+
+
+def test_superlatives_ignore_script_blocks_and_catch_curly_apostrophe():
+    html = page('<script type="application/ld+json">{"description":"Bred in Midland. The world\'s best talker."}</script>'
+                '<p>Bred in Midland.</p>')
+    assert E.unsourced_superlatives(html, BUDGETS) == []
+    assert E.unsourced_superlatives(page("<p>The world’s best talking parrot.</p>"), BUDGETS) == ["world's best"]
+    assert E.unsourced_superlatives(page("<p>The world&rsquo;s best talking parrot.</p>"), BUDGETS) == ["world's best"]
+
+
+def test_review_attribution_reads_name_from_sibling_div_and_trims_location():
+    # Testimonials.astro 'grid' variant: name sits in a sibling <div class="font-display font-semibold">, as "Name, City, ST"
+    html = page(
+        '<article><blockquote><p>I searched for months before finding C.A.Gs. Truly top notch.</p></blockquote>'
+        '<div class="font-display font-semibold text-[14px]">Ann Lee, Midland, TX</div></article>'
+        '<article><blockquote><p>I searched for months before finding C.A.Gs. Truly top notch.</p></blockquote>'
+        '<div class="font-display font-semibold text-[14px]">Bob Ray, Odessa, TX</div></article>')
+    bad = E.review_attribution(html)
+    assert len(bad) == 1 and bad[0][1] == ["Ann Lee", "Bob Ray"]   # location trimmed, names sorted
+
+
+def test_review_attribution_name_first_card_is_not_credited_to_next_card():
+    # regression for 1d0d7775: 'mosaic'/'feature' variants print the name BEFORE the blockquote;
+    # the follow-on search must stop at </figure>, not run into the next card's name
+    html = page(
+        '<figure><div class="font-display font-bold text-xl">Ann Lee</div>'
+        '<blockquote><p>I searched for months before finding C.A.Gs. Truly top notch.</p></blockquote></figure>'
+        '<figure><div class="font-display font-bold text-xl">Bob Ray</div>'
+        '<blockquote><p>I searched for months before finding C.A.Gs. Truly top notch.</p></blockquote></figure>')
+    bad = E.review_attribution(html)
+    assert len(bad) == 1 and bad[0][1] == ["Ann Lee", "Bob Ray"]
+
+
+def test_review_attribution_wrapper_div_does_not_swallow_first_card():
+    # the homepage bug the QUOTE_BLOCK lookahead fixed: a grid wrapper <div> whose first inner </div>
+    # is the first card's name must not hide that card from the scan
+    html = page(
+        '<div class="grid"><article><blockquote><p>I searched for months before finding C.A.Gs. Truly top notch.</p></blockquote>'
+        '<div class="font-display font-semibold">Ann Lee</div></article>'
+        '<article><blockquote><p>I searched for months before finding C.A.Gs. Truly top notch.</p></blockquote>'
+        '<div class="font-display font-semibold">Bob Ray</div></article></div>')
+    assert E.review_attribution(html)[0][1] == ["Ann Lee", "Bob Ray"]
+
+
+def test_statement_labels_section_regex_ignores_data_id():
+    html = page("<section data-id='zz'><p>Psittacus erithacus lives 40 to 60 years.</p></section>")
+    assert E.missing_statement_labels(html) == []
