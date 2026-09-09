@@ -38,6 +38,7 @@ Eight of the sixteen remaining C.A.Gs mentions sit inside verbatim review quotes
 | 7 | Six injector rules retired across 16 files: no keyword floor, Rule 57 = 95–105 distinct entities, Rule 56 = competitor count +5–10, H5/H6 advisory on home + location, alt ≤125, title ≤70 | `2aba161b` |
 | 8 | `data/reviews.json` single source + sweep; the breeder's names applied on 8 pages | `e9674f2a` |
 | 9 | Homepage pass: one-clause title and H1, `#proof` trust section, 32 labels, brand and credential budgets met, homepage added to the render harness | `288b0df0` `de03d165` |
+| Follow-up | Final review found an AI-invented USDA licence number (`#74-B-0247`) live on two near-me pages plus a Timneh price below the floor; removed, home profile skips breadcrumb, copy pack and rule index now describe all seven checks | `d5fedfbb` |
 
 ## 3. Review attribution: final
 
@@ -48,7 +49,7 @@ Eight of the sixteen remaining C.A.Gs mentions sit inside verbatim review quotes
 | "I ordered a Congo African Grey from C.A.Gs and the experience was flawless…" | Catherine Kempf, Schaumburg, IL | on file |
 | "Finding a healthy and well-socialized female Congo African Grey…" | Archie O'Brien, Farmingdale, NY | on file |
 
-Albert Schroder was the wrong name on two pages and is gone. Archie's photo never sits next to another buyer's words. The stray word "parrot" after the final period in the supplied O'Brien text was treated as a typo. Eight pages changed and were submitted to IndexNow once live.
+Albert Schroder was the wrong name on two pages and is gone. Archie's photo never sits next to another buyer's words. The stray word "parrot" after the final period in the supplied O'Brien text was treated as a typo. Eight pages changed and were submitted to IndexNow once live. The homepage and the two near-me pages were submitted after their own deploys.
 
 ## 4. Gates run on the shipped homepage
 
