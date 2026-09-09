@@ -25,6 +25,8 @@ interface Props {
   compact?: boolean;
   /** When compact, the bird id to submit silently (must match a birds[].id, e.g. 'roys'). */
   preselect?: string;
+  /** "Why Apply With Us?" bullets (plain text). Default = the five site-wide lines (literal markup below). */
+  trustBullets?: string[];
 }
 const {
   heading = 'Adopt an African Grey — Inquiry Form',
@@ -33,7 +35,12 @@ const {
   idPrefix = '',
   compact = false,
   preselect = '',
+  trustBullets,
 } = Astro.props;
+// The default trust list below stays LITERAL markup, in a second branch on purpose: rendering the
+// default via set:html drops the scoped data-astro-cid-* attribute Astro stamps on the inline
+// <svg>/<circle>/<polyline>, which changed bytes on 17 built pages (measured 2026-09-09).
+const CHECK = '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg>';
 
 const birds = [
   { id: 'roys',   label: 'ROYS — Congo African Grey, Male, 4 months',          price: '$2,300' },
@@ -281,6 +288,11 @@ const pricingRows = [
       <!-- Why Apply card -->
       <div class="inq-sidebar-card">
         <h3 class="font-lora inq-sidebar-heading">Why Apply With Us?</h3>
+        {trustBullets ? (
+        <ul class="inq-trust-list font-sora">
+          {trustBullets.map((b) => (<li><Fragment set:html={CHECK} /> {b}</li>))}
+        </ul>
+        ) : (
         <ul class="inq-trust-list font-sora">
           <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Every Grey DNA sexed + CITES documented</li>
           <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Avian vet health certificate included</li>
@@ -288,6 +300,7 @@ const pricingRows = [
           <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Family-owned aviary since 2014</li>
           <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> USDA AWA licensed facility</li>
         </ul>
+        )}
       </div>
 
       <!-- Pricing card — hidden in compact single-bird mode (price already shown on the page) -->

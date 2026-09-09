@@ -48,9 +48,22 @@ export function normalise(text: string): string[] {
     .filter(Boolean);
 }
 
+/**
+ * Slug → built file / served route. Astro's file-based routing puts the homepage at
+ * `dist/index.html` served as `/`; every other slug is `dist/<slug>/index.html` at
+ * `/<slug>/`. `index` is the ONE special case, and both resolvers live here so the
+ * spec and the corpus reader cannot disagree about where a page is.
+ */
+export function distFileFor(slug: string): string {
+  return slug === 'index' ? join(REPO, 'dist', 'index.html') : join(REPO, 'dist', slug, 'index.html');
+}
+export function routeFor(slug: string): string {
+  return slug === 'index' ? '/' : `/${slug}/`;
+}
+
 /** Visible text of a built page — script, style and JSON-LD stripped. */
 export function distText(slug: string): string | null {
-  const file = join(REPO, 'dist', slug, 'index.html');
+  const file = distFileFor(slug);
   if (!existsSync(file)) return null;
   let html = readFileSync(file, 'utf8');
   html = html.replace(/<script[\s\S]*?<\/script>/gi, ' ');

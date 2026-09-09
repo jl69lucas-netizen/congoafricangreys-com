@@ -18,13 +18,24 @@ interface Props {
    *  Pass an on-page anchor (e.g. "#contact") on pages that render the inquiry
    *  form so the CTA jumps straight to it instead of redirecting. */
   inquireHref?: string;
+  /** Trust micro-badges. Default = the five site-wide badges.
+   *  Pass e.g. [{ label: 'Documented', href: '#proof' }] on a page that owns the proof list. */
+  badges?: { label: string; href?: string }[];
+  /** Photo-corner location pill. Default "Midland, TX"; pass "" to omit the pill. */
+  location?: string;
 }
 
 const { id, name, sex, age, price, tag, tagType, notes, hook,
   image = '/african-grey-hero.webp', variant = 'Congo African Grey',
-  objectPos = 'object-center', inquireHref } = Astro.props;
+  objectPos = 'object-center', inquireHref, location = 'Midland, TX',
+  badges = [
+    { label: 'CITES Cert' }, { label: 'PCR DNA-Sexed' }, { label: 'Vet Certified' },
+    { label: 'PBFD & APV Screened' }, { label: 'Fully Weaned' },
+  ] } = Astro.props;
 
 const ctaHref = inquireHref ?? `/contact-us/?bird=${id}`;
+// Literal newline so the default render stays byte-identical to the pre-prop markup (compressHTML).
+const NL = '\n';
 
 const tagColors: Record<string, string> = {
   new:    'bg-clay text-white',
@@ -52,9 +63,10 @@ const tagClass = tagColors[tagType] ?? tagColors.new;
     <span class={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${tagClass}`}>
       {tag}
     </span>
+    {location !== '' && (
     <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-stone-600 text-xs font-sora px-2 py-1 rounded-full">
-      <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Midland, TX
-    </span>
+      <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {location}{NL}</span>
+    )}
   </div>
 
   <!-- Body -->
@@ -73,11 +85,9 @@ const tagClass = tagColors[tagType] ?? tagColors.new;
 
     <!-- Trust micro-badges -->
     <div class="flex flex-wrap gap-1.5 mb-4">
-      <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">CITES Cert</span>
-      <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">PCR DNA-Sexed</span>
-      <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">Vet Certified</span>
-      <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">PBFD &amp; APV Screened</span>
-      <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">Fully Weaned</span>
+      {badges.map((b, i) => <>{i > 0 && " "}{b.href
+        ? <a href={b.href} class="text-xs bg-green/8 text-green font-sora font-medium px-2 py-0.5 rounded-full underline decoration-clay/40 underline-offset-2 hover:decoration-clay">{b.label}</a>
+        : <span class="text-xs bg-green/8 text-green font-sora px-2 py-0.5 rounded-full">{b.label}</span>}</>)}
     </div>
 
     <!-- Shipping cost line -->

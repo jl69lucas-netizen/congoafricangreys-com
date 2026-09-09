@@ -5,10 +5,17 @@
  * italic forest subtitles · numbered anchor lists, 2-col).
  * Ported to site Tailwind tokens. Real homepage section anchors grouped into 4 parts.
  */
-interface TocItem { n: number; t: string; href: string; }
-interface Group { tag: string; title: string; items: TocItem[]; }
+export interface TocItem { n: number; t: string; href: string; }
+export interface Group { tag: string; title: string; items: TocItem[]; }
+interface Props {
+  /** Header-right caption. Default = the original line; pass "" to hide it. */
+  label?: string;
+  /** Override the grouped items. Default = the original homepage outline below. */
+  groups?: Group[];
+}
+const { label = "18 sections · everything about C.A.Gs", groups: groupsProp } = Astro.props;
 
-const groups: Group[] = [
+const defaultGroups: Group[] = [
   {
     tag: "Part One", title: "Meet C.A.Gs",
     items: [
@@ -48,6 +55,7 @@ const groups: Group[] = [
     ],
   },
 ];
+const groups = groupsProp ?? defaultGroups;
 ---
 
 <nav class="toc-v3 py-10 px-4 bg-warm-white md:py-12" aria-label="On this page">
@@ -62,7 +70,7 @@ const groups: Group[] = [
             On This Page
           </h2>
         </div>
-        <p class="font-sora text-[13px] text-stone-500">18 sections · everything about C.A.Gs</p>
+        {label !== "" && <p class="font-sora text-[13px] text-stone-500">{label}</p>}
       </div>
 
       <!-- grouped parts -->

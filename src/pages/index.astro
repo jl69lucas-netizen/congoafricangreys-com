@@ -19,9 +19,96 @@ import NewsletterV2 from '../components/cag-library/NewsletterV2.astro';
 import CompareTableE from '../components/cag-library/CompareTableE.astro';
 import InquiryForm  from '../components/cag-inquiry-form.astro';
 import JumpRail     from '../components/cag-library/JumpRail.astro';
+import StatementLabel from '../components/cag-library/StatementLabel.astro';
 
-const title = "African Grey Parrot Breeder | Where Can I Buy a Healthy Congo African Grey Near Me? | Captive-Bred C.A.Gs vs Unverified Online Sellers | C.A.Gs – America's Trusted Congo & Timneh Breeder Since 2014";
-const description = "Trusted African Grey parrot breeder Mark & Teri raise hand-fed Congo & Timneh Greys in Midland, TX | Why families choose captive-bred C.A.Gs over unverified online sellers | Every C.A.Gs Grey is DNA-sexed, vet-checked, and ships with CITES Appendix I paperwork | Reserve yours — nationwide delivery";
+const title = "African Grey Parrot Breeder in Midland, Texas – C.A.Gs";
+const description = "Mark & Teri Benjamin hand-raise Congo and Timneh African Greys at home in Midland, Texas — documented, vet-checked and shipped to all 50 states since 2014.";
+
+// JumpRail — homepage map with plain labels (the component's default labels carry the brand
+// name and the word "Scammers"; the evidence pass says each once, in the section that owns it).
+const railSections = [
+  { id: 'about',           label: 'Our Breeders',   part: 1 },
+  { id: 'available-birds', label: 'Available',       part: 1 },
+  { id: 'eggs-pairs',      label: 'Eggs & Pairs',    part: 1 },
+  { id: 'congo',           label: 'Congo Grey',      part: 2 },
+  { id: 'timneh',          label: 'Timneh Grey',     part: 2 },
+  { id: 'compare-species', label: 'Compare',         part: 2 },
+  { id: 'why-us',          label: 'Why Us',          part: 3 },
+  { id: 'trust',           label: 'Verify Us',       part: 3 },
+  { id: 'history',         label: 'History',         part: 3 },
+  { id: 'health',          label: 'Health',          part: 3 },
+  { id: 'pricing',         label: 'Pricing',         part: 4 },
+  { id: 'tools',           label: 'Cost Tools',      part: 4 },
+  { id: 'shipping',        label: 'Shipping',        part: 4 },
+  { id: 'reviews',         label: 'Reviews',         part: 4 },
+  { id: 'blog',            label: 'Care Guides',     part: 4 },
+  { id: 'faq',             label: 'FAQ',             part: 4 },
+  { id: 'how-to-buy',      label: 'How to Buy',      part: 4 },
+  { id: 'contact',         label: 'Contact',         part: 4 },
+];
+const railParts = { 1: 'Meet the Breeders', 2: 'Choose Your Grey', 3: 'Why Families Trust Us', 4: 'Pricing, Tools & Buying' };
+
+// TocV3 — homepage outline with plain labels: the brand appears once (the Part One title),
+// the credential terms not at all; the component's defaults keep the original wording.
+const tocGroups = [
+  { tag: "Part One", title: "Meet C.A.Gs", items: [
+    { n: 1, t: "Who Are the Breeders?", href: "#about" },
+    { n: 2, t: "Which African Greys Are Available Now?", href: "#available-birds" },
+    { n: 3, t: "Fertile African Grey Eggs & Breeding Pairs", href: "#eggs-pairs" },
+  ]},
+  { tag: "Part Two", title: "Choose your Grey", items: [
+    { n: 4, t: "What Is a Congo African Grey?", href: "#congo" },
+    { n: 5, t: "What Is a Timneh African Grey?", href: "#timneh" },
+    { n: 6, t: "Congo, Timneh or Another Species?", href: "#compare-species" },
+  ]},
+  { tag: "Part Three", title: "Why families trust us", items: [
+    { n: 7, t: "Why Do Families Choose Us?", href: "#why-us" },
+    { n: 8, t: "How Do You Verify Us Before Paying?", href: "#trust" },
+    { n: 9, t: "Where Do African Greys Come From?", href: "#history" },
+    { n: 10, t: "How Do We Protect Your Bird's Health?", href: "#health" },
+  ]},
+  { tag: "Part Four", title: "Pricing, tools & buying", items: [
+    { n: 11, t: "How Much Does an African Grey Cost?", href: "#pricing" },
+    { n: 12, t: "What Will the First Year Cost?", href: "#tools" },
+    { n: 13, t: "How Do We Ship to Your State?", href: "#shipping" },
+    { n: 14, t: "What Do Past Buyers Say?", href: "#reviews" },
+    { n: 15, t: "Watch the Aviary on Video", href: "#video" },
+    { n: 16, t: "African Grey Questions, Answered", href: "#faq" },
+    { n: 17, t: "How Do I Reserve a Bird — Step by Step?", href: "#how-to-buy" },
+    { n: 18, t: "How Do You Reach Us?", href: "#contact" },
+  ]},
+];
+
+// TrustStats — homepage cards; the paperwork card names the treaty once and links the proof list.
+const trustIcon = (d: string) => `<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#2D6A4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const trustItems = [
+  { icon: trustIcon('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>'),
+    title: '3-day health guarantee', sub: 'Written, with lifetime owner support' },
+  { icon: trustIcon('<path d="M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9"/><path d="M16 3c0 4.5-8 4.5-8 9s8 4.5 8 9"/><line x1="9" y1="6.5" x2="15" y2="6.5"/><line x1="9.5" y1="12" x2="14.5" y2="12"/><line x1="9" y1="17.5" x2="15" y2="17.5"/>'),
+    title: 'DNA-sexed + vet-cleared', sub: 'Every Grey, no exceptions' },
+  { icon: trustIcon('<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>'),
+    title: 'Ships to all 50 states', sub: 'IATA-compliant, vet-certified transport' },
+  { icon: trustIcon('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>'),
+    title: 'CITES paperwork', sub: 'Legal on every Grey — see the full list', href: '#proof' },
+];
+
+// ScamAwareness (grid) — twelve red flags in plain words. The component's other variants carry
+// fixed copy that names the licence, the treaty and the word "scam" several times each.
+const ico = (d: string) => `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true">${d}</svg>`;
+const redFlags = [
+  { icon: ico('<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>'), title: '01 · Price under $1,500', body: 'A real range is $1,500–$3,500.' },
+  { icon: ico('<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'), title: '02 · Zelle / CashApp only', body: 'Untraceable = unrecoverable.' },
+  { icon: ico('<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>'), title: '03 · Stolen images', body: 'Reverse-image search the photos.' },
+  { icon: ico('<path d="M12 3c-3.5 0-6 5-6 9a6 6 0 0 0 12 0c0-4-2.5-9-6-9z"/>'), title: '04 · "Parrot eggs" from a stranger', body: 'Ask for candling video and a hatch record.' },
+  { icon: ico('<circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/>'), title: '05 · No treaty paperwork', body: 'Required by federal law.' },
+  { icon: ico('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'), title: '06 · Site under 6 months old', body: 'Check age via WHOIS lookup.' },
+  { icon: ico('<circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/>'), title: '07 · Refuses video call', body: 'Real breeders show real birds.' },
+  { icon: ico('<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>'), title: '08 · Fake shipping fees', body: 'Beware "insurance" upcharges.' },
+  { icon: ico('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'), title: '09 · No physical address', body: 'Real aviaries are findable.' },
+  { icon: ico('<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="13" y1="10" x2="18" y2="10"/><line x1="13" y1="14" x2="18" y2="14"/>'), title: '10 · No licence number', body: 'A real one is public record.' },
+  { icon: ico('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'), title: '11 · "Pay today or lose it"', body: 'Urgency is the oldest trick.' },
+  { icon: ico('<path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><line x1="7" y1="7" x2="7.01" y2="7"/>'), title: '12 · "Free / $150 rehome"', body: '"Shipping only" is never real.' },
+];
 const canonical = "https://congoafricangreys.com/";
 
 // ─── Available birds (filterable) — prices from data/price-matrix.json ───
@@ -97,13 +184,13 @@ const bottomReviews = [
 // ─── Master FAQ (CITES Appendix I corrected; prices from price-matrix) ───
 const faqItems = [
   { q: 'Are your African Grey parrots CITES documented?',
-    a: 'Yes. African Greys are protected under CITES Appendix I — the highest level of protection, applied in 2017 to restrict commercial trade and protect wild populations from poaching and habitat loss. Every one of our parrots is captive-bred in the USA, never wild-caught, and comes with full documentation: hatch certificate, band number, DNA sexing certificate, and avian-vet health certificate.' },
+    a: 'Yes. African Greys are listed on Appendix I of the treaty, its strictest tier, applied in 2017 to stop commercial trade in wild-caught birds. Every parrot we place hatched here in the USA and comes with its full paperwork — hatch certificate, band number, sex certificate and avian-vet health certificate — each described in the documentation section of this page.' },
   { q: 'How much does an African Grey parrot cost?',
     a: 'Our Congo African Greys range from $1,700 to $2,500 for individual birds, with the bonded Jins + Jeni pair at $3,500. Timneh African Greys are $1,500–$1,600. Proven breeding pairs run $3,000 to $5,500, and candled fertile eggs are $95 each (buy 5, free US shipping). A $200 deposit reserves your bird.' },
   { q: 'Do you ship African Grey parrots nationwide?',
     a: 'Yes. We ship IATA-compliant to all 50 states under the IATA Live Animals Regulations (LAR). Your bird travels in an approved live-animal carrier with an avian-vet health certificate dated within 10 days of travel. Choose airport pickup at your nearest major airport for $185, or door-to-door home delivery for $350 — either way your Grey arrives calm, hydrated, and ready to meet you.' },
   { q: 'Are the birds DNA-sexed and vet-checked?',
-    a: 'Each of our Greys is sexed by PCR-based DNA testing and examined by a board-certified avian veterinarian before placement, with PBFD and Polyomavirus screening as part of our health protocol. You receive the PCR DNA sexing certificate and the avian-vet health certificate with your bird.' },
+    a: 'Yes. Each Grey\'s sex is confirmed by a PCR lab test, and an avian veterinarian examines the bird before placement, with PBFD and Polyomavirus screening as part of our health protocol. You receive the sex certificate and the health certificate with your bird.' },
   { q: 'What is the difference between a Congo and a Timneh African Grey?',
     a: 'Both are African Greys. The Congo (Psittacus erithacus) is larger (400–600g) with a bright red tail and a famous talking vocabulary. The Timneh (Psittacus timneh) is smaller (275–375g) with a maroon tail, a calmer temperament, and often starts talking earlier — a great fit for first-time owners.' },
   { q: 'Is the deposit refundable?',
@@ -111,7 +198,7 @@ const faqItems = [
   { q: 'How long do African Grey parrots live?',
     a: 'African Greys live 40 to 60 years in captivity, and well-cared-for birds frequently reach the upper end of that range. Bringing one home is a multi-decade commitment — many owners name their Grey in their estate plans. We talk every buyer through that reality before placement, because a bird this intelligent thrives only in a home prepared for the long haul.' },
   { q: 'Do African Grey parrots really talk?',
-    a: 'Yes — the African Grey is widely regarded as the best talking parrot in the world. Congo Greys commonly build vocabularies of several hundred words, and the famous Grey named Alex, studied for three decades by Dr. Irene Pepperberg, demonstrated that Greys can use words in context, count, identify colors and shapes, and grasp the concept of zero. Each Grey is an individual, but with daily interaction most of our Greys begin mimicking sounds and words within their first few months home.' },
+    a: 'Yes — the African Grey is the parrot most often cited for speech. Congo Greys commonly build vocabularies of several hundred words, and the famous Grey named Alex, studied for three decades by Dr. Irene Pepperberg, demonstrated that Greys can use words in context, count, identify colors and shapes, and grasp the concept of zero. Each Grey is an individual, but with daily interaction most of our Greys begin mimicking sounds and words within their first few months home.' },
   { q: 'What do African Grey parrots eat?',
     a: 'A healthy African Grey eats a formulated pellet diet as its base, supplemented with fresh vegetables, leafy greens, and limited fruit. Healthy African Grey treats like a few nuts or a slice of apple work well for training but should stay occasional. Greys are prone to calcium deficiency (hypocalcemia), so calcium support and natural sunlight or full-spectrum light matter. Never feed avocado, chocolate, caffeine, or alcohol — all are toxic to parrots. We send every buyer home with the exact diet their bird is already eating to avoid digestive stress during the transition.' },
   { q: 'Do African Greys need a companion bird?',
@@ -126,19 +213,19 @@ const faqItems = [
   { q: 'Can an African Grey be left alone during the day?',
     a: 'A Grey can be alone for a normal work day if it has a large cage, foraging toys, and rotated enrichment — but it should not be isolated for long stretches every day. These are highly social birds; chronic loneliness and boredom are the leading causes of feather-plucking. Plan for real daily interaction, not just food and water.' },
   { q: 'Why are African Grey parrots so expensive?',
-    a: 'The price reflects ethical captive breeding: months of daily hand-feeding, DNA sexing, an avian-vet exam, CITES Appendix I documentation, and a closed band — plus the fact that wild trade is now banned, so every legitimate bird is captive-bred. A listing far below our $1,500 floor is the clearest sign of a scam or a sick, undocumented bird.' },
+    a: 'The price reflects ethical captive breeding: months of daily hand-feeding, lab sexing, an avian-vet exam, the treaty paperwork, and a closed band — plus the fact that wild trade is banned, so every lawful bird was hatched in an aviary. A listing far below our $1,500 floor is the clearest sign of a fake listing or a sick, undocumented bird.' },
   { q: 'Do African Greys bond with only one person?',
     a: 'Congo African Greys in particular tend to choose a favorite person, but early, consistent handling by the whole household builds a bird that is comfortable with several people. We socialize every chick with multiple handlers from day one specifically to encourage that broader confidence.' },
   { q: 'Are African Grey parrots legal to own in the United States?',
-    a: 'Yes. While the species is listed on CITES Appendix I — which bans commercial trade in wild-caught birds — captive-bred African Greys are legal to own and transfer domestically in the U.S. with proper documentation. Every Grey we place is U.S. captive-bred and fully documented, so your ownership is on solid legal ground.' },
+    a: 'Yes. The treaty listing bans commercial trade in wild-caught birds, but aviary-hatched African Greys are legal to own and transfer within the U.S. with proper documentation. Every Grey we place hatched here and is fully documented, so your ownership is on solid legal ground.' },
   { q: 'How big do African Grey parrots get?',
     a: 'A Congo African Grey reaches about 12–14 inches long and 400–600 grams. A Timneh is smaller — roughly 9–11 inches and 275–375 grams. Both need a cage with room to fully spread their wings and climb, plus daily out-of-cage time.' },
   { q: 'What age should I buy an African Grey?',
     a: 'Buy a fully weaned bird — never an unweaned chick. African Greys typically wean between 12 and 16 weeks, and hand-feeding a baby is risky for inexperienced owners. Each Grey we sell is fully weaned, eating on its own, and ready to bond safely with its new family.' },
   { q: 'Male or female African Grey — which is better?',
-    a: 'Behaviorally, male and female African Greys are very similar; personality is shaped far more by individual temperament and upbringing than by sex. Every Grey we sell is DNA-sexed so you know exactly what you are bringing home. If you have a preference, just tell us in your inquiry.' },
-  { q: 'How do I know an African Grey breeder is legitimate?',
-    a: 'A real breeder can show a verifiable USDA Animal Welfare Act license, provides CITES Appendix I captive-bred paperwork, will video-call to show your specific bird on demand, accepts reversible payment (card, PayPal Goods, bank wire), and has a findable physical location. We meet every one of those tests — and we hand you the paperwork before any money moves.' },
+    a: 'Behaviorally, male and female African Greys are very similar; personality is shaped far more by individual temperament and upbringing than by sex. Every Grey we sell is lab-sexed, so you know exactly what you are bringing home. If you have a preference, just tell us in your inquiry.' },
+  { q: 'How can I verify an African Grey breeder before paying?',
+    a: 'A real breeder can show a verifiable federal animal-welfare licence, hands over the bird\'s own origin paperwork, will video-call to show your specific bird on demand, accepts reversible payment (card, PayPal Goods, bank wire), and has a findable physical location. We meet every one of those tests — and you hold the paperwork before any money moves.' },
 ];
 
 const orgSchema = {
@@ -311,7 +398,7 @@ const birdListSchema = {
 .home-d .text-center p { margin-left:auto; margin-right:auto; }
 .home-d h1 + p, .home-d h2 + p { font-size:1.08em !important; line-height:1.7 !important; }
 /* "inkier" lead color ONLY where the paragraph hasn't set its own (skips light-text paragraphs on dark sections — fixes WCAG contrast fails) */
-.home-d h1 + p:not([style*="color"]):not([class*="text-cream"]), .home-d h2 + p:not([style*="color"]):not([class*="text-cream"]) { color:var(--ink) !important; }
+.home-d h1 + p:not([style*="color"]):not([class*="text-cream"]):not([class*="text-white"]), .home-d h2 + p:not([style*="color"]):not([class*="text-cream"]) { color:var(--ink) !important; }
 
 /* --- EYEBROWS: calm uppercase label with a clay underline tick --- */
 .home-d .border-l-4 { border-left:0 !important; padding-left:0 !important; }
@@ -346,29 +433,53 @@ const birdListSchema = {
 <div class="home-d">
 
   <!-- Jump Rail — fixed right-side progress nav (desktop 1024px+) -->
-  <JumpRail />
+  <JumpRail sections={railSections} partNames={railParts} />
 
   <!-- 1. Hero — cag-hero-v3:b "Authority Green" (REBUILD v2) -->
   <HeroV3 availableCount={birds.filter(b => b.status === 'available').length} />
 
   <!-- 2. Counter Snippet — cag-counter-snippet (Rule 31: 4 stats after H1) -->
-  <CounterSnippet />
+  <CounterSnippet stats={[
+    { num: "12+",    label: "Years Aviary" },
+    { num: "100%",   label: "Documented Birds" },
+    { num: "$1,500", label: "Floor Price" },
+    { num: "24h",    label: "Reply Guarantee" },
+  ]} />
 
   <!-- 3. Key Takeaway — cag-key-takeaway-v2:02 (stat-forward answer box) -->
-  <KeyTakeawayV2 />
+  <KeyTakeawayV2
+    heading="What Should You Know Before Buying a Grey From Us?"
+    items={[
+      { stat: "2014",      label: "Family Aviary",       body: "Mark & Teri Benjamin hand-raise every Congo and Timneh in the family home — no warehouse, no middleman." },
+      { stat: "100%",      label: "Hatched in the USA",  body: "Every Grey we place hatched here and carries the paperwork listed under How We Document Each Bird — never wild-caught." },
+      { stat: "Lab",       label: "Sexed & Vet-Checked", body: "Sex is confirmed by a lab test, not by eye, and the certificates travel with the bird." },
+      { stat: "$1,500+",   label: "Honest Pricing",      body: "Timneh Greys from $1,500 and Congos from $1,700 — no $400 bait listings, ever." },
+      { stat: "40–60 yr",  label: "Lifetime Companion",  body: "A Grey can outlive its first owner, so our support runs for the bird's whole life." },
+      { stat: "Licensed",  label: "Verifiable Aviary",   body: "Our federal animal-welfare licence is public record; check it before you pay anything." },
+      { stat: "Nationwide",label: "IATA Shipping",       body: "Birds fly to your nearest major airport in an airline-approved travel crate." },
+      { stat: "24h",       label: "Reply Guarantee",     body: "Send an inquiry and hear back from Mark or Teri within one business day." },
+    ]}
+  />
 
   <!-- 4. TOC — cag-toc-v3:02 (grouped by part) -->
-  <TocV3 />
+  <TocV3 label="" groups={tocGroups} />
 
   <!-- 5. About the Breeders — cag-owner-card (H-S-S, Mark & Teri) -->
-  <OwnerCard />
+  <OwnerCard
+    story={[
+      "We started raising African Greys in our Midland, Texas home in 2014 — because we could not stand how many were sold sick, undocumented, or shipped from people the buyer would never meet. So our aviary became the opposite: every chick is hand-fed inside our home, never warehoused in a back-room facility.",
+      "Every Grey we raise is sexed by a lab, examined by an avian veterinarian, closed-banded and documented before it leaves us — and you hold that paperwork before any money changes hands. A decade on, the principle is unchanged: raise fewer birds, raise them right, and stay reachable long after pickup.",
+    ]}
+    signature="— Mark & Teri Benjamin"
+    chips={["USDA AWA Licensed", "CITES Documented", "Lab Sexed", "Avian-Vet Certified"]}
+  />
 
   <!-- 6. Review block #1 — verified buyer social proof (Review-top image) -->
   <section id="reviews-top" class="scroll-mt-20 bg-cream py-14 px-4 md:py-16">
     <div class="container mx-auto max-w-[1100px]">
       <div class="mb-8 text-center">
         <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">Verified Buyer Review</p>
-        <h2 class="font-lora mt-2 font-bold text-logo-dark">What Do African Grey Families Say About C.A.Gs?</h2>
+        <h2 class="font-lora mt-2 font-bold text-logo-dark">What Do African Grey Families Say About Us?</h2>
       </div>
       <Testimonials variant="feature" testimonials={[{ ...reviews[0], avatarSrc: '/african-grey-review-top.webp' }]} />
     </div>
@@ -383,7 +494,7 @@ const birdListSchema = {
         <div class="border-l-4 border-green pl-4">
           <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">This Week's Aviary</p>
           <h2 class="font-lora font-bold text-logo-dark">Which Hand-Fed African Greys Are Available Right Now?</h2>
-          <p class="text-stone-500 mt-2 max-w-md text-sm leading-relaxed">Every Congo and Timneh African Grey we hand-feed here at C.A.Gs is PCR DNA-sexed, screened for PBFD, Polyomavirus, and psittacosis, CITES Appendix I-documented, and fully weaned at 12–16 weeks — these are real birds we are raising right now, including our <a href="/baby-african-grey-parrot-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">baby African Greys for sale</a>, with real availability and no waitlist tricks or bait listings. You can <a href="/available/" class="text-clay-text font-medium underline decoration-clay/30 hover:decoration-clay">see every available African Grey for sale</a> on our dedicated listings page.</p>
+          <p class="text-stone-500 mt-2 max-w-md text-sm leading-relaxed">Every Congo and Timneh we hand-feed here is lab-sexed, health-screened, <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">documented</a> and fully weaned at 12–16 weeks — these are real birds we are raising right now, including our <a href="/baby-african-grey-parrot-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">baby African Greys for sale</a>, with real availability and no waitlist tricks or bait listings. You can <a href="/available/" class="text-clay-text font-medium underline decoration-clay/30 hover:decoration-clay">see every available African Grey for sale</a> on our dedicated listings page.</p>
         </div>
         <a href="/african-grey-parrot-for-sale/" class="inline-block bg-clay hover:bg-clay-dk text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors whitespace-nowrap cag-glow">View All Birds →</a>
       </div>
@@ -402,14 +513,14 @@ const birdListSchema = {
       <div id="bird-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {birds.map(bird => (
           <div class="bird-item" data-variant={bird.variant} data-kind={bird.kind} data-price={bird.priceVal} data-status={bird.status}>
-            <BirdCard {...bird} />
+            <BirdCard {...bird} location="" badges={[{ label: 'Documented', href: '#proof' }, { label: 'Fully Weaned' }]} />
           </div>
         ))}
       </div>
       <p id="bird-empty" class="hidden text-center text-stone-500 py-10 font-sora">No birds match that filter right now — <a href="/contact-us/" class="text-clay font-semibold">ask about upcoming clutches →</a></p>
 
       <div class="flex flex-wrap justify-center gap-2 mt-8">
-        {['CITES Captive-Bred Cert', 'PCR DNA Sex Certificate', 'Avian Vet Health Cert', 'Hatch Certificate'].map(badge => (
+        {['Captive-Bred Certificate', 'Lab Sex Certificate', 'Avian Vet Health Cert', 'Hatch Certificate'].map(badge => (
           <span class="text-xs font-sora text-green bg-green/8 border border-green/20 px-3 py-1 rounded-full">✓ {badge}</span>
         ))}
       </div>
@@ -422,18 +533,20 @@ const birdListSchema = {
       <div class="mb-7 border-l-4 border-green pl-4">
         <p class="font-sora text-xs font-semibold uppercase tracking-widest text-clay mb-2">Beyond Single Birds</p>
         <h2 class="font-lora font-bold text-logo-dark">Looking for Fertile Eggs or a Bonded Breeding Pair?</h2>
-        <p class="font-sora text-stone-500 mt-2 max-w-2xl text-sm leading-relaxed">Whether you incubate your own clutch or want a proven, closed-banded pair for your own aviary, we place both here at C.A.Gs — with the same CITES Appendix I documentation we put behind every hand-fed baby.</p>
+        <p class="font-sora text-stone-500 mt-2 max-w-2xl text-sm leading-relaxed">Whether you incubate your own clutch or want a proven, closed-banded pair for your own aviary, we place both here — with the same <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">paperwork</a> we put behind every hand-fed baby.</p>
       </div>
 
       <div class="grid gap-5 md:grid-cols-2">
         {[
           { img: '/african-grey-candled-eggs.webp',
+            alt: 'Candled African Grey eggs, the fertile ones showing veins against the light',
             tag: 'Fertile Eggs',
             title: 'African Grey Fertile Eggs',
             desc: 'Candled, fertility-checked Congo & Timneh eggs — $95 each, free US shipping on 5+.',
             href: '/african-grey-parrot-bird-eggs-for-sale-usa/',
             cta: 'View fertile eggs' },
           { img: '/congo-african-grey-breeding-pair-aviary.webp',
+            alt: 'Bonded Congo African Grey breeding pair side by side in an aviary',
             tag: 'Breeding Pairs',
             title: 'Proven Breeding Pairs',
             desc: 'Every African Grey breeding pair for sale is bonded, closed-banded, and proven (from $3,000) — for serious aviculturists.',
@@ -441,7 +554,7 @@ const birdListSchema = {
             cta: 'View breeding pairs' },
         ].map(item => (
           <a href={item.href} class="group flex items-stretch gap-4 rounded-2xl border border-black/[0.07] bg-white p-3 transition-shadow hover:shadow-lg" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
-            <img src={item.img} alt={`${item.title} for sale at C.A.Gs — captive-bred, CITES Appendix I documented`} width="160" height="160" loading="lazy" decoding="async" class="h-28 w-28 flex-shrink-0 rounded-xl object-cover sm:h-32 sm:w-32" />
+            <img src={item.img} alt={item.alt} width="160" height="160" loading="lazy" decoding="async" class="h-28 w-28 flex-shrink-0 rounded-xl object-cover sm:h-32 sm:w-32" />
             <div class="flex flex-col justify-center py-1 pr-2">
               <span class="font-sora text-xs font-bold uppercase tracking-[0.12em] text-clay">{item.tag}</span>
               <h3 class="font-lora mt-1 text-xl font-bold text-logo-dark">{item.title}</h3>
@@ -460,37 +573,37 @@ const birdListSchema = {
       <div class="mb-8 border-l-4 border-green pl-4">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Congo African Grey · Psittacus erithacus</p>
         <h2 class="font-lora font-bold text-logo-dark">What Is a Congo African Grey — the Classic Red-Tailed Talker?</h2>
-        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Decades of <a href="https://alexfoundation.org/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">documented cognition research</a> made the Congo African Grey the bird people picture when they hear "the smartest parrot in the world." At C.A.Gs in Midland, TX, every <a href="/congo-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Congo African Grey we place</a> is a <a href="/hand-raised-african-grey-parrot-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">hand-raised African Grey</a> fed from the nest box, DNA-sexed, and CITES Appendix I documented — the proof behind the reputation.</p>
+        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">The Congo is the larger of the two Grey species and the bird most people picture when they think of a parrot that talks. <StatementLabel kind="fact" source="https://alexfoundation.org/" /> Alex, the Congo Grey Dr. Irene Pepperberg studied for thirty years, learned more than a hundred English labels and used them in context — that research is where the reputation comes from. Every <a href="/congo-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Congo African Grey we place</a> is a <a href="/hand-raised-african-grey-parrot-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">hand-raised African Grey</a> fed from the nest box in our home, and its paperwork is listed under <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">how we document each bird</a>.</p>
       </div>
       <SplitFeature variant="editorial"
         eyebrow="THE LARGER GREY SPECIES"
-        title="Why Is the Congo Considered the World's Best Talking Parrot?"
-        body="The Congo African Grey (Psittacus erithacus) is the larger of the two African Grey species — 400–600 grams, a brilliant scarlet tail, and a silver-scalloped grey body. Congos are extraordinary mimics with documented vocabularies of hundreds of words, and they bond deeply with their family. Ours are hand-raised in our Midland, Texas home, DNA-sexed, and CITES Appendix I documented."
+        title="How Well Does a Congo African Grey Talk?"
+        body="Very well, and in a voice that sounds startlingly human. The Congo is the bolder, more broadcast-clear talker of the two Greys — it picks up whole phrases, mimics the microwave and the dog, and learns which words get a reaction. Ours come out of the nest box into our hands in the family home, so the first voice they copy is usually one of ours."
         bullets={[
           { label: '<b class="text-ink">Price:</b> $1,700 (adult) – $2,500 (hand-raised baby)' },
-          { label: '<b class="text-ink">Size:</b> 400–600g · 12–14 in · bright red tail' },
-          { label: '<b class="text-ink">Lifespan:</b> 40–60 years' },
+          { label: '<b class="text-ink">Look:</b> silver-scalloped grey body, black beak, scarlet tail' },
+          { label: '<b class="text-ink">Temperament:</b> sensitive; bonds hardest with one or two people' },
           { label: '<b class="text-ink">Best for:</b> owners who want a deeply bonded, talkative companion' },
         ]}
         quote="A Congo Grey doesn't just mimic words — it learns when to use them."
         ctaLabel="Shop Congo Greys"
         ctaHref="/congo-african-grey-for-sale/"
         imageSrc="/congo-african-grey-variant.webp"
-        imageAlt="Congo African Grey parrot (Psittacus erithacus) with its bright red tail, hand-raised at C.A.Gs in Midland, TX — DNA-sexed and CITES documented"
+        imageAlt="Congo African Grey parrot showing its scarlet tail and silver-scalloped grey plumage"
       />
       <div class="max-w-3xl mx-auto pb-2 mt-10">
         <h3 class="font-lora font-bold text-logo-dark mb-3">How Big Does a Congo African Grey Get, and Why the Red Tail?</h3>
         <div class="space-y-4 text-stone-600 leading-relaxed" style="max-width:70ch;">
-          <p>Field guides like the <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">World Parrot Trust species profile</a> describe the Congo exactly as buyers first see it: a dove-grey body with delicate white scalloping, an all-black beak, and the striking scarlet tail that sets it apart from every other parrot. Adults weigh roughly 400–600 grams and measure about 12–14 inches — the larger of the two African Grey species, and the one with the clearest, most human-sounding voice in the parrot world.</p>
-          <p>Temperament is where the Congo earns its reputation as a sensitive bird. Because Congos read household mood closely and often bond hardest with one or two people, they thrive in calmer, attentive homes — the same routine and patience covered in our <a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey care guide</a> is what turns that sensitivity into a decades-long conversation. Pricing reflects that ethical, hand-raised start, and our full <a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey price breakdown</a> shows exactly what each documented bird includes.</p>
+          <p><StatementLabel kind="fact" source="https://parrots.org/encyclopedia/grey-parrot/" /> The <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">World Parrot Trust species profile</a> describes the Congo exactly as buyers first see it: a dove-grey body with white scalloping, an all-black beak, and a scarlet tail no other parrot carries; adults weigh roughly 400–600 grams and measure about 12–14 inches. <StatementLabel kind="fact" source="https://en.wikipedia.org/wiki/Grey_parrot" /> A well-kept Grey lives 40–60 years, which is why we talk every buyer through the commitment before the deposit.</p>
+          <p><StatementLabel kind="observed" since={2014} /> Temperament is where the Congo earns its reputation as a sensitive bird: the Congos we raise read household mood closely and usually bond hardest with one or two people, so they settle best in calmer, attentive homes. The routine and patience covered in our <a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey care guide</a> is what turns that sensitivity into a decades-long conversation. Pricing reflects that ethical, hand-raised start, and our full <a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey price breakdown</a> shows exactly what each documented bird includes.</p>
         </div>
         <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-6 mb-1.5">What Is the Congo's Scientific Name — Psittacus erithacus?</h4>
-        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;"><em>Psittacus erithacus</em> is the formal binomial for the Congo African Grey — taxonomically it sits in the order <strong>Psittaciformes</strong>, family <strong>Psittacidae</strong> — native to the rainforests of West and Central Africa and listed on <a href="https://en.wikipedia.org/wiki/Grey_parrot" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">CITES Appendix I as a protected species</a>. Every Congo we place is U.S. captive-bred and never wild-caught.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;"><StatementLabel kind="fact" source="https://en.wikipedia.org/wiki/Grey_parrot" /> <em>Psittacus erithacus</em> is the formal binomial for the Congo African Grey — order <strong>Psittaciformes</strong>, family <strong>Psittacidae</strong> — native to the rainforests of West and Central Africa; <a href="https://en.wikipedia.org/wiki/Grey_parrot" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">the species account</a> covers its wild range and trade status, and <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">our documentation section</a> covers the paperwork that proves every Congo we place hatched here.</p>
         <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-6 mb-1.5">Common Questions From Congo African Grey Buyers</h4>
         <div class="mt-6 space-y-3">
           <details class="border border-stone-200 rounded-xl overflow-hidden group bg-white">
             <summary class="flex items-center justify-between p-4 cursor-pointer font-sora font-semibold text-sm text-logo-dark hover:bg-stone-50"><h5 class="font-sora font-semibold text-sm text-logo-dark m-0">Is a Congo African Grey good for a beginner?</h5><span class="text-clay group-open:rotate-180 transition-transform">⌄</span></summary>
-            <div class="px-4 pb-4 text-stone-600 text-sm leading-relaxed">Congos can be a wonderful first parrot for a prepared, patient owner, but their sensitivity means they reward consistency.<h6 class="font-sora font-bold text-[13px] text-logo-dark mt-2.5 mb-1">Should a first-time owner pick a Congo or a Timneh?</h6>First-time owners who want a slightly more forgiving temperament often start with a <a href="/timneh-african-grey-for-sale/" class="text-clay font-medium underline">Timneh African Grey</a> instead.</div>
+            <div class="px-4 pb-4 text-stone-600 text-sm leading-relaxed"><StatementLabel kind="recommendation" /> A Congo can be a wonderful first parrot for a prepared, patient owner, but its sensitivity means it rewards consistency.<h6 class="font-sora font-bold text-[13px] text-logo-dark mt-2.5 mb-1">Should a first-time owner pick a Congo or a Timneh?</h6>First-time owners who want a slightly more forgiving temperament often start with a <a href="/timneh-african-grey-for-sale/" class="text-clay font-medium underline">Timneh African Grey</a> instead.</div>
           </details>
           <details class="border border-stone-200 rounded-xl overflow-hidden group bg-white">
             <summary class="flex items-center justify-between p-4 cursor-pointer font-sora font-semibold text-sm text-logo-dark hover:bg-stone-50"><h5 class="font-sora font-semibold text-sm text-logo-dark m-0">How much does a Congo African Grey cost here?</h5><span class="text-clay group-open:rotate-180 transition-transform">⌄</span></summary>
@@ -507,36 +620,36 @@ const birdListSchema = {
       <div class="mb-8 border-l-4 border-green pl-4">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Timneh African Grey · Psittacus timneh</p>
         <h2 class="font-lora font-bold text-logo-dark">What Is a Timneh African Grey — the Calmer, Earlier-Talking Species?</h2>
-        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Once treated as a Congo sub-type, the <a href="https://en.wikipedia.org/wiki/Timneh_parrot" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Timneh is now recognized as a full species</a> with its own steadier temperament. For many families, every <a href="/timneh-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Timneh African Grey we hand-raise</a> at C.A.Gs is the gentler, first-timer-friendly path into the world of Greys.</p>
+        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><StatementLabel kind="fact" source="https://en.wikipedia.org/wiki/Grey_parrot" /> Once treated as a Congo sub-type, the <a href="https://en.wikipedia.org/wiki/Timneh_parrot" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Timneh is now recognized as a full species</a> in its own right. <StatementLabel kind="observed" since={2014} /> For many of the families we place birds with, a <a href="/timneh-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Timneh African Grey we hand-raise</a> has been the gentler, first-timer-friendly path into the world of Greys.</p>
       </div>
       <SplitFeature variant="classic"
         eyebrow="THE SMALLER GREY SPECIES"
         title="Why Do First-Time Owners Choose the Timneh African Grey?"
-        body="The Timneh African Grey (Psittacus timneh) is the smaller of the two African Grey species — 275–375 grams, a maroon tail, and a horn-colored upper beak. Timnehs tend to be calmer and less prone to nervous behavior than Congos, and they often start talking earlier — which makes them an excellent first African Grey. Like our Congos, every Timneh is captive-bred, DNA-sexed, and fully documented."
+        body="Because the Timneh forgives more. It is the smaller, darker Grey — maroon tail, horn-colored upper beak — and in our home it has been the steadier of the two: less thrown by a new visitor or a moved cage, quicker to settle, and often the first to try a word. That is why it is the Grey we point first-time owners and busy households toward."
         bullets={[
           { label: '<b class="text-ink">Price:</b> $1,500 – $1,600' },
-          { label: '<b class="text-ink">Size:</b> 275–375g · maroon tail' },
+          { label: '<b class="text-ink">Look:</b> charcoal-grey body · maroon tail · horn-colored upper beak' },
           { label: '<b class="text-ink">Temperament:</b> calmer, adapts quickly, earlier talker' },
           { label: '<b class="text-ink">Best for:</b> first-time Grey owners and active families' },
         ]}
         ctaLabel="Shop Timneh Greys"
         ctaHref="/timneh-african-grey-for-sale/"
         imageSrc="/timneh-african-grey-variant.webp"
-        imageAlt="Timneh African Grey parrot (Psittacus timneh) with its maroon tail — the calmer, earlier-talking species — hand-raised at C.A.Gs in Midland, TX"
+        imageAlt="Timneh African Grey parrot with its maroon tail and horn-colored upper beak"
       />
       <div class="max-w-3xl mx-auto pb-2 mt-10">
         <h3 class="font-lora font-bold text-logo-dark mb-3">How Is the Timneh Different From the Congo African Grey?</h3>
         <div class="space-y-4 text-stone-600 leading-relaxed" style="max-width:70ch;">
-          <p>Often called the "underrated Grey," the Timneh is smaller and darker than the Congo — 275–375 grams, a charcoal-grey body, a deep maroon tail, and a distinctive horn-colored patch on the upper beak. Anyone weighing a <a href="/congo-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Congo African Grey against a Timneh</a> is really choosing between two temperaments, not two levels of intelligence.</p>
-          <p>What makes Timnehs special for many families is their steadier temperament: organizations such as the <a href="https://www.parrots.org/encyclopedia/grey-parrot" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">World Parrot Trust's grey parrot encyclopedia</a> note they are less reactive to change and frequently begin talking earlier than Congos — often by four to six months. They are every bit as clever; they simply wear it more calmly, which is why we recommend the Timneh so often to first-time owners and active households. Pricing sits a step below the Congo, and our <a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">full African Grey pricing guide</a> explains why. Like our Congos, every Timneh is hand-raised, DNA-sexed, vet-checked, and CITES Appendix I documented.</p>
+          <p><StatementLabel kind="fact" source="https://parrots.org/encyclopedia/grey-parrot/" /> Often called the "underrated Grey," the Timneh is smaller and darker than the Congo — 275–375 grams against the Congo's 400–600, a charcoal-grey body, a deep maroon tail, and a horn-colored patch on the upper beak. Anyone weighing a <a href="/congo-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Congo African Grey against a Timneh</a> is really choosing between two temperaments, not two levels of intelligence.</p>
+          <p><StatementLabel kind="observed" since={2014} /> What makes Timnehs special for many families is the steadier temperament: the Timnehs we raise are less reactive to change and frequently begin talking earlier than our Congos — often by four to six months. They are every bit as clever; they simply wear it more calmly. <StatementLabel kind="recommendation" /> Choose the Timneh if you are a first-time Grey owner or run an active household; pricing sits a step below the Congo, and our <a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">full African Grey pricing guide</a> explains why. Like our Congos, every Timneh is hand-raised, sexed, vet-checked and <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">documented</a>.</p>
         </div>
         <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-6 mb-1.5">Psittacus timneh — How Is the Timneh Classified?</h4>
-        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;"><em>Psittacus timneh</em> is the Timneh African Grey's own species name — split from the Congo (<em>Psittacus erithacus</em>) as a distinct full species, recognized by major taxonomic authorities such as <a href="https://en.wikipedia.org/wiki/Timneh_parrot" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">BirdLife International and the IOC</a> — and native to the western edge of the Greys' range. Both species share <a href="https://cites.org/eng" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">CITES Appendix I protection</a>, and every Timneh we place is U.S. captive-bred, never wild-caught.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;"><StatementLabel kind="fact" source="https://en.wikipedia.org/wiki/Grey_parrot" /> <em>Psittacus timneh</em> is the Timneh African Grey's own species name — split from the Congo (<em>Psittacus erithacus</em>) as a distinct full species, recognized by taxonomic authorities such as <a href="https://en.wikipedia.org/wiki/Timneh_parrot" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">BirdLife International and the IOC</a> — and native to the western edge of the Greys' range. <StatementLabel kind="fact" source="https://www.cites.org/eng/app/appendices.php" /> Both species share the same <a href="https://cites.org/eng" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">treaty protection</a>, and every Timneh we place hatched here, never in the wild.</p>
         <h4 class="font-sora font-bold text-sm uppercase tracking-wide text-green mt-6 mb-1.5">Common Questions From Timneh African Grey Buyers</h4>
         <div class="mt-6 space-y-3">
           <details class="border border-stone-200 rounded-xl overflow-hidden group bg-white">
             <summary class="flex items-center justify-between p-4 cursor-pointer font-sora font-semibold text-sm text-logo-dark hover:bg-stone-50"><h5 class="font-sora font-semibold text-sm text-logo-dark m-0">Do Timneh Greys talk as well as Congos?</h5><span class="text-clay group-open:rotate-180 transition-transform">⌄</span></summary>
-            <div class="px-4 pb-4 text-stone-600 text-sm leading-relaxed">Yes — Timnehs are excellent talkers and often start earlier than Congos.<h6 class="font-sora font-bold text-[13px] text-logo-dark mt-2.5 mb-1">Is the Timneh's talking voice clear enough to understand?</h6>Their voice tends to be a little softer and less "broadcast-clear," but their vocabulary and comprehension are outstanding.</div>
+            <div class="px-4 pb-4 text-stone-600 text-sm leading-relaxed"><StatementLabel kind="observed" since={2014} /> Yes — the Timnehs we raise are excellent talkers and often start earlier than our Congos.<h6 class="font-sora font-bold text-[13px] text-logo-dark mt-2.5 mb-1">Is the Timneh's talking voice clear enough to understand?</h6>Their voice tends to be a little softer and less "broadcast-clear," but their vocabulary and comprehension are outstanding.</div>
           </details>
           <details class="border border-stone-200 rounded-xl overflow-hidden group bg-white">
             <summary class="flex items-center justify-between p-4 cursor-pointer font-sora font-semibold text-sm text-logo-dark hover:bg-stone-50"><h5 class="font-sora font-semibold text-sm text-logo-dark m-0">Why is the Timneh less expensive than the Congo?</h5><span class="text-clay group-open:rotate-180 transition-transform">⌄</span></summary>
@@ -552,8 +665,25 @@ const birdListSchema = {
 
   <section id="compare-species" class="scroll-mt-20">
     <!-- 11a. Congo vs Timneh — cag-compare-table-e (NEW CAG COMPONENTS · Style E, 1100px) -->
-    <CompareTableE />
+    <CompareTableE
+      sub='We hand-raise both, and neither is "better" — the Congo is the bolder, more headline talker, while the Timneh is calmer and tends to start talking earlier, so the right one comes down to your home and your experience. Below we put our two Greys side by side, so you can see exactly which one we would help you bring home.'
+      rows={[
+        ['Species', '<em>Psittacus erithacus</em>', '<em>Psittacus timneh</em>'],
+        ['Size', '12–14 in · 400–600 g', '9–11 in · 275–375 g'],
+        ['Tail color', 'Scarlet red', 'Maroon / dark crimson'],
+        ['Lifespan', '40–60 years', '40–60 years'],
+        ['Talking ability', '★★★★★ exceptional', '★★★★☆ excellent, earlier'],
+        ['Talking onset', '~12 months', '~4–6 months (earlier)'],
+        ['Temperament', 'Confident, dramatic', 'Calmer, steadier'],
+        ['Best for', 'Experienced owners', 'First-time owners'],
+        ['Price (ours)', '$1,700–$2,500', '$1,500–$1,600'],
+        ['Available now', 'Roys · Amie · Bery · Jins/Jeni', 'Elad · Evie'],
+        ['Sexed by lab', '✓ Yes', '✓ Yes'],
+        ['Paperwork', '✓ Full set, hatched here', '✓ Full set, hatched here'],
+      ]}
+    />
     <div class="bg-cream px-4 pb-12 -mt-4">
+      <p class="font-sora text-stone-600 text-sm leading-relaxed mx-auto text-center mb-3" style="max-width:70ch;"><StatementLabel kind="fact" source="https://parrots.org/encyclopedia/grey-parrot/" /> The size, tail and lifespan rows above are species figures from the World Parrot Trust profile; <StatementLabel kind="observed" since={2014} /> the talking-onset and temperament rows are what we have seen in our own clutches.</p>
       <p class="font-sora text-stone-600 text-sm leading-relaxed mx-auto text-center" style="max-width:70ch;">Our <a href="/congo-vs-timneh-african-grey/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">full Congo vs Timneh African Grey comparison</a> goes deeper than the table — temperament, talking onset, noise, and which of our two Greys we would match to your home.</p>
     </div>
 
@@ -561,9 +691,9 @@ const birdListSchema = {
     <div class="py-14 px-4 bg-cream">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-8">
-        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">DNA-Sexed at C.A.Gs</p>
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Sex, Confirmed by Lab</p>
         <h3 class="font-lora font-bold text-logo-dark mb-3">Should You Choose a Male or Female African Grey?</h3>
-        <p class="text-stone-500 max-w-2xl mx-auto text-sm leading-relaxed">In our experience hand-raising both, the sex of an African Grey matters far less than most buyers expect — our full <a href="/male-vs-female-african-grey-parrots-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">guide to male vs female African Grey parrots</a> walks through all eight differences, but the short version is that a bird's upbringing shapes temperament far more than its sex, and because every African Grey we place is PCR DNA-sexed you always know exactly which you are bringing home.</p>
+        <p class="text-stone-500 max-w-2xl mx-auto text-sm leading-relaxed"><StatementLabel kind="observed" since={2014} /> In our experience hand-raising both, the sex of an African Grey matters far less than most buyers expect — our full <a href="/male-vs-female-african-grey-parrots-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">guide to male vs female African Grey parrots</a> walks through all eight differences, but the short version is that a bird's upbringing shapes temperament far more than its sex, and because every Grey we place is <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">sexed by a lab</a> you always know exactly which you are bringing home.</p>
       </div>
       <div class="overflow-x-auto rounded-2xl border border-green/15 shadow-sm">
         <table class="w-full text-sm font-sora bg-white">
@@ -592,12 +722,12 @@ const birdListSchema = {
             </tr>
             <tr class="border-t border-stone-100">
               <td class="p-4 font-bold text-logo-dark">Telling them apart</td>
-              <td class="p-4" colspan="2">African Greys are sexually monomorphic — males and females look identical — so <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11939742/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay"><strong>PCR-based DNA sexing</strong></a> from a feather or blood sample, not invasive surgical sexing, is the only certain method. It is included with every C.A.Gs bird.</td>
+              <td class="p-4" colspan="2"><StatementLabel kind="fact" source="https://pmc.ncbi.nlm.nih.gov/articles/PMC11939742/" /> African Greys are sexually monomorphic — males and females look identical — so <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11939742/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay"><strong>PCR-based DNA sexing</strong></a> from a feather or blood sample, not invasive surgical sexing, is the only certain method. It is included with every bird we place.</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p class="text-stone-600 leading-relaxed mt-6 text-sm" style="max-width:70ch;margin-left:auto;margin-right:auto;">Honestly, the "better" sex is the one whose personality fits your home — a quieter female African Grey may suit a calm apartment, while a bold male African Grey thrives in a busy family. Tell Mark &amp; Teri what you are looking for and they will match you with the right hand-raised bird; you can <a href="/male-vs-female-african-grey-parrots-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">compare male and female African Greys in full here</a> or <a href="/contact-us/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">ask C.A.Gs which DNA-sexed Greys are available now</a>.</p>
+      <p class="text-stone-600 leading-relaxed mt-6 text-sm" style="max-width:70ch;margin-left:auto;margin-right:auto;"><StatementLabel kind="recommendation" /> Honestly, the "better" sex is the one whose personality fits your home — a quieter female African Grey may suit a calm apartment, while a bold male African Grey thrives in a busy family. Tell Mark &amp; Teri what you are looking for and they will match you with the right hand-raised bird; you can <a href="/male-vs-female-african-grey-parrots-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">compare male and female African Greys in full here</a> or <a href="/contact-us/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">ask us which Greys are available now</a>.</p>
     </div>
     </div>
 
@@ -607,7 +737,7 @@ const birdListSchema = {
       <div class="text-center mb-8">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Beyond the Two Greys</p>
         <h3 class="font-lora font-bold text-logo-dark mb-3">How Does an African Grey Compare to a Macaw, Cockatoo, or Amazon?</h3>
-        <p class="text-stone-500 max-w-2xl mx-auto text-sm leading-relaxed">Widely considered the most cognitively gifted companion parrot, the African Grey is the one most families ask us about — and we point them to our <a href="/african-grey-comparison/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">full African Grey comparison hub</a> to weigh it against the other big talkers. Here is how the Grey we raise stacks up.</p>
+        <p class="text-stone-500 max-w-2xl mx-auto text-sm leading-relaxed">The African Grey is the parrot most families ask us about — and we point them to our <a href="/african-grey-comparison/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">full African Grey comparison hub</a> to weigh it against the other big talkers. Here is how the Grey we raise stacks up.</p>
       </div>
       <div class="overflow-x-auto rounded-2xl border border-green/15 shadow-sm">
         <table class="w-full text-sm font-sora bg-white">
@@ -624,7 +754,7 @@ const birdListSchema = {
               <td class="p-4 font-bold text-logo-dark">African Grey</td>
               <td class="p-4">Exceptional — context-aware speech</td>
               <td class="p-4">Moderate</td>
-              <td class="p-4">Owners wanting the smartest, most verbal companion</td>
+              <td class="p-4">Owners wanting a talkative, problem-solving companion</td>
             </tr>
             <tr class="border-t border-stone-100">
               <td class="p-4 font-bold text-logo-dark">Macaw</td>
@@ -648,12 +778,12 @@ const birdListSchema = {
         </table>
       </div>
       <p class="text-stone-600 leading-relaxed mt-6 text-sm" style="max-width:70ch;margin-left:auto;margin-right:auto;">
-        For most buyers choosing their first larger parrot, the African Grey wins on the two factors that matter most in a real home: how much the bird can genuinely communicate, and how manageable its noise is day to day. Our <a href="/african-grey-vs-macaw/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey vs Macaw</a> and <a href="/african-grey-vs-cockatoo/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey vs Cockatoo</a> breakdowns show why their volume and attention needs put those two out of reach for many households, while our <a href="/african-grey-vs-amazon-parrot/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey vs Amazon comparison</a> weighs the Grey against its closest talking rival. The Grey delivers the talking, the problem-solving, and the bond — at a noise level a typical family can live with.
+        <StatementLabel kind="recommendation" /> For most buyers choosing their first larger parrot, the African Grey comes out ahead on the two factors that matter most in a real home: how much the bird can genuinely communicate, and how manageable its noise is day to day. Our <a href="/african-grey-vs-macaw/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey vs Macaw</a> and <a href="/african-grey-vs-cockatoo/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey vs Cockatoo</a> breakdowns show why their volume and attention needs put those two out of reach for many households, while our <a href="/african-grey-vs-amazon-parrot/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey vs Amazon comparison</a> weighs the Grey against its closest talking rival. The Grey delivers the talking, the problem-solving, and the bond — at a noise level a typical family can live with.
       </p>
       <h4 class="font-sora font-bold text-base text-logo-dark mt-7 mb-1.5" style="max-width:70ch;margin-left:auto;margin-right:auto;">Which Parrot Is Quietest for an Apartment?</h4>
-      <p class="text-stone-600 leading-relaxed text-sm" style="max-width:70ch;margin-left:auto;margin-right:auto;">Of the big four, the African Grey is the most apartment-friendly: it whistles, mimics, and chatters far more than it screams, where a macaw or cockatoo can carry a flock call across a city block.</p>
+      <p class="text-stone-600 leading-relaxed text-sm" style="max-width:70ch;margin-left:auto;margin-right:auto;"><StatementLabel kind="observed" since={2014} /> Of the big four, the African Grey is the one we would put in an apartment: it whistles, mimics, and chatters far more than it screams, where a macaw or cockatoo can carry a flock call across a city block.</p>
       <h5 class="font-sora font-bold text-sm text-logo-dark mt-4 mb-1.5" style="max-width:70ch;margin-left:auto;margin-right:auto;">Which African Grey Is Quietest for Close Neighbours?</h5>
-      <p class="text-stone-600 leading-relaxed text-sm" style="max-width:70ch;margin-left:auto;margin-right:auto;">For close neighbours, a Timneh African Grey tends to be the quietest, gentlest option of all.</p>
+      <p class="text-stone-600 leading-relaxed text-sm" style="max-width:70ch;margin-left:auto;margin-right:auto;"><StatementLabel kind="recommendation" /> For close neighbours, choose a Timneh African Grey — in our home it has been the quieter, gentler of the two.</p>
     </div>
     </div>
   </section>
@@ -664,31 +794,31 @@ const birdListSchema = {
   <section id="why-us" class="py-16 px-4 scroll-mt-20">
     <div class="max-w-6xl mx-auto">
       <div class="mb-8 border-l-4 border-green pl-4">
-        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Why Families Choose C.A.Gs</p>
-        <h2 class="font-lora font-bold text-logo-dark">Why Choose C.A.Gs For Your Hand-Reared African Grey Parrots?</h2>
-        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Verifiable at <a href="https://www.aphis.usda.gov/aphis/ourfocus/animalwelfare" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">the USDA APHIS Animal Welfare portal</a>, our Animal Welfare Act license is the first thing we hand a buyer — because at C.A.Gs in Midland, TX, paperwork comes before the bird, not after. Mark &amp; Teri Benjamin have hand-reared captive-bred Congo and Timneh Greys here since 2014 — among the few USDA-licensed African Grey parrot breeders in Texas who hand you the documents before the deposit. The <a href="#reviews" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">reviews from those families below</a> are the proof behind that promise.</p>
+        <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Why Families Choose Us</p>
+        <h2 class="font-lora font-bold text-logo-dark">Why Do Families Choose Us for a Hand-Reared African Grey?</h2>
+        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Our paperwork</a> is the first thing we hand a buyer — here, the documents come before the bird, not after. We have hand-reared Congo and Timneh Greys in our family home since 2014 — Mark &amp; Teri — and the <a href="#reviews" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">reviews from those families below</a> are the proof behind that promise. Before you send anyone a deposit, read <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">how to tell a real breeder from a listing</a>.</p>
       </div>
       <SplitFeature variant="editorial"
         eyebrow="PAPERWORK BEFORE THE BIRD"
-        title="What Makes C.A.Gs a USDA-Licensed African Grey Breeder You Can Verify?"
-        body="Every African Grey we place is hand-reared inside our Midland, Texas home, never a commercial warehouse — and every one of our Greys leaves with the receipts that prove it. You get a verifiable USDA Animal Welfare Act license number, CITES Appendix I captive-bred documentation, a PCR-based DNA sexing certificate, a board-certified avian-veterinarian health certificate backed by PBFD, Polyomavirus, and psittacosis screening, a hatch certificate, and a closed band number. U.S. captive-bred, never wild-caught — and we put it all in your hands before any money moves."
+        title="What Makes Us an African Grey Breeder You Can Verify?"
+        body="Every African Grey we place is hand-reared inside our home, never a commercial warehouse — and every one leaves with the receipts that prove it: a licence number you can look up, the certificate that proves the bird hatched here, its sex and health certificates, a hatch certificate and a closed band. Each is listed, with what it means, under How We Document Each Bird — and it is in your hands before any money moves."
         bullets={[
-          { label: '<b class="text-ink">USDA AWA licensed:</b> a verifiable number you can check before paying' },
-          { label: '<b class="text-ink">CITES Appendix I:</b> U.S. captive-bred documentation, never wild-caught' },
-          { label: '<b class="text-ink">PCR DNA-sexed &amp; vet-checked:</b> certificate plus a board-certified avian-vet exam, with PBFD, Polyomavirus &amp; psittacosis screening' },
-          { label: '<b class="text-ink">Family breeders since 2014:</b> Mark &amp; Teri Benjamin, Midland, TX' },
+          { label: '<b class="text-ink">Licensed:</b> a public-record number you can check before paying' },
+          { label: '<b class="text-ink">Hatched here:</b> aviary-raised, never wild-caught' },
+          { label: '<b class="text-ink">Sexed &amp; vet-checked:</b> both certificates travel with the bird' },
+          { label: '<b class="text-ink">Family breeders since 2014:</b> Mark &amp; Teri Benjamin' },
         ]}
         quote="We hand you the paperwork before the wire — because a real breeder has nothing to hide and everything to prove."
         ctaLabel="Ask About Credentials →"
         ctaHref="#contact"
         imageSrc="/african-grey-head-scratch-cags-breeder.webp"
-        imageAlt="Hand-raised Congo African Grey enjoying a head scratch from its C.A.Gs breeder in Midland, TX — fully socialized, tame, and vet-checked"
+        imageAlt="Congo African Grey leaning into a head scratch from its breeder's hand"
       />
       <div class="max-w-3xl mx-auto pb-2 mt-10">
-        <h4 class="font-lora font-bold text-logo-dark mb-3">How Do You Know a C.A.Gs African Grey Is Genuinely Captive-Bred?</h4>
+        <h4 class="font-lora font-bold text-logo-dark mb-3">How Do You Know One of Our African Greys Really Hatched Here?</h4>
         <div class="space-y-4 text-stone-600 leading-relaxed" style="max-width:70ch;">
-          <p>Conservation groups such as <a href="https://parrots.org/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">the World Parrot Trust</a> are clear that since the African Grey was <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">moved to CITES Appendix I</a>, the only ethical bird is a documented, captive-bred one — and a closed band plus a hatch certificate is how you prove a chick was raised in an aviary rather than taken from the wild. The <a href="/trusted-african-grey-parrot-breeders/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">C.A.Gs about page</a> carries our full breeder story, including how we hand-feed and socialize every clutch.</p>
-          <p>Pricing reflects that ethical, hand-reared start rather than a bargain-bin shortcut, and our <a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey price breakdown</a> shows exactly what each documented bird includes — from the DNA certificate to the avian-vet exam. When a Grey costs far less than that, the savings come out of the bird's health or its paperwork, and usually both.</p>
+          <p><StatementLabel kind="fact" source="https://www.cites.org/eng/app/appendices.php" /> Since the African Grey was <a href="https://cites.org/eng/app/appendices.php" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">moved to the treaty's strictest appendix</a> in 2017, wild-caught birds cannot be traded commercially, so the only ethical bird is a documented, aviary-hatched one — and a closed band plus a hatch certificate is how a chick's origin is proven. Conservation groups such as <a href="https://parrots.org/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">the World Parrot Trust</a> make the same case. <a href="/trusted-african-grey-parrot-breeders/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Our full breeder story</a> covers how we hand-feed and socialize every clutch.</p>
+          <p>Pricing reflects that ethical, hand-reared start rather than a bargain-bin shortcut, and our <a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey price breakdown</a> shows exactly what each documented bird includes — from the sex certificate to the avian-vet exam. When a Grey costs far less than that, the savings come out of the bird's health or its paperwork, and usually both.</p>
         </div>
       </div>
     </div>
@@ -699,25 +829,37 @@ const birdListSchema = {
 
   <!-- 13. C.A.Gs vs other breeders (trust / scam) — cag-scam-awareness:compare -->
   <section id="trust" class="py-16 px-4 scroll-mt-20">
-    <div class="max-w-6xl mx-auto">
+    <div id="proof" class="max-w-6xl mx-auto scroll-mt-20">
       <div class="mb-8 border-l-4 border-green pl-4">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Verify Before You Pay</p>
-        <h2 class="font-lora font-bold text-logo-dark">How Do You Tell C.A.Gs From African Grey Scammers and Unverified Breeders?</h2>
-        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Walking through <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">our guide to avoiding African Grey scams</a> first, then cross-checking a seller against a list of <a href="/trusted-african-grey-parrot-breeders/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">trusted African Grey breeders</a>, is the fastest way to separate a real aviary from a stolen-photo storefront — the side-by-side below shows exactly what changes between the two.</p>
+        <h2 class="font-lora font-bold text-logo-dark">How Do You Verify C.A.Gs Before You Send a Deposit?</h2>
+        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Verify us the way you would a contractor: a licence you can look up, an address on a map, a payment you can reverse, and a live look at the bird. <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Our twelve-red-flag guide</a> takes those checks one at a time, and our page on <a href="/trusted-african-grey-parrot-breeders/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">trusted African Grey parrot breeders</a> introduces the family you would be checking. The red flags below are the short version; the paperwork list under them is what a real bird arrives with.</p>
       </div>
       <div class="mb-8">
         <img src="/avoid-african-grey-parrot-scam.jpg"
-          alt="How to avoid African Grey parrot scams — C.A.Gs vs unverified breeders: USDA licensed, CITES documented, verifiable credentials"
+          alt="Illustrated checklist contrasting a fake African Grey listing with a verifiable breeder"
           width="1024" height="572" loading="lazy" decoding="async"
           class="w-full rounded-2xl object-cover"
           style="height:340px;box-shadow:0 6px 28px rgba(60,30,10,0.12);" />
       </div>
-      <ScamAwareness variant="compare" />
+      <ScamAwareness variant="grid" flags={redFlags} />
+      <div class="max-w-3xl mx-auto pt-10">
+        <h3 class="font-lora font-bold text-logo-dark mb-3">How Do We Document Each Bird?</h3>
+        <p class="text-stone-600 leading-relaxed text-[15px] mb-5" style="max-width:70ch;">Six documents travel with every Grey we place. Each is named once here, with what it is; every other mention on this page links back to this list.</p>
+        <ul class="space-y-3 text-stone-600 leading-relaxed text-[15px] list-none pl-0" style="max-width:70ch;">
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>USDA Animal Welfare Act licence.</strong> Our aviary is licensed under the federal Animal Welfare Act, and the licence is public record on the <a href="https://www.aphis.usda.gov/awa/public-search" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">APHIS public search</a>. <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">How we document it</a></span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>CITES captive-bred documentation.</strong> <StatementLabel kind="fact" source="https://www.cites.org/eng/app/appendices.php" /> African Greys are listed on CITES Appendix I (uplisted at CoP17, effective January 2017), so every bird we place hatched in the USA and carries its own captive-bred paperwork — never wild-caught. <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">How we document it</a></span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>DNA sexing certificate.</strong> Sex is confirmed by a lab test, not by eye, and a certificate is issued per bird. <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">How we document it</a></span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Avian-vet health certificate.</strong> Issued per bird by a licensed avian veterinarian before placement. <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">How we document it</a></span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>PBFD and Avian Polyomavirus screening.</strong> Both are tested by PCR, and a negative result is required before placement. <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">How we document it</a></span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Hatch certificate and leg band.</strong> Each bird has a hatch certificate and its leg-band number on record. <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">How we document it</a></span></li>
+        </ul>
+      </div>
       <div class="max-w-3xl mx-auto pt-8">
         <h4 class="font-lora font-bold text-logo-dark mb-3">What Can You Verify About C.A.Gs Before Sending a Deposit?</h4>
         <div class="space-y-4 text-stone-600 leading-relaxed" style="max-width:70ch;">
-          <p>Buyers who search “is congoafricangreys.com legit?” get the same answer every time — verify us before you pay. Reaching out through our <a href="/contact-us/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">contact page</a> before you commit costs nothing and answers every red flag at once: we hand over our USDA Animal Welfare Act license number for you to verify independently, show the CITES Appendix I captive-bred paperwork that proves the bird was never wild-caught, and offer a live video call to put your specific Grey on camera with the day's date in frame.</p>
-          <p>A verifiable physical location here in Midland, Texas, reversible payment methods such as a credit card, PayPal Goods, or a bank wire, and a written health guarantee are the baseline of a legitimate breeder — not extras, and our <a href="/african-grey-parrot-breeders-comparison/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">side-by-side look at how C.A.Gs compares to other African Grey breeders</a> walks through each of those checks. The scammer's whole model depends on untraceable payment and a camera that is conveniently always broken; the moment a seller can't or won't meet those checks, that is your answer. The pattern even has names — <strong>advance-fee</strong> and <strong>non-delivery fraud</strong> — and you can short-circuit it in minutes: run a seller's listing photos through a <strong>reverse image search</strong> (Google Lens or TinEye) to expose stolen stock images, and report any loss to the FBI's <a href="https://www.ic3.gov/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Internet Crime Complaint Center (IC3)</a> and the FTC.</p>
+          <p>Reaching out through our <a href="/contact-us/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">contact page</a> before you commit costs nothing and answers every red flag at once: we hand over the licence number for you to check independently, show the bird's paperwork from the list above, and put your specific Grey on a live video call with the day's date in frame. A findable location here in Midland, Texas and a written health guarantee are the baseline, not extras, and our <a href="/african-grey-parrot-breeders-comparison/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">side-by-side look at other African Grey breeders</a> walks through each of those checks.</p>
+          <p><StatementLabel kind="recommendation" /> Pay only by a method you can dispute — a credit card, PayPal Goods and Services, or a bank wire — and run any seller's listing photos through a <strong>reverse image search</strong> (Google Lens or TinEye) before you reply. A seller whose payment is untraceable and whose camera is conveniently always broken has answered your question for you. The pattern has names — <strong>advance-fee</strong> and <strong>non-delivery fraud</strong> — and if money has already gone, report it to the FBI's <a href="https://www.ic3.gov/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Internet Crime Complaint Center (IC3)</a> and the <a href="https://reportfraud.ftc.gov/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">FTC's ReportFraud site</a>.</p>
         </div>
       </div>
     </div>
@@ -736,41 +878,41 @@ const birdListSchema = {
       <div class="mb-8 border-l-4 border-green pl-4">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">The Species, Origin &amp; Intelligence</p>
         <h2 class="font-lora font-bold text-logo-dark">Where Do African Greys Come From, and Why Are They So Smart?</h2>
-        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;">Native to the equatorial forest belt of <strong>Central and West Africa</strong> — a wild range spanning Angola, Cameroon, the Congo Basin, Gabon, Ivory Coast, Ghana, Kenya, and Uganda — the African Grey — also spelled African Gray, and known as the <strong>Jaco</strong> (or Jako) parrot — is intensely social, wary, and famously intelligent; wild populations are now classified <strong>Endangered</strong> (Congo) and <strong>Vulnerable</strong> (Timneh) on the IUCN Red List — a decline documented in the <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">World Parrot Trust's grey parrot species profile</a> and tracked by other conservation groups for decades. <a href="https://www.brown.edu/news/2024-02-29/grey-parrots" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Brown University's historical research on the species</a> ties that same decline to illegal international trade, intensive agriculture, and deforestation — even as the Congo Basin remains one of the few regions where researchers still find robust wild populations. Both species we hand-rear, the Congo (<em>Psittacus erithacus</em>) and the Timneh (<em>Psittacus timneh</em>), trace to that lineage, and our <a href="/african-grey-parrot-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">full African Grey guide</a> covers it in depth — every Grey we raise is U.S. captive-bred, never wild-caught.</p>
+        <p class="text-stone-600 leading-relaxed mt-3 text-[15px]" style="max-width:70ch;"><StatementLabel kind="fact" source="https://parrots.org/encyclopedia/grey-parrot/" /> The African Grey — also spelled African Gray, and known as the <strong>Jaco</strong> (or Jako) parrot — is native to the equatorial forest belt of <strong>Central and West Africa</strong>, a wild range spanning Angola, Cameroon, the Congo Basin, Gabon, Ivory Coast, Ghana, Kenya and Uganda; the <a href="https://parrots.org/encyclopedia/grey-parrot/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">World Parrot Trust's grey parrot species profile</a> records the wild population as <strong>Endangered</strong> (Congo) and <strong>Vulnerable</strong> (Timneh) on the IUCN Red List, even as the Congo Basin remains one of the few regions where researchers still find robust wild flocks. Brown University's historical research on the species ties that decline to illegal international trade, intensive agriculture and deforestation. Both species we hand-rear, the Congo (<em>Psittacus erithacus</em>) and the Timneh (<em>Psittacus timneh</em>), trace to that lineage, and our <a href="/african-grey-parrot-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">full African Grey guide</a> covers it in depth — every Grey we raise hatched here, and <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">the paperwork that proves it</a> is listed above.</p>
       </div>
       <SplitFeature variant="classic"
-        eyebrow="THE SMARTEST COMPANION PARROT"
+        eyebrow="OUR AVIARY · SINCE 2014"
         title="How Did Alex the African Grey Rewrite the Science of Bird Intelligence?"
-        body="A thirty-year study by Dr. Irene Pepperberg of a Congo Grey named Alex reset what science believed a bird could think; cognitive scientists now compare a Grey's reasoning to that of a four- to six-year-old child. It is the reason the African Grey is called the smartest companion parrot on earth."
+        body="A thirty-year study by Dr. Irene Pepperberg of a Congo Grey named Alex reset what science believed a bird could think — and it is the reason people still ask us whether a Grey 'understands' what it says. In our home the answer is smaller and more everyday: a bird that asks for a specific nut by name, and sulks when it gets the other one."
         bullets={[
-          { label: '<b class="text-ink">Native range:</b> rainforests of West &amp; Central Africa' },
           { label: '<b class="text-ink">Alex the Grey:</b> 100+ words, counted to six, grasped "same / different" and the concept of zero — studied by <a href="https://alexfoundation.org/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">The Alex Foundation</a>' },
-          { label: '<b class="text-ink">CITES Appendix I (CoP17, 2017):</b> wild trade banned — every C.A.Gs bird is U.S. captive-bred and documented' },
-          { label: '<b class="text-ink">Lifespan:</b> 40–60 years — a true lifetime companion' },
+          { label: '<b class="text-ink">Two species:</b> Congo (<em>Psittacus erithacus</em>) and Timneh (<em>Psittacus timneh</em>)' },
+          { label: '<b class="text-ink">Other names:</b> African Gray, Jaco or Jako parrot' },
+          { label: '<b class="text-ink">Our line:</b> hand-reared in the family home since 2014, documented above' },
         ]}
         ctaLabel="Read the Full African Grey Guide"
         ctaHref="/african-grey-parrot-guide/"
         imageSrc="/congo-african-grey-natural-habitat-origin.webp"
-        imageAlt="Congo African Grey parrot in its native West and Central African rainforest habitat — the wild origin behind every captive-bred C.A.Gs Grey"
+        imageAlt="Congo African Grey parrot perched among rainforest foliage in its native range"
       />
-      <p class="text-stone-600 leading-relaxed mt-8 text-[15px]" style="max-width:70ch;">You can hear a small, everyday echo of that intelligence in our own aviary: our Congo <strong>Maxy</strong> — <a href="#video" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">talking in the video further down this page</a> — is one of the hand-raised Greys we have learning and repeating words right now, the same capacity for a decades-long conversation that every C.A.Gs Grey we place carries.</p>
+      <p class="text-stone-600 leading-relaxed mt-8 text-[15px]" style="max-width:70ch;"><StatementLabel kind="observed" since={2014} /> You can hear a small, everyday echo of that intelligence in our own aviary: our Congo <strong>Maxy</strong> — <a href="#video" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">talking in the video further down this page</a> — is one of the hand-raised Greys we have learning and repeating words right now, the same capacity for a decades-long conversation that every Grey we place carries.</p>
     </div>
   </section>
 
   <!-- 16. Health & Guarantee — cag-trust-stats:classic -->
   <section id="health" class="py-16 px-4 bg-warm-white scroll-mt-20">
     <div class="max-w-6xl mx-auto">
-      <TrustStats variant="classic"
+      <TrustStats variant="classic" items={trustItems}
         eyebrow="HEALTH & GUARANTEE"
-        title="What Health Guarantees Come With Every C.A.Gs African Grey?"
-        body="Every African Grey from C.A.Gs – Midland, TX is examined by a board-certified avian veterinarian — including PBFD, Polyomavirus, and psittacosis (Chlamydia psittaci) screening — and ships with a health certificate dated within 10 days of travel, plus a 3-day health guarantee in writing, a PCR DNA sexing certificate, and CITES Appendix I captive-bred paperwork. We send your bird home on the exact diet it is already eating — the same calcium-supported, pellet-based plan covered in our best African Grey parrot food guide — and Mark & Teri stay on the phone for lifetime breeder support long after pickup."
+        title="What Health Guarantees Come With Every African Grey We Place?"
+        body="Every Grey we place is examined by an avian veterinarian, screened for PBFD, Polyomavirus and psittacosis (Chlamydia psittaci), and ships with a health certificate dated within 10 days of travel, a 3-day health guarantee in writing, and its sex certificate — the full document list is under How We Document Each Bird. Your bird comes home on the exact diet it is already eating, the same pellet-based plan in our African Grey food guide, and Mark & Teri stay on the phone for lifetime breeder support long after pickup."
         ctaLabel="See our health guarantee →"
         ctaHref="/african-grey-parrot-health-guarantee/"
       />
       <div class="mt-10 grid md:grid-cols-2 gap-8 items-center" style="max-width:900px;margin-left:auto;margin-right:auto;">
-        <p class="text-stone-600 leading-relaxed text-[15px]">Every one of <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">our African Greys for sale comes with a written health guarantee</a>, and diet is the foundation of that promise — which is why we coach every new owner through the calcium-supported, pellet-based plan in our <a href="/best-african-grey-parrot-food/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey pellet food &amp; diet guide</a> before the transition home — African Greys are specifically prone to <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7128777/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">hypocalcemia</a>, so alongside that diet we raise our Greys with UV-B lighting and vitamin D3 supplementation — the combination that lets a bird actually absorb the calcium it eats — and getting nutrition right from day one is how a healthy chick stays healthy.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px]"><StatementLabel kind="fact" source="https://pmc.ncbi.nlm.nih.gov/articles/PMC7128777/" /> African Greys are specifically prone to <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7128777/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">hypocalcemia</a>, and calcium in the diet is only useful if the bird can absorb it, which takes UV-B light or vitamin D3. <StatementLabel kind="observed" since={2014} /> So we raise our Greys with UV-B lighting and D3 supplementation on a pellet-based diet, and we coach every new owner through that plan in our <a href="/best-african-grey-parrot-food/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey pellet food &amp; diet guide</a> before the transition home. Every one of <a href="/african-greys-for-sale-with-health-guarantee/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">our African Greys for sale comes with a written health guarantee</a>, and getting nutrition right from day one is the foundation of that promise.</p>
         <img src="/african-grey-parrot-health-review.webp"
-          alt="Healthy hand-raised African Grey parrot at C.A.Gs — avian-vet certified, CITES Appendix I documented"
+          alt="Healthy hand-raised African Grey parrot with tight, glossy feathers, perched and alert"
           width="440" height="320" loading="lazy" decoding="async"
           class="w-full rounded-2xl object-cover h-[200px] md:h-[240px] lg:h-[280px]"
           style="box-shadow:0 6px 28px rgba(60,30,10,0.10);" />
@@ -785,31 +927,31 @@ const birdListSchema = {
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-8">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Transparent Pricing</p>
-        <h2 class="font-lora font-bold text-logo-dark mb-3">What Does a Hand-Raised, CITES-Documented African Grey Parrot Cost From C.A.Gs?</h2>
+        <h2 class="font-lora font-bold text-logo-dark mb-3">What Does a Hand-Raised, Documented African Grey Parrot Cost From C.A.Gs?</h2>
       </div>
-      <p class="text-stone-600 leading-relaxed text-[15px] mb-8 mx-auto" style="max-width:70ch;"><a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot prices</a> at C.A.Gs are never just a number on a chick — the Congo African Grey price you see already includes the CITES Appendix I captive-bred paperwork, our verifiable USDA AWA license, the PCR DNA sexing certificate, and a current board-certified avian-vet health certificate, because here at C.A.Gs – Midland, TX a documented, <a href="/captive-bred-african-grey-parrot/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">captive-bred African Grey</a> is the only kind we will ever sell.</p>
+      <p class="text-stone-600 leading-relaxed text-[15px] mb-8 mx-auto" style="max-width:70ch;"><a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot prices</a> at C.A.Gs are never just a number on a chick — the price you see already includes every certificate listed under <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">how we document each bird</a>, because a documented, <a href="/captive-bred-african-grey-parrot/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">captive-bred African Grey</a> is the only kind we will ever sell.</p>
       <PricingTable variant="classic"
-        note="Anyone listing a Congo African Grey under $1,500 is selling a wild-caught bird, a sick bird, or no bird at all. Real, documented, captive-bred Greys reflect the cost of ethical breeding."
+        note="Anyone listing a Congo African Grey under $1,500 is selling a wild-caught bird, a sick bird, or no bird at all. Real, documented, aviary-hatched Greys reflect the cost of ethical breeding."
         rows={[
           { breed: 'CONGO GREY · BABY', weight: '400–600 g', fit: 'Bond-from-day-one buyers', ability: 'Exceptional · hand-raised', price: '$2,300–$2,500', topPick: true },
           { breed: 'CONGO GREY · ADULT', weight: '400–600 g', fit: 'Calm, established personality', ability: 'Pre-developed vocabulary', price: '$1,700' },
           { breed: 'TIMNEH GREY', weight: '275–375 g', fit: 'First-time owners / active families', ability: 'Excellent · earlier talker', price: '$1,500–$1,600' },
           { breed: 'CONGO PAIR (Jins + Jeni)', weight: 'Bonded pair', fit: 'Two-bird homes', ability: 'Must go together', price: '$3,500' },
-          { breed: 'BREEDING PAIR', weight: 'Proven · Closed-banded', fit: 'Established breeders', ability: 'CITES-documented', price: 'From $3,000' },
+          { breed: 'BREEDING PAIR', weight: 'Proven · Closed-banded', fit: 'Established breeders', ability: 'Fully documented', price: 'From $3,000' },
           { breed: 'FERTILE EGG', weight: 'Candled', fit: 'Experienced breeders', ability: 'Buy 5, free US shipping', price: '$95 / egg' },
         ]}
       />
       <div class="mt-8 space-y-4 text-stone-600 leading-relaxed text-[15px]" style="max-width:70ch;">
-        <p><strong>What the price includes.</strong> Every C.A.Gs bird price is all-inclusive — never just the chick. Each documented Grey ships with:</p>
+        <p><strong>What the price includes.</strong> Every price is all-inclusive — never just the chick. Each documented Grey ships with:</p>
         <ul class="space-y-2 list-none pl-0">
-          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>CITES Appendix I captive-bred certificate</strong> — proof your Grey was never wild-caught</span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Captive-bred certificate</strong> — proof your Grey hatched in an aviary, not a wild nest</span></li>
           <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Hatch certificate + closed leg band</strong> — the aviary-raised paper trail</span></li>
-          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>PCR DNA sexing certificate</strong> — every one of <a href="/dna-tested-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">our DNA-tested African Greys</a> has its biological sex confirmed by lab, not by sight</span></li>
-          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Board-certified avian-vet health certificate</strong> — backed by <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12560886/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">PBFD</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2168798/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Polyomavirus</a> &amp; psittacosis screening</span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Sex certificate</strong> — every one of <a href="/dna-tested-african-grey-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">our DNA-tested African Greys</a> has its biological sex confirmed by lab, not by sight</span></li>
+          <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>Avian-vet health certificate</strong> — backed by <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12560886/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">PBFD</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2168798/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Polyomavirus</a> &amp; psittacosis screening</span></li>
           <li class="flex items-start gap-2"><span class="text-green font-bold flex-shrink-0">✔</span><span><strong>3-day written health guarantee</strong> + the exact diet plan your bird is already eating</span></li>
         </ul>
         <p>A $200 deposit reserves your Grey and is applied to your final total; nationwide IATA shipping is arranged separately — <strong>$185 airport pickup</strong> or <strong>$350 home delivery</strong>.</p>
-        <p><strong>Think in decades, not dollars.</strong> The diet, cage, and enrichment routine in our <a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot care guide</a> matter far more than the sticker price, because a healthy Grey lives 40–60 years and the purchase is the smallest line item across that lifespan. If you are comparing routes, <a href="/african-grey-parrot-adoption-cost/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey adoption costs</a> vary widely by rescue and waitlist, while our pricing is fixed and fully documented up front. Use the <a href="#tools" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">first-year cost calculator below</a> to estimate your real startup cost — a fairly priced documented bird today is always cheaper than a "bargain" that arrives sick or undocumented.</p>
+        <p><strong>Think in decades, not dollars.</strong> <StatementLabel kind="fact" source="https://en.wikipedia.org/wiki/Grey_parrot" /> A healthy Grey lives 40–60 years, so the purchase is the smallest line item across that lifespan; the diet, cage, and enrichment routine in our <a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot care guide</a> matter far more than the sticker price. If you are comparing routes, <a href="/african-grey-parrot-adoption-cost/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey adoption costs</a> vary widely by rescue and waitlist, while our pricing is fixed and fully documented up front. Use the <a href="#tools" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">first-year cost calculator below</a> to estimate your real startup cost — a fairly priced documented bird today is always cheaper than a "bargain" that arrives sick or undocumented.</p>
       </div>
     </div>
   </section>
@@ -820,7 +962,7 @@ const birdListSchema = {
       <div class="text-center mb-10">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Plan Your Purchase</p>
         <h2 class="font-lora font-bold text-logo-dark mb-3">How Do You Plan the Real Cost of Owning an African Grey Parrot Before You Commit?</h2>
-        <p class="text-stone-500 max-w-2xl mx-auto text-sm leading-relaxed"><a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot pricing</a> is only the starting point — these three C.A.Gs tools let you estimate your true first-year cost, run the same CITES documentation checklist we hand every buyer, and see the shipping estimator that gets your Grey home safely.</p>
+        <p class="text-stone-500 max-w-2xl mx-auto text-sm leading-relaxed"><a href="/african-grey-parrot-price/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot pricing</a> is only the starting point — these three tools let you estimate your true first-year cost, run the same paperwork checklist we hand every buyer, and see the shipping estimator that gets your Grey home safely.</p>
       </div>
       <h3 class="font-lora font-bold text-logo-dark mb-5 text-center">Plan-Ahead Tools for African Grey Buyers</h3>
       <div class="grid md:grid-cols-3 gap-6">
@@ -838,7 +980,7 @@ const birdListSchema = {
           <span class="block text-xs font-sora text-stone-500 mb-1.5">Delivery method</span>
           <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-1"><input type="radio" name="calc-delivery" class="calc-delivery" value="185" checked /> IATA airport pickup ($185)</label>
           <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-1"><input type="radio" name="calc-delivery" class="calc-delivery" value="350" /> Home delivery ($350)</label>
-          <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-3"><input type="radio" name="calc-delivery" class="calc-delivery" value="0" /> Local pickup in Midland, TX (free)</label>
+          <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-3"><input type="radio" name="calc-delivery" class="calc-delivery" value="0" /> Local pickup at our Texas aviary (free)</label>
           <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-1.5"><input type="checkbox" id="calc-cage" checked /> Cage + setup (~$450)</label>
           <label class="flex items-center gap-2 text-sm font-sora text-stone-600 mb-4"><input type="checkbox" id="calc-vet" checked /> First-year food + vet (~$700)</label>
           <div class="bg-green/5 rounded-xl p-4 text-center">
@@ -849,10 +991,10 @@ const birdListSchema = {
 
         <!-- Tool 2: CITES / documentation checklist -->
         <div class="bg-white rounded-2xl border border-green/15 p-6 shadow-sm" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
-          <h4 class="font-lora font-bold text-lg text-logo-dark mb-2">CITES Documentation Checklist for African Greys</h4>
-          <p class="text-xs font-sora text-stone-500 mb-4">Tick what a legitimate, captive-bred African Grey from C.A.Gs should come with:</p>
+          <h4 class="font-lora font-bold text-lg text-logo-dark mb-2">Paperwork Checklist for a Documented African Grey</h4>
+          <p class="text-xs font-sora text-stone-500 mb-4">Tick what a properly documented African Grey should come with:</p>
           <div id="doc-checklist" class="space-y-2.5 font-sora text-sm text-stone-700">
-            {['CITES Appendix I captive-bred certificate','Hatch certificate + closed band number','DNA sexing certificate','Avian-vet health certificate','Verifiable USDA AWA license number','Written health guarantee'].map(item => (
+            {['Origin certificate (aviary-hatched)','Hatch certificate + closed band number','Sex certificate (lab, not visual)','Avian-vet health certificate','Verifiable animal-welfare licence number','Written health guarantee'].map(item => (
               <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="doc-check mt-0.5" /> <span>{item}</span></label>
             ))}
           </div>
@@ -864,7 +1006,7 @@ const birdListSchema = {
         <!-- Tool 3: Shipping timeline estimator -->
         <div class="bg-white rounded-2xl border border-green/15 p-6 shadow-sm" style="box-shadow:0 4px 24px rgba(60,30,10,0.06);">
           <h4 class="font-lora font-bold text-lg text-logo-dark mb-2">Shipping Timeline Estimator for Your African Grey</h4>
-          <p class="text-xs font-sora text-stone-500 mb-4">How your African Grey gets home from C.A.Gs:</p>
+          <p class="text-xs font-sora text-stone-500 mb-4">How your African Grey gets home from our aviary:</p>
           <ol class="relative border-l-2 border-green/20 ml-2 space-y-4 font-sora text-sm">
             <li class="pl-4"><span class="absolute -left-[7px] w-3 h-3 rounded-full bg-clay"></span><b class="text-logo-dark">Day 0 —</b> $200 deposit reserves your bird; paperwork begins.</li>
             <li class="pl-4"><span class="absolute -left-[7px] w-3 h-3 rounded-full bg-green"></span><b class="text-logo-dark">Days 1–7 —</b> avian-vet exam &amp; health certificate.</li>
@@ -883,13 +1025,13 @@ const birdListSchema = {
     <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
       <div class="md:order-2">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Nationwide IATA Delivery</p>
-        <h2 class="font-lora font-bold text-logo-dark mb-4">How Does C.A.Gs Ship African Grey Parrots Safely to All 50 States?</h2>
-        <p class="text-stone-600 leading-relaxed mb-4" style="max-width:70ch;"><a href="/buy-african-grey-parrot-near-me/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Buying an African Grey near you</a> rarely means a breeder down the street — so C.A.Gs ships from our Midland, Texas home aviary to all 50 states — our full <a href="/buy-african-grey-parrots-with-shipping/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">guide to buying an African Grey with nationwide shipping</a> walks through every option — with your bird traveling in an IATA-compliant carrier alongside an avian-vet health certificate dated within 10 days of departure.</p>
+        <h2 class="font-lora font-bold text-logo-dark mb-4">How Do We Ship African Grey Parrots Safely to All 50 States?</h2>
+        <p class="text-stone-600 leading-relaxed mb-4" style="max-width:70ch;"><a href="/buy-african-grey-parrot-near-me/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Buying an African Grey near you</a> rarely means a breeder down the street — so we ship from our West Texas home aviary to all 50 states — our full <a href="/buy-african-grey-parrots-with-shipping/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">guide to buying an African Grey with nationwide shipping</a> walks through every option — with your bird traveling in an IATA-compliant carrier alongside an avian-vet health certificate dated within 10 days of departure.</p>
         <p class="text-stone-600 leading-relaxed mb-6" style="max-width:70ch;">Our <a href="/african-grey-parrots-for-sale/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Greys for sale by state and city</a> hub maps every route we run, and we have safely placed Greys across <a href="/african-grey-parrot-for-sale-texas/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Texas</a> — including <a href="/african-grey-parrot-for-sale-dallas/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Dallas</a>, <a href="/african-grey-parrot-for-sale-houston/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Houston</a>, and <a href="/african-grey-parrot-for-sale-austin/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Austin</a> — as well as <a href="/african-grey-parrot-for-sale-los-angeles/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">California</a>, <a href="/african-grey-parrot-for-sale-florida/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Florida</a>, <a href="/african-grey-parrot-for-sale-new-york/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">New York</a>, <a href="/african-grey-parrot-for-sale-colorado/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Colorado</a>, <a href="/african-grey-parrot-for-sale-washington/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Washington</a>, <a href="/african-grey-parrot-for-sale-georgia/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Georgia</a>, <a href="/african-grey-parrot-for-sale-virginia/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Virginia</a>, <a href="/african-grey-parrot-for-sale-arizona/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Arizona</a>, <a href="/african-grey-parrot-for-sale-illinois/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Illinois</a>, and <a href="/african-grey-parrot-for-sale-pennsylvania/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Pennsylvania</a>. We coordinate every leg of the trip and your African Grey arrives at your nearest major airport calm, hydrated, and ready to meet you.</p>
         <a href="/buy-african-grey-parrot-near-me/" class="inline-block bg-clay hover:bg-clay-dk text-white font-semibold px-6 py-3 rounded-full text-sm transition-colors cag-glow">IATA Shipping Guide →</a>
       </div>
       <img src="/african-grey-parrot-iata-shipping-crates.webp"
-        alt="Two IATA-compliant travel crates with African Grey parrots ready for nationwide shipping from C.A.Gs"
+        alt="Two airline travel crates, each holding an African Grey parrot, packed for a flight"
         class="w-full rounded-2xl shadow-md object-cover md:order-1 h-[220px] md:h-[300px] lg:h-[420px]"
         loading="lazy" width="640" height="360" />
     </div>
@@ -968,8 +1110,8 @@ const birdListSchema = {
       <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">After Pickup</p>
       <h3 class="font-lora font-bold text-logo-dark mb-5">What Happens in Your African Grey's First 30 Days at Home?</h3>
       <div class="space-y-4 text-stone-600 leading-relaxed" style="max-width:70ch;">
-        <p>"The first week isn't about training — it's about trust." That's one of the first things <strong>Teri</strong> tells every C.A.Gs family before their Grey leaves for its new home, and it shapes everything we coach you through in the first month.</p>
-        <p><strong>Week one — let them settle.</strong> Many first-time owners worry when their African Grey goes quiet for a few days, eating a little less and studying everything from a favorite perch. "Don't panic if your Grey acts like a little detective the first week," Teri explains. "They're incredibly intelligent — before they decide a new home is safe, they want to study everything, and everyone." Keep the cage in a calm, central room, offer the exact diet your C.A.Gs Grey is already eating, and let curiosity do the work. One recent family called Teri three days after bringing home their young Congo, worried it wasn't talking, wasn't playing much, and just sat near the cage door — her advice was simply, "Give him time. Sit nearby. Read a book. Let him watch you without pressure."</p>
+        <p>"The first week isn't about training — it's about trust." That's one of the first things <strong>Teri</strong> tells every family before their Grey leaves for its new home, and it shapes everything we coach you through in the first month.</p>
+        <p><strong>Week one — let them settle.</strong> <StatementLabel kind="observed" since={2014} /> Many first-time owners worry when their African Grey goes quiet for a few days, eating a little less and studying everything from a favorite perch. "Don't panic if your Grey acts like a little detective the first week," Teri explains. "They're incredibly intelligent — before they decide a new home is safe, they want to study everything, and everyone." Keep the cage in a calm, central room, offer the exact diet your Grey is already eating, and let curiosity do the work. One recent family called Teri three days after bringing home their young Congo, worried it wasn't talking, wasn't playing much, and just sat near the cage door — her advice was simply, "Give him time. Sit nearby. Read a book. Let him watch you without pressure."</p>
         <p><strong>Weeks two to three — build trust.</strong> By the second week that same Congo was stepping up confidently and waiting at the cage door for the family each morning — the arc we see again and again. The bonding and step-up routine in our <a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">African Grey parrot care guide</a> turns those first wary days into real trust: keep routines predictable, avoid overwhelming visitors, and start short, positive sessions — a favorite treat through the bars, then from your hand, then step-ups. Greys are sensitive and shut down under pressure, so reward and never punish. This is usually when the first mimicked sounds appear.</p>
         <p><strong>Week four and beyond — enrich and engage.</strong> Rotate foraging toys, puzzles, and safe novelty to keep that remarkable brain busy, aim for daily out-of-cage time, and book a wellness check with an avian veterinarian to establish care. Keep our number handy — Teri answers diet, behavior, and enrichment questions long after your bird comes home. As she puts it, "You're not just bringing home a pet — you're beginning a friendship that can last decades, and the first 30 days are the foundation for everything that comes after."</p>
       </div>
@@ -980,8 +1122,8 @@ const birdListSchema = {
   <section id="reviews" class="scroll-mt-20 py-16 px-4">
     <div class="max-w-4xl mx-auto text-center mb-10">
       <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Verified Buyers</p>
-      <h2 class="font-lora font-bold text-logo-dark">What Do Families Say After Adopting a C.A.Gs African Grey?</h2>
-      <p class="text-stone-600 leading-relaxed text-[15px] mx-auto mt-4" style="max-width:70ch;">These C.A.Gs reviews come from verified buyers, not anonymous ratings. Every buyer we've worked with started the same way — worried about scams, unsure whether the bird would arrive healthy, and wondering if the <a href="/how-to-avoid-african-grey-parrot-scams/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">CITES documentation would actually be in order</a> when the crate landed. What changed the equation was the paperwork packet Teri sends home with every Grey — avian vet health certificate, CITES captive-bred record, PCR DNA sex cert, hatch certificate, and a written care plan — plus the fact that she answers follow-up questions for as long as it takes. The families below weren't sure at first either — like Richard in Winter Haven, Florida, who was hesitant to buy a bird online and now calls his Congo "the star of our family, talking and entertaining us daily."</p>
+      <h2 class="font-lora font-bold text-logo-dark">What Do Families Say After Bringing One of Our African Greys Home?</h2>
+      <p class="text-stone-600 leading-relaxed text-[15px] mx-auto mt-4" style="max-width:70ch;">These reviews come from verified buyers, not anonymous ratings. Every buyer we've worked with started the same way — wary of fake listings, unsure whether the bird would arrive healthy, and wondering if the paperwork would actually be in order when the crate landed. What changed the equation was the packet Teri sends home with every Grey — <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">every certificate listed above</a> plus a written care plan — and the fact that she answers follow-up questions for as long as it takes. The families below weren't sure at first either — like Richard in Winter Haven, Florida, who was hesitant to buy a bird online and now calls his Congo "the star of our family, talking and entertaining us daily."</p>
     </div>
     <Testimonials variant="grid" testimonials={bottomReviews} />
   </section>
@@ -995,7 +1137,7 @@ const birdListSchema = {
       <div class="text-center mb-8">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Care Guides &amp; Resources</p>
         <h2 class="font-lora font-bold text-logo-dark mb-3">How Do You Give an African Grey Parrot the Best Care — Diet, Enrichment, and Health?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;"><a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Our African Grey parrot care guide</a> is where every new owner starts, and C.A.Gs sends a written diet and enrichment plan home with every Grey so the routine that kept your Grey healthy in our aviary carries straight into yours.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;"><a href="/african-grey-parrot-care-guide/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Our African Grey parrot care guide</a> is where every new owner starts, and we send a written diet and enrichment plan home with every Grey so the routine that kept your Grey healthy in our aviary carries straight into yours.</p>
       </div>
       <div class="grid sm:grid-cols-2 gap-6">
         {[
@@ -1010,7 +1152,7 @@ const birdListSchema = {
             excerpt: 'Morning routines, out-of-cage time, step-up training, and trust-building.' },
           { img: '/first-time-african-grey-owner-review.webp',  imgAlt: 'First-time African Grey owner with their new C.A.Gs bird',
             title: 'Explore Our African Grey Blog', href: '/blog/',
-            excerpt: 'Breeder-authored articles on health, training, CITES compliance, and habitat.' },
+            excerpt: 'Breeder-authored articles on health, training, documentation, and habitat.' },
         ].map(card => (
           <a href={card.href} class="group bg-white rounded-2xl border border-line overflow-hidden transition-shadow hover:shadow-lg flex flex-col" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
             <div class="overflow-hidden h-[160px] md:h-[180px] lg:h-[200px]">
@@ -1032,7 +1174,7 @@ const birdListSchema = {
   <section id="video" class="py-16 px-4 scroll-mt-20">
     <div class="max-w-3xl mx-auto text-center">
       <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">Hear Them Talk</p>
-      <h2 class="font-lora font-bold text-logo-dark mb-6">Can You Watch C.A.Gs African Greys Learning to Talk Before You Commit to One?</h2>
+      <h2 class="font-lora font-bold text-logo-dark mb-6">Can You Watch Our African Greys Learning to Talk Before You Commit to One?</h2>
       <!-- YOUTUBE PLACEHOLDER — breeder to supply real embed URL; mp4 poster-backed placeholder in the meantime -->
       <div class="relative rounded-2xl overflow-hidden shadow-md bg-green/10" style="aspect-ratio:16/9;">
         <video controls preload="none" playsinline poster="/african-grey-breeder-with-bird-midland-tx.webp" class="w-full h-full object-cover" width="768" height="432">
@@ -1040,7 +1182,7 @@ const birdListSchema = {
           Your browser does not support the video tag.
         </video>
       </div>
-      <p class="text-stone-500 text-sm mt-4" style="max-width:70ch;margin-left:auto;margin-right:auto;">That's <strong>Maxy</strong>, one of our hand-raised Congo African Greys, talking at our Midland, TX home aviary — and our guide to <a href="/blog/african-grey-parrot-talking-ability/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">how African Greys learn to talk</a> covers vocabulary, timeline, and what to expect. <span class="text-stone-400">(YouTube URL coming soon — breeder to supply.)</span></p>
+      <p class="text-stone-500 text-sm mt-4" style="max-width:70ch;margin-left:auto;margin-right:auto;">That's <strong>Maxy</strong>, one of our hand-raised Congo African Greys, talking at our home aviary — and our guide to <a href="/blog/african-grey-parrot-talking-ability/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">how African Greys learn to talk</a> covers vocabulary, timeline, and what to expect. <span class="text-stone-400">(YouTube URL coming soon — breeder to supply.)</span></p>
     </div>
   </section>
 
@@ -1051,7 +1193,7 @@ const birdListSchema = {
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-10">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">COMMON QUESTIONS</p>
-        <h2 class="font-lora font-bold text-logo-dark">What Do Buyers Ask Most Before Choosing a C.A.Gs African Grey?</h2>
+        <h2 class="font-lora font-bold text-logo-dark">What Do Buyers Ask Most Before Choosing One of Our African Greys?</h2>
       </div>
       <div class="cag-faq-acc max-w-3xl mx-auto space-y-3">
         {faqItems.map((item, i) => (
@@ -1073,7 +1215,7 @@ const birdListSchema = {
         .cag-faq-item.open .cag-faq-panel { grid-template-rows: 1fr; }
         .cag-faq-panel-inner { overflow: hidden; }
       </style>
-      <p class="font-sora text-stone-600 text-sm leading-relaxed mx-auto text-center mt-8" style="max-width:70ch;">Still weighing it up? Bringing one of our Greys home is a <a href="/african-grey-parrot-lifespan/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">40–60-year commitment we walk every buyer through</a> — and if you are torn between the two species, you can <a href="#compare-species" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">compare our Congo and Timneh Greys side by side</a> in the table above before you decide.</p>
+      <p class="font-sora text-stone-600 text-sm leading-relaxed mx-auto text-center mt-8" style="max-width:70ch;"><StatementLabel kind="fact" source="https://en.wikipedia.org/wiki/Grey_parrot" /> An African Grey lives 40–60 years in captivity, so bringing one of our Greys home is a <a href="/african-grey-parrot-lifespan/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">commitment we walk every buyer through</a> — and if you are torn between the two species, you can <a href="#compare-species" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">compare our Congo and Timneh Greys side by side</a> in the table above before you decide.</p>
       <div class="text-center mt-6">
         <a href="/african-grey-parrot-faq/" class="inline-block bg-clay hover:bg-clay-dk text-white font-sora font-semibold px-7 py-3 rounded-full text-sm transition-colors cag-glow">See All African Grey FAQs →</a>
       </div>
@@ -1128,7 +1270,7 @@ const birdListSchema = {
       <div class="text-center mb-10">
         <p class="text-clay font-sora text-xs font-semibold uppercase tracking-widest mb-2">How to Buy</p>
         <h2 class="font-lora font-bold text-logo-dark mb-4">How Do You Reserve a Hand-Raised African Grey Parrot From C.A.Gs — Step by Step?</h2>
-        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;"><a href="/contact-us/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Starting a conversation with us</a> is the only step that has to happen before any money changes hands, and from there reserving a Grey from C.A.Gs – Midland, TX — wherever you are <a href="/where-to-buy-african-greys-near-me/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">deciding where to buy an African Grey near you</a> — follows the same calm, documented four-step path for every family — no pressure, no surprises, just a captive-bred bird matched to a home that is ready for it.</p>
+        <p class="text-stone-600 leading-relaxed text-[15px] mx-auto" style="max-width:70ch;"><a href="/contact-us/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Starting a conversation with us</a> is the only step that has to happen before any money changes hands, and from there reserving a Grey from us — wherever you are <a href="/where-to-buy-african-greys-near-me/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">deciding where to buy an African Grey near you</a> — follows the same calm, documented four-step path for every family — no pressure, no surprises, just an aviary-hatched bird matched to a home that is ready for it.</p>
       </div>
 
       <div class="grid sm:grid-cols-2 gap-6">
@@ -1157,7 +1299,7 @@ const birdListSchema = {
             <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-green text-white font-sora font-bold text-sm flex-shrink-0">3</span>
             <h3 class="font-lora font-bold text-lg text-logo-dark m-0">Paperwork &amp; Vet Certificate</h3>
           </div>
-          <p class="font-sora text-stone-600 text-sm leading-relaxed" style="max-width:70ch;">Behind the scenes we assemble the full paper trail every legitimate bird must have: the CITES Appendix I captive-bred certificate that proves your Grey was never wild-caught, its DNA sexing certificate, and an avian-vet health certificate dated within 10 days of travel — all backed by our verifiable USDA Animal Welfare Act license.</p>
+          <p class="font-sora text-stone-600 text-sm leading-relaxed" style="max-width:70ch;">Behind the scenes we assemble the full paper trail every lawful bird must have — <a href="#proof" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">the six documents listed under How We Document Each Bird</a>, including an avian-vet health certificate dated within 10 days of travel — all backed by a licence number you can check yourself.</p>
         </div>
 
         <!-- Step 4 -->
@@ -1166,7 +1308,7 @@ const birdListSchema = {
             <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-green text-white font-sora font-bold text-sm flex-shrink-0">4</span>
             <h3 class="font-lora font-bold text-lg text-logo-dark m-0">Airport Pickup or Home Delivery</h3>
           </div>
-          <p class="font-sora text-stone-600 text-sm leading-relaxed" style="max-width:70ch;"><a href="/buy-african-grey-parrot-near-me/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Collecting your African Grey near you</a> is the final step — your bird travels in an IATA-compliant live-animal carrier built to the <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay"><strong>IATA Live Animals Regulations (LAR)</strong></a>. Choose <strong>airport pickup ($185)</strong> at your nearest major airport, or <strong>door-to-door home delivery ($350)</strong> — either way your Grey arrives calm, hydrated, and ready to meet the family it is about to spend the next 40 to 60 years with.</p>
+          <p class="font-sora text-stone-600 text-sm leading-relaxed" style="max-width:70ch;"><a href="/buy-african-grey-parrot-near-me/" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay">Collecting your African Grey near you</a> is the final step — your bird travels in an IATA-compliant live-animal carrier built to the <a href="https://www.iata.org/en/programs/cargo/live-animals/" target="_blank" rel="noopener noreferrer" class="text-clay font-medium underline decoration-clay/30 hover:decoration-clay"><strong>IATA Live Animals Regulations (LAR)</strong></a>. Choose <strong>airport pickup ($185)</strong> at your nearest major airport, or <strong>door-to-door home delivery ($350)</strong> — either way your Grey arrives calm, hydrated, and ready to meet the family it is about to spend the coming decades with.</p>
         </div>
 
       </div>
@@ -1179,7 +1321,13 @@ const birdListSchema = {
 
   <!-- 25. Contact — full inquiry form + map below -->
   <div id="contact" class="scroll-mt-20">
-    <InquiryForm />
+    <InquiryForm trustBullets={[
+      "Full paperwork with every bird — the six documents listed under How We Document Each Bird",
+      "Avian vet health certificate included",
+      "Full post-purchase support",
+      "Family-owned aviary since 2014",
+      "Licensed facility — check the number before you pay",
+    ]} />
     <div style="max-width:1100px;margin:0 auto;padding:0 24px 40px;">
       <div class="rounded-2xl overflow-hidden border border-line cag-map-wrap" style="box-shadow:0 2px 12px rgba(60,30,10,0.06);">
         <iframe

@@ -653,8 +653,8 @@ blocking"):
 **The two that pass the precondition still should not be retired, for a reason the plan
 does not model: the two tools do not cover the same pages.** `page_hardening_scan.py`
 defaults to every `dist/**/index.html` — **108 pages**. The render harness runs
-`tests/render/targets.json` — **15**. Retiring a static check therefore trades enforcement
-on 108 pages for enforcement on 15, leaving 93 pages with no coverage of that invariant at
+`tests/render/targets.json` — **16**. Retiring a static check therefore trades enforcement
+on 108 pages for enforcement on 16, leaving 92 pages with no coverage of that invariant at
 all. Sampled to confirm rather than argued from structure: scanning three comparison pages
 that are NOT harness targets (`african-grey-vs-macaw`, `-vs-cockatoo`,
 `african-grey-parrot-pros-and-cons`) returns **29 ERROR · 30 WARN**.

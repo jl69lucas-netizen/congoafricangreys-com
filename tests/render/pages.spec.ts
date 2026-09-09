@@ -8,7 +8,7 @@ import { writePartial } from './lib/scorecard.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import { runCheck } from './lib/runCheck.js';
 import { resetScrollInstant } from './lib/probes.js';
-import { distText } from './lib/dupCorpus.js';
+import { distText, routeFor } from './lib/dupCorpus.js';
 import type { Defect } from './lib/registry.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -94,7 +94,7 @@ for (const target of targets.pages) {
 
   test(`${target.slug}`, async ({ page }, testInfo) => {
     const viewport = testInfo.project.use.viewport!.width;
-    const res = await page.goto(`/${target.slug}/`);
+    const res = await page.goto(routeFor(target.slug)); // `index` → `/`, everything else `/<slug>/`
     expect(res?.status(), `${target.slug} must be built`).toBe(200);
 
     const defects: Defect[] = [];

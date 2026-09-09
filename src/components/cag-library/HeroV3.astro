@@ -5,6 +5,14 @@
  * Ported to the site's Tailwind tokens. Trust-first forest-green hero with a circular
  * framed bird photo, ring accent, floating availability pill, eyebrow + trust pills.
  * Content corrected to contract: C.A.Gs voice · CITES Appendix I · real photo · no phone.
+ * Single consumer: `/` (homepage) — the `#proof` link only resolves there.
+ *
+ * Contrast (2026-09-09): the copy column sits on an opaque dark-green scrim (#0f3d2c, the
+ * same bed as the image stage) so the clay H1 span reads 3.6:1 (large text needs 3:1);
+ * every other text colour is a full-opacity tint pre-blended over that scrim, because
+ * a11y-text-contrast-aa cannot judge translucent foregrounds (Tailwind emits oklab()).
+ * The lead paragraph carries its colour INLINE: two `h1 + p` rules (body.theme-d in the
+ * layout, .home-d on the page) force ink !important and both exempt only [style*=color].
  */
 interface Props {
   availableCount?: number;
@@ -13,11 +21,13 @@ const { availableCount = 8 } = Astro.props;
 
 const heroImg = "/african-grey-parrot-breeder-midland-tx-hero.webp";
 const heroAlt =
-  "Mark and Teri Benjamin's captive-bred Congo African Grey parrots photographed inside the C.A.Gs family aviary in Midland, Texas, showing the signature silver-scalloped grey plumage and bright red tail feathers of a healthy, hand-raised, DNA-sexed African Grey parrot that leaves with full CITES Appendix I documentation and an avian-veterinarian health certificate.";
+  "Hand-raised Congo African Grey parrot with silver-scalloped grey plumage and a red tail in the Benjamin family aviary";
 
+// Evidence pass (2026-09-09): each credential term is said ONCE across the whole hero —
+// the pills carry it, the paragraph says "documented" and links the proof list (#proof).
 const pills = [
   "USDA Licensed",
-  "CITES Appendix I",
+  "CITES Documented",
   "DNA Sexed",
   "10+ Year Support",
 ];
@@ -35,26 +45,27 @@ const pills = [
     <div class="grid items-center gap-10 py-8 md:grid-cols-2 md:gap-8 md:py-12 lg:py-12">
 
       <!-- COPY -->
-      <div class="order-2 text-center md:order-1 md:text-left">
+      <div class="order-2 rounded-2xl bg-[#0f3d2c] px-5 py-6 text-center md:order-1 md:px-8 md:py-8 md:text-left">
         <span
-          class="font-sora text-xs font-medium tracking-[0.12em] text-white/60 md:text-xs"
+          class="font-sora text-xs font-medium tracking-[0.12em] text-[#9fb1ab] md:text-xs"
         >
-          C.A.Gs &middot; Midland, Texas &middot; Family Aviary Since 2014
+          C.A.Gs &middot; Family Aviary Since 2014
         </span>
 
         <h1
           class="font-lora mt-4 text-3xl font-bold leading-[1.08] sm:text-4xl md:text-[2.25rem] lg:text-[2.5rem] md:leading-[1.1]"
         >
-          African Grey Parrot Breeder You Can <span class="text-clay">Trust</span>
+          Congo and Timneh African Grey Breeder in <span class="text-clay">Midland, Texas</span>
         </h1>
 
         <p
-          class="font-sora mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-white/80 md:mx-0 md:text-base"
+          class="hero-lead font-sora mx-auto mt-3 max-w-xl text-[15px] leading-relaxed md:mx-0 md:text-base"
+          style="color:#cfd8d5"
         >
-          At C.A.Gs, Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and
-          Timneh African Greys since 2014. Every Grey is DNA-sexed, avian-vet certified,
-          and placed with full CITES Appendix I documentation — never wild-caught, always
-          with lifetime breeder support.
+          Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and Timneh African Greys in our
+          family home since 2014. Every Grey is lab-sexed, avian-vet certified and
+          <a href="#proof" class="underline decoration-clay/40 underline-offset-2 hover:decoration-clay">documented</a>
+          before it leaves us — never wild-caught, always with lifetime breeder support.
         </p>
 
         <div class="mt-5 flex flex-wrap justify-center gap-3 md:justify-start">
@@ -77,7 +88,7 @@ const pills = [
           aria-label="Breeder credentials"
         >
           {pills.map((p) => (
-            <li class="font-sora flex items-center gap-2 text-[13px] text-white/85 whitespace-nowrap">
+            <li class="font-sora flex items-center gap-2 text-[13px] text-[#dbe2df] whitespace-nowrap">
               <span
                 class="flex h-4 w-4 items-center justify-center rounded-full bg-clay text-xs font-bold text-white"
                 aria-hidden="true"

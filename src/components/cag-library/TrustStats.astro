@@ -4,6 +4,7 @@
  *
  * @prop variant — 'classic' | 'editorial' | 'dark'
  */
+export interface TrustItem { /** trusted inline SVG markup, never user data */ icon: string; title: string; sub: string; /** optional — wraps the card title in a link (e.g. "#proof") */ href?: string; }
 export interface Props {
   variant?: 'classic' | 'editorial' | 'dark';
   eyebrow?: string;
@@ -11,6 +12,8 @@ export interface Props {
   body?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  /** Override the four stat cards. Default = the site-wide set below (unchanged markup). */
+  items?: TrustItem[];
 }
 const {
   variant = 'classic',
@@ -19,12 +22,13 @@ const {
   body = "We hand every buyer the paperwork before the wire. USDA license number, CITES certificate, DNA sex result, and a written health guarantee — verified independently if you ask.",
   ctaLabel = 'Our ethical standards',
   ctaHref = '#',
+  items: itemsProp,
 } = Astro.props;
 
 // Consistent Feather-style line icons (forest green #2D6A4F) — replaced the
 // off-brand emoji set flagged in the 2026-06-03 design audit (DESIGN.md
 // §Iconography). Rendered via set:html below.
-const items = [
+const defaultItems: TrustItem[] = [
   { // shield-check — written health guarantee
     icon: '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#2D6A4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>',
     title: '3-day health guarantee', sub: 'Written, with lifetime owner support' },
@@ -38,6 +42,7 @@ const items = [
     icon: '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#2D6A4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>',
     title: 'CITES Appendix I',        sub: 'Legal paperwork on every Grey' },
 ];
+const items = itemsProp ?? defaultItems;
 ---
 
 <style>
@@ -62,7 +67,7 @@ const items = [
       {items.map(i => (
         <div class="bg-warm rounded-2xl p-4 md:p-6 border border-line">
           <div class="trust-ico" set:html={i.icon} />
-          <div class="font-display font-bold text-sm md:text-lg mt-2 md:mt-3 leading-tight">{i.title}</div>
+          <div class="font-display font-bold text-sm md:text-lg mt-2 md:mt-3 leading-tight">{i.href ? <a href={i.href} class="underline decoration-clay/40 underline-offset-2 hover:decoration-clay">{i.title}</a> : i.title}</div>
           <div class="text-xs md:text-[13px] text-mid mt-1">{i.sub}</div>
         </div>
       ))}
@@ -78,7 +83,7 @@ const items = [
       {items.map(i => (
         <div class="px-4">
           <div class="trust-ico" set:html={i.icon} />
-          <div class="font-display font-bold text-lg mt-2">{i.title}</div>
+          <div class="font-display font-bold text-lg mt-2">{i.href ? <a href={i.href} class="underline decoration-clay/40 underline-offset-2 hover:decoration-clay">{i.title}</a> : i.title}</div>
           <div class="text-xs text-mid mt-1">{i.sub}</div>
         </div>
       ))}
@@ -97,7 +102,7 @@ const items = [
       {items.map(i => (
         <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-5 border border-white/10">
           <div class="trust-ico mb-3" set:html={i.icon} />
-          <div class="font-display font-bold text-[17px]">{i.title}</div>
+          <div class="font-display font-bold text-[17px]">{i.href ? <a href={i.href} class="underline decoration-clay/40 underline-offset-2 hover:decoration-clay">{i.title}</a> : i.title}</div>
           <div class="text-xs text-white/60 mt-1">{i.sub}</div>
         </div>
       ))}
