@@ -47,3 +47,29 @@ the AEO "named entity" is wanted once per section at the answer, not in every se
 minimums are advisory on the homepage and never a reason to add a heading; alt text describes the
 image in ≤125 chars; and a credential made twice without its proof link is an ERROR, so the second
 mention becomes a plain noun or a link to `#proof`.
+
+## GREEN run
+Same prompt as Task 1, one line added: "Also read skills/cag-evidence-pass.md and obey it; it supersedes the rules above where they conflict." Same two sections. Counted with the Task 1 Step 3 loop.
+
+| section | words before | words after | CITES | USDA | DNA | C.A.Gs | H5 | H6 | statement labels |
+|---|---|---|---|---|---|---|---|---|---|
+| trust | 326 | 383 | 2→2 | 2→2 | 0→0 | 4→2 | 0→0 | 0→0 | 0→4 |
+| congo | 566 | 631 | 4→0 | 0→0 | 3→0 | 2→1 | 2→2 | 2→2 | 0→9 |
+
+(The case-insensitive loop reports trust CITES as 3: the third hit is the `cites.org` URL in the new `StatementLabel kind="fact" source=…`, not a mention. Case-sensitive, 2→2. The word count rose only because label markup and the `#proof` anchor/link text were added; no heading was added.)
+
+The subagent's numbered list cited the skill's mechanisms directly, among others:
+- "`evidence-budgets.json` home ceiling for *scam* is 2 and the ScamAwareness component already spends both" (#1)
+- "*legit* budget is 0 outside `/trusted-african-grey-parrot-breeders/` (`evidence-budgets.json` `legit_owner`), and it was keyword bait, not an answer" (#5)
+- "Wrapped the H4 block in `<div id="proof">` — `evidence-ledger.json` names `trust` as the anchor that owns `usda-awa`, `cites-docs`, `hatch-band`" (#7)
+- "the ledger pattern matches both 'hatch certificate' and 'closed band', so the original phrasing registered as the claim made twice with proof NOT FETCHED … One pattern hit now" (#11)
+- "CITES sentence now opens with `<StatementLabel kind="fact" source=cites.org appendices>` — 'Species, legal and health facts open with **Fact** (+ source link)'" (#10)
+- "No H5/H6 added (still 0/0) — `cag-evidence-pass`: 'The H5/H6 minimums are advisory on the homepage… never a reason to add a heading.'" (#15)
+- "Removed 'the smartest parrot in the world' and the SplitFeature title 'World's Best Talking Parrot' — both are in `evidence-budgets.json` `superlatives`" (#16)
+- "'If you cannot name the source for a Fact, it is not a Fact'. 'Documented vocabularies of hundreds of words' (unsourced) is gone." (#17)
+- "Image alt 127 → 106 chars, now describes the picture … This overrides `cag-keyword-verifier` IMAGE-01 ≥250, which the skill names as retired." (#6)
+
+Two judgement calls it made that Task 9 should re-check on the page rather than inherit: it replaced the "trusted African Grey breeders" anchor with "our about page" (its reading of that page's H1), and it moved the payment-method sentence out of prose because the ScamAwareness component above states it.
+
+## REFACTOR run
+Not needed — GREEN passed on the first run: every trust-term count ≤ the original, no heading added, the budget, the ledger and the label each cited by name.
