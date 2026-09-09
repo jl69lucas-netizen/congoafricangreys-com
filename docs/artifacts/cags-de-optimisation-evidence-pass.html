@@ -65,7 +65,7 @@ section.sec .copy.done{border-color:var(--green);background:var(--green-soft);co
 <div class="wrap">
 <header class="masthead">
   <div>
-    <p class="eyebrow">CongoAfricanGreys.com · Strategy design for approval</p>
+    <p class="eyebrow">CongoAfricanGreys.com · Strategy A approved 2026-09-09</p>
     <h1 class="title">C.A.Gs De-Optimisation &amp; Evidence Pass</h1>
     <p class="sub">Own measurement of the built site against the ChatGPT report: what it got right, what it invented, the three strategies, the homepage section plan, the cag-evidence-pass skill and where it sits in the seven sprints.</p>
   </div>
@@ -166,7 +166,7 @@ The GSC "Search appearance" export on disk contains two rows only: Product snipp
 
 ### What it missed that our own system caused
 
-Four house rules actively manufacture the pattern ChatGPT is describing. They are in `docs/reference/WORKFLOW.md` Sprint 4 and the keyword-verifier agent:
+Six house rules actively manufacture the pattern ChatGPT is describing. They are in `docs/reference/WORKFLOW.md` Sprint 4 and the keyword-verifier agent:
 
 | Rule | Text | Effect |
 |---|---|---|
@@ -199,6 +199,18 @@ Prune the location matrix, move all scam and "legit" content to the two pages th
 Build the neutral species, legal, health and behaviour reference pages and the breeder knowledge base, then link commerce from them.
 
 **Why not first.** It is more pages, which is what the report itself says not to do first, and every one of those pages would today be written under the same injector rules that produced the homepage. Run it after A has changed the rules, and seed it from the proof objects A collects.
+
+### Does Strategy A fix each confirmed finding?
+
+| Finding | Fixed by A? | How, and what else it needs |
+|---|---|---|
+| Concept repetition | **Yes** | term budgets per page type, enforced by `evidence_audit.py`; word count falls as a by-product |
+| Homepage does too many jobs | **Partly** | A removes what each section repeats, which is most of the 8,830 words; it does not reduce the 25 jobs because the breeder ruled the sections stay. Once the rail and hero stop describing the page as "everything about C.A.Gs", the remaining length reads as depth, not sprawl |
+| Scam / legit propagation | **Yes** | the budget line "scam ≤2, legit 0 outside the two owning pages" is the Strategy B routing folded into A; 37 and 32 pages get one sentence + link |
+| Engineered titles | **Yes, via the rule change** | the skill only checks length; the fix is retiring "≤205, never short" and rewriting titles to ≤70 chars, one clause |
+| Claims outrun proof | **Yes when proof objects arrive; partly until then** | today each credential is said once and links to the trust section; the proof object (redacted USDA record, example DNA / vet / CITES certificate) replaces the assertion when the breeder supplies it. NOT FETCHED until then |
+| Fact / observation / recommendation blended | **Yes** | the statement-label component, required wherever species, health or comparison claims appear |
+| Do not answer with more pages | **Yes** | A adds zero pages; C is deferred |
 </script>
 <script type="text/markdown" data-title="5. Homepage Section-by-Section Plan (Sections Stay)">
 Each row keeps the section. "Cut" means repeated concept mentions, never the section. Budgets are starting points to calibrate in Sprint 0 against the pages Perplexity actually cited; they are not fetched from a competitor.
@@ -283,22 +295,35 @@ Per the Iron Law: baseline first. A subagent is given one homepage section and t
 | Rule | Proposal |
 |---|---|
 | keyword-verifier UNDER-OPTIMIZED < 85 | delete the floor; keep the ceiling at the Sprint 0 calibrated budget |
-| Rule 57 "150+ entity mentions" | replace with "every ledger entity present once where load-bearing" |
-| Rule 56 "150–200 keyword variants documented" | keep as research, remove as page requirement |
+| Rule 57 "150+ entity mentions" | **Breeder's correction:** the target is 95–105. Recommended reading (Recommended): 95–105 **distinct** entities present on the page, each said once where load-bearing; counting *mentions* would re-create the floor that caused the repetition. Trade-off: distinct-entity counting needs the entity catalog as the reference list, which `cag-entity-agent` already is |
+| Rule 56 "150–200 keyword variants documented" | **Breeder's correction:** per page, count the variants the top competitor page for that keyword actually uses (fetched in Sprint 0, never assumed), then target that count +5 to +10. The fixed 150–200 was the error from the start |
 | ≥5 H5 and ≥5 H6 on every page | keep "no skipped levels"; drop the minimum counts on homepage and location pages |
 | IMAGE-01 alt ≥250 chars · IMAGE-02 300-word image block | alt describes the image, ≤125 chars; drop the image block |
 | Meta title ≤205, "never short" | ≤70 characters, one clause, brand suffix optional |
 </script>
 <script type="text/markdown" data-title="8. Open Flags and the One Question">
-- **Review attribution.** Two quotes, four names. I cannot know which are real. This blocks `reviews-top` and `reviews` and it is the first thing to fix on the homepage regardless of strategy.
+- **Review attribution (breeder: the reviews are real, a name is mixed up).** Three quotes carry five names, and the mix-up is not only on the homepage: the reviews hub `/african-grey-reviews/` lists each quote under both names, and the same quotes appear on 12 pages in total. The breeder supplies the correct name for each quote once; the fix then sweeps every file listed.
+
+| Quote (opening words) | Credited to | Where |
+|---|---|---|
+| Q1 "I searched for African Grey parrots for sale near me for months before finding C.A.Gs…" | **Clifford Hutter**, Secaucus NJ | homepage feature block, reviews hub |
+| Q1 (same text) | **Archie Obrien**, Farmingdale NY (photo on file) | homepage bottom grid, reviews hub |
+| Q1 (same text, name to confirm) | — | eggs, pros-and-cons, congo-for-sale, congo-vs-timneh, timneh-for-sale |
+| Q2 "At first I was hesitant about buying a bird online, but C.A.Gs made the process stress-free…" | **Richard Woodard**, Winter Haven FL (photo on file) | homepage ×2, reviews hub, trusted-breeders |
+| Q2 (same text) | **Archie Obrien** | eggs, pros-and-cons, congo-for-sale, congo-vs-timneh, timneh-for-sale |
+| Q3 "I ordered a Congo African Grey from C.A.Gs and the experience was flawless…" | **Albert Schroder**, Santa Clara CA | homepage feature block, reviews hub |
+| Q3 (same text) | **Catherine Kempf**, Schaumburg IL (photo on file) | homepage bottom grid, reviews hub, trusted-breeders |
+| Q3 (same text, name to confirm) | — | vs-amazon, vs-cockatoo, male-vs-female ×2 |
+
+Needed from the breeder: for Q1, Q2 and Q3, the one real name each; and for the names left over, the review they actually wrote, or confirmation that they are removed. Until then the review sections ship unchanged; the `review-attribution-unique` check will fail on them by design.
 - **Proof objects.** None exist in the repo. Each is NOT FETCHED until the breeder supplies it.
 - **AI Overview before/after.** Not measurable from what we hold. If the GSC property has the 2026 generative-AI report, an export of it is the single most useful file for Sprint 0.
 - **Budgets** are proposals until calibrated against cited pages.
 - Nothing has been edited on the site or in the rules. The skill is not written; per the writing-skills method it cannot be until its baseline test has been run, and per the brainstorming gate it waits for this design's approval.
 
-**The one question:** approve Strategy A with the six rule changes in §7, so the next session runs the baseline test, writes `cag-evidence-pass`, and applies it to the homepage first?
+**Answered 2026-09-09:** Strategy A approved. Remaining input needed: the three review names above.
 </script>
-<script type="text/markdown" data-title="9. What Happens on Approval">
+<script type="text/markdown" data-title="9. What Happens Next (Approved)">
 1. Breeder answers the review-attribution question and supplies whichever proof objects exist.
 2. RED: baseline subagent run on two homepage sections; rationalisations logged.
 3. GREEN: `cag-evidence-pass` skill + `evidence_audit.py` + ledger + rule-index rows + known_broken fixtures; `npm run test:render:meta` must fail on the fixtures first.
