@@ -128,6 +128,11 @@ def test_home_and_location_profiles_downgrade_h5_h6_minimums_to_warn():
         assert F.severity(pt, "min_h6_5") == "WARN", pt
         assert F.severity(pt, "no_skip") == "FAIL", pt   # skipped levels stay a hard FAIL
 
+def test_home_profile_marks_breadcrumb_not_applicable():
+    # The root page has no trail — a missing BreadcrumbList on "/" is not a defect.
+    import final_page_audit as F
+    assert F.severity("home", "has_breadcrumb") != "FAIL", F.severity("home", "has_breadcrumb")
+
 if __name__ == "__main__":
     import traceback, inspect
     fns = [f for n, f in sorted(globals().items()) if n.startswith("test_") and inspect.isfunction(f)]

@@ -96,6 +96,7 @@ PROFILES = {
     "home": {                            # homepage: sections stay, heading minimums do not (evidence pass, 2026-09-09)
         "no_aggregateoffer": "NA", "no_pbfd_claim": "NA",
         "shipping_line": "NA", "wordcount_in_band": "NA", "real_hero_image": "NA",
+        "has_breadcrumb": "NA",          # root page has no trail
         "house_method": "WARN",
         "min_h5_5": "WARN",
         "min_h6_5": "WARN",
