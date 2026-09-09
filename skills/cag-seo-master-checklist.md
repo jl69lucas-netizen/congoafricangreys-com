@@ -1,6 +1,6 @@
 ---
 name: cag-seo-master-checklist
-description: Use BEFORE starting any interior page build on CongoAfricanGreys.com (homepage, species/care guides, blog, variant, trust, scam, purchase, FAQ, about) — the 4-phase master SEO execution checklist v2.0 (Pre-Build Research → Planning/Outline Gate → 5-Tier Section Form → Optimization + QA), the 10-category keyword fan-out, 150+ entity research, 3 anchor-text strategies and the Internal Linking Library (Appendix A). NOT for location or comparison pages (they have their own builders). Triggers - "run the SEO checklist", "master checklist", "Rule 51 outline gate", "keyword fan-out", "Appendix A links".
+description: Use BEFORE starting any interior page build on CongoAfricanGreys.com (homepage, species/care guides, blog, variant, trust, scam, purchase, FAQ, about) — the 4-phase master SEO execution checklist v2.0 (Pre-Build Research → Planning/Outline Gate → 5-Tier Section Form → Optimization + QA), the 10-category keyword fan-out, 95–105-distinct-entity research (Rule 57, 2026-09-09), 3 anchor-text strategies and the Internal Linking Library (Appendix A). NOT for location or comparison pages (they have their own builders). Triggers - "run the SEO checklist", "master checklist", "Rule 51 outline gate", "keyword fan-out", "Appendix A links".
 ---
 
 # SKILL: CAG Master SEO Execution Checklist (v2.0)
@@ -210,9 +210,9 @@ Develop 100+ keyword variations across these categories:
 - `CITES certified african grey breeder vs scammer`
 - `real african grey breeders with documentation`
 
-#### C. Entity Optimization (150+ Entities Required)
+#### C. Entity Optimization (95–105 Distinct Entities, Each Once — Rule 57 as of 2026-09-09)
 
-Every full-length page (22+ sections) requires 150+ named entities across 6 categories:
+Every full-length page carries 95–105 **distinct** named entities, each said ONCE where load-bearing (breeder correction 2026-09-09; the old "150+ mentions" floor is retired — a repeated term is a `term-budget-per-page` defect, not a score). The 6 categories:
 
 **1. People Entities (10+ required):**
 - Mark Benjamin (owner, C.A.Gs, Midland TX, 2014)
@@ -1152,7 +1152,7 @@ Before final submission, verify all items:
 - ☐ 3 customer testimonials positioned at top, middle, and bottom
 - ☐ 3 newsletter signups at top (diet/nutrition section), middle (shipping section), bottom (contact section)
 - ☐ 30+ FAQ questions distributed throughout (top, middle, bottom groupings)
-- ☐ 150+ named entities naturally integrated (people, locations, medical, brands, stats, credentials)
+- ☐ 95–105 distinct named entities, each once where load-bearing (Rule 57, 2026-09-09) — people, locations, medical, brands, stats, credentials
 
 **Linking Quality:**
 - ☐ 50+ contextual internal links (Link-First: anchors at sentence start; varied anchor text, no repeats per target)

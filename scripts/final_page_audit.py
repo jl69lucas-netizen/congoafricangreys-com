@@ -5,14 +5,17 @@ the objective checks against the page-type PROFILE, returning per-check pass plu
 verdict: PASS / PASS-WITH-WARNINGS / FAIL. Subjective checks (voice/humor/Flesch/
 non-commodity/tone/brand-protocol) stay manual. Run AFTER `npx astro build`.
 Profiles: interior (default), bird (--birds), blog (--blog, auto-discovers the
-/blog/ hub + every dist/blog/<slug>/ post; also included in the default run)."""
+/blog/ hub + every dist/blog/<slug>/ post; also included in the default run), or any profile by name via
+`<slug>... --type home|location|...` (slug `index` = dist/index.html)."""
 import re, json, sys
 from pathlib import Path
 from html.parser import HTMLParser
 
 DIST = Path("dist")
 def dist_path(slug):
-    """Resolve a flat or nested slug to its rendered index.html."""
+    """Resolve a flat or nested slug to its rendered index.html (`index` = the homepage)."""
+    if slug in ("index", "", "/"):
+        return DIST / "index.html"
     return DIST / slug / "index.html"
 
 SLUGS = [
@@ -89,6 +92,22 @@ PROFILES = {
         "shipping_line": "NA", "wordcount_in_band": "NA", "real_hero_image": "NA",
         "house_method": "WARN",
         "airport_codes": "WARN",         # transactional nicety on price page, not a ship-blocker
+    },
+    "home": {                            # homepage: sections stay, heading minimums do not (evidence pass, 2026-09-09)
+        "no_aggregateoffer": "NA", "no_pbfd_claim": "NA",
+        "shipping_line": "NA", "wordcount_in_band": "NA", "real_hero_image": "NA",
+        "house_method": "WARN",
+        "min_h5_5": "WARN",
+        "min_h6_5": "WARN",
+        "no_skip": "FAIL",
+    },
+    "location": {                        # 40 thin state/city pages: depth is filled with real shipments, not headings
+        "no_aggregateoffer": "NA", "no_pbfd_claim": "NA",
+        "shipping_line": "NA", "wordcount_in_band": "NA", "real_hero_image": "NA",
+        "house_method": "WARN",
+        "min_h5_5": "WARN",
+        "min_h6_5": "WARN",
+        "no_skip": "FAIL",
     },
     "comparison": {                      # [X] vs [Y] spokes + hub (added 2026-07-04 per breeder review)
         "no_aggregateoffer": "FAIL",     # comparison pages never carry Offer/AggregateOffer (variant pages own it)
@@ -388,7 +407,12 @@ def blog_targets():
     return targets
 
 def main():
-    if "--birds" in sys.argv:
+    if "--type" in sys.argv:
+        # `final_page_audit.py <slug>... --type home|location|interior|...` (2026-09-09)
+        t = sys.argv[sys.argv.index("--type") + 1]
+        slugs = [a for a in sys.argv[1:] if not a.startswith("--") and a != t]
+        targets = [(s, t) for s in slugs]
+    elif "--birds" in sys.argv:
         targets = [(s, "bird") for s in BIRDS]
     elif "--blog" in sys.argv:
         targets = blog_targets()

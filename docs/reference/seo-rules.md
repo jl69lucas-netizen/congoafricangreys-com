@@ -124,11 +124,11 @@ Build order — every element is mandatory:
 3. **Include a positive/power word** — Trusted, Healthy, Ethical, Certified, CITES-Documented, USDA-Licensed.
 4. **Insert a long-tail conversational query** — `African Grey Parrot Breeder near me that has available parrots`.
 5. **End with the brand** — `C.A.Gs – Midland, TX` (or `C.A.Gs` where space-tight, per page).
-6. Use `|` separators.
-- **Title cap: ≤ 205 characters.**
-- **Description cap: ≤ 185 characters** (see Rule 23, Format 1 desc).
+6. ~~Use `|` separators.~~ Retired 2026-09-09 — one clause, no pipes.
+- **Title cap: ≤ 70 characters, one clause** (breeder correction 2026-09-09; the ≤205 cap was retired — it produced a 233-char homepage title).
+- **Description cap: ≤ 160 characters** (2026-09-09; was ≤185).
 
-**Rule 22 — Meta FORMAT 2 (4-Part Long Title + Tone System)**
+**Rule 22 — Meta FORMAT 2 (4-Part Long Title + Tone System) — RETIRED 2026-09-09 by the evidence pass; every page uses Rule 21's one-clause title. Kept for the record only.**
 For homepage, hubs, and high-intent/high-competition pages.
 Format: `[Primary Keyword] | [Conversational Query] | [Comparison / LSI / NLP] | C.A.Gs – Midland, TX Trust Ending`
 Still required: a **number** and a **positive/power word** somewhere in the title.
@@ -137,8 +137,8 @@ Choose the tone that matches page intent:
 - 🆚 **Comparison** — C.A.Gs vs competitor / vs unverified sellers, price/documentation comparison.
 - 💰 **Transactional** — Price, reserve now, available today, skip overpriced alternatives.
 - 🛡️ **Trust/Health** — CITES proof, DNA-sexed, avian-vet-certified, captive-bred — not just promises.
-- **Title cap: ≤ 205 characters.**
-- **Description cap: ≤ 300 characters** (see Rule 23, Format 2 desc).
+- **Title cap: retired — see Rule 21 (≤ 70, one clause).**
+- **Description cap: retired — see Rule 21 (≤ 160).**
 - **Homepage default tone = Comparison + Trust (🆚 + 🛡️). Lead with authority, NOT urgency** — the homepage is top-of-funnel and the #1 buyer fear is scam/fraud.
 
 **Rule 23 — Meta Description (matches the chosen format)**
@@ -407,8 +407,8 @@ All keyword variations planned for the page: exact match, phrase match, LSI clus
   - **H6 → Ultra-specific details / breeder notes / citations**
 - H5 purpose: deep LSI / technical authority terms ("PBFD Screening Protocol", "USDA AWA License Explained", "DNA Sexing Methodology")
 - H6 purpose: voice search / natural language queries + breeder notes / citations ("Is This Bird Good With Kids?", "What Happens After I Pay a Deposit?", "Source: World Parrot Trust, 2024")
-- Every page outline (Rule 51) must include **a minimum of 5 H5 headings AND 5 H6 headings** — no fewer than 5 of each, per page. 1 H6 or 4 H5 will NOT pass.
-- **OUTLINE-FIRST APPROVAL GATE (mandatory):** Before creating, editing, or updating ANY page, you MUST first show the breeder the page's **complete H1→H6 outline** (every heading, in render order, level-labeled) and get approval. No page code is written or changed until the outline is approved. Enforced mechanically by `scripts/final_page_audit.py` (`all_six_levels`, `min_h5_5`, `min_h6_5` = hard FAIL).
+- Every page outline (Rule 51) must include **a minimum of 5 H5 headings AND 5 H6 headings** — no fewer than 5 of each, per page. 1 H6 or 4 H5 will NOT pass. **Exception (2026-09-09, evidence pass): on the homepage and the location pages the 5-per-level minimums are advisory (WARN), never a reason to add a heading; no skipped levels and all six levels stay hard.**
+- **OUTLINE-FIRST APPROVAL GATE (mandatory):** Before creating, editing, or updating ANY page, you MUST first show the breeder the page's **complete H1→H6 outline** (every heading, in render order, level-labeled) and get approval. No page code is written or changed until the outline is approved. Enforced mechanically by `scripts/final_page_audit.py` (`all_six_levels`, `min_h5_5`, `min_h6_5` = hard FAIL; `min_h5_5` / `min_h6_5` = WARN on the `home` and `location` profiles since 2026-09-09).
 - Special elements (newsletter, forms, comparison tables, quizzes, calculators, trust badges, video) are REQUIRED on every page. Minimum 3 special elements per page; exact type and placement determined by competitor research per Rule 51 Section E.
 
 ---
@@ -464,8 +464,8 @@ Every competitor analysis must be delivered as a structured markdown report cove
 Output format: markdown table + gap matrix + outranking strategy summary.
 Minimum 8 competitors per page: top 3 Google + top 3 Bing + 2 specialized aviaries + 1 authority site (World Parrot Trust or AAV).
 
-**Rule 56 — 10-Category Keyword Fan-Out (MANDATORY Pre-Write)**
-Every page requires keyword fan-out across all 10 categories BEFORE writing any section:
+**Rule 56 — Keyword Fan-Out Sized to the Competitor (breeder correction 2026-09-09; was a fixed 150–200)**
+Before writing, fetch the top-ranking competitor page for the primary keyword (Sprint 0, real fetch, never assumed) and count the keyword variants it actually uses. The page's target is that count **+5 to +10**. Record the competitor URL and its count in the session brief. The 10 categories below still organise the fan-out.
 1. Transactional (Bottom-Funnel) — buy, for sale, available, pricing
 2. Long-Tail Conversational (6+ words) — natural questions, search intent phrases
 3. Voice Search Optimized — How, What, Are, Can, Is, Do questions
@@ -479,8 +479,8 @@ Every page requires keyword fan-out across all 10 categories BEFORE writing any 
 Minimum 15–20 keywords per category = 150–200 total keyword variations per page.
 Full fan-out template: `skills/cag-seo-master-checklist.md` Phase 1 Step 3.
 
-**Rule 57 — 150+ Entity Requirement**
-Every full-length page (22+ sections) requires 150+ named entities across 6 categories:
+**Rule 57 — 95–105 Distinct Entities (breeder correction 2026-09-09; was "150+ mentions")**
+Every full-length page carries 95–105 **distinct** named entities from `skills/cag-entity-agent.md`, each said ONCE where it is load-bearing. Mentions are not entities: a term repeated is a `term-budget-per-page` defect, not a score. Categories and examples below are unchanged.
 1. **People Entities (10+):** Mark Benjamin, Teri Benjamin, Dr. Irene Pepperberg, Sally Blanchard, Dr. Sarah Walsh DVM
 2. **Location Entities (80+):** Midland TX + nationwide cities + airport codes (DEN, LAX, MIA, ORD, JFK, PHX)
 3. **Medical/Health Entities (40+):** PBFD, Avian Polyomavirus (APV), Psittacosis, Bornavirus, Hypocalcemia, Aspergillosis, Feather Destructive Behavior

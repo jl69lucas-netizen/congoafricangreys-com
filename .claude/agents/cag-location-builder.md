@@ -233,7 +233,7 @@ Before building ANY state location page (single or batch mode), produce the Page
 
 The outline must include:
 
-**A. H1–H6 Heading Tree** — using the 22-section template as the base, customized per state. Must include all six heading levels (H1→H2→H3→H4→H5→H6, no skips). Must include ≥5 H5 and ≥3 H6 entries per page.
+**A. H1–H6 Heading Tree** — using the 22-section template as the base, customized per state. Must include all six heading levels (H1→H2→H3→H4→H5→H6, no skips). ≥5 H5 / ≥3 H6 are advisory on location pages (WARN, evidence pass 2026-09-09) — never add a heading to hit a count; depth comes from real shipments, not headings.
 
 **B. Keyword Distribution Table** — section by section for the state: primary KW, LSI, longtail, NLP, comparison KWs, word count per section.
 

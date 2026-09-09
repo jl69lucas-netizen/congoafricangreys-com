@@ -78,7 +78,7 @@ For each page audit, check every item:
 
 ### Images
 - [ ] Every image has alt text
-- [ ] Alt text is ≥250 characters (IMAGE-01) — descriptive + keyword + context + captive-bred signal
+- [ ] Alt text ≤125 characters, describes THAT image, one keyword type per image, no two alts match (IMAGE-01, 2026-09-09; the ≥250 floor is retired)
 - [ ] No alt text under 50 characters on commercial/transactional pages
 - [ ] No "image001.jpg" filenames — filenames are descriptive
 - [ ] No images over 200KB (check file size)
@@ -139,8 +139,8 @@ Run these checks AFTER the standard keyword checklist above. Every item must pas
 
 ### Rules 55-62 Compliance
 - [ ] Rule 55: Competitor analysis covers ≥8 competitors with gap matrix
-- [ ] Rule 56: 10-category keyword fan-out documented (150–200 variants in brief or session file)
-- [ ] Rule 57: Entity count — 150+ entities across 8–12 per 100 words
+- [ ] Rule 56: 10-category keyword fan-out documented (top competitor page's real count +5–10; URL + count recorded in the session brief — 2026-09-09)
+- [ ] Rule 57: Entity count — 95–105 DISTINCT entities, each once where load-bearing (2026-09-09)
 - [ ] Rule 58: Anchor text — 3 strategies used; no repeated anchor text patterns
 - [ ] Rule 59: 5-Tier Section Creation Form completed for all sections (check session file)
 - [ ] Rule 60: 4-Part Delivery Format present in content output
@@ -242,11 +242,11 @@ For full pages (22+ sections, 3,000+ words), audit that keyword mentions fall wi
 | Solution keywords | 5–10 | |
 | Related keywords | 10–15 | |
 | Transactional keywords | 15 | |
-| **TOTAL** | **≈85–105** | |
+| **TOTAL** | **≤105 (no minimum)** | |
 
 **Rules:**
-- If a full page has <85 total keyword mentions across all types → flag as **UNDER-OPTIMIZED**
-- If a full page has >110 total keyword mentions → flag as **OVER-STUFFED**
+- There is **no floor**. A page is never "under-optimized" by count (retired 2026-09-09: the floor manufactured the repetition the evidence pass now fails).
+- If a full page has >110 total keyword mentions → flag as **OVER-STUFFED**; trust-concept terms additionally answer to `data/quality/evidence-budgets.json` via `scripts/evidence_audit.py`
 - Short pages (<1,500 words): scale targets proportionally; do not apply full-page thresholds
 
 ---
@@ -259,4 +259,4 @@ For full pages (22+ sections, 3,000+ words), audit that keyword mentions fall wi
 4. **Never modify the page** — audit only, report findings, user decides what to fix
 5. **Check site/content/[slug]/index.html** — always the live file path
 6. **Canonical check is mandatory** — non-negotiable per seo-rules.md
-7. **Distribution check on full pages** — run keyword distribution audit on any page over 3,000 words; flag UNDER-OPTIMIZED or OVER-STUFFED as warnings
+7. **Distribution check on full pages** — run keyword distribution audit on any page over 3,000 words; flag OVER-STUFFED as a warning (no floor since 2026-09-09; never flag a page for too few mentions)

@@ -41,7 +41,7 @@ You never write without a Content Brief from cag-content-architect. If no brief 
 6. **Outline Approval Gate (Rule 51 — MANDATORY):** Before writing any section, confirm that a Page Outline has been produced AND explicitly approved by the user for this page. The outline must include the H1–H6 heading tree, keyword distribution table, special elements plan, and competitor snapshot. If no approved outline exists: STOP. Produce the outline using the format from cag-content-audit-agent Phase 0. Wait for explicit user approval ("Approved", "Continue", or changes). Only then proceed to section writing.
 
 7. **Rules 55-62 Reference (apply during writing):**
-   - Rule 56: Confirm keyword fan-out (150–200 variants) is documented in session brief or run it now
+   - Rule 56: Confirm keyword fan-out (top competitor page's real count +5–10, 2026-09-09) is documented in session brief or run it now
    - Rule 57: Target 8–12 entity mentions per 100 words (total 150+ across full page)
    - Rule 58: Use 3 anchor text strategies for internal links — exact match, conversational, branded; never repeat the same anchor
    - Rule 59: Complete 5-Tier Section Creation Form before writing each section

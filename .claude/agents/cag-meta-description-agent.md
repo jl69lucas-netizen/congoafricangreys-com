@@ -40,36 +40,23 @@ You are the **Meta Description Agent** for CongoAfricanGreys.com. Title tags and
 
 > **⚠️ SOURCE OF TRUTH = `docs/reference/seo-rules.md` Rules 21–23.** If these ever disagree, seo-rules.md wins — then fix this file. The old "50–60 / up to 600 / 726" caps are RETIRED. NEVER ship a generic short title. NEVER put emoji inside a title or description (emoji tone markers 🔴🆚🛡️ are planning labels only, never rendered in the tag). Brand string is always **`C.A.Gs`** or **`C.A.Gs – Midland, TX`** — never "CAG" or "CongoAfricanGreys.com".
 
-Every page picks Format 1 OR Format 2. Both formats REQUIRE: a number, a positive/power word, a long-tail conversational query, and the C.A.Gs brand ending.
+Every page uses Format 1. (Format 2 — the 4-part ≤205 pipe-stacked title — was retired 2026-09-09 by the evidence pass; it produced a 233-char homepage title. Do not reintroduce it.)
 
-### Format 1 — Standard Long Title (Title ≤ 205 / Desc ≤ 185)
+### Format 1 — One-Clause Title (Title ≤ 70 / Desc ≤ 160)
 Used on: most content pages, care guides, single-keyword pages.
-**Title:** `[Primary Keyword] | [Number] + [Power Word] | [Long-tail Conversational Query] | C.A.Gs – Midland, TX`
-**Description (≤185):** `[Trust hook + primary keyword] + [long-tail/LSI variation] + [trust signal: DNA-sexed / vet-checked / CITES] + [CTA + delivery]` — single conversational flow.
+> **`[What the page is, plainly] – C.A.Gs`** — one clause, ≤70 chars, no pipes, no question stacked on a claim. Example: `African Grey Parrot Breeder in Midland, Texas – C.A.Gs`. (Retired 2026-09-09: the 4-part ≤205 pattern produced a 233-char homepage title.)
+**Description (≤160):** `[Trust hook + primary keyword] + [one trust signal: DNA-sexed / vet-checked / CITES] + [CTA + delivery]` — single conversational flow, no pipes.
 
 **Example:**
 ```
-Title (161): African Grey Parrot Breeder | 12 Years Hand-Raising DNA-Sexed Congo African Greys for Sale | Looking for an African Grey Breeder in Texas? | C.A.Gs – Midland, TX
-Desc (182): Trusted African Grey parrot breeder in Midland, TX. Mark & Teri hand-raise DNA-sexed, vet-checked Congo & Timneh Greys with full CITES paperwork. Reserve yours — nationwide shipping.
+Title (54): African Grey Parrot Breeder in Midland, Texas – C.A.Gs
+Desc (156): Trusted African Grey parrot breeder in Midland, TX. Mark & Teri hand-raise DNA-sexed, vet-checked Congo & Timneh Greys with CITES paperwork. Reserve yours today.
 ```
 
 > **BLOG POSTS = FORMAT 1, LOCKED (breeder rule, 2026-07-02).** Every `/blog/<slug>/` post uses Format 1 with this exact title order — no deviation:
-> **`[Primary Keyword FIRST] | [Number] + [Positive/Power Word] | [Long-tail Conversational Query — What/How/Where/Can/Is] | C.A.Gs – Midland, TX`** (pipe `|` separators, ≤205 chars).
-> **Description (≤185):** clear, conversational, benefit-driven; opens with the conversational hook, includes the **primary keyword** AND the **long-tail keyword** in one natural sentence.
+> **`[What the post is, plainly] – C.A.Gs`** — one clause, ≤70 chars, no pipes (the pipe-stacked ≤205 blog pattern was retired 2026-09-09 with Format 2; retrofit on next touch).
+> **Description (≤160):** clear, conversational, benefit-driven; opens with the conversational hook, includes the **primary keyword** AND the **long-tail keyword** in one natural sentence.
 > Applied 2026-07-02 to the 5 built blog posts (best-place-to-buy, cage-setup, training, talking-ability, price-what-you-get). Retrofit any new or legacy blog post to this pattern before deploy.
-
-### Format 2 — 4-Part Long Title + Tone (Title ≤ 205 / Desc ≤ 300)
-Used on: homepage, hubs, highest-competition / high-intent pages.
-**Title:** `[Primary Keyword] | [Conversational Query] | [Comparison / LSI / NLP] | C.A.Gs – Midland, TX Trust Ending` (still include a number + power word).
-**Tone** (pick by page intent): 🔴 Urgency · 🆚 Comparison · 💰 Transactional · 🛡️ Trust/Health.
-**Homepage default = 🆚 Comparison + 🛡️ Trust. Lead with authority, NOT urgency** (top-of-funnel; #1 buyer fear is scam/fraud).
-**Description (≤300):** `|`-separated multi-part: `[trust hook + primary KW] | [comparison: why families choose C.A.Gs over unverified sellers] | [proof: DNA-sexed, vet-checked, CITES Appendix I] | [CTA + delivery]`.
-
-**Example (homepage — LIVE):**
-```
-Title (197): African Grey Parrot Breeder | Where Can I Buy a Healthy Congo African Grey Near Me? | Captive-Bred C.A.Gs vs Unverified Online Sellers | C.A.Gs – America's Trusted Congo & Timneh Breeder Since 2014
-Desc (291): Trusted African Grey parrot breeder Mark & Teri raise hand-fed Congo & Timneh Greys in Midland, TX | Why families choose captive-bred C.A.Gs over unverified online sellers | Every bird is DNA-sexed, vet-checked, and ships with CITES Appendix I paperwork | Reserve yours — nationwide delivery
-```
 
 ---
 

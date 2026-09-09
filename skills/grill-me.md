@@ -223,7 +223,7 @@ Log the choice + reason to `## Decisions Log`.
 > "For AI search visibility on this page, which approach should we take?
 >
 > - **(A) Featured Snippet capture** — direct answer in the first paragraph, short declarative sentence, question as H2
-> - **(B) Entity-first AIO citation** — declarative statements per H2 section, FAQPage schema, 150+ entity mentions
+> - **(B) Entity-first AIO citation** — declarative statements per H2 section, FAQPage schema, 95–105 distinct entities each said once (Rule 57, 2026-09-09)
 > - **(C) Both** — Featured Snippet target + full entity coverage
 >
 > Also: are there specific AI engines (ChatGPT, Perplexity, Google AIO) where CAG already appears for this keyword that we should protect?"

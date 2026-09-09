@@ -1288,7 +1288,7 @@ SPECIFIC OUTPUT RULES
 **\- "best African Grey breeder testimonials"**  
 **\- "African Grey bird buyer experiences"**
 
-**\#\#\# C. Entity Optimization (150+ Entities Required)**
+**\#\#\# C. Entity Optimization (95–105 Distinct Entities, Each Once — Rule 57 as of 2026-09-09)**
 
 **\*\*Entity Categories to Include:\*\***
 
@@ -2159,7 +2159,7 @@ Phase 1: Pre-Writing Research & Strategy
 Phase 2: Keyword & Entity Research
 
 * Intent-Based Keyword Fan-Out: Develop 100+ variations (Transactional, Voice Search, Geographic, Comparison).  
-* Entity Optimization: Integrate 150+ entities (8–12 per 100 words):  
+* Entity Optimization: Integrate 95–105 distinct entities, each said once where load-bearing (Rule 57, 2026-09-09; the 150+ / 8–12-per-100-words floor is retired):  
   * People: Breeder Credentials  
   * \- USDA Animal Welfare Act (AWA) licensed breeder  
   * \- CITES Appendix II compliant — captive-bred documentation provided with every bird  

@@ -121,6 +121,13 @@ def test_sold_not_instock_explicit_fail_on_bird():
         "sold_not_instock must be explicitly declared in the bird profile"
     assert A.PROFILES["bird"]["sold_not_instock"] == "FAIL"
 
+def test_home_and_location_profiles_downgrade_h5_h6_minimums_to_warn():
+    import final_page_audit as F
+    for pt in ("home", "location"):
+        assert F.severity(pt, "min_h5_5") == "WARN", pt
+        assert F.severity(pt, "min_h6_5") == "WARN", pt
+        assert F.severity(pt, "no_skip") == "FAIL", pt   # skipped levels stay a hard FAIL
+
 if __name__ == "__main__":
     import traceback, inspect
     fns = [f for n, f in sorted(globals().items()) if n.startswith("test_") and inspect.isfunction(f)]

@@ -66,7 +66,7 @@ Even for homepage rebuilds, a Page Outline must be produced and approved BEFORE 
 
 The outline must include:
 
-**A. H1–H6 Heading Tree** — all 18 sections shown with their heading levels. H1 is locked. All other headings (H2→H6) must be shown for approval. No heading level skipping. Must include ≥5 H5 and ≥3 H6 entries across the full page.
+**A. H1–H6 Heading Tree** — all 18 sections shown with their heading levels. H1 is locked. All other headings (H2→H6) must be shown for approval. No heading level skipping. ≥5 H5 / ≥3 H6 are advisory on the homepage (WARN, evidence pass 2026-09-09) — never add a heading to hit a count; no skipped levels stays hard.
 
 **B. Keyword Distribution Table** — section by section: primary KW, LSI, longtail, NLP/conversational, comparison KWs, word count per section, rolling total vs 85–105× target.
 

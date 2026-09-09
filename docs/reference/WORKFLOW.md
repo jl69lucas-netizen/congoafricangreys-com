@@ -38,6 +38,7 @@ Sprint 3    Harden     page_hardening_scan + seam_parity + runtime probes
                        @375/768/1280 + contrast + overflow + dup-gate
 Sprint 4    Final      cag-final-page-pass + AEO/GEO + keyword-verifier
                        + anti-ai-writing + technical batch
+                       + cag-evidence-pass
 Sprint 5    Ship       generate_sitemaps + push + deploy-verify + live 200
 Sprint 6    Bank       session-closer + memory + BACK-PROPAGATE to the
                        skill/scanner that enforces each lesson + sweep siblings
@@ -266,7 +267,7 @@ Step 5: cag-content-architect
 
 3.5. cag-seo-master-checklist skill  ← INVOKE BEFORE WRITING BEGINS
    → Skills path: skills/cag-seo-master-checklist.md
-   → Phase 1: Competitor analysis (8+ competitors) + 10-category keyword fan-out (150–200 variants) + 150+ entity research
+   → Phase 1: Competitor analysis (8+ competitors) + 10-category keyword fan-out (top competitor's real count +5–10, Rule 56 as of 2026-09-09) + entity research (95–105 distinct, each once, Rule 57)
    → Phase 2: Page Outline Gate (Rule 51 — FULL STOP until outline approved)
    → Phase 3: 5-Tier Section Creation Form for each section (Rule 59)
    → Phase 4: 4-Part Delivery Format output (Rule 60)
@@ -478,10 +479,12 @@ including the bird `/available/` and for-sale pages the old interior gate exclud
 1. npx astro build
 2. python3 scripts/final_page_audit.py [--birds]
    → page-type-aware, nested-slug aware. SUPERSEDES scripts/interior_29_audit.py.
-   → headings: all six levels, ≥5 H5 AND ≥5 H6, no skipped levels, Title Case
+   → headings: all six levels, no skipped levels, Title Case; ≥5 H5/H6 advisory on homepage + location pages (2026-09-09)
    → schema · meta · image SEO · a11y traps · links · phone · compliance copy
    → one PASS / PASS-WITH-WARNINGS / FAIL verdict; triage every ✗
 3. anti-ai-writing  → AI-tell sweep on the final prose
+4. cag-evidence-pass → python3 scripts/evidence_audit.py <slug>  (term budgets · claim→proof · labels · review attribution · title ≤70)
+   → runs AFTER anti-ai-writing, BEFORE cag-final-page-pass; ERROR blocks deploy
 ```
 
 ### 4a — AEO/GEO Gate Checklist
@@ -494,7 +497,7 @@ AEO/GEO GATE — RUN IN THIS ORDER:
 1. cag-keyword-verifier
    → Checks: title, H1, meta, first 100 words, H2 distribution,
              alt text, internal links, canonical
-   → Flags: UNDER-OPTIMIZED (<85 keyword mentions) or OVER-STUFFED (>110)
+   → Flags: OVER-STUFFED (>110) only — no floor (2026-09-09); trust terms answer to evidence-budgets.json
    → AEO additions: entity coverage check, declarative statement density
 
 2. cag-meta-description-agent
@@ -520,8 +523,8 @@ AEO/GEO GATE — RUN IN THIS ORDER:
 
 6. Rules 55-62 Compliance Check (seo-rules.md)
    → Rule 55: Competitor analysis output — 8+ competitors, gap matrix, outranking strategy present
-   → Rule 56: 10-category keyword fan-out documented (150–200 keyword variants)
-   → Rule 57: 150+ entity mentions verified (people, locations, medical, brands, credentials)
+   → Rule 56: keyword variants = top competitor page's real count +5–10 (fetched, recorded)
+   → Rule 57: 95–105 DISTINCT entities, each once where load-bearing
    → Rule 58: 3 anchor text strategies used — exact match, conversational, branded (never repeat same anchor)
    → Rule 59: 5-Tier Section Creation Form completed for all sections
    → Rule 60: 4-Part Content Delivery Format present in output
@@ -541,8 +544,8 @@ AEO/GEO GATE — RUN IN THIS ORDER:
 ☐ LocalBusiness schema on all location pages
 ☐ VideoObject schema if YouTube video embedded (cag-video-seo-agent)
 ☐ No language implying wild-caught origin (CITES check)
-☐ IMAGE-01: All images have alt text ≥250 characters (descriptive + keyword + context)
-☐ IMAGE-02: Featured/hero images have 300+ word image description block in page copy
+☐ IMAGE-01: Every image alt describes THAT image, ≤125 characters, one keyword type per image (rules/images.md); no two alts match
+☐ IMAGE-02: retired 2026-09-09 — no image-description blocks in body copy
 ☐ IMAGE-03: Infographic widths match page type (760px for guides · 1100px for homepage/location pages)
 ☐ IMAGE-04: OG image (og:image) is 1200×630px — separate from portrait bird images
 ```
@@ -602,7 +605,8 @@ cag-llm-keyword-intel [for target keyword]
 
 ### Sprint 4 Gate
 - [ ] One PASS / PASS-WITH-WARNINGS verdict from `scripts/final_page_audit.py`; every ✗ triaged
-- [ ] All six heading levels present, ≥5 H5 AND ≥5 H6, no skipped levels
+- [ ] All six heading levels present, no skipped levels; ≥5 H5/H6 advisory on homepage + location pages
+- [ ] `python3 scripts/evidence_audit.py <slug>` → 0 ERROR; every WARN read and triaged
 - [ ] **Title Case on every H1–H6**; FAQ `<summary>` stays sentence case
 - [ ] **Header style declared + justified** at the outline gate (framework-heading-hierarchy §Header Style Selection)
 - [ ] Lighthouse Performance ≥90 · Accessibility ≥90 — **judged on the DISTRIBUTION of ≥5 runs**, never one; CLS is bimodal on this site and one run already caused a confident wrong attribution
