@@ -33,10 +33,9 @@ register({
   //     image; backdrop() walks DOM ancestors, never meets the photo, and compares white
   //     against the white section behind it. The check already declines to judge text
   //     over a background-image — it just cannot detect that case out of flow.
-  //  2. Translucent FOREGROUNDS (e.g. Tailwind text-cream/80) report ~1.1:1, because
-  //     rgb() above returns the colour channels and ignores foreground alpha unless it
-  //     is exactly 0. A composited foreground needs the same "not judgeable" treatment
-  //     the translucent BACKDROP already gets.
+  //  2. Translucent FOREGROUNDS (e.g. Tailwind text-cream/80) — now handled: rgb() returns
+  //     null (not judged) for any foreground with alpha < 1, the same "not judgeable"
+  //     treatment the translucent BACKDROP already gets.
   // A third, likely-real family also surfaced: clay/gold on light at 3.17–3.38:1.
   // Triage is its own sprint. reference_registered_is_not_wired.
   severity: 'advisory',
@@ -44,14 +43,37 @@ register({
   // The known_broken fixture carries 4 judgeable spans (2 failing, 2 passing); the floor is
   // set to that so the check cannot pass the meta gate by judging one element and skipping
   // the rest. reference_promote_check_needs_examined_count.
-  minExamined: 4,
+  minExamined: 6,
   async run(page: Page, viewport: number): Promise<CheckResult> {
     const r = await page.evaluate(() => {
+      // getComputedStyle (and canvas fillStyle read back as a string) both preserve oklab()/
+      // oklch()/color() verbatim instead of normalising to rgb() — regex-mining digits out
+      // of "oklab(0.97 0 0 / .85)" read it as rgb(0.97,0,0), a false near-black (44 rows on
+      // /). A canvas PIXEL READBACK is the only honest normaliser: fillRect + getImageData
+      // always resolves any <color> notation to real sRGB bytes (and unpremultiplied alpha),
+      // regardless of the source syntax.
+      const px = document.createElement('canvas');
+      px.width = 1;
+      px.height = 1;
+      const cvs = px.getContext('2d', { willReadFrequently: true })!;
+      /** Normalised [r, g, b, a] where a is 0–255, or null when unparsable. */
+      const rgba = (s: string): number[] | null => {
+        if (!s || s === 'transparent') return null;
+        cvs.clearRect(0, 0, 1, 1);
+        try {
+          cvs.fillStyle = s;
+        } catch {
+          return null;
+        }
+        cvs.fillRect(0, 0, 1, 1);
+        return Array.from(cvs.getImageData(0, 0, 1, 1).data);
+      };
       const rgb = (s: string): number[] | null => {
-        const m = (s.match(/[\d.]+/g) || []).map(Number);
-        if (m.length < 3) return null;
-        if (m.length >= 4 && m[3] === 0) return null; // fully transparent
-        return m.slice(0, 3);
+        const c = rgba(s);
+        if (!c) return null;
+        if (c[3] === 0) return null; // fully transparent
+        if (c[3] < 255) return null; // translucent foreground: not judgeable (see header note 2)
+        return c.slice(0, 3);
       };
       const lum = (c: number[]) => {
         const [r, g, b] = c.map((v) => {
@@ -67,16 +89,15 @@ register({
         while (n && n !== document.documentElement) {
           const cs = getComputedStyle(n);
           if (cs.backgroundImage && cs.backgroundImage !== 'none') return null;
-          const parts = (cs.backgroundColor.match(/[\d.]+/g) || []).map(Number);
-          if (parts.length >= 3) {
-            const alpha = parts.length >= 4 ? parts[3] : 1;
-            if (alpha === 1) return parts.slice(0, 3);
-            if (alpha > 0) return null; // translucent layer — composite is paint-order dependent
+          const parts = rgba(cs.backgroundColor);
+          if (parts) {
+            if (parts[3] === 255) return parts.slice(0, 3);
+            if (parts[3] > 0) return null; // translucent layer — composite is paint-order dependent
           }
           n = n.parentElement;
         }
-        const root = (getComputedStyle(document.documentElement).backgroundColor.match(/[\d.]+/g) || []).map(Number);
-        return root.length >= 3 && (root.length < 4 || root[3] === 1) ? root.slice(0, 3) : [255, 255, 255];
+        const root = rgba(getComputedStyle(document.documentElement).backgroundColor);
+        return root && root[3] === 255 ? root.slice(0, 3) : [255, 255, 255];
       };
 
       const fails: { sel: string; text: string; ratio: number; need: number }[] = [];

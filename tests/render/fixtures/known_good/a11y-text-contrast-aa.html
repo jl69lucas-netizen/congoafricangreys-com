@@ -12,6 +12,13 @@
   .big { color:#8a8a8a; font-size:26px; }
   .over-photo { background-image:linear-gradient(90deg,#fff,#000); color:#888; }
   .over-glass { background:rgba(255,255,255,.5); color:#999; }
+  /* Tailwind v4 emits oklab() for opacity modifiers. White at 85% over #2D6A4F composites to
+     ~#d5e1db → 6.9:1. The parser must not read "0.97 0 0 / .85" as rgb(0.97,0,0). */
+  .nav-green { background:#2D6A4F; padding:8px; }
+  .nav-green a { color: oklab(1 0 0 / 0.85); font-size:15px; }
+  /* Opaque oklab() must still resolve to real channels, not the raw L/a/b numbers read as
+     rgb() — opaque white here is a genuine AA pass on forest green (~11.7:1). */
+  .nav-green .solid { color: oklab(1 0 0); }
 </style>
 <nav class="tdial"><ul>
   <li><a><span class="ti">1</span><span class="tt">The Three Pairs</span></a></li>
@@ -20,3 +27,4 @@
 <p class="big">Large text clears at three to one.</p>
 <p class="over-photo">Text on a gradient has no single backdrop colour.</p>
 <p class="over-glass">Text on a translucent layer composites by paint order.</p>
+<nav class="nav-green"><a>Shop Parrots</a> <a>Compare</a> <a>Care Guides</a> <a class="solid">Home</a></nav>
