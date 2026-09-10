@@ -17,7 +17,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LIB = join(ROOT, 'docs/artifacts/component-library');
 const MD_OUT = join(ROOT, 'docs/artifacts/cags-component-library.md');
 const HTML_OUT = join(ROOT, 'docs/artifacts/cags-component-library.html');
-const ARTIFACT_URL = '(published by the controller)';
+const ARTIFACT_URL = 'https://claude.ai/code/artifact/6be797ba-d2bf-4cb8-b8e2-601cbade03d2';
 const VPS = ['375', '768', '1280'];
 const ORDER = ['hero', 'counter', 'toc', 'table', 'bird-card', 'reviews', 'trust',
   'key-takeaway', 'owner', 'faq', 'shipping', 'seam', 'newsletter', 'form'];

@@ -1,6 +1,6 @@
 # C.A.Gs Component Library
 
-**Artifact URL:** (published by the controller)
+**Artifact URL:** https://claude.ai/code/artifact/6be797ba-d2bf-4cb8-b8e2-601cbade03d2
 
 Every live C.A.Gs component captured in a real browser at 375, 768 and 1280. 38 components, 104 captures, generated 2026-09-10 from commit `0766652`.
 
