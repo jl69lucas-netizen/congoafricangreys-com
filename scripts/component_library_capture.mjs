@@ -31,7 +31,9 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
 const OUT = path.join(ROOT, 'docs/artifacts/component-library');
-const PORT = 4321;
+// 4399, not 4321 — 4321 is SITE_PORT in tests/render/lib/servers.ts and a
+// concurrent render-harness run would collide with it.
+const PORT = 4399;
 const VIEWPORTS = [
   { vp: '375', width: 375, height: 900 },
   { vp: '768', width: 768, height: 1100 },
@@ -104,7 +106,10 @@ function startServer() {
       res.end(body);
     } catch { res.writeHead(500).end(); }
   });
-  return new Promise(r => server.listen(PORT, () => r(server)));
+  return new Promise((resolve, reject) => {
+    server.on('error', reject);
+    server.listen(PORT, '127.0.0.1', () => resolve(server));
+  });
 }
 
 /* ------------------------------------------------------------- capturing */
@@ -134,7 +139,12 @@ async function settle(page) {
  *  jump-rail/tab-bar cannot bleed into the element screenshot. Uses
  *  visibility, not display, so layout — and the target's own boundingBox —
  *  does not shift. Rows that ARE the chrome (e.g. the jump rail itself) are
- *  unaffected because `contains` exempts them. */
+ *  unaffected because `contains` exempts them.
+ *  Assumption: any fixed/sticky element outside the target's ancestor/
+ *  descendant chain is page chrome, not part of the component being
+ *  photographed — true for this site's header/footer/rails/tab-bars, but it
+ *  would wrongly hide a fixed element that is a sibling-of-content design
+ *  choice inside some future component. */
 async function hideChrome(loc) {
   await loc.evaluate((target) => {
     for (const el of document.querySelectorAll('*')) {
@@ -169,6 +179,10 @@ if im.width > 1280:
     im = im.resize((1280, round(im.height * 1280 / im.width)), Image.LANCZOS)
 im.save(dst, 'WEBP', quality=82, method=6)
 import os
+# MAX_BYTES = 90 KB per image. The plan said <=60 KB; 90 KB was chosen
+# deliberately so tables stay legible at 1280 — the folder runs ~3.4 MB
+# against a 6 MB budget, and the D2 artifact inlines it under a 16 MB cap,
+# so the extra headroom is affordable.
 if os.path.getsize(dst) > 90*1024:
     im.save(dst, 'WEBP', quality=70, method=6)
 if os.path.getsize(dst) > 90*1024 and im.width > 1000:
@@ -183,105 +197,128 @@ print(im.width, im.height)
 }
 
 async function main() {
+  try {
+    execFileSync('python3', ['-c', 'import PIL']);
+  } catch {
+    console.error('Pillow (PIL) is required: python3 -m pip install pillow');
+    process.exit(2);
+  }
+
   const resolveOnly = process.argv.includes('--resolve');
   const onlyArg = process.argv.find(a => a.startsWith('--only='));
   const only = onlyArg ? onlyArg.slice(7).split(',').map(s => s.trim()) : null;
   const catalog = only ? CATALOG.filter(r => only.includes(r.id)) : CATALOG;
   await mkdir(OUT, { recursive: true });
-  const server = await startServer();
-  const browser = await chromium.launch();
 
-  // ---- pass 1: resolve every selector on its built page (at 1280) --------
-  const resolvePage = await (await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 })).newPage();
-  const rows = [];
-  const dropped = [];
-  const corrected = [];
-  for (const row of catalog) {
-    process.stdout.write(`  resolving ${row.id}\n`);
-    let hit = null;
-    try {
-      await goto(resolvePage, `http://localhost:${PORT}/${row.page ? row.page + '/' : ''}`);
-      hit = await resolveOn(resolvePage, row);
-    } catch (e) {
-      console.log(`  NAV   ${row.id.padEnd(16)} ${e.message.split('\n')[0]}`);
-    }
-    if (!hit && row.openMaxVp) hit = row.selector.split(',')[0].trim(); // hidden-until-opened
-    if (!hit) {
-      // one more try at 375 — a mobile-only component is display:none at 1280
-      // but still present in the DOM, so querySelector would have found it;
-      // absence here means it is genuinely not on the page.
-      dropped.push(row.id);
-      console.log(`  DROP  ${row.id.padEnd(16)} no match for ${row.selector}`);
-      continue;
-    }
-    if (hit !== row.selector) { corrected.push(`${row.id}: "${row.selector}" -> "${hit}"`); }
-    rows.push({ ...row, selector: hit, captures: {} });
-  }
-  console.log(`\nResolve: ${catalog.length} rows · ${rows.length} resolved · ${dropped.length} dropped`);
-  if (corrected.length) { console.log('Corrected (comma-list narrowed to first match):'); corrected.forEach(c => console.log('  ' + c)); }
-  await resolvePage.context().close();
-  if (resolveOnly) { await browser.close(); server.close(); return; }
+  let server, browser;
+  try {
+    server = await startServer();
+    browser = await chromium.launch();
 
-  // ---- pass 2: capture -------------------------------------------------
-  const tmp = path.join(OUT, '.tmp.png');
-  for (const { vp, width, height } of VIEWPORTS) {
-    const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
-    const page = await ctx.newPage();
-    for (const row of rows) {
-      row.captures[vp] = null;
+    // ---- pass 1: resolve every selector on its built page (at 1280) ------
+    const resolvePage = await (await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 })).newPage();
+    const rows = [];
+    const dropped = [];
+    const corrected = [];
+    for (const row of catalog) {
+      process.stdout.write(`  resolving ${row.id}\n`);
+      let hit = null;
       try {
-        await goto(page, `http://localhost:${PORT}/${row.page ? row.page + '/' : ''}`);
-        if (row.open && width <= (row.openMaxVp ?? 99999)) {
-          await page.evaluate(() => window.scrollTo(0, 1800));
-          await page.waitForTimeout(700);
-          const btn = page.locator(row.open).first();
-          if (await btn.count() && await btn.isVisible()) { await btn.click(); await page.waitForTimeout(500); }
-        }
-        const loc = page.locator(row.selector).nth(row.nth ?? 0);
-        if (!(await loc.count())) continue;
-        let box = await loc.boundingBox();
-        if (!box || box.width < 8 || box.height < 8) continue;
-        await loc.scrollIntoViewIfNeeded().catch(() => {});
-        await page.waitForTimeout(400);
-        await settle(page);
-        await hideChrome(loc).catch(() => {});
-        box = await loc.boundingBox();
-        if (!box || box.width < 8 || box.height < 8) continue;
-        // locator.screenshot() has no `clip` option — the MAX_H cap is applied
-        // by the Pillow step, which crops before it resizes.
-        await loc.screenshot({ type: 'png', path: tmp });
-        const file = `${row.id}-${vp}.webp`;
-        const { w, h } = toWebp(tmp, path.join(OUT, file));
-        const bytes = (await stat(path.join(OUT, file))).size;
-        row.captures[vp] = { file, w, h, bytes };
-        console.log(`  ${vp.padStart(4)}  ${row.id.padEnd(16)} ${w}x${h}  ${(bytes/1024).toFixed(0)}KB`);
+        await goto(resolvePage, `http://127.0.0.1:${PORT}/${row.page ? row.page + '/' : ''}`);
+        hit = await resolveOn(resolvePage, row);
       } catch (e) {
-        console.log(`  ${vp.padStart(4)}  ${row.id.padEnd(16)} ERROR ${e.message.split('\n')[0]}`);
+        console.log(`  NAV   ${row.id.padEnd(16)} ${e.message.split('\n')[0]}`);
       }
+      if (!hit && row.openMaxVp) hit = row.selector.split(',')[0].trim(); // hidden-until-opened
+      if (!hit) {
+        // one more try at 375 — a mobile-only component is display:none at 1280
+        // but still present in the DOM, so querySelector would have found it;
+        // absence here means it is genuinely not on the page.
+        dropped.push(row.id);
+        console.log(`  DROP  ${row.id.padEnd(16)} no match for ${row.selector}`);
+        continue;
+      }
+      if (hit !== row.selector) { corrected.push(`${row.id}: "${row.selector}" -> "${hit}"`); }
+      rows.push({ ...row, selector: hit, captures: {} });
     }
-    await ctx.close();
-  }
-  await unlink(tmp).catch(() => {});
-  await browser.close();
-  server.close();
+    console.log(`\nResolve: ${catalog.length} rows · ${rows.length} resolved · ${dropped.length} dropped`);
+    if (corrected.length) { console.log('Corrected (comma-list narrowed to first match):'); corrected.forEach(c => console.log('  ' + c)); }
+    await resolvePage.context().close();
+    if (resolveOnly) return;
 
-  const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim();
-  let out = rows.map(({ open, openMaxVp, nth, ...r }) => r);
-  if (only && existsSync(path.join(OUT, 'manifest.json'))) {
-    const prev = JSON.parse(await readFile(path.join(OUT, 'manifest.json'), 'utf8'));
-    const byId = new Map(out.map(r => [r.id, r]));
-    out = prev.rows.map(r => byId.get(r.id) ?? r);
-    for (const r of byId.values()) if (!out.some(o => o.id === r.id)) out.push(r);
-  }
-  const manifest = { generated: new Date().toISOString(), commit, rows: out };
-  await writeFile(path.join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+    // ---- pass 2: capture ---------------------------------------------
+    const tmp = path.join(OUT, '.tmp.png');
+    for (const { vp, width, height } of VIEWPORTS) {
+      const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
+      const page = await ctx.newPage();
+      for (const row of rows) {
+        row.captures[vp] = null;
+        try {
+          await goto(page, `http://127.0.0.1:${PORT}/${row.page ? row.page + '/' : ''}`);
+          if (row.open && width <= (row.openMaxVp ?? 99999)) {
+            await page.evaluate(() => window.scrollTo(0, 1800));
+            await page.waitForTimeout(700);
+            const btn = page.locator(row.open).first();
+            if (await btn.count() && await btn.isVisible()) { await btn.click(); await page.waitForTimeout(500); }
+          }
+          const loc = page.locator(row.selector).nth(row.nth ?? 0);
+          if (!(await loc.count())) continue;
+          let box = await loc.boundingBox();
+          if (!box || box.width < 8 || box.height < 8) continue;
+          await loc.scrollIntoViewIfNeeded().catch(() => {});
+          await page.waitForTimeout(400);
+          await settle(page);
+          await hideChrome(loc).catch(() => {});
+          box = await loc.boundingBox();
+          if (!box || box.width < 8 || box.height < 8) continue;
+          // locator.screenshot() has no `clip` option — the MAX_H cap is applied
+          // by the Pillow step, which crops before it resizes.
+          await loc.screenshot({ type: 'png', path: tmp });
+          const file = `${row.id}-${vp}.webp`;
+          const { w, h } = toWebp(tmp, path.join(OUT, file));
+          const bytes = (await stat(path.join(OUT, file))).size;
+          row.captures[vp] = { file, w, h, bytes };
+          console.log(`  ${vp.padStart(4)}  ${row.id.padEnd(16)} ${w}x${h}  ${(bytes/1024).toFixed(0)}KB`);
+        } catch (e) {
+          console.log(`  ${vp.padStart(4)}  ${row.id.padEnd(16)} ERROR ${e.message.split('\n')[0]}`);
+        }
+      }
+      await ctx.close();
+    }
+    await unlink(tmp).catch(() => {});
 
-  const files = await readdir(OUT);
-  let total = 0;
-  for (const f of files) total += (await stat(path.join(OUT, f))).size;
-  const caps = rows.reduce((n, r) => n + Object.values(r.captures).filter(Boolean).length, 0);
-  console.log(`\n${rows.length} rows · ${caps} captures · ${dropped.length} dropped · folder ${(total/1048576).toFixed(2)} MB`);
-  if (total > 6 * 1048576) console.log('WARNING: folder exceeds the 6 MB budget for the D2 artifact.');
+    const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim();
+    let out = rows.map(({ open, openMaxVp, nth, ...r }) => r);
+    if (only && existsSync(path.join(OUT, 'manifest.json'))) {
+      const prev = JSON.parse(await readFile(path.join(OUT, 'manifest.json'), 'utf8'));
+      const byId = new Map(out.map(r => [r.id, r]));
+      out = prev.rows.map(r => byId.get(r.id) ?? r);
+      for (const r of byId.values()) if (!out.some(o => o.id === r.id)) out.push(r);
+    }
+    const manifest = { generated: new Date().toISOString(), commit, rows: out };
+    await writeFile(path.join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+
+    const files = await readdir(OUT);
+    let total = 0;
+    for (const f of files) total += (await stat(path.join(OUT, f))).size;
+    const caps = rows.reduce((n, r) => n + Object.values(r.captures).filter(Boolean).length, 0);
+    console.log(`\n${rows.length} rows · ${caps} captures · ${dropped.length} dropped · folder ${(total/1048576).toFixed(2)} MB`);
+    if (total > 6 * 1048576) console.log('WARNING: folder exceeds the 6 MB budget for the D2 artifact.');
+
+    // expected = every resolved row at all 3 viewports, minus rows too small
+    // to ever be captured at that viewport (recorded null and skipped above
+    // isn't distinguishable here, so this is a coarse ceiling: rows × 3).
+    const expected = rows.length * VIEWPORTS.length;
+    if (caps < 0.5 * expected) {
+      console.error(`\nFAILURE: only ${caps}/${expected} captures succeeded (< 50% threshold).`);
+      process.exitCode = 1;
+    }
+  } finally {
+    await browser?.close();
+    server?.close();
+  }
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  main().catch(e => { console.error(e); process.exit(1); });
+}
