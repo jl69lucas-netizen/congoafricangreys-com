@@ -189,3 +189,6 @@ flow strip under the copy, so folding it in removes a duplicate and lands the tw
 reader looking for a price arrives. **Trade-off:** it is second shortest at both widths, not
 shortest at Tablet as the note previously claimed (Tablet A 1,033, B 1,065, C 1,223; Desktop C 968,
 B 1,034, A 1,097), and at 390 the strip has to become a vertical list.
+
+## Canvas
+Published 2026-09-10: https://claude.ai/code/artifact/65cdf7d4-d24b-45b4-a8ba-b5bbd142fe15

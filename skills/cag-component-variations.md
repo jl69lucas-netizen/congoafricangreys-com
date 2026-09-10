@@ -221,6 +221,8 @@ calling the page done:
 
 ## 9. Record
 
+Variations canvas (2026-09-10): https://claude.ai/code/artifact/65cdf7d4-d24b-45b4-a8ba-b5bbd142fe15
+
 The 2026-09-10 homepage build's canvas and reference material live at:
 - `docs/design/homepage-variations/CONTRACT.md` — the canvas contract (worked example for
   §4 above).

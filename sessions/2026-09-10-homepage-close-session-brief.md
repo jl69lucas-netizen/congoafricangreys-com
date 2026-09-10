@@ -348,3 +348,9 @@ SUBMITTED 3 URL(s).
 
 - **Verdict recorded:** PASS-WITH-WARNINGS. Three accepted overrides (evidence per-slug term caps, the H6 advisory, the title-case FAQ outlier) and two findings left open on the page (7 real a11y rows, hero 649px at 1280).
 - **Next session starts with Part D** (variations canvas, component library, skill), then the a11y triage, then the `cag-inquiry-form.astro:387` 14.5px control, which is a real shared-component defect that renders on `/`.
+
+## Deliverables (artifacts)
+- Plan: https://claude.ai/code/artifact/cac94f42-ae43-4ca3-bcc5-6c950978195b
+- Gate report: https://claude.ai/code/artifact/ff786ba9-0317-4e71-9a64-9a06d17bf52e
+- Component library: https://claude.ai/code/artifact/6be797ba-d2bf-4cb8-b8e2-601cbade03d2
+- Variations canvas (90 artboards, editable, PNG/PDF export): https://claude.ai/code/artifact/65cdf7d4-d24b-45b4-a8ba-b5bbd142fe15 — working files in `docs/design/homepage-variations/`, re-seed per `skills/cag-component-variations.md`
