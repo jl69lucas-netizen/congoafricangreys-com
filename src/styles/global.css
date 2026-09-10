@@ -126,3 +126,165 @@
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
 }
+
+/* ── Mobile table stacking · .cag-tstack (2026-09-10) ───────────────────────
+   Below 640px a multi-column table becomes one card per row — no sideways
+   scroll, no squeezed columns. Locked recipe from the hand-raised page
+   (breeder, 2026-07-23), promoted to a shared utility so every table on the
+   site stacks the same way: same width (full container), same card radius,
+   same band / label / value type sizes.
+
+   Markup contract:
+     <div class="cag-tstack-wrap"> <table class="cag-tstack"> …
+     · first <td> of each row is the card title band (needs no label)
+     · every other <td> carries data-label="<column header>"
+     · optional data-tone="green|clay" colours the label (2-way comparisons)
+     · optional class="is-pick" on a <tr> keeps a highlighted row highlighted
+     · optional class="cag-tstack-price" on a <td> pins it to the band, right
+     · optional .cag-tstack--legend keeps th 2..n visible as a legend strip
+   Desktop is untouched: nothing here applies above 640px.
+   thead is clip-hidden (not display:none) so column headers stay in the
+   accessibility tree; a11y tree still reads row → cell → header. */
+@media (max-width: 640px) {
+  .cag-tstack-wrap {
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  .cag-tstack-wrap > .overflow-x-auto { overflow: visible !important; }
+
+  table.cag-tstack {
+    display: block;
+    width: 100%;
+    min-width: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: transparent;
+  }
+  .cag-tstack thead {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .cag-tstack caption,
+  .cag-tstack tbody,
+  .cag-tstack tr,
+  .cag-tstack td { display: block; width: 100%; }
+
+  /* the card */
+  .cag-tstack tbody tr {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 14px;
+    overflow: hidden;
+    margin: 0 0 12px;
+    box-shadow: 0 2px 10px rgba(60,30,10,.05);
+  }
+  .cag-tstack tbody tr:last-child { margin-bottom: 0; }
+
+  /* cells */
+  .cag-tstack td {
+    padding: .7rem .95rem;
+    border: 0;
+    border-bottom: 1px solid var(--color-line);
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: left;
+  }
+  .cag-tstack tr td:last-child { border-bottom: 0; }
+
+  /* first cell = title band, mirrors the desktop <th> row */
+  .cag-tstack td:first-child {
+    background: #f6f1ea;
+    color: #20342b;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: .8rem .95rem;
+    border-bottom: 1px solid rgba(45,106,79,.16);
+  }
+  .cag-tstack td:first-child .cag-tag {
+    font-size: 15px;
+    letter-spacing: .02em;
+    text-transform: none;
+    font-weight: 600;
+    color: #20342b;
+  }
+
+  /* labelled value rows: label | value.
+     The label is an absolutely-positioned pseudo-element and the value is the
+     cell's own padded flow, NOT a grid — a grid/flex cell would split mixed
+     inline content (<a>, <svg>, <em>, text runs) into separate items and
+     scatter them across the columns (seen on the colspan cell, 2026-09-10). */
+  .cag-tstack td[data-label] {
+    position: relative;
+    padding-left: calc(.95rem + 6.25rem + .8rem);
+  }
+  .cag-tstack td[data-label]::before {
+    content: attr(data-label);
+    position: absolute;
+    left: .95rem;
+    top: calc(.7rem + .25em);
+    width: 6.25rem;
+    font-size: 11px;
+    line-height: 1.35;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #6b6259;
+  }
+  /* a cell that spans the row (colspan) is a note: label on its own line */
+  .cag-tstack td[colspan][data-label] { padding-left: .95rem; }
+  .cag-tstack td[colspan][data-label]::before {
+    position: static;
+    display: block;
+    width: auto;
+    margin-bottom: .35rem;
+  }
+  .cag-tstack td[data-tone="green"]::before { color: #2D6A4F; }
+  .cag-tstack td[data-tone="clay"]::before  { color: #b04228; }
+
+  /* highlighted row survives the stack */
+  .cag-tstack tr.is-pick { background: #fdf6f3; border-color: rgba(176,66,40,.22); }
+  .cag-tstack tr.is-pick td:first-child { background: #f8e9e3; }
+
+  /* price pinned to the band, right edge (pricing table) */
+  .cag-tstack tr.has-price {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .cag-tstack tr.has-price td { grid-column: 1 / -1; }
+  .cag-tstack tr.has-price td:first-child { grid-column: 1; grid-row: 1; }
+  .cag-tstack tr.has-price td.cag-tstack-price {
+    grid-column: 2; grid-row: 1;
+    display: flex; align-items: center;
+    background: #f6f1ea;
+    border-bottom: 1px solid rgba(45,106,79,.16);
+    padding: .8rem .95rem .8rem 0;
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .cag-tstack tr.has-price.is-pick td.cag-tstack-price { background: #f8e9e3; }
+
+  /* legend strip: keep the variant headers (icons + tint) above the cards */
+  .cag-tstack--legend thead {
+    position: static; width: auto; height: auto;
+    overflow: visible; clip: auto; white-space: normal;
+    display: block; margin-bottom: 12px;
+  }
+  .cag-tstack--legend thead tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .cag-tstack--legend thead th { display: block; width: auto !important; padding: .75rem .85rem; border-radius: 14px; border: 0; }
+  .cag-tstack--legend thead th:first-child { display: none; }
+  .cag-tstack--legend thead th .font-lora { font-size: 1rem; }
+}

@@ -31,8 +31,8 @@ const {
 
 {variant === 'classic' && (
   <div>
-    <div class="bg-white rounded-3xl border border-line cag-warm-shadow overflow-hidden">
-      <table class="w-full">
+    <div class="cag-tstack-wrap bg-white rounded-3xl border border-line cag-warm-shadow overflow-hidden">
+      <table class="cag-tstack w-full">
         <thead>
           <tr class="bg-clay text-white">
             <th class="p-5 text-left cag-tag">Subspecies</th>
@@ -44,21 +44,21 @@ const {
         </thead>
         <tbody class="text-[14px]">
           {rows.map((r, i) => (
-            <tr class={`border-b border-line ${i % 2 === 1 ? 'bg-warm' : ''}`}>
+            <tr class={`has-price border-b border-line ${i % 2 === 1 ? 'bg-warm' : ''} ${r.topPick ? 'is-pick' : ''}`}>
               <td class="p-5"><span class="cag-tag text-clay">{r.breed}</span></td>
-              <td class="p-5 text-mid">{r.weight}</td>
-              <td class="p-5 text-mid">{r.fit}</td>
-              <td class="p-5 text-mid">{r.ability}</td>
-              <td class="p-5 text-right font-display font-bold text-clay">{r.price}</td>
+              <td class="p-5 text-mid" data-label="Adult weight">{r.weight}</td>
+              <td class="p-5 text-mid" data-label="Best fit">{r.fit}</td>
+              <td class="p-5 text-mid" data-label="Talking">{r.ability}</td>
+              <td class="cag-tstack-price p-5 text-right font-display font-bold text-clay">{r.price}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
     {note && (
-      <div class="bg-warm rounded-2xl border-l-4 border-clay p-6 mt-5">
+      <div class="bg-white rounded-2xl border border-line cag-warm-shadow p-6 mt-5">
         <div class="cag-tag text-clay">EXPERT TAKE · TERI BENJAMIN</div>
-        <p class="text-ink mt-2 text-[15px] leading-relaxed">"{note}"</p>
+        <p class="text-ink mt-2 mb-0 text-[15px] leading-relaxed">"{note}"</p>
       </div>
     )}
   </div>

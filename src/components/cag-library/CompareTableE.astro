@@ -19,6 +19,8 @@ export interface Props {
   timnehHref?: string;
   cta1Label?: string;
   cta2Label?: string;
+  col1Label?: string;
+  col2Label?: string;
 }
 
 const check = '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg>';
@@ -46,6 +48,8 @@ const {
   timnehHref = '/timneh-african-grey-for-sale/',
   cta1Label = 'Inquire about a Congo →',
   cta2Label = 'Inquire about a Timneh →',
+  col1Label,
+  col2Label,
   rows = [
     ['Species', '<em>Psittacus erithacus</em>', '<em>Psittacus timneh</em>'],
     ['Size', '12–14 in · 400–600 g', '9–11 in · 275–375 g'],
@@ -61,6 +65,9 @@ const {
     ['CITES docs', check + ' Appendix I, captive-bred', check + ' Appendix I, captive-bred'],
   ] as [string, string, string][],
 } = Astro.props;
+// Short labels for the mobile stacked cards (see .cag-tstack in global.css).
+const lbl1 = col1Label ?? (col1Title === 'Congo African Grey' ? 'Congo' : col1Title);
+const lbl2 = col2Label ?? (col2Title === 'Timneh African Grey' ? 'Timneh' : col2Title);
 ---
 
 <div class="bg-cream py-14 md:py-16 px-4">
@@ -73,10 +80,10 @@ const {
       </div>
     )}
 
-    <div class="overflow-hidden rounded-2xl border border-black/[0.07] bg-white"
+    <div class="cag-tstack-wrap overflow-hidden rounded-2xl border border-black/[0.07] bg-white"
          style="box-shadow:0 4px 24px rgba(60,30,10,0.07);">
       <div class="overflow-x-auto">
-        <table class="w-full border-collapse" style="min-width:640px;">
+        <table class="cag-tstack cag-tstack--legend w-full border-collapse" style="min-width:640px;">
           <thead>
             <tr>
               <th class="text-left font-sora text-xs font-bold uppercase tracking-[0.09em] text-stone-500 bg-white px-6 py-5 border-b border-black/[0.07]" style="width:24%;">{featureLabel}</th>
@@ -108,8 +115,8 @@ const {
             {rows.map(([f, c, t], i) => (
               <tr class={i % 2 === 0 ? 'bg-cream' : 'bg-white'}>
                 <td class="px-6 py-4 font-sora text-[13px] font-semibold text-ink" class:list={[i < rows.length - 1 && 'border-b border-black/[0.07]']}>{f}</td>
-                <td class="px-6 py-4 font-sora text-sm text-stone-600 border-l border-black/[0.07]" class:list={[i < rows.length - 1 && 'border-b border-black/[0.07]']} set:html={c}></td>
-                <td class="px-6 py-4 font-sora text-sm text-stone-600 border-l border-black/[0.07]" class:list={[i < rows.length - 1 && 'border-b border-black/[0.07]']} set:html={t}></td>
+                <td class="px-6 py-4 font-sora text-sm text-stone-600 border-l border-black/[0.07]" class:list={[i < rows.length - 1 && 'border-b border-black/[0.07]']} data-label={lbl1} data-tone="green" set:html={c}></td>
+                <td class="px-6 py-4 font-sora text-sm text-stone-600 border-l border-black/[0.07]" class:list={[i < rows.length - 1 && 'border-b border-black/[0.07]']} data-label={lbl2} data-tone="clay" set:html={t}></td>
               </tr>
             ))}
           </tbody>
