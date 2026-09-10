@@ -27,7 +27,7 @@ gate was run **twice**. Nothing was fixed in this pass — findings are recorded
 | `npm run test:render:meta` | **PASS** | 255 passed · 24 skipped | — |
 | `npm run test:render:pages` (run 1) | **PASS** (57 tests, 15.1m) | 19 pages · 294 rows sitewide | **24 rows / 216 inst** |
 | `npm run test:render:pages` (run 2) | **PASS** (57 tests, 14.7m) | 19 pages · 294 rows sitewide | **24 rows / 216 inst** |
-| `page_hardening_scan.py index` | **NO VERDICT** — did not terminate (>30 CPU-min, 0 bytes out) | see harness defect H1 | — |
+| `page_hardening_scan.py index` | **NO VERDICT** — killed at 37m46s CPU / 43m wall, 0 bytes out | see harness defect H1 | — |
 | `seam_parity.py index` | FAIL `index.astro` sections=20 seams=6 missing=13 | 52 pages using the idiom (53 N/A) · 29 FAIL | out-of-profile, see F3 |
 | `final_page_audit.py index --type home` | **PASS-WITH-WARNINGS** | 1 of 1 | WARN `min_h6_5`, `house_method` |
 | `aeo_audit.py index` | **0 pages matched — not a pass** (harness defect H2) | 0 | — |
@@ -165,7 +165,7 @@ charged to the change, not to a new rule.
   homepage.** `main()` filters with `pages = [p for p in pages if any(s in p for s in args)]`.
   Every built page's path ends `/index.html`, so the slug `index` matches **all 105 pages**
   (proved: `len([p for p in glob('dist/**/index.html') if 'index' in p]) == 105`). The run
-  burned >30 CPU-minutes with 100% of `sample(1)` frames inside the regex engine (three
+  burned 37m46s of CPU over 43 minutes of wall clock before it was killed, with 100% of `sample(1)` frames inside the regex engine (three
   frames below `main`, consistent with `_subtrees_with_class` / `check_class_drift`
   backtracking) and produced no output. **The homepage has no hardening-scan verdict this
   pass.** Fix belongs in `tests/render/fixtures/known_broken/` first, per CLAUDE.md.
