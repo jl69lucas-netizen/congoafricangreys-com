@@ -1,0 +1,911 @@
+<title>Table Design Prompts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+
+<style>
+:root {
+  --ground:      #efe9e2;
+  --ground-deep: #e4dcd2;
+  --panel:       #faf7f4;
+  --paper:       #fbf9f7;
+  --paper-edge:  rgba(60,30,10,.14);
+  --bar:         #0f3d2c;
+  --bar-ink:     #e8efe9;
+  --ink:         #1f2a24;
+  --ink-soft:    #4a5c52;
+  --muted:       #6d6459;
+  --forest:      #2D6A4F;
+  --clay:        #b04228;
+  --clay-solid:  #c8472f;
+  --rule:        rgba(60,30,10,.14);
+  --rule-soft:   rgba(60,30,10,.07);
+  --tint:        rgba(45,106,79,.07);
+  --shadow:      0 6px 28px rgba(60,30,10,.12);
+  --shadow-lift: 0 14px 40px rgba(60,30,10,.16);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:      #0c1f18;
+    --ground-deep: #081711;
+    --panel:       #132c22;
+    --paper:       #143024;
+    --paper-edge:  rgba(159,199,176,.20);
+    --bar:         #061a12;
+    --bar-ink:     #cfe3d7;
+    --ink:         #e6eee9;
+    --ink-soft:    #b5c8bd;
+    --muted:       #8fa79a;
+    --forest:      #7fb598;
+    --clay:        #f0866f;
+    --clay-solid:  #c8472f;
+    --rule:        rgba(159,199,176,.20);
+    --rule-soft:   rgba(159,199,176,.10);
+    --tint:        rgba(127,181,152,.10);
+    --shadow:      0 6px 28px rgba(0,0,0,.42);
+    --shadow-lift: 0 14px 40px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"] {
+  --ground:      #0c1f18;
+  --ground-deep: #081711;
+  --panel:       #132c22;
+  --paper:       #143024;
+  --paper-edge:  rgba(159,199,176,.20);
+  --bar:         #061a12;
+  --bar-ink:     #cfe3d7;
+  --ink:         #e6eee9;
+  --ink-soft:    #b5c8bd;
+  --muted:       #8fa79a;
+  --forest:      #7fb598;
+  --clay:        #f0866f;
+  --clay-solid:  #c8472f;
+  --rule:        rgba(159,199,176,.20);
+  --rule-soft:   rgba(159,199,176,.10);
+  --tint:        rgba(127,181,152,.10);
+  --shadow:      0 6px 28px rgba(0,0,0,.42);
+  --shadow-lift: 0 14px 40px rgba(0,0,0,.5);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- masthead ---------- */
+.mast {
+  background: var(--bar);
+  color: var(--bar-ink);
+  padding: 30px 32px 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px 32px;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--clay-solid);
+}
+.mast-id { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
+.kicker {
+  font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+  font-weight: 600; color: #e8604c;
+}
+.mast h1 {
+  font-family: Newsreader, Georgia, serif;
+  font-weight: 600; font-size: clamp(27px, 4vw, 38px);
+  line-height: 1.1; margin: 0; letter-spacing: -.01em;
+  text-wrap: balance; color: #fff;
+}
+.mast p { margin: 0; color: #a9c3b5; font-size: 14px; max-width: 62ch; }
+.mast-acts { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ---------- tally ---------- */
+.tally {
+  display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+  background: var(--panel);
+  border-bottom: 1px solid var(--rule);
+}
+.tally div {
+  padding: 15px 20px;
+  display: flex; flex-direction: column; gap: 3px;
+  border-right: 1px solid var(--rule-soft);
+}
+.tally div:last-child { border-right: 0; }
+.tally b {
+  font-family: Newsreader, Georgia, serif;
+  font-size: 25px; font-weight: 600; line-height: 1;
+  color: var(--forest); font-variant-numeric: tabular-nums;
+}
+.tally span {
+  font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600;
+}
+
+/* ---------- shell ---------- */
+.shell {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: 40px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 36px 32px 90px;
+  align-items: start;
+}
+nav {
+  position: sticky; top: 20px;
+  display: flex; flex-direction: column; gap: 2px;
+  border-left: 1px solid var(--rule);
+  padding-left: 2px;
+}
+nav a {
+  color: var(--ink-soft); text-decoration: none;
+  font-size: 13px; padding: 8px 12px;
+  border-left: 2px solid transparent; margin-left: -1px;
+  line-height: 1.35;
+}
+nav a:hover { color: var(--clay); background: var(--tint); }
+nav a.on { color: var(--clay); border-left-color: var(--clay-solid); font-weight: 600; }
+nav .navhead {
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700; padding: 6px 12px 10px;
+}
+
+main { display: flex; flex-direction: column; gap: 34px; min-width: 0; }
+
+/* ---------- section ---------- */
+section { scroll-margin-top: 20px; display: flex; flex-direction: column; gap: 14px; }
+.sec-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--rule); padding-bottom: 9px;
+}
+.sec-head h2 {
+  font-family: Newsreader, Georgia, serif;
+  font-weight: 600; font-size: 25px; margin: 0; line-height: 1.2;
+  color: var(--ink); text-wrap: balance;
+}
+.prose { display: flex; flex-direction: column; gap: 13px; }
+.prose p { margin: 0; max-width: 68ch; color: var(--ink-soft); }
+.prose strong { color: var(--ink); font-weight: 600; }
+.prose ul, .prose ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; color: var(--ink-soft); }
+.prose a { color: var(--clay); }
+.prose code {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .88em; background: var(--tint); color: var(--forest);
+  padding: 1.5px 5px; border-radius: 4px;
+}
+
+/* ---------- tables in prose ---------- */
+.tblwrap { overflow-x: auto; }
+.prose table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.prose th {
+  text-align: left; font-size: 10.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted); font-weight: 700;
+  padding: 0 14px 8px 0; border-bottom: 1px solid var(--rule); white-space: nowrap;
+}
+.prose td {
+  padding: 11px 14px 11px 0; border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top; color: var(--ink-soft);
+}
+.prose td:first-child { color: var(--forest); font-weight: 600; white-space: nowrap; }
+
+/* ---------- payload sheet ---------- */
+.sheet {
+  border: 1px solid var(--paper-edge);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.sheet-bar {
+  background: var(--bar); color: var(--bar-ink);
+  padding: 10px 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+}
+.sheet-bar span {
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  font-weight: 600; color: #9ab8a8;
+  font-family: "IBM Plex Mono", monospace;
+}
+.sheet pre {
+  margin: 0; padding: 20px 22px; overflow-x: auto;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 12.5px; line-height: 1.62; color: var(--ink);
+  white-space: pre; tab-size: 2;
+}
+
+/* ---------- buttons ---------- */
+button {
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  letter-spacing: .04em;
+  border-radius: 50px; padding: 9px 17px; cursor: pointer;
+  border: 1px solid transparent; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.b-clay { background: var(--clay-solid); color: #fff; }
+.b-clay:hover { background: #b03d27; }
+.b-ghost { background: transparent; color: #cfe3d7; border-color: rgba(207,227,215,.4); }
+.b-ghost:hover { background: rgba(207,227,215,.13); color: #fff; }
+.b-copy { background: transparent; color: var(--forest); border-color: var(--rule); }
+.b-copy:hover { background: var(--tint); }
+button:focus-visible, nav a:focus-visible { outline: 2px solid var(--clay-solid); outline-offset: 2px; }
+button.done { background: var(--forest); color: #fff; border-color: transparent; }
+svg { flex: none; }
+
+.foot {
+  border-top: 1px solid var(--rule); padding-top: 18px;
+  font-size: 12.5px; color: var(--muted); max-width: 68ch;
+}
+
+@media (max-width: 880px) {
+  .shell { grid-template-columns: minmax(0,1fr); gap: 26px; padding: 26px 20px 70px; }
+  nav { position: static; flex-direction: row; flex-wrap: wrap; border-left: 0; padding-left: 0;
+        border-bottom: 1px solid var(--rule); padding-bottom: 12px; }
+  nav a { border-left: 0; border-bottom: 2px solid transparent; padding: 6px 10px; }
+  nav a.on { border-left-color: transparent; border-bottom-color: var(--clay-solid); }
+  nav .navhead { width: 100%; padding: 0 0 4px; }
+  .tally { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .tally div:nth-child(2) { border-right: 0; }
+  .mast { padding: 24px 20px 20px; }
+  .sheet pre { font-size: 11.5px; padding: 16px 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+
+<div class="mast">
+  <div class="mast-id">
+    <p class="kicker">C.A.Gs · Homepage Tables</p>
+    <h1>Table Design Prompts</h1>
+    <p>Four prompts for Claude Design on the web. Each returns 4 style directions across mobile, tablet and desktop — 16 designs, 48 artboards in all.</p>
+  </div>
+  <div class="mast-acts">
+    <button class="b-clay" id="dl">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M4 20h16"/></svg>
+      Download .md
+    </button>
+    <button class="b-ghost" id="copyall">Copy everything</button>
+  </div>
+</div>
+
+<div class="tally">
+  <div><b>4</b><span>Tables</span></div>
+  <div><b>4</b><span>Styles each</span></div>
+  <div><b>16</b><span>Designs</span></div>
+  <div><b>48</b><span>Artboards</span></div>
+</div>
+
+<div class="shell">
+  <nav id="nav"><p class="navhead">Contents</p></nav>
+  <main id="main"></main>
+</div>
+
+<script type="text/markdown" id="src"># C.A.Gs Homepage Tables — Claude Design Prompt Pack
+
+Four prompts, one per homepage table. Each produces **4 style directions x 3 viewports = 12 artboards**.
+Across all four runs: **16 designs, 48 artboards.**
+
+## How to run this
+
+**Run the four prompts separately — one per table (Recommended).**
+
+Each prompt below is complete on its own: brand colours, sizes, rules and the table's exact text are
+all inside it. Paste one, get 12 artboards, then start a fresh Claude Design run for the next table.
+
+**Why separate runs rather than one:** 48 artboards in a single run is where canvas builds start
+dropping detail and truncating late artboards — the last table would come back worse than the first.
+Separate runs also mean that if Table 3 comes back wrong, you re-run Table 3 alone instead of
+regenerating all sixteen designs. **The trade-off:** the four runs will not share a house style
+unless you pick the same letter across all four tables, so compare the letters before you commit.
+
+The preamble repeats inside every prompt. That is deliberate — it makes each one a single paste.
+
+**Bring back to me for the build:** the canvas link plus your pick per table, written as
+`Table 1c, Table 2a, Table 3c, Table 4b`. If you edited an artboard inside Claude Design, say so —
+I build from what is on the canvas, not from the original prompt.
+
+## The four style directions
+
+Every table uses the same four, so `a` means the same thing on Table 1 as on Table 4 and you can
+compare like with like.
+
+| | Direction | What it is |
+|---|---|---|
+| **a** | Elevated Cards | Soft-shadowed rounded panels, generous padding, column headers as floating chips. Modern product-pricing feel. |
+| **b** | Editorial Rule | Type-led and near-boxless. Large Newsreader display, thin forest hairlines, wide whitespace, small-caps labels. |
+| **c** | Dark Panel | The table sits on a deep forest ground with cream text and mint values, one column or row lifted. Premium, high contrast. |
+| **d** | Split Feature | Asymmetric. A lead summary panel beside the data; on mobile the summary becomes a strip across the top. |
+
+## Prompt — Table 1 (Congo vs Timneh)
+
+```
+You are designing a comparison-table component for CongoAfricanGreys.com (C.A.Gs), a family
+breeder of captive-bred Congo and Timneh African Greys in Midland, Texas since 2014.
+
+Produce a design canvas with 12 artboards: 4 style directions x 3 viewports.
+
+VIEWPORT WIDTHS — exact, do not vary:
+  Mobile   390px wide
+  Tablet   768px wide
+  Desktop  1440px wide
+
+ARTBOARD NAMES — use exactly these twelve:
+  Table 1a — Mobile     Table 1a — Tablet     Table 1a — Desktop
+  Table 1b — Mobile     Table 1b — Tablet     Table 1b — Desktop
+  Table 1c — Mobile     Table 1c — Tablet     Table 1c — Desktop
+  Table 1d — Mobile     Table 1d — Tablet     Table 1d — Desktop
+
+HEIGHT BUDGET — measured from the current live table. Stay at or under these:
+  Mobile   2,300px      Tablet   1,320px      Desktop  1,420px
+Shorter is better on Mobile. This table is the longest on the site and the mobile stack is the
+problem being solved.
+
+BRAND COLOURS — use these and nothing else:
+  #2D6A4F  forest green, primary
+  #0f3d2c  deep forest, dark scrims and headings
+  #234f3b  aviary dark, dark panels
+  #c8472f  clay ink, solid button fills with white text on them
+  #e8604c  clay, large text and tints, on dark grounds only
+  #b04228  clay for small text on a light ground
+  #faf7f4  cream, page ground
+  #f6efe8  warm bed, secondary ground
+  #1f2a24  ink, body text
+  #5b524a  muted, secondary text
+  rgba(60,30,10,.12)  hairline rules
+  #9fc7b0  mint, text on deep forest only
+
+TYPE:
+  Headings   Newsreader, weight 600
+  Body / UI  IBM Plex Sans
+  Uppercase labels  11-12px, letter-spacing .12em
+  Mobile body text never below 14px
+
+HARD RULES:
+  1. The table MUST stack on Mobile. A horizontally scrolling table is never the only mobile answer.
+  2. Use the text below word for word. Do not rewrite, shorten, reorder, or add rows.
+  3. No colours outside the list above.
+  4. No emoji. The characters * and ✓ and · and → and ↗ in the content are text — keep them as typed.
+  5. One solid clay button per artboard maximum. Everything else outline or text.
+  6. Mobile: no tap target under 44px tall.
+  7. Card radius 16-18px, pill radius 50px. Shadow, where used: 0 6px 28px rgba(60,30,10,.12)
+  8. No gradient text. No decorative left-edge accent stripes.
+  9. Every figure below is real. Transcribe prices and species names exactly.
+
+THE FOUR DIRECTIONS — make them genuinely different designs, not four versions of one idea:
+  1a  ELEVATED CARDS — soft-shadowed rounded panels, generous padding, column headers as
+      floating chips above the data. Modern product-pricing feel.
+  1b  EDITORIAL RULE — type-led and near-boxless. Large Newsreader display, thin forest
+      hairlines only, wide whitespace, small-caps row labels. No cards, no fills.
+  1c  DARK PANEL — the table sits on a #0f3d2c ground, cream text, mint values, one column
+      lifted. Premium and high contrast.
+  1d  SPLIT FEATURE — asymmetric. A lead summary panel on one side, the trait data on the
+      other. On Mobile the summary becomes a strip across the top.
+
+CONTENT — exact text, all of it appears on all twelve artboards:
+
+Eyebrow:  Compare Variants
+Heading:  Is a Congo or a Timneh African Grey Right for You?
+Intro:    We hand-raise both, and neither is "better" — the Congo is the bolder, more headline
+          talker, while the Timneh is calmer and tends to start talking earlier, so the right one
+          comes down to your home and your experience. Below we put our two Greys side by side,
+          so you can see exactly which one we would help you bring home.
+
+Column headers:
+  Feature
+  Congo African Grey     (subtitle: The classic, dramatic talker)
+  Timneh African Grey    (subtitle: Calmer, earlier to bond)
+
+Rows, in this order:
+  Species          | Psittacus erithacus            | Psittacus timneh
+  Size             | 12-14 in · 400-600 g           | 9-11 in · 275-375 g
+  Tail color       | Scarlet red                    | Maroon / dark crimson
+  Lifespan         | 40-60 years                    | 40-60 years
+  Talking ability  | 5 stars, exceptional           | 4 stars, excellent, earlier
+  Talking onset    | ~12 months                     | ~4-6 months (earlier)
+  Temperament      | Confident, dramatic            | Calmer, steadier
+  Best for         | Experienced owners             | First-time owners
+  Price (ours)     | $1,700-$2,500                  | $1,500-$1,600
+  Available now    | Roys · Amie · Bery · Jins/Jeni | Elad · Evie
+  Sexed by lab     | ✓ Yes                          | ✓ Yes
+  Paperwork        | ✓ Full set, hatched here       | ✓ Full set, hatched here
+
+Note: render "Species" values in italic — they are scientific names. Render the star ratings as
+five star glyphs and four-and-a-half star glyphs, not as the word "stars".
+
+Two buttons below the table:
+  Inquire about a Congo →      (this one is the solid clay button)
+  Inquire about a Timneh →     (outline)
+
+Attribution strip below the buttons, with the two labels set as small pills:
+  [Fact ↗]  The size, tail and lifespan rows above are species figures from the World Parrot
+  Trust profile;
+  [Observed here · since 2014]  the talking-onset and temperament rows are what we have seen in
+  our own clutches.
+
+Closing line, with the comparison phrase as a link:
+  Our full Congo vs Timneh African Grey comparison goes deeper than the table — temperament,
+  talking onset, noise, and which of our two Greys we would match to your home.
+```
+
+## Prompt — Table 2 (Male vs Female)
+
+```
+You are designing a comparison-table component for CongoAfricanGreys.com (C.A.Gs), a family
+breeder of captive-bred Congo and Timneh African Greys in Midland, Texas since 2014.
+
+Produce a design canvas with 12 artboards: 4 style directions x 3 viewports.
+
+VIEWPORT WIDTHS — exact, do not vary:
+  Mobile   390px wide
+  Tablet   768px wide
+  Desktop  1440px wide
+
+ARTBOARD NAMES — use exactly these twelve:
+  Table 2a — Mobile     Table 2a — Tablet     Table 2a — Desktop
+  Table 2b — Mobile     Table 2b — Tablet     Table 2b — Desktop
+  Table 2c — Mobile     Table 2c — Tablet     Table 2c — Desktop
+  Table 2d — Mobile     Table 2d — Tablet     Table 2d — Desktop
+
+HEIGHT BUDGET — measured from the current live table. Stay at or under these:
+  Mobile   1,650px      Tablet   1,230px      Desktop  1,210px
+
+BRAND COLOURS — use these and nothing else:
+  #2D6A4F  forest green, primary
+  #0f3d2c  deep forest, dark scrims and headings
+  #234f3b  aviary dark, dark panels
+  #c8472f  clay ink, solid button fills with white text on them
+  #e8604c  clay, large text and tints, on dark grounds only
+  #b04228  clay for small text on a light ground
+  #faf7f4  cream, page ground
+  #f6efe8  warm bed, secondary ground
+  #1f2a24  ink, body text
+  #5b524a  muted, secondary text
+  rgba(60,30,10,.12)  hairline rules
+  #9fc7b0  mint, text on deep forest only
+
+TYPE:
+  Headings   Newsreader, weight 600
+  Body / UI  IBM Plex Sans
+  Uppercase labels  11-12px, letter-spacing .12em
+  Mobile body text never below 14px
+
+HARD RULES:
+  1. The table MUST stack on Mobile. A horizontally scrolling table is never the only mobile answer.
+  2. Use the text below word for word. Do not rewrite, shorten, reorder, or add rows.
+  3. No colours outside the list above.
+  4. No emoji. The ↗ character in the content is text — keep it as typed.
+  5. One solid clay button per artboard maximum. Everything else outline or text.
+  6. Mobile: no tap target under 44px tall.
+  7. Card radius 16-18px, pill radius 50px. Shadow, where used: 0 6px 28px rgba(60,30,10,.12)
+  8. No gradient text. No decorative left-edge accent stripes.
+
+THE DESIGN PROBLEM SPECIFIC TO THIS TABLE: the cells are full sentences, not short values. Do not
+squeeze sentences into narrow columns. Give the prose room and let the layout breathe.
+
+THE FOUR DIRECTIONS — make them genuinely different designs, not four versions of one idea:
+  2a  ELEVATED CARDS — soft-shadowed rounded panels, generous padding, column headers as
+      floating chips above the data. Modern product-pricing feel.
+  2b  EDITORIAL RULE — type-led and near-boxless. Large Newsreader display, thin forest
+      hairlines only, wide whitespace, small-caps row labels. No cards, no fills.
+  2c  DARK PANEL — the table sits on a #0f3d2c ground, cream text, mint values, one column
+      lifted. Premium and high contrast.
+  2d  SPLIT FEATURE — asymmetric. A lead summary panel on one side, the trait data on the
+      other. On Mobile the summary becomes a strip across the top.
+
+CONTENT — exact text, all of it appears on all twelve artboards:
+
+Eyebrow:  Sex, Confirmed by Lab
+Heading:  Should You Choose a Male or Female African Grey?
+Intro, with "Observed here · since 2014" as a small pill at the start of it:
+          In our experience hand-raising both, the sex of an African Grey matters far less than
+          most buyers expect — our full guide to male vs female African Grey parrots walks
+          through all eight differences, but the short version is that a bird's upbringing shapes
+          temperament far more than its sex, and because every Grey we place is sexed by a lab
+          you always know exactly which you are bringing home.
+          (set "guide to male vs female African Grey parrots" and "sexed by a lab" as links)
+
+Column headers:
+  What buyers ask about
+  Male African Grey
+  Female African Grey
+
+Rows, in this order:
+  Talking & mimicry | Often a touch more talkative and a bolder mimic
+                    | Slightly quieter, but still an excellent talker
+  Temperament       | Confident; can be territorial or dominant, especially in breeding season
+                    | Typically gentler and more even, though it can be moody at times
+  Bonding style     | Outgoing — often bonds with the whole household
+                    | May bond closely with one person; can be reserved with strangers
+
+Fourth row, full width across both value columns, labelled "Telling them apart", containing a
+small [Fact ↗] pill and then this text:
+  African Greys are sexually monomorphic — males and females look identical — so PCR-based DNA
+  sexing from a feather or blood sample, not invasive surgical sexing, is the only certain
+  method. It is included with every bird we place.
+  (set "PCR-based DNA sexing" as a link)
+
+Recommendation block below the table, headed "Our recommendation":
+  Honestly, the "better" sex is the one whose personality fits your home — a quieter female
+  African Grey may suit a calm apartment, while a bold male African Grey thrives in a busy
+  family. Tell Mark & Teri what you are looking for and they will match you with the right
+  hand-raised bird; you can compare male and female African Greys in full here or ask us which
+  Greys are available now.
+  (set "compare male and female African Greys in full here" and "ask us which Greys are
+  available now" as links)
+
+Button (the solid clay one):  View Available Greys →
+```
+
+## Prompt — Table 3 (Grey vs Macaw, Cockatoo, Amazon)
+
+```
+You are designing a comparison-table component for CongoAfricanGreys.com (C.A.Gs), a family
+breeder of captive-bred Congo and Timneh African Greys in Midland, Texas since 2014.
+
+Produce a design canvas with 12 artboards: 4 style directions x 3 viewports.
+
+VIEWPORT WIDTHS — exact, do not vary:
+  Mobile   390px wide
+  Tablet   768px wide
+  Desktop  1440px wide
+
+ARTBOARD NAMES — use exactly these twelve:
+  Table 3a — Mobile     Table 3a — Tablet     Table 3a — Desktop
+  Table 3b — Mobile     Table 3b — Tablet     Table 3b — Desktop
+  Table 3c — Mobile     Table 3c — Tablet     Table 3c — Desktop
+  Table 3d — Mobile     Table 3d — Tablet     Table 3d — Desktop
+
+HEIGHT BUDGET — measured from the current live table. Stay at or under these:
+  Mobile   1,600px      Tablet   1,340px      Desktop  1,000px
+
+BRAND COLOURS — use these and nothing else:
+  #2D6A4F  forest green, primary
+  #0f3d2c  deep forest, dark scrims and headings
+  #234f3b  aviary dark, dark panels
+  #c8472f  clay ink, solid button fills with white text on them
+  #e8604c  clay, large text and tints, on dark grounds only
+  #b04228  clay for small text on a light ground
+  #faf7f4  cream, page ground
+  #f6efe8  warm bed, secondary ground
+  #1f2a24  ink, body text
+  #5b524a  muted, secondary text
+  rgba(60,30,10,.12)  hairline rules
+  #9fc7b0  mint, text on deep forest only
+
+TYPE:
+  Headings   Newsreader, weight 600
+  Body / UI  IBM Plex Sans
+  Uppercase labels  11-12px, letter-spacing .12em
+  Mobile body text never below 14px
+
+HARD RULES:
+  1. The table MUST stack on Mobile. A horizontally scrolling table is never the only mobile answer.
+  2. Use the text below word for word. Do not rewrite, shorten, reorder, or add rows.
+  3. No colours outside the list above.
+  4. No emoji.
+  5. One solid clay button per artboard maximum. Everything else outline or text.
+  6. Mobile: no tap target under 44px tall.
+  7. Card radius 16-18px, pill radius 50px. Shadow, where used: 0 6px 28px rgba(60,30,10,.12)
+  8. No gradient text. No decorative left-edge accent stripes.
+
+THE STRUCTURE SPECIFIC TO THIS TABLE: unlike the others, the first column is a SPECIES, not a
+trait — each row is a whole bird. African Grey is the only one we breed, so give that row visible
+weight over the other three, using layout, type weight or a small label, never an off-palette
+colour.
+
+THE FOUR DIRECTIONS — make them genuinely different designs, not four versions of one idea:
+  3a  ELEVATED CARDS — soft-shadowed rounded panels, generous padding, column headers as
+      floating chips above the data. Modern product-pricing feel.
+  3b  EDITORIAL RULE — type-led and near-boxless. Large Newsreader display, thin forest
+      hairlines only, wide whitespace, small-caps labels. No cards, no fills.
+  3c  DARK PANEL — the table sits on a #0f3d2c ground, cream text, mint values, the African
+      Grey row lifted. Premium and high contrast.
+  3d  SPLIT FEATURE — asymmetric. A lead panel carrying the African Grey beside the other three
+      species. On Mobile the lead becomes a strip across the top.
+
+CONTENT — exact text, all of it appears on all twelve artboards:
+
+Eyebrow:  Beyond the Two Greys
+Heading:  How Does an African Grey Compare to a Macaw, Cockatoo, or Amazon?
+Intro:    The African Grey is the parrot most families ask us about — and we point them to our
+          full African Grey comparison hub to weigh it against the other big talkers. Here is how
+          the Grey we raise stacks up.
+          (set "full African Grey comparison hub" as a link)
+
+Column headers:
+  Species | Talking ability | Noise level | Best for
+
+Rows, in this order:
+  African Grey | Exceptional — context-aware speech | Moderate
+               | Owners wanting a talkative, problem-solving companion
+  Macaw        | Good, but fewer words             | Very loud
+               | Experienced owners with space and tolerance for volume
+  Cockatoo     | Limited speech                    | Very loud
+               | Cuddle-seekers who can meet high attention needs
+  Amazon       | Strong talker & singer            | Loud
+               | Owners who want a bold, outgoing personality
+
+Recommendation block below the table, headed "Our recommendation":
+  For most buyers choosing their first larger parrot, the African Grey comes out ahead on the two
+  factors that matter most in a real home: how much the bird can genuinely communicate, and how
+  manageable its noise is day to day. Our African Grey vs Macaw and African Grey vs Cockatoo
+  breakdowns show why their volume and attention needs put those two out of reach for most homes.
+  (set "African Grey vs Macaw" and "African Grey vs Cockatoo" as links)
+
+Button (the solid clay one):  Full African Grey Comparison Hub →
+```
+
+## Prompt — Table 4 (Pricing)
+
+```
+You are designing the PRICING table component for CongoAfricanGreys.com (C.A.Gs), a family
+breeder of captive-bred Congo and Timneh African Greys in Midland, Texas since 2014.
+
+Produce a design canvas with 12 artboards: 4 style directions x 3 viewports.
+
+VIEWPORT WIDTHS — exact, do not vary:
+  Mobile   390px wide
+  Tablet   768px wide
+  Desktop  1440px wide
+
+ARTBOARD NAMES — use exactly these twelve:
+  Table 4a — Mobile     Table 4a — Tablet     Table 4a — Desktop
+  Table 4b — Mobile     Table 4b — Tablet     Table 4b — Desktop
+  Table 4c — Mobile     Table 4c — Tablet     Table 4c — Desktop
+  Table 4d — Mobile     Table 4d — Tablet     Table 4d — Desktop
+
+HEIGHT BUDGET — measured from the current live table. Stay at or under these:
+  Mobile   1,480px      Tablet   1,410px      Desktop  960px
+
+BRAND COLOURS — use these and nothing else:
+  #2D6A4F  forest green, primary
+  #0f3d2c  deep forest, dark scrims and headings
+  #234f3b  aviary dark, dark panels
+  #c8472f  clay ink, solid button fills with white text on them
+  #e8604c  clay, large text and tints, on dark grounds only
+  #b04228  clay for small text on a light ground
+  #faf7f4  cream, page ground
+  #f6efe8  warm bed, secondary ground
+  #1f2a24  ink, body text
+  #5b524a  muted, secondary text
+  rgba(60,30,10,.12)  hairline rules
+  #9fc7b0  mint, text on deep forest only
+
+TYPE:
+  Headings   Newsreader, weight 600
+  Body / UI  IBM Plex Sans
+  Uppercase labels  11-12px, letter-spacing .12em
+  Mobile body text never below 14px
+  Use tabular figures for the prices so the column aligns
+
+HARD RULES:
+  1. The table MUST stack on Mobile. A horizontally scrolling table is never the only mobile answer.
+  2. Use the text below word for word. Do not rewrite, shorten, reorder, or add rows.
+  3. No colours outside the list above.
+  4. No emoji.
+  5. One solid clay button per artboard maximum. Everything else outline or text.
+  6. Mobile: no tap target under 44px tall.
+  7. Card radius 16-18px, pill radius 50px. Shadow, where used: 0 6px 28px rgba(60,30,10,.12)
+  8. No gradient text. No decorative left-edge accent stripes.
+  9. THESE ARE REAL PRICES. Transcribe every figure exactly as written. Never round them, never
+     re-range them, never add a "starting at", never invent a discount or a strikethrough.
+
+THE DESIGN PROBLEM SPECIFIC TO THIS TABLE: price is the column buyers scan for. In every one of
+the four directions, price must hold the strongest position on the row and stay easy to compare
+down the column.
+
+THE FOUR DIRECTIONS — make them genuinely different designs, not four versions of one idea:
+  4a  ELEVATED CARDS — soft-shadowed rounded panels, generous padding, price as the anchor of
+      each card. Modern product-pricing feel.
+  4b  EDITORIAL RULE — type-led and near-boxless. Large Newsreader display, thin forest
+      hairlines only, wide whitespace, price set large in a terminal column. No cards, no fills.
+  4c  DARK PANEL — the table sits on a #0f3d2c ground, cream text, prices in mint. Premium and
+      high contrast.
+  4d  SPLIT FEATURE — asymmetric. A lead panel carrying the headline price range beside the full
+      list. On Mobile the lead becomes a strip across the top.
+
+CONTENT — exact text, all of it appears on all twelve artboards:
+
+Eyebrow:  Transparent Pricing
+Heading:  What Does a Hand-Raised, Documented African Grey Parrot Cost From C.A.Gs?
+Intro:    African Grey parrot prices at C.A.Gs are never just a number on a chick — the price you
+          see already includes every certificate listed under how we document each bird, because
+          a documented, captive-bred African Grey is the only kind we will ever sell.
+          (set "African Grey parrot prices", "how we document each bird" and "captive-bred
+          African Grey" as links)
+
+Column headers:
+  Subspecies | Adult weight | Best fit / lifestyle | Talking ability | Price
+
+Rows, in this order:
+  CONGO GREY · BABY        | 400-600 g            | Bond-from-day-one buyers
+                           | Exceptional · hand-raised          | $2,300-$2,500
+  CONGO GREY · ADULT       | 400-600 g            | Calm, established personality
+                           | Pre-developed vocabulary           | $1,700
+  TIMNEH GREY              | 275-375 g            | First-time owners / active families
+                           | Excellent · earlier talker         | $1,500-$1,600
+  CONGO PAIR (Jins + Jeni) | Bonded pair          | Two-bird homes
+                           | Must go together                   | $3,500
+  BREEDING PAIR            | Proven · Closed-banded | Established breeders
+                           | Fully documented                   | From $3,000
+  FERTILE EGG              | Candled              | Experienced breeders
+                           | Buy 5, free US shipping            | $95 / egg
+
+Note: the en dashes in the price ranges and weights are en dashes, not hyphens.
+
+Quote block below the table, labelled "EXPERT TAKE · TERI BENJAMIN":
+  "Anyone listing a Congo African Grey under $1,500 is selling a wild-caught bird, a sick bird,
+  or no bird at all. Real, documented, aviary-hatched Greys reflect the cost of ethical breeding."
+
+Button (the solid clay one):  Reserve Yours Now →
+```
+
+## One-run alternative
+
+If you would rather do all sixteen in a single Claude Design run, paste the four prompts above one
+after another into one message and add this line at the top:
+
+```
+Produce 48 artboards total across four tables: Table 1a-1d, Table 2a-2d, Table 3a-3d and Table
+4a-4d, each at Mobile 390, Tablet 768 and Desktop 1440. Give every artboard the same care — do
+not simplify the later tables. The four instruction blocks follow.
+```
+
+I do not recommend it. Quality drops off across a run that long, and Table 4 is the one that
+carries your prices.
+</script>
+
+<script>
+(function () {
+  var raw = document.getElementById('src').textContent;
+
+  // Split the single markdown source into sections at each "## " heading.
+  var parts = raw.split(/\n(?=## )/);
+  var intro = parts.shift(); // the "# " title block — not rendered as a section
+  var main = document.getElementById('main');
+  var nav = document.getElementById('nav');
+
+  function slug(s) {
+    return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  var sections = parts.map(function (block) {
+    var nl = block.indexOf('\n');
+    var title = block.slice(3, nl < 0 ? undefined : nl).trim();
+    var body = nl < 0 ? '' : block.slice(nl + 1);
+    // A section whose body is a fenced block copies the fence CONTENTS —
+    // that is the thing you paste into Claude Design.
+    var fence = body.match(/```\n([\s\S]*?)\n```/);
+    return {
+      title: title,
+      id: slug(title),
+      body: body,
+      copy: fence ? fence[1] : ('## ' + title + '\n' + body).trim(),
+      isPrompt: !!fence
+    };
+  });
+
+  var icon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+
+  sections.forEach(function (s) {
+    var a = document.createElement('a');
+    a.href = '#' + s.id;
+    a.textContent = s.title;
+    nav.appendChild(a);
+
+    var sec = document.createElement('section');
+    sec.id = s.id;
+
+    var head = document.createElement('div');
+    head.className = 'sec-head';
+    var h = document.createElement('h2');
+    h.textContent = s.title;
+    head.appendChild(h);
+
+    var btn = document.createElement('button');
+    btn.className = 'b-copy';
+    btn.innerHTML = icon + (s.isPrompt ? ' Copy prompt' : ' Copy section');
+    btn.addEventListener('click', function () { copy(s.copy, btn, s.isPrompt); });
+    head.appendChild(btn);
+    sec.appendChild(head);
+
+    if (s.isPrompt) {
+      // Prose above the fence (if any), then the payload sheet.
+      var before = s.body.split('```')[0].trim();
+      if (before) {
+        var p = document.createElement('div');
+        p.className = 'prose';
+        p.innerHTML = marked.parse(before);
+        sec.appendChild(p);
+      }
+      var sheet = document.createElement('div');
+      sheet.className = 'sheet';
+      var bar = document.createElement('div');
+      bar.className = 'sheet-bar';
+      var lbl = document.createElement('span');
+      lbl.textContent = 'paste into claude design';
+      bar.appendChild(lbl);
+      var b2 = document.createElement('button');
+      b2.className = 'b-clay';
+      b2.innerHTML = icon + ' Copy';
+      b2.addEventListener('click', function () { copy(s.copy, b2, true); });
+      bar.appendChild(b2);
+      sheet.appendChild(bar);
+      var pre = document.createElement('pre');
+      pre.textContent = s.copy;
+      sheet.appendChild(pre);
+      sec.appendChild(sheet);
+
+      var after = s.body.split('```').slice(2).join('```').trim();
+      if (after) {
+        var p2 = document.createElement('div');
+        p2.className = 'prose';
+        p2.innerHTML = marked.parse(after);
+        sec.appendChild(p2);
+      }
+    } else {
+      var d = document.createElement('div');
+      d.className = 'prose';
+      d.innerHTML = marked.parse(s.body);
+      d.querySelectorAll('table').forEach(function (t) {
+        var w = document.createElement('div');
+        w.className = 'tblwrap';
+        t.parentNode.insertBefore(w, t);
+        w.appendChild(t);
+      });
+      sec.appendChild(d);
+    }
+    main.appendChild(sec);
+  });
+
+  var foot = document.createElement('p');
+  foot.className = 'foot';
+  foot.textContent = 'Every figure in these prompts is transcribed from the live homepage. Prices, bird names and species names are real — if Claude Design changes one, that artboard is wrong.';
+  main.appendChild(foot);
+
+  function copy(text, btn, isPrompt) {
+    var label = btn.innerHTML;
+    navigator.clipboard.writeText(text).then(function () {
+      btn.classList.add('done');
+      btn.innerHTML = isPrompt ? 'Copied — now paste it' : 'Copied';
+      setTimeout(function () { btn.classList.remove('done'); btn.innerHTML = label; }, 1900);
+    }).catch(function () {
+      btn.innerHTML = 'Press Ctrl/Cmd+C';
+      setTimeout(function () { btn.innerHTML = label; }, 1900);
+    });
+  }
+
+  document.getElementById('copyall').addEventListener('click', function () {
+    copy(raw, this, false);
+  });
+
+  document.getElementById('dl').addEventListener('click', function () {
+    var btn = this, label = btn.innerHTML;
+    var d = window.claude && window.claude.downloads;
+    if (!d) { btn.innerHTML = 'Use Copy everything'; setTimeout(function(){ btn.innerHTML = label; }, 2200); return; }
+    d.save({ filename: 'cags-table-design-prompts.md', data: raw }).then(function () {
+      btn.innerHTML = 'Saved'; setTimeout(function () { btn.innerHTML = label; }, 1900);
+    }).catch(function (e) {
+      btn.innerHTML = (e && e.code === 'declined') ? 'Cancelled' : 'Use Copy everything';
+      setTimeout(function () { btn.innerHTML = label; }, 2200);
+    });
+  });
+
+  // Mark the section currently in view.
+  var links = [].slice.call(nav.querySelectorAll('a'));
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (l) { l.classList.toggle('on', l.getAttribute('href') === '#' + e.target.id); });
+    });
+  }, { rootMargin: '-10% 0px -75% 0px' });
+  document.querySelectorAll('section').forEach(function (s) { obs.observe(s); });
+  if (links[0]) links[0].classList.add('on');
+})();
+</script>
