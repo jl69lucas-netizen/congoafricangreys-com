@@ -46,6 +46,14 @@ const usageMd = (r) => (isComponent(r)
   : `Inline in \`${r.source}\`; search for \`${r.selector}\``);
 const capMark = (r, v) => (r.captures[v] ? '✓' : 'hidden');
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+// Markdown payloads inside <script type="text/markdown"> are raw text content — the HTML
+// parser does NOT decode entities there, so .textContent would return the escaped string
+// verbatim if we ran esc() on it. Never HTML-escape these payloads; only guard the one
+// sequence that could prematurely close the element.
+const assertNoScriptClose = (s, label) => {
+  if (s.includes('</script')) throw new Error(`${label} contains a literal "</script" — would break out of its <script type="text/markdown"> element`);
+  return s;
+};
 
 function cardMarkdown(r) {
   const lines = [
@@ -91,11 +99,14 @@ const dataUri = (file) => 'data:image/webp;base64,' + readFileSync(join(LIB, fil
 
 const chips = ['all', ...cats].map((c) => {
   const n = c === 'all' ? rows.length : byCat(c).length;
-  return `<button class="chip${c === 'all' ? ' on' : ''}" type="button" data-cat="${c}">${c === 'all' ? 'All' : esc(c)} <span class="n">${n}</span></button>`;
+  const on = c === 'all';
+  return `<button class="chip${on ? ' on' : ''}" type="button" data-cat="${c}" aria-pressed="${on}">${c === 'all' ? 'All' : esc(c)} <span class="n">${n}</span></button>`;
 }).join('');
 
-const vpButtons = [...VPS, 'all'].map((v) =>
-  `<button class="chip vp${v === '1280' ? ' on' : ''}" type="button" data-vp="${v}">${v === 'all' ? 'All' : v}</button>`).join('');
+const vpButtons = [...VPS, 'all'].map((v) => {
+  const on = v === '1280';
+  return `<button class="chip vp${on ? ' on' : ''}" type="button" data-vp="${v}" aria-pressed="${on}">${v === 'all' ? 'All' : v}</button>`;
+}).join('');
 
 function cardHtml(r) {
   const shots = VPS.map((v) => {
@@ -108,7 +119,7 @@ function cardHtml(r) {
 <p class="meta"><a href="${href(r)}" target="_blank" rel="noopener">${esc(pageLabel(r))}</a> <span class="dot">&middot;</span> <code>${esc(r.source)}</code> <span class="dot">&middot;</span> <code>${esc(r.selector)}</code></p>
 <p class="use"><code>${esc(usageLine(r))}</code></p>
 <div class="shots">${shots}</div>
-<script type="text/markdown" class="usage">${esc(cardMarkdown(r))}</script>
+<script type="text/markdown" class="usage">${assertNoScriptClose(cardMarkdown(r), `cardMarkdown(${r.name})`)}</script>
 </article>`;
 }
 
@@ -118,6 +129,7 @@ const sections = cats.map((c) => `<section class="cat" id="cat-${c}" data-cat="$
 </section>`).join('\n');
 
 const html = `<title>C.A.Gs Component Library</title>
+<meta charset="utf-8">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{
@@ -193,8 +205,14 @@ body.actual .frame img{max-width:none}
 </header>
 
 <div class="bar">
-  <div class="row"><span class="lab">Category</span>${chips}</div>
-  <div class="row"><span class="lab">Viewport</span>${vpButtons}<span class="lab" style="margin-left:14px">Scale</span><button class="chip fit on" type="button" data-fit="fit">Fit</button><button class="chip fit" type="button" data-fit="actual">Actual</button><button class="btn" type="button" id="copy-all" data-label="Copy whole library as Markdown">Copy whole library as Markdown</button></div>
+  <div class="row" role="group" aria-label="Filter by category"><span class="lab">Category</span>${chips}</div>
+  <div class="row">
+    <span class="lab">Viewport</span>
+    <span role="group" aria-label="Viewport size">${vpButtons}</span>
+    <span class="lab" style="margin-left:14px">Scale</span>
+    <span role="group" aria-label="Image scale"><button class="chip fit on" type="button" data-fit="fit" aria-pressed="true">Fit</button><button class="chip fit" type="button" data-fit="actual" aria-pressed="false">Actual</button></span>
+    <button class="btn" type="button" id="copy-all" data-label="Copy whole library as Markdown">Copy whole library as Markdown</button>
+  </div>
 </div>
 
 <p class="empty" id="empty">No components in that category.</p>
@@ -202,7 +220,7 @@ ${sections}
 </div>
 <div class="toast" id="toast">Copied</div>
 
-<script type="text/markdown" id="full-md">${esc(mdText)}</script>
+<script type="text/markdown" id="full-md">${assertNoScriptClose(mdText, 'mdText')}</script>
 <script>
 (function(){
   var toast=document.getElementById('toast');
@@ -219,21 +237,21 @@ ${sections}
   var empty=document.getElementById('empty');
 
   function setCat(cat){
-    catChips.forEach(function(c){ c.classList.toggle('on', c.getAttribute('data-cat')===cat); });
+    catChips.forEach(function(c){ var on=c.getAttribute('data-cat')===cat; c.classList.toggle('on', on); c.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     var any=false;
     secs.forEach(function(s){ var show=(cat==='all'||s.getAttribute('data-cat')===cat); s.hidden=!show; if(show) any=true; });
     empty.style.display=any?'none':'block';
     store('cag-cl-cat',cat);
   }
   function setVp(vp){
-    vpChips.forEach(function(c){ c.classList.toggle('on', c.getAttribute('data-vp')===vp); });
+    vpChips.forEach(function(c){ var on=c.getAttribute('data-vp')===vp; c.classList.toggle('on', on); c.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     [].slice.call(document.querySelectorAll('.shot')).forEach(function(s){
       s.hidden = !(vp==='all' || s.getAttribute('data-vp')===vp);
     });
     store('cag-cl-vp',vp);
   }
   function setFit(f){
-    fitChips.forEach(function(c){ c.classList.toggle('on', c.getAttribute('data-fit')===f); });
+    fitChips.forEach(function(c){ var on=c.getAttribute('data-fit')===f; c.classList.toggle('on', on); c.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     document.body.classList.toggle('actual', f==='actual');
     store('cag-cl-fit',f);
   }
