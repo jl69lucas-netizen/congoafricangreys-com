@@ -21,6 +21,8 @@ export interface Props {
   cta2Label?: string;
   col1Label?: string;
   col2Label?: string;
+  col1Short?: string;
+  col2Short?: string;
 }
 
 const check = '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg>';
@@ -50,6 +52,8 @@ const {
   cta2Label = 'Inquire about a Timneh →',
   col1Label,
   col2Label,
+  col1Short,
+  col2Short,
   rows = [
     ['Species', '<em>Psittacus erithacus</em>', '<em>Psittacus timneh</em>'],
     ['Size', '12–14 in · 400–600 g', '9–11 in · 275–375 g'],
@@ -68,6 +72,9 @@ const {
 // Short labels for the mobile stacked cards (see .cag-tstack in global.css).
 const lbl1 = col1Label ?? (col1Title === 'Congo African Grey' ? 'Congo' : col1Title);
 const lbl2 = col2Label ?? (col2Title === 'Timneh African Grey' ? 'Timneh' : col2Title);
+// Two-word legend titles for the mobile stack (breeder, 2026-09-10): "Congo Grey" / "Timneh Grey".
+const short1 = col1Short ?? (col1Title === 'Congo African Grey' ? 'Congo Grey' : col1Title);
+const short2 = col2Short ?? (col2Title === 'Timneh African Grey' ? 'Timneh Grey' : col2Title);
 ---
 
 <div class="bg-cream py-14 md:py-16 px-4">
@@ -93,7 +100,7 @@ const lbl2 = col2Label ?? (col2Title === 'Timneh African Grey' ? 'Timneh' : col2
                     ? <span class="shrink-0 inline-flex" set:html={col1IconHtml} />
                     : <img src={col1Icon} alt={col1IconAlt} width="30" height="30" loading="lazy" style="width:30px;height:30px;object-fit:contain;" />}
                   <span>
-                    <span class="block font-lora font-bold text-[1.1rem] leading-tight">{col1Title}</span>
+                    <span class="block font-lora font-bold text-[1.1rem] leading-tight"><span class="ct-full">{col1Title}</span><span class="ct-short">{short1}</span></span>
                     <span class="block font-sora text-xs font-normal opacity-85 mt-0.5">{col1Sub}</span>
                   </span>
                 </div>
@@ -104,7 +111,7 @@ const lbl2 = col2Label ?? (col2Title === 'Timneh African Grey' ? 'Timneh' : col2
                     ? <span class="shrink-0 inline-flex" set:html={col2IconHtml} />
                     : <img src={col2Icon} alt={col2IconAlt} width="30" height="30" loading="lazy" style="width:30px;height:30px;object-fit:contain;" />}
                   <span>
-                    <span class="block font-lora font-bold text-[1.1rem] leading-tight">{col2Title}</span>
+                    <span class="block font-lora font-bold text-[1.1rem] leading-tight"><span class="ct-full">{col2Title}</span><span class="ct-short">{short2}</span></span>
                     <span class="block font-sora text-xs font-normal mt-0.5">{col2Sub}</span>
                   </span>
                 </div>
