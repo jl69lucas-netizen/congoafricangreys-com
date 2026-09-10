@@ -76,8 +76,12 @@ def term_budget(html, page_type, budgets, slug=""):
     text = text_of(main_html(html))
     ceilings = budgets["budgets"].get(page_type, {})
     # Per-slug override (breeder, 2026-09-10): a number replaces the page-type ceiling, null removes it.
-    overrides = budgets.get("budgets_by_slug", {}).get(slug, {})
-    ceilings = {t: overrides.get(t, c) for t, c in ceilings.items() if not (t in overrides and overrides[t] is None)}
+    overrides = {t: c for t, c in budgets.get("budgets_by_slug", {}).get(slug, {}).items() if not t.startswith("_")}
+    for t in overrides:
+        if t not in ceilings:
+            print(f"WARN budgets_by_slug[{slug!r}] names {t!r}, which budgets[{page_type!r}] never caps — ignored", file=sys.stderr)
+    ceilings = {t: overrides.get(t, c) for t, c in ceilings.items()}
+    ceilings = {t: c for t, c in ceilings.items() if c is not None}
     out = []
     for term, ceiling in ceilings.items():
         if term == "scam" and slug in budgets.get("scam_owner", []):

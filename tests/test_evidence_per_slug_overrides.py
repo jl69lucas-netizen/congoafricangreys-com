@@ -37,3 +37,11 @@ def test_other_slug_credential_terms_still_capped():
     html = _main(["CITES"] * 20)
     over = {t for t, n, c in ea.term_budget(html, "home", _budgets(), slug="not-the-homepage")}
     assert "CITES" in over
+
+def test_unmatched_override_term_is_reported(capsys):
+    b = _budgets()
+    b = json.loads(json.dumps(b))  # deep copy
+    b["budgets_by_slug"]["index"]["Appendix1"] = None  # typo: no such term in budgets["budgets"]["home"]
+    ea.term_budget(_main(["CITES"]), "home", b, slug="index")
+    err = capsys.readouterr().err
+    assert "Appendix1" in err and "index" in err and "home" in err
