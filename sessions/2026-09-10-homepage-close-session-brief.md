@@ -325,3 +325,26 @@ in the output; the one `form-control-ios-zoom` finding that remains is
 `BaseLayout`/`global.css`), none of which carry a known defect, so the shared-form
 findings blamed on it above no longer apply. Tests: `tests/test_audit_slug_resolution.py`
 (`imports_of()` + `src_files()`, 4 new cases).
+
+## Shipped
+
+Task C2 closed the session on `main`.
+
+- **Gate report commit** `6a7e587c` — `docs(homepage): close-out gate report (md + copy-button html); rework ledger`. Files: `docs/artifacts/cags-homepage-close-gate-report.md`, `docs/artifacts/cags-homepage-close-gate-report.html` (7 copy-button sections, shell reused verbatim from the evidence-pass report), `data/quality/rework-ledger.json` (the 2026-08-11..2026-09-10 window). Pushed `4c152bdf..6a7e587c`.
+- **Slugs whose rendered output changed this session.** Built the session-start commit `33056dc9` in a throwaway worktree, built HEAD, and diffed the two `dist/` trees (ignoring `_astro`, `pagefind`, `sitemap`). Exactly three `index.html` files differ: `/` (homepage), `/african-grey-reviews/`, `/trusted-african-grey-parrot-breeders/`. The last two come from B2's `OwnerCard` `scroll-mt-28` change; the remaining diff rows are the new `-NNN.webp` srcset variants B3 generated, which are assets, not pages.
+- **LIVE confirmation** (no `-L`, so a 301 cannot fake a 200): `https://congoafricangreys.com/` returns HTTP 200 and carries both `Brian Carr` and `scroll-mt-28`. `/african-grey-reviews/` 200 with `scroll-mt-28`; `/trusted-african-grey-parrot-breeders/` 200 with `scroll-mt-28`.
+- **IndexNow**, after the deploy was live:
+
+```
+key       f8071f0dbdb94257934a690f4a18fa59  (live, HTTP 200, body matches)
+checking 3 URL(s) are live...
+  200  https://congoafricangreys.com/
+  200  https://congoafricangreys.com/african-grey-reviews/
+  200  https://congoafricangreys.com/trusted-african-grey-parrot-breeders/
+submitting 3 URL(s) to https://api.indexnow.org/indexnow
+IndexNow HTTP 200 — OK — URLs submitted
+SUBMITTED 3 URL(s).
+```
+
+- **Verdict recorded:** PASS-WITH-WARNINGS. Three accepted overrides (evidence per-slug term caps, the H6 advisory, the title-case FAQ outlier) and two findings left open on the page (7 real a11y rows, hero 649px at 1280).
+- **Next session starts with Part D** (variations canvas, component library, skill), then the a11y triage, then the `cag-inquiry-form.astro:387` 14.5px control, which is a real shared-component defect that renders on `/`.
