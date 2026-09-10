@@ -15,6 +15,12 @@ Usage:
 Severity:
   ERROR  = shipped-broken; fix before deploy
   WARN   = very likely wrong; eyeball it
+
+Scoped-run source selection (2026-09-10): a scoped run (one or more slugs)
+examines the page's own file plus the components it actually imports, plus
+BaseLayout.astro/global.css — see src_files()/imports_of(). Before this date
+a scoped run examined only the page file itself and could miss a defect
+shipped in an imported component.
 """
 import re, sys, glob, os, json
 
@@ -38,29 +44,81 @@ def lines_of(path):
     except Exception:
         return []
 
-def src_files(slugs):
-    """Same latent bug as `pages` selection, found while proving the fix: almost
-    every Astro page source is src/pages/<slug>/index.astro, so slug "index"
-    substring-matched 105 of 136 source files (near-whole-site) instead of just
-    the homepage's own file — the same failure mode charged to the harness for
-    `select_pages`, in the sibling function. Shared chrome (components/layouts/
-    styles) applies to every page regardless of slug, so it is always included;
-    only src/pages/**/*.astro is slug-filtered, using the same index-vs-slug
-    convention as select_pages(). See tests/test_audit_slug_resolution.py.
+IMPORT_RE = re.compile(
+    r"""^\s*import\b[^'"]*?['"](\.\.?/[^'"]+)['"]""", re.M)
+
+_RESOLVE_EXTS = ("", ".astro", ".ts", ".js", ".json", ".mjs")
+
+
+def _resolve_import(base_dir, rel_path):
+    """Resolve a relative import path to a real file on disk, trying the
+    common Astro/TS extensions. Returns None if nothing exists (bare
+    package imports never reach here since IMPORT_RE only matches './' and
+    '../' specifiers)."""
+    candidate = os.path.normpath(os.path.join(base_dir, rel_path))
+    for ext in _RESOLVE_EXTS:
+        p = candidate + ext
+        if os.path.isfile(p):
+            return p.replace(os.sep, "/")
+    return None
+
+
+def imports_of(astro_path):
+    """Pure helper: parse `import X from '<relative path>'` lines out of an
+    Astro/JS file's frontmatter and return the set of relative-imported
+    files that actually exist on disk, resolved relative to astro_path's own
+    directory. Bare package imports (no leading './' or '../') and imports
+    that don't resolve to a real file are silently dropped.
+    See tests/test_audit_slug_resolution.py.
     """
-    page_files = sorted(set(glob.glob("src/pages/**/*.astro", recursive=True)))
-    shared_files = []
-    for g in ("src/components/*.astro", "src/layouts/*.astro", "src/styles/*.css"):
-        shared_files += glob.glob(g, recursive=True)
-    if slugs:
-        targets = set()
-        for s in slugs:
-            if s in ("index", "", "/"):
-                targets.add("src/pages/index.astro")
-            else:
-                targets.add(f"src/pages/{s.strip('/')}/index.astro")
-        page_files = [f for f in page_files if f in targets]
-    return sorted(set(page_files) | set(shared_files))
+    text = "\n".join(lines_of(astro_path))
+    base_dir = os.path.dirname(astro_path)
+    found = set()
+    for m in IMPORT_RE.finditer(text):
+        resolved = _resolve_import(base_dir, m.group(1))
+        if resolved:
+            found.add(resolved)
+    return found
+
+
+def src_files(slugs):
+    """A scoped run examines the page's OWN source file plus the components
+    it actually imports (one level, plus one more level for
+    src/components/cag-library/*.astro components — they commonly import a
+    sibling), plus src/layouts/BaseLayout.astro and src/styles/global.css
+    (every page is wrapped in BaseLayout). Earlier versions either
+    substring-matched "index" against every page (pre-2026-09-10) or, after
+    that fix, unconditionally globbed in EVERY component/layout/style file
+    for a scoped run — which changed a normal slug's verdict and attributed
+    a shared component's findings to pages that never import it (e.g.
+    cag-inquiry-compact.astro's defect blamed on `/`, which imports
+    cag-inquiry-form.astro instead). With no slugs (site sweep) this keeps
+    the old full-glob behaviour, since every source file is in scope anyway.
+    See tests/test_audit_slug_resolution.py.
+    """
+    always = {"src/layouts/BaseLayout.astro", "src/styles/global.css"}
+    if not slugs:
+        page_files = sorted(set(glob.glob("src/pages/**/*.astro", recursive=True)))
+        shared_files = []
+        for g in ("src/components/*.astro", "src/layouts/*.astro", "src/styles/*.css"):
+            shared_files += glob.glob(g, recursive=True)
+        return sorted(set(page_files) | set(shared_files) | always)
+
+    result = set(always)
+    for s in slugs:
+        if s in ("index", "", "/"):
+            page_file = "src/pages/index.astro"
+        else:
+            page_file = f"src/pages/{s.strip('/')}/index.astro"
+        if not os.path.isfile(page_file):
+            continue
+        result.add(page_file)
+        first_level = imports_of(page_file)
+        result |= first_level
+        for imp in first_level:
+            if imp.startswith("src/components/cag-library/") and imp.endswith(".astro"):
+                result |= imports_of(imp)
+    return sorted(result)
 
 
 def select_pages(pages, slugs, dist=DIST):

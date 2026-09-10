@@ -307,3 +307,21 @@ before the fix / pass after): `select_pages()` in `page_hardening_scan.py` and
   intentionally always includes shared components regardless of slug, since most shared
   files DO apply to every page), but it does not render on `dist/index.html` and is not
   a defect *of the homepage*.
+
+**Follow-up fix, same day:** the "always include every shared file" behaviour above was
+itself the next bug — it changed a normal slug's verdict (this section's own
+`congo-african-grey-for-sale` proof, above, already shows `2 ERROR · 21 WARN` for a page
+whose OWN imports carry none of those defects) and attributed `cag-inquiry-compact.astro`'s
+finding to `/`, which never imports it. `src_files()` now parses each page's actual
+`import … from '<relative path>'` lines (`imports_of()`, one level, plus one more level
+for `src/components/cag-library/*.astro` siblings) instead of globbing in every shared
+file, and always adds `BaseLayout.astro` + `global.css`. Re-run after the fix:
+`python3 scripts/page_hardening_scan.py index` → **22 source files, 1 built pages, 30
+ERROR · 14 WARN** (down from 32/31/23 — `cag-inquiry-compact` no longer appears anywhere
+in the output; the one `form-control-ios-zoom` finding that remains is
+`cag-inquiry-form.astro:387`, which `/` genuinely imports).
+`python3 scripts/page_hardening_scan.py congo-african-grey-for-sale` → **5 source files,
+1 built pages, clean** — the page only imports `Breadcrumb.astro` (plus
+`BaseLayout`/`global.css`), none of which carry a known defect, so the shared-form
+findings blamed on it above no longer apply. Tests: `tests/test_audit_slug_resolution.py`
+(`imports_of()` + `src_files()`, 4 new cases).
