@@ -355,7 +355,10 @@ SUBMITTED 3 URL(s).
 - Component library: https://claude.ai/code/artifact/6be797ba-d2bf-4cb8-b8e2-601cbade03d2
 - Variations canvas (90 artboards, editable, PNG/PDF export): https://claude.ai/code/artifact/65cdf7d4-d24b-45b4-a8ba-b5bbd142fe15 — working files in `docs/design/homepage-variations/`, re-seed per `skills/cag-component-variations.md`
 
+- Variations canvas ROUND 2 (D/E/F, 90 artboards, hero from Hero B with image-first mobile and `.chero` sizes, fourth table = the homepage pricing table): https://claude.ai/code/artifact/cf046e8c-0b42-482a-91ed-ec6baead29d5 — working files in `docs/design/homepage-variations-r2/` (CONTRACT.md, CRITIQUE.md, merge_canvas.py), probe banked at `scripts/design_canvas_probe.mjs`
+
 ## What's Next
+0. Breeder picks per component across BOTH canvases (round 1 A/B/C `65cdf7d4`, round 2 D/E/F `cf046e8c`); round-2 recommendations: Hero D · Counter E · Dial E · Rail D · Cvt F · Mvf E · Others F · Price F · FAQ D · Shipping E (see r2 CRITIQUE.md).
 1. Breeder picks one variation per page on the canvas (65cdf7d4); apply the picks to `/` under preview-before-apply, starting with the hero (350–400 band) — `skills/cag-component-variations.md` §7 gates, then Part C's gate sequence and IndexNow.
 2. Fix `src/components/cag-inquiry-form.astro:387` `.inq-input` 14.5px → 16px (iOS zoom; shared form, re-verify every consumer, IndexNow each).
 3. a11y triage: the 7 real rows on `/` (clay `✓`/`!`/`5` glyphs at 3.2–3.4:1) — decorative (aria-hidden) or recolour to `#b04228`.
