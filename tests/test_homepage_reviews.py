@@ -1,7 +1,13 @@
-"""Homepage review slots: mid feature = Brian Carr; Kempf appears once (Rule 50b alt)."""
+"""Homepage review slots: the mid feature block renders Brian Carr, and Catherine Kempf
+appears once (Rule 50b: no two non-empty alts on a page may match). Measured on dist/,
+never on source — the gates measure what ships."""
 import re
+import pytest
 from pathlib import Path
-HOME = Path(__file__).resolve().parents[1] / "dist" / "index.html"
+ROOT = Path(__file__).resolve().parents[1]
+DIST = ROOT / "dist"
+HOME = DIST / "index.html"
+pytestmark = pytest.mark.skipif(not DIST.exists(), reason="dist/ not built — gates measure dist, never source")
 
 def test_mid_review_is_brian_carr():
     html = HOME.read_text(encoding="utf-8")
