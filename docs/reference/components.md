@@ -1,6 +1,8 @@
 # CAG Component Registry
 **Version 2.1 — 2026-05-29** *(Added cag-newsletter-v2; updated Quick Reference Table to reflect modern vs legacy status.)*
 
+**Visual library (2026-09-10):** `docs/artifacts/cags-component-library.html` (artifact URL in the .md header) — every live component at 375/768/1280, rebuilt by `node scripts/build_component_library.mjs` after `node scripts/component_library_capture.mjs`.
+
 All components live in `src/components/cag-library/`.
 Design system tokens: `src/styles/cag-design-system.css` (non-Tailwind) or `src/styles/global.css` (Astro/Tailwind).
 
