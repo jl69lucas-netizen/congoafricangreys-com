@@ -40,9 +40,10 @@ register({
   // Triage is its own sprint. reference_registered_is_not_wired.
   severity: 'advisory',
   describe: 'rendered text must meet WCAG AA contrast against its own backdrop',
-  // The known_broken fixture carries 4 judgeable spans (2 failing, 2 passing); the floor is
-  // set to that so the check cannot pass the meta gate by judging one element and skipping
-  // the rest. reference_promote_check_needs_examined_count.
+  // The known_broken fixture carries 6 judgeable spans (2 × .ti sage-on-white, 2 × .tt
+  // dark-on-white, 2 × .nav-green .dim opaque-oklab-on-green — 4 failing, 2 passing); the
+  // floor is set to that so the check cannot pass the meta gate by judging one element and
+  // skipping the rest. reference_promote_check_needs_examined_count.
   minExamined: 6,
   async run(page: Page, viewport: number): Promise<CheckResult> {
     const r = await page.evaluate(() => {
@@ -56,17 +57,27 @@ register({
       px.width = 1;
       px.height = 1;
       const cvs = px.getContext('2d', { willReadFrequently: true })!;
+      // ~2,700 nodes × ancestor walks per viewport; a page uses tens of distinct colour
+      // strings, not thousands.
+      const colourCache = new Map<string, number[] | null>();
       /** Normalised [r, g, b, a] where a is 0–255, or null when unparsable. */
       const rgba = (s: string): number[] | null => {
         if (!s || s === 'transparent') return null;
+        const cached = colourCache.get(s);
+        if (cached !== undefined) return cached ? cached.slice() : cached;
         cvs.clearRect(0, 0, 1, 1);
         try {
           cvs.fillStyle = s;
         } catch {
+          // canvas ignores an unparsable colour silently rather than throwing in practice —
+          // this catch is defensive, not load-bearing.
+          colourCache.set(s, null);
           return null;
         }
         cvs.fillRect(0, 0, 1, 1);
-        return Array.from(cvs.getImageData(0, 0, 1, 1).data);
+        const result = Array.from(cvs.getImageData(0, 0, 1, 1).data);
+        colourCache.set(s, result);
+        return result.slice();
       };
       const rgb = (s: string): number[] | null => {
         const c = rgba(s);
