@@ -7,7 +7,8 @@ Runs over dist/ (the rendered page, never the source).
 
 Checks (ids are the rule-index ids):
   term-budget-per-page        trust-concept mentions in <main> vs data/quality/evidence-budgets.json
-  title-length-max            <title> length vs title_max_chars
+                               (per-slug override: budgets_by_slug)
+  title-length-max            <title> length vs title_max_chars (per-slug override: title_max_chars_by_slug)
   review-attribution-unique   the same review text credited to two different names on one page
   claim-bound-to-proof        a ledger claim made 2+ times must link its proof object (ERROR);
                               a claim whose proof is NOT FETCHED is a WARN, never silently a pass
@@ -70,9 +71,13 @@ def text_of(html):
 
 # ── term-budget-per-page ────────────────────────────────────────────────────
 def term_budget(html, page_type, budgets, slug=""):
-    """[(term, count, ceiling)] for every term over its ceiling. Owner pages are exempt for their term."""
+    """[(term, count, ceiling)] for every term over its ceiling. Owner pages are exempt for their term.
+    Per-slug override: budgets_by_slug — a number replaces the page-type ceiling, null removes it."""
     text = text_of(main_html(html))
     ceilings = budgets["budgets"].get(page_type, {})
+    # Per-slug override (breeder, 2026-09-10): a number replaces the page-type ceiling, null removes it.
+    overrides = budgets.get("budgets_by_slug", {}).get(slug, {})
+    ceilings = {t: overrides.get(t, c) for t, c in ceilings.items() if not (t in overrides and overrides[t] is None)}
     out = []
     for term, ceiling in ceilings.items():
         if term == "scam" and slug in budgets.get("scam_owner", []):
@@ -87,12 +92,13 @@ def term_budget(html, page_type, budgets, slug=""):
 
 
 # ── title-length-max ────────────────────────────────────────────────────────
-def title_too_long(html, budgets):
+def title_too_long(html, budgets, slug=""):
     m = re.search(r"<title>(.*?)</title>", html, flags=re.S | re.I)
     if not m:
         return None
     t = text_of(m.group(1))
-    limit = budgets.get("title_max_chars", 70)
+    # Per-slug override (breeder, 2026-09-10): the homepage keeps its five-part Rule-21 title.
+    limit = budgets.get("title_max_chars_by_slug", {}).get(slug, budgets.get("title_max_chars", 70))
     return (len(t), limit) if len(t) > limit else None
 
 
@@ -223,7 +229,7 @@ def audit(slug, html, page_type, budgets, ledger):
     f = []
     for term, n, cap in term_budget(html, page_type, budgets, slug):
         f.append(("ERROR", f"term budget: {term} x{n} in <main>, ceiling {cap} for {page_type}"))
-    t = title_too_long(html, budgets)
+    t = title_too_long(html, budgets, slug)
     if t:
         f.append(("ERROR", f"<title> is {t[0]} chars, ceiling {t[1]}"))
     for fp, names in review_attribution(html):

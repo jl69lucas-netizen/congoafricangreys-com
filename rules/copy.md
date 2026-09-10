@@ -67,10 +67,10 @@ family: COPY
 
 Seven checks in `scripts/evidence_audit.py`, run per slug against `dist/`. Budgets: `data/quality/evidence-budgets.json` · proof ledger: `data/quality/evidence-ledger.json` · method: `skills/cag-evidence-pass.md`.
 
-- `term-budget-per-page` (blocking) — every calibrated term stays within its per-page budget; uncalibrated pages report, they do not pass.
+- `term-budget-per-page` (blocking) — every calibrated term stays within its per-page budget; uncalibrated pages report, they do not pass. Per-slug override: `budgets_by_slug` (the homepage's restored credential entities — CITES, Appendix I, DNA, USDA — carry no ceiling, breeder 2026-09-10).
 - `claim-bound-to-proof` (blocking) — every health / credential / price claim resolves to a ledger entry; un-ledgered = not assertable.
 - `statement-labels-present` (advisory) — a `StatementLabel` sits on each proven claim so the reader can see what is proven and what is opinion.
 - `review-attribution-unique` (blocking) — no reviewer quote is attributed to two different people across the site (`data/reviews.json` is the single source).
-- `title-length-max` (blocking) — `<title>` never exceeds `title_max_chars` from the budgets file.
+- `title-length-max` (blocking) — `<title>` never exceeds `title_max_chars` from the budgets file (per-slug override: `title_max_chars_by_slug` — the homepage keeps its five-part Rule-21 title at 205, breeder 2026-09-10).
 - `no-not-fetched-in-prose` (blocking) — the literal `NOT FETCHED` never ships in visible text; it is a research placeholder, not copy.
 - `no-unsourced-superlatives` (advisory) — "best / #1 / world's" etc. need a link to the source in the same sentence.
