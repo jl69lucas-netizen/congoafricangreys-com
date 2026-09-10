@@ -2,7 +2,7 @@
 
 Plan `docs/superpowers/plans/2026-09-10-homepage-close-and-component-variations.md`, executed 2026-09-10 on `main`, session-start `33056dc9` → HEAD. Parts A, B and C shipped; Part D (component variations) is next.
 
-Artifact URL: (published by the controller)
+Artifact URL: https://claude.ai/code/artifact/ff786ba9-0317-4e71-9a64-9a06d17bf52e
 
 ## 1. Verdict
 
