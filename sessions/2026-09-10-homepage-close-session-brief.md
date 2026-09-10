@@ -8,3 +8,5 @@ Done: gates green or overridden visibly; built, committed, pushed, IndexNow `/` 
 Out of scope: blog titles, Rule 21 text, budget calibration, sitewide srcset, any other page.
 
 ## Open Flags
+
+- evidence_audit term-budget WARNs on `/` for USDA/CITES/DNA/vet/PBFD/hatch are breeder-accepted (2026-09-10: "these are entities Google needs to see"). Not a defect. Revisit when Sprint 0 calibrates budgets.
