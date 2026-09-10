@@ -1,0 +1,125 @@
+# Homepage Close-Out Gate Report
+
+Plan `docs/superpowers/plans/2026-09-10-homepage-close-and-component-variations.md`, executed 2026-09-10 on `main`, session-start `33056dc9` → HEAD. Parts A, B and C shipped; Part D (component variations) is next.
+
+Artifact URL: (published by the controller)
+
+## 1. Verdict
+
+**PASS-WITH-WARNINGS.** Parts A, B and C of the homepage close-out shipped: the six breeder decisions from the 2026-09-09 evidence pass are back on `/` (Brian Carr in the mid review slot, the five-part title and meta description, six credential badges on every bird card, the six credential entities visible across hero pills / counter / takeaways / owner chips / FAQ, per-slug evidence caps, and the repaired `cag-homepage-builder` agent), the three render rows the harness saw are gone (IMG oversized 6 → 0, IMG duplicate alt fixed, NAV scroll-margin 3 → 0), and the oklab contrast parser in the harness was fixed so it stopped inventing 44/39/39 contrast instances per viewport. No gate returned a hard FAIL inside the homepage profile. `npm run test:render:meta` PASS (255 passed, 24 skipped), `npm run test:render:pages` PASS twice with identical output, `final_page_audit.py index --type home` PASS-WITH-WARNINGS, `aeo_audit.py index` 0 ERROR / 3 WARN, `evidence_audit.py index` 0 ERROR / 8 WARN, `pytest tests/ -q` 196 passed.
+
+Three overrides are accepted and visible rather than silenced. **Evidence per-slug caps:** the term-budget WARNs on `/` for USDA, CITES, DNA, vet, PBFD and hatch are breeder-accepted (2026-09-10, "these are entities Google needs to see"), implemented as explicit per-slug overrides in `scripts/evidence_audit.py` so the exception is written down and not a silent pass. **H6 advisory:** `sem-all-six-levels` counts H6 = 3 against a 5-per-level floor; the breeder's 2026-09-09 exception makes this advisory on `/` and `final_page_audit` repeats it as `min_h6_5`. **Title-case FAQ outlier:** `sem-title-case-headings` count 29, every one a FAQ question rendered as an H3 to H6 rather than a `<summary>`; this is the documented `rules/headings.md` backlog for the homepage, not a regression from this session. Two findings stay open on the page itself: the a11y check now reports **7 real rows** at every viewport (clay and green glyphs at 3.22 to 3.38:1 where 4.5:1 is required), and the hero measures **649px at 1280** against the recorded 350 to 400px band, which is Part D's job.
+
+## 2. What changed, task by task
+
+| Task | Commit(s) | What it did |
+|---|---|---|
+| A1 reviews | `d5d74c83`, `b41f7aa0` | Brian Carr (Plainview, TX) added to `data/reviews.json` as `q5` and placed in the mid review slot; Kempf now appears once, which also removed the duplicate alt text row |
+| A2 five-part title | `63473b93` | Restored the five-part title and meta description removed in `de03d165`, per the breeder's Rule 21 ruling |
+| A3 six badges | `43d0d5a1` | Homepage bird cards carry CITES Cert, PCR DNA-Sexed, Vet Certified, PBFD and APV Screened, Fully Weaned, plus Documented linking to `#proof` |
+| A4 credential entities | `6a22f5e5`, `3643b254` | The six credential terms are visible entities again in hero pills, counter, takeaways, owner chips and FAQ; the follow-up made the hero pills wrap instead of overflowing and added a per-slot entity guard |
+| A5 per-slug evidence caps | `3d77fb9f`, `31091bb3` | Per-slug title cap and term-budget overrides so `/` keeps its five-part title and credential entities; the follow-up warns when an override names a term the page type never caps, so a dead override cannot hide |
+| A6 agent repair | `d06f00e9`, `7488be1d` | `cag-homepage-builder` rewritten against live paths, the 26-section map, the six badges, the hero band and the per-slug caps; design rules keyed by live section ids and the H1 grep pointed at `HeroV3` |
+| B1 oklab contrast | `0b909af8`, `40e61081` | `a11y-text-contrast-aa` normalises `oklab()` and `color()` by canvas pixel readback instead of a digit regex; translucent foregrounds are no longer judged; fixture counts corrected and a colour-string cache added |
+| B2 scroll-mt-28 | `3ae91b0d`, `cce25371` | In-page anchors clear the 96px header (112px = 96 + 16); the `OwnerCard` `#about` anchor fixed on both consumers, which is why a second page ships today |
+| B3 srcset | `d87b01cf`, `9d25c146` | Measured `srcset` and `sizes` on every oversized homepage image, variants generated, 0 oversized and 0 undersized; `srcsetAttrs()` makes `sizes` unable to ship without `srcset`, adds an actual-width guard, and derives the hero preload from the same call |
+| C1 gate pass | `981320e1`, `ee430f2d` | The full gate pass recorded in the session brief: two identical harness runs, runtime probes, learning loop, scorecards for 2026-09-10 |
+| C1b audit slug fixes | `40986a66`, `c67192cd`, `4c152bdf` | Three audit scripts resolved the homepage slug wrong; `index` now means exactly `dist/index.html`, the hardening scan finishes on `/` in 59s instead of never, it scopes to the page plus the components it actually imports, and one shared slug-resolution module now backs all three with fixture-based tests |
+
+Every SHA above was confirmed with `git show -s --oneline <sha>`.
+
+## 3. Gates run on the shipped homepage
+
+| Gate | Verdict | Examined (its own count) | Rows on `/` |
+|---|---|---|---|
+| `npx astro build` | OK | 105 pages in 27.0s | n/a |
+| `npm run test:render:meta` | **PASS** | 255 passed, 24 skipped | n/a |
+| `npm run test:render:pages` run 1 | **PASS** (57 tests, 15.1m) | 19 pages, 294 rows sitewide | 24 rows / 216 instances |
+| `npm run test:render:pages` run 2 | **PASS** (57 tests, 14.7m) | 19 pages, 294 rows sitewide | 24 rows / 216 instances |
+| `page_hardening_scan.py index` (after the slug fix) | reported | 22 source files, 1 built page, 59.16s | 30 ERROR / 14 WARN |
+| `final_page_audit.py index --type home` | **PASS-WITH-WARNINGS** | 1 of 1 | WARN `min_h6_5`, `house_method` |
+| `aeo_audit.py index` (after the slug fix) | 0 ERROR / 3 WARN | 1 page | 3 WARN |
+| `evidence_audit.py index` | 0 ERROR / 8 WARN, exit 0 | 1 page | 6 proof `NOT FETCHED` + 2 statement-label PROXY |
+| `seam_parity.py index` | FAIL, out of profile | 52 pages use the idiom, 53 N/A | sections 20 / seams 6 / missing 13 |
+| `dup_content_audit.py --headers` | FAIL sitewide, out of profile | 105 pages | homepage in 24 crossover rows |
+| `python3 -m pytest tests/ -q` | **PASS** | 196 passed | n/a |
+| `quality_report.py` | reported | PAGE 38/278 = 13.7%, harness self-repair 36 = 13.0% | worst family CSS (111 rows sitewide), 0 overrides, 15 untested rules |
+
+Before and after, against the 2026-09-09 baseline:
+
+| Family | 2026-09-09 | 2026-09-10 | Δ |
+|---|---|---|---|
+| IMG | 6 rows | **0** | −6 (measured srcset plus the duplicate-alt fix) |
+| NAV | 3 rows | **0** | −3 (`scroll-mt-28`) |
+| A11Y | 3 rows / 44 + 39 + 39 instances | 3 rows / **7 + 7 + 7** instances | −108 instances (oklab readback) |
+| SEM | 9 | 9 | 0 |
+| SCHEMA | 3 | 3 | 0 |
+| CSS | 9 | 9 | 0 |
+| **Total** | 30 rows / 304 instances | **24 rows / 216 instances** | −6 rows / −88 instances |
+
+**Run 1 equals run 2.** The homepage scorecard was diffed field by field: `defects` identical (`SEM 9, SCHEMA 3, CSS 9, A11Y 3`), `examined_by_check` identical for all 22 checks including the large ones (`css-class-resolves` 24135, `a11y-text-contrast-aa` 2742, `layout-min-font-size` 3557), and no row in `details` differs in viewport, checkId, count or message. Zero divergence, so nothing here is a bimodal metric masquerading as a finding.
+
+Three checks report `examined: 0` and that is structurally correct, confirmed on `dist/index.html` with no edit made: `layout-hero-counter-separation` (no `.counter-wrap`, `.counter-strip` or `[data-counters]` on `/`), `layout-h3-image-first` (no `.sec-img` on `/`, which has 61 H3s), and `schema-sold-not-instock` (no sold bird on `/`). `targets.json` `families_by_page_type.home` carries IMG, LAYOUT, NAV, SEM, SCHEMA, CSS and A11Y and deliberately does not carry DUP.
+
+## 4. Runtime probes
+
+Playwright against `file://dist/index.html`, fresh browser context per viewport. The Browser pane reports a zero viewport on this machine, so every number below is Playwright, not the pane.
+
+| Probe | 375 | 768 | 1280 |
+|---|---|---|---|
+| `scrollWidth` vs `innerWidth` | 375 / 375 ✓ | 768 / 768 ✓ | 1280 / 1280 ✓ |
+| Elements with `rect.right > innerWidth + 1` | 5 | 5 | **0** |
+| All inside a scroll or clip ancestor? | yes, `div.overflow-x-auto` (the comparison table) | yes, `div.grid.overflow-hidden` (the card rail) | n/a |
+| `.hero-v3-b` height | 951px | 842px | **649px** |
+| Hero `div.grid` height | 951px | 842px | 649px (hero padding is 0, so grid equals hero) |
+| `h1` computed font-size | 28.95px | 38.4px | 38.4px |
+| `#available-birds article` heights | 682/682/702/722/702/682 | 682/660/702/722/679/682 | 633/633/633/**652**/633/633 |
+| Card heights uniform ±2? | no (Δ40) | no (Δ62) | no (Δ19) |
+| `#cag-jump-rail` | hidden | hidden | **visible** ✓ |
+| `.cag-jump-mobile` | **visible** ✓ | visible | hidden ✓ |
+| `main p` wider than 75ch (real `ch`, 100 zeros in the element's own font) | **0** | **0** | **0** |
+
+No horizontal overflow at any viewport. The five apparent offenders at 375 and 768 are confirmed children of an `overflow-x` container, which is the sanctioned pattern and not a defect. Line length is clean everywhere with a measured `ch`; the `0.5em` approximation that over-reports by roughly 20% was not used.
+
+## 5. Learning loop
+
+Eight fix, revert, correct, restore or repair commits landed this session. Classified by where the error actually lived:
+
+| SHA | Subject | Family | Page or harness |
+|---|---|---|---|
+| `0b909af8` | `a11y-text-contrast-aa` normalises `oklab()` and `color()` by canvas readback | GATE | **harness** — the check mis-parsed modern colour syntax and invented 44/39/39 instances; the page was never touched |
+| `40e61081` | a11y contrast, true fixture counts and colour-string cache | GATE | **harness** — follow-up to the same defect |
+| `3ae91b0d` | in-page anchors clear the 96px header | NAV | **page** — real defect, `nav-jump-target-lands` was right |
+| `cce25371` | `OwnerCard` `#about` anchor on both consumers | NAV | **page** — the same defect inside a shared component |
+| `3643b254` | hero credential pills wrap instead of overflowing | LAYOUT | **page** — caused by A4's longer credential labels; self-inflicted and caught in the same session |
+| `31091bb3` | warn on a per-slug override term the page type never caps | GATE | **harness** — a silent no-op override |
+| `63473b93` | restore the five-part title and meta description | COPY | **page** — a breeder ruling, not a defect escape |
+| `33056dc9` | fold the 2026-09-10 rulings into the plan | n/a | docs only |
+
+Four of eight were harness, three page, one docs. `rework_ledger.py --last-30-days` for 2026-08-11 to 2026-09-10: **PAGE 5/45 = 11.1%**, harness self-repair 7 = 15.6%, by domain NAV 3, LAYOUT 1, COPY 1. Harness self-repair is now running ahead of page rework, which is the intended direction: the invariants are absorbing the errors instead of the pages doing so. The one page defect that escaped a gate (the hero pill overflow) was caused by a same-session content change, so per CLAUDE.md it is charged to the change and no new rule was written. Three further harness defects found this pass were fixed the same day rather than turned into rules: the hardening scan could not be scoped to `/` and never terminated, `aeo_audit` could not reach `/` by slug, and `dup_content_audit` labelled `/` as `dist`.
+
+## 6. Open flags for the breeder
+
+**a. Neither brand-owned method label appears on `/`.** `grep -c "Benjamin Home-Raising Protocol\|Midland Socialization Method" dist/index.html` returns **0**. CLAUDE.md rule 12 defines both labels, and both `final_page_audit` (`house_method`) and `aeo_audit` ("no brand-owned method name") flag the absence; they are the same finding and it is confirmed. Adding either label is prose on the highest-traffic page, so it goes through the heading-outline gate and a written section, not a find and replace. Not done this session.
+
+**b. The a11y check reports 7 real rows at every viewport.** Clay and green glyphs against their own ground: `div "5"` at 3.38:1, `.text-green-600.font-bold "✓"` at 3.22:1 several times, and a `"!"`. All need 4.5:1. The open question is whether these glyphs are decorative (in which case they need `aria-hidden` and a text equivalent, and the contrast row goes away) or real text carrying meaning (in which case the colour has to change). That call decides the fix, so it is a breeder and design question, not a mechanical one.
+
+**c. The hero measures 649px at 1280, over the 350 to 400px band.** Recorded in `skills/cag-page-hardening.md` §2c and the comparison cluster's 400px heroes. This is Part D's job, since shrinking the hero is a visual redesign and a redesign is previewed before it is applied.
+
+**d. Bird cards are not height-uniform** at any viewport: Δ40px at 375, Δ62px at 768, Δ19px at 1280, always one card taller. Pre-existing, not introduced this session, and not in scope for the close-out.
+
+**e. Two SplitFeature srcset ladders the planner cannot reach.** `timneh-african-grey-variant.webp` has 310/390/579 variants while the tag asks for [600, 1000], and `african-grey-head-scratch-cags-breeder.webp` variants are named `-card-NNN`. Both masters sit inside 2×, so there is no defect on the page, only a missed byte saving. Re-plan with `image_srcset_plan.mjs` (slug `""` for the homepage) when the BirdCard ladders are redone.
+
+**f. The srcset toolchain has three traps, found 2026-09-10, in the harness rather than the pages.** `plan.mjs` and `verify.mjs` build `/${slug}/`, so `index` 404s and the homepage must be passed as `""`. `map.mjs` must run after `instrument.mjs --off`, because offsets are recorded unstamped. `verify.mjs` reuses one page across viewports, so Chrome keeps a cached larger candidate and each viewport needs a fresh context. Fix the scripts before the next cluster run.
+
+**g. The hardening scan's 30 ERROR on `/` is 29 backlog plus one real defect.** Twenty-nine are `header-not-title-case` on FAQ-style questions rendered as H3 to H6, which `rules/headings.md` line 28 already lists as the homepage's share of a 1,099-heading backlog; the conversational exemption there covers `<summary>`, not heading tags, so they are genuine but not new. The thirtieth is different: **`form-control-ios-zoom` in `src/components/cag-inquiry-form.astro:387`**, where `.inq-input` is set to `font-size:14.5px`. That is under 16px, iOS Safari auto-zooms the viewport on focus, and the rule ships inline in `dist/index.html` because the homepage imports `InquiryForm`. It is a real, fixable defect on a shared form that renders on the homepage and on every other page that imports the same component. It was left unfixed here only because this session's scope was the homepage close-out, and the fix touches a shared component whose consumers all need a re-verify.
+
+**h. The evidence term-budget WARNs stay accepted.** Six `proof object NOT FETCHED` warnings (usda-awa, cites-docs, dna-sexing, avian-vet-cert, pbfd-apv-pcr, hatch-band) and two statement-label PROXY warnings (`#available-birds`, `#blog`). The proof documents come at the end of the site build; nothing is asserted that the ledger does not carry. Revisit when Sprint 0 calibrates the budgets.
+
+## 7. What the next session does first
+
+1. **Part D, the component variations.** Three variations across three viewports for every screenshotted homepage component, seeded as `.dc.html` artboards under `docs/design/homepage-variations/` onto a design canvas, plus the browsable component library artifact under `docs/artifacts/` and the reusable skill `skills/cag-component-variations.md`. Part D writes no site file; it is preview-only until the breeder picks variants. The 649px hero is the first thing it has to answer, because the band says 350 to 400px.
+2. **Triage the seven a11y rows.** Decide decorative or meaningful for each `✓`, `!` and `5` glyph, then either mark them `aria-hidden` with a text equivalent or move the colour to 4.5:1. Re-run `test:render:pages` twice, since one clean run proves nothing.
+3. **Fix the inquiry-form 14.5px control.** `src/components/cag-inquiry-form.astro:387` to 16px or larger, then re-verify every page that imports `InquiryForm`, not only `/`, and submit each one whose rendered output changes to IndexNow.
+
+Deferred behind those three: the FAQ title-case backlog (29 rows on `/`, 1,099 sitewide), the H6 floor, the CSS dead-token family (`quality_report` §3's worst at 111 rows sitewide), the srcset toolchain fixes in flag f, and the 15 untested rules `quality_report.py` §5 prints on every run.
