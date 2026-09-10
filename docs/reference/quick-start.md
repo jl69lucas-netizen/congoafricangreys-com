@@ -50,6 +50,9 @@
 ### "Deploy a page"
 → `@cag-canonical-fixer` → `git push` → `@cag-deploy-verifier` → `sitemap-agent` skill
 
+### "I want 3 variations of a component" / "new hero/counter/dial" / "design canvas"
+→ `docs/artifacts/cags-component-library.md` (what already exists) → `skills/cag-component-variations` (3 named-axis variations × 3 viewports on a `/design` canvas; worked example `docs/design/homepage-variations/CONTRACT.md` + `CRITIQUE.md`) → breeder picks on the canvas → apply under Rule 7 preview-before-apply → `cag-page-hardening` §2 probes + `npm run test:render:pages --grep '<slug>'`
+
 ---
 
 ## Reference Docs
