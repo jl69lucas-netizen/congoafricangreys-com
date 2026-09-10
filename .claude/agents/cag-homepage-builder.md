@@ -39,7 +39,7 @@ You preserve every SEO element: H1, canonical, schema JSON-LD, og:url, og:image.
 3. **Read** `data/price-matrix.json` — all pricing data (never hardcode prices)
 4. **Read** `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro` lines 1–120 — reference design patterns (Astro component format)
 5. **Read** `data/image-specs.json` — image source type, dimensions, and infographic widths for this page type (page type: "homepage")
-6. **Run** `grep -n "h1\|canonical\|og:url\|ld+json" src/pages/index.astro 2>/dev/null | head -30` — extract current H1, canonical, schema locations
+6. **Run** `grep -n "canonical\|ld+json" src/pages/index.astro | head -10 && grep -n "<h1" src/components/cag-library/HeroV3.astro` — extract current H1, canonical, schema locations
 7. **Read** `rules/headings.md`, `rules/images.md`, `rules/design.md` — the enforced packs (headings gate, image sizing, hero/counter separation)
 8. **Read** `docs/reference/components.md` and `docs/artifacts/cags-component-library.md` — the component registry and the visual library of every live component at 375/768/1280
 
@@ -51,6 +51,7 @@ Only after reading all eight do you begin any section work.
 
 ```
 ❌ H1 text — copy it character-for-character from current page
+   (the H1 lives in `src/components/cag-library/HeroV3.astro`, not in the page file)
 ❌ Canonical: https://congoafricangreys.com/
 ❌ og:url: https://congoafricangreys.com/
 ❌ Any <script type="application/ld+json"> block
@@ -115,7 +116,7 @@ The outline must include:
 
 **Sacred elements (never change):**
 - H1, canonical, all JSON-LD schema blocks, og: meta tags
-- Run `grep -n "<h1\|canonical\|ld+json" src/pages/index.astro | head -10`
+- Run `grep -n "canonical\|ld+json" src/pages/index.astro | head -10 && grep -n "<h1" src/components/cag-library/HeroV3.astro`
 
 ---
 
@@ -197,34 +198,34 @@ Confirmed mobile results: H2 = 20px, H3 = 17px, body = 15px, prefix = 10px.
 
 ## Design Rules for This Page
 
-### Hero Section (Section 1)
+### Hero (pre-section · HeroV3)
 - Background: CAG design system primary color
 - H1: per design system font specs, white
 - **H1 TEXT IS SACRED — copy it character-for-character from current page**
 - Primary CTA: "View Available African Greys" → `/african-grey-parrots-for-sale/`
 - Live: `HeroV3` (cag-hero-v3:b Authority Green) — circular framed photo right, copy on an opaque #0f3d2c scrim left, four credential pills
 
-### CITES Trust Bar (Section 2)
+### Counter Strip (pre-section · CounterSnippet)
 - 4 trust badges in a row: icons + labels
 - Background: white
-- Stats to use: **USDA AWA Licensed · CITES Appendix I · DNA Sexed · Avian Vet Certified**
+- Live stats (page passes `stats`): **12+ Years Aviary · 100% CITES Documented · $1,500 Floor Price · 24h Reply Guarantee**
 
-### Available Birds (Section 3)
+### Available Birds (id="available-birds" · BirdCard grid)
 - Read `data/price-matrix.json` for price ranges
 - Display as price cards: Congo African Grey ($1,500–$3,500), Timneh African Grey ($1,200–$2,500)
 - Each card has "Inquire" CTA → `#contact`
 
-### YouTube Embeds (Section 8)
-- Always use real `src="https://www.youtube.com/embed/VIDEO_ID"` — never `data-src`
-- Read current iframes from `src/pages/index.astro` to get VIDEO_IDs
+### Video (id="video")
+- Live section renders an inline `<video>` element (mp4 placeholder), not a YouTube iframe — real YouTube src pending breeder
+- If a future revision embeds YouTube instead, always use real `src="https://www.youtube.com/embed/VIDEO_ID"` — never `data-src`
 - Aspect ratio wrapper: `padding-bottom: 56.25%` (16:9)
 
-### FAQ Section (Section 11)
+### FAQ (id="faq" · faqItems + FAQPage schema)
 - Always include `<script type="application/ld+json">` FAQPage schema
 - Use `<details>/<summary>` accordion — no JavaScript
 - Minimum 8 questions covering: price, CITES docs, Congo vs Timneh, shipping, health guarantee
 
-### Contact Form (Section 18)
+### Contact Form (id="contact" · InquiryForm)
 - 3-field inquiry form: Name, Email, Message
 - Payment method: `[PAYMENT_METHOD_TBD]`
 
