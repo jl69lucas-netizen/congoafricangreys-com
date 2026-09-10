@@ -354,3 +354,22 @@ SUBMITTED 3 URL(s).
 - Gate report: https://claude.ai/code/artifact/ff786ba9-0317-4e71-9a64-9a06d17bf52e
 - Component library: https://claude.ai/code/artifact/6be797ba-d2bf-4cb8-b8e2-601cbade03d2
 - Variations canvas (90 artboards, editable, PNG/PDF export): https://claude.ai/code/artifact/65cdf7d4-d24b-45b4-a8ba-b5bbd142fe15 — working files in `docs/design/homepage-variations/`, re-seed per `skills/cag-component-variations.md`
+
+## What's Next
+1. Breeder picks one variation per page on the canvas (65cdf7d4); apply the picks to `/` under preview-before-apply, starting with the hero (350–400 band) — `skills/cag-component-variations.md` §7 gates, then Part C's gate sequence and IndexNow.
+2. Fix `src/components/cag-inquiry-form.astro:387` `.inq-input` 14.5px → 16px (iOS zoom; shared form, re-verify every consumer, IndexNow each).
+3. a11y triage: the 7 real rows on `/` (clay `✓`/`!`/`5` glyphs at 3.2–3.4:1) — decorative (aria-hidden) or recolour to `#b04228`.
+4. Rule 12 on `/`: the two brand method labels are absent — prose addition through the outline gate.
+5. Harness: fix the three `image_srcset_*` traps (homepage slug, map-after-off, fresh context per viewport).
+
+## Unfinished
+- Two SplitFeature srcset ladders on `/` (variants unreachable by name) — byte saving only.
+- 29 FAQ-as-H3 title-case rows (documented backlog) · H6=3 advisory · non-uniform bird-card heights.
+
+## Discovered This Session
+- `evidence_audit` term budgets printed ERROR (not WARN) → per-slug overrides added (A5).
+- Three audit scripts mis-resolved the homepage slug; `scripts/_slugs.py` is now the one convention; page-gate `--grep 'index'` scopes a run.
+- The contrast checker's regex read Tailwind `oklab()` as near-black (44 false rows) — fixed in the harness.
+- srcset toolchain: homepage slug is `""`, map must run unstamped, verify needs a fresh context per viewport, preload needs `imagesrcset`.
+- `CAG-grill-me-upgrade/` deleted (stale 171 MB copy). `cag-homepage-builder` agent repaired.
+- Design canvas method: CONTRACT.md + disjoint fragments + controller-only commits (skill `cag-component-variations`).
