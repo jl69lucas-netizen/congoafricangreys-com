@@ -23,6 +23,7 @@ site-standard section headers) is whitelisted below.
 import re, sys, itertools
 from pathlib import Path
 from html.parser import HTMLParser
+from _slugs import page_key
 
 MIN_WORDS = 12
 WHITELIST_SNIPPETS = [
@@ -152,22 +153,6 @@ def headers_mode(pages):
     if bad:
         print(f"FAIL — {bad} crossover headers across {len(pages)} pages."); sys.exit(1)
     print(f"PASS — no crossover headers in {len(pages)} pages.")
-
-def page_key(p, dist=Path("dist")):
-    """Slug key for a built page, matching final_page_audit.py / evidence_audit.py:
-    dist/index.html -> "index"; dist/<slug>/index.html -> "<slug>" (nested slugs,
-    e.g. dist/available/roys/index.html -> "available/roys", keep their full path).
-
-    Previously this was `p.parent.name or "home"`. dist/index.html's parent is
-    the `dist` directory itself, whose .name is "dist" (truthy), so the
-    homepage was keyed "dist" and the `or "home"` fallback never fired.
-    See tests/test_audit_slug_resolution.py.
-    """
-    rel = p.relative_to(dist).as_posix()
-    if rel == "index.html":
-        return "index"
-    return rel[: -len("/index.html")]
-
 
 def main():
     args=[a for a in sys.argv[1:] if not a.startswith("--")]

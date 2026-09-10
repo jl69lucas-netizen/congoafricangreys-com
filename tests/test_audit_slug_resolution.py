@@ -90,30 +90,53 @@ def test_dup_key_of_nested_slug_keeps_full_path():
 # pages that never import it. src_files() must instead resolve each page's
 # OWN imports (one level, plus one more level for cag-library components
 # that import siblings) and always add BaseLayout.astro + global.css.
+#
+# These run against tests/fixtures/hardening_scan/ (not the live repo) so
+# they don't break on unrelated component swaps — imports_of()/src_files()
+# both accept an optional `root` for exactly this. Fixture tree:
+#   src/pages/index.astro        -> imports FormA + cag-library/Hero
+#   src/pages/alpha/index.astro  -> imports FormB only
+#   src/components/cag-library/Hero.astro -> imports ../../lib/util
+FIXTURE_ROOT = ROOT / "tests" / "fixtures" / "hardening_scan"
+
 
 def test_imports_of_homepage_finds_its_own_components_only():
-    found = hardening.imports_of("src/pages/index.astro")
-    assert "src/components/cag-inquiry-form.astro" in found
-    assert "src/components/cag-library/HeroV3.astro" in found
-    assert "src/components/cag-inquiry-compact.astro" not in found
+    found = hardening.imports_of("src/pages/index.astro", root=FIXTURE_ROOT)
+    assert "src/components/FormA.astro" in found
+    assert "src/components/cag-library/Hero.astro" in found
+    assert "src/components/FormB.astro" not in found
 
 
 def test_src_files_index_scopes_to_its_own_imports():
-    files = hardening.src_files(["index"])
+    files = hardening.src_files(["index"], root=FIXTURE_ROOT)
     assert "src/pages/index.astro" in files
     assert "src/layouts/BaseLayout.astro" in files
     assert "src/styles/global.css" in files
-    assert "src/components/cag-inquiry-form.astro" in files
-    assert "src/components/cag-inquiry-compact.astro" not in files
+    assert "src/components/FormA.astro" in files
+    assert "src/components/cag-library/Hero.astro" in files
+    assert "src/lib/util.ts" in files
+    assert "src/components/FormB.astro" not in files
 
 
-def test_src_files_congo_scopes_to_its_own_imports_and_excludes_index():
-    files = hardening.src_files(["congo-african-grey-for-sale"])
-    assert "src/pages/congo-african-grey-for-sale/index.astro" in files
-    assert "src/components/Breadcrumb.astro" in files
+def test_src_files_alpha_scopes_to_its_own_imports_and_excludes_index():
+    files = hardening.src_files(["alpha"], root=FIXTURE_ROOT)
+    assert "src/pages/alpha/index.astro" in files
+    assert "src/components/FormB.astro" in files
+    assert "src/components/FormA.astro" not in files
     assert "src/pages/index.astro" not in files
 
 
 def test_src_files_no_slugs_returns_full_glob():
-    files = hardening.src_files([])
-    assert len(files) > 100
+    # The no-slugs sweep globs src/components/*.astro one level deep (not
+    # recursive), so nested src/components/cag-library/Hero.astro and
+    # src/lib/util.ts are out of scope here — same as the real repo sweep.
+    files = hardening.src_files([], root=FIXTURE_ROOT)
+    expected = {
+        "src/pages/index.astro",
+        "src/pages/alpha/index.astro",
+        "src/components/FormA.astro",
+        "src/components/FormB.astro",
+        "src/layouts/BaseLayout.astro",
+        "src/styles/global.css",
+    }
+    assert set(files) == expected

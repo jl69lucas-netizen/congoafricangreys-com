@@ -25,6 +25,7 @@ Usage:
 Exit 1 if any page has an ERROR-level finding, or if the slug filter matched nothing.
 """
 import re, sys, glob, json, pathlib
+from _slugs import select_pages
 
 # Approved 2026-07-30 by the breeder: two labels, used for different things.
 LABELED_METHODS = ["Benjamin Home-Raising Protocol", "Midland Socialization Method"]
@@ -176,28 +177,6 @@ def audit(slug, html):
     if not stat_headers(html):
         f.append(("WARN", "no stat-bearing header — nothing for an AI to cite as a figure"))
     return f, ent
-
-
-def select_pages(pages, slugs, dist="dist"):
-    """Resolve slugs to built page paths using the same convention as
-    final_page_audit.py / evidence_audit.py: `index` (and "" / "/") means
-    EXACTLY <dist>/index.html; any other slug means EXACTLY
-    <dist>/<slug>/index.html (slug may be nested, e.g. available/roys).
-
-    Deliberately NOT substring matching: the previous filter was
-    `f"/{s}/" in p`, and dist/index.html has no "/index/" segment, so
-    `aeo_audit.py index` matched zero pages instead of the homepage.
-    See tests/test_audit_slug_resolution.py.
-    """
-    if not slugs:
-        return pages
-    targets = set()
-    for s in slugs:
-        if s in ("index", "", "/"):
-            targets.add(f"{dist}/index.html")
-        else:
-            targets.add(f"{dist}/{s.strip('/')}/index.html")
-    return [p for p in pages if p in targets]
 
 
 def main():

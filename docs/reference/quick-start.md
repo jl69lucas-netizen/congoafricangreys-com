@@ -36,6 +36,7 @@
 
 ### "Give a page a final pass / is this page done?"
 → `skills/cag-final-page-pass` (THE final gate, ANY page type incl. bird /available/) → `npx astro build` → `python3 scripts/final_page_audit.py [--birds]` → one PASS/WARN/FAIL verdict + triaged fixes → deploy
+→ `python3 -m pytest tests/ -q` — the harness's own unit tests (audit-script slug resolution, evidence budgets, review attribution, homepage entities)
 
 ### "Weekly monitoring check"
 → [parallel] `@cag-rank-tracker` + `@cag-branded-search-monitor-agent` + `@cag-competitor-pricing-alert-agent` + `@cag-llm-keyword-intel`

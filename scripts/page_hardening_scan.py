@@ -23,6 +23,7 @@ a scoped run examined only the page file itself and could miss a defect
 shipped in an imported component.
 """
 import re, sys, glob, os, json
+from _slugs import select_pages
 
 SRC_GLOBS = ["src/pages/**/*.astro", "src/components/*.astro",
              "src/layouts/*.astro", "src/styles/*.css"]
@@ -44,6 +45,9 @@ def lines_of(path):
     except Exception:
         return []
 
+# Matches single-line `import ... from '...'` only — a multi-line destructured
+# import (`import {\n  Foo,\n} from '../x'`) is not followed. None exist in the
+# repo as of 2026-09-10.
 IMPORT_RE = re.compile(
     r"""^\s*import\b[^'"]*?['"](\.\.?/[^'"]+)['"]""", re.M)
 
@@ -63,25 +67,30 @@ def _resolve_import(base_dir, rel_path):
     return None
 
 
-def imports_of(astro_path):
+def imports_of(astro_path, root="."):
     """Pure helper: parse `import X from '<relative path>'` lines out of an
     Astro/JS file's frontmatter and return the set of relative-imported
     files that actually exist on disk, resolved relative to astro_path's own
     directory. Bare package imports (no leading './' or '../') and imports
     that don't resolve to a real file are silently dropped.
-    See tests/test_audit_slug_resolution.py.
+
+    `astro_path` is given relative to `root` (default "." — the real repo
+    root when run as a script from there); the returned paths are also
+    relative to `root`, so tests can point `root` at a fixture tree and get
+    back the same style of path (e.g. "src/components/FormA.astro") the
+    real scan produces. See tests/test_audit_slug_resolution.py.
     """
-    text = "\n".join(lines_of(astro_path))
-    base_dir = os.path.dirname(astro_path)
+    text = "\n".join(lines_of(os.path.join(root, astro_path)))
+    base_dir = os.path.join(root, os.path.dirname(astro_path))
     found = set()
     for m in IMPORT_RE.finditer(text):
         resolved = _resolve_import(base_dir, m.group(1))
         if resolved:
-            found.add(resolved)
+            found.add(os.path.relpath(resolved, root).replace(os.sep, "/"))
     return found
 
 
-def src_files(slugs):
+def src_files(slugs, root="."):
     """A scoped run examines the page's OWN source file plus the components
     it actually imports (one level, plus one more level for
     src/components/cag-library/*.astro components — they commonly import a
@@ -94,14 +103,23 @@ def src_files(slugs):
     cag-inquiry-compact.astro's defect blamed on `/`, which imports
     cag-inquiry-form.astro instead). With no slugs (site sweep) this keeps
     the old full-glob behaviour, since every source file is in scope anyway.
+
+    `root` (default "." — the real repo root) lets tests point this at a
+    fixture tree; returned paths stay relative to `root`.
     See tests/test_audit_slug_resolution.py.
     """
     always = {"src/layouts/BaseLayout.astro", "src/styles/global.css"}
     if not slugs:
-        page_files = sorted(set(glob.glob("src/pages/**/*.astro", recursive=True)))
+        page_files = sorted(set(
+            os.path.relpath(p, root).replace(os.sep, "/")
+            for p in glob.glob(os.path.join(root, "src/pages/**/*.astro"), recursive=True)
+        ))
         shared_files = []
         for g in ("src/components/*.astro", "src/layouts/*.astro", "src/styles/*.css"):
-            shared_files += glob.glob(g, recursive=True)
+            shared_files += [
+                os.path.relpath(p, root).replace(os.sep, "/")
+                for p in glob.glob(os.path.join(root, g), recursive=True)
+            ]
         return sorted(set(page_files) | set(shared_files) | always)
 
     result = set(always)
@@ -110,37 +128,15 @@ def src_files(slugs):
             page_file = "src/pages/index.astro"
         else:
             page_file = f"src/pages/{s.strip('/')}/index.astro"
-        if not os.path.isfile(page_file):
+        if not os.path.isfile(os.path.join(root, page_file)):
             continue
         result.add(page_file)
-        first_level = imports_of(page_file)
+        first_level = imports_of(page_file, root=root)
         result |= first_level
         for imp in first_level:
             if imp.startswith("src/components/cag-library/") and imp.endswith(".astro"):
-                result |= imports_of(imp)
+                result |= imports_of(imp, root=root)
     return sorted(result)
-
-
-def select_pages(pages, slugs, dist=DIST):
-    """Resolve slugs to built page paths using the same convention as
-    final_page_audit.py / evidence_audit.py: `index` (and "" / "/") means
-    EXACTLY <dist>/index.html; any other slug means EXACTLY
-    <dist>/<slug>/index.html (slug may be nested, e.g. available/roys).
-
-    Deliberately NOT substring matching: every built page path ends in
-    "/index.html", so `any(s in p for s in slugs)` with slug "index" matched
-    every page on the site (105 pages, 43-minute run, killed) instead of just
-    the homepage. See tests/test_audit_slug_resolution.py.
-    """
-    if not slugs:
-        return pages
-    targets = set()
-    for s in slugs:
-        if s in ("index", "", "/"):
-            targets.add(f"{dist}/index.html")
-        else:
-            targets.add(f"{dist}/{s.strip('/')}/index.html")
-    return [p for p in pages if p in targets]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
