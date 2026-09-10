@@ -21,7 +21,7 @@
 | 3 Blog titles | Ignore. | — |
 | 4 Rule 21 | Keep the five-part formula. Restore the homepage title + meta description to the five-part form removed in `de03d165`. | A2 |
 | 5 Budgets | OK as proposals. | — |
-| 6 BirdCard badges | Homepage cards show `CITES Cert · PCR DNA-Sexed · Vet Certified · Fully Weaned · Documented→#proof`. | A3 |
+| 6 BirdCard badges | Homepage cards show `CITES Cert · PCR DNA-Sexed · Vet Certified · PBFD & APV Screened · Fully Weaned · Documented→#proof` (breeder confirmed PBFD 2026-09-10). | A3 |
 
 ## Verified facts the plan rests on
 
@@ -198,7 +198,7 @@ const description = "Trusted African Grey parrot breeder Mark & Teri raise hand-
 npx astro build >/dev/null && grep -o '<title>[^<]*</title>' dist/index.html
 git add src/pages/index.astro && git commit -m "feat(homepage): restore the five-part title and meta description (breeder ruling, Rule 21 kept)"
 ```
-Expected: `<title>` shows the five-part title. Note for Part C: `evidence_audit.py` `title_too_long` will WARN on `/`; this is a breeder-accepted override, logged in `## Open Flags` (Task C1).
+Expected: `<title>` shows the five-part title. `evidence_audit.py` will WARN `title-length-max` until Task A5 makes the cap per page — run A5 before Part C.
 
 ### Task A3: BirdCard badges on the homepage
 
@@ -210,7 +210,7 @@ Expected: `<title>` shows the five-part title. Note for Part C: `evidence_audit.
 ```bash
 npx astro build >/dev/null; python3 -c "
 h=open('dist/index.html').read(); s=h.split('id=\"available-birds\"',1)[1].split('</section>',1)[0]
-print({k:s.count(k) for k in ['CITES Cert','PCR DNA-Sexed','Vet Certified','Fully Weaned','Documented']})"
+print({k:s.count(k) for k in ['CITES Cert','PCR DNA-Sexed','Vet Certified','PBFD &amp; APV Screened','Fully Weaned','Documented']})"
 ```
 Expected today: CITES Cert 0, PCR DNA-Sexed 0, Vet Certified 0.
 
@@ -219,7 +219,7 @@ Expected today: CITES Cert 0, PCR DNA-Sexed 0, Vet Certified 0.
 ```astro
 <BirdCard {...bird} location="" badges={[
   { label: 'CITES Cert' }, { label: 'PCR DNA-Sexed' }, { label: 'Vet Certified' },
-  { label: 'Fully Weaned' }, { label: 'Documented', href: '#proof' },
+  { label: 'PBFD & APV Screened' }, { label: 'Fully Weaned' }, { label: 'Documented', href: '#proof' },
 ]} />
 ```
 
@@ -227,7 +227,7 @@ Expected today: CITES Cert 0, PCR DNA-Sexed 0, Vet Certified 0.
 
 Expected: every count equals the number of cards rendered (6 available birds → 6 each).
 ```bash
-git add src/pages/index.astro && git commit -m "feat(homepage): bird cards carry the five credential badges + Documented→#proof"
+git add src/pages/index.astro && git commit -m "feat(homepage): bird cards carry the five credential badges + Documented→#proof"  # five = CITES, PCR DNA, Vet, PBFD/APV, Weaned
 ```
 
 ### Task A4: Put the six credential entities back on the page
@@ -302,6 +302,107 @@ EOF
 git add src/components/cag-library/HeroV3.astro src/pages/index.astro tests/test_homepage_entities.py sessions/2026-09-10-homepage-close-session-brief.md
 git commit -m "feat(homepage): six credential entities visible again in hero pills, counter, takeaways, owner chips, FAQ"
 ```
+
+### Task A5: Title-length cap becomes per page (breeder ruling 2026-09-10)
+
+The five-part title is deliberate on `/`. `evidence_audit.py` reads one global `title_max_chars: 70`; the breeder ruled "title length is per page, add it to the pass". Add a per-slug override so the homepage stops warning and every other page keeps 70.
+
+**Files:**
+- Modify: `data/quality/evidence-budgets.json` (add `title_max_chars_by_slug`)
+- Modify: `scripts/evidence_audit.py:90-96` (`title_too_long`) and `:226` (call site passes `slug`)
+- Test: `tests/test_evidence_title_budget.py`
+
+- [ ] **Step 1: Failing test**
+
+```bash
+cat > tests/test_evidence_title_budget.py <<'EOF'
+"""title-length-max is per page: the homepage carries the five-part title (breeder, 2026-09-10)."""
+import json, sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+import evidence_audit as ea
+
+def _budgets():
+    return json.load(open(ROOT / "data" / "quality" / "evidence-budgets.json"))
+
+def test_homepage_cap_is_205():
+    b = _budgets()
+    assert b["title_max_chars_by_slug"]["index"] == 205
+
+def test_homepage_five_part_title_passes():
+    html = "<title>" + "x" * 200 + "</title>"
+    assert ea.title_too_long(html, _budgets(), slug="index") is None
+
+def test_other_pages_keep_70():
+    html = "<title>" + "x" * 90 + "</title>"
+    assert ea.title_too_long(html, _budgets(), slug="congo-african-grey-for-sale") == (90, 70)
+EOF
+python3 -m pytest tests/test_evidence_title_budget.py -q
+```
+Expected: FAIL (`KeyError: 'title_max_chars_by_slug'` and `TypeError: unexpected keyword 'slug'`).
+
+- [ ] **Step 2: Budget + function**
+
+```bash
+python3 - <<'EOF'
+import json; p='data/quality/evidence-budgets.json'; b=json.load(open(p))
+b['title_max_chars_by_slug'] = {"_comment": "Per-slug override of title_max_chars. `index` carries the deliberate five-part Rule-21 title (breeder, 2026-09-10); the site-wide title ceiling is 205 (feedback_meta_format).", "index": 205}
+json.dump(b, open(p,'w'), indent=2, ensure_ascii=False); open(p,'a').write('\n')
+EOF
+```
+In `scripts/evidence_audit.py` replace the function:
+```python
+def title_too_long(html, budgets, slug=""):
+    m = re.search(r"<title>(.*?)</title>", html, flags=re.S | re.I)
+    if not m:
+        return None
+    t = text_of(m.group(1))
+    # Per-slug override (breeder, 2026-09-10): the homepage keeps its five-part Rule-21 title.
+    by_slug = budgets.get("title_max_chars_by_slug", {})
+    limit = by_slug.get(slug, budgets.get("title_max_chars", 70))
+    return (len(t), limit) if len(t) > limit else None
+```
+and at the call site (line ~226): `t = title_too_long(html, budgets, slug)`.
+
+- [ ] **Step 3: Test, run the audit on `/`, commit**
+
+```bash
+python3 -m pytest tests/test_evidence_title_budget.py -q && npx astro build >/dev/null && python3 scripts/evidence_audit.py index | grep -c "title-length-max"
+git add data/quality/evidence-budgets.json scripts/evidence_audit.py tests/test_evidence_title_budget.py
+git commit -m "feat(evidence): title-length-max is per slug; homepage keeps the five-part title"
+```
+Expected: 3 PASS; grep count `0`. Also update the `title-length-max` row in `docs/reference/seo-rules.md` / `data/quality/rule-index.json` wording only if it states "70 on every page" (check with `grep -n "title_max_chars\|title-length-max" data/quality/rule-index.json rules/*.md`).
+
+### Task A6: Repair the stale `cag-homepage-builder` agent (paths and map only)
+
+The agent still targets `site/content/index.md` and an 18-section map. The live page is `src/pages/index.astro` with 26 `id`'d sections built from `src/components/cag-library/*`. Repair the facts; keep every binding rule (H1 sacred, prices from `data/`, header/footer untouched, outline-first, Direction D).
+
+**Files:**
+- Modify: `.claude/agents/cag-homepage-builder.md`
+
+- [ ] **Step 1: Failing check**
+
+```bash
+grep -c "site/content/index.md\|18-Section\|all 18 sections" .claude/agents/cag-homepage-builder.md
+```
+Expected: `6` (or more).
+
+- [ ] **Step 2: Edit**
+  - Every `site/content/index.md` → `src/pages/index.astro` (description line, Purpose, startup step 6, sacred-elements grep, Build Protocol step 1, YouTube note).
+  - Replace the "18-Section Map" table with the live map generated from the page: `grep -n '<section id=\|<div id=' src/pages/index.astro | sed -E 's/.*id="([^"]+)".*/\1/'` → one row per id in order (hero · counter · key-takeaway · toc · about · reviews-top · available-birds · eggs-pairs · congo · timneh · compare-species · why-us · trust/proof · reviews-mid · history · health · pricing · tools · shipping · reviews · blog · video · faq · pros-cons · how-to-buy · contact), each with the cag-library component that renders it.
+  - Startup reads: add `rules/headings.md`, `rules/images.md`, `rules/design.md`, `docs/reference/components.md`, and the component-library artifact URL (from Task D2) as reads 7–9.
+  - Add under "Rules You Must Follow": `10. Homepage cards carry six badges (CITES Cert · PCR DNA-Sexed · Vet Certified · PBFD & APV Screened · Fully Weaned · Documented→#proof); the six credential entities stay visible in hero pills, counter, takeaways, owner chips and FAQ (breeder, 2026-09-10).` and `11. Desktop hero 350–400px measured on the hero grid; the current HeroV3 is ~483px and is the reason for the variations canvas.`
+  - Keep line 69's advisory wording; correct "≥3 H6" to "5 H5 / 5 H6" to match `rules/headings.md` (advisory on home).
+
+- [ ] **Step 3: Verify and commit**
+
+```bash
+grep -c "site/content/index.md" .claude/agents/cag-homepage-builder.md; grep -c "src/pages/index.astro" .claude/agents/cag-homepage-builder.md
+python3 scripts/quality_report.py | tail -5
+git add .claude/agents/cag-homepage-builder.md && git commit -m "agent(cag-homepage-builder): live paths, 26-section map, six badges, hero band"
+```
+Expected: `0` and `>=5`.
 
 ---
 
@@ -705,17 +806,18 @@ git push origin main
 
 ---
 
-## Open Flags (log these in the brief; ask ONE question at the end)
+## Open Flags (resolved by the breeder 2026-09-10 unless marked open)
 
-1. **Hero band.** The breeder wrote "Desktop hero height: 390–45px". No rule file carries that figure; the recorded band is **350–400px** on `.hero-grid`. The plan uses 350–400. *Question to ask:* "Is 390–445px a new band you want written into the rules, or did you mean the recorded 350–400?"
-2. **PBFD & APV Screened badge.** The breeder's badge list omitted it (the old default had five: it was the fourth). A3 follows the list as written; add it back in one line if wanted.
-3. **`evidence_audit` WARNs on `/`** (title length, term budgets) are breeder-accepted; they will print every run until Sprint 0 recalibrates budgets or a per-page override exists in `evidence_audit.py`.
-4. **`CAG-grill-me-upgrade/`** is a stale full copy of the project (old CLAUDE.md, 2026-05 rules: "Appendix II corrected 2026-05-29"), not a skill. Nothing in this plan reads it; consider deleting or archiving it so agents never load its outdated rules.
-5. **`cag-homepage-builder` agent is stale**: it targets `site/content/index.md`, an 18-section map, and Rule 51 "≥5 H5/≥3 H6" wording. Its rules (H1 sacred, prices from `data/`, header/footer untouched, outline-first) still bind; its file paths do not. Not fixed here (out of scope).
-6. **Sixth-level headings** `sem-all-six-levels` reports H6=3 on `/` — advisory on the homepage since the evidence pass; unchanged.
+1. **Hero band — RESOLVED:** 350–400px desktop on `.hero-grid`. The "390–45px" was a typo.
+2. **PBFD & APV Screened badge — RESOLVED:** included (A3).
+3. **`evidence_audit` title WARN — RESOLVED:** the cap is per page from Task A5; the homepage keeps its five-part title. Term-budget WARNs for the six restored entities remain and are breeder-accepted (logged in the brief by A4).
+4. **`CAG-grill-me-upgrade/` — RESOLVED:** deleted 2026-09-10 (was gitignored, 171 MB, nested repo, referenced nowhere).
+5. **`cag-homepage-builder` — RESOLVED:** repaired by Task A6 (paths, live section map, badges, hero band). Its binding rules were already correct.
+6. **H6 = 3 on `/` — RESOLVED, no action:** `rules/headings.md` sets ≥5 H5 / ≥5 H6, with the breeder's 2026-09-09 exception making the minimums advisory on the homepage and "never a reason to add a heading". `sem-all-six-levels` stays a WARN. If a genuine breeder note or citation belongs under an existing H5, it may become an H6; none is added to hit a count.
+7. **OPEN:** whether `evidence_audit` should carry a per-slug term-budget override too, so the six restored entities stop warning on `/` every run. Not done here; ask before Sprint 0 calibration.
 
 ## Self-review (done while writing)
 
-- Spec coverage: flags 1/2/4/6 → A4/A1/A2/A3; three render rows → B2/B3/A1; harness bug → B1; "run all checks" → C1; 3 variations × 3 viewports for every screenshot + 3 heroes + 3 counters + mobile links + dial → D3; library artifact → D1/D2; skill + artifact tool → D4/D3; hero-height read/verify/confirm → Verified facts + Open Flag 1.
+- Spec coverage: flags 1/2/4/6 → A4/A1/A2/A3; 2026-09-10 rulings → A3 (PBFD), A5 (title cap), A6 (agent), folder deleted; three render rows → B2/B3/A1; harness bug → B1; "run all checks" → C1; 3 variations × 3 viewports for every screenshot + 3 heroes + 3 counters + mobile links + dial → D3; library artifact → D1/D2; skill + artifact tool → D4/D3; hero-height read/verify/confirm → Verified facts + Open Flag 1.
 - Placeholders: none; every code step carries its code; the two `<base directory>` uses are literal absolute paths.
 - Consistency: `reviews[3]` in A1 matches the inserted fourth object; `scroll-mt-28` used in B2 and the invariants; `index` is the slug every script accepts for `/`.
