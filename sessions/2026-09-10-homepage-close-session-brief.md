@@ -10,3 +10,4 @@ Out of scope: blog titles, Rule 21 text, budget calibration, sitewide srcset, an
 ## Open Flags
 
 - evidence_audit term-budget WARNs on `/` for USDA/CITES/DNA/vet/PBFD/hatch are breeder-accepted (2026-09-10: "these are entities Google needs to see"). Not a defect. Revisit when Sprint 0 calibrates budgets.
+- B2 touched one shared component: `OwnerCard.astro` `scroll-mt-20` → `scroll-mt-28` (both consumers sit under the same 96px header; 80px was wrong on both). Rendered output of `/trusted-african-grey-parrot-breeders/` changed → submit it to IndexNow with `/` at ship (Task C2).
