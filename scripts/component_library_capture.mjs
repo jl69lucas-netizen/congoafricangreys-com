@@ -129,6 +129,24 @@ async function settle(page) {
   ])).catch(() => {});
 }
 
+/** Hide any fixed/sticky page chrome that is not the target and does not
+ *  contain (or is not contained by) the target, so a sticky header/footer/
+ *  jump-rail/tab-bar cannot bleed into the element screenshot. Uses
+ *  visibility, not display, so layout — and the target's own boundingBox —
+ *  does not shift. Rows that ARE the chrome (e.g. the jump rail itself) are
+ *  unaffected because `contains` exempts them. */
+async function hideChrome(loc) {
+  await loc.evaluate((target) => {
+    for (const el of document.querySelectorAll('*')) {
+      if (el === target || target.contains(el) || el.contains(target)) continue;
+      const cs = getComputedStyle(el);
+      if (cs.position === 'fixed' || cs.position === 'sticky') {
+        el.style.visibility = 'hidden';
+      }
+    }
+  });
+}
+
 async function resolveOn(page, row) {
   return page.evaluate(({ sel, nth }) => {
     for (const part of sel.split(',').map(s => s.trim()).filter(Boolean)) {
@@ -226,6 +244,7 @@ async function main() {
         await loc.scrollIntoViewIfNeeded().catch(() => {});
         await page.waitForTimeout(400);
         await settle(page);
+        await hideChrome(loc).catch(() => {});
         box = await loc.boundingBox();
         if (!box || box.width < 8 || box.height < 8) continue;
         // locator.screenshot() has no `clip` option — the MAX_H cap is applied
