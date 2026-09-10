@@ -69,7 +69,7 @@ section.sec .copy.done{border-color:var(--green);background:var(--green-soft);co
     <h1 class="title">Homepage Close-Out Plan</h1>
     <p class="sub">Homepage only. Closes the 2026-09-09 open flags the breeder ruled on, fixes the three render rows and one harness bug, runs every gate on <code>/</code>, and delivers a 3×3 component-variation canvas, a component library and a reusable skill.</p>
   </div>
-  <div class="meta">Written 2026-09-10 · not yet executed<br>Source of truth: <code>docs/superpowers/plans/2026-09-10-homepage-close-and-component-variations.md</code><br>Execute with superpowers:subagent-driven-development, task by task</div>
+  <div class="meta">Written and executed 2026-09-10 · all tasks done<br>Source of truth: <code>docs/superpowers/plans/2026-09-10-homepage-close-and-component-variations.md</code><br>Gate report ff786ba9 · library 6be797ba · canvas 65cdf7d4</div>
 </header>
 <div class="toolbar">
   <button class="btn" id="copy-all">Copy whole document as Markdown</button>
@@ -82,6 +82,8 @@ section.sec .copy.done{border-color:var(--green);background:var(--green-soft);co
 
 <script type="text/markdown" data-title="Homepage Close-Out + Component Variations Implementation Plan">
 # Homepage Close-Out + Component Variations Implementation Plan
+
+> **Executed 2026-09-10** via subagent-driven development on `main` (every task, fix and review recorded in `sessions/2026-09-10-homepage-close-session-brief.md`; artifacts: gate report `ff786ba9`, component library `6be797ba`, variations canvas `65cdf7d4`). Deviations: A5 also added per-slug term ceilings; C1b fixed three audit-script slug bugs; D3 ran as four parallel authoring passes + one critique pass (see `docs/design/homepage-variations/CONTRACT.md`, `CRITIQUE.md`); D5 = session closer.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -149,7 +151,7 @@ section.sec .copy.done{border-color:var(--green);background:var(--green-soft);co
 **Files:**
 - Create: `sessions/2026-09-10-homepage-close-session-brief.md`
 
-- [ ] **Step 1: Write the brief with the restated goal and an empty Open Flags section**
+- [x] **Step 1: Write the brief with the restated goal and an empty Open Flags section**
 
 ```bash
 cat > sessions/2026-09-10-homepage-close-session-brief.md <<'EOF'
@@ -177,7 +179,7 @@ git commit -m "docs(session): homepage close-out brief"
 - Modify: `src/pages/index.astro:156-167` (`reviews` array), `:871` (`reviews[2]` → `reviews[3]`)
 - Test: `tests/test_review_attribution.py`
 
-- [ ] **Step 1: Add the review to the ledger**
+- [x] **Step 1: Add the review to the ledger**
 
 ```bash
 python3 - <<'EOF'
@@ -197,7 +199,7 @@ python3 -m pytest tests/test_review_attribution.py -q
 ```
 Expected: PASS (the ledger is well-formed; no src object yet references q5).
 
-- [ ] **Step 2: Write the failing page-level check** — the mid block must render Brian Carr, and "Catherine Kempf" must appear as an alt exactly once.
+- [x] **Step 2: Write the failing page-level check** — the mid block must render Brian Carr, and "Catherine Kempf" must appear as an alt exactly once.
 
 ```bash
 cat > tests/test_homepage_reviews.py <<'EOF'
@@ -220,7 +222,7 @@ npx astro build >/dev/null && python3 -m pytest tests/test_homepage_reviews.py -
 ```
 Expected: FAIL — `assert "Brian Carr" in mid`.
 
-- [ ] **Step 3: Add Brian Carr as `reviews[3]` and point the mid block at it**
+- [x] **Step 3: Add Brian Carr as `reviews[3]` and point the mid block at it**
 
 Edit `src/pages/index.astro`: after the Catherine Kempf object inside `const reviews = [ … ]` (ends `meta: 'Congo African Grey' },` at ~line 166) insert:
 
@@ -235,14 +237,14 @@ Then change line ~871:
 ```
 Leave `bottomReviews` untouched (Kempf stays in the bottom three).
 
-- [ ] **Step 4: Build and run both tests**
+- [x] **Step 4: Build and run both tests**
 
 ```bash
 npx astro build >/dev/null && python3 -m pytest tests/test_review_attribution.py tests/test_homepage_reviews.py -q
 ```
 Expected: 2 files PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add data/reviews.json src/pages/index.astro tests/test_homepage_reviews.py
@@ -254,14 +256,14 @@ git commit -m "feat(homepage): Brian Carr (Plainview, TX) fills the mid review s
 **Files:**
 - Modify: `src/pages/index.astro:24-25`
 
-- [ ] **Step 1: Failing check** (the breeder's ruling: five parts, pipe-separated)
+- [x] **Step 1: Failing check** (the breeder's ruling: five parts, pipe-separated)
 
 ```bash
 grep -c 'const title = ".*|.*|.*|' src/pages/index.astro
 ```
 Expected: `0`.
 
-- [ ] **Step 2: Restore verbatim from the pre-evidence-pass commit**
+- [x] **Step 2: Restore verbatim from the pre-evidence-pass commit**
 
 ```bash
 python3 - <<'EOF'
@@ -281,7 +283,7 @@ const title = "African Grey Parrot Breeder | Where Can I Buy a Healthy Congo Afr
 const description = "Trusted African Grey parrot breeder Mark & Teri raise hand-fed Congo & Timneh Greys in Midland, TX | Why families choose captive-bred C.A.Gs over unverified online sellers | Every C.A.Gs Grey is DNA-sexed, vet-checked, and ships with CITES Appendix I paperwork | Reserve yours — nationwide delivery";
 ```
 
-- [ ] **Step 3: Verify in the build, then commit**
+- [x] **Step 3: Verify in the build, then commit**
 
 ```bash
 npx astro build >/dev/null && grep -o '<title>[^<]*</title>' dist/index.html
@@ -294,7 +296,7 @@ Expected: `<title>` shows the five-part title. `evidence_audit.py` will WARN `ti
 **Files:**
 - Modify: `src/pages/index.astro:516`
 
-- [ ] **Step 1: Failing check**
+- [x] **Step 1: Failing check**
 
 ```bash
 npx astro build >/dev/null; python3 -c "
@@ -303,7 +305,7 @@ print({k:s.count(k) for k in ['CITES Cert','PCR DNA-Sexed','Vet Certified','PBFD
 ```
 Expected today: CITES Cert 0, PCR DNA-Sexed 0, Vet Certified 0.
 
-- [ ] **Step 2: Replace the badges prop**
+- [x] **Step 2: Replace the badges prop**
 
 ```astro
 <BirdCard {...bird} location="" badges={[
@@ -312,7 +314,7 @@ Expected today: CITES Cert 0, PCR DNA-Sexed 0, Vet Certified 0.
 ]} />
 ```
 
-- [ ] **Step 3: Rebuild, re-run the check, commit**
+- [x] **Step 3: Rebuild, re-run the check, commit**
 
 Expected: every count equals the number of cards rendered (6 available birds → 6 each).
 ```bash
@@ -327,7 +329,7 @@ Google must see the six proof-object terms as entities, not only in the `#proof`
 - Modify: `src/components/cag-library/HeroV3.astro:29-34` (pills)
 - Modify: `src/pages/index.astro:442-447` (counter), `:454-461` (KeyTakeaway items), `:474` (OwnerCard chips), `:184-192` (FAQ answers 1 and 4)
 
-- [ ] **Step 1: Failing entity check**
+- [x] **Step 1: Failing entity check**
 
 ```bash
 cat > tests/test_homepage_entities.py <<'EOF'
@@ -355,7 +357,7 @@ python3 -m pytest tests/test_homepage_entities.py -q
 ```
 Expected: FAIL (report shows which terms are at 1).
 
-- [ ] **Step 2: Restore the terms in the named slots**
+- [x] **Step 2: Restore the terms in the named slots**
 
 `HeroV3.astro` pills:
 ```js
@@ -373,7 +375,7 @@ OwnerCard chips: `chips={["USDA AWA Licensed", "CITES Documented", "PCR DNA-Sexe
 FAQ 1 answer, replace `hatch certificate, band number, sex certificate and avian-vet health certificate` with `hatch certificate, closed leg-band number, PCR DNA-sexing certificate, avian-vet health certificate and PBFD / Polyomavirus PCR results`.
 FAQ 4 answer, replace `confirmed by a PCR lab test` with `confirmed by a PCR DNA-sexing test`.
 
-- [ ] **Step 3: Build, test, and run the evidence audit to record the accepted WARNs**
+- [x] **Step 3: Build, test, and run the evidence audit to record the accepted WARNs**
 
 ```bash
 npx astro build >/dev/null && python3 -m pytest tests/test_homepage_entities.py -q && python3 scripts/evidence_audit.py index | tail -20
@@ -385,7 +387,7 @@ cat >> sessions/2026-09-10-homepage-close-session-brief.md <<'EOF'
 EOF
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/cag-library/HeroV3.astro src/pages/index.astro tests/test_homepage_entities.py sessions/2026-09-10-homepage-close-session-brief.md
@@ -401,7 +403,7 @@ The five-part title is deliberate on `/`. `evidence_audit.py` reads one global `
 - Modify: `scripts/evidence_audit.py:90-96` (`title_too_long`) and `:226` (call site passes `slug`)
 - Test: `tests/test_evidence_title_budget.py`
 
-- [ ] **Step 1: Failing test**
+- [x] **Step 1: Failing test**
 
 ```bash
 cat > tests/test_evidence_title_budget.py <<'EOF'
@@ -431,7 +433,7 @@ python3 -m pytest tests/test_evidence_title_budget.py -q
 ```
 Expected: FAIL (`KeyError: 'title_max_chars_by_slug'` and `TypeError: unexpected keyword 'slug'`).
 
-- [ ] **Step 2: Budget + function**
+- [x] **Step 2: Budget + function**
 
 ```bash
 python3 - <<'EOF'
@@ -454,7 +456,7 @@ def title_too_long(html, budgets, slug=""):
 ```
 and at the call site (line ~226): `t = title_too_long(html, budgets, slug)`.
 
-- [ ] **Step 3: Test, run the audit on `/`, commit**
+- [x] **Step 3: Test, run the audit on `/`, commit**
 
 ```bash
 python3 -m pytest tests/test_evidence_title_budget.py -q && npx astro build >/dev/null && python3 scripts/evidence_audit.py index | grep -c "title-length-max"
@@ -470,21 +472,21 @@ The agent still targets `site/content/index.md` and an 18-section map. The live 
 **Files:**
 - Modify: `.claude/agents/cag-homepage-builder.md`
 
-- [ ] **Step 1: Failing check**
+- [x] **Step 1: Failing check**
 
 ```bash
 grep -c "site/content/index.md\|18-Section\|all 18 sections" .claude/agents/cag-homepage-builder.md
 ```
 Expected: `6` (or more).
 
-- [ ] **Step 2: Edit**
+- [x] **Step 2: Edit**
   - Every `site/content/index.md` → `src/pages/index.astro` (description line, Purpose, startup step 6, sacred-elements grep, Build Protocol step 1, YouTube note).
   - Replace the "18-Section Map" table with the live map generated from the page: `grep -n '<section id=\|<div id=' src/pages/index.astro | sed -E 's/.*id="([^"]+)".*/\1/'` → one row per id in order (hero · counter · key-takeaway · toc · about · reviews-top · available-birds · eggs-pairs · congo · timneh · compare-species · why-us · trust/proof · reviews-mid · history · health · pricing · tools · shipping · reviews · blog · video · faq · pros-cons · how-to-buy · contact), each with the cag-library component that renders it.
   - Startup reads: add `rules/headings.md`, `rules/images.md`, `rules/design.md`, `docs/reference/components.md`, and the component-library artifact URL (from Task D2) as reads 7–9.
   - Add under "Rules You Must Follow": `10. Homepage cards carry six badges (CITES Cert · PCR DNA-Sexed · Vet Certified · PBFD & APV Screened · Fully Weaned · Documented→#proof); the six credential entities stay visible in hero pills, counter, takeaways, owner chips and FAQ (breeder, 2026-09-10).` and `11. Desktop hero 350–400px measured on the hero grid; the current HeroV3 is ~483px and is the reason for the variations canvas.`
   - Keep line 69's advisory wording; correct "≥3 H6" to "5 H5 / 5 H6" to match `rules/headings.md` (advisory on home).
 
-- [ ] **Step 3: Verify and commit**
+- [x] **Step 3: Verify and commit**
 
 ```bash
 grep -c "site/content/index.md" .claude/agents/cag-homepage-builder.md; grep -c "src/pages/index.astro" .claude/agents/cag-homepage-builder.md
@@ -506,7 +508,7 @@ Expected: `0` and `>=5`.
 - Modify: `tests/render/checks/a11y.ts:50-55`
 - Test: `npm run test:render:meta`
 
-- [ ] **Step 1: Add the false-positive case to `known_good`** — white text at 85% over forest green must be silent (current parser reads it as near-black → fires).
+- [x] **Step 1: Add the false-positive case to `known_good`** — white text at 85% over forest green must be silent (current parser reads it as near-black → fires).
 
 Append inside `<style>`:
 ```css
@@ -520,7 +522,7 @@ and before `</body>`/end of file:
 <nav class="nav-green"><a>Shop Parrots</a> <a>Compare</a> <a>Care Guides</a></nav>
 ```
 
-- [ ] **Step 2: Add the true-positive case to `known_broken`** — an oklab dark grey on forest green must still fire.
+- [x] **Step 2: Add the true-positive case to `known_broken`** — an oklab dark grey on forest green must still fire.
 
 Append:
 ```css
@@ -532,14 +534,14 @@ Append:
 ```
 Raise `minExamined` in `a11y.ts` from `4` to `6` (the broken fixture now carries 6 judgeable spans).
 
-- [ ] **Step 3: Run the meta gate and watch it fail for the RIGHT reason**
+- [x] **Step 3: Run the meta gate and watch it fail for the RIGHT reason**
 
 ```bash
 npm run test:render:meta -- --grep "a11y-text-contrast-aa"
 ```
 Expected: `is silent on the known_good fixture` FAILS with a 3-row report naming "Shop Parrots" at ~1.1:1. (If it passes, the fixture did not reproduce — stop, per `cag-learning-loop` step 3.2.)
 
-- [ ] **Step 4: Fix the parser — let the browser normalise the colour**
+- [x] **Step 4: Fix the parser — let the browser normalise the colour**
 
 Replace the `rgb` helper in `tests/render/checks/a11y.ts` (inside `page.evaluate`):
 ```ts
@@ -560,7 +562,7 @@ Replace the `rgb` helper in `tests/render/checks/a11y.ts` (inside `page.evaluate
       };
 ```
 
-- [ ] **Step 5: Re-run the meta gate — fires on broken, silent on good**
+- [x] **Step 5: Re-run the meta gate — fires on broken, silent on good**
 
 ```bash
 npm run test:render:meta -- --grep "a11y-text-contrast-aa"
@@ -571,7 +573,7 @@ npm run test:render:meta
 ```
 Expected: all green.
 
-- [ ] **Step 6: Commit (no new rule — `cag-learning-loop` step 3.5)**
+- [x] **Step 6: Commit (no new rule — `cag-learning-loop` step 3.5)**
 
 ```bash
 git add tests/render/checks/a11y.ts tests/render/fixtures/known_good/a11y-text-contrast-aa.html tests/render/fixtures/known_broken/a11y-text-contrast-aa.html
@@ -583,14 +585,14 @@ git commit -m "fix(harness): a11y-text-contrast-aa normalises oklab()/color() th
 **Files:**
 - Modify: `src/pages/index.astro` (every `scroll-mt-20` on `<section id=…>` / `<div id="proof">` / `<div id="contact">`)
 
-- [ ] **Step 1: Confirm the defect on the page (gate-integrity)**
+- [x] **Step 1: Confirm the defect on the page (gate-integrity)**
 
 ```bash
 grep -c 'scroll-mt-20' src/pages/index.astro
 ```
 Expected: `23`. Header `h-24` = 96px; `scroll-mt-20` = 80px < 88px near edge. Defect confirmed.
 
-- [ ] **Step 2: Fix — `scroll-mt-28` (112px = header 96 + 16)**
+- [x] **Step 2: Fix — `scroll-mt-28` (112px = header 96 + 16)**
 
 ```bash
 sed -i '' 's/scroll-mt-20/scroll-mt-28/g' src/pages/index.astro
@@ -598,7 +600,7 @@ grep -c 'scroll-mt-28' src/pages/index.astro
 ```
 Expected: `23`. (JumpRail mobile sheet is a modal, not sticky chrome, so 16px clearance is the whole offset.)
 
-- [ ] **Step 3: Rebuild and run the pages gate; read the NAV rows**
+- [x] **Step 3: Rebuild and run the pages gate; read the NAV rows**
 
 ```bash
 npx astro build >/dev/null && npm run test:render:pages 2>&1 | tail -40
@@ -610,7 +612,7 @@ EOF
 ```
 Expected: `nav-jump-target-lands` examined 58, **zero** rows (or only the last anchor `#contact` at document end — see the check's own comment; if so, record it, do not tune).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/pages/index.astro && git commit -m "fix(homepage): in-page anchors clear the 96px header (scroll-mt-28)"
@@ -624,7 +626,7 @@ Use the banked toolchain end to end; never hand-write `sizes` (memory `reference
 - Modify: `src/pages/index.astro`, `src/components/cag-library/HeroV3.astro`, `src/components/cag-library/Testimonials.astro`, `src/components/cag-library/SplitFeature.astro`, `src/components/cag-library/OwnerCard.astro` — **only the tags the map names**
 - Create: variant files under `public/` (by `image_srcset_variants.py`)
 
-- [ ] **Step 1: Measure (plan) and stamp (instrument) the tags**
+- [x] **Step 1: Measure (plan) and stamp (instrument) the tags**
 
 ```bash
 mkdir -p /private/tmp/claude-501/-Users-apple-Downloads-CAG/75638366-2100-4d39-9a39-f7e13424c444/scratchpad/srcset && S=/private/tmp/claude-501/-Users-apple-Downloads-CAG/75638366-2100-4d39-9a39-f7e13424c444/scratchpad/srcset
@@ -635,7 +637,7 @@ node scripts/image_srcset_instrument.mjs --off && git diff --stat src/
 ```
 Expected: plan lists ≥12 occurrences on `index`; map reports `0 ambiguous`; `git diff --stat src/` is **empty** after `--off`. Read any `CONFLICT` rows aloud in the brief — those tags are not patched.
 
-- [ ] **Step 2: Generate variants, apply, fill missing**
+- [x] **Step 2: Generate variants, apply, fill missing**
 
 ```bash
 python3 scripts/image_srcset_variants.py --map $S/map.json --apply
@@ -645,7 +647,7 @@ git status --short | head -30
 ```
 Expected: `srcset`/`sizes` added to the tags the map names (hero in `HeroV3.astro`, eggs/pair inline `<img>` in `index.astro`, avatar tags in `Testimonials.astro`, `imageSrc` consumer in `SplitFeature.astro`, `OwnerCard.astro`), new `-NNN.webp` files in `public/`. **Shared components:** if apply touches `Testimonials.astro`/`SplitFeature.astro`/`OwnerCard.astro`, the tag must go through `src/lib/srcset.ts` (manifest lookup), not a literal `w` descriptor — check the diff for a literal like `640w` in a component and reroute it through `srcsetFor()` if present.
 
-- [ ] **Step 3: Verify both directions, then the harness**
+- [x] **Step 3: Verify both directions, then the harness**
 
 ```bash
 npx astro build >/dev/null && node scripts/image_srcset_verify.mjs index
@@ -653,7 +655,7 @@ npm run test:render:pages 2>&1 | tail -20
 ```
 Expected: verify prints `OVERSIZED 0 · UNDERSIZED 0` for `index` at 375/768/1280; scorecard `img-srcset-within-2x` rows = 0 and `img-alt-present-and-unique` = 0. Any image that cannot clear 2× without blur (e.g. the 48px avatars need a `-96`/`-128` sibling) is fixed by adding the variant, never by loosening the check.
 
-- [ ] **Step 4: Commit (git add only the named files + new public variants)**
+- [x] **Step 4: Commit (git add only the named files + new public variants)**
 
 ```bash
 git add src/pages/index.astro src/components/cag-library/HeroV3.astro src/components/cag-library/Testimonials.astro src/components/cag-library/SplitFeature.astro src/components/cag-library/OwnerCard.astro public/*-[0-9]*.webp data/image-manifest.json 2>/dev/null
@@ -667,14 +669,14 @@ git commit -m "perf(homepage): measured srcset/sizes on every oversized image; v
 
 ### Task C1: Run every gate, twice, and read the examined counts
 
-- [ ] **Step 1: Build, meta gate first, then the page gate**
+- [x] **Step 1: Build, meta gate first, then the page gate**
 
 ```bash
 npx astro build >/dev/null && npm run test:render:meta 2>&1 | tail -5 && npm run test:render:pages 2>&1 | tail -30
 ```
 Read `examined_by_check` in the newest `data/quality/scorecards/index-*.json`. A check with `0` examined is not a pass.
 
-- [ ] **Step 2: Static + profile gates**
+- [x] **Step 2: Static + profile gates**
 
 ```bash
 python3 scripts/page_hardening_scan.py index
@@ -688,7 +690,7 @@ python3 scripts/quality_report.py
 ```
 Expected: hardening `0 ERROR`; seam PASS with a non-zero section count; final audit PASS / PASS-WITH-WARNINGS; aeo 0 ERROR; evidence WARNs only the accepted ones (A2 title, A4 terms); dup 0 body crossovers; pytest green.
 
-- [ ] **Step 3: Runtime probes at 375/768/1280 (hardening §2)** — Playwright, not the Browser pane. Record hero `.hero-grid`/`.hero-v3-b` height at 1280, overflow, contrast sweep, line length in a real `ch`.
+- [x] **Step 3: Runtime probes at 375/768/1280 (hardening §2)** — Playwright, not the Browser pane. Record hero `.hero-grid`/`.hero-v3-b` height at 1280, overflow, contrast sweep, line length in a real `ch`.
 
 ```bash
 node - <<'EOF'
@@ -700,9 +702,9 @@ EOF
 ```
 Expected: `scrollW === vw` at every width. Hero at 1280 will read ~483px — **above the 350–400 band**; log to Open Flags (it is the reason for the three new heroes in Part D, not a fix here).
 
-- [ ] **Step 4: Run the whole set a second time** (memory `reference_same_input_different_verdict`): re-run Step 1 and compare defect totals. Two clean runs = pass.
+- [x] **Step 4: Run the whole set a second time** (memory `reference_same_input_different_verdict`): re-run Step 1 and compare defect totals. Two clean runs = pass.
 
-- [ ] **Step 5: Learning loop (skills/cag-learning-loop.md)**
+- [x] **Step 5: Learning loop (skills/cag-learning-loop.md)**
 
 ```bash
 git log --since="2026-09-10" --pretty=format:"%h %s" | grep -iE "fix|revert|correct|restore"
@@ -716,11 +718,11 @@ Classify each hit (IMG/NAV/A11Y-harness). The oklab fix is `GATE`, charged to th
 - Create: `docs/artifacts/cags-homepage-close-gate-report.md` and `.html`
 - Modify: `sessions/2026-09-10-homepage-close-session-brief.md` (Open Flags)
 
-- [ ] **Step 1: Write the report as markdown once** (sections: verdict · what changed (A1–A4, B1–B3) · gate table with examined counts · runtime probe table · accepted overrides · open flags · what the next session does first). Then wrap it in the same copy-button shell as `docs/artifacts/cags-evidence-pass-gate-report.html` (copy that file's `<style>` + the per-section `<button class="copy">` script, replace the embedded markdown). Load `artifact-design` before writing the HTML.
+- [x] **Step 1: Write the report as markdown once** (sections: verdict · what changed (A1–A4, B1–B3) · gate table with examined counts · runtime probe table · accepted overrides · open flags · what the next session does first). Then wrap it in the same copy-button shell as `docs/artifacts/cags-evidence-pass-gate-report.html` (copy that file's `<style>` + the per-section `<button class="copy">` script, replace the embedded markdown). Load `artifact-design` before writing the HTML.
 
-- [ ] **Step 2: Publish** with the Artifact tool (`file_path: docs/artifacts/cags-homepage-close-gate-report.html`, favicon `🦜📋`, description "Homepage close-out gate report, 2026-09-10"). Record the URL in the `.md` and the brief.
+- [x] **Step 2: Publish** with the Artifact tool (`file_path: docs/artifacts/cags-homepage-close-gate-report.html`, favicon `🦜📋`, description "Homepage close-out gate report, 2026-09-10"). Record the URL in the `.md` and the brief.
 
-- [ ] **Step 3: Sitemaps unchanged (no URL added) — skip `generate_sitemaps.py`. Commit, push, wait for the deploy, IndexNow**
+- [x] **Step 3: Sitemaps unchanged (no URL added) — skip `generate_sitemaps.py`. Commit, push, wait for the deploy, IndexNow**
 
 ```bash
 git add docs/artifacts/cags-homepage-close-gate-report.md docs/artifacts/cags-homepage-close-gate-report.html sessions/2026-09-10-homepage-close-session-brief.md
@@ -747,7 +749,7 @@ Part D writes **no site files**. The breeder picks; a later session applies (pre
 - Create: `scripts/component_library_capture.mjs`
 - Output: `docs/artifacts/component-library/manifest.json` + `*.webp` (base64-inlined later)
 
-- [ ] **Step 1: Write the catalogue** — one row per component instance: `{id, category, name, page, selector, source, props}`. Categories: `hero`, `counter`, `toc/dial/rail`, `bird-card`, `table`, `faq`, `shipping`, `reviews`, `newsletter`, `form`, `seam`, `key-takeaway`, `owner`, `trust`. Seed rows (all verified to exist):
+- [x] **Step 1: Write the catalogue** — one row per component instance: `{id, category, name, page, selector, source, props}`. Categories: `hero`, `counter`, `toc/dial/rail`, `bird-card`, `table`, `faq`, `shipping`, `reviews`, `newsletter`, `form`, `seam`, `key-takeaway`, `owner`, `trust`. Seed rows (all verified to exist):
 
 ```js
 export const CATALOG = [
@@ -784,14 +786,14 @@ export const CATALOG = [
 ```
 Before capture, confirm each selector matches on its built page (`document.querySelector`); drop or correct any that returns null and print the examined count.
 
-- [ ] **Step 2: Capture element screenshots at 375/768/1280 from `dist/`** (Playwright `locator.screenshot`, `scrollIntoViewIfNeeded`, hidden desktop/mobile variants skipped when the rect is zero), convert to WebP ≤60 KB each with Pillow, write `manifest.json` with `{id, viewport, file, width, height}`.
+- [x] **Step 2: Capture element screenshots at 375/768/1280 from `dist/`** (Playwright `locator.screenshot`, `scrollIntoViewIfNeeded`, hidden desktop/mobile variants skipped when the rect is zero), convert to WebP ≤60 KB each with Pillow, write `manifest.json` with `{id, viewport, file, width, height}`.
 
 ```bash
 npx astro build >/dev/null && node scripts/component_library_capture.mjs && python3 -c "import json;m=json.load(open('docs/artifacts/component-library/manifest.json'));print(len(m),'captures')"
 ```
 Expected: ≈ 29 components × up to 3 viewports = 60–87 captures (mobile-only / desktop-only components have fewer). Print the miss list.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add scripts/component_library_capture.mjs docs/artifacts/component-library/manifest.json docs/artifacts/component-library/*.webp
@@ -803,11 +805,11 @@ git commit -m "tooling(library): capture every live CAG component at 375/768/128
 **Files:**
 - Create: `docs/artifacts/cags-component-library.md`, `docs/artifacts/cags-component-library.html`
 
-- [ ] **Step 1: Load `artifact-design`, then write the page.** Layout: sticky category filter (chips), one card per component with a 375/768/1280 tab strip showing the capture, name, page it lives on, source path, a **copy button** that copies the `.astro` import + a usage snippet, and a "Variants on canvas" link (filled in after D3). Images inline as base64 (`data:image/webp;base64,…`) — total must stay under 16 MB; if it exceeds, downscale to 900px wide. Author the markdown once (`cags-component-library.md`: category → table of components with source path + usage snippet) and render it inside the page so copy buttons emit exact markdown.
+- [x] **Step 1: Load `artifact-design`, then write the page.** Layout: sticky category filter (chips), one card per component with a 375/768/1280 tab strip showing the capture, name, page it lives on, source path, a **copy button** that copies the `.astro` import + a usage snippet, and a "Variants on canvas" link (filled in after D3). Images inline as base64 (`data:image/webp;base64,…`) — total must stay under 16 MB; if it exceeds, downscale to 900px wide. Author the markdown once (`cags-component-library.md`: category → table of components with source path + usage snippet) and render it inside the page so copy buttons emit exact markdown.
 
-- [ ] **Step 2: Publish** (Artifact tool, `file_path: docs/artifacts/cags-component-library.html`, favicon `🧩`, description "Every live C.A.Gs component by category at three viewports, with copyable usage"). Record the URL in the `.md` header and in `docs/reference/components.md` under a new line "**Visual library:** artifact <url> (2026-09-10)".
+- [x] **Step 2: Publish** (Artifact tool, `file_path: docs/artifacts/cags-component-library.html`, favicon `🧩`, description "Every live C.A.Gs component by category at three viewports, with copyable usage"). Record the URL in the `.md` header and in `docs/reference/components.md` under a new line "**Visual library:** artifact <url> (2026-09-10)".
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs/artifacts/cags-component-library.md docs/artifacts/cags-component-library.html docs/reference/components.md
@@ -821,11 +823,11 @@ git commit -m "docs(library): C.A.Gs component library artifact by category at 3
 
 Screenshotted components (from `assets/ScreenShots/`): hero · counter snippet · desktop dial · mobile jump-to-section · "what buyers ask about" (male-vs-female) table · "African vs others" table · CompareTableE desktop · hand-raised `.tblC` table · FAQ section (too long) · shipping section · `Screenshot 2026-09-09 at 21.51.48.png` (identify by reading it; if it duplicates one above, fold it in).
 
-- [ ] **Step 1: Read the brand files and lift exact tokens** — `PRODUCT.md`, `DESIGN.md`, `src/styles/global.css` (`--clay #e8604c`, `--clay-ink #c8472f`, `#b04228` small clay, forest `#2D6A4F`, cream `#faf7f4`, warm-white, Newsreader/IBM Plex Sans via Google Fonts, radii 16/18/50px, 96px header). Say in one line what was matched. The impeccable `load-context.mjs` loader is **not** installed in this plugin version — read the two files directly and note that in the brief.
+- [x] **Step 1: Read the brand files and lift exact tokens** — `PRODUCT.md`, `DESIGN.md`, `src/styles/global.css` (`--clay #e8604c`, `--clay-ink #c8472f`, `#b04228` small clay, forest `#2D6A4F`, cream `#faf7f4`, warm-white, Newsreader/IBM Plex Sans via Google Fonts, radii 16/18/50px, 96px header). Say in one line what was matched. The impeccable `load-context.mjs` loader is **not** installed in this plugin version — read the two files directly and note that in the brief.
 
-- [ ] **Step 2: Invariants that never vary** (from `skills/cag-component-refresh.md §0` + `rules/design.md`): palette, clay pill CTA, 96px sticky offsets, seam divider, type system, motion ≤0.2s, hero/counter separation (tone shift + 1px rule), **desktop hero 350–400px on `.hero-grid`**, dial rows ≥24px tall with tag pill visible (`cag-page-hardening §1e-bis`), mobile rail at TOP under the header (never bottom-pinned), tables stack to `data-label` cards on mobile with `caption` in the `display:block` list.
+- [x] **Step 2: Invariants that never vary** (from `skills/cag-component-refresh.md §0` + `rules/design.md`): palette, clay pill CTA, 96px sticky offsets, seam divider, type system, motion ≤0.2s, hero/counter separation (tone shift + 1px rule), **desktop hero 350–400px on `.hero-grid`**, dial rows ≥24px tall with tag pill visible (`cag-page-hardening §1e-bis`), mobile rail at TOP under the header (never bottom-pinned), tables stack to `data-label` cards on mobile with `caption` in the `display:block` list.
 
-- [ ] **Step 3: Author the artboards.** One `.dc.html` per component × variation × viewport, named `Hero-A-Desktop.dc.html`, `Hero-A-Tablet.dc.html`, `Hero-A-Mobile.dc.html` … (`Main.dc.html` = Hero-A-Desktop, the leading candidate). Frames: mobile 390×(h), tablet 768×(h), desktop 1440×(h). Each variation explores a **named axis** (layout / accent-role / motif / container / density — one per variation, never palette). Required sets:
+- [x] **Step 3: Author the artboards.** One `.dc.html` per component × variation × viewport, named `Hero-A-Desktop.dc.html`, `Hero-A-Tablet.dc.html`, `Hero-A-Mobile.dc.html` … (`Main.dc.html` = Hero-A-Desktop, the leading candidate). Frames: mobile 390×(h), tablet 768×(h), desktop 1440×(h). Each variation explores a **named axis** (layout / accent-role / motif / container / density — one per variation, never palette). Required sets:
 
 | Component | A | B | C |
 |---|---|---|---|
@@ -839,9 +841,9 @@ Screenshotted components (from `assets/ScreenShots/`): hero · counter snippet �
 
 Copy is literal text lifted from the live page (no lorem, no new claims; prices from `data/price-matrix.json`). Tweaks: at most one per artboard (a `variant` enum or a `dark` boolean). Icons as inline SVG, never emoji. Images: downsample the live hero/bird photos with Pillow to ≤70 KB and pass with `--image`.
 
-- [ ] **Step 4: `canvas.json`** — one **page per component** (`pages: [{id:'hero',name:'Heroes'}, {id:'counter',name:'Counter snippets'}, {id:'dial',name:'Desktop dial'}, {id:'rail',name:'Mobile jump links'}, {id:'tables',name:'Tables'}, {id:'faq',name:'FAQ'}, {id:'shipping',name:'Shipping'}]`), rows = variation, columns = Mobile/Tablet/Desktop, ≥80px between frames, ≥120px between rows, one sticky-note annotation per variation stating its axis, motivation and trade-off, plus the **(Recommended)** pick per component with the data reason (e.g. hero A: only variant that measures inside 350–400 at 1440 with the full H1). `launch: {view:'canvas', page:'hero'}`.
+- [x] **Step 4: `canvas.json`** — one **page per component** (`pages: [{id:'hero',name:'Heroes'}, {id:'counter',name:'Counter snippets'}, {id:'dial',name:'Desktop dial'}, {id:'rail',name:'Mobile jump links'}, {id:'tables',name:'Tables'}, {id:'faq',name:'FAQ'}, {id:'shipping',name:'Shipping'}]`), rows = variation, columns = Mobile/Tablet/Desktop, ≥80px between frames, ≥120px between rows, one sticky-note annotation per variation stating its axis, motivation and trade-off, plus the **(Recommended)** pick per component with the data reason (e.g. hero A: only variant that measures inside 350–400 at 1440 with the full H1). `launch: {view:'canvas', page:'hero'}`.
 
-- [ ] **Step 5: Seed, check, publish**
+- [x] **Step 5: Seed, check, publish**
 
 ```bash
 cd docs/design/homepage-variations
@@ -853,9 +855,9 @@ node "/private/tmp/claude-501/bundled-skills/2.1.260/9f0c7cee38fdc0d14337e779ec8
 ```
 Expected: `ok:` with the title and every artboard listed. (If the skill base directory was lost to a resumed session, re-run `/design` to re-extract it.) Then load `artifact-capabilities`, and publish with the Artifact tool per the design skill's step 4 (`contract: "0.1.31"`, favicon `🎨`, capabilities exactly as the roster lists). Record the URL in the brief and in the library artifact's "Variants on canvas" links (republish D2).
 
-- [ ] **Step 6: Critique + harden + refine pass on every variation** — run `impeccable critique` then `impeccable harden` against the working `.dc.html` files (the loader is absent; the register is **brand**, PRODUCT.md/DESIGN.md already read), then a `frontend-design` refinement pass. Record each finding and fix in `docs/design/homepage-variations/CRITIQUE.md` (component · variation · finding · fix · rule cited). Re-seed and republish after fixes.
+- [x] **Step 6: Critique + harden + refine pass on every variation** — run `impeccable critique` then `impeccable harden` against the working `.dc.html` files (the loader is absent; the register is **brand**, PRODUCT.md/DESIGN.md already read), then a `frontend-design` refinement pass. Record each finding and fix in `docs/design/homepage-variations/CRITIQUE.md` (component · variation · finding · fix · rule cited). Re-seed and republish after fixes.
 
-- [ ] **Step 7: Commit the working files (never the seeded output's payload — it is 2 MB of editor code; commit it anyway only if the repo already tracks artifact HTML of that size; otherwise add it to `.gitignore`)**
+- [x] **Step 7: Commit the working files (never the seeded output's payload — it is 2 MB of editor code; commit it anyway only if the repo already tracks artifact HTML of that size; otherwise add it to `.gitignore`)**
 
 ```bash
 git add docs/design/homepage-variations/*.dc.html docs/design/homepage-variations/canvas.json docs/design/homepage-variations/CRITIQUE.md docs/design/homepage-variations/*.webp
@@ -868,7 +870,7 @@ git commit -m "design(homepage): 3×3 variations for hero, counter, dial, mobile
 - Create: `skills/cag-component-variations.md`
 - Modify: `docs/reference/system-registry.md` (skill row), `docs/reference/quick-start.md` (task → entry point row)
 
-- [ ] **Step 1: Write the skill** (frontmatter `name`, `description` with triggers: "3 variations", "mobile/tablet/desktop versions", "new hero", "new counter", "design canvas", "component library"). Body, in this order:
+- [x] **Step 1: Write the skill** (frontmatter `name`, `description` with triggers: "3 variations", "mobile/tablet/desktop versions", "new hero", "new counter", "design canvas", "component library"). Body, in this order:
   1. **Invariants** (the §0 list from D3 Step 2, verbatim, plus "desktop hero 350–400px measured on `.hero-grid`; HeroV3 at ~483px is out of band").
   2. **Inputs**: the screenshots folder, the component library artifact URL, the page slug.
   3. **Method**: lift tokens from DESIGN.md/global.css → pick one named axis per variation → author `.dc.html` per variation×viewport → `canvas.json` pages per component with a (Recommended)+why note → seed/check/publish → `impeccable critique/harden` → `frontend-design` refine → CRITIQUE.md → breeder picks → apply via preview-before-apply.
@@ -876,7 +878,7 @@ git commit -m "design(homepage): 3×3 variations for hero, counter, dial, mobile
   5. **Pass gates before apply**: `cag-page-hardening` §2 probes at 375/768/1280, `test:render:pages`, `seam_parity`, dup gate.
   6. **What NOT to do**: palette changes, bottom-pinned mobile rails, density passes that shrink dial rows, emoji icons, new claims in copy.
 
-- [ ] **Step 2: Register and verify**
+- [x] **Step 2: Register and verify**
 
 ```bash
 python3 scripts/register_skills.py --copy && python3 scripts/register_skills.py --check
@@ -884,7 +886,7 @@ grep -n "cag-component-variations" docs/reference/system-registry.md docs/refere
 ```
 Expected: check passes; both docs list the skill.
 
-- [ ] **Step 3: Commit and push**
+- [x] **Step 3: Commit and push**
 
 ```bash
 git add skills/cag-component-variations.md docs/reference/system-registry.md docs/reference/quick-start.md
@@ -894,7 +896,7 @@ git push origin main
 
 ### Task D5: Close the session
 
-- [ ] **Step 1:** Run `session-closer`: fill `## What's Next` in the brief (breeder picks variants → apply hero/counter/dial/rail/tables to `/` under preview-before-apply → re-run Part C). Commit + push.
+- [x] **Step 1:** Run `session-closer`: fill `## What's Next` in the brief (breeder picks variants → apply hero/counter/dial/rail/tables to `/` under preview-before-apply → re-run Part C). Commit + push.
 
 ---
 </script>
