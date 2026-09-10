@@ -1,0 +1,850 @@
+<title>Homepage Close-Out Plan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F7F5EE; --paper:#FFFFFF; --ink:#1E2A24; --ink-2:#4B5A52; --ink-3:#7A867F;
+  --line:#DDD9CC; --green:#2D6A4F; --green-soft:#E3EEE8; --clay:#E8604C; --clay-soft:#FBE7E2;
+  --code-bg:#F0EEE5; --mark:#FFF3C4;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+    --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+    --code-bg:#11161380; --mark:#4A3F16;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+  --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+  --code-bg:#11161380; --mark:#4A3F16;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 96px}
+header.masthead{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;padding-bottom:20px;border-bottom:2px solid var(--green);margin-bottom:28px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:600;margin:0 0 8px}
+h1.title{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+.sub{color:var(--ink-2);margin:10px 0 0;max-width:62ch}
+.meta{font-size:13px;color:var(--ink-3);text-align:right;line-height:1.5}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 28px}
+button.btn{font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:6px;border:1px solid var(--green);background:var(--green);color:#fff;cursor:pointer}
+button.btn.ghost{background:transparent;color:var(--green)}
+button.btn:focus-visible{outline:3px solid var(--clay);outline-offset:2px}
+.toc{font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 36px;padding:0;list-style:none}
+.toc a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a:hover{color:var(--green);border-color:var(--green)}
+section.sec{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:26px 30px 30px;margin:0 0 22px;position:relative}
+section.sec .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:6px}
+section.sec h2{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:24px;margin:0;line-height:1.2;text-wrap:balance}
+section.sec .copy{flex:none;font:inherit;font-size:12px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:5px;border:1px solid var(--line);background:transparent;color:var(--ink-2);cursor:pointer}
+section.sec .copy:hover{border-color:var(--green);color:var(--green)}
+section.sec .copy.done{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.md h3{font-family:"Source Serif 4",Georgia,serif;font-size:18px;margin:26px 0 8px}
+.md h4{font-size:15px;margin:20px 0 6px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+.md p,.md li{max-width:72ch}
+.md ul,.md ol{padding-left:22px}
+.md li{margin:4px 0}
+.md strong{font-weight:600}
+.md code{font:13.5px/1.5 "IBM Plex Mono",ui-monospace,Menlo,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.md pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;font:13px/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
+.md pre code{background:none;padding:0;font-size:inherit}
+.md table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0 18px;display:block;overflow-x:auto}
+.md thead th{text-align:left;font-weight:600;color:var(--ink-2);font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--green);padding:8px 10px;white-space:nowrap}
+.md tbody td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-variant-numeric:tabular-nums}
+.md tbody tr:last-child td{border-bottom:none}
+.md blockquote{margin:14px 0;padding:10px 16px;border-left:4px solid var(--clay);background:var(--clay-soft);border-radius:0 6px 6px 0}
+.md blockquote p{margin:4px 0}
+.md a{color:var(--green)}
+.md mark{background:var(--mark);padding:0 3px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--ground);padding:9px 16px;border-radius:6px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:640px){header.masthead{grid-template-columns:1fr}.meta{text-align:left}section.sec{padding:20px 18px 22px}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<div class="wrap">
+<header class="masthead">
+  <div>
+    <p class="eyebrow">CongoAfricanGreys.com · Implementation plan</p>
+    <h1 class="title">Homepage Close-Out Plan</h1>
+    <p class="sub">Homepage only. Closes the 2026-09-09 open flags the breeder ruled on, fixes the three render rows and one harness bug, runs every gate on <code>/</code>, and delivers a 3×3 component-variation canvas, a component library and a reusable skill.</p>
+  </div>
+  <div class="meta">Written 2026-09-10 · not yet executed<br>Source of truth: <code>docs/superpowers/plans/2026-09-10-homepage-close-and-component-variations.md</code><br>Execute with superpowers:subagent-driven-development, task by task</div>
+</header>
+<div class="toolbar">
+  <button class="btn" id="copy-all">Copy whole document as Markdown</button>
+  <span style="font-size:13px;color:var(--ink-3)">Each section below has its own copy button. Copies are exact Markdown, not scraped HTML. The same text is versioned as <code>.md</code> in the repo.</span>
+</div>
+<ul class="toc" id="toc"></ul>
+<div id="doc"></div>
+</div>
+<div class="toast" id="toast">Copied</div>
+
+<script type="text/markdown" data-title="Homepage Close-Out + Component Variations Implementation Plan">
+# Homepage Close-Out + Component Variations Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Close every breeder decision from the 2026-09-09 evidence-pass open flags on the homepage only, fix the three render rows the harness now sees, fix the one harness bug, run the full gate pass on the homepage, and deliver a design canvas of 3 variations × 3 viewports for every screenshotted homepage component plus a browsable component library and a reusable skill.
+
+**Architecture:** Four independent parts. **Part A** edits `src/pages/index.astro` + `data/reviews.json` + `src/components/cag-library/HeroV3.astro` only (content restorations). **Part B** touches `tests/render/checks/a11y.ts` + its two fixtures (harness bug) and the homepage srcset/scroll-margin rows. **Part C** is the gate pass, artifact gate report, build, commit, push, IndexNow. **Part D** is design work that writes no site file: a `/design` canvas seeded from working `.dc.html` files under `docs/design/homepage-variations/`, a component-library artifact under `docs/artifacts/`, and a new skill `skills/cag-component-variations.md`. Parts A–C ship; Part D is preview-only until the breeder picks variants.
+
+**Tech Stack:** Astro 4 + Tailwind v4 (`src/`), Playwright render harness (`tests/render/`), Python audit scripts (`scripts/`), pytest (`tests/`), the `design` skill helper (`seed-canvas.mjs`), Artifact tool for deliverables.
+
+**Scope lock (breeder, 2026-09-10):** homepage only. No blog title retrofit (flag 3), no Rule 21 reconciliation (flag 4), no budget calibration (flag 5), no sitewide srcset sweep. Any task that would touch a second page stops and logs to `## Open Flags`.
+
+---
+</script>
+<script type="text/markdown" data-title="Decisions already made by the breeder (do not re-ask)">
+## Decisions already made by the breeder (do not re-ask)
+
+| Flag | Decision | Task |
+|---|---|---|
+| 1 Proof objects | Put the six credential **terms** back on the page as visible entities; proof docs (images/PDFs) come at the end of the site build. Keep "How we document it" links. | A4 |
+| 2 Kempf twice | Replace the **mid** review with Brian Carr (Plainview, TX); keep the middle image; Kempf stays in the bottom grid of three. | A1 |
+| 3 Blog titles | Ignore. | — |
+| 4 Rule 21 | Keep the five-part formula. Restore the homepage title + meta description to the five-part form removed in `de03d165`. | A2 |
+| 5 Budgets | OK as proposals. | — |
+| 6 BirdCard badges | Homepage cards show `CITES Cert · PCR DNA-Sexed · Vet Certified · Fully Weaned · Documented→#proof`. | A3 |
+</script>
+<script type="text/markdown" data-title="Verified facts the plan rests on">
+## Verified facts the plan rests on
+
+- Header is 96px (`src/components/Header.astro:59` `h-24`). Every homepage section carries `scroll-mt-20` = 80px → all 19–20 in-page links land under the 88–156px band. Fix = `scroll-mt-28` (112px = 96 + 16), matching `rules/…` "scroll-margin-top: calc(var(--hdr) + 16px)".
+- Contrast checker `rgb()` in `tests/render/checks/a11y.ts:50` does `s.match(/[\d.]+/g)`, so Tailwind v4 `oklab(0.97 0 0 / 0.85)` parses as `rgb(0.97, 0, 0)` → near-black → false 3.28:1 rows on white nav text. Harness bug, charged to the harness (`skills/cag-learning-loop.md` step 3).
+- `img-srcset-within-2x` rows on `index` at 375/768/1280: hero (800→220–300px), candled eggs (550→112–128), breeding-pair (900→112–128), habitat (2752→343–736), review avatars (300/600→48), mix-nuts (1000→354–498), review-top/middle (600→200–295), variant (640→272), about (640→312), scam jpg (1024→343). The homepage has **zero** `srcset` attributes today. The banked toolchain is `scripts/image_srcset_{plan,instrument,map,variants,apply,fill_missing,verify}` — plan → instrument --on → build → map → variants → apply → instrument --off → fill_missing → verify.
+- Duplicate alt "Catherine Kempf" ×2 comes from `Testimonials.astro` `alt={t.name}` on the mid feature (`reviews[2]`) and the grid. A1 removes it.
+- `data/reviews.json` is the single source of truth; `tests/test_review_attribution.py` fails on any inline review object whose (quote, name, location) is not in the ledger. Brian Carr must be added as `q5` **before** the page edit.
+- Hero height rule as recorded: **350–400px desktop**, measured on `.hero-grid` (`skills/cag-page-hardening.md §2c`, comparison "400px heroes"). `HeroV3` measures ~483px at 1280 (memory `project_hero_v3b_specs`). The breeder's "390–45px" does not appear in any rule file; treated as 350–400 with an open flag (see §Open Flags).
+- The five-part title/meta that `de03d165` replaced (from `git show de03d165~1:src/pages/index.astro` lines 23–24) is quoted verbatim in A2.
+
+---
+</script>
+<script type="text/markdown" data-title="File Structure">
+## File Structure
+
+| File | Part | Responsibility |
+|---|---|---|
+| `data/reviews.json` | A | add `q5` Brian Carr |
+| `src/pages/index.astro` | A, B | reviews array, title/meta, BirdCard badges, credential terms, `scroll-mt-28`, srcset attrs |
+| `src/components/cag-library/HeroV3.astro` | A, B | pill labels, hero `srcset` |
+| `src/components/cag-library/CounterSnippet.astro` | A | untouched (page passes `stats`) |
+| `tests/render/checks/a11y.ts` | B | colour parser via canvas normalisation |
+| `tests/render/fixtures/known_good/a11y-text-contrast-aa.html` | B | oklab white-on-dark must be silent |
+| `tests/render/fixtures/known_broken/a11y-text-contrast-aa.html` | B | oklab dark-on-dark must fire |
+| `sessions/2026-09-10-homepage-close-session-brief.md` | A–D | brief + `## Open Flags` |
+| `docs/artifacts/cags-homepage-close-gate-report.{html,md}` | C | gate report artifact (copy buttons) |
+| `docs/design/homepage-variations/*.dc.html`, `canvas.json` | D | working artboards for the `/design` canvas |
+| `docs/artifacts/cags-component-library.{html,md}` | D | component library artifact |
+| `scripts/component_library_capture.mjs` | D | Playwright element screenshots → base64 manifest |
+| `skills/cag-component-variations.md` | D | the reusable skill (hero band, method, canvas workflow) |
+
+---
+</script>
+<script type="text/markdown" data-title="PART A — Breeder decisions on the homepage">
+# PART A — Breeder decisions on the homepage
+
+### Task A0: Session brief + restated brief
+
+**Files:**
+- Create: `sessions/2026-09-10-homepage-close-session-brief.md`
+
+- [ ] **Step 1: Write the brief with the restated goal and an empty Open Flags section**
+
+```bash
+cat > sessions/2026-09-10-homepage-close-session-brief.md <<'EOF'
+# 2026-09-10 — Homepage close-out + component variations
+</script>
+<script type="text/markdown" data-title="Brief (restated)">
+## Brief (restated)
+Goal: close open flags 1/2/4/6 from the 2026-09-09 evidence pass on `/` only; fix IMG-oversized, IMG-dup-alt, NAV-scroll-margin; fix the oklab contrast harness bug; run every gate on `/`; deliver 3×3 component variations on a design canvas + a component library artifact + a skill.
+Scope: `src/pages/index.astro`, `data/reviews.json`, `HeroV3.astro`, `tests/render/checks/a11y.ts` + 2 fixtures. Nothing else on the site.
+Gates: `npm run test:render:meta` → `npm run test:render:pages` → hardening scan → final_page_audit --type home → aeo → evidence → seam → dup → quality_report → pytest.
+Done: gates green or overridden visibly; built, committed, pushed, IndexNow `/` submitted; artifacts published; canvas published; skill registered.
+Out of scope: blog titles, Rule 21 text, budget calibration, sitewide srcset, any other page.
+</script>
+<script type="text/markdown" data-title="Open Flags">
+## Open Flags
+EOF
+git add sessions/2026-09-10-homepage-close-session-brief.md
+git commit -m "docs(session): homepage close-out brief"
+```
+
+### Task A1: Brian Carr replaces the mid review
+
+**Files:**
+- Modify: `data/reviews.json` (append `q5` to `reviews`)
+- Modify: `src/pages/index.astro:156-167` (`reviews` array), `:871` (`reviews[2]` → `reviews[3]`)
+- Test: `tests/test_review_attribution.py`
+
+- [ ] **Step 1: Add the review to the ledger**
+
+```bash
+python3 - <<'EOF'
+import json, io
+p='data/reviews.json'; d=json.load(open(p))
+assert not any(r['id']=='q5' for r in d['reviews'])
+d['reviews'].append({
+  "id": "q5", "name": "Brian Carr", "location": "Plainview, TX",
+  "bird": "Congo African Grey", "confirmed": "2026-09-10",
+  "avatar": "/african-grey-review-middle.webp",
+  "headline": "Helpful, professional, and genuinely caring.",
+  "quote": "Mark and Teri made the process of finding a young African Grey male parrot such a positive experience. From our first conversation to bringing him home, they were helpful, professional, and genuinely caring. He is healthy, friendly, and has an amazing personality. I’m very happy with my experience and would highly recommend Mark and Teri to anyone looking for a well-cared-for African Grey."
+})
+json.dump(d, open(p,'w'), indent=2, ensure_ascii=False); open(p,'a').write('\n')
+EOF
+python3 -m pytest tests/test_review_attribution.py -q
+```
+Expected: PASS (the ledger is well-formed; no src object yet references q5).
+
+- [ ] **Step 2: Write the failing page-level check** — the mid block must render Brian Carr, and "Catherine Kempf" must appear as an alt exactly once.
+
+```bash
+cat > tests/test_homepage_reviews.py <<'EOF'
+"""Homepage review slots: mid feature = Brian Carr; Kempf appears once (Rule 50b alt)."""
+import re
+from pathlib import Path
+HOME = Path(__file__).resolve().parents[1] / "dist" / "index.html"
+
+def test_mid_review_is_brian_carr():
+    html = HOME.read_text(encoding="utf-8")
+    mid = html.split('id="reviews-mid"', 1)[1].split('</section>', 1)[0]
+    assert "Brian Carr" in mid and "Plainview, TX" in mid
+    assert "african-grey-review-middle.webp" in mid
+
+def test_kempf_alt_once():
+    html = HOME.read_text(encoding="utf-8")
+    assert len(re.findall(r'alt="Catherine Kempf"', html)) == 1
+EOF
+npx astro build >/dev/null && python3 -m pytest tests/test_homepage_reviews.py -q
+```
+Expected: FAIL — `assert "Brian Carr" in mid`.
+
+- [ ] **Step 3: Add Brian Carr as `reviews[3]` and point the mid block at it**
+
+Edit `src/pages/index.astro`: after the Catherine Kempf object inside `const reviews = [ … ]` (ends `meta: 'Congo African Grey' },` at ~line 166) insert:
+
+```js
+  { headline: 'Helpful, professional, and genuinely caring.',
+    quote: "Mark and Teri made the process of finding a young African Grey male parrot such a positive experience. From our first conversation to bringing him home, they were helpful, professional, and genuinely caring. He is healthy, friendly, and has an amazing personality. I’m very happy with my experience and would highly recommend Mark and Teri to anyone looking for a well-cared-for African Grey.",
+    name: 'Brian Carr', location: 'Plainview, TX', meta: 'Congo African Grey' },
+```
+Then change line ~871:
+```astro
+<Testimonials variant="feature" testimonials={[{ ...reviews[3], avatarSrc: '/african-grey-review-middle.webp' }]} />
+```
+Leave `bottomReviews` untouched (Kempf stays in the bottom three).
+
+- [ ] **Step 4: Build and run both tests**
+
+```bash
+npx astro build >/dev/null && python3 -m pytest tests/test_review_attribution.py tests/test_homepage_reviews.py -q
+```
+Expected: 2 files PASS.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add data/reviews.json src/pages/index.astro tests/test_homepage_reviews.py
+git commit -m "feat(homepage): Brian Carr (Plainview, TX) fills the mid review slot; Kempf once"
+```
+
+### Task A2: Restore the five-part title and meta description
+
+**Files:**
+- Modify: `src/pages/index.astro:24-25`
+
+- [ ] **Step 1: Failing check** (the breeder's ruling: five parts, pipe-separated)
+
+```bash
+grep -c 'const title = ".*|.*|.*|' src/pages/index.astro
+```
+Expected: `0`.
+
+- [ ] **Step 2: Restore verbatim from the pre-evidence-pass commit**
+
+```bash
+python3 - <<'EOF'
+import subprocess,re
+old=subprocess.check_output(['git','show','de03d165~1:src/pages/index.astro']).decode()
+t=re.search(r'^const title = ".*";$',old,re.M).group(0)
+d=re.search(r'^const description = ".*";$',old,re.M).group(0)
+p='src/pages/index.astro'; s=open(p).read()
+s=re.sub(r'^const title = ".*";$',lambda m:t,s,count=1,flags=re.M)
+s=re.sub(r'^const description = ".*";$',lambda m:d,s,count=1,flags=re.M)
+open(p,'w').write(s); print(t); print(d)
+EOF
+```
+Expected output (the restored lines):
+```
+const title = "African Grey Parrot Breeder | Where Can I Buy a Healthy Congo African Grey Near Me? | Captive-Bred C.A.Gs vs Unverified Online Sellers | C.A.Gs – America's Trusted Congo & Timneh Breeder Since 2014";
+const description = "Trusted African Grey parrot breeder Mark & Teri raise hand-fed Congo & Timneh Greys in Midland, TX | Why families choose captive-bred C.A.Gs over unverified online sellers | Every C.A.Gs Grey is DNA-sexed, vet-checked, and ships with CITES Appendix I paperwork | Reserve yours — nationwide delivery";
+```
+
+- [ ] **Step 3: Verify in the build, then commit**
+
+```bash
+npx astro build >/dev/null && grep -o '<title>[^<]*</title>' dist/index.html
+git add src/pages/index.astro && git commit -m "feat(homepage): restore the five-part title and meta description (breeder ruling, Rule 21 kept)"
+```
+Expected: `<title>` shows the five-part title. Note for Part C: `evidence_audit.py` `title_too_long` will WARN on `/`; this is a breeder-accepted override, logged in `## Open Flags` (Task C1).
+
+### Task A3: BirdCard badges on the homepage
+
+**Files:**
+- Modify: `src/pages/index.astro:516`
+
+- [ ] **Step 1: Failing check**
+
+```bash
+npx astro build >/dev/null; python3 -c "
+h=open('dist/index.html').read(); s=h.split('id=\"available-birds\"',1)[1].split('</section>',1)[0]
+print({k:s.count(k) for k in ['CITES Cert','PCR DNA-Sexed','Vet Certified','Fully Weaned','Documented']})"
+```
+Expected today: CITES Cert 0, PCR DNA-Sexed 0, Vet Certified 0.
+
+- [ ] **Step 2: Replace the badges prop**
+
+```astro
+<BirdCard {...bird} location="" badges={[
+  { label: 'CITES Cert' }, { label: 'PCR DNA-Sexed' }, { label: 'Vet Certified' },
+  { label: 'Fully Weaned' }, { label: 'Documented', href: '#proof' },
+]} />
+```
+
+- [ ] **Step 3: Rebuild, re-run the check, commit**
+
+Expected: every count equals the number of cards rendered (6 available birds → 6 each).
+```bash
+git add src/pages/index.astro && git commit -m "feat(homepage): bird cards carry the five credential badges + Documented→#proof"
+```
+
+### Task A4: Put the six credential entities back on the page
+
+Google must see the six proof-object terms as entities, not only in the `#proof` list. `de03d165` cut them to one mention each (removed: 12× PCR, 11× DNA-sexed, 6× PBFD/Polyomavirus, 4× hatch certificate, 1× USDA AWA licensed, 1× avian-vet certified). Restore them in the **named slots below only** (grounded in that diff; no new prose, no new sections):
+
+**Files:**
+- Modify: `src/components/cag-library/HeroV3.astro:29-34` (pills)
+- Modify: `src/pages/index.astro:442-447` (counter), `:454-461` (KeyTakeaway items), `:474` (OwnerCard chips), `:184-192` (FAQ answers 1 and 4)
+
+- [ ] **Step 1: Failing entity check**
+
+```bash
+cat > tests/test_homepage_entities.py <<'EOF'
+"""The six proof-object entities must be visible on / at least twice each (breeder, 2026-09-10)."""
+import re
+from pathlib import Path
+HOME = Path(__file__).resolve().parents[1] / "dist" / "index.html"
+TERMS = {
+  "USDA": r"USDA (AWA|Animal Welfare Act)",
+  "CITES": r"CITES (Appendix I|captive-bred|Documented|Cert)",
+  "DNA": r"(PCR )?DNA[- ]sex(ed|ing)",
+  "VET": r"avian[- ]vet(erinarian)?( health)? certif",
+  "PBFD": r"PBFD",
+  "HATCH": r"hatch certificate",
+}
+def _text():
+    h = HOME.read_text(encoding="utf-8").split("<main", 1)[-1]
+    return re.sub(r"<script.*?</scr" + r"ipt>", "", h, flags=re.S)
+def test_each_entity_at_least_twice():
+    t = _text()
+    missing = {k: len(re.findall(v, t, re.I)) for k, v in TERMS.items()}
+    assert all(n >= 2 for n in missing.values()), missing
+EOF
+python3 -m pytest tests/test_homepage_entities.py -q
+```
+Expected: FAIL (report shows which terms are at 1).
+
+- [ ] **Step 2: Restore the terms in the named slots**
+
+`HeroV3.astro` pills:
+```js
+const pills = [
+  "USDA AWA Licensed",
+  "CITES Appendix I Documented",
+  "PCR DNA-Sexed",
+  "Avian-Vet Certified",
+];
+```
+`index.astro` counter (line ~444): `{ num: "100%", label: "CITES Documented" },`
+KeyTakeaway item 3: `{ stat: "PCR", label: "DNA-Sexed & Vet-Checked", body: "Sex is confirmed by a PCR DNA test, not by eye, and the avian-vet health certificate travels with the bird." },`
+KeyTakeaway item 6: `{ stat: "USDA", label: "AWA-Licensed Aviary", body: "Our USDA Animal Welfare Act licence is public record; check it before you pay anything." },`
+OwnerCard chips: `chips={["USDA AWA Licensed", "CITES Documented", "PCR DNA-Sexed", "Avian-Vet Certified"]}`
+FAQ 1 answer, replace `hatch certificate, band number, sex certificate and avian-vet health certificate` with `hatch certificate, closed leg-band number, PCR DNA-sexing certificate, avian-vet health certificate and PBFD / Polyomavirus PCR results`.
+FAQ 4 answer, replace `confirmed by a PCR lab test` with `confirmed by a PCR DNA-sexing test`.
+
+- [ ] **Step 3: Build, test, and run the evidence audit to record the accepted WARNs**
+
+```bash
+npx astro build >/dev/null && python3 -m pytest tests/test_homepage_entities.py -q && python3 scripts/evidence_audit.py index | tail -20
+```
+Expected: pytest PASS. `evidence_audit.py` prints term-budget WARNs for `/` — **expected and accepted** (the breeder overrode the once-only budget for these six entities on the homepage). Append to the brief:
+```bash
+cat >> sessions/2026-09-10-homepage-close-session-brief.md <<'EOF'
+- evidence_audit term-budget WARNs on `/` for USDA/CITES/DNA/vet/PBFD/hatch are breeder-accepted (2026-09-10: "these are entities Google needs to see"). Not a defect. Revisit when Sprint 0 calibrates budgets.
+EOF
+```
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/components/cag-library/HeroV3.astro src/pages/index.astro tests/test_homepage_entities.py sessions/2026-09-10-homepage-close-session-brief.md
+git commit -m "feat(homepage): six credential entities visible again in hero pills, counter, takeaways, owner chips, FAQ"
+```
+
+---
+</script>
+<script type="text/markdown" data-title="PART B — Harness bug + the three render rows">
+# PART B — Harness bug + the three render rows
+
+### Task B1: Contrast checker parses `oklab()` as near-black (harness bug)
+
+**Files:**
+- Modify: `tests/render/fixtures/known_good/a11y-text-contrast-aa.html`
+- Modify: `tests/render/fixtures/known_broken/a11y-text-contrast-aa.html`
+- Modify: `tests/render/checks/a11y.ts:50-55`
+- Test: `npm run test:render:meta`
+
+- [ ] **Step 1: Add the false-positive case to `known_good`** — white text at 85% over forest green must be silent (current parser reads it as near-black → fires).
+
+Append inside `<style>`:
+```css
+  /* Tailwind v4 emits oklab() for opacity modifiers. White at 85% over #2D6A4F composites to
+     ~#d5e1db → 6.9:1. The parser must not read "0.97 0 0 / .85" as rgb(0.97,0,0). */
+  .nav-green { background:#2D6A4F; padding:8px; }
+  .nav-green a { color: oklab(1 0 0 / 0.85); font-size:15px; }
+```
+and before `</body>`/end of file:
+```html
+<nav class="nav-green"><a>Shop Parrots</a> <a>Compare</a> <a>Care Guides</a></nav>
+```
+
+- [ ] **Step 2: Add the true-positive case to `known_broken`** — an oklab dark grey on forest green must still fire.
+
+Append:
+```css
+  .nav-green { background:#2D6A4F; padding:8px; }
+  .nav-green .dim { color: oklab(0.42 -0.03 0.01); font-size:15px; } /* ≈#3b5a4c → 1.6:1 */
+```
+```html
+<nav class="nav-green"><span class="dim">Shop Parrots</span> <span class="dim">Compare</span></nav>
+```
+Raise `minExamined` in `a11y.ts` from `4` to `6` (the broken fixture now carries 6 judgeable spans).
+
+- [ ] **Step 3: Run the meta gate and watch it fail for the RIGHT reason**
+
+```bash
+npm run test:render:meta -- --grep "a11y-text-contrast-aa"
+```
+Expected: `is silent on the known_good fixture` FAILS with a 3-row report naming "Shop Parrots" at ~1.1:1. (If it passes, the fixture did not reproduce — stop, per `cag-learning-loop` step 3.2.)
+
+- [ ] **Step 4: Fix the parser — let the browser normalise the colour**
+
+Replace the `rgb` helper in `tests/render/checks/a11y.ts` (inside `page.evaluate`):
+```ts
+      // Chromium normalises ANY <color> (oklab/oklch/color()/hsl/named) through a 2D
+      // canvas fillStyle into "#rrggbb" or "rgba(r, g, b, a)". Regex-mining digits out of
+      // an oklab() string read "0.97 0 0 / .85" as rgb(0.97,0,0) — a false near-black.
+      const cvs = document.createElement('canvas').getContext('2d')!;
+      const rgb = (s: string): number[] | null => {
+        if (!s || s === 'transparent') return null;
+        cvs.fillStyle = '#000'; cvs.fillStyle = s;
+        const n = String(cvs.fillStyle);
+        if (n.startsWith('#')) return [1, 3, 5].map((i) => parseInt(n.slice(i, i + 2), 16));
+        const m = (n.match(/[\d.]+/g) || []).map(Number);
+        if (m.length < 3) return null;
+        if (m.length >= 4 && m[3] === 0) return null; // fully transparent
+        if (m.length >= 4 && m[3] < 1) return null;   // translucent foreground: not judgeable (see note 2 above)
+        return m.slice(0, 3);
+      };
+```
+
+- [ ] **Step 5: Re-run the meta gate — fires on broken, silent on good**
+
+```bash
+npm run test:render:meta -- --grep "a11y-text-contrast-aa"
+```
+Expected: both specs PASS. Then the full meta gate:
+```bash
+npm run test:render:meta
+```
+Expected: all green.
+
+- [ ] **Step 6: Commit (no new rule — `cag-learning-loop` step 3.5)**
+
+```bash
+git add tests/render/checks/a11y.ts tests/render/fixtures/known_good/a11y-text-contrast-aa.html tests/render/fixtures/known_broken/a11y-text-contrast-aa.html
+git commit -m "fix(harness): a11y-text-contrast-aa normalises oklab()/color() through canvas; translucent foregrounds not judged"
+```
+
+### Task B2: NAV — scroll-margin 80px under a 96px header
+
+**Files:**
+- Modify: `src/pages/index.astro` (every `scroll-mt-20` on `<section id=…>` / `<div id="proof">` / `<div id="contact">`)
+
+- [ ] **Step 1: Confirm the defect on the page (gate-integrity)**
+
+```bash
+grep -c 'scroll-mt-20' src/pages/index.astro
+```
+Expected: `23`. Header `h-24` = 96px; `scroll-mt-20` = 80px < 88px near edge. Defect confirmed.
+
+- [ ] **Step 2: Fix — `scroll-mt-28` (112px = header 96 + 16)**
+
+```bash
+sed -i '' 's/scroll-mt-20/scroll-mt-28/g' src/pages/index.astro
+grep -c 'scroll-mt-28' src/pages/index.astro
+```
+Expected: `23`. (JumpRail mobile sheet is a modal, not sticky chrome, so 16px clearance is the whole offset.)
+
+- [ ] **Step 3: Rebuild and run the pages gate; read the NAV rows**
+
+```bash
+npx astro build >/dev/null && npm run test:render:pages 2>&1 | tail -40
+python3 - <<'EOF'
+import json,glob; f=sorted(glob.glob('data/quality/scorecards/index-*.json'))[-1]; d=json.load(open(f))
+print(f, d['examined_by_check'].get('nav-jump-target-lands'))
+print([r['message'][:120] for r in d['details'] if r['checkId']=='nav-jump-target-lands'])
+EOF
+```
+Expected: `nav-jump-target-lands` examined 58, **zero** rows (or only the last anchor `#contact` at document end — see the check's own comment; if so, record it, do not tune).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/pages/index.astro && git commit -m "fix(homepage): in-page anchors clear the 96px header (scroll-mt-28)"
+```
+
+### Task B3: IMG — srcset for the oversized homepage images
+
+Use the banked toolchain end to end; never hand-write `sizes` (memory `reference_srcset_needs_measured_sizes`).
+
+**Files:**
+- Modify: `src/pages/index.astro`, `src/components/cag-library/HeroV3.astro`, `src/components/cag-library/Testimonials.astro`, `src/components/cag-library/SplitFeature.astro`, `src/components/cag-library/OwnerCard.astro` — **only the tags the map names**
+- Create: variant files under `public/` (by `image_srcset_variants.py`)
+
+- [ ] **Step 1: Measure (plan) and stamp (instrument) the tags**
+
+```bash
+mkdir -p /private/tmp/claude-501/-Users-apple-Downloads-CAG/75638366-2100-4d39-9a39-f7e13424c444/scratchpad/srcset && S=/private/tmp/claude-501/-Users-apple-Downloads-CAG/75638366-2100-4d39-9a39-f7e13424c444/scratchpad/srcset
+node scripts/image_srcset_instrument.mjs --on && npx astro build >/dev/null
+node scripts/image_srcset_plan.mjs --out $S/plan.json index
+node scripts/image_srcset_map.mjs --plan $S/plan.json --out $S/map.json
+node scripts/image_srcset_instrument.mjs --off && git diff --stat src/
+```
+Expected: plan lists ≥12 occurrences on `index`; map reports `0 ambiguous`; `git diff --stat src/` is **empty** after `--off`. Read any `CONFLICT` rows aloud in the brief — those tags are not patched.
+
+- [ ] **Step 2: Generate variants, apply, fill missing**
+
+```bash
+python3 scripts/image_srcset_variants.py --map $S/map.json --apply
+node scripts/image_srcset_apply.mjs --map $S/map.json --write
+python3 scripts/image_srcset_fill_missing.py --apply
+git status --short | head -30
+```
+Expected: `srcset`/`sizes` added to the tags the map names (hero in `HeroV3.astro`, eggs/pair inline `<img>` in `index.astro`, avatar tags in `Testimonials.astro`, `imageSrc` consumer in `SplitFeature.astro`, `OwnerCard.astro`), new `-NNN.webp` files in `public/`. **Shared components:** if apply touches `Testimonials.astro`/`SplitFeature.astro`/`OwnerCard.astro`, the tag must go through `src/lib/srcset.ts` (manifest lookup), not a literal `w` descriptor — check the diff for a literal like `640w` in a component and reroute it through `srcsetFor()` if present.
+
+- [ ] **Step 3: Verify both directions, then the harness**
+
+```bash
+npx astro build >/dev/null && node scripts/image_srcset_verify.mjs index
+npm run test:render:pages 2>&1 | tail -20
+```
+Expected: verify prints `OVERSIZED 0 · UNDERSIZED 0` for `index` at 375/768/1280; scorecard `img-srcset-within-2x` rows = 0 and `img-alt-present-and-unique` = 0. Any image that cannot clear 2× without blur (e.g. the 48px avatars need a `-96`/`-128` sibling) is fixed by adding the variant, never by loosening the check.
+
+- [ ] **Step 4: Commit (git add only the named files + new public variants)**
+
+```bash
+git add src/pages/index.astro src/components/cag-library/HeroV3.astro src/components/cag-library/Testimonials.astro src/components/cag-library/SplitFeature.astro src/components/cag-library/OwnerCard.astro public/*-[0-9]*.webp data/image-manifest.json 2>/dev/null
+git commit -m "perf(homepage): measured srcset/sizes on every oversized image; variants generated; 0 oversized 0 undersized"
+```
+
+---
+</script>
+<script type="text/markdown" data-title="PART C — Full gate pass on the homepage, ship, report">
+# PART C — Full gate pass on the homepage, ship, report
+
+### Task C1: Run every gate, twice, and read the examined counts
+
+- [ ] **Step 1: Build, meta gate first, then the page gate**
+
+```bash
+npx astro build >/dev/null && npm run test:render:meta 2>&1 | tail -5 && npm run test:render:pages 2>&1 | tail -30
+```
+Read `examined_by_check` in the newest `data/quality/scorecards/index-*.json`. A check with `0` examined is not a pass.
+
+- [ ] **Step 2: Static + profile gates**
+
+```bash
+python3 scripts/page_hardening_scan.py index
+python3 scripts/seam_parity.py index
+python3 scripts/final_page_audit.py index --type home
+python3 scripts/aeo_audit.py index
+python3 scripts/evidence_audit.py index
+python3 scripts/dup_content_audit.py --headers
+python3 -m pytest tests/ -q
+python3 scripts/quality_report.py
+```
+Expected: hardening `0 ERROR`; seam PASS with a non-zero section count; final audit PASS / PASS-WITH-WARNINGS; aeo 0 ERROR; evidence WARNs only the accepted ones (A2 title, A4 terms); dup 0 body crossovers; pytest green.
+
+- [ ] **Step 3: Runtime probes at 375/768/1280 (hardening §2)** — Playwright, not the Browser pane. Record hero `.hero-grid`/`.hero-v3-b` height at 1280, overflow, contrast sweep, line length in a real `ch`.
+
+```bash
+node - <<'EOF'
+const { chromium } = require('playwright'); (async()=>{const b=await chromium.launch();
+for (const w of [375,768,1280]) { const p=await b.newPage({viewport:{width:w,height:900}}); await p.goto('file://'+process.cwd()+'/dist/index.html');
+ const r=await p.evaluate(()=>({scrollW:document.documentElement.scrollWidth,vw:innerWidth,hero:Math.round(document.querySelector('.hero-v3-b').getBoundingClientRect().height),h1:getComputedStyle(document.querySelector('h1')).fontSize}));
+ console.log(w, JSON.stringify(r)); await p.close(); } await b.close(); })();
+EOF
+```
+Expected: `scrollW === vw` at every width. Hero at 1280 will read ~483px — **above the 350–400 band**; log to Open Flags (it is the reason for the three new heroes in Part D, not a fix here).
+
+- [ ] **Step 4: Run the whole set a second time** (memory `reference_same_input_different_verdict`): re-run Step 1 and compare defect totals. Two clean runs = pass.
+
+- [ ] **Step 5: Learning loop (skills/cag-learning-loop.md)**
+
+```bash
+git log --since="2026-09-10" --pretty=format:"%h %s" | grep -iE "fix|revert|correct|restore"
+python3 scripts/rework_ledger.py --last-30-days | tail -15
+```
+Classify each hit (IMG/NAV/A11Y-harness). The oklab fix is `GATE`, charged to the harness, no rule written.
+
+### Task C2: Gate report artifact + ship
+
+**Files:**
+- Create: `docs/artifacts/cags-homepage-close-gate-report.md` and `.html`
+- Modify: `sessions/2026-09-10-homepage-close-session-brief.md` (Open Flags)
+
+- [ ] **Step 1: Write the report as markdown once** (sections: verdict · what changed (A1–A4, B1–B3) · gate table with examined counts · runtime probe table · accepted overrides · open flags · what the next session does first). Then wrap it in the same copy-button shell as `docs/artifacts/cags-evidence-pass-gate-report.html` (copy that file's `<style>` + the per-section `<button class="copy">` script, replace the embedded markdown). Load `artifact-design` before writing the HTML.
+
+- [ ] **Step 2: Publish** with the Artifact tool (`file_path: docs/artifacts/cags-homepage-close-gate-report.html`, favicon `🦜📋`, description "Homepage close-out gate report, 2026-09-10"). Record the URL in the `.md` and the brief.
+
+- [ ] **Step 3: Sitemaps unchanged (no URL added) — skip `generate_sitemaps.py`. Commit, push, wait for the deploy, IndexNow**
+
+```bash
+git add docs/artifacts/cags-homepage-close-gate-report.md docs/artifacts/cags-homepage-close-gate-report.html sessions/2026-09-10-homepage-close-session-brief.md
+git commit -m "docs(homepage): close-out gate report artifact + session brief"
+git push origin main
+```
+Then poll until live (note: the live check follows redirects — verify without `-L`):
+```bash
+for i in $(seq 1 20); do curl -s https://congoafricangreys.com/ | grep -q "Brian Carr" && echo LIVE && break; sleep 30; done
+python3 scripts/indexnow_submit.py /
+```
+Expected: `LIVE`, then IndexNow 200/202 for `https://congoafricangreys.com/`. Only `/` changed its rendered output (shared-component edits in B3 only add `srcset`; if `image_srcset_apply` touched `Testimonials.astro`/`SplitFeature.astro`/`OwnerCard.astro`, every page importing them changed too → list them with `grep -rl "Testimonials.astro\|SplitFeature.astro\|OwnerCard.astro" src/pages | sed 's#src/pages/##;s#/index.astro##'` and submit each).
+
+---
+</script>
+<script type="text/markdown" data-title="PART D — Component variations canvas, component library, skill">
+# PART D — Component variations canvas, component library, skill
+
+Part D writes **no site files**. The breeder picks; a later session applies (preview-before-apply, rule 7).
+
+### Task D1: Component library capture script
+
+**Files:**
+- Create: `scripts/component_library_capture.mjs`
+- Output: `docs/artifacts/component-library/manifest.json` + `*.webp` (base64-inlined later)
+
+- [ ] **Step 1: Write the catalogue** — one row per component instance: `{id, category, name, page, selector, source, props}`. Categories: `hero`, `counter`, `toc/dial/rail`, `bird-card`, `table`, `faq`, `shipping`, `reviews`, `newsletter`, `form`, `seam`, `key-takeaway`, `owner`, `trust`. Seed rows (all verified to exist):
+
+```js
+export const CATALOG = [
+  { id:'hero-v3b',        category:'hero',    name:'Hero V3:b Authority Green',   page:'index',                                   selector:'.hero-v3-b',        source:'src/components/cag-library/HeroV3.astro' },
+  { id:'hero-split-b',    category:'hero',    name:'Split-Hero B warm gradient',  page:'congo-african-grey-for-sale',             selector:'.chero',            source:'src/pages/congo-african-grey-for-sale/index.astro' },
+  { id:'hero-split-c',    category:'hero',    name:'Split-Hero C dark + grid',    page:'dna-tested-african-grey-for-sale',        selector:'header.hero, .hero',source:'src/pages/dna-tested-african-grey-for-sale/index.astro' },
+  { id:'hero-a-polaroid', category:'hero',    name:'Hero-A scattered polaroids',  page:'african-grey-breeding-pair-for-sale',     selector:'header.hero, .hero',source:'src/pages/african-grey-breeding-pair-for-sale/index.astro' },
+  { id:'hero-c-mosaic',   category:'hero',    name:'Hero-C mosaic metrics',       page:'african-grey-parrots-for-sale',           selector:'header.hero, .hero',source:'src/pages/african-grey-parrots-for-sale/index.astro' },
+  { id:'counter-home',    category:'counter', name:'Counter Snippet (home)',      page:'index',                                   selector:'.counter-snippet',  source:'src/components/cag-library/CounterSnippet.astro' },
+  { id:'counter-forsale', category:'counter', name:'Counter strip (for-sale)',    page:'congo-african-grey-for-sale',             selector:'.counter-wrap',     source:'src/pages/congo-african-grey-for-sale/index.astro' },
+  { id:'dial-timneh',     category:'toc',     name:'Desktop dial (.tdial canonical)', page:'timneh-african-grey-for-sale',        selector:'.tdial',            source:'src/pages/timneh-african-grey-for-sale/index.astro' },
+  { id:'dial-congo',      category:'toc',     name:'Desktop dial (.cdial)',       page:'congo-african-grey-for-sale',             selector:'.cdial',            source:'src/pages/congo-african-grey-for-sale/index.astro' },
+  { id:'rail-home',       category:'toc',     name:'JumpRail dot rail + mobile sheet', page:'index',                              selector:'#cag-jump-rail, .cag-jump-mobile', source:'src/components/cag-library/JumpRail.astro' },
+  { id:'rail-chero',      category:'toc',     name:'Mobile rail (.chero-rail)',   page:'congo-african-grey-for-sale',             selector:'.chero-rail',       source:'src/pages/congo-african-grey-for-sale/index.astro' },
+  { id:'rail-egg',        category:'toc',     name:'Mobile rail (.egg-rail)',     page:'african-grey-parrot-bird-eggs-for-sale-usa', selector:'.egg-rail',      source:'src/pages/african-grey-parrot-bird-eggs-for-sale-usa/index.astro' },
+  { id:'toc-v3',          category:'toc',     name:'TocV3 grouped',               page:'index',                                   selector:'.toc-v3, [data-toc]', source:'src/components/cag-library/TocV3.astro' },
+  { id:'table-mvf',       category:'table',   name:'Male vs Female table',        page:'index',                                   selector:'#compare-species table:nth-of-type(1)', source:'src/pages/index.astro' },
+  { id:'table-others',    category:'table',   name:'Grey vs Macaw/Cockatoo/Amazon', page:'index',                                 selector:'#compare-species table:nth-of-type(2)', source:'src/pages/index.astro' },
+  { id:'table-e',         category:'table',   name:'CompareTableE',               page:'congo-vs-timneh-african-grey',            selector:'.overflow-hidden.rounded-2xl table', source:'src/components/cag-library/CompareTableE.astro' },
+  { id:'table-tblc',      category:'table',   name:'.tblC (hand-raised)',         page:'hand-raised-african-grey-parrot-for-sale',selector:'.tblC',             source:'src/pages/hand-raised-african-grey-parrot-for-sale/index.astro' },
+  { id:'pricing-table',   category:'table',   name:'PricingTable classic',        page:'index',                                   selector:'#pricing',          source:'src/components/cag-library/PricingTable.astro' },
+  { id:'faq-home',        category:'faq',     name:'FAQ accordion (home)',        page:'index',                                   selector:'#faq',              source:'src/pages/index.astro' },
+  { id:'shipping-home',   category:'shipping',name:'Shipping split (home)',       page:'index',                                   selector:'#shipping',         source:'src/pages/index.astro' },
+  { id:'bird-card',       category:'bird-card', name:'BirdCard',                  page:'index',                                   selector:'#available-birds article', source:'src/components/BirdCard.astro' },
+  { id:'mini-bird-card',  category:'bird-card', name:'MiniBirdCard',              page:'african-grey-breeding-pair-for-sale',     selector:'.mini-bird, .mbc',  source:'src/components/cag-library/MiniBirdCard.astro' },
+  { id:'reviews-feature', category:'reviews', name:'Testimonials feature',        page:'index',                                   selector:'#reviews-mid',      source:'src/components/cag-library/Testimonials.astro' },
+  { id:'reviews-grid',    category:'reviews', name:'Testimonials grid',           page:'index',                                   selector:'#reviews',          source:'src/components/cag-library/Testimonials.astro' },
+  { id:'key-takeaway',    category:'key-takeaway', name:'KeyTakeawayV2',          page:'index',                                   selector:'.key-takeaway, [class*="takeaway"]', source:'src/components/cag-library/KeyTakeawayV2.astro' },
+  { id:'owner-card',      category:'owner',   name:'OwnerCard',                   page:'index',                                   selector:'#about',            source:'src/components/cag-library/OwnerCard.astro' },
+  { id:'seam',            category:'seam',    name:'Seam divider',                page:'index',                                   selector:'.cag-seam',         source:'src/pages/index.astro' },
+  { id:'newsletter-v2',   category:'newsletter', name:'NewsletterV2',             page:'index',                                   selector:'[class*="newsletter"]', source:'src/components/cag-library/NewsletterV2.astro' },
+  { id:'inquiry-form',    category:'form',    name:'InquiryForm',                 page:'index',                                   selector:'#contact',          source:'src/components/cag-inquiry-form.astro' },
+];
+```
+Before capture, confirm each selector matches on its built page (`document.querySelector`); drop or correct any that returns null and print the examined count.
+
+- [ ] **Step 2: Capture element screenshots at 375/768/1280 from `dist/`** (Playwright `locator.screenshot`, `scrollIntoViewIfNeeded`, hidden desktop/mobile variants skipped when the rect is zero), convert to WebP ≤60 KB each with Pillow, write `manifest.json` with `{id, viewport, file, width, height}`.
+
+```bash
+npx astro build >/dev/null && node scripts/component_library_capture.mjs && python3 -c "import json;m=json.load(open('docs/artifacts/component-library/manifest.json'));print(len(m),'captures')"
+```
+Expected: ≈ 29 components × up to 3 viewports = 60–87 captures (mobile-only / desktop-only components have fewer). Print the miss list.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add scripts/component_library_capture.mjs docs/artifacts/component-library/manifest.json docs/artifacts/component-library/*.webp
+git commit -m "tooling(library): capture every live CAG component at 375/768/1280 into a manifest"
+```
+
+### Task D2: Component library artifact
+
+**Files:**
+- Create: `docs/artifacts/cags-component-library.md`, `docs/artifacts/cags-component-library.html`
+
+- [ ] **Step 1: Load `artifact-design`, then write the page.** Layout: sticky category filter (chips), one card per component with a 375/768/1280 tab strip showing the capture, name, page it lives on, source path, a **copy button** that copies the `.astro` import + a usage snippet, and a "Variants on canvas" link (filled in after D3). Images inline as base64 (`data:image/webp;base64,…`) — total must stay under 16 MB; if it exceeds, downscale to 900px wide. Author the markdown once (`cags-component-library.md`: category → table of components with source path + usage snippet) and render it inside the page so copy buttons emit exact markdown.
+
+- [ ] **Step 2: Publish** (Artifact tool, `file_path: docs/artifacts/cags-component-library.html`, favicon `🧩`, description "Every live C.A.Gs component by category at three viewports, with copyable usage"). Record the URL in the `.md` header and in `docs/reference/components.md` under a new line "**Visual library:** artifact <url> (2026-09-10)".
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/artifacts/cags-component-library.md docs/artifacts/cags-component-library.html docs/reference/components.md
+git commit -m "docs(library): C.A.Gs component library artifact by category at 375/768/1280"
+```
+
+### Task D3: Variations canvas (3 variations × 3 viewports per screenshotted component)
+
+**Files:**
+- Create: `docs/design/homepage-variations/*.dc.html`, `canvas.json`, seeded `docs/design/homepage-variations/cags-homepage-component-variations.html`
+
+Screenshotted components (from `assets/ScreenShots/`): hero · counter snippet · desktop dial · mobile jump-to-section · "what buyers ask about" (male-vs-female) table · "African vs others" table · CompareTableE desktop · hand-raised `.tblC` table · FAQ section (too long) · shipping section · `Screenshot 2026-09-09 at 21.51.48.png` (identify by reading it; if it duplicates one above, fold it in).
+
+- [ ] **Step 1: Read the brand files and lift exact tokens** — `PRODUCT.md`, `DESIGN.md`, `src/styles/global.css` (`--clay #e8604c`, `--clay-ink #c8472f`, `#b04228` small clay, forest `#2D6A4F`, cream `#faf7f4`, warm-white, Newsreader/IBM Plex Sans via Google Fonts, radii 16/18/50px, 96px header). Say in one line what was matched. The impeccable `load-context.mjs` loader is **not** installed in this plugin version — read the two files directly and note that in the brief.
+
+- [ ] **Step 2: Invariants that never vary** (from `skills/cag-component-refresh.md §0` + `rules/design.md`): palette, clay pill CTA, 96px sticky offsets, seam divider, type system, motion ≤0.2s, hero/counter separation (tone shift + 1px rule), **desktop hero 350–400px on `.hero-grid`**, dial rows ≥24px tall with tag pill visible (`cag-page-hardening §1e-bis`), mobile rail at TOP under the header (never bottom-pinned), tables stack to `data-label` cards on mobile with `caption` in the `display:block` list.
+
+- [ ] **Step 3: Author the artboards.** One `.dc.html` per component × variation × viewport, named `Hero-A-Desktop.dc.html`, `Hero-A-Tablet.dc.html`, `Hero-A-Mobile.dc.html` … (`Main.dc.html` = Hero-A-Desktop, the leading candidate). Frames: mobile 390×(h), tablet 768×(h), desktop 1440×(h). Each variation explores a **named axis** (layout / accent-role / motif / container / density — one per variation, never palette). Required sets:
+
+| Component | A | B | C |
+|---|---|---|---|
+| Hero (3 new, 350–400px desktop) | Split copy-left + single portrait, credential pill-row (Split-Hero B lineage) | Full-bleed dark + 2×2 photo grid (Split-Hero C lineage) | Mosaic metrics: stats column + inventory mosaic (Hero-C lineage) |
+| Counter snippet (3 new) | 4-up ledger with hairline rule + clay numerals (current lineage, tighter) | 2×2 tile strip on `#f6efe8` bed with 3px green→clay top bar | Inline ribbon: numerals + labels on one line, scrolls at mobile |
+| Desktop dial | `.tdial` light-cream card, 64px ring (canonical numbers) | dark-aviary variant (`#234f3b`, numerals `#9fc7b0`) | grouped-by-part dial (part headers as the homepage rail uses) |
+| Mobile jump links | sticky top rail, single-line pills (`.chero-rail`) | stacked two-line chips (hand-raised) | bottom-sheet "Jump to a section" grouped by part (current), with part chips |
+| Tables (each of the 4) | mobile: `data-label` stacked cards; tablet: 2-col cards; desktop: classic | mobile: tab-toggle (one column at a time); tablet/desktop: classic with sticky first column | mobile: verdict cards (trait title, two mini-columns, "our note" strip); tablet/desktop: zebra ledger |
+| FAQ (too long) | grouped accordion with 3 topic tabs, 4 open max | two-column masonry at desktop, single accordion at mobile | "top 4 + show all" progressive disclosure |
+| Shipping | two photo cards (van / cargo) | timeline strip reserve→vet→fly→arrive with $185/$350 end-nodes | split panel photo left, tier rows right |
+
+Copy is literal text lifted from the live page (no lorem, no new claims; prices from `data/price-matrix.json`). Tweaks: at most one per artboard (a `variant` enum or a `dark` boolean). Icons as inline SVG, never emoji. Images: downsample the live hero/bird photos with Pillow to ≤70 KB and pass with `--image`.
+
+- [ ] **Step 4: `canvas.json`** — one **page per component** (`pages: [{id:'hero',name:'Heroes'}, {id:'counter',name:'Counter snippets'}, {id:'dial',name:'Desktop dial'}, {id:'rail',name:'Mobile jump links'}, {id:'tables',name:'Tables'}, {id:'faq',name:'FAQ'}, {id:'shipping',name:'Shipping'}]`), rows = variation, columns = Mobile/Tablet/Desktop, ≥80px between frames, ≥120px between rows, one sticky-note annotation per variation stating its axis, motivation and trade-off, plus the **(Recommended)** pick per component with the data reason (e.g. hero A: only variant that measures inside 350–400 at 1440 with the full H1). `launch: {view:'canvas', page:'hero'}`.
+
+- [ ] **Step 5: Seed, check, publish**
+
+```bash
+cd docs/design/homepage-variations
+node "/private/tmp/claude-501/bundled-skills/2.1.260/9f0c7cee38fdc0d14337e779ec8c0104/design/seed-canvas.mjs" \
+  --template "/private/tmp/claude-501/bundled-skills/2.1.260/9f0c7cee38fdc0d14337e779ec8c0104/design/payload.template.html" \
+  --out cags-homepage-component-variations.html --title "C.A.Gs Homepage Component Variations" \
+  $(for f in *.dc.html; do printf -- '--artboard %s ' "$f"; done) $(for f in *.webp *.png; do [ -f "$f" ] && printf -- '--image %s ' "$f"; done) --canvas canvas.json
+node "/private/tmp/claude-501/bundled-skills/2.1.260/9f0c7cee38fdc0d14337e779ec8c0104/design/seed-canvas.mjs" --check cags-homepage-component-variations.html
+```
+Expected: `ok:` with the title and every artboard listed. (If the skill base directory was lost to a resumed session, re-run `/design` to re-extract it.) Then load `artifact-capabilities`, and publish with the Artifact tool per the design skill's step 4 (`contract: "0.1.31"`, favicon `🎨`, capabilities exactly as the roster lists). Record the URL in the brief and in the library artifact's "Variants on canvas" links (republish D2).
+
+- [ ] **Step 6: Critique + harden + refine pass on every variation** — run `impeccable critique` then `impeccable harden` against the working `.dc.html` files (the loader is absent; the register is **brand**, PRODUCT.md/DESIGN.md already read), then a `frontend-design` refinement pass. Record each finding and fix in `docs/design/homepage-variations/CRITIQUE.md` (component · variation · finding · fix · rule cited). Re-seed and republish after fixes.
+
+- [ ] **Step 7: Commit the working files (never the seeded output's payload — it is 2 MB of editor code; commit it anyway only if the repo already tracks artifact HTML of that size; otherwise add it to `.gitignore`)**
+
+```bash
+git add docs/design/homepage-variations/*.dc.html docs/design/homepage-variations/canvas.json docs/design/homepage-variations/CRITIQUE.md docs/design/homepage-variations/*.webp
+git commit -m "design(homepage): 3×3 variations for hero, counter, dial, mobile rail, 4 tables, FAQ, shipping on a design canvas"
+```
+
+### Task D4: The skill — `cag-component-variations`
+
+**Files:**
+- Create: `skills/cag-component-variations.md`
+- Modify: `docs/reference/system-registry.md` (skill row), `docs/reference/quick-start.md` (task → entry point row)
+
+- [ ] **Step 1: Write the skill** (frontmatter `name`, `description` with triggers: "3 variations", "mobile/tablet/desktop versions", "new hero", "new counter", "design canvas", "component library"). Body, in this order:
+  1. **Invariants** (the §0 list from D3 Step 2, verbatim, plus "desktop hero 350–400px measured on `.hero-grid`; HeroV3 at ~483px is out of band").
+  2. **Inputs**: the screenshots folder, the component library artifact URL, the page slug.
+  3. **Method**: lift tokens from DESIGN.md/global.css → pick one named axis per variation → author `.dc.html` per variation×viewport → `canvas.json` pages per component with a (Recommended)+why note → seed/check/publish → `impeccable critique/harden` → `frontend-design` refine → CRITIQUE.md → breeder picks → apply via preview-before-apply.
+  4. **Commands** (the exact seed/check lines from D3 Step 5, with `<base directory>` placeholders).
+  5. **Pass gates before apply**: `cag-page-hardening` §2 probes at 375/768/1280, `test:render:pages`, `seam_parity`, dup gate.
+  6. **What NOT to do**: palette changes, bottom-pinned mobile rails, density passes that shrink dial rows, emoji icons, new claims in copy.
+
+- [ ] **Step 2: Register and verify**
+
+```bash
+python3 scripts/register_skills.py --copy && python3 scripts/register_skills.py --check
+grep -n "cag-component-variations" docs/reference/system-registry.md docs/reference/quick-start.md
+```
+Expected: check passes; both docs list the skill.
+
+- [ ] **Step 3: Commit and push**
+
+```bash
+git add skills/cag-component-variations.md docs/reference/system-registry.md docs/reference/quick-start.md
+git commit -m "skill(cag-component-variations): 3×3 component variations on a design canvas, hero band 350–400, library-backed"
+git push origin main
+```
+
+### Task D5: Close the session
+
+- [ ] **Step 1:** Run `session-closer`: fill `## What's Next` in the brief (breeder picks variants → apply hero/counter/dial/rail/tables to `/` under preview-before-apply → re-run Part C). Commit + push.
+
+---
+</script>
+<script type="text/markdown" data-title="Open Flags (log these in the brief; ask ONE question at the end)">
+## Open Flags (log these in the brief; ask ONE question at the end)
+
+1. **Hero band.** The breeder wrote "Desktop hero height: 390–45px". No rule file carries that figure; the recorded band is **350–400px** on `.hero-grid`. The plan uses 350–400. *Question to ask:* "Is 390–445px a new band you want written into the rules, or did you mean the recorded 350–400?"
+2. **PBFD & APV Screened badge.** The breeder's badge list omitted it (the old default had five: it was the fourth). A3 follows the list as written; add it back in one line if wanted.
+3. **`evidence_audit` WARNs on `/`** (title length, term budgets) are breeder-accepted; they will print every run until Sprint 0 recalibrates budgets or a per-page override exists in `evidence_audit.py`.
+4. **`CAG-grill-me-upgrade/`** is a stale full copy of the project (old CLAUDE.md, 2026-05 rules: "Appendix II corrected 2026-05-29"), not a skill. Nothing in this plan reads it; consider deleting or archiving it so agents never load its outdated rules.
+5. **`cag-homepage-builder` agent is stale**: it targets `site/content/index.md`, an 18-section map, and Rule 51 "≥5 H5/≥3 H6" wording. Its rules (H1 sacred, prices from `data/`, header/footer untouched, outline-first) still bind; its file paths do not. Not fixed here (out of scope).
+6. **Sixth-level headings** `sem-all-six-levels` reports H6=3 on `/` — advisory on the homepage since the evidence pass; unchanged.
+</script>
+<script type="text/markdown" data-title="Self-review (done while writing)">
+## Self-review (done while writing)
+
+- Spec coverage: flags 1/2/4/6 → A4/A1/A2/A3; three render rows → B2/B3/A1; harness bug → B1; "run all checks" → C1; 3 variations × 3 viewports for every screenshot + 3 heroes + 3 counters + mobile links + dial → D3; library artifact → D1/D2; skill + artifact tool → D4/D3; hero-height read/verify/confirm → Verified facts + Open Flag 1.
+- Placeholders: none; every code step carries its code; the two `<base directory>` uses are literal absolute paths.
+- Consistency: `reviews[3]` in A1 matches the inserted fourth object; `scroll-mt-28` used in B2 and the invariants; `index` is the slug every script accepts for `/`.
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+<script>
+(function(){
+  var blocks = Array.prototype.slice.call(document.querySelectorAll('script[type="text/markdown"]'));
+  var doc = document.getElementById('doc'), toc = document.getElementById('toc'), toast = document.getElementById('toast');
+  var all = [];
+  function dedent(s){ return s.replace(/^\n+|\s+$/g,''); }
+  function copy(text, btn){
+    var done = function(){ if(btn){ btn.classList.add('done'); btn.textContent='Copied'; setTimeout(function(){btn.classList.remove('done'); btn.textContent=btn.getAttribute('data-label');},1400);} toast.classList.add('show'); setTimeout(function(){toast.classList.remove('show');},1200); };
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, function(){ fallback(text); done(); }); } else { fallback(text); done(); }
+  }
+  function fallback(text){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); }
+  blocks.forEach(function(b, i){
+    var title = b.getAttribute('data-title'); var md = dedent(b.textContent);
+    var full = '## ' + title + '\n\n' + md + '\n';
+    all.push(full);
+    var id = 'sec-' + i;
+    var sec = document.createElement('section'); sec.className='sec'; sec.id=id;
+    var head = document.createElement('div'); head.className='sec-head';
+    var h2 = document.createElement('h2'); h2.textContent = title;
+    var btn = document.createElement('button'); btn.className='copy'; btn.type='button'; btn.textContent='Copy section'; btn.setAttribute('data-label','Copy section');
+    btn.addEventListener('click', function(){ copy(full, btn); });
+    head.appendChild(h2); head.appendChild(btn);
+    var body = document.createElement('div'); body.className='md';
+    body.innerHTML = (window.marked ? marked.parse(md) : '<pre>'+md.replace(/</g,'&lt;')+'</pre>');
+    sec.appendChild(head); sec.appendChild(body); doc.appendChild(sec);
+    var li = document.createElement('li'); var a = document.createElement('a'); a.href='#'+id; a.textContent=title; li.appendChild(a); toc.appendChild(li);
+  });
+  document.getElementById('copy-all').addEventListener('click', function(){
+    copy('# Evidence Pass Gate Report\n\n' + all.join('\n'), this);
+  });
+  document.getElementById('copy-all').setAttribute('data-label','Copy whole document as Markdown');
+})();
+</script>
