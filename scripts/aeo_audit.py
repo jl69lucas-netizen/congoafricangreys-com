@@ -178,11 +178,33 @@ def audit(slug, html):
     return f, ent
 
 
+def select_pages(pages, slugs, dist="dist"):
+    """Resolve slugs to built page paths using the same convention as
+    final_page_audit.py / evidence_audit.py: `index` (and "" / "/") means
+    EXACTLY <dist>/index.html; any other slug means EXACTLY
+    <dist>/<slug>/index.html (slug may be nested, e.g. available/roys).
+
+    Deliberately NOT substring matching: the previous filter was
+    `f"/{s}/" in p`, and dist/index.html has no "/index/" segment, so
+    `aeo_audit.py index` matched zero pages instead of the homepage.
+    See tests/test_audit_slug_resolution.py.
+    """
+    if not slugs:
+        return pages
+    targets = set()
+    for s in slugs:
+        if s in ("index", "", "/"):
+            targets.add(f"{dist}/index.html")
+        else:
+            targets.add(f"{dist}/{s.strip('/')}/index.html")
+    return [p for p in pages if p in targets]
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     pages = sorted(glob.glob("dist/**/index.html", recursive=True))
     if args:
-        pages = [p for p in pages if any(f"/{s}/" in p for s in args)]
+        pages = select_pages(pages, args)
     elif "--all" not in sys.argv:
         print("usage: aeo_audit.py <slug> [<slug>...] | --all")
         return 1

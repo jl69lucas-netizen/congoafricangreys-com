@@ -153,13 +153,29 @@ def headers_mode(pages):
         print(f"FAIL — {bad} crossover headers across {len(pages)} pages."); sys.exit(1)
     print(f"PASS — no crossover headers in {len(pages)} pages.")
 
+def page_key(p, dist=Path("dist")):
+    """Slug key for a built page, matching final_page_audit.py / evidence_audit.py:
+    dist/index.html -> "index"; dist/<slug>/index.html -> "<slug>" (nested slugs,
+    e.g. dist/available/roys/index.html -> "available/roys", keep their full path).
+
+    Previously this was `p.parent.name or "home"`. dist/index.html's parent is
+    the `dist` directory itself, whose .name is "dist" (truthy), so the
+    homepage was keyed "dist" and the `or "home"` fallback never fired.
+    See tests/test_audit_slug_resolution.py.
+    """
+    rel = p.relative_to(dist).as_posix()
+    if rel == "index.html":
+        return "index"
+    return rel[: -len("/index.html")]
+
+
 def main():
     args=[a for a in sys.argv[1:] if not a.startswith("--")]
     global MIN_WORDS
     if "--min-words" in sys.argv:
         MIN_WORDS=int(sys.argv[sys.argv.index("--min-words")+1])
     dist=Path("dist")
-    pages={p.parent.name or "home": p for p in dist.rglob("index.html")}
+    pages={page_key(p, dist): p for p in dist.rglob("index.html")}
     if args: pages={k:v for k,v in pages.items() if k in args}
     if "--headers" in sys.argv:
         headers_mode(pages); return

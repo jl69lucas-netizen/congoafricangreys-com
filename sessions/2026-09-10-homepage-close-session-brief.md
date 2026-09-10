@@ -235,6 +235,75 @@ charged to the change, not to a new rule.
 6. srcset toolchain traps (`plan.mjs`/`verify.mjs`/`map.mjs`) — logged, not fixed.
 7. **New:** H1/H2/H3 harness defects above — `page_hardening_scan` cannot be scoped to
    the homepage and does not terminate; `aeo_audit` cannot reach `/` by slug;
-   `dup_content_audit` labels `/` as `dist`.
+   `dup_content_audit` labels `/` as `dist`. **Fixed 2026-09-10 — see subsection below.**
 8. **New:** neither brand-owned method label appears on `/` (F11).
 9. **New:** bird cards are not height-uniform (F12).
+
+### Hardening scan (after slug fix)
+
+Charged to the harness, not a new rule (`skills/cag-learning-loop.md` step 3) — three
+scripts resolved the homepage slug `index` wrong, all fixed by adopting the same
+convention `final_page_audit.py` / `evidence_audit.py` already use: `index` (and `""`/`"/"`)
+means EXACTLY `dist/index.html`; any other slug means EXACTLY `dist/<slug>/index.html`
+(nested slugs, e.g. `available/roys`, keep their full path).
+
+- `page_hardening_scan.py` — `pages` selection was `any(s in p for s in args)`; since
+  every built page ends in `/index.html`, slug `index` matched all 105 pages (43-minute
+  run, killed). A second instance of the SAME bug was found in `src_files()` while
+  proving the fix — `any(s in f for s in slugs)` matched 105 of 136 source files for
+  slug `index` because most Astro page sources are `src/pages/<slug>/index.astro`. Both
+  now resolve exactly; shared chrome (components/layouts/styles) is always included in
+  `src_files()` since it applies to every page regardless of slug.
+- `aeo_audit.py` — filter was `f"/{s}/" in p`; `dist/index.html` has no `/index/`
+  segment, so it honestly printed "0 pages matched — CHECK YOUR SLUGS" for `index`.
+- `dup_content_audit.py` — page key was `p.parent.name or "home"`; `dist/index.html`'s
+  parent is the `dist` directory itself (`.name` = `"dist"`, truthy), so the homepage
+  was keyed `"dist"` and the `or "home"` fallback never fired.
+
+New pure functions, covered by `tests/test_audit_slug_resolution.py` (10 tests, fail
+before the fix / pass after): `select_pages()` in `page_hardening_scan.py` and
+`aeo_audit.py`; `page_key()` in `dup_content_audit.py`. Full test suite:
+`python3 -m pytest tests/ -q` → 196 passed.
+
+**Proof on the real scripts, after `npx astro build` (105 pages):**
+
+- `python3 scripts/page_hardening_scan.py index` — **finished in 59.16s** (target
+  25–60s), examined `32 source files, 1 built pages`. Verdict: **31 ERROR · 23 WARN**.
+- `python3 scripts/page_hardening_scan.py congo-african-grey-for-sale` — unchanged
+  behaviour on a normal slug: **2 ERROR · 21 WARN**, page selection still correct.
+- `python3 scripts/aeo_audit.py index` — **1 pages examined** (`── /`), **0 ERROR**,
+  3 WARN (no brand-owned method label, pronoun-heavy, 29 BLUF-buried sections).
+- `python3 scripts/dup_content_audit.py --headers` — `grep -c "index"` → **24**
+  (crossover rows correctly keyed `index`/mentioning `index`); `grep -c "'dist'\| dist "`
+  → **0** (the `dist` mis-key is gone). Overall verdict unchanged: FAIL, 160 crossover
+  headers across 105 pages — a pre-existing content finding, not a harness defect, and
+  out of scope for this fix.
+
+**Every ERROR on `/`, not fixed, confirmed or refuted against `dist/index.html`:**
+
+- **29× `header-not-title-case`** (H3/H4/H5/H6, all FAQ-style questions, e.g. `Is the
+  deposit refundable?`, `Are your African Grey parrots CITES documented?`, `12 red
+  flags: avoid Congo Grey scams`) — **CONFIRMED**. Quote from `dist/index.html`:
+  `<h3 ... data-astro-cid-j7pv25f6>Is the deposit refundable?</h3>`. These are real
+  `<h3>`–`<h6>` tags, not `<summary>` — `rules/headings.md` line 28 scopes the
+  conversational-FAQ exemption to `<summary>` only ("FAQ accordion questions live in
+  `<summary>`, not a heading tag, and stay conversational sentence case"), so headings
+  wrapped in `<h3>`+ are in scope and this is a genuine defect. It is also the
+  documented backlog, not new: `rules/headings.md` line 28 already lists "homepage 31"
+  sentence-case headings in its 1,099-across-68-pages backlog — this run's 29 is that
+  same backlog (± a couple already-fixed headings), not a regression. **Not fixed** —
+  out of scope for this harness-only task; backlog item.
+- **1× `form-control-ios-zoom` on `src/components/cag-inquiry-form.astro:387`**
+  (`.inq-input` at `font-size:14.5px`) — **CONFIRMED applicable to `/`**. `InquiryForm`
+  is imported and rendered on the homepage (`src/pages/index.astro:21` and `:1335`), and
+  `grep -o "font-size:14.5px[^}]*}" dist/index.html` returns the rule inline in the
+  built page. Real defect on `/`, under 16px, iOS Safari will auto-zoom on focus.
+  **Not fixed** — out of scope for this harness-only task.
+- **1× `form-control-ios-zoom` on `src/components/cag-inquiry-compact.astro:86`**
+  (`.cf-group input` at `font-size:14px`) — **REFUTED for `/` specifically**.
+  `cag-inquiry-compact.astro` is not imported by `src/pages/index.astro` — it is used on
+  10 other pages (`grep -rl cag-inquiry-compact src/pages | wc -l` → 10) but not the
+  homepage. It is a real source-level defect (flagged because `src_files()`
+  intentionally always includes shared components regardless of slug, since most shared
+  files DO apply to every page), but it does not render on `dist/index.html` and is not
+  a defect *of the homepage*.

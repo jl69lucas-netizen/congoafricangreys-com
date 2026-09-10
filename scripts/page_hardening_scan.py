@@ -39,12 +39,50 @@ def lines_of(path):
         return []
 
 def src_files(slugs):
-    out = []
-    for g in SRC_GLOBS:
-        out += glob.glob(g, recursive=True)
+    """Same latent bug as `pages` selection, found while proving the fix: almost
+    every Astro page source is src/pages/<slug>/index.astro, so slug "index"
+    substring-matched 105 of 136 source files (near-whole-site) instead of just
+    the homepage's own file — the same failure mode charged to the harness for
+    `select_pages`, in the sibling function. Shared chrome (components/layouts/
+    styles) applies to every page regardless of slug, so it is always included;
+    only src/pages/**/*.astro is slug-filtered, using the same index-vs-slug
+    convention as select_pages(). See tests/test_audit_slug_resolution.py.
+    """
+    page_files = sorted(set(glob.glob("src/pages/**/*.astro", recursive=True)))
+    shared_files = []
+    for g in ("src/components/*.astro", "src/layouts/*.astro", "src/styles/*.css"):
+        shared_files += glob.glob(g, recursive=True)
     if slugs:
-        out = [f for f in out if any(s in f for s in slugs)]
-    return sorted(set(out))
+        targets = set()
+        for s in slugs:
+            if s in ("index", "", "/"):
+                targets.add("src/pages/index.astro")
+            else:
+                targets.add(f"src/pages/{s.strip('/')}/index.astro")
+        page_files = [f for f in page_files if f in targets]
+    return sorted(set(page_files) | set(shared_files))
+
+
+def select_pages(pages, slugs, dist=DIST):
+    """Resolve slugs to built page paths using the same convention as
+    final_page_audit.py / evidence_audit.py: `index` (and "" / "/") means
+    EXACTLY <dist>/index.html; any other slug means EXACTLY
+    <dist>/<slug>/index.html (slug may be nested, e.g. available/roys).
+
+    Deliberately NOT substring matching: every built page path ends in
+    "/index.html", so `any(s in p for s in slugs)` with slug "index" matched
+    every page on the site (105 pages, 43-minute run, killed) instead of just
+    the homepage. See tests/test_audit_slug_resolution.py.
+    """
+    if not slugs:
+        return pages
+    targets = set()
+    for s in slugs:
+        if s in ("index", "", "/"):
+            targets.add(f"{dist}/index.html")
+        else:
+            targets.add(f"{dist}/{s.strip('/')}/index.html")
+    return [p for p in pages if p in targets]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -934,8 +972,7 @@ def main():
     fail_on_error = "--fail-on-error" in sys.argv
     files = src_files(args)
     pages = sorted(glob.glob(f"{DIST}/**/index.html", recursive=True))
-    if args:
-        pages = [p for p in pages if any(s in p for s in args)]
+    pages = select_pages(pages, args)
 
     check_css_math(files)
     check_bottom_bar_z(files)
