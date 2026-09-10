@@ -1,5 +1,5 @@
 ---
-import { srcsetFor } from '../lib/srcset';
+import { srcsetFor, srcsetAttrs } from '../lib/srcset';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import MapPin from '../components/MapPin.astro';
 import Schema from '../components/Schema.astro';
@@ -328,9 +328,13 @@ const birdListSchema = {
     }
   }))
 };
+
+// The hero preload must list the same candidates as HeroV3's <img srcset={srcsetFor(heroImg, [300])}>
+// — derive both from the same call so they can never drift apart.
+const heroSrcset = srcsetFor('/african-grey-parrot-breeder-midland-tx-hero.webp', [300]);
 ---
 
-<BaseLayout {title} {description} {canonical} extraHeadHtml={'<link rel="preload" as="image" href="/african-grey-parrot-breeder-midland-tx-hero.webp" imagesrcset="/african-grey-parrot-breeder-midland-tx-hero-300.webp 300w, /african-grey-parrot-breeder-midland-tx-hero.webp 800w" imagesizes="300px" fetchpriority="high" type="image/webp" />'}>
+<BaseLayout {title} {description} {canonical} extraHeadHtml={`<link rel="preload" as="image" href="/african-grey-parrot-breeder-midland-tx-hero.webp"${heroSrcset ? ` imagesrcset="${heroSrcset}" imagesizes="300px"` : ''} fetchpriority="high" type="image/webp" />`}>
 
 <style is:global>
 /* ============================================================
@@ -561,7 +565,7 @@ const birdListSchema = {
             cta: 'View breeding pairs' },
         ].map(item => (
           <a href={item.href} class="group flex items-stretch gap-4 rounded-2xl border border-black/[0.07] bg-white p-3 transition-shadow hover:shadow-lg" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
-            <img src={item.img} alt={item.alt} width="160" height="160" loading="lazy" decoding="async" class="h-28 w-28 flex-shrink-0 rounded-xl object-cover sm:h-32 sm:w-32"  srcset={srcsetFor(item.img, [130])} sizes="128px" />
+            <img src={item.img} alt={item.alt} width="160" height="160" loading="lazy" decoding="async" class="h-28 w-28 flex-shrink-0 rounded-xl object-cover sm:h-32 sm:w-32" {...srcsetAttrs(item.img, [130], "128px")} />
             <div class="flex flex-col justify-center py-1 pr-2">
               <span class="font-sora text-xs font-bold uppercase tracking-[0.12em] text-clay">{item.tag}</span>
               <h3 class="font-lora mt-1 text-xl font-bold text-logo-dark">{item.title}</h3>
@@ -1164,7 +1168,7 @@ const birdListSchema = {
           <a href={card.href} class="group bg-white rounded-2xl border border-line overflow-hidden transition-shadow hover:shadow-lg flex flex-col" style="box-shadow:0 4px 18px rgba(60,30,10,0.05);">
             <div class="overflow-hidden h-[160px] md:h-[180px] lg:h-[200px]">
               <img src={card.img} alt={card.imgAlt} width="480" height="176" loading="lazy" decoding="async"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"  srcset={srcsetFor(card.img, [370, 680])} sizes="(max-width:639px) 94.7vw, 47.1vw" />
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" {...srcsetAttrs(card.img, [370, 680], "(max-width:639px) 94.7vw, 47.1vw")} />
             </div>
             <div class="p-6 flex flex-col flex-1">
               <h3 class="font-lora font-bold text-lg text-logo-dark mb-2 leading-snug">{card.title}</h3>

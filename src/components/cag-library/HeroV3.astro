@@ -1,5 +1,5 @@
 ---
-import { srcsetFor } from '../../lib/srcset';
+import { srcsetAttrs } from '../../lib/srcset';
 /**
  * cag-hero-v3:b — "Authority Green"
  * Source design: UNIQUE CAGs NEW COMPONENTS.zip → standalone/Hero B - Authority Green.html
@@ -20,6 +20,9 @@ interface Props {
 }
 const { availableCount = 8 } = Astro.props;
 
+// heroImg and the sizes="300px" on its <img> are a pair, measured against the 220/260/300
+// circular stage. The homepage preload derives from the same srcsetFor(heroImg, [300]) call —
+// keep them in step.
 const heroImg = "/african-grey-parrot-breeder-midland-tx-hero.webp";
 const heroAlt =
   "Hand-raised Congo African Grey parrot with silver-scalloped grey plumage and a red tail in the Benjamin family aviary";
@@ -121,7 +124,8 @@ const pills = [
               fetchpriority="high"
               decoding="async"
               class="h-auto w-full object-contain"
-             srcset={srcsetFor(heroImg, [300])} sizes="300px" />
+              {...srcsetAttrs(heroImg, [300], "300px")}
+            />
           </div>
           <span
             class="font-sora absolute -bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-green shadow-lg md:bottom-4 md:left-auto md:right-0 md:translate-x-0"

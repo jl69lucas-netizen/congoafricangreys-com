@@ -41,9 +41,18 @@ export function srcsetFor(src: string | undefined, wanted: number[]): string | u
     const v = variantName(src, w);
     const actual = W[v];
     if (!actual) continue;
+    // A misnamed variant file (e.g. a "-760" that is really 640px) must never be
+    // emitted at or above the master — it would win the candidate race for no benefit.
+    if (actual >= master) continue;
     parts.push(`${v} ${actual}w`);
   }
   if (!parts.length) return undefined;
   parts.push(`${src} ${master}w`);
   return parts.join(', ');
+}
+
+/** Both attributes or neither — `sizes` without `srcset` is dead markup. Spread onto the tag. */
+export function srcsetAttrs(src: string | undefined, wanted: number[], sizes: string): { srcset: string; sizes: string } | {} {
+  const srcset = srcsetFor(src, wanted);
+  return srcset ? { srcset, sizes } : {};
 }
