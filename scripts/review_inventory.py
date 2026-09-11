@@ -23,20 +23,25 @@ DIST = ROOT / "dist"
 LEDGER = ROOT / "data" / "reviews.json"
 KEY = 60
 
-# (id, name, location exactly as the source page shows it, source slug, prefix if no schema, provenance, confirmed)
+# (id, name, location exactly as the source page shows it, source slug, prefix if no schema, provenance, confirmed,
+#  [optional avatar src when the photo's alt does not start with the full name])
 CONFIRMED_SPECS = [
     ("q6", "Stanley Perkin", "Oceanside, CA 92054", "dna-tested-african-grey-for-sale", None,
      "breeder-supplied 2026-07-22 (commit 70786197)", "2026-07-22"),
     ("q7", "Jesse Ovalle", "Baton Rouge, LA 70806", "dna-tested-african-grey-for-sale", None,
      "breeder-supplied 2026-07-22 (commit 70786197)", "2026-07-22"),
     ("q8", "Meredith Plaisance", "Hartsville, SC 29550", "african-greys-for-sale-with-health-guarantee", None,
-     "breeder-supplied, verbatim 2026-07-25", "2026-07-25"),
+     "breeder-supplied, verbatim 2026-07-25", "2026-07-25",
+     "/images/health-guarantee-page/meredith-plaisance-hartsville-sc-health-guarantee-review.webp"),
     ("q9", "Jeffrey Hendershot", "Centennial, CO 80112", "african-greys-for-sale-with-health-guarantee", None,
-     "breeder-supplied, verbatim 2026-07-25", "2026-07-25"),
+     "breeder-supplied, verbatim 2026-07-25", "2026-07-25",
+     "/images/health-guarantee-page/jeffrey-hendershot-centennial-co-guaranteed-grey-review.webp"),
     ("q10", "Joanna Thomas", "Oildale, CA", "baby-african-grey-parrot-for-sale", None,
-     "baby-page build (commit b0d9f44f, 2026-07-27)", "2026-07-27"),
+     "baby-page build (commit b0d9f44f, 2026-07-27)", "2026-07-27",
+     "/images/baby-page/review-joanna-california-220.webp"),
     ("q11", "Anthony Tershal", "Lakewood, WA", "baby-african-grey-parrot-for-sale", None,
-     "baby-page build (commit b0d9f44f, 2026-07-27)", "2026-07-27"),
+     "baby-page build (commit b0d9f44f, 2026-07-27)", "2026-07-27",
+     "/images/baby-page/review-anthony-washington-220.webp"),
     ("q12", "Joshua Erwin", "San Bernardino, California", "african-grey-breeding-pair-for-sale", None,
      "real, named, attributed quote 2026-08-07", "2026-08-07"),
     ("q13", "Walter Zander", "Fort Washington, PA", "congo-african-grey-parrot-pair-for-sale",
@@ -122,21 +127,30 @@ def load(slug: str) -> Page:
 
 
 def extract(spec) -> dict:
-    rid, name, location, slug, prefix, source, confirmed = spec
+    rid, name, location, slug, prefix, source, confirmed, *rest = spec
+    avatar_override = rest[0] if rest else None
     pg = load(slug)
+    visible = norm("\n".join(pg.nodes))
     body, how = schema_bodies(pg.ld).get(name), "schema"
     if body is None:
         if not prefix:
             sys.exit(f"{rid} {name}: no Review schema on {slug} and no prefix given")
-        node = next((n for n in pg.nodes if norm(n).lstrip('"').startswith(norm(prefix))), None)
-        if node is None:
+        idx = next((i for i, n in enumerate(pg.nodes) if norm(n).lstrip('"').startswith(norm(prefix))), None)
+        if idx is None:
             sys.exit(f"{rid} {name}: prefix {prefix!r} not found on {slug}")
-        body, how = node.strip().strip('"“”').strip(), "visible"
-    on_page = norm(body)[:KEY] in norm("\n".join(pg.nodes))
-    avatar = next((src for alt, src in pg.imgs if alt.startswith(name)), None)
-    print(f"{rid:4s} {name:20s} via {how:7s} visible={on_page!s:5s} avatar={avatar}\n     {body[:110]}…")
-    if not on_page:
+        if name not in " ".join(pg.nodes[max(0, idx - 8): idx + 9]):
+            sys.exit(f"{rid} {name}: the quote matched on {slug} is not in {name}'s card (name not within 8 nodes)")
+        body, how = pg.nodes[idx].strip().strip('"“”').strip(), "visible"
+    if not re.search(r"[.!?]$", body):
+        sys.exit(f"{rid} {name}: quote does not end in . ! or ? — it may be cut at an inline tag on {slug}")
+    if norm(body)[:KEY] not in visible:
         sys.exit(f"{rid} {name}: extracted text is not visible on {slug} — inspect before ledgering")
+    if norm(location) not in visible:
+        sys.exit(f"{rid} {name}: location {location!r} is not shown on {slug} — copy it exactly as the page shows it")
+    if avatar_override and not any(src == avatar_override for _, src in pg.imgs):
+        sys.exit(f"{rid} {name}: avatar {avatar_override!r} is not an <img> on {slug}")
+    avatar = avatar_override or next((src for alt, src in pg.imgs if alt.startswith(name)), None)
+    print(f"{rid:4s} {name:20s} via {how:7s} avatar={avatar}\n     {body[:110]}…")
     entry = {"id": rid, "quote": body, "name": name, "location": location, "bird": None,
              "avatar": avatar, "source": f"{slug} — {source}"}
     if confirmed:
@@ -156,13 +170,28 @@ def main() -> int:
         return 0
 
     data = json.loads(LEDGER.read_text(encoding="utf-8"))
-    have_ids = {r["id"] for r in data["reviews"]}
+    by_id = {r["id"]: r for r in data["reviews"]}
     have_names = {r["name"] for r in data["reviews"]}
-    added = [e for e in confirmed if e["id"] not in have_ids and e["name"] not in have_names]
+    added, filled = [], []
+    for e in confirmed:
+        old = by_id.get(e["id"])
+        if old is None:
+            if e["name"] not in have_names:
+                added.append(e)
+            continue
+        for field in ("quote", "name", "location"):
+            if norm(old[field]) != norm(e[field]):
+                sys.exit(f"{e['id']}: the ledger's {field} no longer matches the page — the page or the "
+                         f"ledger changed. Resolve by hand with the breeder; never by re-running this script.")
+        if not old.get("avatar") and e["avatar"]:
+            old["avatar"] = e["avatar"]
+            filled.append(e["id"])
     data["reviews"].extend(added)
-    data["pending"] = pending
+    promoted = have_names | {e["name"] for e in added}
+    data["pending"] = [p for p in pending if p["name"] not in promoted]
     LEDGER.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-    print(f"\nwrote {len(added)} confirmed + {len(pending)} pending to {LEDGER.relative_to(ROOT)}")
+    print(f"\nwrote {len(added)} new confirmed, filled {len(filled)} avatar(s) {filled}, "
+          f"{len(data['pending'])} pending → {LEDGER.relative_to(ROOT)}")
     return 0
 
 
