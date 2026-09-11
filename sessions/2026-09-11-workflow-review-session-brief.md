@@ -45,3 +45,24 @@
   - `/goal` has a separate model judge the condition after each turn.
   - Cowork is on Pro, Max, Team and Enterprise and has scheduled tasks.
 - **The outline-gate file header still says "AWAITING BREEDER APPROVAL",** but the record says approved. Treated as approved.
+
+---
+
+## Addendum — Gemini image run (same session, after the key landed)
+
+**Done.** 58 images generated, QA'd and exported; nothing placed on a page yet (rule 7).
+
+- **Model:** `imagen-3.0-generate-001` is retired. Used **`gemini-3-pro-image`** via `generateContent` at 2K (2752×1536), 16:9. `scripts/generate_nb_image.sh` still calls the dead model and the old `:predict` shape — **rewrite it before the next run**.
+- **Scope corrected mid-run.** The 2026-08-10 pack listed 14 slots; `skills/cag-for-sale-page-builder.md:92` requires an image on every H2, H3 and key H4. Measured on the shipped references — congo-for-sale 29/32, timneh-for-sale 31/36, congo-vs-timneh 42/50 — with FAQ, CTA, summary and owner blocks exempt. So the set grew to **58** (Page A 32, Page B 26).
+- **The 08-10 pack's "no text overlay" rule was wrong for these pages.** Breeder ruling: all infographics are Gemini-generated with short labels and exact figures, matching `public/images/breeding-pair/inf-*.webp`.
+- **Every baked figure traced:** $185/$350/$200 from `price-matrix.json`; $850/$4,500/$7,500/$8,500 from the 2026-08-10 sweep. Competitor names and the measurement date stay in HTML Table H, never in the art.
+- **QA:** 4 regenerated — A-X-11 (off-frame), A-X-12 (stamp covering DAY 3), B-X-01 (unlabelled output + paw print), B-X-21 (duplicated label). A-OG-2 took three attempts to remove identifiable faces.
+- **Exported** 1408×768 WebP <95 KB + `-760.webp` siblings <55 KB into `public/images/buy-shipping-page/` and `public/images/near-me-page/`. Max 91 KB / 34 KB, none over budget.
+- **Approval artifact:** https://claude.ai/code/artifact/87fe598b-58ca-45f1-b8eb-6b71f5ae1b5c
+- **Sources:** `sessions/2026-09-11-two-pages-image-prompts-v2.json` + `-expansion.json` (machine), and the two rendered `-pack-v2*.md` twins.
+- **Still breeder-supplied:** P1–P11 — six named birds, two heroes, the document flat-lay, two newsletter images.
+
+### Next
+1. Breeder approves or names redos on the artifact.
+2. Rewrite `scripts/generate_nb_image.sh` to the `generateContent` shape and a passable aspect ratio.
+3. Build Pages A and B (2026-08-10 plan, Task 8 on) with these images placed and the photo slots measured.
