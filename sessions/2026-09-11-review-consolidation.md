@@ -48,3 +48,20 @@ Plan artifact: https://claude.ai/code/artifact/b7bc965b-18c3-4bb0-bbd9-42441a01a
 - [x] FIXED 5ab8eda2 in Testimonials only: Testimonials `grid`/`mosaic`/`feature` variants use `font-display` and `grid` uses `bg-clay-50` — neither token exists (no --font-display / --color-clay-50 in @theme), so review-card headlines and names on the homepage + trusted-breeders render in the body sans and the grid initials badge has no circle. Pre-existing; the new `wall` variant uses font-lora + bg-clay/10. Fixing the shared variants changes the homepage — separate task
 - [x] Commit B 34c7f768 pushed 2026-09-11 (layout approved by breeder)
 - [ ] NEW: `font-display` class is used 105× across 21 cag-library components (Navbar, Footer, BirdCard, …) with no --font-display token — only the Testimonials variants are fixed in this session (the approved flag); the rest is a sitewide change for a separate decision
+
+## Batch 2 (breeder, 2026-09-11 evening): fix the remaining open items; ignore the 52/4.9 aggregate and the Hutter photo (breeder has it)
+- [x] Review towns normalised to "City, ST" (Perkin, Ovalle, Plaisance, Hendershot, Erwin) — ledger, specs, 4 pages
+- [x] Wall: a lone last card is centred (2 cols) / middle column (3 cols)
+- [x] font-display → font-lora in 17 cag-library files (94 class uses); only the homepage renders them — 12 elements visibly change (2 pull quotes, 4 trust badges, 6 price cells) → breeder visual approval before deploy (rule 7)
+- [x] Guard: D-b now structural for every card layout (card = nearest ancestor element holding a buyer name); 71 cards attributed; negative proofs on grid + bird-page swaps
+- [x] Sitemap lastmod = page source's last git commit date (TODAY only for uncommitted sources)
+- [x] FOUND: live sitemap listed /.astro/, /dist/, /node_modules/ (404s) from gitignored stray dirs in src/pages — generator now skips dirs without a page file
+- [x] FOUND: fbda1577 (another session's homepage-hero design canvases in docs/) made Tailwind scan docs/ → ~57 KB dead CSS inlined into every page; fixed with `@source not "../../docs"` in global.css
+- [ ] FLAG: src/components/cag-library/ContactForm.astro shows phone (432) 555-0119 — looks fabricated; component has 0 importers (not rendered). Breeder call
+- [ ] Scorecards: regenerate with test:render:pages after the batch-2 deploy, then commit
+- [ ] CONCURRENT SESSION: src/components/cag-library/HeroV3.astro is being rebuilt by another session (homepage hero round-5 variation A "Paperwork card", docs/design/homepage-hero-r5/, canvas 6881b0e8; file modified 17:54). NOT part of this work — never stage it from this session
+- [x] Commit E 43f63661 pushed (towns, lone card, structural D-b guard, sitemap lastmod/phantoms//available/, docs/ excluded from Tailwind scan)
+- [x] BREEDER APPROVED (2026-09-11): homepage font-display→font-lora (17 cag-library files) and removal of the fabricated-looking phone (432) 555-0119 from the unused ContactForm component
+- [x] Commit F 887b598d pushed: font-display→font-lora (17 files, breeder-approved) + fake (432) 555-0119 phone removed from ContactForm (2 spots) and Navbar/Footer defaults (blanked; both render phone only when passed). The other session's hero landed separately as ad59f19b.
+- [x] 887b598d LIVE-verified (curl): homepage 0 font-display / 151 font-lora; prices, badges and pull quote in serif; no fake phone; IndexNow / HTTP 200
+- [x] Scorecards regenerated from a clean worktree of origin/main @ 887b598d: test:render:pages 57/57; 19 scorecard files committed
