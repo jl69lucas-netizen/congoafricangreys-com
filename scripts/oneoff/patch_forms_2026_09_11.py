@@ -147,7 +147,7 @@ def bird_block(P, name):
       <input id="{P}-phone-confirm" name="phone_confirm" type="tel" required placeholder="Repeat your number" {I} />
     </div>
   </div>
-  <fieldset class="border-0 p-0 m-0 min-w-0">
+  <fieldset class="border-0 p-0 min-w-0">
     <legend {L.replace("mb-1.5", "mb-2 p-0")}>Are you involved in any pet store, commercial parrot breeding operation, or getting parrots for cheap resale? {REQ}</legend>
     <div class="flex flex-wrap gap-2.5">
       <label {PILL}><input type="radio" name="resale_screening" value="yes" required style="accent-color:#e8604c" /> Yes</label>
@@ -158,14 +158,14 @@ def bird_block(P, name):
     <label for="{P}-surrender" {L}>Have you ever surrendered a pet to a shelter or given one away? {REQ}</label>
     <textarea id="{P}-surrender" name="surrender_history" rows="3" required placeholder="If yes, please explain in detail. Honest answers are appreciated." {I}></textarea>
   </div>
-  <fieldset class="border-0 p-0 m-0 min-w-0">
+  <fieldset class="border-0 p-0 min-w-0">
     <legend {L.replace("mb-1.5", "mb-2 p-0")}>Are you a First-Time or Experienced Parrot Owner? {REQ}</legend>
     <div class="flex flex-wrap gap-2.5">
       <label {PILL}><input type="radio" name="experience" value="experienced" required style="accent-color:#e8604c" /> Experienced owner</label>
       <label {PILL}><input type="radio" name="experience" value="first-time" required style="accent-color:#e8604c" /> First-time owner</label>
     </div>
   </fieldset>
-  <fieldset class="border-0 p-0 m-0 min-w-0">
+  <fieldset class="border-0 p-0 min-w-0">
     <legend {L.replace("mb-1.5", "mb-2 p-0")}>How would you like {name} to reach you? {REQ}</legend>
     <div class="grid gap-2">
 {dlv}
