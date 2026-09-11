@@ -886,10 +886,15 @@ const productSchemas = pairs.map((p) => ({
       <p class="fsx-ship">Ships nationwide · $185 airport · $350 home</p>
       <p class="fsx-note">Pickup in Midland, TX — if you live within 2–3 hours of us</p>
     </aside>
-    <form class="fs-fields" action="/contact-us/" method="get">
-      <div class="fld2"><label>First name<input type="text" name="fname" autocomplete="given-name"></label><label>Last name<input type="text" name="lname" autocomplete="family-name"></label></div>
-      <label class="fld">Email<input type="email" name="email" autocomplete="email" required></label>
-      <label class="fld">Which pair or bird<select name="bird">
+    <form class="fs-fields" action="https://formspree.io/f/xrejpnvn" method="POST">
+      <input type="hidden" name="_subject" value="C.A.Gs inquiry — african-grey-breeding-pair-for-sale">
+      <input type="hidden" name="_next" value="https://congoafricangreys.com/contact-us/?success=true">
+      <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="fld2"><label>First name <span class="req">*</span><input type="text" name="fname" autocomplete="given-name" required></label><label>Last name <span class="req">*</span><input type="text" name="lname" autocomplete="family-name" required></label></div>
+      <div class="fld2"><label>Cell number <span class="req">*</span><input type="tel" name="cell" autocomplete="tel" required></label><label>Confirm cell number <span class="req">*</span><input type="tel" name="cell_confirm" required></label></div>
+      <div class="fld2"><label>Email <span class="req">*</span><input type="email" name="email" autocomplete="email" required></label><label>Confirm email <span class="req">*</span><input type="email" name="email_confirm" required></label></div>
+      <label class="fld">Which pair or bird <span class="req">*</span><select name="bird" required>
+        <option value="">Choose one…</option>
         <option>Talker &amp; Jane — $3,000</option>
         <option>Mari &amp; Lake — $4,500</option>
         <option>Sally &amp; Odin — $5,500</option>
@@ -901,8 +906,25 @@ const productSchemas = pairs.map((p) => ({
         <option>Candled fertile eggs</option>
         <option>Not sure yet — need advice</option>
       </select></label>
-      <label class="fld">Delivery<select name="delivery"><option>Airport cargo — $185</option><option>Home delivery — $350</option><option>Pickup in Midland, TX</option></select></label>
-      <label class="fld">Anything you want us to know<textarea name="msg" rows="3"></textarea></label>
+      <fieldset class="fld fset">
+        <legend>Are you involved in any pet store, commercial parrot breeding operation, or getting parrots for cheap resale? <span class="req">*</span></legend>
+        <div class="rad"><label><input type="radio" name="resale_screening" value="yes" required /> Yes</label><label><input type="radio" name="resale_screening" value="no" required /> No</label></div>
+      </fieldset>
+      <label class="fld">Have you ever surrendered a pet to a shelter or given one away? <span class="req">*</span><textarea name="surrender_history" rows="3" required placeholder="If yes, please explain in detail. Honest answers are appreciated."></textarea></label>
+      <fieldset class="fld fset">
+        <legend>Are you a First-Time or Experienced Parrot Owner? <span class="req">*</span></legend>
+        <div class="rad"><label><input type="radio" name="experience" value="experienced" required /> Experienced owner</label><label><input type="radio" name="experience" value="first-time" required /> First-time owner</label></div>
+      </fieldset>
+      <fieldset class="fld fset">
+        <legend>How would you like your pair to reach you? <span class="req">*</span></legend>
+        <div class="dlv">
+          <label><input type="radio" name="delivery" value="Airport cargo — $185" required /><span class="t">Airport Pickup · $185</span><span class="d">Flies on IATA live-animal terms with Delta, United or American to your nearest major airport; you collect at the airline's cargo desk.</span></label>
+          <label><input type="radio" name="delivery" value="Home delivery — $350" required /><span class="t">Home Delivery · $350</span><span class="d">Brought to the address you give us, on a date we agree with you first.</span></label>
+          <label><input type="radio" name="delivery" value="Flight nanny — from $750" required /><span class="t">Flight Nanny · from $750</span><span class="d">A nanny keeps your birds in the cabin for the whole flight; quoted per route.</span></label>
+          <label><input type="radio" name="delivery" value="Pickup in Midland, TX" required /><span class="t">Local Pickup · Free</span><span class="d">Collect from us in Midland, TX if you live within two to three hours.</span></label>
+        </div>
+      </fieldset>
+      <label class="fld">Anything you want us to know <span class="req">*</span><textarea name="msg" rows="3" required></textarea></label>
       <button type="submit" class="btn-clay bfull">Reserve a proven pair</button>
       <p class="fs-fine">Mark or Teri answers every inquiry personally, usually the same day.</p>
     </form>
@@ -1168,6 +1190,20 @@ const productSchemas = pairs.map((p) => ({
 .fs-fields input, .fs-fields select, .fs-fields textarea { width:100%; margin-top:4px; border:1.5px solid var(--bp-bd); border-radius:10px; background:#fff9f6; padding:9px 11px; font:inherit; font-size:16px; color:var(--bp-ink); }  /* 16px floor — under it iOS Safari auto-zooms on focus */
 .fs-fields input:focus, .fs-fields select:focus, .fs-fields textarea:focus { outline:none; border-color:var(--bp-clay); box-shadow:0 0 0 3px rgba(232,96,76,.1); }
 .fs-fields .btn-clay { border-radius:12px; margin-top:4px; }
+.fs-fields .req{color:#b04228;font-weight:700}
+.fs-fields .hp{position:absolute;left:-9999px}
+.fs-fields .fset{border:0;padding:0;margin:0 0 10px;min-width:0}
+.fs-fields .fset legend{display:block;padding:0;font-size:var(--fs-micro);font-weight:600;margin-bottom:6px}
+.fs-fields .rad{display:flex;flex-wrap:wrap;gap:8px}
+.fs-fields .rad label{display:flex;align-items:center;gap:8px;margin:0;padding:8px 16px;border:1.5px solid #ede5dc;border-radius:50px;background:#fff9f6;cursor:pointer}
+.fs-fields .rad label:has(input:checked){border-color:#e8604c;background:rgba(232,96,76,.06);color:#b04228}
+.fs-fields .dlv{display:grid;gap:8px}
+.fs-fields .dlv label{display:grid;grid-template-columns:auto 1fr;column-gap:10px;row-gap:2px;align-items:start;margin:0;padding:10px 14px;border:1.5px solid #ede5dc;border-radius:12px;background:#fff9f6;cursor:pointer}
+.fs-fields .dlv label:has(input:checked){border-color:#e8604c;background:rgba(232,96,76,.05)}
+.fs-fields .dlv input{grid-row:span 2;margin-top:3px}
+.fs-fields .dlv .t{font-weight:700}
+.fs-fields .dlv .d{grid-column:2;font-weight:400;font-size:12.5px;line-height:1.45;opacity:.85}
+.fs-fields .rad input,.fs-fields .dlv input{width:auto;margin-top:0;padding:0;border:0;background:none;box-shadow:none;accent-color:#e8604c}
 .fs-fine { font-size:var(--fs-micro); color:var(--bp-mid); margin:.6rem 0 0; }
 
 /* ── §1l specificity guard — `.bpair p` (0,1,1) outranks a bare component class (0,1,0).
