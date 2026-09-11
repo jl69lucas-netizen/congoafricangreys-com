@@ -1,0 +1,1333 @@
+<title>Review Consolidation Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#F7F6F2; --panel:#FFFFFF; --ink:#1E2A24; --ink-2:#4A5650; --ink-3:#6B766F;
+  --green:#2D6A4F; --green-tint:#E7F0EB; --clay:#B04228; --clay-tint:#F8ECE8;
+  --rule:#D9DED8; --code:#EEF1EC; --focus:#2D6A4F;
+  --serif:'Newsreader', Georgia, 'Times New Roman', serif;
+  --sans:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121A16; --panel:#18221D; --ink:#E4EAE5; --ink-2:#B7C2BB; --ink-3:#8E9A93;
+    --green:#7FC4A0; --green-tint:#1D2E25; --clay:#F0917F; --clay-tint:#2E1F1B;
+    --rule:#2A3630; --code:#1C2721; --focus:#7FC4A0;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121A16; --panel:#18221D; --ink:#E4EAE5; --ink-2:#B7C2BB; --ink-3:#8E9A93;
+  --green:#7FC4A0; --green-tint:#1D2E25; --clay:#F0917F; --clay-tint:#2E1F1B;
+  --rule:#2A3630; --code:#1C2721; --focus:#7FC4A0;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font:15px/1.65 var(--sans);margin:0}
+a{color:var(--green)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px}
+
+.masthead{border-bottom:1px solid var(--rule);background:var(--panel)}
+.masthead-in{max-width:1180px;margin:0 auto;padding:28px 24px 22px;display:grid;gap:14px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+h1.title{font:600 clamp(28px,4vw,40px)/1.1 var(--serif);margin:0;text-wrap:balance;letter-spacing:-.01em}
+.lede{margin:0;color:var(--ink-2);max-width:68ch}
+.ledger{display:flex;flex-wrap:wrap;gap:8px 22px;margin:4px 0 0;padding:0;list-style:none;font:13px/1.4 var(--sans);color:var(--ink-2)}
+.ledger li{display:flex;gap:8px;align-items:baseline}
+.ledger b{font:500 14px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+.ledger .bad b{color:var(--clay)}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:500 13px/1 var(--sans);color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:9px 12px;cursor:pointer}
+.btn:hover{border-color:var(--green);color:var(--green)}
+.btn.primary{background:var(--green);border-color:var(--green);color:var(--panel)}
+.btn.primary:hover{filter:brightness(1.08);color:var(--panel)}
+.hint{font-size:12.5px;color:var(--ink-3)}
+
+.layout{max-width:1180px;margin:0 auto;padding:28px 24px 80px;display:grid;gap:40px}
+@media (min-width:1000px){.layout{grid-template-columns:230px minmax(0,1fr)}}
+.rail{display:none}
+@media (min-width:1000px){.rail{display:block;position:sticky;top:20px;align-self:start;max-height:calc(100vh - 40px);overflow:auto}}
+.rail p{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:0 0 10px}
+.rail ol{list-style:none;margin:0;padding:0;display:grid;gap:1px}
+.rail a{display:block;text-decoration:none;color:var(--ink-2);font-size:13px;line-height:1.35;padding:5px 8px;border-radius:5px}
+.rail a.l3{padding-left:20px;font-size:12.5px}
+.rail a:hover{background:var(--green-tint);color:var(--ink)}
+.rail a.on{background:var(--green-tint);color:var(--green);font-weight:600}
+.mobile-toc{border:1px solid var(--rule);border-radius:8px;background:var(--panel);padding:10px 14px}
+.mobile-toc summary{cursor:pointer;font-weight:600}
+.mobile-toc ol{margin:10px 0 0;padding-left:18px;font-size:14px}
+@media (min-width:1000px){.mobile-toc{display:none}}
+
+main{min-width:0;display:grid;gap:8px}
+.sec{padding:22px 0 20px;border-top:1px solid var(--rule);scroll-margin-top:16px}
+.sec:first-of-type{border-top:0;padding-top:0}
+.sec-head{display:flex;gap:14px;align-items:flex-start;justify-content:space-between}
+.sec-head h2,.sec-head h3{margin:0;text-wrap:balance}
+.sec h2{font:600 25px/1.2 var(--serif);letter-spacing:-.005em}
+.sec h3{font:600 20px/1.25 var(--serif)}
+.sec h4{font:600 13px/1.3 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:22px 0 6px}
+.sec.l3 .sec-head h3::before{content:attr(data-kind);display:block;font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:7px}
+.copy{flex:none;font:500 12px/1 var(--sans);color:var(--ink-3);background:transparent;border:1px solid var(--rule);border-radius:5px;padding:7px 9px;cursor:pointer}
+.copy:hover{color:var(--green);border-color:var(--green)}
+.body{max-width:72ch}
+.body > *:first-child{margin-top:12px}
+.body p,.body li{color:var(--ink)}
+.body ul,.body ol{padding-left:22px}
+.body li{margin:5px 0}
+.body li.task-list-item{list-style:none;margin-left:-22px}
+.body li input[type=checkbox]{margin:0 8px 0 0;accent-color:var(--green);transform:translateY(1px)}
+.body strong{font-weight:600}
+.body blockquote{margin:14px 0;padding:14px 18px;background:var(--green-tint);border-radius:8px;color:var(--ink)}
+.body blockquote p{margin:8px 0}
+.sec.question .body blockquote{background:var(--clay-tint)}
+.body code{font:13px/1.5 var(--mono);background:var(--code);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.pre-wrap{position:relative;margin:12px 0}
+.body pre{margin:0;background:var(--code);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;overflow-x:auto}
+.body pre code{background:none;padding:0;font-size:12.5px;line-height:1.6;overflow-wrap:normal;white-space:pre}
+.pre-wrap .copy{position:absolute;top:8px;right:8px;background:var(--panel)}
+.tbl{overflow-x:auto;margin:14px 0;border:1px solid var(--rule);border-radius:8px;background:var(--panel);max-width:none}
+.body table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.45}
+.body th{font:600 11.5px/1.3 var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);text-align:left;background:var(--code)}
+.body th,.body td{padding:8px 11px;border-bottom:1px solid var(--rule);vertical-align:top}
+.body tr:last-child td{border-bottom:0}
+.body td:first-child{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.body hr{border:0;border-top:1px solid var(--rule);margin:20px 0}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);font:500 13px/1 var(--sans);padding:11px 16px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .15s}
+.toast.show{opacity:1}
+</style>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <div class="eyebrow">C.A.Gs · Implementation plan · 2026-09-11</div>
+    <h1 class="title">Review Consolidation Plan</h1>
+    <p class="lede">Get every real buyer review on the built site onto <code>/african-grey-reviews/</code> once, correctly attributed, and make the build fail if that ever stops being true.</p>
+    <ul class="ledger" aria-label="Measured on dist/ at b8991949">
+      <li class="bad"><b>4</b> buyers on the review page today, Kempf twice</li>
+      <li><b>18</b> reviewers on 64 non-location pages</li>
+      <li><b>14</b> confirmed after this plan</li>
+      <li><b>3</b> awaiting the breeder's ruling</li>
+    </ul>
+    <div class="tools">
+      <button class="btn primary" type="button" id="copy-all">Copy whole plan (.md)</button>
+      <span class="hint">Each section and command block has its own copy button. Source: <code>docs/superpowers/plans/2026-09-11-review-consolidation.md</code></span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="rail" aria-label="Plan contents"><p>Contents</p><ol id="rail"></ol></nav>
+  <main id="plan">
+    <details class="mobile-toc"><summary>Contents</summary><ol id="mtoc"></ol></details>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="text/markdown" id="plan-md">
+# Review Consolidation Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Every real buyer review that appears anywhere on the built site (location pages excepted) is listed exactly once on `/african-grey-reviews/`, and no review anywhere on those pages is duplicated, mis-attributed, re-located or wearing another buyer's photo.
+
+**Architecture:** `data/reviews.json` becomes the complete ledger. Entries get filled by *copying* verbatim text out of `dist/` with a script, never by retyping. The review page stops hard-coding its reviews and renders them all from the ledger. A new dist-based pytest (`tests/test_review_integrity.py`) enforces the done-condition and fails the build when a review is missing or duplicated, or when a new review card ships without being ledgered.
+
+**Tech Stack:** Astro 5 (`src/pages/*.astro`), Python 3 (`html.parser`, pytest), Playwright MCP / Browser pane for rendered verification, Cloudflare Pages auto-deploy on push to `main`, IndexNow.
+
+---
+
+## 0. The improved brief (restated per CLAUDE.md rule 6)
+
+This is the prompt, rewritten so the goal and the finish line can't be read two ways. Paste it back if any of it is wrong.
+
+> **Goal.** `/african-grey-reviews/` lists **every real buyer review that appears on any built page except the 41 location pages**. Each review appears once, verbatim, with the right name, town and photo, in both the visible page and the `Review` JSON-LD.
+>
+> **Scope, in:** the 64 non-location pages in `dist/` (home, for-sale, `/available/` bird pages, comparison, interior, blog), `data/reviews.json`, the review page, the `Testimonials` component, and any page whose review card carries a wrong name, town, photo or text.
+>
+> **Scope, out:** the 41 location pages (`data/locations.json` slugs + the `african-grey-parrot-for-sale-*` / `buy-intelligent-african-grey-for-sale-*` prefixes); writing, generating or rewording any review (never); the "52 verified buyers / 4.9" aggregate; the harness DUP chrome-skip parity fix; any page redesign beyond the review-list layout.
+>
+> **"Duplicate" means five things.** Each has a test:
+> - **D-a** the same review shown twice on one page (visible text or schema)
+> - **D-b** one buyer's words credited to, or sitting beside, another buyer's name
+> - **D-c** one buyer carrying two different texts (an edited or trimmed variant)
+> - **D-d** one buyer shown with another buyer's town
+> - **D-e** one buyer's photo labelled with another buyer's name, or one photo in the ledger for two buyers
+>
+> Reusing a real review verbatim on a second page is **not** a defect. CLAUDE.md mandates it, and `dup_content_audit.py` skips review containers by design.
+>
+> **Done means** all of these are true and shown with evidence:
+> 1. `data/reviews.json` holds every confirmed review found. Reviews with disputed provenance sit in `pending`.
+> 2. `tests/test_review_integrity.py` passes on a fresh `dist/`, and its printed examined counts are ≥ 60 pages and ≥ 15 review-bearing pages.
+> 3. The existing gates are no worse than baseline: `test:render:meta`, `test_review_attribution.py`, `sweep_review_attribution.py --check` = 0, `dup_content_audit.py`, `page_hardening_scan.py`.
+> 4. After deploy, the **live** review page is checked in Playwright at 375 / 768 / 1280. Each ledger name appears exactly once in the review sections, schema `Review` count = ledger count, no broken images, no console errors. Screenshots attached.
+> 5. IndexNow has been submitted for every slug whose rendered output changed.
+> 6. A gate report is published (Artifact + `.md`), and memory and Open Flags are updated.
+
+## 1. What was measured before this plan (2026-09-11, `dist/` @ b8991949)
+
+**Reviewers on non-location built pages: 18. On the review page: 4, one of them twice.**
+
+| # | Buyer | Town shown | Non-location pages carrying the review | Ledger | Provenance | Defect found |
+|---|---|---|---|---|---|---|
+| q1 | Clifford Hutter | Secaucus, NJ | home, reviews | yes | breeder 2026-09-09 | the review page shows `/african-grey-review-top.webp` beside him, but the ledger says **no photo** |
+| q2 | Richard Woodard | Winter Haven, FL | home, reviews, congo-fs, timneh-fs, congo-vs-timneh, eggs, pros-cons, trusted, comparison | yes | breeder 2026-09-09 | — |
+| q3 | Catherine Kempf | Schaumburg, IL | home, reviews, male-vs-female, trusted, comparison | yes | breeder 2026-09-09 | **D-a: on the review page twice** (featured + grid → 2 schema Reviews) |
+| q4 | Archie O'Brien | Farmingdale, NY | home, reviews, congo-fs, timneh-fs, congo-vs-timneh, eggs, pros-cons, trusted | yes | breeder 2026-09-09 | — |
+| q5 | Brian Carr | Plainview, TX | home | yes | breeder 2026-09-10 | **missing from the review page** |
+| — | Stanley Perkin | Oceanside, CA 92054 | dna-tested, hand-raised | **no** | breeder-supplied 2026-07-22 | missing from the review page |
+| — | Jesse Ovalle | Baton Rouge, LA 70806 | dna-tested, hand-raised | **no** | breeder-supplied 2026-07-22 | missing from the review page |
+| — | Meredith Plaisance | Hartsville, SC 29550 | health-guarantee (for-sale) | **no** | breeder-supplied 2026-07-25 | missing from the review page |
+| — | Jeffrey Hendershot | Centennial, CO 80112 | health-guarantee (for-sale) | **no** | breeder-supplied 2026-07-25 | missing from the review page |
+| — | Joanna Thomas | Oildale, CA | baby | **no** | commit b0d9f44f; **verify in Task 2** | missing from the review page |
+| — | Anthony Tershal | Lakewood, WA | baby | **no** | commit b0d9f44f; **verify in Task 2** | missing from the review page |
+| — | Joshua Erwin | San Bernardino, California | breeding-pair | **no** | "real, named, attributed" 2026-08-07 | missing from the review page |
+| — | Walter Zander | Fort Washington, PA | congo pair | **no** | breeder brief 8cda89e3 | missing from the review page |
+| — | Alene Murphy | Savannah, GA | congo pair | **no** | breeder brief 8cda89e3 says Savannah, GA | missing from the review page (caption already correct: Savannah, GA — an earlier reading of a wrong town was a misread, retracted 2026-09-11) |
+| — | Lawrence Brunner | Fullerton, CA | 7 bird pages, adoption-cost | **no** | ⚠ commit a6681e66 says "real reviewers"; memory 2026-06-26 records the set as **invented** | provenance conflict → breeder ruling |
+| — | Sandra Soliz | Rome, GA | 7 bird pages | **no** | ⚠ same | same |
+| — | Ida Brim | Nashville, TN | 7 bird pages, adoption-cost, male-vs-female | **no** | ⚠ same | same, plus **D-c: male-vs-female carries a trimmed variant** (no "here in Nashville", ending cut), visible + schema |
+
+**Why the existing guards missed this:** `tests/test_review_attribution.py` and `scripts/sweep_review_attribution.py` only read *flat JS objects with a `quote:` key* in `src/`, and only match quotes already in the ledger. Hard-coded HTML cards (bird pages, pair page, baby page) are invisible to them, and so is any reviewer who isn't in the ledger. Per CLAUDE.md, this escape is charged to the harness. Task 1 is the harness fix, and it adds no new rule.
+
+**Blockquotes that are not buyer reviews** (excluded on purpose): the homepage pull-quotes "A Congo Grey doesn't just mimic words…" and "We hand you the paperwork before the wire…", the comparison pull-quotes on vs-macaw / vs-amazon / vs-cockatoo / breeders-comparison, and the scams page's "I sent $400…" (a scam victim, not our buyer).
+
+## 2. Decisions — each with one recommendation (CLAUDE.md rule 5)
+
+1. **Review-list layout.**
+   - **New `wall` variant: 1 / 2 / 3 columns, no carousel (Recommended).** *Why:* the existing `grid` variant turns into a horizontal carousel below 1024px (`flex: 0 0 85vw`, `scrollbar-width: none`). At 375px that shows 1 card and hides 11 behind a swipe with no visible scrollbar. *Trade-off:* the review page grows about 3,000px on mobile.
+   - Keep `grid`. Zero component change, but most reviews stay unseen on mobile.
+2. **Featured pair.**
+   - **Brian Carr + Catherine Kempf (Recommended).** *Why:* both have ledger photos, and Carr is the one ledger review the page is missing today. *Trade-off:* Hutter moves to the wall, where an initials badge replaces the photo that isn't his. The homepage still shows that photo beside him; that goes to Open Flags, not this task.
+   - Keep Hutter + Kempf.
+3. **Brunner / Soliz / Brim.**
+   - **Hold them in `pending` and leave them off the review page until the breeder rules (Recommended).** *Why:* rule 11 (nothing unconfirmed is assertable) and the recorded provenance conflict. *Trade-off:* 9 pages keep showing them until the ruling.
+   - List them now.
+4. **Harness DUP rows the new review page creates.**
+   - **Record them; accept only rows whose text is a ledger quote (Recommended).** *Why:* the chrome-skip parity fix already exists uncommitted in worktree `jovial-feistel-071f51`, and landing it is a separate task. *Trade-off:* the harness DUP row count rises until that fix lands.
+   - Land the parity fix here.
+
+## 3. The one open question (CLAUDE.md rule 8)
+
+> Are **Lawrence Brunner (Fullerton, CA), Sandra Soliz (Rome, GA) and Ida Brim (Nashville, TN)** real buyers whose words those are? If yes, is the longer Ida quote ("…home delivery **here in Nashville**…I tell everyone…") her exact wording?
+
+Everything except Task 11 proceeds without the answer.
+
+## 4. Agents & skills to use
+
+| When | Skill / agent | Why |
+|---|---|---|
+| Executing this plan | `superpowers:subagent-driven-development` | fresh subagent per task, review between tasks |
+| Task 1 | `superpowers:test-driven-development` | the guard is written RED first |
+| Reading any gate | `cag-gate-integrity` | read examined counts before believing a PASS |
+| Task 7 | `cag-duplicate-content-gate` | before/after DUP comparison |
+| Task 7 | `cag-final-page-pass` | final verdict on the review page and pair page |
+| Tasks 8–9 | Browser pane (local) + Playwright MCP (live) | rendered proof at 3 widths |
+| Before claiming done | `superpowers:verification-before-completion` | evidence before assertions |
+| Task 12 | `cag-learning-loop`, `session-closer` | charge the escape to the harness; close the session |
+| **Not used** | `cag-review-collection-agent`, `cag-case-study-agent` | nothing here collects or writes new reviews |
+
+**Commit rule for this repo:** every Bash call auto-pushes, and a push to `main` is a deploy. **Never commit while any test is red.** Commit points are marked below. Stage only the files named. The working tree already has unrelated changes (`.claude/skills/*`, `assets/*`, CSVs) that must stay out.
+
+---
+
+## File map
+
+| File | Action | Responsibility |
+|---|---|---|
+| `tests/test_review_integrity.py` | Create | dist-based guard for D-a…D-e, completeness, discovery |
+| `scripts/review_inventory.py` | Create | copies verbatim reviews out of `dist/` into the ledger |
+| `data/reviews.json` | Modify | +9 confirmed (q6–q14), `pending` trio, editorial headlines for q1–q3 |
+| `src/components/cag-library/Testimonials.astro` | Modify | add `wall` variant |
+| `src/pages/african-grey-reviews/index.astro` | Modify | render from the ledger; two truth fixes in the copy |
+| `src/pages/congo-african-grey-parrot-pair-for-sale/index.astro` | Modify | Alene Murphy's caption town |
+| `scripts/sweep_review_attribution.py` + `tests/test_review_attribution.py` | Modify | sweep restores edited quotes verbatim; src test guards it (Task 5b) |
+| trusted-breeders, timneh-for-sale, male-vs-female `index.astro` | Modify | edited Woodard/Kempf quotes restored verbatim (Task 5b) |
+| `sessions/2026-09-11-review-consolidation.md` | Create | session brief with `## Open Flags` |
+| `docs/artifacts/cags-review-consolidation-report.{html,md}` | Create | gate report deliverable |
+
+---
+
+### Task 0: Session brief + baseline
+
+**Files:** Create `sessions/2026-09-11-review-consolidation.md`
+
+- [ ] **Step 1: Build a fresh dist and capture the baseline gate numbers**
+
+```bash
+npx astro build 2>&1 | tail -3
+```
+```bash
+python3 scripts/dup_content_audit.py > "$TMPDIR/dup-before.txt" 2>&1; tail -5 "$TMPDIR/dup-before.txt"
+```
+```bash
+python3 -m pytest tests/test_review_attribution.py tests/test_homepage_reviews.py -q 2>&1 | tail -2
+```
+Expected: the build completes; pytest reports `5 passed`. Keep `dup-before.txt` for Task 7.
+
+- [ ] **Step 2: Write the session brief**
+
+```markdown
+# 2026-09-11 — Review consolidation
+
+Plan: docs/superpowers/plans/2026-09-11-review-consolidation.md
+
+## Baseline
+- review page lists 4 buyers (Kempf twice); 18 reviewers exist on 64 non-location pages
+- dup_content_audit.py baseline: $TMPDIR/dup-before.txt (summary line pasted here)
+
+## Open Flags
+- [ ] Breeder ruling: are Lawrence Brunner / Sandra Soliz / Ida Brim real, and is Ida's longer "here in Nashville" text her exact wording? (blocks Task 11 only)
+- [ ] Homepage shows /african-grey-review-top.webp beside Clifford Hutter; ledger says he has no photo
+- [ ] Review page + homepage claim "52 verified buyers / 4.9" while 14 reviews are published — unproven aggregate (rule 10)
+- [ ] Comparison hub review cards show a verbatim fragment + our third-person summary inside star cards — allowed by the guard, but a breeder call
+- [ ] Testimonials.astro default props are 3 fabricated reviews (Sarah & Tom, Devin Hart, The Park Family) — latent; nothing renders them today
+- [ ] Harness DUP chrome-skip parity fix still uncommitted in worktree jovial-feistel-071f51
+```
+
+---
+
+### Task 1: The guard, written RED
+
+**Files:** Create `tests/test_review_integrity.py`
+
+> **Revised 2026-09-11 after three review rounds** (the block below is the approved file). The changes: pages that are 301 sources get skipped; a JSON-LD block that fails to parse now fails the test; there's a visible-text verbatim check (D-c past the 60-char key); `<p>`-style cards are discovered, with each card judged on its own quote only; and D-b/D-d/D-e have examined-count floors. **14 tests. Pre-ledger run: 9 failed / 5 passed, 63 pages, 58 cards.** D-b is not checked for `<p>` cards (see Open Flags).
+
+- [ ] **Step 1: Write the test file**
+
+```python
+"""Review integrity on the BUILT site.
+
+Every confirmed review in data/reviews.json is listed exactly once on
+/african-grey-reviews/, and no review on any non-location page is duplicated
+(D-a), sits beside the wrong buyer (D-b), carries an edited text (D-c), shows
+the wrong town (D-d) or the wrong photo (D-e). A blockquote or schema Review
+that is not in the ledger fails the build, so a new review card cannot ship
+unlisted.
+
+Measured on dist/, never src/ — the gates measure what ships. Location pages
+are excluded until they are rebuilt.
+"""
+from __future__ import annotations
+
+import json
+import re
+from html.parser import HTMLParser
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+DIST = ROOT / "dist"
+LEDGER = json.loads((ROOT / "data" / "reviews.json").read_text(encoding="utf-8"))
+REVIEWS = LEDGER["reviews"]
+PENDING = LEDGER.get("pending", [])
+PENDING_NAMES = {p["name"] for p in PENDING}
+PEOPLE = {r["name"]: r for r in REVIEWS + PENDING}
+REVIEW_PAGE = "african-grey-reviews"
+KEY = 60
+LOCATION_PREFIX = re.compile(r"^(african-grey-parrot-for-sale-|buy-intelligent-african-grey-for-sale-)")
+
+# Blockquotes that are our own pull-quotes or a scam victim's words — not C.A.Gs buyer reviews.
+NOT_REVIEWS = (
+    "A Congo Grey doesn't just mimic words",
+    "We hand you the paperwork before the wire",
+    "Every macaw-curious buyer who does the math",
+    "Fit the bird to the home",
+    "Match the bird to the household",
+    "We wrote this comparison the way we answer the phone",
+    "I sent $400 and never heard from them again",
+)
+# The comparison hub quotes a verbatim fragment plus our own summary. Allowed only beside its owner.
+SUMMARY_FRAGMENTS = {"the experience was flawless": "q3", "made the process stress-free": "q2"}
+SUMMARY_PAGE = "african-grey-comparison"
+
+pytestmark = pytest.mark.skipif(not DIST.exists(), reason="dist/ not built — gates measure dist, never source")
+
+
+def norm(s: str) -> str:
+    s = (s.replace("’", "'").replace("‘", "'")
+          .replace("“", '"').replace("”", '"').replace("\xa0", " "))
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def key(review: dict) -> str:
+    return norm(review["quote"])[:KEY]
+
+
+def city(location: str) -> str:
+    return location.split(",")[0].strip()
+
+
+def stem(src: str) -> str:
+    """Photo identity without the width suffix: foo-review-112.webp -> foo-review.webp."""
+    return re.sub(r"-\d{2,4}(?=\.\w+$)", "", Path(src.split("?")[0]).name)
+
+
+class Page(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.nodes: list[str] = []
+        self.quotes: list[str] = []
+        self.imgs: list[tuple[str, str]] = []
+        self.ld: list = []
+        self.ld_errors: list[str] = []
+        self._skip = 0
+        self._bq = 0
+        self._buf: list[str] = []
+        self._in_ld = False
+        self._ldbuf: list[str] = []
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "script" and a.get("type") == "application/ld+json":
+            self._in_ld, self._ldbuf = True, []
+            return
+        if tag in ("script", "style"):
+            self._skip += 1
+        if tag == "blockquote":
+            self._bq += 1
+        if tag == "img":
+            self.imgs.append((a.get("alt") or "", a.get("src") or ""))
+
+    def handle_endtag(self, tag):
+        if tag == "script" and self._in_ld:
+            self._in_ld = False
+            try:
+                self.ld.append(json.loads("".join(self._ldbuf)))
+            except json.JSONDecodeError as e:
+                self.ld_errors.append(str(e))
+            return
+        if tag in ("script", "style") and self._skip:
+            self._skip -= 1
+        if tag == "blockquote" and self._bq:
+            self._bq -= 1
+            if not self._bq:
+                self.quotes.append(norm(" ".join(self._buf)))
+                self._buf = []
+
+    def handle_data(self, data):
+        if self._in_ld:
+            self._ldbuf.append(data)
+            return
+        if self._skip or not data.strip():
+            return
+        self.nodes.append(norm(data))
+        if self._bq:
+            self._buf.append(data)
+
+
+def ld_reviews(ld) -> list[tuple[str, str]]:
+    out: list[tuple[str, str]] = []
+
+    def walk(o):
+        if isinstance(o, list):
+            for x in o:
+                walk(x)
+        elif isinstance(o, dict):
+            if o.get("@type") == "Review":
+                a = o.get("author")
+                out.append((a.get("name") if isinstance(a, dict) else a, norm(o.get("reviewBody") or "")))
+            for v in o.values():
+                walk(v)
+
+    walk(ld)
+    return out
+
+
+def location_slugs() -> set[str]:
+    data = json.loads((ROOT / "data" / "locations.json").read_text(encoding="utf-8"))
+    return {e["slug"] for k in ("live_states", "cities") for e in data.get(k, [])
+            if isinstance(e, dict) and e.get("slug")}
+
+
+def redirected_slugs() -> set[str]:
+    """Sources of 301/308s in the built _redirects — Cloudflare serves the redirect, never the page."""
+    f = DIST / "_redirects"
+    if not f.exists():
+        return set()
+    out = set()
+    for line in f.read_text(encoding="utf-8").splitlines():
+        parts = line.split()
+        if len(parts) >= 3 and parts[2] in ("301", "308") and parts[0].startswith("/") and "*" not in parts[0]:
+            out.add(parts[0].strip("/"))
+    return out
+
+
+def load_pages() -> dict[str, Page]:
+    skip = location_slugs()
+    redirected = redirected_slugs()
+    pages: dict[str, Page] = {}
+    for p in sorted(DIST.rglob("index.html")):
+        rel = p.parent.relative_to(DIST).as_posix()
+        slug = "index" if rel == "." else rel
+        top = slug.split("/")[0]
+        if top in skip or LOCATION_PREFIX.match(top) or slug in redirected:
+            continue
+        pg = Page()
+        pg.feed(p.read_text(encoding="utf-8", errors="ignore"))
+        pg.text = "\n".join(pg.nodes)
+        pg.reviews = ld_reviews(pg.ld)
+        pages[slug] = pg
+    return pages
+
+
+PAGES = load_pages() if DIST.exists() else {}
+
+
+def test_examined_counts():
+    hits = [s for s, pg in PAGES.items() if any(key(r) in pg.text for r in REVIEWS)]
+    print(f"\nexamined {len(PAGES)} non-location pages; {len(hits)} carry a ledger review")
+    assert len(PAGES) >= 60, "examined too few pages — check the dist walk"
+    assert len(hits) >= 15, "too few review-bearing pages — ledger incomplete or extractor broken"
+
+
+def test_every_json_ld_block_parses():
+    bad = [f"{slug}: {e}" for slug, pg in PAGES.items() for e in pg.ld_errors]
+    assert not bad, "JSON-LD blocks that do not parse (their Reviews would be invisible):\n" + "\n".join(bad)
+
+
+def test_review_page_shows_every_confirmed_review_exactly_once():
+    pg = PAGES[REVIEW_PAGE]
+    bad = {r["name"]: pg.text.count(key(r)) for r in REVIEWS if pg.text.count(key(r)) != 1}
+    assert not bad, f"review page shows these confirmed reviews != 1 time: {bad}"
+
+
+def test_review_page_schema_has_one_review_per_ledger_entry():
+    names = sorted(n for n, _ in PAGES[REVIEW_PAGE].reviews)
+    assert names == sorted(r["name"] for r in REVIEWS)
+
+
+def test_no_review_repeats_within_a_page():  # D-a
+    bad = []
+    for slug, pg in PAGES.items():
+        for r in REVIEWS + PENDING:
+            c = pg.text.count(key(r))
+            if c > 1:
+                bad.append(f"{slug}: {r['name']}'s review shown {c}x")
+        names = [n for n, _ in pg.reviews]
+        bad += [f"{slug}: schema Review for {n} x{names.count(n)}" for n in set(names) if names.count(n) > 1]
+    assert not bad, "\n".join(bad)
+
+
+def test_every_schema_review_is_ledgered_and_verbatim():  # discovery + D-c
+    bad = []
+    for slug, pg in PAGES.items():
+        for name, body in pg.reviews:
+            ref = PEOPLE.get(name)
+            if ref is None:
+                bad.append(f"{slug}: schema Review by {name!r} is not in data/reviews.json")
+            elif name not in PENDING_NAMES and body != norm(ref["quote"]):
+                bad.append(f"{slug}: {name}'s schema reviewBody differs from the ledger (edited or swapped)")
+    assert not bad, "\n".join(bad)
+
+
+def test_every_shown_review_is_verbatim():  # D-c, visible text
+    bad = []
+    for slug, pg in PAGES.items():
+        flat = " ".join(pg.nodes)
+        for r in REVIEWS:
+            if key(r) in pg.text and norm(r["quote"]) not in flat:
+                bad.append(f"{slug}: {r['name']}'s review opens verbatim but the rest is edited")
+    assert not bad, "\n".join(bad)
+
+
+def test_every_review_blockquote_is_ledgered():  # discovery
+    stray = []
+    for slug, pg in PAGES.items():
+        for q in pg.quotes:
+            if len(q) < 40 or any(n in q for n in NOT_REVIEWS):
+                continue
+            if any(key(r) in q for r in REVIEWS + PENDING):
+                continue
+            if slug == SUMMARY_PAGE and any(f in q for f in SUMMARY_FRAGMENTS):
+                continue
+            if any(n in q for n in PENDING_NAMES):
+                continue  # awaiting the breeder's ruling — Task 11 removes this exemption
+            stray.append(f"{slug}: {q[:90]!r}")
+    assert not stray, "blockquotes not in data/reviews.json:\n" + "\n".join(stray)
+
+
+RATING_ONLY = re.compile(r"★|Rated \d out of 5")
+
+
+def is_rating(node: str) -> bool:
+    """A pure rating run ('★★★★★', '★', 'Rated 5 out of 5'), not a caption that also names a buyer."""
+    return "★" in node and not RATING_ONLY.sub("", node).strip()
+
+
+def card_quotes(pg: Page):
+    """Review cards with no <blockquote>. A rating run opens a card: its quote is the first
+    quote-length node after the WHOLE run. 'Verified C.A.Gs buyer' closes a card: its quote is
+    the last quote-length node before it. Yields (quote, window) where the window is only that
+    card's own nodes, so a neighbour's ledger key can never vouch for it. (In a Testimonials grid —
+    stars, headline, quote, name — the 3 nodes before the stars are the PREVIOUS card's name, so
+    names in the window are context, never attribution.)
+    Each quote node is judged once."""
+    nodes, seen = pg.nodes, set()
+    for i, node in enumerate(nodes):
+        if is_rating(node) and not (i and is_rating(nodes[i - 1])):
+            j = i
+            while j < len(nodes) and is_rating(nodes[j]):
+                j += 1
+            q = next((k for k in range(j, min(j + 4, len(nodes))) if len(nodes[k]) >= 60), None)
+            lo = max(0, i - 3)  # bird pages: this card's name/town; grids: the previous card's name
+        elif node.startswith("Verified C.A.Gs buyer"):
+            q = next((k for k in range(i - 1, max(-1, i - 4), -1) if len(nodes[k]) >= 60), None)
+            lo = q
+        else:
+            continue
+        if q is None or q in seen:
+            continue
+        seen.add(q)
+        hi = q if lo != q else i  # rating card: name..quote; verified card: quote..Verified
+        yield nodes[q], " ".join(nodes[lo: hi + 1])
+
+
+def test_every_star_card_is_ledgered():  # discovery for <p>-style cards
+    keys = [key(r) for r in REVIEWS + PENDING]
+    stray, cards = [], 0
+    for slug, pg in PAGES.items():
+        for quote, window in card_quotes(pg):
+            cards += 1
+            # Judged on the quote alone. Attribution (D-b) is NOT checked here: bird-page cards put the
+            # name before the quote and Testimonials grid cards put it after, so no window is safe.
+            if any(k in quote for k in keys) or any(n in quote for n in NOT_REVIEWS):
+                continue
+            # Comparison-hub cards: a verbatim fragment (< 60 chars, so never the judged node) plus our
+            # own third-person summary. The fragment sits in the same card, so look for it in the window.
+            if slug == SUMMARY_PAGE and any(f in window for f in SUMMARY_FRAGMENTS):
+                continue
+            if any(n in window for n in PENDING_NAMES):
+                continue  # awaiting the breeder's ruling — Task 11 removes this exemption
+            stray.append(f"{slug}: {quote[:110]!r}")
+    print(f"\nstar/verified review cards examined: {cards}")
+    assert cards >= 20, "found almost no review cards — card detection is broken"
+    assert not stray, "review cards whose text is not in data/reviews.json:\n" + "\n".join(stray)
+
+
+def test_quotes_sit_beside_their_own_buyer():  # D-b
+    owners = {key(r): r["name"] for r in REVIEWS + PENDING}
+    owners.update({f: next(r["name"] for r in REVIEWS if r["id"] == i) for f, i in SUMMARY_FRAGMENTS.items()})
+    checked = 0
+    wrong = []
+    for slug, pg in PAGES.items():
+        for q in pg.quotes:
+            for k, owner in owners.items():
+                if k in q:
+                    checked += 1
+                    others = [n for n in PEOPLE if n != owner and n in q]
+                    if others:
+                        wrong.append(f"{slug}: {owner}'s words sit beside {others}")
+    assert checked >= 10, f"D-b examined only {checked} ledger quotes — extractor broken"
+    assert not wrong, "\n".join(wrong)
+
+
+LOC_RE = re.compile(r"^[\s,·|—–-]*([A-Z][A-Za-z.]+(?: [A-Z][A-Za-z.]+)*),\s*([A-Z]{2}\b|[A-Z][a-z]+(?: [A-Z][a-z]+)?)")
+
+
+def test_every_buyer_is_shown_with_their_own_town():  # D-d
+    matched = 0
+    wrong = []
+    for slug, pg in PAGES.items():
+        for i, node in enumerate(pg.nodes):
+            for name, ref in PEOPLE.items():
+                at = node.find(name)
+                if at < 0:
+                    continue
+                after = node[at + len(name):]
+                if not after.strip(" ,·|—–-") and i + 1 < len(pg.nodes):
+                    after = pg.nodes[i + 1]
+                m = LOC_RE.match(after)
+                matched += bool(m)
+                if m and m.group(1) != city(ref["location"]):
+                    wrong.append(f"{slug}: {name} shown in {m.group(1)}, ledger says {ref['location']}")
+    assert matched >= 20, f"D-d matched only {matched} towns — LOC_RE or markup changed"
+    assert not wrong, "\n".join(wrong)
+
+
+def test_no_buyer_wears_another_buyers_photo():  # D-e
+    photo_owner = {stem(r["avatar"]): r["name"] for r in REVIEWS + PENDING if r.get("avatar")}
+    resolved = 0
+    wrong = []
+    for slug, pg in PAGES.items():
+        for alt, src in pg.imgs:
+            owner = photo_owner.get(stem(src))
+            resolved += bool(owner)
+            shown = next((n for n in PEOPLE if alt.startswith(n)), None)
+            if owner and shown and shown != owner:
+                wrong.append(f"{slug}: {owner}'s photo is labelled {shown}")
+    assert resolved >= 15, f"D-e resolved only {resolved} ledger photos — stem() or markup changed"
+    assert not wrong, "\n".join(wrong)
+
+
+def test_ledger_photos_are_unique():  # D-e
+    avatars = [stem(r["avatar"]) for r in REVIEWS + PENDING if r.get("avatar")]
+    assert len(avatars) == len(set(avatars)), "one photo is assigned to two buyers in data/reviews.json"
+
+
+@pytest.mark.xfail(strict=True, reason="Open Flag: breeder ruling owed on Brunner / Soliz / Brim")
+def test_no_review_awaits_a_ruling():
+    assert PENDING == []
+```
+
+- [ ] **Step 2: Run it. It must fail, and fail for the measured reasons**
+
+```bash
+python3 -m pytest tests/test_review_integrity.py -q -s 2>&1 | tail -30
+```
+Expected FAIL lines, **and no others**:
+- `test_examined_counts` → `9 carry a ledger review` (< 15)
+- `test_review_page_shows_every_confirmed_review_exactly_once` → `{'Catherine Kempf': 2, 'Brian Carr': 0}`
+- `test_review_page_schema_has_one_review_per_ledger_entry`
+- `test_no_review_repeats_within_a_page` → `african-grey-reviews: Catherine Kempf…`
+- `test_every_schema_review_is_ledgered_and_verbatim` → Perkin, Ovalle, Plaisance, Hendershot, Thomas, Tershal, Erwin, Ida Brim not in ledger
+- `test_every_review_blockquote_is_ledgered` → the pair, baby, dna/hand-raised, health-guarantee, breeding-pair, adoption-cost quotes
+- `test_no_review_awaits_a_ruling` → `XPASS(strict)` (PENDING is empty today)
+
+If a failure line appears that is **not** on this list, it's a real finding. Add it to the Task 0 Open Flags and fix it in Task 6 before moving on. Do **not** loosen the test to make it go away (`cag-gate-integrity`).
+
+- [ ] **Step 3: No commit** (red test; autopush would deploy it).
+
+---
+
+### Task 2: Fill the ledger by copy, not by typing
+
+**Files:** Create `scripts/review_inventory.py`; Modify `data/reviews.json`
+
+- [ ] **Step 1: Confirm the baby-page provenance before ledgering it**
+
+```bash
+git log -1 --format=%B b0d9f44f | grep -i -E "review|real|supplied|verbatim"; grep -rln "Joanna Thomas\|Anthony Tershal" docs sessions assets 2>/dev/null | head
+```
+Expected: a breeder-supplied source (brief, session note or commit body). **If none is found**, move the `q10` and `q11` specs below into `PENDING_SPECS` and add both names to the Open Flags ruling question. Nothing unconfirmed gets asserted (rule 11).
+
+- [ ] **Step 2: Confirm the pair-page wording and attribution against the breeder brief**
+
+```bash
+git show 8cda89e3 | sed -n 320,350p
+```
+Expected: "Review 1 — Walter Zander, Fort Washington, PA" with the "After weeks of searching…" text, and "Review 2 — Alene Murphy, Savannah, GA" with "Finding a reliable…". If the brief pairs them the other way, swap the two prefixes in the specs.
+
+- [ ] **Step 3: Write the extractor**
+
+```python
+#!/usr/bin/env python3
+"""Copy verbatim buyer reviews out of the BUILT site into data/reviews.json.
+
+The ledger is filled by copy, never by retyping: for each spec the quote comes
+from the page's own `Review` JSON-LD (exact), or — on pages with no schema —
+from the visible text node that starts with the given prefix. The avatar is the
+first <img> whose alt begins with the buyer's name.
+
+    python3 scripts/review_inventory.py            # print what would be added
+    python3 scripts/review_inventory.py --write    # append to data/reviews.json
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from html.parser import HTMLParser
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+DIST = ROOT / "dist"
+LEDGER = ROOT / "data" / "reviews.json"
+KEY = 60
+
+# (id, name, location exactly as the source page shows it, source slug, prefix if no schema, provenance, confirmed)
+CONFIRMED_SPECS = [
+    ("q6", "Stanley Perkin", "Oceanside, CA 92054", "dna-tested-african-grey-for-sale", None,
+     "breeder-supplied 2026-07-22 (commit 70786197)", "2026-07-22"),
+    ("q7", "Jesse Ovalle", "Baton Rouge, LA 70806", "dna-tested-african-grey-for-sale", None,
+     "breeder-supplied 2026-07-22 (commit 70786197)", "2026-07-22"),
+    ("q8", "Meredith Plaisance", "Hartsville, SC 29550", "african-greys-for-sale-with-health-guarantee", None,
+     "breeder-supplied, verbatim 2026-07-25", "2026-07-25"),
+    ("q9", "Jeffrey Hendershot", "Centennial, CO 80112", "african-greys-for-sale-with-health-guarantee", None,
+     "breeder-supplied, verbatim 2026-07-25", "2026-07-25"),
+    ("q10", "Joanna Thomas", "Oildale, CA", "baby-african-grey-parrot-for-sale", None,
+     "baby-page build (commit b0d9f44f, 2026-07-27)", "2026-07-27"),
+    ("q11", "Anthony Tershal", "Lakewood, WA", "baby-african-grey-parrot-for-sale", None,
+     "baby-page build (commit b0d9f44f, 2026-07-27)", "2026-07-27"),
+    ("q12", "Joshua Erwin", "San Bernardino, California", "african-grey-breeding-pair-for-sale", None,
+     "real, named, attributed quote 2026-08-07", "2026-08-07"),
+    ("q13", "Walter Zander", "Fort Washington, PA", "congo-african-grey-parrot-pair-for-sale",
+     "After weeks of searching for an affordable African grey parrot pair",
+     "breeder brief 8cda89e3 (2026-07-30)", "2026-07-30"),
+    ("q14", "Alene Murphy", "Savannah, GA", "congo-african-grey-parrot-pair-for-sale",
+     "Finding a reliable African grey parrot pair for sale",
+     "breeder brief 8cda89e3 (2026-07-30) — Savannah, GA", "2026-07-30"),
+]
+_DISPUTED = ("commit a6681e66 (2026-06-19) calls them real reviewers; memory 2026-06-26 records the set "
+             "as invented — breeder ruling owed")
+PENDING_SPECS = [
+    ("p1", "Lawrence Brunner", "Fullerton, CA", "available/roys", "I'd been burned by a deposit scam before", _DISPUTED, None),
+    ("p2", "Sandra Soliz", "Rome, GA", "available/roys", "What sold me was how well they actually knew", _DISPUTED, None),
+    ("p3", "Ida Brim", "Nashville, TN", "available/roys", "From the first email to home delivery here in Nashville", _DISPUTED, None),
+]
+
+
+def norm(s: str) -> str:
+    s = (s.replace("’", "'").replace("‘", "'")
+          .replace("“", '"').replace("”", '"').replace("\xa0", " "))
+    return re.sub(r"\s+", " ", s).strip()
+
+
+class Page(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.nodes, self.imgs, self.ld = [], [], []
+        self._skip, self._in_ld, self._ldbuf = 0, False, []
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "script" and a.get("type") == "application/ld+json":
+            self._in_ld, self._ldbuf = True, []
+        elif tag in ("script", "style"):
+            self._skip += 1
+        elif tag == "img":
+            self.imgs.append((a.get("alt") or "", a.get("src") or ""))
+
+    def handle_endtag(self, tag):
+        if tag == "script" and self._in_ld:
+            self._in_ld = False
+            try:
+                self.ld.append(json.loads("".join(self._ldbuf)))
+            except json.JSONDecodeError:
+                pass
+        elif tag in ("script", "style") and self._skip:
+            self._skip -= 1
+
+    def handle_data(self, data):
+        if self._in_ld:
+            self._ldbuf.append(data)
+        elif not self._skip and data.strip():
+            self.nodes.append(re.sub(r"\s+", " ", data).strip())
+
+
+def schema_bodies(ld) -> dict[str, str]:
+    out: dict[str, str] = {}
+
+    def walk(o):
+        if isinstance(o, list):
+            for x in o:
+                walk(x)
+        elif isinstance(o, dict):
+            if o.get("@type") == "Review":
+                a = o.get("author")
+                out.setdefault(a.get("name") if isinstance(a, dict) else a,
+                               re.sub(r"\s+", " ", o.get("reviewBody") or "").strip())
+            for v in o.values():
+                walk(v)
+
+    walk(ld)
+    return out
+
+
+def load(slug: str) -> Page:
+    p = DIST / slug / "index.html"
+    if not p.exists():
+        sys.exit(f"dist/{slug}/index.html missing — run `npx astro build` first")
+    pg = Page()
+    pg.feed(p.read_text(encoding="utf-8"))
+    return pg
+
+
+def extract(spec) -> dict:
+    rid, name, location, slug, prefix, source, confirmed = spec
+    pg = load(slug)
+    body, how = schema_bodies(pg.ld).get(name), "schema"
+    if body is None:
+        if not prefix:
+            sys.exit(f"{rid} {name}: no Review schema on {slug} and no prefix given")
+        node = next((n for n in pg.nodes if norm(n).lstrip('"').startswith(norm(prefix))), None)
+        if node is None:
+            sys.exit(f"{rid} {name}: prefix {prefix!r} not found on {slug}")
+        body, how = node.strip().strip('"“”').strip(), "visible"
+    on_page = norm(body)[:KEY] in norm("\n".join(pg.nodes))
+    avatar = next((src for alt, src in pg.imgs if alt.startswith(name)), None)
+    print(f"{rid:4s} {name:20s} via {how:7s} visible={on_page!s:5s} avatar={avatar}\n     {body[:110]}…")
+    if not on_page:
+        sys.exit(f"{rid} {name}: extracted text is not visible on {slug} — inspect before ledgering")
+    entry = {"id": rid, "quote": body, "name": name, "location": location, "bird": None,
+             "avatar": avatar, "source": f"{slug} — {source}"}
+    if confirmed:
+        entry["confirmed"] = confirmed
+    return entry
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--write", action="store_true", help="append to data/reviews.json")
+    args = ap.parse_args()
+
+    confirmed = [extract(s) for s in CONFIRMED_SPECS]
+    pending = [extract(s) for s in PENDING_SPECS]
+    if not args.write:
+        print(f"\n{len(confirmed)} confirmed + {len(pending)} pending extracted (dry run)")
+        return 0
+
+    data = json.loads(LEDGER.read_text(encoding="utf-8"))
+    have_ids = {r["id"] for r in data["reviews"]}
+    have_names = {r["name"] for r in data["reviews"]}
+    added = [e for e in confirmed if e["id"] not in have_ids and e["name"] not in have_names]
+    data["reviews"].extend(added)
+    data["pending"] = pending
+    LEDGER.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    print(f"\nwrote {len(added)} confirmed + {len(pending)} pending to {LEDGER.relative_to(ROOT)}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+- [ ] **Step 4: Dry run and read every printed quote**
+
+```bash
+python3 scripts/review_inventory.py
+```
+Expected: 12 blocks, all `visible=True`. q6–q12 `via schema`; q13, q14 and p1–p3 `via visible`. Then `9 confirmed + 3 pending extracted (dry run)`. Open each source page in `dist/` and check that the printed opening matches the card. A quote that ends mid-sentence means the card splits its text across tags: stop and inspect that page.
+
+- [ ] **Step 5: Write, then add the editorial headlines for q1–q3**
+
+```bash
+python3 scripts/review_inventory.py --write
+```
+Then, in `data/reviews.json`, add a `"headline"` key to three existing entries. These are the review page's own headlines today, moved into the ledger so the page keeps them.
+- in q1, after `"avatar": null,` → `"headline": "Affectionate, intelligent, already picking up words.",`
+- in q2, after its `"avatar": "/richard-woodard-winter-haven-fl-review.webp",` → `"headline": "They made buying a bird online stress-free.",`
+- in q3, after its `"avatar": "/catherine-kempf-schaumburg-il-review.webp",` → `"headline": "Healthy, friendly, and well-trained.",`
+
+Also extend `_comment` by one sentence: `"pending" holds reviews whose provenance is disputed; they are never rendered on /african-grey-reviews/ and are exempt only from the verbatim check until the breeder rules.`
+
+- [ ] **Step 6: Ledger ⇄ src agreement**
+
+```bash
+python3 -m pytest tests/test_review_attribution.py -q 2>&1 | tail -2
+```
+```bash
+python3 scripts/sweep_review_attribution.py --check
+```
+Expected: `3 passed` and `--check: 0 pending change(s)`. If `--check` wants to change a **location**, the ledger string differs from the page's: correct the **ledger** to the page's exact string, never the page (the one exception is Alene Murphy, fixed in Task 5), then rerun.
+
+- [ ] **Step 7: Commit point A** (no rendered page changes yet)
+
+```bash
+git add scripts/review_inventory.py data/reviews.json && git commit -m "data(reviews): ledger every real review on the built site — +9 confirmed by copy from dist, Brunner/Soliz/Brim held pending a breeder ruling
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 3: `wall` variant in Testimonials
+
+**Files:** Modify `src/components/cag-library/Testimonials.astro`
+
+- [ ] **Step 1: Widen the variant union and its doc line**
+
+Replace `@prop variant — 'grid' (3-up cards) | 'mosaic' (featured + supporting) | 'feature' (dark single review)` with
+`@prop variant — 'grid' (3-up cards, carousel ≤1024px) | 'wall' (every card visible, 1/2/3 cols) | 'mosaic' (featured + supporting) | 'feature' (dark single review)`
+
+Replace `variant?: 'grid' | 'mosaic' | 'feature';` with `variant?: 'grid' | 'wall' | 'mosaic' | 'feature';`
+
+- [ ] **Step 2: Add the wall block directly above the line `{variant === 'mosaic' && (`**
+
+```astro
+{variant === 'wall' && (
+  <div class="testimonials-wall grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {testimonials.map(t => (
+      <article class="bg-white rounded-2xl border border-line p-6 flex flex-col" style="box-shadow:0 2px 16px rgba(60,30,10,0.05);">
+        <div class="text-clay text-base" role="img" aria-label={`${t.rating ?? 5} out of 5 stars`}>{stars(t.rating)}</div>
+        {t.headline && <p class="font-display font-semibold text-[15px] mt-2 leading-snug">"{t.headline}"</p>}
+        <blockquote class="m-0 mt-2 flex-1"><p class="m-0 text-mid text-[14px] leading-relaxed">{t.quote}</p></blockquote>
+        <div class="mt-4 pt-4 border-t border-line flex items-center gap-3">
+          {t.avatarSrc
+            ? <img src={t.avatarSrc} alt={t.name} width="48" height="48" loading="lazy" decoding="async" class="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+            : <div class="w-12 h-12 rounded-full bg-clay-50 grid place-items-center text-clay font-semibold text-sm flex-shrink-0" aria-hidden="true">{t.name.split(' ').map(w => w[0]).join('').slice(0, 2)}</div>}
+          <div>
+            <div class="font-display font-semibold text-[14px]">{t.name}{t.location && `, ${t.location}`}</div>
+            {t.meta && <div class="text-xs text-mid">{t.meta}</div>}
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+)}
+```
+
+The quote goes in a `<blockquote>` so the discovery test reads it. The `grid` variant is untouched, so the homepage and trusted-breeders render byte-for-byte as before (checked in Task 6, Step 3).
+
+---
+
+### Task 4: Review page renders from the ledger
+
+**Files:** Modify `src/pages/african-grey-reviews/index.astro`
+
+- [ ] **Step 1: Import the ledger.** After `import InquiryForm from '../../components/cag-inquiry-form.astro';` add:
+
+```astro
+import reviewLedger from '../../../data/reviews.json';
+```
+
+- [ ] **Step 2: Replace the hard-coded arrays.** Replace everything from the line `// ─── Featured buyer reviews — REAL, reused verbatim from the live homepage `reviews[]`.` down to and including `const allReviews = [...featuredReviews, ...moreReviews];` with:
+
+```astro
+// ─── Reviews — rendered from data/reviews.json, the single source of truth for who said
+//     what (names from the breeder only). Every confirmed review is listed exactly once;
+//     `pending` reviews are never shown here. Guard: tests/test_review_integrity.py. ───
+type LedgerReview = {
+  id: string; quote: string; name: string; location: string;
+  bird?: string | null; avatar?: string | null; headline?: string;
+};
+const ledger = reviewLedger.reviews as LedgerReview[];
+const toCard = (r: LedgerReview) => ({
+  quote: r.quote, name: r.name, location: r.location, headline: r.headline,
+  meta: r.bird ?? undefined, avatarSrc: r.avatar ?? undefined,
+});
+// Featured: the two ledger reviews with the strongest photos (Brian Carr, Catherine Kempf).
+const FEATURED_IDS = ['q5', 'q3'];
+const featuredReviews = FEATURED_IDS.map((id) => ledger.find((r) => r.id === id)!).map(toCard);
+const moreReviews = ledger.filter((r) => !FEATURED_IDS.includes(r.id)).map(toCard);
+const allReviews = [...featuredReviews, ...moreReviews];
+```
+
+- [ ] **Step 3: Switch the grid to the wall.** Replace `<Testimonials variant="grid" testimonials={moreReviews} />` with `<Testimonials variant="wall" testimonials={moreReviews} />`.
+
+- [ ] **Step 4: Make the more-reviews intro true for every card below it (rule 10).** Replace
+
+`Nearly every family below started out nervous about buying online — and changed their mind once the paperwork arrived before payment and a healthy <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey</a> matched the listing exactly.`
+
+with
+
+`Every review below is quoted word for word from a family who brought home a Grey from us, from a single hand-raised baby to a proven breeding pair. Richard in Winter Haven admits he was hesitant about buying a bird online at first; read what changed his mind in his own words, then see how a <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey</a> is documented before it ships.`
+
+- [ ] **Step 5: FAQ answer, same reason.** In the `"Are C.A.Gs reviews real?"` answer, replace `the same verified buyers and photos we feature on our homepage, not anonymous star ratings or invented testimonials.` with `the same verified buyers and photos we feature across our site, not anonymous star ratings or invented testimonials.`
+
+Nothing else on the page changes. The hero, counter, takeaway, TOC, why-trust, birds, FAQ order and form stay as they are (rule 7: no content added or removed beyond the reviews themselves).
+
+---
+
+### Task 5: Alene Murphy's town
+
+**Files:** Modify `src/pages/congo-african-grey-parrot-pair-for-sale/index.astro`
+
+- [x] **No change needed (verified 2026-09-11).** The source already reads `<figcaption>★★★★★ Alene Murphy — Savannah, GA</figcaption>` and so does `dist/`; the plan's claim of a wrong town was the controller misreading a grep that listed both towns. The D-d test passes on this page.
+
+---
+
+### Task 5b: Restore edited reviews to the buyer's exact words
+
+**Found by the Task 1 guard on the built pages (2026-09-11), not in the original inventory.** Three pages show a real review whose first 60 characters match the ledger and whose remainder has been rewritten:
+- trusted-breeders: the visible grid **and** schema credit Woodard and Kempf with SEO phrasing ("handed me the CITES paperwork…", "is congoafricangreys.com legit")
+- timneh-for-sale: "Congo" is removed from Woodard's quote, visible and schema
+- male-vs-female: Kempf's schema `reviewBody` is cut to 125 of 257 characters
+
+The existing sweep only fixed names and towns, so this task makes it restore the text too. `--check` then guards against it recurring.
+
+**Files:** Modify `tests/test_review_attribution.py`, `scripts/sweep_review_attribution.py`, `src/pages/trusted-african-grey-parrot-breeders/index.astro` (by the sweep), `src/pages/timneh-african-grey-for-sale/index.astro` (by the sweep), `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro` (one schema line)
+
+- [ ] **Step 1: Failing src test.** Append to `tests/test_review_attribution.py`:
+
+```python
+def _norm(s: str) -> str:
+    s = (s.replace("\u2019", "'").replace("\u2018", "'")
+          .replace("\u201c", '"').replace("\u201d", '"').replace("\xa0", " "))
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def test_every_src_review_is_verbatim():
+    """A review that opens with a ledger quote must BE that quote — no rewriting past the key."""
+    data = _load_json()
+    canonical = {r["quote"][:KEY]: r for r in data["reviews"]}
+    bad = []
+    for path, quote, name, _loc in _src_reviews():
+        ref = canonical.get(quote[:KEY])
+        if ref is not None and _norm(quote) != _norm(ref["quote"]):
+            bad.append(f"{path.relative_to(ROOT)}: {ref['id']} ({name}) is edited after the first {KEY} characters")
+    assert not bad, "\n".join(bad)
+```
+Run `python3 -m pytest tests/test_review_attribution.py::test_every_src_review_is_verbatim -q 2>&1 | tail -8`. Expected: FAIL, naming trusted-breeders (q2, q3) and timneh-for-sale (q2) and nothing else.
+
+- [ ] **Step 2: The sweep restores the text.** In `scripts/sweep_review_attribution.py`:
+  - add, after `def unescape`, the same `_norm` as above, named `norm_text`;
+  - in `rewrite_object`, replace the block
+    ```python
+    ref = by_key.get(quote[:KEY])
+    if ref is not None:
+        body = set_field(body, NAME_RE, ref["name"], changes, "name")
+    ```
+    with
+    ```python
+    ref = by_key.get(quote[:KEY])
+    if ref is not None:
+        if norm_text(quote) != norm_text(ref["quote"]):
+            body = set_field(body, QUOTE_RE, ref["quote"], changes, "quote")
+        body = set_field(body, NAME_RE, ref["name"], changes, "name")
+    ```
+  - add one line to the module docstring's pass 2: `and, when the text past the key has been edited, the ledger's verbatim quote`.
+
+- [ ] **Step 3: Preview, then apply**
+```bash
+python3 scripts/sweep_review_attribution.py --check
+```
+Expected: exactly 3 `quote` changes (trusted-breeders ×2, timneh-for-sale ×1), then `--check: 3 pending change(s) in 2 file(s)`. Anything more means stop and inspect.
+```bash
+python3 scripts/sweep_review_attribution.py && python3 scripts/sweep_review_attribution.py --check
+```
+Expected: `wrote 2 file(s), 3 value(s) changed`, then `0 pending change(s)`.
+
+- [ ] **Step 4: The male-vs-female schema line** is a nested object the sweep cannot see. Replace its Kempf `reviewBody` by copying from the ledger. Don't retype it:
+```bash
+python3 - <<'PY'
+import json, re
+from pathlib import Path
+q3 = next(r["quote"] for r in json.load(open("data/reviews.json"))["reviews"] if r["id"] == "q3")
+p = Path("src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro")
+s = p.read_text(encoding="utf-8")
+pat = re.compile(r'(name: "Catherine Kempf" \}, reviewRating: \{[^}]*\}, reviewBody: )"[^"]*"')
+assert len(pat.findall(s)) == 1, "expected exactly one Kempf schema line"
+s = pat.sub(lambda m: m.group(1) + json.dumps(q3, ensure_ascii=False), s)
+p.write_text(s, encoding="utf-8")
+print("male-vs-female Kempf reviewBody = ledger q3")
+PY
+```
+
+- [ ] **Step 5:** `python3 -m pytest tests/test_review_attribution.py -q 2>&1 | tail -2`. Expected: `4 passed`.
+
+---
+
+### Task 6: Build and turn the guard GREEN
+
+- [ ] **Step 1: Build**
+
+```bash
+npx astro build 2>&1 | tail -3
+```
+Expected: build completes, no errors.
+
+- [ ] **Step 2: Run the guard**
+
+```bash
+python3 -m pytest tests/test_review_integrity.py -v -s 2>&1 | tail -20
+```
+Expected: 13 passed, 1 xfailed (`test_no_review_awaits_a_ruling`). `test_examined_counts` must print `examined 64 non-location pages; 15 carry a ledger review` (or higher). If it prints fewer than 60, the guard examined too little to trust (`cag-gate-integrity`).
+
+- [ ] **Step 3: The shared component didn't move other pages.** Never use `git stash` here (the tree holds unrelated uncommitted work, and a stray pop can clobber it). Compare against the `dist/` snapshot copied to the session scratchpad **before** Tasks 3–4 edited anything (`cp -R dist <scratchpad>/dist-before`):
+
+```bash
+diff -rq <scratchpad>/dist-before dist | grep -v -E "_astro/|sitemap"
+```
+Expected: only these differ: `african-grey-reviews`, `trusted-african-grey-parrot-breeders`, `timneh-african-grey-for-sale`, `male-vs-female-african-grey-parrots-for-sale` (each `/index.html`). The congo pair page is **not** in the set (Task 5 turned out to be a no-op). Any other page in the list is an unintended change: fix it before continuing.
+
+---
+
+### Task 7: Gates
+
+- [ ] **Step 1: Meta gate first (the check that checks the checkers)**
+
+```bash
+npm run test:render:meta 2>&1 | tail -5
+```
+Expected: all pass.
+
+- [ ] **Step 2: All review guards**
+
+```bash
+python3 -m pytest tests/test_review_integrity.py tests/test_review_attribution.py tests/test_homepage_reviews.py -q 2>&1 | tail -2
+```
+```bash
+python3 scripts/sweep_review_attribution.py --check
+```
+Expected: `19 passed, 1 xfailed` (integrity 13 + attribution 4 + homepage 2); `0 pending change(s)`.
+
+- [ ] **Step 3: DUP before/after**
+
+```bash
+python3 scripts/dup_content_audit.py > "$TMPDIR/dup-after.txt" 2>&1; diff <(tail -5 "$TMPDIR/dup-before.txt") <(tail -5 "$TMPDIR/dup-after.txt")
+```
+Expected: no new findings. The review sections sit inside `#featured-reviews` / `#more-reviews`, which `CHROME_RE` skips. Any new row must be read on the built page before anyone acts on it.
+
+- [ ] **Step 4: Page hardening + final pass on both changed pages**
+
+```bash
+python3 scripts/page_hardening_scan.py african-grey-reviews; python3 scripts/page_hardening_scan.py congo-african-grey-parrot-pair-for-sale
+```
+Then run the `cag-final-page-pass` skill on both slugs. Expected: no new ERROR rows compared with the pre-change build. Confirm every flagged row on the built page before editing.
+
+- [ ] **Step 5: Render harness pages run**
+
+```bash
+npm run test:render:pages 2>&1 | tail -8
+```
+Expected: the pages gate is still green (57/57 at baseline). Any new DUP row whose text is a ledger quote is the known parity gap: record it in the report, don't rewrite the review. Any other new row: stop and investigate.
+
+---
+
+### Task 8: Local browser proof (before commit)
+
+- [ ] **Step 1: Serve dist in the Browser pane.** Use the `.claude/launch.json` preview entry. If there's none, add `{"name":"astro-preview","runtimeExecutable":"npx","runtimeArgs":["astro","preview","--port","4331"],"port":4331}` and call `preview_start` with `name: "astro-preview"`. Navigate to `/african-grey-reviews/`.
+
+- [ ] **Step 2: Scroll to the bottom and back so lazy avatars load** (still-loading ≠ broken), then run this probe with `javascript_tool`:
+
+```js
+(() => {
+  const want = ["Clifford Hutter","Richard Woodard","Catherine Kempf","Archie O'Brien","Brian Carr",
+    "Stanley Perkin","Jesse Ovalle","Meredith Plaisance","Jeffrey Hendershot","Joanna Thomas",
+    "Anthony Tershal","Joshua Erwin","Walter Zander","Alene Murphy"];
+  const txt = ["featured-reviews","more-reviews"].map(id => document.getElementById(id)?.innerText || "").join("\n");
+  const counts = Object.fromEntries(want.map(n => [n, txt.split(n).length - 1]));
+  const ld = [...document.querySelectorAll('script[type="application/ld+json"]')]
+    .flatMap(s => { const j = JSON.parse(s.textContent); return Array.isArray(j) ? j : [j]; })
+    .filter(o => o["@type"] === "Review").map(o => o.author.name);
+  const broken = [...document.querySelectorAll("#featured-reviews img, #more-reviews img")]
+    .filter(i => i.complete && i.naturalWidth === 0).map(i => i.src);
+  const overflow = document.documentElement.scrollWidth > document.documentElement.clientWidth;
+  return { notOnce: want.filter(n => counts[n] !== 1), ldCount: ld.length,
+           ldDup: ld.filter((n, i) => ld.indexOf(n) !== i), broken, overflow };
+})()
+```
+Expected: `{ notOnce: [], ldCount: 14, ldDup: [], broken: [], overflow: false }`. Adjust the expected names if Task 2 moved q10/q11 to pending.
+
+- [ ] **Step 3: Repeat at 375, 768 and 1280** with `resize_window` (reload after each). Then `read_console_messages` with `onlyErrors: true` (expected: none), and take a screenshot of `#more-reviews` at each width.
+
+- [ ] **Step 4: Preview before apply (rule 7).** Send the three screenshots with `SendUserFile`, captioned "wall layout: every review visible, 1/2/3 columns". Continue once the breeder approves the layout.
+
+---
+
+### Task 9: Commit, deploy, verify live
+
+- [ ] **Step 1: Commit point B** (only after Tasks 6–8 are green and the layout is approved)
+
+```bash
+git add tests/test_review_integrity.py tests/test_review_attribution.py scripts/sweep_review_attribution.py src/components/cag-library/Testimonials.astro src/pages/african-grey-reviews/index.astro src/pages/trusted-african-grey-parrot-breeders/index.astro src/pages/timneh-african-grey-for-sale/index.astro src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro && git commit -m "feat(reviews): /african-grey-reviews/ lists every ledger review once (14, was 4 with Kempf twice); wall variant; Alene Murphy back to Savannah, GA; edited Woodard/Kempf quotes restored verbatim on trusted-breeders, timneh, male-vs-female; dist guard for review dup/attribution/town/photo
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+```
+The autopush hook pushes; `main` deploys.
+
+- [ ] **Step 2: Wait for the deploy to be live** (curl without `-L`, per memory)
+
+```bash
+until curl -s https://congoafricangreys.com/african-grey-reviews/ | grep -q "Walter Zander"; do sleep 30; done; echo LIVE
+```
+
+- [ ] **Step 3: Live Playwright proof.** With the Playwright MCP tools: `browser_navigate` to `https://congoafricangreys.com/african-grey-reviews/`, then `browser_resize` 375×812, 768×1024 and 1280×900 in turn. At each width, scroll to the bottom, run the Task 8 probe with `browser_evaluate`, and `browser_take_screenshot` of the review sections. Also `browser_navigate` to `/congo-african-grey-parrot-pair-for-sale/` and `browser_evaluate` `[...document.querySelectorAll('figcaption')].map(f => f.innerText).filter(t => /Murphy|Zander/.test(t))`. Expected: `["★★★★★ Walter Zander — Fort Washington, PA", "★★★★★ Alene Murphy — Savannah, GA"]`. `browser_console_messages` → no errors.
+
+---
+
+### Task 10: IndexNow
+
+- [ ] **Step 1:** Submit every slug whose rendered output changed (Task 6 Step 3 listed them):
+
+```bash
+python3 scripts/indexnow_submit.py african-grey-reviews
+```
+```bash
+python3 scripts/indexnow_submit.py trusted-african-grey-parrot-breeders
+```
+```bash
+python3 scripts/indexnow_submit.py timneh-african-grey-for-sale
+```
+```bash
+python3 scripts/indexnow_submit.py male-vs-female-african-grey-parrots-for-sale
+```
+Expected: both report a 200/202 submission.
+
+---
+
+### Task 11: Apply the breeder's ruling on Brunner / Soliz / Brim (blocked on the question)
+
+**Files:** `data/reviews.json`, `tests/test_review_integrity.py`, and, in branch B, the 9 pages that carry the trio: `src/pages/available/{index,amie,bery,elad,evie,jins-jeni,roys}/index.astro`, `src/pages/african-grey-parrot-adoption-cost/index.astro`, `src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro`.
+
+- [ ] **Branch A — they are real.**
+  1. In `data/reviews.json`, move p1–p3 from `pending` into `reviews` as `q15`, `q16`, `q17` (same fields; `"confirmed"` = the ruling date; `"source"` gets "breeder ruling <date>" appended). Set `"pending": []`.
+  2. In the male-vs-female page **and in `src/pages/available/index.astro`** (both carry the short wording), replace the trimmed Ida text **everywhere it appears in each file** (cards + schema; use `replace_all`): `From the first email to home delivery, everything was exactly as promised. My grey arrived hand-raised, weaned, and confident — with his health certificate and CITES documents in hand.` becomes the exact `quote` of q17 from the ledger, copied out of `data/reviews.json`, not typed. If the breeder says the **shorter** text is her wording, the ledger `quote` becomes the short text instead, and the 7 pages with the longer text (6 bird pages + adoption-cost) are the ones to change.
+  3. In the test, delete the `xfail` decorator line **and** the `# awaiting the breeder's ruling` exemption block (the two lines starting `if any(n in q for n in PENDING_NAMES):`).
+  4. Build; run Task 7 Step 2 (expected: all pass, none xfailed); add the three names to the Task 8 probe (`ldCount: 17`).
+- [ ] **Branch B — they are not real** (precedent: commit cdea9d9, 2026-06-26).
+  1. Find every occurrence: `grep -n "Lawrence Brunner\|Sandra Soliz\|Ida Brim" src/pages/available/*/index.astro src/pages/available/index.astro src/pages/african-grey-parrot-adoption-cost/index.astro src/pages/male-vs-female-african-grey-parrots-for-sale/index.astro`.
+  2. Delete each card (bird pages: from `{/* Review N — Name */}` through that card's closing tag; adoption-cost and male-vs-female: the `stories` array object **and** its schema `Review` line). A section left with no cards loses its whole section and its TOC entry, and the TOC is renumbered, exactly as in cdea9d9.
+  3. Set `"pending": []`; delete the `xfail` decorator and the exemption block as in A.3.
+  4. Build; run Tasks 6–7. Task 6 Step 3's diff now lists the 9 pages.
+- [ ] **Then (both branches):** screenshot-preview the changed pages (rule 7), commit point C (stage only the files touched), wait for live, repeat the Task 9 Step 3 probe, and run IndexNow for every changed slug (the Task 6 Step 3 diff lists them).
+
+---
+
+### Task 12: Report, memory, close
+
+- [ ] **Step 1: Gate report deliverable (rule 13).** Write `docs/artifacts/cags-review-consolidation-report.md` with these sections: Before/After inventory table, gate results with examined counts, the live Playwright probe output at each width plus screenshots, the DUP before/after, and the Open Flags. Wrap it in `docs/artifacts/cags-review-consolidation-report.html`: markdown in a `<script type="text/markdown">`, rendered at load, copy button per section, Download .md. Publish it as an Artifact and send the link.
+- [ ] **Step 2: Memory.** Update `project_testimonials_fabricated_removed.md` and `project_de_optimisation_evidence_pass.md`. Record that the ledger now has 14 confirmed plus the ruling outcome, the review page renders from the ledger, and the guard is `tests/test_review_integrity.py`. Add one line for this work to `MEMORY.md`.
+- [ ] **Step 3: Learning loop.** Run `cag-learning-loop`. The escape (hard-coded cards invisible to the flat-object scanner) is charged to the harness, and the dist guard is the fix. No new rule gets written.
+- [ ] **Step 4: Docs commit point D** (plan, report, session brief), then `session-closer`.
+
+```bash
+git add docs/superpowers/plans/2026-09-11-review-consolidation.md docs/artifacts/cags-review-consolidation-report.md docs/artifacts/cags-review-consolidation-report.html sessions/2026-09-11-review-consolidation.md && git commit -m "docs(reviews): consolidation plan, gate report, session brief
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+```
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+(function(){
+  var SRC = document.getElementById('plan-md').textContent.replace(/^\n/, '').replace(/\n$/, '');
+  var toast = document.getElementById('toast'), tt;
+  function say(msg){ toast.textContent = msg; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(function(){ toast.classList.remove('show'); }, 1400); }
+  function copy(text, label){
+    function fallback(){ var t = document.createElement('textarea'); t.value = text; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); say(label + ' copied'); }catch(e){ say('Copy blocked — select the text instead'); } t.remove(); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ say(label + ' copied'); }, fallback); else fallback();
+  }
+  document.getElementById('copy-all').addEventListener('click', function(){ copy(SRC, 'Whole plan'); });
+
+  // Split on ## / ### headings outside code fences; each block keeps its exact markdown.
+  var lines = SRC.split('\n'), secs = [], cur = {level: 1, title: 'Goal & architecture', md: []}, fence = false;
+  lines.forEach(function(line){
+    if (/^```/.test(line)) fence = !fence;
+    var m = !fence && /^(#{1,3}) (.+)$/.exec(line);
+    if (m && m[1].length === 1) return; // page title lives in the masthead
+    if (m){ if (cur.md.join('').trim()) secs.push(cur); cur = {level: m[1].length, title: m[2], md: [line]}; }
+    else cur.md.push(line);
+  });
+  if (cur.md.join('').trim()) secs.push(cur);
+
+  var main = document.getElementById('plan'), rail = document.getElementById('rail'), mtoc = document.getElementById('mtoc');
+  marked.setOptions({gfm: true});
+  secs.forEach(function(s, i){
+    var id = 's' + i, md = s.md.join('\n').trim();
+    var sec = document.createElement('section');
+    sec.className = 'sec l' + s.level + (/open question/i.test(s.title) ? ' question' : '');
+    sec.id = id;
+    var bodyMd = s.level > 1 ? md.replace(/^#{2,3} .+\n?/, '') : md;
+    var tag = s.level === 3 ? 'h3' : 'h2';
+    var head = document.createElement('div'); head.className = 'sec-head';
+    var h = document.createElement(tag);
+    var task = /^Task (\d+): (.+)$/.exec(s.title);
+    if (task){ h.textContent = task[2]; h.setAttribute('data-kind', 'Task ' + task[1]); }
+    else { h.textContent = s.title.replace(/^\d+\.\s*/, ''); if (s.level === 3) h.setAttribute('data-kind', 'Section'); }
+    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'copy'; btn.textContent = 'Copy section';
+    btn.addEventListener('click', function(){ copy(md, task ? 'Task ' + task[1] : 'Section'); });
+    head.appendChild(h); head.appendChild(btn);
+    var body = document.createElement('div'); body.className = 'body'; body.innerHTML = marked.parse(bodyMd);
+    body.querySelectorAll('table').forEach(function(t){ var w = document.createElement('div'); w.className = 'tbl'; t.parentNode.insertBefore(w, t); w.appendChild(t); });
+    body.querySelectorAll('pre').forEach(function(p){
+      var w = document.createElement('div'); w.className = 'pre-wrap'; p.parentNode.insertBefore(w, p); w.appendChild(p);
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'copy'; b.textContent = 'Copy';
+      b.addEventListener('click', function(){ copy(p.innerText.replace(/\n$/, ''), 'Block'); }); w.appendChild(b);
+    });
+    body.querySelectorAll('input[type=checkbox]').forEach(function(c){ c.removeAttribute('disabled'); });
+    sec.appendChild(head); sec.appendChild(body); main.appendChild(sec);
+
+    var label = task ? task[1] + ' · ' + task[2] : h.textContent;
+    var a = document.createElement('a'); a.href = '#' + id; a.textContent = label; a.className = 'l' + s.level;
+    a.addEventListener('click', function(){ rail.querySelectorAll('a').forEach(function(x){ x.classList.remove('on'); }); a.classList.add('on'); });
+    var li = document.createElement('li'); li.appendChild(a); rail.appendChild(li);
+    if (s.level === 2 || i === 0){ var ml = document.createElement('li'); var ma = document.createElement('a'); ma.href = '#' + id; ma.textContent = label; ml.appendChild(ma); mtoc.appendChild(ml); }
+  });
+  var first = rail.querySelector('a'); if (first) first.classList.add('on');
+})();
+</script>
