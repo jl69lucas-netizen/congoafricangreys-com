@@ -8,14 +8,14 @@ export interface Props {
   variant?: 'banner' | 'split' | 'footer';
   title?: string;
   body?: string;
-  action?: string;       // form action URL — defaults to '#'
+  action?: string;       // form action URL — defaults to Formspree xrejpnvn (2026-09-11 one-endpoint rule)
   perks?: string[];
 }
 const {
   variant = 'banner',
   title = 'Get priority access to new Grey clutches',
   body = 'Join 420+ families on our priority list. First to know when chicks are born — before they go public.',
-  action = '#',
+  action = 'https://formspree.io/f/xrejpnvn',
   perks = [
     'Weekly clutch updates',
     'Exclusive early reservation',
@@ -43,8 +43,10 @@ const {
       <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-[13px]">
         {perks.map(p => <span class="flex items-center gap-1.5"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> <span>{p}</span></span>)}
       </div>
-      <form action={action} class="newsletter-input-row mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-        <input type="email" required placeholder="Enter your email address…" class="flex-1 rounded-full bg-white text-ink px-5 py-3.5 placeholder:text-mute outline-none focus:ring-4 focus:ring-white/30" />
+      <form action={action} method="POST" class="newsletter-input-row mt-7 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+        <input type="hidden" name="_subject" value="Newsletter Signup — CongoAfricanGreys.com" />
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
+        <input type="email" name="email" required placeholder="Enter your email address…" class="flex-1 rounded-full bg-white text-ink px-5 py-3.5 placeholder:text-mute outline-none focus:ring-4 focus:ring-white/30" />
         <button class="newsletter-btn bg-white text-clay hover:bg-cream transition rounded-full px-6 py-3.5 font-semibold text-[14px] flex items-center justify-center gap-2 cag-warm-shadow">
           <img src="/emoji/cag-congo-64.webp" alt="" class="cag-emoji" loading="lazy"  srcset="/emoji/cag-congo-32.webp 1x, /emoji/cag-congo-64.webp 2x" /> Subscribe
         </button>
@@ -67,8 +69,10 @@ const {
       <ul class="mt-4 space-y-2 text-[14px] text-mid">
         {perks.map(p => <li class="flex items-start gap-2"><span class="text-forest">✓</span> {p}</li>)}
       </ul>
-      <form action={action} class="mt-6 space-y-3">
-        <input type="email" required placeholder="Enter your email address…" class="w-full bg-warm border border-line rounded-xl px-4 py-3 outline-none focus:border-clay focus:ring-4 focus:ring-clay/15 transition" />
+      <form action={action} method="POST" class="mt-6 space-y-3">
+        <input type="hidden" name="_subject" value="Newsletter Signup — CongoAfricanGreys.com" />
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
+        <input type="email" name="email" required placeholder="Enter your email address…" class="w-full bg-warm border border-line rounded-xl px-4 py-3 outline-none focus:border-clay focus:ring-4 focus:ring-clay/15 transition" />
         <button class="w-full bg-clay hover:bg-clay-dk transition text-white rounded-xl px-5 py-3 font-semibold cag-glow flex items-center justify-center gap-2">Subscribe me <img src="/emoji/cag-congo-64.webp" alt="" class="cag-emoji" loading="lazy"  srcset="/emoji/cag-congo-32.webp 1x, /emoji/cag-congo-64.webp 2x" /></button>
       </form>
       <p class="text-xs text-mute mt-3 text-center">We email about new clutches only. Unsubscribe in one click.</p>
@@ -83,9 +87,11 @@ const {
       <h3 class="font-display font-bold text-3xl mt-2 leading-tight">{title}</h3>
       <p class="text-white/60 mt-2 text-[14px]">{body}</p>
     </div>
-    <form action={action} class="space-y-2">
+    <form action={action} method="POST" class="space-y-2">
+      <input type="hidden" name="_subject" value="Newsletter Signup — CongoAfricanGreys.com" />
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
       <div class="flex bg-white/10 backdrop-blur rounded-full p-1.5 border border-white/20 focus-within:border-clay transition">
-        <input type="email" required placeholder="you@yourdomain.com" class="flex-1 bg-transparent px-4 py-2 outline-none placeholder:text-white/40" />
+        <input type="email" name="email" required placeholder="you@yourdomain.com" class="flex-1 bg-transparent px-4 py-2 outline-none placeholder:text-white/40" />
         <button class="bg-clay hover:bg-clay-dk transition rounded-full px-5 py-2 text-[13px] font-semibold cag-glow">Subscribe →</button>
       </div>
       <div class="flex gap-4 text-xs text-white/50">
