@@ -1,5 +1,6 @@
 ---
 import { srcsetFor, srcsetAttrs } from '../lib/srcset';
+import { HERO_IMG, HERO_WIDTHS, HERO_SIZES } from '../lib/homeHero';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import MapPin from '../components/MapPin.astro';
 import Schema from '../components/Schema.astro';
@@ -329,12 +330,12 @@ const birdListSchema = {
   }))
 };
 
-// The hero preload must list the same candidates as HeroV3's <img srcset={srcsetFor(heroImg, [300])}>
-// — derive both from the same call so they can never drift apart.
-const heroSrcset = srcsetFor('/african-grey-parrot-breeder-midland-tx-hero.webp', [300]);
+// The hero preload must list the same candidates and sizes as HeroV3's <img> — both read
+// src/lib/homeHero.ts so they can never drift apart.
+const heroSrcset = srcsetFor(HERO_IMG, HERO_WIDTHS);
 ---
 
-<BaseLayout {title} {description} {canonical} extraHeadHtml={`<link rel="preload" as="image" href="/african-grey-parrot-breeder-midland-tx-hero.webp"${heroSrcset ? ` imagesrcset="${heroSrcset}" imagesizes="300px"` : ''} fetchpriority="high" type="image/webp" />`}>
+<BaseLayout {title} {description} {canonical} extraHeadHtml={`<link rel="preload" as="image" href="${HERO_IMG}"${heroSrcset ? ` imagesrcset="${heroSrcset}" imagesizes="${HERO_SIZES}"` : ''} fetchpriority="high" type="image/webp" />`}>
 
 <style is:global>
 /* ============================================================
@@ -363,7 +364,15 @@ const heroSrcset = srcsetFor('/african-grey-parrot-breeder-midland-tx-hero.webp'
   font-variation-settings:'opsz' 18;
   letter-spacing:-.003em;
 }
-.home-d .hero-v3-b h1 { font-size:clamp(1.8rem, 1.2rem + 2.6vw, 2.4rem) !important; line-height:1.12 !important; font-weight:500 !important; }
+/* Hero round 5 "Paperwork card" (2026-09-11). The H1 is ALWAYS two lines (breeder):
+   "Congo and Timneh African Grey" / "Breeder in Midland, Texas", each a nowrap block. Its size
+   tracks the copy column (a size container in HeroV3): line 1 measured 13.51× the font size in
+   Newsreader 500 opsz 18, so 7cqi fills ~95% of the column and leaves slack for the fallback.
+   ≈24px at 375 · 28px at 768 · 32px at 1024 · 38px at 1280+. Lead 14.5 / 15.5 / 16px. */
+.home-d .hero-v3-b h1 { font-size:clamp(20px, 7cqi, 44px) !important; line-height:1.14 !important; font-weight:500 !important; }
+.home-d .hero-v3-b h1 + p { font-size:14.5px !important; line-height:1.6 !important; }
+@media (min-width:1024px){ .home-d .hero-v3-b h1 { line-height:1.1 !important; } .home-d .hero-v3-b h1 + p { font-size:15.5px !important; } }
+@media (min-width:1280px){ .home-d .hero-v3-b h1 + p { font-size:16px !important; } }
 .home-d .hero-v3-b .text-clay { font-style:italic; font-weight:500; }
 
 /* --- WCAG AA (2026-06-03): clay TEXT + muted grays on the homepage's LIGHT
@@ -377,7 +386,6 @@ const heroSrcset = srcsetFor('/african-grey-parrot-breeder-midland-tx-hero.webp'
 .home-d .text-stone-400 { color:#6b6259; }
 .home-d .text-stone-500 { color:#5f574e; }
 
-/* --- HERO PORTRAIT: CIRCLE KEPT (no radius override) --- */
 
 /* --- DIVIDERS + COMPACT RHYTHM: clear lines, no big gaps --- */
 .home-d > * + * { border-top:1px solid var(--rule); }

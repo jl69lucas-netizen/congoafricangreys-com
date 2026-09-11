@@ -1,34 +1,35 @@
 ---
 import { srcsetAttrs } from '../../lib/srcset';
+import { HERO_IMG, HERO_WIDTHS, HERO_SIZES } from '../../lib/homeHero';
 /**
- * cag-hero-v3:b — "Authority Green"
- * Source design: UNIQUE CAGs NEW COMPONENTS.zip → standalone/Hero B - Authority Green.html
- * Ported to the site's Tailwind tokens. Trust-first forest-green hero with a circular
- * framed bird photo, ring accent, floating availability pill, eyebrow + trust pills.
- * Content corrected to contract: C.A.Gs voice · CITES Appendix I · real photo · no phone.
- * Single consumer: `/` (homepage) — the `#proof` link only resolves there.
+ * cag-hero-v3:b — homepage hero, round-5 variation A "Paperwork card" (breeder pick 2026-09-11).
+ * Design source: docs/design/homepage-hero-r5/ (canvas 6881b0e8). Visual layer only: the copy
+ * is the previous HeroV3 copy verbatim.
  *
- * Contrast (2026-09-09): the copy column sits on an opaque dark-green scrim (#0f3d2c, the
- * same bed as the image stage) so the clay H1 span reads 3.6:1 (large text needs 3:1);
- * every other text colour is a full-opacity tint pre-blended over that scrim, because
- * a11y-text-contrast-aa cannot judge translucent foregrounds (Tailwind emits oklab()).
- * The lead paragraph carries its colour INLINE: two `h1 + p` rules (body.theme-d in the
- * layout, .home-d on the page) force ink !important and both exempt only [style*=color].
+ * Layout: copy sits straight on the forest-dark scrim (#0f3d2c); the Midland photo is a cream
+ * "document" card that also carries the four credentials. The card comes FIRST in source, so
+ * it leads on mobile (stacked) and tablet (left column); from lg it moves to the right.
+ * Desktop target 350–450px tall (breeder ceiling, 2026-09-11).
+ *
+ * Contrast: the clay H1 span reads 3.45:1 on #0f3d2c (large text needs 3:1). The lead
+ * paragraph keeps its colour INLINE because two `h1 + p` rules (body.theme-d and .home-d)
+ * force ink !important and exempt only [style*=color]. The availability pill is deliberately
+ * almost transparent (breeder: the two Greys' faces must show) — a 28% scrim tint plus a
+ * text-shadow keeps the white text legible over the floor fabric it sits on. It sits
+ * bottom-LEFT: the faces are in the top half of every crop, and at 1024–1420px the fixed
+ * desktop JumpRail covers the card's right edge (measured 59px at 1280).
+ * Single consumer: `/` (homepage) — the `#proof` link only resolves there.
  */
 interface Props {
   availableCount?: number;
 }
 const { availableCount = 8 } = Astro.props;
 
-// heroImg and the sizes="300px" on its <img> are a pair, measured against the 220/260/300
-// circular stage. The homepage preload derives from the same srcsetFor(heroImg, [300]) call —
-// keep them in step.
-const heroImg = "/african-grey-parrot-breeder-midland-tx-hero.webp";
 const heroAlt =
   "Hand-raised Congo African Grey parrot with silver-scalloped grey plumage and a red tail in the Benjamin family aviary";
 
 // Breeder ruling (2026-09-10): the credential entities are named in the pills; the
-// paragraph links the proof list (#proof).
+// paragraph links the proof list (#proof). tests/test_homepage_entities.py guards this list.
 const pills = [
   "USDA AWA Licensed",
   "CITES Appendix I Documented",
@@ -37,106 +38,77 @@ const pills = [
 ];
 ---
 
-<section class="hero-v3-b relative overflow-hidden bg-green text-white">
-  <!-- warm radial glow -->
-  <div
-    class="pointer-events-none absolute inset-0 opacity-60"
-    style="background: radial-gradient(900px 520px at 78% 28%, rgba(232,96,76,0.22), transparent 60%);"
-  >
-  </div>
-
+<section class="hero-v3-b relative overflow-hidden border-b border-green bg-[#0f3d2c] text-white">
   <div class="container relative z-10 mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-12">
-    <div class="grid items-center gap-10 py-8 md:grid-cols-2 md:gap-8 md:py-12 lg:py-12">
+    <div class="grid items-center gap-[22px] pt-5 pb-7 md:grid-cols-[292px_minmax(0,1fr)] md:gap-8 md:py-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-12 lg:py-7 xl:grid-cols-[minmax(0,1fr)_492px] xl:gap-16">
 
-      <!-- COPY -->
-      <div class="order-2 rounded-2xl bg-[#0f3d2c] px-5 py-6 text-center md:order-1 md:px-8 md:py-8 md:text-left">
-        <span
-          class="font-sora text-xs font-medium tracking-[0.12em] text-[#9fb1ab] md:text-xs"
-        >
+      <!-- PAPERWORK CARD — photo + credentials; first on mobile/tablet -->
+      <div class="flex flex-col gap-3.5 rounded-[18px] bg-[#faf7f4] p-3 shadow-[0_24px_60px_rgba(0,0,0,0.28)] lg:order-2 lg:p-3.5">
+        <div class="relative overflow-hidden rounded-xl bg-[#234f3b]">
+          <img
+            src={HERO_IMG}
+            alt={heroAlt}
+            width="800"
+            height="600"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            class="block h-[168px] w-full object-cover object-[50%_24%] md:h-[150px] lg:h-[200px] lg:object-[50%_40%] xl:h-[232px]"
+            {...srcsetAttrs(HERO_IMG, HERO_WIDTHS, HERO_SIZES)}
+          />
+          <span
+            class="font-sora absolute left-2.5 bottom-2.5 inline-flex items-center gap-[7px] whitespace-nowrap rounded-full border border-[rgba(250,247,244,0.55)] bg-[rgba(15,61,44,0.28)] px-3 py-[5px] text-[12.5px] font-semibold leading-[18px] text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]"
+          >
+            <span class="h-2 w-2 rounded-full bg-clay" aria-hidden="true"></span>
+            {availableCount} Birds Available Now
+          </span>
+        </div>
+        <div class="flex flex-col gap-2.5 px-1 pb-1">
+          <span class="font-sora text-[12.5px] font-semibold uppercase leading-4 tracking-[0.1em] text-clay-text" aria-hidden="true">Breeder credentials</span>
+          <ul class="grid grid-cols-2 gap-x-4 gap-y-2 md:grid-cols-1 lg:grid-cols-2" aria-label="Breeder credentials">
+            {pills.map((p) => (
+              <li class="font-sora flex items-start gap-2 text-[12.5px] font-medium leading-5 text-[#1f2a24] md:text-[13px]">
+                <svg class="mt-0.5 flex-none" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#b04228" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.4l3.3 3.3L13 5"></path></svg>
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <!-- COPY — straight on the scrim -->
+      <!-- [container-type:inline-size] lets the H1 size itself to this column (cqi) so it is
+           always exactly two lines (breeder, 2026-09-11). -->
+      <div class="flex flex-col gap-3 [container-type:inline-size] lg:order-1 lg:gap-3.5">
+        <span class="font-sora block text-[13px] font-medium leading-[18px] tracking-[0.1em] text-[#9fb1ab]">
           C.A.Gs &middot; Family Aviary Since 2014
         </span>
 
-        <h1
-          class="font-lora mt-4 text-3xl font-bold leading-[1.08] sm:text-4xl md:text-[2.25rem] lg:text-[2.5rem] md:leading-[1.1]"
-        >
-          Congo and Timneh African Grey Breeder in <span class="text-clay">Midland, Texas</span>
+        <h1 class="font-lora text-[#faf7f4]">
+          <span class="block whitespace-nowrap">Congo and Timneh African Grey</span>
+          <span class="block whitespace-nowrap">Breeder in <span class="text-clay">Midland, Texas</span></span>
         </h1>
 
-        <p
-          class="hero-lead font-sora mx-auto mt-3 max-w-xl text-[15px] leading-relaxed md:mx-0 md:text-base"
-          style="color:#cfd8d5"
-        >
+        <p class="hero-lead font-sora max-w-[58ch]" style="color:#cfd8d5">
           Mark &amp; Teri Benjamin have hand-raised captive-bred Congo and Timneh African Greys in our
           family home since 2014. Every Grey is lab-sexed, avian-vet certified and
-          <a href="#proof" class="underline decoration-clay/40 underline-offset-2 hover:decoration-clay">documented</a>
+          <a href="#proof" class="underline decoration-clay/55 underline-offset-[3px] hover:decoration-clay">documented</a>
           before it leaves us — never wild-caught, always with lifetime breeder support.
         </p>
 
-        <div class="mt-5 flex flex-wrap justify-center gap-3 md:justify-start">
+        <div class="flex flex-col gap-2.5 pt-1.5 sm:flex-row sm:flex-wrap sm:gap-3 lg:pt-2">
           <a
             href="#available-birds"
-            class="font-sora rounded-full bg-clay px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-dk"
+            class="font-sora inline-flex min-h-[46px] items-center justify-center whitespace-nowrap rounded-full bg-clay-ink px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-clay-dk"
           >
             View Available Greys →
           </a>
           <a
             href="#contact"
-            class="font-sora rounded-full border-2 border-white/60 px-8 py-3.5 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white hover:text-green"
+            class="font-sora inline-flex min-h-[46px] items-center justify-center whitespace-nowrap rounded-full border-2 border-[rgba(250,247,244,0.6)] px-[22px] py-2.5 text-sm font-semibold text-[#faf7f4] transition-colors hover:border-[#faf7f4] hover:bg-[#faf7f4] hover:text-green"
           >
             Reserve Yours Now →
           </a>
-        </div>
-
-        <ul
-          class="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2.5 md:justify-start"
-          aria-label="Breeder credentials"
-        >
-          {pills.map((p) => (
-            <li class="font-sora flex items-center gap-2 text-[13px] text-[#dbe2df] whitespace-nowrap">
-              <span
-                class="flex h-4 w-4 items-center justify-center rounded-full bg-clay text-xs font-bold text-white"
-                aria-hidden="true"
-              >✓</span>
-              {p}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- CIRCULAR IMAGE STAGE -->
-      <div class="order-1 flex justify-center md:order-2 md:justify-end">
-        <div class="relative">
-          <div
-            class="absolute inset-0 -m-3 rounded-full border border-white/25 md:-m-5"
-            aria-hidden="true"
-          >
-          </div>
-          <div
-            class="relative flex h-[220px] w-[220px] items-center justify-center overflow-hidden rounded-full bg-[#0f3d2c] ring-4 ring-white/15 sm:h-[260px] sm:w-[260px] md:h-[300px] md:w-[300px]"
-            style="box-shadow: 0 24px 60px rgba(60,30,10,0.35);"
-          >
-            <img
-              src={heroImg}
-              alt={heroAlt}
-              width="400"
-              height="300"
-              loading="eager"
-              fetchpriority="high"
-              decoding="async"
-              class="h-auto w-full object-contain"
-              {...srcsetAttrs(heroImg, [300], "300px")}
-            />
-          </div>
-          <span
-            class="font-sora absolute -bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-green shadow-lg md:bottom-4 md:left-auto md:right-0 md:translate-x-0"
-            style="box-shadow: 0 10px 30px rgba(60,30,10,0.22);"
-          >
-            <span class="relative flex h-2.5 w-2.5">
-              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-clay opacity-60"></span>
-              <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-clay"></span>
-            </span>
-            {availableCount} Birds Available Now
-          </span>
         </div>
       </div>
 

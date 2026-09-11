@@ -9,6 +9,20 @@ Earlier rounds: 1 = A/B/C (`../homepage-variations/`), 2 = D/E/F (`../homepage-v
 designs × Mobile/Tablet/Desktop = 9 artboards. The breeder asked for them on 2026-09-11 against the
 live HeroV3:b (forest card on the left, circular photo on the right, ~649px tall on desktop).
 
+## 0. Pick (breeder, 2026-09-11): **A · Paperwork card**, with three changes
+
+1. "6 Birds Available Now" pill almost transparent (28% `#0f3d2c` tint, 55% cream hairline, white
+   text + shadow) so both Greys' faces show; it sits bottom-LEFT of the photo (faces are in the top
+   half of every crop, and the fixed desktop JumpRail covers the card's right edge at 1024–1420px).
+2. Image first on Mobile (card on top) and Tablet (card in the left column).
+3. Eyebrow in mixed case, exactly `C.A.Gs · Family Aviary Since 2014` (no uppercase transform).
+4. (follow-up) H1 is always exactly two lines: "Congo and Timneh African Grey" / "Breeder in
+   *Midland, Texas*", each a nowrap block, sized `clamp(20px, 7cqi, 44px)` against the copy column.
+
+Applied to `src/components/cag-library/HeroV3.astro` + `src/pages/index.astro` + `src/lib/homeHero.ts`.
+Measured on the built page (8/8 viewports pass): H1 2 lines at 320 → 1440; hero 409px at 1280 and
+1440, 397 at 1024, 426 at 768, 728–783 on phones; no overflow; pill never under the rail.
+
 ## 1. Brief (restated)
 
 - **Goal:** three new homepage heroes, A/B/C, each at 390 / 768 / 1440, shown on one canvas for

@@ -38,7 +38,7 @@ const span = (clayColor = CLAY) =>
   `<span style="color:${clayColor}; font-style:italic;">${H1_B}</span>`;
 
 const eyebrow = (color = EYEBROW_DK, align = 'left') =>
-  `<span style="display:block; font-size:12px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; line-height:18px; color:${color}; text-align:${align};">${EYEBROW}</span>`;
+  `<span style="display:block; font-size:13px; font-weight:500; letter-spacing:.1em; line-height:18px; color:${color}; text-align:${align};">${EYEBROW}</span>`;
 
 const h1 = (size, { align = 'left', lh = 1.1, color = '#faf7f4', maxw = 'none' } = {}) =>
   `<h1 style="font-size:${size}px; line-height:${lh}; letter-spacing:-.012em; color:${color}; text-align:${align}; max-width:${maxw}; text-wrap:balance;">${H1_A} ${span()}</h1>`;
@@ -109,11 +109,16 @@ const section = (style, inner) =>
 // A · PAPERWORK CARD — copy on the open scrim; the photo is a cream
 // document card that carries the credentials + availability.
 // ════════════════════════════════════════════════════════════════════
+// Breeder 2026-09-11: availability pill "almost transparent" so both Greys' faces show.
+// Bottom-right sits on the empty floor fabric in every crop; a light scrim tint + text-shadow
+// keeps the white text legible without hiding the photo.
+const glassPill = `<span style="position:absolute; left:10px; bottom:10px; display:inline-flex; align-items:center; gap:7px; background:rgba(15,61,44,.28); color:#ffffff; border:1px solid rgba(250,247,244,.55); border-radius:50px; padding:5px 12px; font-size:12.5px; font-weight:600; line-height:18px; white-space:nowrap; text-shadow:0 1px 2px rgba(0,0,0,.55);"><svg width="8" height="8" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="${CLAY}"></circle></svg><span>${AVAIL}</span></span>`;
+
 const paperCard = ({ photoH, credLayout, credFs = 13, pad = 14, objPos = '50% 24%' }) =>
   `<div style="display:flex; flex-direction:column; gap:14px; background:${CREAM}; border-radius:18px; padding:${pad}px; box-shadow:0 24px 60px rgba(0,0,0,.28);">
-    <div style="position:relative; border-radius:12px; overflow:hidden; background:${AVI};">${img(`width:100%; height:${photoH}px; object-position:${objPos};`)}${availPill(' position:absolute; left:12px; top:12px;')}</div>
+    <div style="position:relative; border-radius:12px; overflow:hidden; background:${AVI};">${img(`width:100%; height:${photoH}px; object-position:${objPos};`)}${glassPill}</div>
     <div style="display:flex; flex-direction:column; gap:10px; padding:0 4px 4px;">
-      <span style="font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; line-height:16px; color:${CLAY_SM};">Breeder credentials</span>
+      <span style="font-size:12.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; line-height:16px; color:${CLAY_SM};">Breeder credentials</span>
       ${creds({ layout: credLayout, color: INK, stroke: CLAY_SM, fs: credFs, gap: '8px 16px' })}
     </div>
   </div>`;
