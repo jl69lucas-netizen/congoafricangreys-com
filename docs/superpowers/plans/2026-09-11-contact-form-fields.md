@@ -215,7 +215,7 @@ Expected: `ModuleNotFoundError: No module named 'form_contract_audit'`
 """Form contract audit over dist/.
 
 Every non-search <form> must POST to the one Formspree endpoint with no Netlify residue.
-Every inquiry form (a form with a <textarea>) on an in-scope page must carry the seven
+Every inquiry form (any form whose visible controls are more than a single email box) on an in-scope page must carry the seven
 screening fields, each required. Excluded from the FIELD checks only: the homepage,
 /contact-us/, and the location cluster (which has no forms today).
 
@@ -473,9 +473,13 @@ register({
           if (action !== endpoint || netlify || (f.getAttribute('method') || 'get').toLowerCase() !== 'post') {
             wrongEndpoint.push(`${label} action="${action || '(none)'}"${netlify ? ' +netlify' : ''}`);
           }
-          const isInquiry = !!f.querySelector('textarea');
-          if (!isInquiry || !fieldsApply) return;
+          // Same classification as scripts/form_contract_audit.py: a NEWSLETTER is a form whose
+          // visible controls are exactly one email box; anything else is an inquiry form. Two
+          // gates must agree on what an inquiry form is (reference_same_input_different_verdict).
           const controls = Array.from(f.querySelectorAll('input,select,textarea')) as HTMLInputElement[];
+          const visible = controls.filter((c) => c.type !== 'hidden' && c.name !== '_gotcha');
+          const isInquiry = !(visible.length === 1 && visible[0].type === 'email');
+          if (!isInquiry || !fieldsApply) return;
           for (const [name, rx] of KEYS) {
             const hits = controls.filter((c) => rx.test(c.name));
             if (!hits.length) missing.push(`${label}: ${name} absent`);
@@ -1621,7 +1625,7 @@ allowed-tools: [Read, Write, Bash]
 
 ## The seven-field contract (2026-09-11)
 
-Applies to every inquiry form (a form with a `<textarea>`) except `/`, `/contact-us/` and the location cluster. Existing fields are kept; nothing is duplicated; every field carries a red `*` in that page's own required class.
+Applies to every inquiry form (any form whose visible controls are more than a single email box — the same rule as `scripts/form_contract_audit.py`) except `/`, `/contact-us/` and the location cluster. Existing fields are kept; nothing is duplicated; every field carries a red `*` in that page's own required class.
 
 | # | Label | name | control |
 |---|---|---|---|
