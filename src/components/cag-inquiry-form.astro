@@ -27,14 +27,6 @@ interface Props {
   preselect?: string;
   /** "Why Apply With Us?" bullets (plain text). Default = the five site-wide lines (literal markup below). */
   trustBullets?: string[];
-  /** 2026-09-11 field contract: Message required + Flight Nanny delivery card. Default true.
-   *  The homepage and /contact-us/ pass false so their rendered bytes stay identical (breeder
-   *  excluded both from the contract rollout — brief Open Flag 1).
-   *  Two spots in the markup are deliberately whitespace-tight — the `)}<label` join after the
-   *  Flight Nanny block in Field 8 and the space INSIDE the `*` span in Field 10 — because Astro
-   *  collapses inter-node whitespace and any change there alters the bytes of the two opt-out
-   *  pages. Do not reformat; re-run the Task 3 Step 6 `cmp` if you touch either. */
-  requireAll?: boolean;
 }
 const {
   heading = 'Adopt an African Grey — Inquiry Form',
@@ -44,7 +36,6 @@ const {
   compact = false,
   preselect = '',
   trustBullets,
-  requireAll = true,
 } = Astro.props;
 // The default trust list below stays LITERAL markup, in a second branch on purpose: rendering the
 // default via set:html drops the scoped data-astro-cid-* attribute Astro stamps on the inline
@@ -247,7 +238,6 @@ const pricingRows = [
                   <span class="inq-delivery-desc">We deliver to your provided home address.</span>
                 </div>
               </label>
-              {requireAll && (
               <label class="inq-delivery-card font-sora">
                 <input type="radio" name="delivery_method" value="nanny" />
                 <div class="inq-delivery-card-body">
@@ -256,7 +246,7 @@ const pricingRows = [
                   <span class="inq-delivery-desc">A nanny keeps your grey in the cabin for the whole flight; quoted per route.</span>
                 </div>
               </label>
-              )}<label class="inq-delivery-card font-sora">
+              <label class="inq-delivery-card font-sora">
                 <input type="radio" name="delivery_method" value="pickup" />
                 <div class="inq-delivery-card-body">
                   <span class="inq-delivery-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M5 17H3v-5l2-5h12l2 5v5h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><line x1="6" y1="7" x2="18" y2="7"/></svg></span>
@@ -285,11 +275,11 @@ const pricingRows = [
 
         <!-- Field 10: Message -->
         <div class="inq-field">
-          <label class="inq-label font-sora" for={idPrefix + "message"}>Message or Questions?{requireAll && <span class="inq-required"> *</span>}</label>
+          <label class="inq-label font-sora" for={idPrefix + "message"}>Message or Questions? <span class="inq-required">*</span></label>
           <textarea
             id={idPrefix + "message"}
             name="message"
-            required={requireAll}
+            required
             rows="6"
             placeholder="Questions, timeline, anything else we should know?"
             class="inq-input inq-textarea font-sora"
@@ -336,7 +326,7 @@ const pricingRows = [
               ))}
             </tbody>
           </table>
-          <p class="font-sora inq-price-footer">Shipping: $185 · Home delivery: $350</p>
+          <p class="font-sora inq-price-footer">Shipping: $185 · Home delivery: $350 · Flight nanny: from $750</p>
         </div>
       )}
     </aside>
