@@ -132,7 +132,7 @@ const A = {
         ${lead(16, { maxw: '58ch' })}
         <div style="display:flex; padding-top:8px;">${ctas()}</div>
       </div>
-      ${paperCard({ photoH: 232, credLayout: 'grid2', objPos: '50% 40%' })}
+      ${paperCard({ photoH: 256, credLayout: 'grid2', objPos: '50% 6%' })}
     </div>`)),
   Tablet: doc(768, section('padding:32px;',
     `<div style="display:grid; grid-template-columns:292px minmax(0, 1fr); gap:32px; align-items:center;">

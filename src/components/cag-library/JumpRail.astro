@@ -23,6 +23,9 @@ interface Props {
   ctaLabel?: string;
   /** id of the CTA scroll target (no leading #). */
   ctaTarget?: string;
+  /** Render the mobile "Sections" button + bottom sheet (<1024px). The homepage passes false:
+   *  it uses HomeSectionStrip instead (breeder pick 2026-09-11). */
+  mobileNav?: boolean;
 }
 
 const homepageSections: Section[] = [
@@ -62,13 +65,16 @@ const {
   partNames = homepagePartNames,
   ctaLabel = 'Reserve a Bird →',
   ctaTarget = 'contact',
+  mobileNav = true,
 } = Astro.props;
 
 const parts = [...new Set(sections.map(s => s.part))];
 ---
 
-<!-- Desktop (≥1024px): fixed dot rail -->
-<nav id="cag-jump-rail" aria-label="Page sections">
+<!-- Desktop (≥1024px): fixed dot rail. Starts hidden and fades in once the page hero has
+     scrolled away (breeder pick 2026-09-11: it covered the homepage hero card at 1024–1420px). -->
+<noscript><style>#cag-jump-rail.is-hidden{opacity:1!important;visibility:visible!important;transform:translateY(-50%)!important;pointer-events:auto!important}</style></noscript>
+<nav id="cag-jump-rail" class="is-hidden" aria-label="Page sections">
   {sections.map((s, i) => {
     const isFirstOfPart = i === 0 || sections[i - 1].part !== s.part;
     return (
@@ -84,6 +90,7 @@ const parts = [...new Set(sections.map(s => s.part))];
 </nav>
 
 <!-- Mobile / tablet (<1024px): floating "Sections" button + bottom-sheet -->
+{mobileNav && (
 <div class="cag-jump-mobile">
   <button id="cag-sections-fab" type="button" class="cag-fab"
           aria-haspopup="dialog" aria-expanded="false" aria-controls="cag-section-sheet">
@@ -121,6 +128,7 @@ const parts = [...new Set(sections.map(s => s.part))];
     </div>
   </div>
 </div>
+)}
 
 <style>
   #cag-jump-rail {
@@ -149,6 +157,20 @@ const parts = [...new Set(sections.map(s => s.part))];
   /* Also hide if viewport is too short */
   @media (max-height: 600px) {
     #cag-jump-rail { display: none; }
+  }
+
+  /* Hidden while the page hero is on screen; fades in (0.2s) once it has scrolled away.
+     visibility:hidden keeps the hidden links out of the tab order. */
+  #cag-jump-rail { transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s; }
+  #cag-jump-rail.is-hidden {
+    opacity: 0;
+    transform: translate(12px, -50%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #cag-jump-rail, #cag-jump-rail.is-hidden { transition: none; }
   }
 
   .rail-spacer {
@@ -478,14 +500,27 @@ const parts = [...new Set(sections.map(s => s.part))];
       (lastFocus ?? fab).focus();
     }
 
-    // Reveal the FAB only after the user scrolls past the hero (avoids
-    // covering the hero CTAs at the top of the page).
-    if (fab) {
-      const REVEAL_AT = 600;
-      const syncFab = () => fab.classList.toggle('visible', window.scrollY > REVEAL_AT);
-      syncFab();
-      window.addEventListener('scroll', syncFab, { passive: true });
-    }
+    // Reveal the desktop rail and the mobile FAB only after the user scrolls past the hero
+    // (avoids covering the hero at the top of the page). A page that marks its hero with
+    // [data-jump-hero] reveals the moment the hero's bottom passes under the 96px header;
+    // any other page keeps the original 600px threshold.
+    const railEl = document.getElementById('cag-jump-rail');
+    const heroEl = document.querySelector<HTMLElement>('[data-jump-hero]');
+    const REVEAL_AT = 600;
+    const HEADER_H = 96;
+    const pastHero = () =>
+      heroEl ? heroEl.getBoundingClientRect().bottom <= HEADER_H : window.scrollY > REVEAL_AT;
+    let revealQueued = false;
+    const syncReveal = () => {
+      revealQueued = false;
+      const past = pastHero();
+      railEl?.classList.toggle('is-hidden', !past);
+      fab?.classList.toggle('visible', past);
+    };
+    syncReveal();
+    window.addEventListener('scroll', () => {
+      if (!revealQueued) { revealQueued = true; requestAnimationFrame(syncReveal); }
+    }, { passive: true });
 
     fab?.addEventListener('click', openSheet);
     closeBtn?.addEventListener('click', closeSheet);

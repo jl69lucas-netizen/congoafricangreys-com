@@ -1,0 +1,133 @@
+---
+/**
+ * HomeSectionStrip — the homepage's mobile/tablet section jump (<1024px).
+ * Breeder pick 2026-09-11: "Design B · Comparison style", the sticky strip from
+ * /congo-vs-timneh-african-grey/ (.cvt-rail): 3px clay rule on top, white pills with clay
+ * numbers and green labels, current section outlined in clay.
+ *
+ * Sits right after the hero and sticks under the 96px header. It replaces JumpRail's floating
+ * "Sections" button + bottom sheet on `/` (index.astro passes JumpRail mobileNav={false});
+ * desktop keeps JumpRail's dot rail. Jumps offset by header + strip height, because the
+ * sections' scroll-mt-28 (112px) is shorter than both together.
+ */
+interface Section {
+  id: string;
+  label: string;
+  part: number;
+}
+interface Props {
+  sections: Section[];
+}
+const { sections } = Astro.props;
+const num = (i: number) => String(i + 1).padStart(2, '0');
+---
+
+<nav class="home-strip" aria-label="Jump to section">
+  <div class="home-strip-row">
+    {sections.map((s, i) => (
+      <a href={`#${s.id}`} data-strip-target={s.id} class={i === 0 ? 'on' : undefined}><b>{num(i)}</b> {s.label}</a>
+    ))}
+  </div>
+</nav>
+
+<style>
+  .home-strip {
+    position: sticky;
+    top: 96px;
+    z-index: 40;
+    display: none;
+    background: rgba(250, 247, 244, 0.985);
+    border-top: 3px solid #bd4129;
+    border-bottom: 1px solid #e7ddd3;
+    box-shadow: 0 6px 14px rgba(60, 30, 10, 0.07);
+  }
+  @media (max-width: 1023px) {
+    .home-strip { display: block; }
+  }
+  .home-strip-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 16px;
+    scrollbar-width: none;
+    scroll-behavior: auto; /* the rail snaps; only the page glides (global.css convention) */
+  }
+  .home-strip-row::-webkit-scrollbar { display: none; }
+  .home-strip-row a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    padding: 8px 14px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #2D6A4F;
+    background: #fff;
+    border: 1px solid #e7ddd3;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .home-strip-row a:hover,
+  .home-strip-row a.on { border-color: #b04228; color: #b04228; }
+  .home-strip-row a b { color: #b04228; margin-right: 4px; font-weight: 700; }
+  .home-strip-row a:focus-visible { outline: 2px solid #2D6A4F; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    .home-strip-row a { transition: none; }
+  }
+</style>
+
+<script>
+  (() => {
+    const strip = document.querySelector<HTMLElement>('.home-strip');
+    if (!strip) return;
+    const row = strip.querySelector<HTMLElement>('.home-strip-row');
+    const links = Array.from(strip.querySelectorAll<HTMLAnchorElement>('a[data-strip-target]'));
+    if (!row || !links.length) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const HEADER_H = 96;
+    const targets = links.map((a) => document.getElementById(a.dataset.stripTarget ?? ''));
+
+    let active = 0;
+    links[0].setAttribute('aria-current', 'true');
+    const setActive = (i: number) => {
+      if (i === active || i < 0) return;
+      links[active]?.classList.remove('on');
+      links[active]?.removeAttribute('aria-current');
+      links[i].classList.add('on');
+      links[i].setAttribute('aria-current', 'true');
+      active = i;
+      // Keep the current chip in view by scrolling the strip itself, never the page, and
+      // INSTANTLY: a smooth scroll on this row, started by the observer while a #fragment
+      // jump is in flight, left the page at y=0 on the first jump after load (render NAV
+      // gate, #proof @375/768, 2026-09-11). Jump-rail scrollers snap; the page glides.
+      if (strip.offsetParent !== null) {
+        row.scrollLeft = Math.max(0, links[i].offsetLeft - 16);
+      }
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const i = targets.indexOf(e.target as HTMLElement);
+          if (i >= 0) setActive(i);
+        }
+      },
+      { rootMargin: '-150px 0px -55% 0px', threshold: 0 }
+    );
+    targets.forEach((t) => t && io.observe(t));
+
+    links.forEach((a, i) => {
+      a.addEventListener('click', (ev) => {
+        const t = targets[i];
+        if (!t) return;
+        ev.preventDefault();
+        const top = t.getBoundingClientRect().top + window.scrollY - (HEADER_H + strip.offsetHeight + 8);
+        window.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
+        history.replaceState(null, '', `#${t.id}`);
+        setActive(i);
+      });
+    });
+  })();
+</script>

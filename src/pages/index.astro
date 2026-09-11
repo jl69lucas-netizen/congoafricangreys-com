@@ -22,6 +22,7 @@ import CompareTableE from '../components/cag-library/CompareTableE.astro';
 import InquiryForm  from '../components/cag-inquiry-form.astro';
 import JumpRail     from '../components/cag-library/JumpRail.astro';
 import StatementLabel from '../components/cag-library/StatementLabel.astro';
+import HomeSectionStrip from '../components/cag-library/HomeSectionStrip.astro';
 
 const title = "African Grey Parrot Breeder | Where Can I Buy a Healthy Congo African Grey Near Me? | Captive-Bred C.A.Gs vs Unverified Online Sellers | C.A.Gs – America's Trusted Congo & Timneh Breeder Since 2014";
 const description = "Trusted African Grey parrot breeder Mark & Teri raise hand-fed Congo & Timneh Greys in Midland, TX | Why families choose captive-bred C.A.Gs over unverified online sellers | Every C.A.Gs Grey is DNA-sexed, vet-checked, and ships with CITES Appendix I paperwork | Reserve yours — nationwide delivery";
@@ -395,10 +396,24 @@ const heroSrcset = srcsetFor(HERO_IMG, HERO_WIDTHS);
    from section padding + dividers, or .cag-jump-mobile (visible <1024px) renders
    a ~72px white gap between the navbar and the hero on mobile. */
 .home-d > #cag-jump-rail, .home-d > .cag-jump-mobile { padding-top:0 !important; padding-bottom:0 !important; border-top:0 !important; }
+/* HomeSectionStrip is a top-level <nav>: keep the section padding off it and let its own 3px clay
+   rule stand; on mobile it already draws the line the counter would otherwise repeat. */
+.home-d > .home-strip { padding-top:0 !important; padding-bottom:0 !important; border-top:3px solid #bd4129 !important; }
+@media (max-width:1023px){ .home-d > .home-strip + * { border-top:0 !important; } }
+/* Below 1024px the sticky chrome is header 96 + strip 48 = 144px, so every in-page target lands
+   at 152px (the NAV gate window is 136–204). scroll-mt-28 (112px) still governs ≥1024, where
+   the strip is hidden. !important beats per-element scroll-margin utilities and inline styles. */
+@media (max-width:1023px){ .home-d [id] { scroll-margin-top:152px !important; } }
 .home-d > section:not(.hero-v3-b), .home-d > nav, .home-d > div { padding-top:2.25rem; padding-bottom:2.25rem; }
-@media (min-width:768px){ .home-d > section:not(.hero-v3-b), .home-d > nav, .home-d > div { padding-top:2.9rem; padding-bottom:2.9rem; } }
+/* Compact desktop/tablet rhythm (breeder, 2026-09-11: "large empty gaps between sections").
+   Measured at 1280 before: 46.4px padding top+bottom = a 93px median gap between sections, up
+   to 124px. 2rem each side gives ~64px. Mobile keeps 2.25rem. */
+@media (min-width:768px){ .home-d > section:not(.hero-v3-b), .home-d > nav, .home-d > div { padding-top:2rem; padding-bottom:2rem; } }
+/* A section's last paragraph/list carried a 17–21px bottom margin on top of the padding
+   (why-us, trust, history, pricing, shipping, video, contact), so those gaps ran 15–30px larger. */
+@media (min-width:768px){ .home-d > * :is(p, ul, ol):last-child { margin-bottom:0; } }
 .home-d .py-16, .home-d .py-14, .home-d .py-12 { padding-top:2.25rem !important; padding-bottom:2.25rem !important; }
-@media (min-width:768px){ .home-d .py-16, .home-d .py-14, .home-d .py-12 { padding-top:2.9rem !important; padding-bottom:2.9rem !important; } }
+@media (min-width:768px){ .home-d .py-16, .home-d .py-14, .home-d .py-12 { padding-top:2rem !important; padding-bottom:2rem !important; } }
 
 /* --- CONCEPT A: centered wordmark seam between major sections (editorial fleuron) ---
    Replaces the plain hairline at chosen seams; removes the auto border-top from itself
@@ -449,10 +464,13 @@ const heroSrcset = srcsetFor(HERO_IMG, HERO_WIDTHS);
 <div class="home-d">
 
   <!-- Jump Rail — fixed right-side progress nav (desktop 1024px+) -->
-  <JumpRail sections={railSections} partNames={railParts} />
+  <JumpRail sections={railSections} partNames={railParts} mobileNav={false} />
 
   <!-- 1. Hero — cag-hero-v3:b "Authority Green" (REBUILD v2) -->
   <HeroV3 availableCount={birds.filter(b => b.status === 'available').length} />
+
+  <!-- Mobile/tablet section jump (<1024px), breeder pick 2026-09-11 — comparison-style strip -->
+  <HomeSectionStrip sections={railSections} />
 
   <!-- 2. Counter Snippet — cag-counter-snippet (Rule 31: 4 stats after H1) -->
   <CounterSnippet stats={[

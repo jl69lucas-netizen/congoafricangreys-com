@@ -1,5 +1,17 @@
 # Section Menu Choices (2026-09-11)
 
+**Breeder pick (2026-09-11): Desktop 1 · Appears after the hero, and Mobile B · Comparison style.**
+Applied in `src/components/cag-library/JumpRail.astro` (rail starts `.is-hidden`, revealed once
+`[data-jump-hero]`'s bottom passes the 96px header, or after 600px on pages without one; new
+`mobileNav` prop), `HeroV3.astro` (`data-jump-hero`), new `HomeSectionStrip.astro` (the comparison
+strip, homepage only, <1024px) and `index.astro` (`mobileNav={false}`, strip after the hero).
+The render NAV gate caught one follow-on defect: with the strip, mobile chrome is 144px (96 + 48),
+so the homepage's 20 in-page targets (scroll-mt-28 = 112px) landed under it. Below 1024px every
+`.home-d [id]` now takes `scroll-margin-top:152px`.
+A second one: on the first #fragment jump after load, the strip's scroll-spy smooth-scrolled its
+own chip row while the page jump was in flight, and the page stayed at the top (#proof @375/768).
+The row now snaps (`scrollLeft`, `scroll-behavior:auto`); only the page glides.
+
 Preview: https://claude.ai/code/artifact/0f0761a8-1c62-4007-84c1-30479d46cbe5 (source
 `section-menu-choices.html`; republish from the same path to update). Screenshots are the built homepage
 at 390 / 1024 / 1280 with every fixed overlay hidden; `measurements.json` holds the hero and
