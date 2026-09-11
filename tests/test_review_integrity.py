@@ -21,6 +21,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
+VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
 LEDGER = json.loads((ROOT / "data" / "reviews.json").read_text(encoding="utf-8"))
 REVIEWS = LEDGER["reviews"]
 PENDING = LEDGER.get("pending", [])
@@ -70,6 +71,7 @@ class Page(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.nodes: list[str] = []
+        self.node_anc: list[tuple[int, ...]] = []
         self.quotes: list[str] = []
         self.imgs: list[tuple[str, str]] = []
         self.ld: list = []
@@ -79,6 +81,8 @@ class Page(HTMLParser):
         self._buf: list[str] = []
         self._in_ld = False
         self._ldbuf: list[str] = []
+        self._stack: list[tuple[str, int]] = []
+        self._next = 0
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -91,6 +95,9 @@ class Page(HTMLParser):
             self._bq += 1
         if tag == "img":
             self.imgs.append((a.get("alt") or "", a.get("src") or ""))
+        if tag not in VOID:
+            self._next += 1
+            self._stack.append((tag, self._next))
 
     def handle_endtag(self, tag):
         if tag == "script" and self._in_ld:
@@ -100,6 +107,10 @@ class Page(HTMLParser):
             except json.JSONDecodeError as e:
                 self.ld_errors.append(str(e))
             return
+        for k in range(len(self._stack) - 1, -1, -1):
+            if self._stack[k][0] == tag:
+                del self._stack[k:]
+                break
         if tag in ("script", "style") and self._skip:
             self._skip -= 1
         if tag == "blockquote" and self._bq:
@@ -115,6 +126,7 @@ class Page(HTMLParser):
         if self._skip or not data.strip():
             return
         self.nodes.append(norm(data))
+        self.node_anc.append(tuple(i for _, i in self._stack))
         if self._bq:
             self._buf.append(data)
 
@@ -290,8 +302,8 @@ def test_every_star_card_is_ledgered():  # discovery for <p>-style cards
     for slug, pg in PAGES.items():
         for quote, window in card_quotes(pg):
             cards += 1
-            # Judged on the quote alone. Attribution (D-b) is NOT checked here: bird-page cards put the
-            # name before the quote and Testimonials grid cards put it after, so no window is safe.
+            # Judged on the quote alone. Attribution (D-b) for these cards is checked structurally in
+            # test_every_review_sits_in_its_own_buyers_card.
             if any(k in quote for k in keys) or any(n in quote for n in NOT_REVIEWS):
                 continue
             # Comparison-hub cards: a verbatim fragment (< 60 chars, so never the judged node) plus our
@@ -319,6 +331,62 @@ def test_quotes_sit_beside_their_own_buyer():  # D-b
                         wrong.append(f"{slug}: {owner}'s words sit beside {others}")
     assert checked >= 10, f"D-b examined only {checked} ledger quotes — extractor broken"
     assert not wrong, "\n".join(wrong)
+
+
+def _spans(pg: Page):
+    """First and last text-node index inside each element (text nodes of an element are contiguous)."""
+    if not hasattr(pg, "_span_cache"):
+        first, last = {}, {}
+        for j, anc in enumerate(pg.node_anc):
+            for a in anc:
+                first.setdefault(a, j)
+                last[a] = j
+        pg._span_cache = (first, last)
+    return pg._span_cache
+
+
+def card_of(pg: Page, idx: int):
+    """The review's own card: the nearest ancestor element of text node `idx` that also contains a
+    ledger buyer's name. Works whether the name comes before the quote (bird pages) or after it
+    (Testimonials grid) because it follows the markup, not node distance."""
+    first, last = _spans(pg)
+    for a in reversed(pg.node_anc[idx]):
+        inside = range(first[a], last[a] + 1)
+        if any(n in pg.nodes[j] for j in inside for n in PEOPLE):
+            return inside
+    return None
+
+
+def test_node_ancestry_is_recorded():
+    for slug, pg in PAGES.items():
+        assert len(pg.node_anc) == len(pg.nodes), f"{slug}: ancestry out of step with text nodes"
+
+
+def test_every_review_sits_in_its_own_buyers_card():  # D-b for every card layout
+    owners = {key(r): r["name"] for r in REVIEWS + PENDING}
+    attributed, wrong = 0, []
+    multi, nocard = 0, 0
+    for slug, pg in PAGES.items():
+        for idx, node in enumerate(pg.nodes):
+            owner = next((o for k, o in owners.items() if k in node), None)
+            if owner is None:
+                continue
+            card = card_of(pg, idx)
+            if card is None:
+                nocard += 1
+                continue
+            text = " ".join(pg.nodes[j] for j in card)
+            if sum(k in text for k in owners) > 1:
+                multi += 1
+                continue  # this ancestor holds several reviews: the quote's own card names nobody
+            attributed += 1
+            names = [n for n in PEOPLE if n in text]
+            if owner not in names or len(names) > 1:
+                wrong.append(f"{slug}: {owner}'s words sit in a card naming {names}")
+    print(f"\nreview cards attributed by structure: {attributed} "
+          f"(skipped: {multi} shared-ancestor, {nocard} no named card)")
+    assert attributed >= 30, f"only {attributed} review cards attributed — card markup changed?"
+    assert not wrong, "review cards credited to the wrong buyer:\n" + "\n".join(wrong)
 
 
 LOC_RE = re.compile(r"^[\s,·|—–-]*([A-Z][A-Za-z.]+(?: [A-Z][A-Za-z.]+)*),\s*([A-Z]{2}\b|[A-Z][a-z]+(?: [A-Z][a-z]+)?)")

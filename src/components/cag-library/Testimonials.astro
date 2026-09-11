@@ -61,6 +61,14 @@ const stars = (n: number = 5) => '★'.repeat(n);
     scroll-snap-align: start;
   }
 }
+
+/* wall: a lone last card is centred, not stranded at the start of its row */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .testimonials-wall > article:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 0.625rem); }
+}
+@media (min-width: 1024px) {
+  .testimonials-wall > article:last-child:nth-child(3n+1) { grid-column: 2; }
+}
 </style>
 
 {variant === 'grid' && (
