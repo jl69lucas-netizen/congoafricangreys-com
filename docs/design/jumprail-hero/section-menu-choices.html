@@ -1,0 +1,413 @@
+<title>Section Menu Choices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root {
+    --bg: #faf7f4;
+    --bed: #f3ece4;
+    --surface: #ffffff;
+    --ink: #1f2a24;
+    --muted: #5b524a;
+    --forest: #2D6A4F;
+    --scrim: #0f3d2c;
+    --clay: #bd4129;
+    --clay-t: #b04228;
+    --line: rgba(60, 30, 10, .13);
+    --chip: #eaf4ef;
+    --chip-ink: #24573f;
+    --frame: #d9cfc4;
+    --focus: #2D6A4F;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1814;
+      --bed: #15221c;
+      --surface: #1a2a22;
+      --ink: #edf1ec;
+      --muted: #a9b6ae;
+      --forest: #8cc5a6;
+      --clay: #e8604c;
+      --clay-t: #f08a78;
+      --line: rgba(255, 255, 255, .12);
+      --chip: rgba(140, 197, 166, .14);
+      --chip-ink: #b7dcc8;
+      --frame: #33443b;
+      --focus: #8cc5a6;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1814;
+    --bed: #15221c;
+    --surface: #1a2a22;
+    --ink: #edf1ec;
+    --muted: #a9b6ae;
+    --forest: #8cc5a6;
+    --clay: #e8604c;
+    --clay-t: #f08a78;
+    --line: rgba(255, 255, 255, .12);
+    --chip: rgba(140, 197, 166, .14);
+    --chip-ink: #b7dcc8;
+    --frame: #33443b;
+    --focus: #8cc5a6;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.6 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  h1, h2, h3 { font-family: Newsreader, Georgia, "Times New Roman", serif; font-weight: 600; margin: 0; text-wrap: balance; letter-spacing: -.005em; }
+  p { margin: 0; }
+  a { color: var(--clay-t); }
+  button { font: inherit; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .page { max-width: 1060px; margin: 0 auto; padding: 40px 24px 72px; display: flex; flex-direction: column; gap: 56px; }
+
+  .head { display: flex; flex-direction: column; gap: 12px; max-width: 68ch; }
+  .eyebrow { font: 500 12.5px/1.4 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .06em; color: var(--muted); }
+  .head h1 { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.08; }
+  .head p { color: var(--muted); font-size: 16px; }
+  .reply { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; color: var(--ink); font-weight: 500; }
+  .key { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); font: 600 14px/1 "IBM Plex Mono", ui-monospace, monospace; color: var(--ink); }
+
+  .decision { display: flex; flex-direction: column; gap: 22px; }
+  .decision-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 12px 24px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .decision-head h2 { font-size: clamp(24px, 3vw, 30px); line-height: 1.15; }
+  .decision-head p { grid-column: 1 / -1; color: var(--muted); max-width: 72ch; }
+  .today { font: 500 13px/1.5 "IBM Plex Mono", ui-monospace, monospace; color: var(--muted); }
+  .today b { color: var(--clay-t); font-weight: 500; }
+
+  .seg { display: inline-flex; padding: 3px; gap: 3px; border-radius: 10px; background: var(--bed); border: 1px solid var(--line); }
+  .seg button { border: 0; background: transparent; color: var(--muted); padding: 7px 14px; border-radius: 7px; cursor: pointer; font: 500 13px/1 "IBM Plex Mono", ui-monospace, monospace; min-height: 34px; }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+
+  .options-desk { display: flex; flex-direction: column; gap: 40px; }
+  .options-mob { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+  @media (max-width: 760px) { .options-mob { grid-template-columns: minmax(0, 1fr); } }
+
+  .opt { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .opt-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .opt-top h3 { font-size: 21px; line-height: 1.2; }
+  .opt-top h3 .tag { font: 600 13px/1 "IBM Plex Mono", ui-monospace, monospace; color: var(--clay-t); margin-right: 8px; letter-spacing: .02em; }
+  .rec { font: 600 11.5px/1 "IBM Plex Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--chip-ink); background: var(--chip); padding: 6px 10px; border-radius: 50px; }
+
+  .stage { display: flex; flex-direction: column; gap: 10px; }
+  .stage-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; }
+  .state { font: 500 12.5px/1.4 "IBM Plex Mono", ui-monospace, monospace; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+  .state::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--frame); flex: none; }
+  .state[data-live="on"]::before { background: var(--forest); }
+  .jump { display: inline-flex; gap: 6px; }
+  .jump button { border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 50px; cursor: pointer; font-size: 13px; font-weight: 500; min-height: 34px; }
+  .jump button:hover { border-color: var(--forest); }
+
+  /* device frames paint the real site, so they keep site colours in both themes */
+  .host { width: 100%; }
+  .host.phone-host { max-width: 340px; }
+  .device { position: relative; overflow: hidden; background: #faf7f4; border: 1px solid var(--frame); }
+  .device.browser { border-radius: 10px; }
+  .device.phone { border-radius: 34px; border-width: 10px; border-color: #1d2521; }
+  .scroller { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+  .shot { background-repeat: no-repeat; }
+  .shot-head { position: sticky; top: 0; z-index: 6; height: 96px; }
+  .tabbar { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; z-index: 7; display: block; pointer-events: none; }
+
+  /* ── live JumpRail, copied from src/components/cag-library/JumpRail.astro ── */
+  .rail { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); z-index: 8; display: flex; flex-direction: column; padding: 10px 8px; background: rgba(250, 247, 244, .92); border: 1px solid #ede5dc; border-radius: 50px; box-shadow: 0 4px 20px rgba(60, 30, 10, .10); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: opacity .2s ease, transform .2s ease, right .2s ease, padding .2s ease, visibility 0s linear 0s; }
+  .rail-spacer { height: 6px; margin: 1px 0; }
+  .rail-item { display: flex; align-items: center; gap: 7px; padding: 6px 8px 6px 10px; border-radius: 50px; text-decoration: none; min-height: 26px; transition: padding .2s ease; }
+  .rail-item:hover { background: rgba(232, 96, 76, .08); }
+  .rail-dot { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid #c8bdb8; background: #fff; flex-shrink: 0; }
+  .rail-label { font: 600 12px/1 "IBM Plex Sans", sans-serif; color: #6b5d54; white-space: nowrap; letter-spacing: .01em; }
+  /* Design 1: hidden while the hero is on screen */
+  .rail.is-hidden { opacity: 0; transform: translate(12px, -50%); visibility: hidden; pointer-events: none; transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s; }
+  /* Design 2: slim dots while the hero is on screen, labels on hover or keyboard focus */
+  .rail.is-slim { right: 12px; padding: 8px 6px; }
+  .rail.is-slim .rail-item { padding: 6px 4px; gap: 0; }
+  .rail.is-slim .rail-label { display: none; }
+  .rail.is-slim:hover, .rail.is-slim:focus-within { padding: 10px 8px; }
+  .rail.is-slim:hover .rail-item, .rail.is-slim:focus-within .rail-item { padding: 6px 8px 6px 10px; gap: 7px; }
+  .rail.is-slim:hover .rail-label, .rail.is-slim:focus-within .rail-label { display: inline; }
+
+  /* ── mobile strips, copied from the for-sale (.chero-rail) and comparison (.cvt-rail) pages ── */
+  .mrail { position: sticky; top: 96px; z-index: 5; background: rgba(250, 247, 244, .985); border-bottom: 1px solid #e6dbcf; box-shadow: 0 6px 14px rgba(60, 30, 10, .07); }
+  .mrail .row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .mrail .row::-webkit-scrollbar { display: none; }
+  .mrail a { flex: 0 0 auto; white-space: nowrap; text-decoration: none; border-radius: 50px; font-family: "IBM Plex Sans", sans-serif; font-size: 13px; line-height: 18px; transition: background .2s, border-color .2s, color .2s; }
+  /* A · for-sale price-chip rail */
+  .mrail.a .row { padding: 2px 16px 1px; }
+  .mrail.a a { font-weight: 600; color: #b04228; border: 1.5px solid #e8604c; background: #fff; padding: 7px 14px; }
+  .mrail.a a b { font-weight: 700; }
+  .mrail.a a.on { background: #bd4129; border-color: #bd4129; color: #fff; }
+  /* B · comparison rail */
+  .mrail.b { border-top: 3px solid #bd4129; }
+  .mrail.b .row { padding: 1px 16px 2px; }
+  .mrail.b a { font-weight: 500; color: #2D6A4F; background: #fff; border: 1px solid #e6dbcf; padding: 8px 14px; }
+  .mrail.b a b { color: #b04228; margin-right: 4px; font-weight: 700; }
+  .mrail.b a.on { border-color: #b04228; color: #b04228; }
+
+  .facts { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: 8px 18px; margin: 0; font-size: 14.5px; }
+  .facts dt { color: var(--muted); font-weight: 500; }
+  .facts dd { margin: 0; }
+  .facts .num { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+  @media (max-width: 560px) { .facts { grid-template-columns: minmax(0, 1fr); gap: 2px; } .facts dd { margin-bottom: 8px; } }
+
+  .scope { font-size: 14px; color: var(--muted); max-width: 78ch; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail, .rail-item, .mrail a { transition: none !important; }
+  }
+</style>
+
+<main class="page">
+  <header class="head">
+    <span class="eyebrow">C.A.Gs homepage · 11 Sep 2026</span>
+    <h1>Section Menu Choices</h1>
+    <p>Two questions, two designs each. The previews are the real homepage as built today, with each menu design laid on top; scroll inside a preview, or use its buttons, to see the menu change as the hero leaves the screen.</p>
+    <p class="reply">Reply with one of each, for example <span class="key">1</span> and <span class="key">B</span>.</p>
+  </header>
+
+  <section class="decision" aria-labelledby="q-desk">
+    <div class="decision-head">
+      <h2 id="q-desk">Desktop: the section menu over the hero</h2>
+      <div class="seg" role="group" aria-label="Preview width">
+        <button type="button" data-w="1280" aria-pressed="true">1280px</button>
+        <button type="button" data-w="1024" aria-pressed="false">1024px</button>
+      </div>
+      <p>The dot menu on the right covers the edge of the new photo card between 1024px and about 1,420px wide. It is on 18 pages, so whichever design you pick changes it everywhere. <span class="today">Today: overlaps the card by <b>59px at 1280</b> and <b>99px at 1024</b>.</span></p>
+    </div>
+
+    <div class="options-desk">
+      <article class="opt" data-design="1">
+        <div class="opt-top">
+          <h3><span class="tag">1</span>Appears after the hero</h3>
+          <span class="rec">Recommended</span>
+        </div>
+        <div class="stage">
+          <div class="stage-bar">
+            <span class="state" aria-live="polite"></span>
+            <span class="jump"><button type="button" data-go="top">Hero on screen</button><button type="button" data-go="past">Past the hero</button></span>
+          </div>
+          <div class="host"></div>
+        </div>
+        <dl class="facts">
+          <dt>What happens</dt><dd>The menu stays out of sight while any part of the hero is on screen, then fades in over 0.2s once the hero slides under the header. The mobile Sections button already waits for the same moment.</dd>
+          <dt>Over the photo card</dt><dd class="num">0px overlap at every width</dd>
+          <dt>Trade-off</dt><dd>No section map on the first screen; it shows up after about 400px of scrolling.</dd>
+        </dl>
+      </article>
+
+      <article class="opt" data-design="2">
+        <div class="opt-top">
+          <h3><span class="tag">2</span>Slim dots over the hero</h3>
+        </div>
+        <div class="stage">
+          <div class="stage-bar">
+            <span class="state" aria-live="polite"></span>
+            <span class="jump"><button type="button" data-go="top">Hero on screen</button><button type="button" data-go="past">Past the hero</button></span>
+          </div>
+          <div class="host"></div>
+        </div>
+        <dl class="facts">
+          <dt>What happens</dt><dd>While the hero is on screen the menu shrinks to a 29px strip of dots, 12px from the edge; hovering or tabbing to it brings the labels back. Past the hero it is the full menu you have today.</dd>
+          <dt>Over the photo card</dt><dd class="num">clears it by 47px at 1280 · 7px at 1024</dd>
+          <dt>Trade-off</dt><dd>Only 7px of air at 1024, the dots mean little until hovered, and hovering spreads the labels back over the card.</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="decision" aria-labelledby="q-mob">
+    <div class="decision-head">
+      <h2 id="q-mob">Mobile: the homepage section jump</h2>
+      <p>Today the homepage uses a floating Sections button that opens a sheet from the bottom. Both designs replace it with the sticky strip the for-sale and comparison pages use: it sits right under the hero and then stays pinned under the header, listing all 18 homepage sections. Homepage only; the other 17 pages keep their current menu.</p>
+    </div>
+
+    <div class="options-mob">
+      <article class="opt" data-mdesign="a">
+        <div class="opt-top">
+          <h3><span class="tag">A</span>For-sale style</h3>
+        </div>
+        <div class="stage">
+          <div class="stage-bar">
+            <span class="state" aria-live="polite"></span>
+            <span class="jump"><button type="button" data-go="top">Top</button><button type="button" data-go="past">Scrolled</button></span>
+          </div>
+          <div class="host phone-host"></div>
+        </div>
+        <dl class="facts">
+          <dt>Looks like</dt><dd><a href="https://congoafricangreys.com/congo-african-grey-for-sale/">Congo for-sale page</a>: clay-outlined pills, the current section filled solid clay.</dd>
+          <dt>Size</dt><dd class="num">38px strip · 18 pills</dd>
+          <dt>Trade-off</dt><dd>A solid clay pill sitting under the hero's clay "View Available Greys" button reads like a second main button (site rule: one clay button per component).</dd>
+        </dl>
+      </article>
+
+      <article class="opt" data-mdesign="b">
+        <div class="opt-top">
+          <h3><span class="tag">B</span>Comparison style</h3>
+          <span class="rec">Recommended</span>
+        </div>
+        <div class="stage">
+          <div class="stage-bar">
+            <span class="state" aria-live="polite"></span>
+            <span class="jump"><button type="button" data-go="top">Top</button><button type="button" data-go="past">Scrolled</button></span>
+          </div>
+          <div class="host phone-host"></div>
+        </div>
+        <dl class="facts">
+          <dt>Looks like</dt><dd><a href="https://congoafricangreys.com/congo-vs-timneh-african-grey/">Congo vs Timneh page</a>: a clay rule on top, white pills with clay numbers and green labels, the current section outlined in clay.</dd>
+          <dt>Size</dt><dd class="num">43px strip · 18 pills</dd>
+          <dt>Trade-off</dt><dd>5px taller than A, and the current section is marked more quietly. It was built for that page's 20 sections, the closest match to the homepage's 18.</dd>
+        </dl>
+      </article>
+    </div>
+    <p class="scope">The phone previews cover the first 9,000px of the 57,985px mobile homepage, so the strip advances through Our Breeders and Available there; on the live page it tracks all 18.</p>
+  </section>
+</main>
+
+<script>
+(() => {
+  // Measured on the built homepage (docs/design/jumprail-hero/measurements.json).
+  const M = {
+    1280: { vh: 800, shotH: 2400, heroBottom: 505 },
+    1024: { vh: 768, shotH: 2300, heroBottom: 493 },
+    390: { vh: 844, shotH: 9000, heroBottom: 824 },
+  };
+  const HEADER = 96;
+  const SECTIONS = [
+    ['about', 'Our Breeders', 1, 3551], ['available-birds', 'Available', 1, 5708], ['eggs-pairs', 'Eggs & Pairs', 1, 10622],
+    ['congo', 'Congo Grey', 2, 11416], ['timneh', 'Timneh Grey', 2, 14032], ['compare-species', 'Compare', 2, 16470],
+    ['why-us', 'Why Us', 3, 22599], ['trust', 'Verify Us', 3, 25464], ['history', 'History', 3, 30400], ['health', 'Health', 3, 32210],
+    ['pricing', 'Pricing', 4, 34003], ['tools', 'Cost Tools', 4, 36649], ['shipping', 'Shipping', 4, 38457], ['reviews', 'Reviews', 4, 42042],
+    ['blog', 'Care Guides', 4, 43475], ['faq', 'FAQ', 4, 45933], ['how-to-buy', 'How to Buy', 4, 49564], ['contact', 'Contact', 4, 51305],
+  ];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
+  const shot = (file, w, h, offset) => {
+    const d = el('div', 'shot');
+    d.style.height = h + 'px';
+    d.style.backgroundImage = `url("${file}")`;
+    d.style.backgroundSize = `${w}px auto`;
+    d.style.backgroundPosition = `0 ${-offset}px`;
+    return d;
+  };
+  const fit = (host, device, w) => {
+    const apply = () => { device.style.zoom = String(host.clientWidth / w); };
+    apply();
+    new ResizeObserver(apply).observe(host);
+  };
+  const pageY = (sc, contentH, vh) => {
+    const max = sc.scrollHeight - sc.clientHeight;
+    return max > 0 ? (sc.scrollTop / max) * (contentH - vh) : 0;
+  };
+  const goTo = (sc, y, contentH, vh) => {
+    const max = sc.scrollHeight - sc.clientHeight;
+    sc.scrollTo({ top: (y / (contentH - vh)) * max, behavior: reduce ? 'auto' : 'smooth' });
+  };
+
+  // ── Desktop ──
+  function railNav() {
+    const nav = el('nav', 'rail');
+    nav.setAttribute('aria-label', 'Page sections (preview)');
+    SECTIONS.forEach(([id, label, part], i) => {
+      if (i > 0 && SECTIONS[i - 1][2] !== part) nav.append(el('div', 'rail-spacer'));
+      const a = el('a', 'rail-item', `<span class="rail-dot"></span><span class="rail-label">${label.replace('&', '&amp;')}</span>`);
+      a.href = '#' + id;
+      a.addEventListener('click', e => e.preventDefault());
+      nav.append(a);
+    });
+    return nav;
+  }
+  function buildDesk(opt, w) {
+    const host = opt.querySelector('.host');
+    const state = opt.querySelector('.state');
+    const design = opt.dataset.design;
+    const m = M[w];
+    host.replaceChildren();
+    const device = el('div', 'device browser');
+    device.style.width = w + 'px';
+    device.style.height = m.vh + 'px';
+    const sc = el('div', 'scroller');
+    const file = `homepage-${w}.jpg`;
+    const head = shot(file, w, HEADER, 0); head.classList.add('shot-head');
+    sc.append(head, shot(file, w, m.shotH - HEADER, HEADER));
+    const rail = railNav();
+    device.append(sc, rail);
+    host.append(device);
+    fit(host, device, w);
+    const sync = () => {
+      const y = pageY(sc, m.shotH, m.vh);
+      const heroOn = y < m.heroBottom - HEADER;
+      rail.classList.toggle(design === '1' ? 'is-hidden' : 'is-slim', heroOn);
+      state.dataset.live = heroOn ? 'off' : 'on';
+      state.textContent = heroOn
+        ? (design === '1' ? 'Hero on screen · menu hidden' : 'Hero on screen · slim dots')
+        : 'Past the hero · full menu';
+    };
+    sc.addEventListener('scroll', sync, { passive: true });
+    sync();
+    opt.querySelectorAll('[data-go]').forEach(b => { b.onclick = () => goTo(sc, b.dataset.go === 'top' ? 0 : m.heroBottom + 200, m.shotH, m.vh); });
+  }
+  let deskW = 1280;
+  const desks = [...document.querySelectorAll('.opt[data-design]')];
+  const renderDesk = () => desks.forEach(o => buildDesk(o, deskW));
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+    deskW = Number(b.dataset.w);
+    document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    renderDesk();
+  }));
+  renderDesk();
+
+  // ── Mobile ──
+  function buildPhone(opt) {
+    const host = opt.querySelector('.host');
+    const state = opt.querySelector('.state');
+    const kind = opt.dataset.mdesign;
+    const m = M[390], w = 390;
+    const device = el('div', 'device phone');
+    device.style.width = w + 'px';
+    device.style.height = m.vh + 'px';
+    const sc = el('div', 'scroller');
+    const file = 'homepage-390.jpg';
+    // the mobile header is captured on its own (a full-page capture paints the sticky header mid-page)
+    const head = shot('header-390.png', w, HEADER, 0); head.classList.add('shot-head');
+    const strip = el('nav', `mrail ${kind}`);
+    strip.setAttribute('aria-label', 'On this page (preview)');
+    const row = el('div', 'row');
+    const chips = SECTIONS.map(([id, label], i) => {
+      const a = el('a', i === 0 ? 'on' : '', `<b>${String(i + 1).padStart(2, '0')}</b> ${label.replace('&', '&amp;')}`);
+      a.href = '#' + id;
+      a.addEventListener('click', e => e.preventDefault());
+      row.append(a);
+      return a;
+    });
+    strip.append(row);
+    sc.append(head, shot(file, w, m.heroBottom - HEADER, HEADER), strip, shot(file, w, m.shotH - m.heroBottom, m.heroBottom));
+    const bar = el('img', 'tabbar');
+    bar.src = 'tabbar-390.png';
+    bar.alt = '';
+    device.append(sc, bar);
+    host.append(device);
+    fit(host, device, w);
+    let active = 0;
+    const sync = () => {
+      const railH = strip.offsetHeight;
+      const contentH = m.shotH + railH;
+      const y = pageY(sc, contentH, m.vh);
+      const probe = y + HEADER + railH + 8;
+      let idx = 0;
+      SECTIONS.forEach(([, , , top], i) => { if (probe >= top + railH) idx = i; });
+      if (idx !== active) {
+        chips[active].classList.remove('on');
+        chips[idx].classList.add('on');
+        active = idx;
+        row.scrollTo({ left: chips[idx].offsetLeft - 16, behavior: reduce ? 'auto' : 'smooth' });
+      }
+      const pinned = y > m.heroBottom - HEADER;
+      state.dataset.live = pinned ? 'on' : 'off';
+      state.textContent = pinned ? `Pinned under the header · ${SECTIONS[idx][1]}` : 'Sits right under the hero';
+    };
+    sc.addEventListener('scroll', sync, { passive: true });
+    sync();
+    opt.querySelectorAll('[data-go]').forEach(b => { b.onclick = () => goTo(sc, b.dataset.go === 'top' ? 0 : 5900, m.shotH + strip.offsetHeight, m.vh); });
+  }
+  document.querySelectorAll('.opt[data-mdesign]').forEach(buildPhone);
+})();
+</script>
