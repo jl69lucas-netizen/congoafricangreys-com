@@ -21,7 +21,7 @@ Prompt-rewrite artifact: https://claude.ai/code/artifact/e46af6a3-172f-4892-baf1
 - Bird + /available/ group titles sat 0px under the pills (Tailwind v4 space-y vs `m-0`); all families now ≥12px at 3 widths, new gate `scripts/form_title_gap_probe.mjs` (126be263).
 - P0 found by the impeccable critique: full form's required delivery radios were `display:none` → submit silently blocked; fixed 1807d015, guarded in form_contract_browser.mjs (f90f23c9).
 10. `text-clay-text` is undefined in the Tailwind theme: 367 uses on the homepage + /available/ render in inherited ink. Form stars repointed to `text-clay-ink`; defining the token recolours the homepage — breeder preview first.
-11. Both dup gates exempt a genuine crossover adjacent to a whitelisted line — spun out as its own task.
+11. Both dup gates exempt a genuine crossover adjacent to a whitelisted line — spun out as its own task. **Closed same day** (`fix(dup): whitelisted stems are cut out of a shared run, not used to exempt it`): both gates now cut the stem out and judge each remaining segment; fixture `known_broken/dup-adjacent-to-whitelist.html`. Python gate surfaced 481 previously hidden findings (53 passages, 70 pages; 27 passages are bird-card text awaiting a breeder ruling); harness +0, because it only compares same-type targets. Report: `docs/artifacts/cags-dup-whitelist-adjacency-report.md`. No copy edited.
 12. Formspree `xpqoeazq` deletion is the breeder's (permanent deletion in their account; export old submissions first).
 - Critique artifact: https://claude.ai/code/artifact/cdee5b57-98f9-4bc3-9929-2cad14cdadc2 (+ docs/artifacts/cags-form-critique.md).
 
