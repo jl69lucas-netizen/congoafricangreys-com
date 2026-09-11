@@ -50,14 +50,16 @@ CONFIRMED_SPECS = [
     ("q14", "Alene Murphy", "Savannah, GA", "congo-african-grey-parrot-pair-for-sale",
      "Finding a reliable African grey parrot pair for sale",
      "breeder brief 8cda89e3 (2026-07-30) — Savannah, GA", "2026-07-30"),
+    ("q15", "Lawrence Brunner", "Fullerton, CA", "available", "I'd been burned by a deposit scam before",
+     "breeder ruling 2026-09-11 (chat), wording identical to the /available/ hub", "2026-09-11"),
+    ("q16", "Sandra Soliz", "Rome, GA", "available", "What sold me was how well they actually knew",
+     "breeder ruling 2026-09-11 (chat), wording identical to the /available/ hub", "2026-09-11"),
+    ("q17", "Ida Brim", "Nashville, TN", "available", "From the first email to home delivery, everything",
+     "breeder ruling 2026-09-11 (chat), wording identical to the /available/ hub", "2026-09-11"),
 ]
-_DISPUTED = ("commit a6681e66 (2026-06-19) calls them real reviewers; memory 2026-06-26 records the set "
-             "as invented — breeder ruling owed")
-PENDING_SPECS = [
-    ("p1", "Lawrence Brunner", "Fullerton, CA", "available/roys", "I'd been burned by a deposit scam before", _DISPUTED, None),
-    ("p2", "Sandra Soliz", "Rome, GA", "available/roys", "What sold me was how well they actually knew", _DISPUTED, None),
-    ("p3", "Ida Brim", "Nashville, TN", "available/roys", "From the first email to home delivery here in Nashville", _DISPUTED, None),
-]
+# Disputed reviews go here (ids pN). --write replaces data["pending"] wholesale from this list,
+# so record a dispute here, never by hand in data/reviews.json.
+PENDING_SPECS = []
 
 
 def norm(s: str) -> str:

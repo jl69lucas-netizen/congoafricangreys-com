@@ -244,8 +244,6 @@ def test_every_review_blockquote_is_ledgered():  # discovery
                 continue
             if slug == SUMMARY_PAGE and any(f in q for f in SUMMARY_FRAGMENTS):
                 continue
-            if any(n in q for n in PENDING_NAMES):
-                continue  # awaiting the breeder's ruling — Task 11 removes this exemption
             stray.append(f"{slug}: {q[:90]!r}")
     assert not stray, "blockquotes not in data/reviews.json:\n" + "\n".join(stray)
 
@@ -300,8 +298,6 @@ def test_every_star_card_is_ledgered():  # discovery for <p>-style cards
             # own third-person summary. The fragment sits in the same card, so look for it in the window.
             if slug == SUMMARY_PAGE and any(f in window for f in SUMMARY_FRAGMENTS):
                 continue
-            if any(n in window for n in PENDING_NAMES):
-                continue  # awaiting the breeder's ruling — Task 11 removes this exemption
             stray.append(f"{slug}: {quote[:110]!r}")
     print(f"\nstar/verified review cards examined: {cards}")
     assert cards >= 20, "found almost no review cards — card detection is broken"
@@ -368,6 +364,5 @@ def test_ledger_photos_are_unique():  # D-e
     assert len(avatars) == len(set(avatars)), "one photo is assigned to two buyers in data/reviews.json"
 
 
-@pytest.mark.xfail(strict=True, reason="Open Flag: breeder ruling owed on Brunner / Soliz / Brim")
 def test_no_review_awaits_a_ruling():
     assert PENDING == []
