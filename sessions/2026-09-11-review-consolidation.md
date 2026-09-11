@@ -65,3 +65,4 @@ Plan artifact: https://claude.ai/code/artifact/b7bc965b-18c3-4bb0-bbd9-42441a01a
 - [x] Commit F 887b598d pushed: font-display→font-lora (17 files, breeder-approved) + fake (432) 555-0119 phone removed from ContactForm (2 spots) and Navbar/Footer defaults (blanked; both render phone only when passed). The other session's hero landed separately as ad59f19b.
 - [x] 887b598d LIVE-verified (curl): homepage 0 font-display / 151 font-lora; prices, badges and pull quote in serif; no fake phone; IndexNow / HTTP 200
 - [x] Scorecards regenerated from a clean worktree of origin/main @ 887b598d: test:render:pages 57/57; 19 scorecard files committed
+- [x] Clifford Hutter photo: ledger q1 avatar = /african-grey-review-top.webp (breeder confirmed it's his); review page card shows it instead of initials. Only african-grey-reviews markup changed; 22 passed
