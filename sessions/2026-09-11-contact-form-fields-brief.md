@@ -29,10 +29,15 @@ Prompt-rewrite artifact: https://claude.ai/code/artifact/e46af6a3-172f-4892-baf1
 Chosen: (a) screening-question polish — "Questions we ask every family" group + one-line why, sentence-case question legends, surrender as Yes/No that reveals the text box only on Yes; (b) inline error messages — summary above submit, per-field message, "Emails don't match" / "Numbers don't match"; (c) 44px Yes/No pills on mobile + define the missing `text-clay-text` colour (homepage recolour previewed first).
 Not chosen (stays open): one field order across all families.
 
+**Shipped after the breeder approved the local preview** ("Ship it"): 25 page files via a fail-loud patcher + both shared components, `global.css`, `BaseLayout.astro`, new `src/scripts/form-enhance.js`. Surrender is now a required Yes/No (`surrender_history`) plus a `surrender_details` box revealed and required only on Yes; "Questions we ask every family" heading; sentence-case question legends; 44px pills; inline per-field errors inside each field's own wrapper + focused summary + "Emails/Numbers don't match"; `--color-clay-text` defined (268 inline links on /available/ + bird pages, 1 homepage link — not a homepage recolour, as first feared). Gates before commit: audit PASS, title-gap probe 0/53, browser proof 106/106, behaviour 12/12 (6 families × 375/1280; every error ≥8px from the next title), pytest 223, meta 292, pages gate.
+- Caught in the preview, not by a gate: error messages first sat flush on the next title (inserted after the field in a Tailwind v4 `space-y` stack, with a margin shorthand). Now appended inside the field wrapper; the behaviour test asserts the gap.
+- IndexNow gap found: the round-1 comparison / for-sale / adoption-cost slugs (13) were only ever dry-run; this round submits the 53-slug union.
+- Flag 11 was closed by the separate dup-adjacency session (a09e33d4, b9b36a54), which ran in this same working tree.
+
 ## What's Next
 - Promote `form-inquiry-contract` to blocking after one full cluster with zero false reports (learning-loop §4).
 - Candidate LAYOUT check for Flag 9: every `.req` / `.inq-required` / `.cf-req` star's box top sits within its label text's first line box. Write `known_broken` first (a grid label with text + star + input), watch the meta gate fail, then implement as advisory.
-- Breeder decision on Open Flag 1 (lift `requireAll={false}` on `/` and `/contact-us/`), and Flag 8's pricing-card footer with it.
+- Open breeder call from the critique: one field order across all seven families (preview first).
 - 30-day Formspree volume check on blog `_subject`s (Open Flag 2).
 - Delete Formspree form `xpqoeazq` in the dashboard (breeder).
 - `.claude/skills/cag-component-variations/SKILL.md` was re-synced from `skills/` by `register_skills.py --copy` (adds the 2026-09-10 canvas URL line already in the source); left uncommitted with the other pre-existing skill-copy syncs.

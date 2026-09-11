@@ -15,6 +15,9 @@
 | **P0 found by this critique:** the full form's delivery radios were `display:none` and required, so a buyer who skipped delivery could not send the form and saw no message | Fixed | `1807d015` |
 | Required `*` on `/available/` + bird forms rendered grey (undefined `text-clay-text` class), now clay `#bd4129` | Fixed | `1807d015` |
 | "Four quick fields" / "A few quick fields" over forms that ask 10–11 questions, now "Ten short questions" / "Eleven short questions" | Fixed | `1807d015` |
+| **Round 3, approved from a local preview:** "Questions we ask every family" heading, sentence-case question titles, surrender as Yes/No that opens a text box only on Yes | Fixed | round-3 commit |
+| Round 3: inline error messages inside each field, a focused summary above the submit, "Emails don't match" / "Numbers don't match" | Fixed | round-3 commit |
+| Round 3: Yes/No pills 44 px tall on every family; `text-clay-text` defined, so 268 inline links on `/available/` + bird pages render clay | Fixed | round-3 commit |
 
 Live check after deploy: all changed pages return 200; the homepage message is required; the blog form has surrender and no experience question; no `m-0` fieldsets remain on the bird pages.
 
@@ -63,20 +66,20 @@ The in-browser overlay was skipped: `impeccable live` needs a project config (`.
 ### P0 · The full form could not be sent when delivery was skipped (Fixed, `1807d015`)
 The four delivery radios were hidden with `display:none` while the first was `required`. With delivery unset, Chrome refused to submit, sent nothing and logged "An invalid form control with name='delivery_method' is not focusable" four times; keyboard users could never reach the choice. This sat on every page that renders the shared full form, the homepage included, and predates this session. Now the radio is visually hidden but focusable, the card shows a focus ring, and the browser focuses the card's radio and shows its message. Re-measured: 0 warnings. `scripts/form_contract_browser.mjs` now fails any form that raises that warning.
 
-### P1 · No inline validation (Your call)
-Errors come only as native bubbles, one at a time, on a very tall form, sometimes under the sticky header. **Fix:** an error summary above the submit, a message on each field with `aria-invalid`, and "Emails don't match" / "Numbers don't match" on the confirm fields. **Trade-off:** adds a small script to every form family.
+### P1 · No inline validation (Fixed, round 3)
+Errors came only as native bubbles, one at a time, on a very tall form. Now `src/scripts/form-enhance.js` shows a message inside each field's own wrapper, a focused summary above the submit (each item jumps to its field), and "Emails don't match" / "Numbers don't match" on the confirm fields. Native validation still works without JavaScript. The first preview put messages flush on the next title; the behaviour test now asserts at least 8 px.
 
-### P1 · How the screening questions read (Your call)
-The resale legend is a 3–4 line uppercase block that reads as an accusation, and "If yes, please explain" sits on a required box, so a buyer must type "No". **Fix, keeping both questions:** group them under "Questions we ask every family" with one line on why; sentence case for question legends; make surrender a Yes/No choice that reveals the text box only on Yes. **Trade-off:** the surrender field changes from free text to Yes/No + text; the audit contract would accept both.
+### P1 · How the screening questions read (Fixed, round 3)
+The resale legend was a 3–4 line uppercase block and "If yes, please explain" sat on a required box. Now both questions sit under "Questions we ask every family" with one line on why, question titles are in sentence case, and surrender is a required Yes/No whose text box opens, and becomes required, only on Yes. The wording of both questions is unchanged.
 
 ### P2 · One field order across all seven families (Your call)
 Evie and baby split confirm fields from their originals; the homepage asks surrender before resale and puts screening between contact details and the bird choice. **Fix:** Contact, then Bird + delivery, then Questions we ask every family, then Message, everywhere. **Trade-off:** a visible reorder on 53 forms; preview first (CLAUDE.md rule 7).
 
-### P2 · Yes/No pills are 38–41 px tall on mobile (Your call)
-Under the 44 px touch target. **Fix:** `min-height:44px` on the pill labels in each family. Low risk; a spacing-only change.
+### P2 · Yes/No pills were 38–41 px tall on mobile (Fixed, round 3)
+Every family's pill now has `min-height:44px` (Tailwind `min-h-11`).
 
-### P2 · `text-clay-text` is not a colour in the theme (Your call)
-367 uses on the homepage and the 7 `/available/` pages render in inherited ink, not clay. Only the form stars and checked pills were repointed (to `text-clay-ink`). **Fix:** define `--color-clay-text: #b04228` in `global.css`. **Trade-off:** recolours 367 elements on the homepage, the highest-traffic page, so it needs a preview first.
+### P2 · `text-clay-text` was not a colour in the theme (Fixed, round 3)
+`--color-clay-text: #b04228` is now defined. Measured before shipping, the scope was smaller than first reported: after the form stars were repointed, 268 uses remained, almost all inline text links on `/available/` and the six bird pages, plus one homepage link. They now render clay instead of body ink.
 
 ## Persona red flags
 

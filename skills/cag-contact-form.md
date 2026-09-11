@@ -53,7 +53,7 @@ page's own required class, colour `#b04228`.
 | 1 | Confirm Number | `phone_confirm` or `cell_confirm` (match the page's phone field) | tel, required |
 | 2 | Confirm Email | `email_confirm` | email, required |
 | 3 | Are you involved in any pet store, commercial parrot breeding operation, or getting parrots for cheap resale? | `resale_screening` | radio `yes` / `no`, required |
-| 4 | Have you ever surrendered a pet to a shelter or given one away? | `surrender_history` | textarea, required, placeholder "If yes, please explain in detail. Honest answers are appreciated." |
+| 4 | Have you ever surrendered a pet to a shelter or given one away? | `surrender_history` (radio) + `surrender_details` (textarea) | radio `yes` / `no`, required; the details box ("If yes, tell us what happened. Honest answers are appreciated.") sits in `[data-surrender-details]`, is revealed and made required only on Yes by `src/scripts/form-enhance.js`, and stays visible + optional without JS (2026-09-11 round 3) |
 | 5 | Are you a First-Time or Experienced Parrot Owner? | `experience` | radio `experienced` / `first-time`, required |
 | 6 | How would you like your grey to reach you? | `delivery` (`delivery_method` in `cag-inquiry-form`) | radio cards with descriptions, required |
 | 7 | Message (the page's own label) | `message` or `msg` | textarea, required |
@@ -70,6 +70,15 @@ description, which is why delivery is always a radio list:
 
 (Pages with an existing value scheme keep it: dna-tested / hand-raised submit `Airport pickup ($185)`,
 baby submits `airport` / `home` / `nanny` / `midland`, adoption-cost renders prices through `money()`.)
+
+## Presentation layer (2026-09-11 round 3, breeder-approved from critique cdee5b57)
+
+Every family renders, in its own vocabulary:
+- **"Questions we ask every family"** — `.screen-head` / `.screen-title` / `.screen-why` (global.css) directly above the screening questions, with the one-line why: "A grey lives 40 to 60 years, so we ask every buyer the same few questions before we place a bird."
+- **Sentence-case question legends** — never the 12 px uppercase label style for a question (both critique assessments flagged it). Short field labels (Name, Email) keep each family's uppercase style.
+- **44 px pills** — every Yes/No or option pill has `min-height:44px` (Tailwind: `min-h-11`).
+- **`src/scripts/form-enhance.js`**, loaded once from `BaseLayout.astro`, acts only on forms carrying `[name="resale_screening"]`: sets `noValidate`, reveals the surrender details box on Yes, and on submit shows a per-field message inside the field's own wrapper, an error summary above the submit button (focused, each item a button that focuses its field), and "Emails don't match." / "Numbers don't match." on the confirm fields. Without JS, native validation still works.
+- **`--color-clay-text: #b04228`** is now a real theme colour (268 `text-clay-text` inline links on /available/ + bird pages rendered in body ink before).
 
 ## Form families and where each lives
 
@@ -105,6 +114,14 @@ once** or the file is left untouched, so a page whose markup drifted fails loudl
    The probe measures an option's pill/card LABEL, never the radio circle inside it — the circle sits
    ~12px above the pill's bottom edge and hid the 0px collision in the first version of the probe.
    Row gaps now: `form-main` 1rem, `fs-fields` label/fieldset 14px, Tailwind `space-y-4` 16px.
+5. **A validation message placed AFTER its field sits flush on the next title.** Inserted as a sibling in a
+   Tailwind `space-y` stack (and styled with a `margin` shorthand) it zeroed the stack's `margin-block-end`
+   — the same v4 trap as #3. `form-enhance.js` appends each message INSIDE the field's own wrapper
+   (fieldset / label / div) and `.form-err` sets only `margin-top`. Checked in a real browser: every
+   message ≥8 px above the next field title (round-3 behaviour test).
+6. **A required control must be focusable.** `display:none` on a required radio blocks submit with no
+   message ("An invalid form control … is not focusable") — the P0 on every full-form page until
+   2026-09-11. Hide visually (1 px, opacity 0), never `display:none`; `form_contract_browser.mjs` fails it.
 4. **Radio/card inputs inherit the family's text-input rule** (width, padding, border). Every family's
    CSS ends with a reset: `width:auto;padding:0;border:0;background:none;box-shadow:none;accent-color:#e8604c`.
 
