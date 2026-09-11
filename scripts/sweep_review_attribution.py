@@ -10,7 +10,8 @@ characters and a `name:` key; nested schema objects and CSS blocks never match):
    avatar is set when the object carries an avatar field AND the target has one,
    and a `headline:` (if present) is replaced with the target's headline.
 2. canonical — any object whose quote matches a ledger quote (first 60 chars)
-   gets the ledger's name and location.
+   gets the ledger's name and location and, when the text past the key has
+   been edited, the ledger's verbatim quote.
 
 Only the changed values are rewritten; the object's own key names
 (`loc`/`location`, `avatar`/`avatarSrc`), key order, indentation and quote
@@ -51,6 +52,12 @@ HEADLINE_RE = field_re("headline")
 
 def unescape(s: str) -> str:
     return re.sub(r"\\(.)", r"\1", s)
+
+
+def norm_text(s: str) -> str:
+    s = (s.replace("’", "'").replace("‘", "'")
+          .replace("“", '"').replace("”", '"').replace("\xa0", " "))
+    return re.sub(r"\s+", " ", s).strip()
 
 
 def literal(value: str, current_delim: str) -> str:
@@ -113,6 +120,8 @@ def rewrite_object(body: str, by_id, by_key, remap):
 
     ref = by_key.get(quote[:KEY])
     if ref is not None:
+        if norm_text(quote) != norm_text(ref["quote"]):
+            body = set_field(body, QUOTE_RE, ref["quote"], changes, "quote")
         body = set_field(body, NAME_RE, ref["name"], changes, "name")
         body = set_field(body, LOC_RE, ref["location"], changes, "location")
     return body, changes

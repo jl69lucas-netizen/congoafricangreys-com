@@ -7,6 +7,7 @@ import KeyTakeawayV2 from '../../components/cag-library/KeyTakeawayV2.astro';
 import Testimonials from '../../components/cag-library/Testimonials.astro';
 import BirdCard from '../../components/BirdCard.astro';
 import InquiryForm from '../../components/cag-inquiry-form.astro';
+import reviewLedger from '../../../data/reviews.json';
 
 const title = "African Grey Parrot Reviews | What Do Real Buyers Say About C.A.Gs? | Is congoafricangreys.com Legit? Verified Families on Mark & Teri Benjamin's Congo & Timneh Greys | C.A.Gs – Midland, TX";
 const description = "Real C.A.Gs reviews from families who bought a Congo or Timneh African Grey from Mark & Teri Benjamin in Midland, TX. Wondering is congoafricangreys.com legit? Verified buyer stories on our DNA-sexed, CITES Appendix I captive-bred Greys — 4.9/5 across 52 verified buyers, nationwide shipping.";
@@ -38,38 +39,26 @@ const jumpPartNames = {
 const AGG_RATING = "4.9";
 const AGG_COUNT = "52";
 
-// ─── Featured buyer reviews — REAL, reused verbatim from the live homepage `reviews[]`.
-//     NOT fabricated. (src/pages/index.astro lines 67–78.) ───
-const featuredReviews = [
-  { headline: 'Affectionate, intelligent, already picking up words.',
-    quote: "I searched for African Grey parrots for sale near me for months before finding C.A.Gs. Their birds are truly top-notch! My African Grey is affectionate, intelligent, and already picking up words. The shipping process was seamless, and they included a health guarantee.",
-    name: 'Clifford Hutter', location: 'Secaucus, NJ', meta: 'Congo African Grey',
-    avatarSrc: '/african-grey-review-top.webp' },
-  { headline: 'Healthy, friendly, and well-trained.',
-    quote: "I ordered a Congo African Grey from C.A.Gs and the experience was flawless. My parrot is healthy, friendly, and well-trained. Watching it grow and bond with my family has been an absolute joy. I recommend C.A.Gs to anyone looking for a quality African Grey.",
-    name: 'Catherine Kempf', location: 'Schaumburg, IL', meta: 'Congo African Grey',
-    avatarSrc: '/catherine-kempf-schaumburg-il-review.webp' },
-];
-
-// ─── More reviews (grid) — REAL verified buyers WITH photos, reused from the live
-//     homepage `bottomReviews[]`. NOT fabricated. (src/pages/index.astro lines 81–94.) ───
-const moreReviews = [
-  { headline: 'Professional and transparent from start to finish.',
-    quote: "Finding a healthy and well-socialized female Congo African Grey was important to me, and I'm so glad I chose C.A.Gs. The entire experience was professional, transparent, and reassuring from start to finish. My Congo Grey is beautiful, affectionate, and already showing an amazing personality. I highly recommend C.A.Gs to anyone looking for a quality Congo Grey parrot.",
-    name: "Archie O'Brien", location: 'Farmingdale, NY', meta: 'Congo African Grey',
-    avatarSrc: '/archie-obrien-farmingdale-ny-review.webp' },
-  { headline: 'They made buying a bird online stress-free.',
-    quote: "At first I was hesitant about buying a bird online, but C.A.Gs made the process stress-free. They provided detailed care instructions and my parrot arrived in perfect condition. My Congo African Grey is now the star of our family, talking and entertaining us daily.",
-    name: 'Richard Woodard', location: 'Winter Haven, FL', meta: 'Congo African Grey',
-    avatarSrc: '/richard-woodard-winter-haven-fl-review.webp' },
-  { headline: 'Healthy, friendly, and well-trained.',
-    quote: "I ordered a Congo African Grey from C.A.Gs and the experience was flawless. My parrot is healthy, friendly, and well-trained. Watching it grow and bond with my family has been an absolute joy. I recommend C.A.Gs to anyone looking for a quality African Grey.",
-    name: 'Catherine Kempf', location: 'Schaumburg, IL', meta: 'Congo African Grey',
-    avatarSrc: '/catherine-kempf-schaumburg-il-review.webp' },
-];
-
-// Combined for Review schema — all 5 authors are unique across the two arrays
-// (Richard lives only in the moreReviews grid; his featured block was removed as a duplicate).
+// ─── Reviews — rendered from data/reviews.json, the single source of truth for who said
+//     what (names from the breeder only). Every confirmed review is listed exactly once;
+//     `pending` reviews are never shown here. Guard: tests/test_review_integrity.py. ───
+type LedgerReview = {
+  id: string; quote: string; name: string; location: string;
+  bird?: string | null; avatar?: string | null; headline?: string;
+};
+const ledger = reviewLedger.reviews as LedgerReview[];
+const toCard = (r: LedgerReview) => ({
+  quote: r.quote, name: r.name, location: r.location, headline: r.headline,
+  meta: r.bird ?? undefined, avatarSrc: r.avatar ?? undefined,
+});
+// Featured: the two ledger reviews with the strongest photos (Brian Carr, Catherine Kempf).
+const FEATURED_IDS = ['q5', 'q3'];
+const featuredReviews = FEATURED_IDS.map((id) => {
+  const r = ledger.find((x) => x.id === id);
+  if (!r) throw new Error(`FEATURED_IDS: '${id}' is not in data/reviews.json reviews[] — moved to pending or removed?`);
+  return toCard(r);
+});
+const moreReviews = ledger.filter((r) => !FEATURED_IDS.includes(r.id)).map(toCard);
 const allReviews = [...featuredReviews, ...moreReviews];
 
 // ─── Available birds (cross-sell grid). Prices/shipping from data files via BirdCard +
@@ -95,7 +84,7 @@ const birds = [
 // ─── FAQ (branded-search + PAA sourced; mirrored into FAQPage schema) ───
 const faqs = [
   { q: "Are C.A.Gs reviews real?",
-    a: "Yes. The reviews on this page are from real families who bought a Congo or Timneh African Grey from us — the same verified buyers and photos we feature on our homepage, not anonymous star ratings or invented testimonials.\n\nBuyers like Richard in Winter Haven, Florida, Catherine in Schaumburg, Illinois, and Archie in Farmingdale, New York describe their own birds in their own words. We never publish a review we did not actually receive." },
+    a: "Yes. The reviews on this page are from real families who bought a Congo or Timneh African Grey from us — the same verified buyers and photos we feature across our site, not anonymous star ratings or invented testimonials.\n\nBuyers like Richard in Winter Haven, Florida, Catherine in Schaumburg, Illinois, and Archie in Farmingdale, New York describe their own birds in their own words. We never publish a review we did not actually receive." },
   { q: "Is congoafricangreys.com legit?",
     a: "Yes.\n\nC.A.Gs is run by Mark and Teri Benjamin, a USDA-licensed family African Grey breeder in Midland, Texas since 2014. We hold a verifiable USDA Animal Welfare Act license, place only U.S. captive-bred birds with CITES Appendix I documentation, video-call you to show your specific bird on demand, and hand you the paperwork before any money moves.\n\nRead the verified reviews here, then verify our license before you pay — exactly how a real breeder should be vetted." },
   { q: "What rating do African Grey buyers give C.A.Gs?",
@@ -290,9 +279,9 @@ const reviewSchema = allReviews.map((r) => ({
         <div class="mb-8 text-center">
           <p class="font-sora text-xs font-bold uppercase tracking-[0.16em] text-clay">More C.A.Gs Reviews</p>
           <h2 class="font-lora mt-2 font-bold text-logo-dark">Why Do Hesitant Buyers End Up Recommending Us?</h2>
-          <p class="font-sora text-stone-500 mt-3 text-sm leading-relaxed mx-auto" style="max-width:70ch;">Nearly every family below started out nervous about buying online — and changed their mind once the paperwork arrived before payment and a healthy <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey</a> matched the listing exactly.</p>
+          <p class="font-sora text-stone-500 mt-3 text-sm leading-relaxed mx-auto" style="max-width:70ch;">Every review below is quoted word for word from a family who brought home a Grey from us, from a single hand-raised baby to a proven breeding pair. Richard in Winter Haven admits he was hesitant about buying a bird online at first; read what changed his mind in his own words, then see how a <a href="/captive-bred-african-grey-parrot/">captive-bred African Grey</a> is documented before it ships.</p>
         </div>
-        <Testimonials variant="grid" testimonials={moreReviews} />
+        <Testimonials variant="wall" testimonials={moreReviews} />
       </div>
     </section>
 

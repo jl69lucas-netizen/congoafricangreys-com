@@ -104,3 +104,26 @@ def test_every_src_review_matches_reviews_json():
             bad.append(f"{path.relative_to(ROOT)}: {ref['id']} credited to {name!r}, ledger says {ref['name']!r}")
     assert matched >= 10, f"only {matched} src reviews matched the ledger — check the extractor"
     assert not bad, "\n".join(bad)
+
+
+def _norm(s: str) -> str:
+    s = (s.replace("’", "'").replace("‘", "'")
+          .replace("“", '"').replace("”", '"').replace("\xa0", " "))
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def test_every_src_review_is_verbatim():
+    """A review that opens with a ledger quote must BE that quote — no rewriting past the key."""
+    data = _load_json()
+    canonical = {r["quote"][:KEY]: r for r in data["reviews"]}
+    matched = 0
+    bad = []
+    for path, quote, name, _loc in _src_reviews():
+        ref = canonical.get(quote[:KEY])
+        if ref is None:
+            continue
+        matched += 1
+        if _norm(quote) != _norm(ref["quote"]):
+            bad.append(f"{path.relative_to(ROOT)}: {ref['id']} ({name}) is edited after the first {KEY} characters")
+    assert matched >= 10, f"only {matched} src reviews matched the ledger — check the extractor"
+    assert not bad, "\n".join(bad)
