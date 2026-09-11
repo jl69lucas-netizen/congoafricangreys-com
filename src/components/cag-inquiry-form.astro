@@ -145,34 +145,45 @@ const pricingRows = [
           </div>
         </div>
 
-        <!-- Field 4: Surrender history -->
+        <!-- Screening questions: one group, sentence case (2026-09-11 form critique) -->
+        <div class="inq-field screen-head"><p class="screen-title">Questions we ask every family</p><p class="screen-why">A grey lives 40 to 60 years, so we ask every buyer the same few questions before we place a bird.</p></div>
+
+        <!-- Field 4: Surrender history (Yes/No; the details box is revealed on Yes by src/scripts/form-enhance.js) -->
         <div class="inq-field">
-          <label class="inq-label font-sora" for={idPrefix + "surrender"}>
-            Have you ever surrendered a pet to a shelter or given one away? <span class="inq-required">*</span>
-          </label>
+          <fieldset class="inq-fieldset">
+            <legend class="inq-label inq-q font-sora">Have you ever surrendered a pet to a shelter or given one away? <span class="inq-required">*</span></legend>
+            <div class="inq-radio-pills">
+              <label class="inq-radio-pill font-sora">
+                <input type="radio" name="surrender_history" value="yes" required /> Yes
+              </label>
+              <label class="inq-radio-pill font-sora">
+                <input type="radio" name="surrender_history" value="no" required /> No
+              </label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="inq-field" data-surrender-details>
+          <label class="inq-label inq-q font-sora" for={idPrefix + "surrender"}>If yes, tell us what happened. Honest answers are appreciated.</label>
           <textarea
             id={idPrefix + "surrender"}
-            name="surrender_history"
-            required
+            name="surrender_details"
             rows="4"
-            placeholder="If yes, please explain in detail."
             class="inq-input inq-textarea font-sora"
           ></textarea>
-          <p class="inq-helper font-sora">If yes, please explain in detail. Honest answers are appreciated.</p>
         </div>
 
         <!-- Field 5: Resale screening -->
         <div class="inq-field">
           <fieldset class="inq-fieldset">
-            <legend class="inq-label font-sora">
+            <legend class="inq-label inq-q font-sora">
               Are you involved in any pet store, commercial parrot breeding operation, or getting parrots for cheap resale? <span class="inq-required">*</span>
             </legend>
             <div class="inq-radio-pills">
               <label class="inq-radio-pill font-sora">
-                <input type="radio" name="resale_screening" value="yes" required /> YES
+                <input type="radio" name="resale_screening" value="yes" required /> Yes
               </label>
               <label class="inq-radio-pill font-sora">
-                <input type="radio" name="resale_screening" value="no" required /> NO
+                <input type="radio" name="resale_screening" value="no" required /> No
               </label>
             </div>
           </fieldset>
@@ -220,7 +231,7 @@ const pricingRows = [
         <!-- Field 8: Delivery method (radio cards) -->
         <div class="inq-field">
           <fieldset class="inq-fieldset">
-            <legend class="inq-label font-sora">How to get your grey parrot? <span class="inq-required">*</span></legend>
+            <legend class="inq-label inq-q font-sora">How to get your grey parrot? <span class="inq-required">*</span></legend>
             <div class="inq-delivery-cards">
               <label class="inq-delivery-card font-sora">
                 <input type="radio" name="delivery_method" value="airport" required />
@@ -261,7 +272,7 @@ const pricingRows = [
         <!-- Field 9: Experience level -->
         <div class="inq-field">
           <fieldset class="inq-fieldset">
-            <legend class="inq-label font-sora">Are you a First-Time or Experienced Parrot Owner? <span class="inq-required">*</span></legend>
+            <legend class="inq-label inq-q font-sora">Are you a First-Time or Experienced Parrot Owner? <span class="inq-required">*</span></legend>
             <div class="inq-radio-pills">
               <label class="inq-radio-pill font-sora">
                 <input type="radio" name="experience" value="experienced" required /> Experienced Owner
@@ -381,6 +392,8 @@ const pricingRows = [
     margin-bottom: 6px;
   }
   .inq-required { color: #b04228; }
+  /* Question legends read as sentences, not 12px capitals (2026-09-11 form critique). */
+  .inq-label.inq-q { text-transform: none; letter-spacing: 0; font-size: 14px; font-weight: 600; line-height: 1.4; }
   .inq-helper {
     font-size:var(--fs-micro);
     color: #6b6259;
@@ -422,6 +435,7 @@ const pricingRows = [
     display: flex;
     align-items: center;
     gap: 8px;
+    min-height: 44px;
     padding: 10px 20px;
     border: 2px solid #ede5dc;
     border-radius: 50px;
