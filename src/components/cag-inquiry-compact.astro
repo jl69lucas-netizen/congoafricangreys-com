@@ -1,7 +1,15 @@
 ---
 /**
- * cag-inquiry-compact — inquiry form (12 fields — 2026-09-11 field contract, see .claude/skills/cag-contact-form/SKILL.md) for content pages that need a
- * low-friction contact box, not the full 10-field adoption application (cag-inquiry-form).
+ * cag-inquiry-compact — low-friction inquiry box for content pages (not the full adoption
+ * application, cag-inquiry-form). Two variants (see .claude/skills/cag-contact-form/SKILL.md):
+ *
+ *   variant="short" (default) — the blog posts. The original short form (name, email, phone,
+ *     interest, message) plus Confirm Email, Confirm Number and the two screening questions
+ *     (resale, surrender). Breeder, 2026-09-11: "revert all blog post forms to the old short
+ *     forms … only put confirm email, numbers, the two questions." Interest + message stay
+ *     optional as they were; phone is required because Confirm Number presupposes one.
+ *   variant="full" — the scam page. The full seven-field contract (experience + delivery added).
+ *
  * AA-safe: green header with white heading + scoped light subtext (beats the Direction-D
  * `h2 + p {color:--ink}` rule via class specificity, so no dark-on-green trap).
  * Formspree xrejpnvn. Props let a page set its own framing + keep ids unique across instances.
@@ -12,6 +20,7 @@ interface Props {
   subject?: string;
   page?: string;
   idPrefix?: string;
+  variant?: 'short' | 'full';
 }
 const {
   heading = 'Ask a Verified Breeder',
@@ -19,7 +28,9 @@ const {
   subject = 'C.A.Gs Website Inquiry',
   page = '',
   idPrefix = '',
+  variant = 'short',
 } = Astro.props;
+const full = variant === 'full';
 const formAction = 'https://formspree.io/f/xrejpnvn';
 ---
 
@@ -58,8 +69,8 @@ const formAction = 'https://formspree.io/f/xrejpnvn';
       </div>
     </div>
     <div class="cf-group">
-      <label for={idPrefix + 'cf-interest'}>Interested In <span class="cf-req">*</span></label>
-      <select id={idPrefix + 'cf-interest'} name="interest" required>
+      <label for={idPrefix + 'cf-interest'}>Interested In{full && <> <span class="cf-req">*</span></>}</label>
+      <select id={idPrefix + 'cf-interest'} name="interest" required={full}>
         <option value="">Select an option</option>
         <option>Congo African Grey ($1,500–$3,500)</option>
         <option>Timneh African Grey ($1,200–$2,500)</option>
@@ -80,25 +91,29 @@ const formAction = 'https://formspree.io/f/xrejpnvn';
       <label for={idPrefix + 'cf-surrender'}>Have you ever surrendered a pet to a shelter or given one away? <span class="cf-req">*</span></label>
       <textarea id={idPrefix + 'cf-surrender'} name="surrender_history" rows="2" required placeholder="If yes, please explain in detail. Honest answers are appreciated."></textarea>
     </div>
-    <fieldset class="cf-group cf-fset">
-      <legend>Are you a First-Time or Experienced Parrot Owner? <span class="cf-req">*</span></legend>
-      <div class="cf-rad">
-        <label for={idPrefix + 'cf-exp-exp'}><input type="radio" id={idPrefix + 'cf-exp-exp'} name="experience" value="experienced" required /> Experienced owner</label>
-        <label for={idPrefix + 'cf-exp-first'}><input type="radio" id={idPrefix + 'cf-exp-first'} name="experience" value="first-time" required /> First-time owner</label>
-      </div>
-    </fieldset>
-    <fieldset class="cf-group cf-fset">
-      <legend>How would you like your grey to reach you? <span class="cf-req">*</span></legend>
-      <div class="cf-dlv">
-        <label for={idPrefix + 'cf-dlv-airport'}><input type="radio" id={idPrefix + 'cf-dlv-airport'} name="delivery" value="Airport pickup — $185" required /><span class="t">Airport Pickup · $185</span><span class="d">Flies on IATA live-animal terms with Delta, United or American to your nearest major airport; you collect at the airline's cargo desk.</span></label>
-        <label for={idPrefix + 'cf-dlv-home'}><input type="radio" id={idPrefix + 'cf-dlv-home'} name="delivery" value="Home delivery — $350" required /><span class="t">Home Delivery · $350</span><span class="d">Brought to the address you give us, on a date we agree with you first.</span></label>
-        <label for={idPrefix + 'cf-dlv-nanny'}><input type="radio" id={idPrefix + 'cf-dlv-nanny'} name="delivery" value="Flight nanny — from $750" required /><span class="t">Flight Nanny · from $750</span><span class="d">A nanny keeps your grey in the cabin for the whole flight; quoted per route.</span></label>
-        <label for={idPrefix + 'cf-dlv-midland'}><input type="radio" id={idPrefix + 'cf-dlv-midland'} name="delivery" value="Pickup in Midland, TX" required /><span class="t">Local Pickup · Free</span><span class="d">Collect from us in Midland, TX if you live within two to three hours.</span></label>
-      </div>
-    </fieldset>
+    {full && (
+      <fieldset class="cf-group cf-fset">
+        <legend>Are you a First-Time or Experienced Parrot Owner? <span class="cf-req">*</span></legend>
+        <div class="cf-rad">
+          <label for={idPrefix + 'cf-exp-exp'}><input type="radio" id={idPrefix + 'cf-exp-exp'} name="experience" value="experienced" required /> Experienced owner</label>
+          <label for={idPrefix + 'cf-exp-first'}><input type="radio" id={idPrefix + 'cf-exp-first'} name="experience" value="first-time" required /> First-time owner</label>
+        </div>
+      </fieldset>
+    )}
+    {full && (
+      <fieldset class="cf-group cf-fset">
+        <legend>How would you like your grey to reach you? <span class="cf-req">*</span></legend>
+        <div class="cf-dlv">
+          <label for={idPrefix + 'cf-dlv-airport'}><input type="radio" id={idPrefix + 'cf-dlv-airport'} name="delivery" value="Airport pickup — $185" required /><span class="t">Airport Pickup · $185</span><span class="d">Flies on IATA live-animal terms with Delta, United or American to your nearest major airport; you collect at the airline's cargo desk.</span></label>
+          <label for={idPrefix + 'cf-dlv-home'}><input type="radio" id={idPrefix + 'cf-dlv-home'} name="delivery" value="Home delivery — $350" required /><span class="t">Home Delivery · $350</span><span class="d">Brought to the address you give us, on a date we agree with you first.</span></label>
+          <label for={idPrefix + 'cf-dlv-nanny'}><input type="radio" id={idPrefix + 'cf-dlv-nanny'} name="delivery" value="Flight nanny — from $750" required /><span class="t">Flight Nanny · from $750</span><span class="d">A nanny keeps your grey in the cabin for the whole flight; quoted per route.</span></label>
+          <label for={idPrefix + 'cf-dlv-midland'}><input type="radio" id={idPrefix + 'cf-dlv-midland'} name="delivery" value="Pickup in Midland, TX" required /><span class="t">Local Pickup · Free</span><span class="d">Collect from us in Midland, TX if you live within two to three hours.</span></label>
+        </div>
+      </fieldset>
+    )}
     <div class="cf-group">
-      <label for={idPrefix + 'cf-msg'}>Your Message or Listing Link <span class="cf-req">*</span></label>
-      <textarea id={idPrefix + 'cf-msg'} name="message" rows="3" required placeholder="Paste a suspicious listing, or tell us which Grey you're after."></textarea>
+      <label for={idPrefix + 'cf-msg'}>Your Message or Listing Link{full && <> <span class="cf-req">*</span></>}</label>
+      <textarea id={idPrefix + 'cf-msg'} name="message" rows="3" required={full} placeholder="Paste a suspicious listing, or tell us which Grey you're after."></textarea>
     </div>
     <button type="submit" class="cf-submit">Send to C.A.Gs — Free, No Pressure &#10003;</button>
   </form>

@@ -4,9 +4,12 @@
 Every non-search <form> must POST to the one Formspree endpoint with no Netlify residue.
 A form is classed "newsletter" only when its non-hidden, non-_gotcha controls are
 exactly one type="email" input; every other form (including one with no textarea) is
-classed "inquiry" and, on an in-scope page, must carry the seven screening fields, each
-required. Excluded from the FIELD checks: the homepage, /contact-us/, the location
-cluster, and buy-* slugs (which have no forms today).
+classed "inquiry" and must carry its page's contract, each field required:
+  full  — the seven screening fields (every in-scope page, incl. the homepage and
+          /contact-us/ since the breeder lifted their opt-out, 2026-09-11 Flag 1)
+  short — blog/* posts: confirm number, confirm email, resale, surrender (breeder,
+          2026-09-11: "old short forms … only confirm email, numbers, the two questions")
+  none  — the location cluster and buy-* slugs (no inquiry forms today).
 
 `n` is 1-based over ALL <form> elements in a page's document order, search forms
 included, matching what a browser script will find at `document.forms[n-1]` — it is
@@ -36,10 +39,20 @@ KEYS = [
     ("message", re.compile(r"^(message|msg)$")),
 ]
 LOCATION = re.compile(r"^(african-grey-parrots?-for-sale-|buy-)")
+SHORT = ("confirm_number", "confirm_email", "resale_screening", "surrender_history")
+
+
+def contract_keys(slug: str) -> list:
+    """The (name, regex) pairs this page's inquiry forms must carry, each required."""
+    if LOCATION.match(slug):
+        return []
+    if slug.startswith("blog/"):
+        return [k for k in KEYS if k[0] in SHORT]
+    return KEYS
 
 
 def field_checks_apply(slug: str) -> bool:
-    return slug not in ("index", "contact-us") and not LOCATION.match(slug)
+    return bool(contract_keys(slug))
 
 
 _SKIPPED = ("template", "noscript")
@@ -104,7 +117,7 @@ def audit_html(html: str, slug: str):
         if kind == "newsletter" and any(c["type"] == "email" and not c["name"] for c in ctl):
             problems.append("email input has no name attribute — Formspree receives nothing")
         if kind == "inquiry" and field_checks_apply(slug):
-            for key, rx in KEYS:
+            for key, rx in contract_keys(slug):
                 hits = [c for c in ctl if c["name"] and rx.match(c["name"])]
                 if not hits:
                     problems.append(f"{key} absent")

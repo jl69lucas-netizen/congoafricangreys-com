@@ -55,11 +55,37 @@ def test_newsletter_box_needs_endpoint_and_name():
     ps = problems(html)
     assert any("endpoint" in p for p in ps) and any("email input has no name" in p for p in ps)
 
-def test_homepage_and_contact_us_and_locations_skip_field_checks_but_not_endpoint():
+def test_locations_skip_field_checks_but_not_endpoint():
     optional_msg = GOOD.replace('<textarea name="message" required>', '<textarea name="message">')
-    for slug in ("index", "contact-us", "african-grey-parrot-for-sale-texas"):
+    for slug in ("african-grey-parrot-for-sale-texas", "buy-african-grey-parrots-with-shipping"):
         assert problems(page(optional_msg), slug) == []
         assert any("endpoint" in p for p in problems(page(optional_msg.replace(END, "/thank-you/")), slug))
+
+def test_homepage_and_contact_us_now_carry_the_full_contract():
+    # Breeder lifted the opt-out on 2026-09-11 (brief Flag 1): an optional message fails there now.
+    optional_msg = GOOD.replace('<textarea name="message" required>', '<textarea name="message">')
+    for slug in ("index", "contact-us"):
+        assert problems(page(GOOD), slug) == []
+        assert any("message not required" in p for p in problems(page(optional_msg), slug))
+
+SHORT_BLOG = f"""<form action="{END}" method="POST">
+<input type="hidden" name="_subject" value="x"><input type="text" name="_gotcha" class="cf-hp">
+<input name="name" required><input name="email" type="email" required>
+<input name="email_confirm" type="email" required><input name="phone" type="tel" required>
+<input name="phone_confirm" type="tel" required><select name="interest"><option value="">-</option></select>
+<input type="radio" name="resale_screening" value="yes" required><input type="radio" name="resale_screening" value="no">
+<textarea name="surrender_history" required></textarea><textarea name="message"></textarea></form>"""
+
+def test_blog_short_contract_passes_without_experience_delivery_or_required_message():
+    assert problems(page(SHORT_BLOG), "blog/african-grey-parrot-facts") == []
+
+def test_blog_short_contract_still_names_a_missing_screening_question():
+    html = page(SHORT_BLOG.replace('<textarea name="surrender_history" required></textarea>', ""))
+    assert any("surrender_history absent" in p for p in problems(html, "blog/african-grey-parrot-facts"))
+
+def test_short_form_on_a_non_blog_page_fails_the_full_contract():
+    ps = problems(page(SHORT_BLOG), "how-to-avoid-african-grey-parrot-scams")
+    assert any("experience absent" in p for p in ps) and any("delivery absent" in p for p in ps)
 
 
 # --- Finding 1: CRITICAL zero-page PASS -------------------------------------------

@@ -22,7 +22,7 @@ import { measureTopChrome, waitForScrollSettle } from './lib/probes.js';
 import { checkDistFreshness, builtRoutesWithoutSource } from './lib/freshness.js';
 import { fixtureCorpus } from './lib/dupCorpus.js';
 import { resetRaw } from './lib/scorecard.js';
-import { fieldChecksSkipped, formExpected } from './checks/form.js';
+import { contractFor, fieldChecksSkipped, formExpected } from './checks/form.js';
 import './checks/index.js';
 
 
@@ -1066,9 +1066,9 @@ test.describe('form-inquiry-contract: zero-examined is a defect off location/hub
  * for every slug shape it needs to cover.
  */
 test.describe('fieldChecksSkipped pins the field-contract exemption list', () => {
-  test('exempt: homepage, contact-us, the location cluster, buy-* pages', () => {
-    expect(fieldChecksSkipped('index')).toBe(true);
-    expect(fieldChecksSkipped('contact-us')).toBe(true);
+  test('exempt: the location cluster and buy-* pages only (homepage + contact-us lifted 2026-09-11)', () => {
+    expect(fieldChecksSkipped('index')).toBe(false);
+    expect(fieldChecksSkipped('contact-us')).toBe(false);
     expect(fieldChecksSkipped('african-grey-parrot-for-sale-florida')).toBe(true);
     expect(fieldChecksSkipped('african-grey-parrots-for-sale-near-me')).toBe(true);
     expect(fieldChecksSkipped('buy-african-grey-parrots-with-shipping')).toBe(true);
@@ -1079,6 +1079,25 @@ test.describe('fieldChecksSkipped pins the field-contract exemption list', () =>
     expect(fieldChecksSkipped('available/roys')).toBe(false);
     expect(fieldChecksSkipped('blog/african-grey-parrot-facts')).toBe(false);
     expect(fieldChecksSkipped('african-grey-parrot-bird-eggs-for-sale-usa')).toBe(false);
+  });
+});
+
+/** `contractFor` picks which field list a page's inquiry forms must carry. Blog posts carry the
+ *  breeder's short form (2026-09-11); everything else in scope carries the full seven. */
+test.describe('contractFor pins the per-slug field contract', () => {
+  test('short: blog posts only (not the blog hub slug itself)', () => {
+    expect(contractFor('blog/african-grey-parrot-facts')).toBe('short');
+    expect(contractFor('blog')).toBe('full');
+  });
+  test('full: homepage, contact-us, comparison, bird, scam page, for-sale', () => {
+    for (const s of ['index', 'contact-us', 'congo-vs-timneh-african-grey', 'available/roys',
+      'how-to-avoid-african-grey-parrot-scams', 'congo-african-grey-for-sale']) {
+      expect(contractFor(s)).toBe('full');
+    }
+  });
+  test('none: the location cluster and buy-* pages', () => {
+    expect(contractFor('african-grey-parrot-for-sale-florida')).toBe('none');
+    expect(contractFor('buy-african-grey-parrots-with-shipping')).toBe('none');
   });
 });
 

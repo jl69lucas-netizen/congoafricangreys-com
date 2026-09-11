@@ -28,8 +28,16 @@ import type { Page } from '@playwright/test';
  */
 const FORM_ENDPOINT = 'https://formspree.io/f/xrejpnvn';
 const LOCATION_CLUSTER = /^(african-grey-parrots?-for-sale-|buy-)/;
+/** Same contracts as scripts/form_contract_audit.py `contract_keys()`. The homepage and
+ *  /contact-us/ carry the full contract since the breeder lifted their opt-out (2026-09-11,
+ *  brief Flag 1); blog posts carry the short one (confirm number, confirm email, resale,
+ *  surrender — breeder, 2026-09-11). */
 export function fieldChecksSkipped(slug: string): boolean {
-  return slug === 'index' || slug === 'contact-us' || LOCATION_CLUSTER.test(slug);
+  return LOCATION_CLUSTER.test(slug);
+}
+export function contractFor(slug: string): 'full' | 'short' | 'none' {
+  if (fieldChecksSkipped(slug)) return 'none';
+  return slug.startsWith('blog/') ? 'short' : 'full';
 }
 export function formExpected(slug: string, pageType: string): boolean {
   return pageType !== 'location' && pageType !== 'hub' && !LOCATION_CLUSTER.test(slug);
@@ -45,8 +53,8 @@ register({
   minExamined: 2,
   async run(page: Page, viewport: number, ctx: CheckContext): Promise<CheckResult> {
     const r = await page.evaluate(
-      ({ endpoint, fieldsApply }) => {
-        const KEYS: [string, RegExp][] = [
+      ({ endpoint, contract }) => {
+        const ALL: [string, RegExp][] = [
           ['confirm number', /^(phone|cell|mobile)[_-]?confirm$/],
           ['confirm email', /^email[_-]?confirm$/],
           ['resale screening', /^resale_screening$/],
@@ -55,6 +63,9 @@ register({
           ['delivery', /^delivery(_method)?$/],
           ['message', /^(message|msg)$/],
         ];
+        const SHORT = ['confirm number', 'confirm email', 'resale screening', 'surrender history'];
+        const KEYS = contract === 'short' ? ALL.filter(([n]) => SHORT.includes(n)) : ALL;
+        const fieldsApply = contract !== 'none';
         const wrongEndpoint: string[] = [];
         const missing: string[] = [];
         let missingCount = 0;
@@ -108,7 +119,7 @@ register({
         });
         return { examined, wrongEndpoint, missing, missingCount, submitsEmpty };
       },
-      { endpoint: FORM_ENDPOINT, fieldsApply: !fieldChecksSkipped(ctx.slug) },
+      { endpoint: FORM_ENDPOINT, contract: contractFor(ctx.slug) },
     );
     const defects: Defect[] = [];
     if (r.examined === 0 && formExpected(ctx.slug, ctx.pageType)) {
