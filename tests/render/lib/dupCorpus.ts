@@ -39,13 +39,38 @@ export function loadWhitelist(): string[] {
   return out;
 }
 
-/** The same normalisation the Python auditor applies, so runs are comparable. */
+/**
+ * The Python auditor's tokeniser, exactly: `re.findall(r"[a-z0-9$']+", text.lower())`.
+ *
+ * An apostrophe is part of a word, so "we'd" is ONE token on both sides. Until 2026-09-11 this
+ * replaced every other character with a space, apostrophe included, and read "we d" — so a
+ * shared sentence of 11 words with one contraction was 12 here (fires) and 11 in Python
+ * (silent), measured on dist/ between the eggs and congo for-sale pages. A curly ’ is outside
+ * the class on both sides, so "we’d" is two tokens in both. Whitelist stems go through this
+ * same function, as Python's WHITELIST_STEMS go through its findall.
+ */
 export function normalise(text: string): string[] {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9$ ]+/g, ' ')
-    .split(/\s+/)
-    .filter(Boolean);
+  return text.toLowerCase().match(/[a-z0-9$']+/g) ?? [];
+}
+
+/**
+ * Decode character references the way Python's HTMLParser (convert_charrefs=True) does before
+ * the auditor tokenises. The rendered page's innerText is already decoded; the corpus is read
+ * from raw HTML, where Astro writes many apostrophes as &#39; — undecoded, "we&#39;d" reads
+ * "we 39 d" and matches neither side. One pass, so "&#38;amp;" cannot decode twice. Only
+ * characters normalise() keeps can change a token, so every named reference other than
+ * &apos; and &dollar; reduces to a word break.
+ */
+const NAMED_KEPT: Record<string, string> = { apos: "'", dollar: '$' };
+export function decodeEntities(text: string): string {
+  return text.replace(
+    /&(?:#(\d+);?|#[xX]([0-9a-fA-F]+);?|([a-zA-Z][a-zA-Z0-9]*);)/g,
+    (_, dec: string | undefined, hex: string | undefined, name: string | undefined) => {
+      if (name !== undefined) return NAMED_KEPT[name] ?? ' ';
+      const cp = dec !== undefined ? Number(dec) : parseInt(hex!, 16);
+      return cp > 0 && cp <= 0x10ffff ? String.fromCodePoint(cp) : ' ';
+    },
+  );
 }
 
 /**
@@ -112,7 +137,7 @@ export function distText(slug: string): string | null {
   html = stripForms(html);
   html = html.replace(/<!--[\s\S]*?-->/g, ' ');
   const main = /<main[\s\S]*?>([\s\S]*)<\/main>/i.exec(html);
-  return (main ? main[1] : html).replace(/<[^>]+>/g, ' ');
+  return decodeEntities((main ? main[1] : html).replace(/<[^>]+>/g, ' '));
 }
 
 /** Every .html file in a fixture corpus directory, for the meta gate. */
@@ -123,10 +148,12 @@ export function fixtureCorpus(dir: string): { slug: string; text: string }[] {
     .filter((f) => f.endsWith('.html'))
     .map((f) => ({
       slug: f.replace(/\.html$/, ''),
-      text: stripForms(
-        readFileSync(join(full, f), 'utf8')
-          .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-          .replace(/<style[\s\S]*?<\/style>/gi, ' '),
-      ).replace(/<[^>]+>/g, ' '),
+      text: decodeEntities(
+        stripForms(
+          readFileSync(join(full, f), 'utf8')
+            .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+            .replace(/<style[\s\S]*?<\/style>/gi, ' '),
+        ).replace(/<[^>]+>/g, ' '),
+      ),
     }));
 }

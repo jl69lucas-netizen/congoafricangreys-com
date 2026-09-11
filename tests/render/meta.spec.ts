@@ -20,7 +20,15 @@ import { flattenSlug } from './lib/scorecard.js';
 import { fixtureUrl, FIXTURE_BASE } from './lib/servers.js';
 import { measureTopChrome, waitForScrollSettle } from './lib/probes.js';
 import { checkDistFreshness, builtRoutesWithoutSource } from './lib/freshness.js';
-import { fixtureCorpus, distSlugs, siblingSlugsFor, type Target } from './lib/dupCorpus.js';
+import {
+  fixtureCorpus,
+  distSlugs,
+  siblingSlugsFor,
+  loadWhitelist,
+  normalise,
+  REPO,
+  type Target,
+} from './lib/dupCorpus.js';
 import { resetRaw } from './lib/scorecard.js';
 import { contractFor, fieldChecksSkipped, formExpected } from './checks/form.js';
 import './checks/index.js';
@@ -179,6 +187,97 @@ test.describe('dup-no-sibling-crossover judges every page against the whole buil
       .filter((r) => r.missing.length || r.got.includes(r.t.slug))
       .map((r) => `${r.t.slug} [${r.t.page_type}]: ${r.got.length} siblings, missing ${r.missing.length}`);
     expect.soft(short, 'targets judged against less than the whole built corpus').toEqual([]);
+  });
+});
+
+/**
+ * DUP counts words the way the Python auditor counts them.
+ *
+ * Found 2026-09-11: scripts/dup_content_audit.py tokenises with [a-z0-9$']+, so "we'd" is one
+ * word; normalise() replaced the apostrophe with a space and read "we d". On the same dist/,
+ * "answered the same honest way we'd answer them on the phone" — shared by the eggs and congo
+ * for-sale pages — was 12 words here (fires) and 11 in Python (silent). The corpus side read
+ * raw HTML without decoding entities, so an apostrophe Astro emits as &#39; was a third token
+ * shape ("we 39 d") that matched neither.
+ *
+ * The Python side is run, not restated: each case asks dup_content_audit.py itself, so a
+ * tokeniser change on either side fails here instead of drifting.
+ */
+test.describe('dup-no-sibling-crossover tokenises exactly like dup_content_audit.py', () => {
+  const onlyOnce = (testInfo: { project: { name: string }; config: { projects: { name: string }[] } }) =>
+    test.skip(
+      testInfo.project.name !== testInfo.config.projects[0].name,
+      `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
+    );
+  const py = (code: string, ...args: string[]): unknown =>
+    JSON.parse(execFileSync('python3', ['-c', code, ...args], { cwd: REPO, encoding: 'utf8' }));
+  const PY_AUDITOR = `import sys, json; sys.path.insert(0, 'scripts'); import dup_content_audit as d\n`;
+  /** The Python gate's crossovers between two fixture files at a given window. */
+  const pyCrossovers = (page: string, minWords: number) =>
+    py(
+      PY_AUDITOR +
+        `from pathlib import Path\n` +
+        `d.MIN_WORDS = int(sys.argv[3]); wa, wb = d.words(Path(sys.argv[1])), d.words(Path(sys.argv[2]))\n` +
+        `print(json.dumps([' '.join(s) for s in d.crossovers(wa, d.shingles(wa), d.shingles(wb))]))`,
+      `tests/render/fixtures/known_broken/${page}.html`,
+      'tests/render/fixtures/dup_corpus/sibling-contraction.html',
+      String(minWords),
+    ) as string[];
+  const SHARED_11 = "answered the same honest way we'd answer them on the phone";
+  const SHARED_12 = "every hatch record we've kept for a chick goes home with it";
+
+  test('a run that is 12 words only because an apostrophe split a word is not a crossover', async ({
+    page,
+  }, testInfo) => {
+    onlyOnce(testInfo);
+    // The fixture sits exactly on the boundary — proven against Python, not assumed, so a
+    // silent harness means "11 words, like Python", never "the text did not match at all".
+    expect(pyCrossovers('dup-contraction-boundary', 11), 'Python: one shared 11-word run').toEqual([SHARED_11]);
+    expect(pyCrossovers('dup-contraction-boundary', 12), 'Python: nothing at the real window').toEqual([]);
+
+    const res = await page.goto(fixtureUrl('known_broken', 'dup-contraction-boundary'));
+    expect(res?.status(), 'fixture must load').toBe(200);
+    const check = registry.find((c) => c.id === 'dup-no-sibling-crossover')!;
+    const r = await runCheck(check, page, testInfo.project.use.viewport!.width, FIXTURE_CTX);
+    expect(r.examined, 'must have compared against the corpus').toBeGreaterThanOrEqual(1);
+    expect(r.defects.map((d) => d.message), 'counted a contraction as two words').toEqual([]);
+  });
+
+  test('an apostrophe the corpus page writes as &#39; is the same word', async ({ page }, testInfo) => {
+    onlyOnce(testInfo);
+    expect(pyCrossovers('dup-contraction-entity', 12), 'Python fires on the 12-word run').toEqual([SHARED_12]);
+
+    const res = await page.goto(fixtureUrl('known_broken', 'dup-contraction-entity'));
+    expect(res?.status(), 'fixture must load').toBe(200);
+    const check = registry.find((c) => c.id === 'dup-no-sibling-crossover')!;
+    const r = await runCheck(check, page, testInfo.project.use.viewport!.width, FIXTURE_CTX);
+    expect(r.examined, 'must have compared against the corpus').toBeGreaterThanOrEqual(1);
+    expect(r.defects.length, 'a 12-word run Python reports must fire here too').toBe(1);
+    expect(r.defects[0].count).toBe(1);
+    expect(r.defects[0].message).toContain(`12w vs /sibling-contraction/ "${SHARED_12}"`);
+  });
+
+  test('normalise() and the whitelist stems match Python token for token', ({}, testInfo) => {
+    onlyOnce(testInfo);
+    const samples = [
+      "We'd answer them",
+      'We’d answer — the curly one', // U+2019: outside the class on both sides
+      "'quoted words' and rock'n'roll",
+      "Mark & Teri's o'clock call",
+      '$1,500–$3,500 · 72-hour / 3-day guarantee',
+      'Timneh/Congo 1st  clutch\tnaïve ÉCLAT',
+      "a''b ' $ -- ",
+      '',
+    ];
+    const want = py(
+      `import sys, json, re\nprint(json.dumps([re.findall(r"[a-z0-9$']+", s.lower()) for s in json.loads(sys.argv[1])]))`,
+      JSON.stringify(samples),
+    );
+    expect(samples.map(normalise), 'normalise() vs dup_content_audit.py words()').toEqual(want);
+    // Both whitelist readers: Python's WHITELIST_STEMS vs the harness's parse + normalise().
+    expect(loadWhitelist().map(normalise), 'whitelist stems, token for token').toEqual(
+      py(PY_AUDITOR + 'print(json.dumps(d.WHITELIST_STEMS))'),
+    );
   });
 });
 
