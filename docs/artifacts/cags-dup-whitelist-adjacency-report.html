@@ -67,9 +67,9 @@ section.sec .copy.done{border-color:var(--green);background:var(--green-soft);co
   <div>
     <p class="eyebrow">CongoAfricanGreys.com · DUP gate report</p>
     <h1 class="title">Hidden Crossover Report</h1>
-    <p class="sub">A shared passage touching a whitelisted line, such as the $185 / $350 shipping line, used to be exempted along with it. Both duplicate-content gates now cut out only the whitelisted line itself. This page lists what surfaced; no page copy was edited.</p>
+    <p class="sub">A shared passage touching a whitelisted line, such as the $185 / $350 shipping line, used to be exempted along with it. Both duplicate-content gates now cut out only the whitelisted line itself. This page lists what surfaced; no page copy was edited. §9: the render harness now compares every page against the whole built site.</p>
   </div>
-  <div class="meta">Measured 2026-09-11 · 105 built pages<br>Source of truth: <code>docs/artifacts/cags-dup-whitelist-adjacency-report.md</code><br>Fix commit <code>a09e33d4</code> on main</div>
+  <div class="meta">Measured 2026-09-11 · 105 built pages<br>Source of truth: <code>docs/artifacts/cags-dup-whitelist-adjacency-report.md</code><br>Fix commits <code>a09e33d4</code> (adjacency) + §9 coverage fix on main</div>
 </header>
 <div class="toolbar">
   <button class="btn" id="copy-all">Copy whole document as Markdown</button>
@@ -311,9 +311,75 @@ The other 26 passages are ordinary page copy, and that's a rewrite decision for 
 **No copy was edited in this session.**
 </script>
 <script type="text/markdown" data-title="8. Follow-ups">
-1. The harness coverage gap in §4 is filed as its own task.
+1. ~~The harness coverage gap in §4 is filed as its own task.~~ **Closed in §9:** every page is now compared against the whole built site.
 2. A breeder ruling on bird cards (§7) comes before any whitelist or skip-list change.
 3. The remaining 26 prose passages go to a rewrite pass once §7 is decided. Write from each page's own outline (rule 9), not by rewording a sibling.
+4. Harness DUP parity: skip review / testimonial / read-card text the way the Python gate does (§9, filed as its own task).
+5. The meta gate's globalSetup probe hard-codes the Playwright CLI path, so it can't run in a git worktree (§9, filed as its own task).
+</script>
+
+<script type="text/markdown" data-title="9. Harness coverage: every page against the whole site">
+The harness gap from §4 is closed. `dup-no-sibling-crossover` now compares every target against **every other built page** (104 siblings), the same input set `dup_content_audit.py` audits. The homepage now runs DUP too. The harness was fixed and the rule stays as it was; **no page copy was edited.**
+
+### What was wrong
+`pages.spec.ts` gave the check only targets of the *same page type*. `targets.json` has 12 for-sale targets and one each of bird, comparison, interior, location, blog, hub and home. So six page types were compared against **0 siblings** (`examined: 0`), and home didn't run DUP at all. The fixture pair couldn't catch this because meta supplies its own corpus, so it tests the comparison but never the policy that feeds it. `build_scorecard.mjs` Guard 2 only asks whether a check examined something *somewhere*, and for-sale's non-zero count satisfied it.
+
+### What changed
+- **Failing test first.** The meta test "every target is compared against every other built page" builds a synthetic `dist/` holding every target plus two untargeted pages. On the old builder it went red on both assertions: home never ran DUP; 7 targets had 0 siblings; the 12 for-sale targets had 11 of 20.
+- **Every other built page is a sibling:** `siblingSlugsFor()` in `tests/render/lib/dupCorpus.ts`. `distSlugs()` keys pages exactly as `scripts/_slugs.py` does.
+- **Home runs DUP** (`targets.json`).
+- **A zero is now loud.** On a real page, `pages.spec.ts` throws if DUP examined fewer than its floor, because the sibling set is chosen there and not in the check.
+- **Runtime is unchanged in practice.** Sibling text and shingles are cached per worker: about 1 s (105 pages read in 0.5 s, 312k shingles in 0.5 s). A full run still takes 14–16 min.
+
+**Corpus chosen: every built page (Recommended).** Why: it's the Python gate's input set, so the two gates judge the same pages. It also reaches the partner pages of the 481 hidden findings (care, blog, `available/*`, city pages), which no target is paired with. "All targets regardless of type" would give 18 siblings and still miss most of them. Trade-off: for-sale rows now include cross-type crossovers as well as sibling-cluster ones. Each finding names the page it collides with, so the two can still be told apart.
+
+### Gates run
+| Gate | Result |
+|---|---|
+| New meta test, old builder | FAILED for the right reason (both assertions) |
+| `test:render:meta`, after the fix | 291 passed, 2 failed. Both failures are the globalSetup regression probe: this worktree's `node_modules` has no `@playwright/test`, so the probe's nested run never starts. It fails with or without this change, and is filed as its own task |
+| `test:render:pages`, run 1 | 54 passed / 3 failed: the last three vp1280 tests got `ERR_CONNECTION_REFUSED` because the site server exited. Infrastructure, not DUP |
+| `test:render:pages`, run 2 | **57 passed, 0 failed.** DUP identical to run 1 on all 54 shared partials |
+| DUP examined, every page-viewport | 104 siblings (was 0 on six page types) |
+| DUP rows | **48 rows / 5,034 instances on 16 of 19 targets.** The §4 build had 30 rows, all for-sale |
+
+### Per target page
+The harness count is per viewport (375 / 768 / 1280). "Python" is `dup_content_audit.py` on the same `dist/`: passages involving that page. When the harness count is higher, the extra is text the Python gate deliberately skips (reviews, testimonials, read-cards; see "Why the counts differ").
+
+| Target | Type | Harness | Python | What the rows are |
+|---|---|---|---|---|
+| `available/roys` | bird | 599 / 604 / 604 | 585 | template prose shared by every `available/*` page (health-certificate, deposit FAQ, guarantee-terms passages of 26–74 words) |
+| `african-grey-parrot-care-guide` | interior | 180 / 181 / 181 | 174 | bird-card strips and blurbs; the adopt-form intro; a 120-word "comparing the two species" paragraph |
+| `index` | home | 147 / 149 / 149 | 127 | city-page reserve band, adopt-form intro, vet-certificate line, price strip. The extra harness rows are review quotes |
+| `african-grey-parrot-for-sale-florida` | location | 138 / 138 / 138 | 110 | credential strip; "why choose an African Grey" (64w), variant-browse and aviary-visit paragraphs, all shared with other state pages |
+| `blog/african-grey-parrot-cage-setup` | blog | 122 / 122 / 122 | 120 | bird-card strips; the "written by Mark & Teri Benjamin" byline |
+| `african-grey-parrot-health-guarantee` | for-sale | 120 / 120 / 120 | 115 | adopt-form intro (104w); bird-card strips |
+| `african-grey-parrots-for-sale` | hub | 90 / 90 / 90 | 64 | credential strip shared with the city pages |
+| `buy-african-grey-parrots-with-shipping` | for-sale | 90 / 90 / 90 | 46 | credential strip (45 of 46) |
+| `congo-vs-timneh-african-grey` | comparison | 71 / 71 / 70 | 8 | **mostly review quotes (harness only).** Real: the Congo-vs-Timneh FAQ question, and the pairs and eggs paragraphs shared with male-vs-female |
+| `timneh-african-grey-for-sale` | for-sale | 31 / 31 / 31 | 0 | review quotes only |
+| `congo-african-grey-for-sale` | for-sale | 30 / 30 / 30 | 2 | review quotes, plus one 13-word legal-status sentence |
+| `african-grey-parrot-bird-eggs-for-sale-usa` | for-sale | 26 / 26 / 26 | 0 | review quotes only |
+| `african-grey-parrot-adoption-cost` | for-sale | 16 / 16 / 16 | 0 | review quotes only |
+| `congo-african-grey-parrot-pair-for-sale` | for-sale | 7 / 7 / 7 | 0 | a credential sentence also on `available/*`, inside an element the Python gate skips (not inspected one by one) |
+| `dna-tested-african-grey-for-sale` | for-sale | 3 / 3 / 3 | 0 | text shared with hand-raised, inside skipped elements (a testimonial leads) |
+| `hand-raised-african-grey-parrot-for-sale` | for-sale | 3 / 3 / 3 | 0 | the same, mirrored |
+| `african-grey-parrots-for-sale-near-me` | for-sale | 0 / 0 / 0 | 2 | Python finds 2 passages shared with `buy-african-grey-parrot-near-me` (a near-duplicate pair); the harness finds 0 (not investigated) |
+| `baby-african-grey-parrot-for-sale` | for-sale | 0 / 0 / 0 | 0 | none |
+| `african-grey-breeding-pair-for-sale` | for-sale | 0 / 0 / 0 | 0 | none. It was 30 in §4; today's forms work (`61044cf6`) removed those, and Python agrees |
+
+### Why the counts differ, and why the check stays advisory
+The harness reads each page's `main` text. The Python gate also skips any element whose class matches `review|testimonial|read-c|quote-c|jump|toc|rail|crumb`. Checked on the built pages: "richard woodard winter haven" sits in `blockquote.quote-c`, "farmingdale" in `section.reviews > .testimonials-grid`, and "deposit scam before" in `figure.quote-c`. Those are real buyer reviews that CLAUDE.md requires to stay word-for-word. **So the harness-only rows are false reports, not copy to rewrite.** This parity gap was already named in `rule-index.json`; the wider corpus makes it larger. It's filed as its own task ("Harness DUP: skip review/chrome text like Python"). Until it's fixed the check stays **advisory**, and its `why_advisory` records the new count.
+
+### For the breeder: what's real, grouped (no copy edited)
+Both gates agree on everything below. Bird-card text is left out because it's already waiting on your §7 ruling.
+
+1. **The credential strip** ("USDA AWA licensed · federal breeder license · CITES Appendix I compliant · captive-bred documented…") repeats across the city pages, the location hub and buy-with-shipping. **Recommended: treat it as a fixed component, like the bird cards and doc-badge lists.** Why: a credential line must read the same everywhere under the Verified-Claim Ledger, so rewording it per page would put the claims themselves at risk. Trade-off: it stays word-identical site-wide, and only the prose around it is checked. It needs the gate-integrity proof before either gate skips it.
+2. **The adopt-form intro** ("Adopt an African Grey inquiry form: we review every application…", up to 104 words) appears on care-guide, health-guarantee, the homepage, adoption and african-grey-care. It sits outside `<form>`, so neither gate treats it as form UI. Your call: fold it into the form component, or write one intro per page.
+3. **`available/*` template prose.** Every bird page shares long passages (health certificate / AAV exam, "the $200 is not an extra fee", guarantee terms, care-guide pointer). That's 585 passages on `available/roys` alone, by far the largest block. Your call: accept these as the bird-listing template, or write per-bird sections.
+4. **State-page template paragraphs:** "why choose an African Grey: intelligence beyond compare…" (64w), "browse our African Grey variants…", "aviary visits are by appointment at our Midland, Texas location…". These add to the §7 city-page list.
+5. **Homepage:** the city-page reserve band (shared with 15 city pages), the vet-certificate/support line, and the "current pricing" strip. The price strip is inventory data, so it falls under the bird-card ruling.
+6. **One-offs:** the 120-word "comparing the two species" paragraph (care-guide = african-grey-care = trusted-breeders); the Congo-vs-Timneh FAQ question (also on faq, guide and a blog post); a 13-word legal-status sentence on congo-for-sale; and near-me ↔ buy-near-me sharing two passages, a possible cannibalisation pair.
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>

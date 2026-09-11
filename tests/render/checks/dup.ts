@@ -6,6 +6,23 @@ import type { Page } from '@playwright/test';
 const MIN_WORDS = 12;
 
 /**
+ * A sibling's 12-word shingle set, cached by the sibling's TEXT (not its slug, so a fixture
+ * corpus and dist/ can never collide on a name). The corpus is every built page, so without
+ * this each of the 57 page-viewports would re-shingle the same ~104 pages.
+ */
+const shingleCache = new Map<string, Set<string>>();
+function shinglesOf(text: string): Set<string> {
+  let set = shingleCache.get(text);
+  if (!set) {
+    const w = normalise(text);
+    set = new Set<string>();
+    for (let i = 0; i + MIN_WORDS <= w.length; i++) set.add(w.slice(i, i + MIN_WORDS).join(' '));
+    shingleCache.set(text, set);
+  }
+  return set;
+}
+
+/**
  * The stretches of a shared run that no whitelisted stem covers.
  *
  * The whitelist exempts LINES, not the runs they sit in. Growth fuses a whitelisted line
@@ -85,15 +102,12 @@ register({
       if (!ownShingles.has(key)) ownShingles.set(key, i);
     }
 
+    const ordered = [...ownShingles.entries()].sort((a, b) => a[1] - b[1]);
     const findings: { sibling: string; words: number; run: string }[] = [];
     for (const sib of siblings) {
-      const sw = normalise(sib.text);
-      const sibShingles = new Set<string>();
-      for (let i = 0; i + MIN_WORDS <= sw.length; i++) {
-        sibShingles.add(sw.slice(i, i + MIN_WORDS).join(' '));
-      }
+      const sibShingles = shinglesOf(sib.text);
       const reported: string[] = [];
-      for (const [key, i] of [...ownShingles.entries()].sort((a, b) => a[1] - b[1])) {
+      for (const [key, i] of ordered) {
         if (!sibShingles.has(key)) continue;
         if (reported.some((r) => r.includes(key))) continue;
         // Grow the match to its maximal run, so one long shared passage is ONE finding

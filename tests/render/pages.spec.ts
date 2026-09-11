@@ -8,7 +8,7 @@ import { writePartial } from './lib/scorecard.js';
 import { checkDistFreshness } from './lib/freshness.js';
 import { runCheck } from './lib/runCheck.js';
 import { resetScrollInstant } from './lib/probes.js';
-import { distText, routeFor } from './lib/dupCorpus.js';
+import { distText, distSlugs, routeFor, siblingSlugsFor } from './lib/dupCorpus.js';
 import type { Defect } from './lib/registry.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -16,6 +16,20 @@ const targets = JSON.parse(readFileSync(resolve(here, 'targets.json'), 'utf8')) 
   families_by_page_type: Record<string, string[]>;
   pages: { slug: string; page_type: string; corpus: boolean }[];
 };
+
+/**
+ * DUP's corpus: every built page, read once per worker. dist/ is fixed for the whole run
+ * (the freshness beforeAll refuses a stale one), so re-walking and re-stripping ~105 pages
+ * on each of the 57 page-viewports would only repeat identical work.
+ */
+let corpusSlugs: string[] | null = null;
+const corpus = () => (corpusSlugs ??= distSlugs());
+const textCache = new Map<string, string>();
+function siblingText(slug: string): string {
+  let t = textCache.get(slug);
+  if (t === undefined) textCache.set(slug, (t = distText(slug) ?? ''));
+  return t;
+}
 
 /**
  * RENDER_OVERRIDE=$'check-id:reason\nother-check:reason'  (one per line)
@@ -113,18 +127,25 @@ for (const target of targets.pages) {
       const result = await runCheck(check, page, viewport, {
         pageType: target.page_type,
         slug: target.slug,
-        // The sibling set is the same page type, per CLAUDE.md's sibling-cluster rule:
-        // a for-sale page must not read like another for-sale page. Deliberately NOT
-        // every page on the site — the ~5,857 sitewide crossovers across the location
-        // pages are a known, separate piece of work, and folding them in here would
-        // bury the sibling signal this rule exists to protect under a backlog it
-        // cannot act on.
+        // The sibling set is every other built page — the Python gate's corpus. It used to
+        // be "same page type", which left six page types comparing against nothing; see
+        // siblingSlugsFor for the measurement. The sibling each finding collides with is
+        // named in its message, so a same-cluster crossover is still told apart.
         siblings: async () =>
-          targets.pages
-            .filter((p) => p.page_type === target.page_type && p.slug !== target.slug)
-            .map((p) => ({ slug: p.slug, text: distText(p.slug) ?? '' }))
+          siblingSlugsFor(target, targets.pages, corpus())
+            .map((slug) => ({ slug, text: siblingText(slug) }))
             .filter((p) => p.text),
       });
+      // DUP's sibling set is chosen HERE, not in the check, so a zero here is a harness
+      // failure rather than a clean page: it is exactly how six page types scored a silent
+      // pass until 2026-09-11. Guard 2 in build_scorecard.mjs cannot see it — for-sale's
+      // non-zero count kept the check "examined somewhere".
+      if (check.family === 'DUP' && result.examined < check.minExamined) {
+        throw new Error(
+          `${check.id} examined ${result.examined} siblings on ${target.slug} (floor ${check.minExamined}) — ` +
+            `the sibling corpus is empty, so this page would read as a pass having compared against nothing`,
+        );
+      }
       examined[check.id] = result.examined;
       defects.push(...result.defects);
     }

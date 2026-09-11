@@ -20,7 +20,7 @@ import { flattenSlug } from './lib/scorecard.js';
 import { fixtureUrl, FIXTURE_BASE } from './lib/servers.js';
 import { measureTopChrome, waitForScrollSettle } from './lib/probes.js';
 import { checkDistFreshness, builtRoutesWithoutSource } from './lib/freshness.js';
-import { fixtureCorpus } from './lib/dupCorpus.js';
+import { fixtureCorpus, distSlugs, siblingSlugsFor, type Target } from './lib/dupCorpus.js';
 import { resetRaw } from './lib/scorecard.js';
 import { contractFor, fieldChecksSkipped, formExpected } from './checks/form.js';
 import './checks/index.js';
@@ -121,6 +121,64 @@ test.describe('dup-no-sibling-crossover sees a crossover adjacent to a whitelist
     expect(msg).toContain('18w vs /sibling-hand-raised-african-grey-texas/ "before a chick leaves');
     expect(msg).toContain('17w vs /sibling-hand-raised-african-grey-texas/ "tell us which bird');
     expect(msg, 'the whitelisted line is not the defect').not.toContain('ships nationwide');
+  });
+});
+
+/**
+ * The DUP check is only as wide as the sibling set pages.spec hands it.
+ *
+ * Found 2026-09-11: the set was "same page type", and targets.json holds 13 for-sale
+ * targets but exactly ONE each of bird, comparison, interior, location, blog and hub — so on
+ * six of eight page types DUP compared against nothing and reported examined=0, while the
+ * Python gate (every dist page, pairwise) found 481 crossovers on 70 pages that day. Home
+ * did not run DUP at all. The fixture pair above cannot see this: meta supplies its own
+ * corpus, so it proves the comparison and never the policy that feeds it.
+ *
+ * Measured against a synthetic dist/ holding every target plus pages no target names, so
+ * it runs with the real dist/ stale or missing, like the rest of this file.
+ */
+test.describe('dup-no-sibling-crossover judges every page against the whole built site', () => {
+  const targetsFile = JSON.parse(
+    readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), 'targets.json'), 'utf8'),
+  ) as { families_by_page_type: Record<string, string[]>; pages: Target[] };
+  let root = '';
+  test.afterAll(() => {
+    if (root) rmSync(root, { recursive: true, force: true });
+  });
+
+  test('every target is compared against every other built page', async ({}, testInfo) => {
+    test.skip(
+      testInfo.project.name !== testInfo.config.projects[0].name,
+      `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
+    );
+    root = mkdtempSync(join(tmpdir(), 'dupcorpus-'));
+    const dist = join(root, 'dist');
+    // Pages no target names: a care page and a nested blog post, the shapes the Python gate
+    // found crossovers on that the harness could not reach.
+    const untargeted = ['african-grey-parrot-diet', 'blog/african-grey-talking-age'];
+    const built = [...targetsFile.pages.map((p) => p.slug), ...untargeted];
+    for (const slug of built) {
+      const dir = slug === 'index' ? dist : join(dist, slug);
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(join(dir, 'index.html'), `<main><p>${slug}</p></main>`);
+    }
+    const corpus = distSlugs(dist);
+    expect(corpus, 'distSlugs keys pages as scripts/_slugs.py page_key does').toEqual([...built].sort());
+
+    const blind = Object.entries(targetsFile.families_by_page_type)
+      .filter(([, fams]) => !fams.includes('DUP'))
+      .map(([type]) => type);
+    expect.soft(blind, 'page types that never run DUP').toEqual([]);
+
+    const short = targetsFile.pages
+      .map((t) => {
+        const got = siblingSlugsFor(t, targetsFile.pages, corpus);
+        const want = corpus.filter((s) => s !== t.slug);
+        return { t, got, missing: want.filter((s) => !got.includes(s)) };
+      })
+      .filter((r) => r.missing.length || r.got.includes(r.t.slug))
+      .map((r) => `${r.t.slug} [${r.t.page_type}]: ${r.got.length} siblings, missing ${r.missing.length}`);
+    expect.soft(short, 'targets judged against less than the whole built corpus').toEqual([]);
   });
 });
 

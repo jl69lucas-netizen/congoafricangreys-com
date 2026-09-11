@@ -61,6 +61,43 @@ export function routeFor(slug: string): string {
   return slug === 'index' ? '/' : `/${slug}/`;
 }
 
+export interface Target {
+  slug: string;
+  page_type: string;
+}
+
+/**
+ * Every built page in a dist/ directory, keyed exactly as `scripts/_slugs.py` page_key keys
+ * it: `dist/index.html` → "index", `dist/available/roys/index.html` → "available/roys".
+ */
+export function distSlugs(dist: string = join(REPO, 'dist')): string[] {
+  const out: string[] = [];
+  const walk = (dir: string, rel: string): void => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      if (e.isDirectory()) walk(join(dir, e.name), rel ? `${rel}/${e.name}` : e.name);
+      else if (e.name === 'index.html') out.push(rel || 'index');
+    }
+  };
+  if (existsSync(dist)) walk(dist, '');
+  return out.sort();
+}
+
+/**
+ * The pages a target's DUP check is judged against: every OTHER built page, the same input
+ * set scripts/dup_content_audit.py compares pairwise.
+ *
+ * Until 2026-09-11 this was "targets of the same page type". targets.json holds a dozen
+ * for-sale targets but one each of every other type, so six page types compared against
+ * nothing (examined=0) while the Python gate found 481 crossovers on 70 pages — bird-card
+ * copy on care, blog and home pages, location lines, credential sentences on available/*.
+ * Every one of those partners is a page no target is paired with, so the fix is the corpus,
+ * not a longer target list. `targets` is kept in the signature so the meta gate can prove
+ * the page-type filter has not crept back.
+ */
+export function siblingSlugsFor(target: Target, _targets: Target[], corpus: string[]): string[] {
+  return corpus.filter((slug) => slug !== target.slug);
+}
+
 /** Forms are UI copy shared by design — the Python auditor skips them (SKIP_TAGS), so every
  *  text path here does too, or the two gates judge the same page differently. */
 const stripForms = (html: string) => html.replace(/<form[\s\S]*?<\/form>/gi, ' ');

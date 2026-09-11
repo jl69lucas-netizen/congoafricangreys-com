@@ -63,8 +63,9 @@ export interface CheckContext {
    * The other pages this one must not read like — resolved by the CALLER, not the check.
    *
    * DUP is the one family that cannot be answered from a single painted page, and how the
-   * sibling set is chosen is a policy decision (same page type, per CLAUDE.md's
-   * sibling-cluster rule) that belongs with the target list rather than buried in a check.
+   * sibling set is chosen is a policy decision (every other built page — see
+   * siblingSlugsFor in lib/dupCorpus.ts) that belongs with the target list rather than
+   * buried in a check.
    * Passing it as a callback also gives the meta gate a real corpus to fire against, so
    * the fixture pair tests the actual comparison rather than a mocked one.
    */
