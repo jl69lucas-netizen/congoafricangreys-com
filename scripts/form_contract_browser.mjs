@@ -4,6 +4,10 @@
 //   1. the untouched form refuses to submit (checkValidity() === false)
 //   2. once every control is filled with a valid value it accepts (checkValidity() === true)
 //   3. a screenshot of the form at 375 and 1280 lands in sessions/2026-09-11-form-screens/
+//   4. reportValidity() on the empty form raises NO "invalid form control … is not focusable"
+//      console warning. Added 2026-09-11: the shared full form's required delivery radios were
+//      display:none, so the browser blocked submit with no message (4 warnings measured) while
+//      checks 1–2 passed — they tick every radio before testing, so they could never see it.
 // Never clicks submit — that would send real mail to the breeder.
 // Input: the --json output of scripts/form_contract_audit.py (run it first).
 import { chromium } from '@playwright/test';
@@ -24,6 +28,8 @@ let checked = 0;
 try {
   for (const vp of [375, 1280]) {
     const page = await browser.newPage({ viewport: { width: vp, height: vp === 375 ? 812 : 800 } });
+    let unfocusable = [];
+    page.on('console', (m) => { if (/not focusable/i.test(m.text())) unfocusable.push(m.text()); });
     for (const row of ROWS) {
       const url = `http://127.0.0.1:${PORT}/${row.slug === 'index' ? '' : row.slug + '/'}`;
       await page.goto(url, { waitUntil: 'load' });
@@ -31,6 +37,10 @@ try {
       // search form included — the audit numbers all forms and only skips judging search).
       const target = page.locator('form').nth(row.n - 1);
       const emptyValid = await target.evaluate((f) => f.checkValidity());
+      unfocusable = [];
+      await target.evaluate((f) => f.reportValidity());
+      await page.waitForTimeout(150);
+      if (unfocusable.length) failures.push(`${row.slug} form#${row.n} @${vp}: ${unfocusable.length} required control(s) not focusable — ${unfocusable[0]}`);
       await target.evaluate((f) => {
         const seen = new Set();
         for (const c of f.querySelectorAll('input,select,textarea')) {
