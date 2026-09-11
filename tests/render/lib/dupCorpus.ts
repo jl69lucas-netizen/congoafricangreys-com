@@ -61,13 +61,18 @@ export function routeFor(slug: string): string {
   return slug === 'index' ? '/' : `/${slug}/`;
 }
 
-/** Visible text of a built page — script, style and JSON-LD stripped. */
+/** Forms are UI copy shared by design — the Python auditor skips them (SKIP_TAGS), so every
+ *  text path here does too, or the two gates judge the same page differently. */
+const stripForms = (html: string) => html.replace(/<form[\s\S]*?<\/form>/gi, ' ');
+
+/** Visible text of a built page — script, style, JSON-LD and forms stripped. */
 export function distText(slug: string): string | null {
   const file = distFileFor(slug);
   if (!existsSync(file)) return null;
   let html = readFileSync(file, 'utf8');
   html = html.replace(/<script[\s\S]*?<\/script>/gi, ' ');
   html = html.replace(/<style[\s\S]*?<\/style>/gi, ' ');
+  html = stripForms(html);
   html = html.replace(/<!--[\s\S]*?-->/g, ' ');
   const main = /<main[\s\S]*?>([\s\S]*)<\/main>/i.exec(html);
   return (main ? main[1] : html).replace(/<[^>]+>/g, ' ');
@@ -81,9 +86,10 @@ export function fixtureCorpus(dir: string): { slug: string; text: string }[] {
     .filter((f) => f.endsWith('.html'))
     .map((f) => ({
       slug: f.replace(/\.html$/, ''),
-      text: readFileSync(join(full, f), 'utf8')
-        .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-        .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-        .replace(/<[^>]+>/g, ' '),
+      text: stripForms(
+        readFileSync(join(full, f), 'utf8')
+          .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+          .replace(/<style[\s\S]*?<\/style>/gi, ' '),
+      ).replace(/<[^>]+>/g, ' '),
     }));
 }

@@ -32,8 +32,20 @@ register({
     // nothing — a page with no siblings must read as "0 examined", not as a pass.
     if (siblings.length === 0) return { examined: 0, defects: [] };
 
+    // Form text (labels, legends, option copy) is component UI shared by design, not prose.
+    // scripts/dup_content_audit.py never reads it (SKIP_TAGS has "form"); before 2026-09-11 this
+    // check did, and flagged the seven-field contract's fixed questions as sibling crossovers.
+    // Hide forms for the read and restore them, so later checks on this page see it unchanged.
     const own = normalise(
-      await page.evaluate(() => (document.querySelector('main') || document.body).innerText || ''),
+      await page.evaluate(() => {
+        const root = document.querySelector('main') || document.body;
+        const forms = Array.from(root.querySelectorAll('form')) as HTMLElement[];
+        const prev = forms.map((f) => f.style.display);
+        forms.forEach((f) => (f.style.display = 'none'));
+        const text = root.innerText || '';
+        forms.forEach((f, i) => (f.style.display = prev[i]));
+        return text;
+      }),
     );
     const whitelist = loadWhitelist();
 
