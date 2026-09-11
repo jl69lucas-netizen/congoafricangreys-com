@@ -12,3 +12,4 @@ Prompt-rewrite artifact: https://claude.ai/code/artifact/e46af6a3-172f-4892-baf1
 5. `/available/evie/` hidden `bird` value and `_subject` said "ELAD … Male"; corrected to Evie / Female.
 6. Formspree form `xpqoeazq` (the MFS form) is no longer referenced anywhere in src; deleting it in the Formspree dashboard is the breeder's call.
 7. `/thank-you/` does not exist; two forms pointed at it. Both now use `_next` → `/contact-us/?success=true`.
+8. The full form's pricing-card footer still reads "Shipping: $185 · Home delivery: $350" while the form now offers Flight Nanny from $750. Left as-is (changing it would alter the two opt-out pages); recommend updating the footer when Flag 1 is lifted.

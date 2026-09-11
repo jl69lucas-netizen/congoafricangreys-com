@@ -29,7 +29,11 @@ interface Props {
   trustBullets?: string[];
   /** 2026-09-11 field contract: Message required + Flight Nanny delivery card. Default true.
    *  The homepage and /contact-us/ pass false so their rendered bytes stay identical (breeder
-   *  excluded both from the contract rollout — brief Open Flag 1). */
+   *  excluded both from the contract rollout — brief Open Flag 1).
+   *  Two spots in the markup are deliberately whitespace-tight — the `)}<label` join after the
+   *  Flight Nanny block in Field 8 and the space INSIDE the `*` span in Field 10 — because Astro
+   *  collapses inter-node whitespace and any change there alters the bytes of the two opt-out
+   *  pages. Do not reformat; re-run the Task 3 Step 6 `cmp` if you touch either. */
   requireAll?: boolean;
 }
 const {

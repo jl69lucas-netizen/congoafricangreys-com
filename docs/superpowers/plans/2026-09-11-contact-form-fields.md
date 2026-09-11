@@ -610,7 +610,7 @@ Insert after the Home Delivery `</label>` (the one whose radio has `value="home"
                   <span class="inq-delivery-desc">A nanny keeps your grey in the cabin for the whole flight; quoted per route.</span>
                 </div>
               </label>
-              )}
+              )}<label class="inq-delivery-card font-sora">   <!-- joined on one line on purpose: an inter-node newline here would leak a space into the two opt-out pages and break Step 6 -->
 ```
 
 - [ ] **Step 4: Message required**
@@ -625,7 +625,7 @@ Replace the Field 10 block:
 ```
 with:
 ```astro
-          <label class="inq-label font-sora" for={idPrefix + "message"}>Message or Questions? {requireAll && <span class="inq-required">*</span>}</label>
+          <label class="inq-label font-sora" for={idPrefix + "message"}>Message or Questions?{requireAll && <span class="inq-required"> *</span>}</label>
           <textarea
             id={idPrefix + "message"}
             name="message"
