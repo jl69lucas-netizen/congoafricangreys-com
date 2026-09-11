@@ -36,9 +36,17 @@ Rewritten 2026-09-11 from the shipped result. Plan and evidence:
 ## The seven-field contract (2026-09-11)
 
 Applies to every **inquiry** form — any form whose visible controls are more than a single email box
-(the same rule as `scripts/form_contract_audit.py`) — **except** `/`, `/contact-us/` and the location
-cluster (41 location pages render `CTA.astro`, which has no `<form>`). Existing fields are kept, nothing
-is duplicated, and every field carries a red `*` in the page's own required class, colour `#b04228`.
+(the same rule as `scripts/form_contract_audit.py`). Three contracts, chosen by slug
+(`contract_keys()` in the audit, `contractFor()` in `tests/render/checks/form.ts` — pinned in meta.spec):
+
+| Contract | Pages | Fields |
+|---|---|---|
+| **full** | every in-scope page, **including `/` and `/contact-us/`** (breeder lifted their opt-out 2026-09-11; the `requireAll` prop is gone) | all seven below |
+| **short** | `blog/*` posts (breeder, 2026-09-11: "old short forms … only confirm email, numbers, the two questions") | Confirm Number, Confirm Email, resale, surrender — required. Interest + message stay optional as on the original short form; phone is required because Confirm Number presupposes one |
+| **none** | the location cluster and `buy-*` (41 location pages render `CTA.astro`, which has no `<form>`) | endpoint only |
+
+Existing fields are kept, nothing is duplicated, and every contract field carries a red `*` in the
+page's own required class, colour `#b04228`.
 
 | # | Label | name | control |
 |---|---|---|---|
@@ -67,8 +75,8 @@ baby submits `airport` / `home` / `nanny` / `midland`, adoption-cost renders pri
 
 | Family | Vocabulary | Files |
 |---|---|---|
-| Full shared | `.inq-*`, `.inq-required` · prop `requireAll` (false only on `/` and `/contact-us/`) | `src/components/cag-inquiry-form.astro` (15 in-scope pages) |
-| Compact shared | `.cf-*`, `.cf-req`, `.cf-rad`, `.cf-dlv`, `.cf-hp` | `src/components/cag-inquiry-compact.astro` (9 blogs + scams ×3) |
+| Full shared | `.inq-*`, `.inq-required` | `src/components/cag-inquiry-form.astro` (15 pages + `/` + `/contact-us/`) |
+| Compact shared | `.cf-*`, `.cf-req`, `.cf-rad`, `.cf-dlv`, `.cf-hp` · prop `variant` — `"short"` (default, the 9 blog posts) / `"full"` (the scam page's 2 forms) | `src/components/cag-inquiry-compact.astro` |
 | `cta-form` | `.form-2col` / `.form-2up`, `.fset`, `.rad`, `.dlv`, `.req` | 8 comparison pages · congo / timneh / eggs for-sale · adoption-cost |
 | `form-main` | `.f2`, `.fset`, `.rad`, `.dlv`, `.req`, scoped `.dnat` / `.handraised` / `.hgar` | dna-tested · hand-raised · health-guarantee |
 | `fs-fields` | `.fld`, `.fld2`, `.fset`, `.rad`, `.dlv`, `.req` | breeding-pair · congo-pair · baby |
@@ -89,18 +97,30 @@ once** or the file is left untouched, so a page whose markup drifted fails loudl
    Only a screenshot shows this — the audit and `checkValidity()` both pass it.
 2. **`opacity` on description text** trips `page_hardening_scan` `opacity-dims-text-contrast`. Use an
    explicit colour (`#5a5248` on the `#fff9f6` card ground).
-3. **The whitespace-tight spots in `cag-inquiry-form.astro`** are guarded by its frontmatter comment —
-   `/` and `/contact-us/` must stay byte-identical while `requireAll={false}`.
+3. **Tailwind v4 `space-y-*` is cancelled by `m-0`.** v4 spaces children with `margin-block-end` inside a
+   zero-specificity `:where()`, so an `m-0` utility on a child (the bird-family `<fieldset>`s had
+   `border-0 p-0 m-0`) wins and the NEXT group title sits 0px under the pills/cards above it. Never put
+   `m-0` on a child of a `space-y-*` stack; preflight already zeroes fieldset margins. Measured, not seen:
+   `scripts/form_title_gap_probe.mjs` (every group title ≥12px below the control above it, 3 widths).
+   The probe measures an option's pill/card LABEL, never the radio circle inside it — the circle sits
+   ~12px above the pill's bottom edge and hid the 0px collision in the first version of the probe.
+   Row gaps now: `form-main` 1rem, `fs-fields` label/fieldset 14px, Tailwind `space-y-4` 16px.
 4. **Radio/card inputs inherit the family's text-input rule** (width, padding, border). Every family's
    CSS ends with a reset: `width:auto;padding:0;border:0;background:none;box-shadow:none;accent-color:#e8604c`.
 
-## Gates — run all three, in this order
+## Gates — run all four, in this order
 
 ```bash
 python3 scripts/form_contract_audit.py --json /tmp/cag-forms.json   # every page in dist/, exit 1 on any miss
 node scripts/form_contract_browser.mjs /tmp/cag-forms.json           # real browser: empty rejects, filled accepts, screenshots
+node scripts/form_title_gap_probe.mjs /tmp/cag-forms.json            # every group title >=12px below the control above, 375/768/1280
 npm run test:render:pages -- --grep form-inquiry-contract            # harness FORM family (advisory)
 ```
+
+Form text is UI copy shared by design, so both duplicate gates skip it: `scripts/dup_content_audit.py`
+(`SKIP_TAGS` includes `form`) and, since 2026-09-11, `tests/render/checks/dup.ts` + `lib/dupCorpus.ts`.
+Before that fix the harness read `<main>` with forms included and flagged the fixed contract questions
+as sibling crossovers — two gates, one input, different verdicts.
 
 Cross-check the audit's `forms examined` independently — if they differ, the audit skipped something:
 
