@@ -9,8 +9,12 @@
  *
  * Fixtures live outside dist/, so they get their own server on the repo root.
  */
-export const SITE_PORT = 4321;
-export const FIXTURE_PORT = 4322;
+// Overridable because every worktree runs the same harness: a second session's run (or a
+// run on another worktree) holds 4321/4322, and `reuseExistingServer: false` then refuses
+// to start rather than silently judging someone else's dist/. RENDER_SITE_PORT /
+// RENDER_FIXTURE_PORT move this run instead of touching the other one.
+export const SITE_PORT = Number(process.env.RENDER_SITE_PORT ?? 4321);
+export const FIXTURE_PORT = Number(process.env.RENDER_FIXTURE_PORT ?? 4322);
 
 export const SITE_BASE = `http://127.0.0.1:${SITE_PORT}`;
 export const FIXTURE_BASE = `http://127.0.0.1:${FIXTURE_PORT}`;

@@ -102,6 +102,57 @@ def words(path: Path):
 
 def norm(ws): return " ".join(ws)
 
+# Tokenised once, with the same tokeniser as the page text, so a stem matches whole words.
+WHITELIST_STEMS = [re.findall(r"[a-z0-9$']+", w) for w in WHITELIST_SNIPPETS]
+
+def unwhitelisted_segments(run):
+    """The stretches of a shared run (a word list) that no whitelisted stem covers.
+
+    The whitelist exempts LINES, not the runs they sit in. Growth fuses a whitelisted line
+    with any shared passage touching it, and skipping a run that merely CONTAINED a stem
+    exempted the passage along with it (found 2026-09-11: a 17-word <legend> right after the
+    shipping line never fired). So every stem occurrence is cut out and each side is judged
+    on its own. Re-joining the sides instead would glue two short shared phrases into one
+    false 12-word passage. Mirrors unwhitelistedSegments() in tests/render/checks/dup.ts.
+    """
+    covered = [False] * len(run)
+    for stem in WHITELIST_STEMS:
+        n = len(stem)
+        for k in range(len(run) - n + 1):
+            if run[k:k+n] == stem:
+                covered[k:k+n] = [True] * n
+    segments, cur = [], []
+    for w, c in zip(run, covered):
+        if c:
+            if cur: segments.append(cur); cur = []
+        else:
+            cur.append(w)
+    if cur: segments.append(cur)
+    return segments
+
+def shingles(ws):
+    sh = {}
+    for i in range(len(ws)-MIN_WORDS+1):
+        sh.setdefault(norm(ws[i:i+MIN_WORDS]), i)
+    return sh
+
+def crossovers(wa, sa, sb):
+    """Every non-whitelisted passage >= MIN_WORDS that page A shares with page B, as word lists.
+
+    Runs grow from the FIRST shared shingle, whitelisted or not. The old per-shingle
+    whitelist skip made growth start mid-stem ("airport $350 home ..."), leaving a stem
+    fragment glued to the passage that no whole-stem cut can remove.
+    """
+    reported = set()
+    found = []
+    for s in sorted(set(sa) & set(sb), key=lambda s: sa[s]):
+        if any(s in r for r in reported): continue
+        i = sa[s]; j = i + MIN_WORDS
+        while j < len(wa) and norm(wa[j-MIN_WORDS+1:j+1]) in sb: j += 1
+        run = wa[i:j]; reported.add(norm(run))
+        found += [seg for seg in unwhitelisted_segments(run) if len(seg) >= MIN_WORDS]
+    return found
+
 # Headings allowed to repeat on every page (site-standard sections).
 HEADER_WHITELIST = [
     "frequently asked questions",
@@ -167,24 +218,13 @@ def main():
     shingled={}
     for slug,p in pages.items():
         ws=words(p)
-        sh={}
-        for i in range(len(ws)-MIN_WORDS+1):
-            sh.setdefault(norm(ws[i:i+MIN_WORDS]), i)
-        shingled[slug]=(ws,sh)
+        shingled[slug]=(ws,shingles(ws))
     bad=0
     for (a,(wa,sa)),(b,(wb,sb)) in itertools.combinations(shingled.items(),2):
-        common=set(sa)&set(sb)
-        # collapse overlapping shingles into maximal runs
-        reported=set()
-        for s in sorted(common, key=lambda s: sa[s]):
-            if any(s in r for r in reported): continue
-            if any(w in s for w in WHITELIST_SNIPPETS): continue
-            i=sa[s]; j=i+MIN_WORDS
-            while j<len(wa) and norm(wa[j-MIN_WORDS+1:j+1]) in sb: j+=1
-            run=norm(wa[i:j]); reported.add(run)
-            if any(w in run for w in WHITELIST_SNIPPETS): continue
+        for seg in crossovers(wa, sa, sb):
             bad+=1
-            print(f"DUPLICATE ({j-i} words) between /{a}/ and /{b}/:\n  \"{run[:220]}{'…' if len(run)>220 else ''}\"\n")
+            run=norm(seg)
+            print(f"DUPLICATE ({len(seg)} words) between /{a}/ and /{b}/:\n  \"{run[:220]}{'…' if len(run)>220 else ''}\"\n")
     if bad:
         print(f"FAIL — {bad} duplicated passages ≥{MIN_WORDS} words."); sys.exit(1)
     print(f"PASS — no cross-page duplicate runs ≥{MIN_WORDS} words in {len(pages)} pages.")

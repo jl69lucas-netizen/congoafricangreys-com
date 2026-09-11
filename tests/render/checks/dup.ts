@@ -6,6 +6,36 @@ import type { Page } from '@playwright/test';
 const MIN_WORDS = 12;
 
 /**
+ * The stretches of a shared run that no whitelisted stem covers.
+ *
+ * The whitelist exempts LINES, not the runs they sit in. Growth fuses a whitelisted line
+ * with any shared passage touching it, and skipping a run that merely CONTAINED a stem
+ * exempted the passage along with it (found 2026-09-11: a 17-word <legend> right after the
+ * shipping line never fired). So every stem occurrence is cut out and each side is judged on
+ * its own. Re-joining the sides instead would glue two short shared phrases into one false
+ * 12-word passage. Mirrors `unwhitelisted_segments` in scripts/dup_content_audit.py.
+ */
+function unwhitelistedSegments(run: string[], stems: string[][]): string[][] {
+  const covered = new Array<boolean>(run.length).fill(false);
+  for (const stem of stems) {
+    for (let k = 0; k + stem.length <= run.length; k++) {
+      if (stem.every((w, n) => run[k + n] === w)) covered.fill(true, k, k + stem.length);
+    }
+  }
+  const segments: string[][] = [];
+  let start = -1;
+  for (let k = 0; k <= run.length; k++) {
+    if (k < run.length && !covered[k]) {
+      if (start < 0) start = k;
+    } else if (start >= 0) {
+      segments.push(run.slice(start, k));
+      start = -1;
+    }
+  }
+  return segments;
+}
+
+/**
  * DUP: no page may share a run of copy with a sibling.
  *
  * Chosen over reimplementing the whole auditor in TypeScript: the SHINGLING is fifteen
@@ -47,7 +77,7 @@ register({
         return text;
       }),
     );
-    const whitelist = loadWhitelist();
+    const whitelist = loadWhitelist().map(normalise);
 
     const ownShingles = new Map<string, number>();
     for (let i = 0; i + MIN_WORDS <= own.length; i++) {
@@ -71,10 +101,11 @@ register({
         // 49 times and DUP outvotes every other family by counting style alone.
         let j = i + MIN_WORDS;
         while (j < own.length && sibShingles.has(own.slice(j - MIN_WORDS + 1, j + 1).join(' '))) j++;
-        const run = own.slice(i, j).join(' ');
-        reported.push(run);
-        if (whitelist.some((w) => run.includes(w))) continue;
-        findings.push({ sibling: sib.slug, words: j - i, run });
+        const run = own.slice(i, j);
+        reported.push(run.join(' '));
+        for (const seg of unwhitelistedSegments(run, whitelist)) {
+          if (seg.length >= MIN_WORDS) findings.push({ sibling: sib.slug, words: seg.length, run: seg.join(' ') });
+        }
       }
     }
 

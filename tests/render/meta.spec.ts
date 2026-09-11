@@ -86,6 +86,44 @@ for (const check of registry) {
   });
 }
 
+/**
+ * The DUP whitelist exempts LINES, not the runs they happen to sit inside.
+ *
+ * Found 2026-09-11: shingle growth fuses a whitelisted line and any shared passage that
+ * touches it into one maximal run, and both gates then skipped the WHOLE run because it
+ * contained a whitelisted stem. A 17-word shared <legend> placed right after
+ * "Ships nationwide · $185 airport · $350 home" never fired. The generic known_broken loop
+ * above could not see this: its fixture's crossover is not adjacent to anything whitelisted.
+ *
+ * The count is pinned at exactly 2, not "> 0": a fix that reported the fused run as one
+ * finding would still fire, and would print the shipping line as the defect.
+ */
+test.describe('dup-no-sibling-crossover sees a crossover adjacent to a whitelisted line', () => {
+  const onlyOnce = (testInfo: { project: { name: string }; config: { projects: { name: string }[] } }) =>
+    test.skip(
+      testInfo.project.name !== testInfo.config.projects[0].name,
+      `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
+    );
+
+  test('reports each passage beside the shipping line, and never the line itself', async ({
+    page,
+  }, testInfo) => {
+    onlyOnce(testInfo);
+    const res = await page.goto(fixtureUrl('known_broken', 'dup-adjacent-to-whitelist'));
+    expect(res?.status(), 'fixture must load').toBe(200);
+    const check = registry.find((c) => c.id === 'dup-no-sibling-crossover')!;
+    const r = await runCheck(check, page, testInfo.project.use.viewport!.width, FIXTURE_CTX);
+
+    expect(r.examined, 'must have compared against the corpus').toBeGreaterThanOrEqual(1);
+    expect(r.defects.length, 'a crossover beside a whitelisted line must still fire').toBe(1);
+    expect(r.defects[0].count, 'one finding per non-whitelisted segment: A before, B after').toBe(2);
+    const msg = r.defects[0].message;
+    expect(msg).toContain('18w vs /sibling-hand-raised-african-grey-texas/ "before a chick leaves');
+    expect(msg).toContain('17w vs /sibling-hand-raised-african-grey-texas/ "tell us which bird');
+    expect(msg, 'the whitelisted line is not the defect').not.toContain('ships nationwide');
+  });
+});
+
 test.describe('dist/ freshness gate', () => {
   // mkdtemp leaks a real directory per call unless something removes it. Tracked here
   // and swept in afterAll — 5 tests x 3 viewport projects otherwise left 15 orphaned
