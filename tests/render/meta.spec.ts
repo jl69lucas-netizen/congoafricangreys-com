@@ -22,6 +22,7 @@ import { measureTopChrome, waitForScrollSettle } from './lib/probes.js';
 import { checkDistFreshness, builtRoutesWithoutSource } from './lib/freshness.js';
 import { fixtureCorpus } from './lib/dupCorpus.js';
 import { resetRaw } from './lib/scorecard.js';
+import { fieldChecksSkipped } from './checks/form.js';
 import './checks/index.js';
 
 
@@ -1007,5 +1008,76 @@ test.describe('IndexNow tooling is intact', () => {
       .split('\n')
       .filter((l) => l.includes('MFS/site2') && !l.trimStart().startsWith('>'));
     expect(offenders, `live code still reads the MFS project: ${offenders.join(' | ')}`).toEqual([]);
+  });
+});
+
+/**
+ * form-inquiry-contract: examined === 0 is a legitimate silent state ONLY on `location`
+ * and `hub` page types (those clusters carry no inquiry form by design). On every other
+ * page type, zero forms examined must itself become a defect row — otherwise a page that
+ * lost its whole form (or that only carries a `/search/` form) scores clean forever,
+ * indistinguishable from a page nobody ever built the check against.
+ *
+ * FIXTURE_CTX pins `pageType: 'bird'`, so this predicate can't be exercised through the
+ * generic known_good/known_broken loop above — it needs its own fixture with no
+ * non-search form at all, run under two different `pageType`s.
+ */
+test.describe('form-inquiry-contract: zero-examined is a defect off location/hub only', () => {
+  const NOFORM_URL = `${FIXTURE_BASE}/tests/render/fixtures/form-inquiry-contract-noform.html`;
+  const check = () => {
+    const c = registry.find((x) => x.id === 'form-inquiry-contract')!;
+    if (!c) throw new Error('form-inquiry-contract is not registered');
+    return c;
+  };
+
+  test('a for-sale page with no non-search form fires one defect', async ({ page }, testInfo) => {
+    const viewport = testInfo.project.use.viewport!.width;
+    const res = await page.goto(NOFORM_URL);
+    expect(res?.status(), 'fixture must load').toBe(200);
+    const result = await runCheck(check(), page, viewport, { ...FIXTURE_CTX, pageType: 'for-sale' });
+    expect(result.examined).toBe(0);
+    expect(result.defects.length, 'zero examined on a form-bearing page type must not pass silently').toBe(1);
+    expect(result.defects[0].message).toBe('no non-search form on a for-sale page — nothing to judge');
+  });
+
+  test('a location page with no non-search form is silent', async ({ page }, testInfo) => {
+    const viewport = testInfo.project.use.viewport!.width;
+    const res = await page.goto(NOFORM_URL);
+    expect(res?.status(), 'fixture must load').toBe(200);
+    const result = await runCheck(check(), page, viewport, { ...FIXTURE_CTX, pageType: 'location' });
+    expect(result.examined).toBe(0);
+    expect(result.defects, 'location legitimately carries no inquiry form').toEqual([]);
+  });
+
+  test('a hub page with no non-search form is silent', async ({ page }, testInfo) => {
+    const viewport = testInfo.project.use.viewport!.width;
+    const res = await page.goto(NOFORM_URL);
+    expect(res?.status(), 'fixture must load').toBe(200);
+    const result = await runCheck(check(), page, viewport, { ...FIXTURE_CTX, pageType: 'hub' });
+    expect(result.examined).toBe(0);
+    expect(result.defects, 'hub legitimately carries no inquiry form').toEqual([]);
+  });
+});
+
+/**
+ * `fieldChecksSkipped` decides which slugs are exempt from the seven-field screening
+ * contract. Pinned directly (same reason as `flattenSlug` above): the predicate is a pure
+ * function driving a policy decision, not something the generic fixture loop can exercise
+ * for every slug shape it needs to cover.
+ */
+test.describe('fieldChecksSkipped pins the field-contract exemption list', () => {
+  test('exempt: homepage, contact-us, the location cluster, buy-* pages', () => {
+    expect(fieldChecksSkipped('index')).toBe(true);
+    expect(fieldChecksSkipped('contact-us')).toBe(true);
+    expect(fieldChecksSkipped('african-grey-parrot-for-sale-florida')).toBe(true);
+    expect(fieldChecksSkipped('african-grey-parrots-for-sale-near-me')).toBe(true);
+    expect(fieldChecksSkipped('buy-african-grey-parrots-with-shipping')).toBe(true);
+  });
+
+  test('in scope: comparison, bird listing, blog, and the for-sale cluster proper', () => {
+    expect(fieldChecksSkipped('congo-vs-timneh-african-grey')).toBe(false);
+    expect(fieldChecksSkipped('available/roys')).toBe(false);
+    expect(fieldChecksSkipped('blog/african-grey-parrot-facts')).toBe(false);
+    expect(fieldChecksSkipped('african-grey-parrot-bird-eggs-for-sale-usa')).toBe(false);
   });
 });

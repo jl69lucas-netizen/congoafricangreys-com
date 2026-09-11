@@ -1,4 +1,4 @@
-import { register, type CheckResult, type CheckContext } from '../lib/registry.js';
+import { register, type CheckResult, type CheckContext, type Defect } from '../lib/registry.js';
 import type { Page } from '@playwright/test';
 
 /**
@@ -10,10 +10,23 @@ import type { Page } from '@playwright/test';
  * check enters ADVISORY with a fixture that went red first. It is judged in the browser,
  * not from source: `checkValidity()` on the untouched form is the one honest test that
  * `required` is live on every control the contract names.
+ *
+ * `examined === 0` is a legitimate, silent state ONLY on `location` and `hub` page types —
+ * those clusters carry no inquiry form by design. On every other page type, zero forms
+ * examined is itself the defect (the page lost its form, or the form is a `/search/` form
+ * in disguise), and this check reports it as one row instead of passing silently — a check
+ * that returns clean on zero is indistinguishable from a check that never ran.
+ *
+ * `fieldChecksSkipped()` exempts `buy-*` slugs from the seven-field contract only because,
+ * as of this writing, no `buy-*` page carries an inquiry form at all (plan §0 groups them
+ * with the location cluster for that reason). That is a fact about today's page inventory,
+ * not a permanent property of the slug pattern — if a `buy-*` page ever grows a real
+ * inquiry form, this exemption must be revisited or it will silently stop checking it.
  */
-export const FORM_ENDPOINT = 'https://formspree.io/f/xrejpnvn';
-const FIELD_CHECKS_SKIP = (slug: string) =>
-  slug === 'index' || slug === 'contact-us' || /^(african-grey-parrots?-for-sale-|buy-)/.test(slug);
+const FORM_ENDPOINT = 'https://formspree.io/f/xrejpnvn';
+export function fieldChecksSkipped(slug: string): boolean {
+  return slug === 'index' || slug === 'contact-us' || /^(african-grey-parrots?-for-sale-|buy-)/.test(slug);
+}
 
 register({
   id: 'form-inquiry-contract',
@@ -37,15 +50,26 @@ register({
         ];
         const wrongEndpoint: string[] = [];
         const missing: string[] = [];
+        let missingCount = 0;
         const submitsEmpty: string[] = [];
         let examined = 0;
         Array.from(document.querySelectorAll('form')).forEach((f, i) => {
           const action = f.getAttribute('action') || '';
           if (action.startsWith('/search')) return;
           examined++;
-          const label = `form#${i + 1}(${f.getAttribute('name') || f.className.split(' ')[0] || 'unnamed'})`;
+          const subject = f.querySelector('input[name="_subject"]') as HTMLInputElement | null;
+          const label = `form#${i + 1}(${
+            f.getAttribute('id') ||
+            f.getAttribute('aria-label') ||
+            subject?.value ||
+            f.getAttribute('name') ||
+            f.className.split(' ')[0] ||
+            'unnamed'
+          })`;
           const netlify =
-            f.hasAttribute('data-netlify') || !!f.querySelector('[name="form-name"],[name="bot-field"]');
+            f.hasAttribute('data-netlify') ||
+            f.hasAttribute('netlify-honeypot') ||
+            !!f.querySelector('[name="form-name"],[name="bot-field"]');
           if (action !== endpoint || netlify || (f.getAttribute('method') || 'get').toLowerCase() !== 'post') {
             wrongEndpoint.push(`${label} action="${action || '(none)'}"${netlify ? ' +netlify' : ''}`);
           }
@@ -55,30 +79,48 @@ register({
           const controls = Array.from(f.querySelectorAll('input,select,textarea')) as HTMLInputElement[];
           const visible = controls.filter((c) => c.type !== 'hidden' && c.name !== '_gotcha');
           const isInquiry = !(visible.length === 1 && visible[0].type === 'email');
-          if (!isInquiry || !fieldsApply) return;
+          if (!isInquiry) {
+            // Same parity check as form_contract_audit.py: a newsletter's one real control
+            // must carry a `name`, or Formspree receives an unlabeled value and drops it.
+            if (!visible[0].name) {
+              wrongEndpoint.push(`${label}: email input has no name — Formspree receives nothing`);
+            }
+            return;
+          }
+          if (!fieldsApply) return;
+          const formIssues: string[] = [];
           for (const [name, rx] of KEYS) {
             const hits = controls.filter((c) => rx.test(c.name));
-            if (!hits.length) missing.push(`${label}: ${name} absent`);
-            else if (!hits.some((c) => c.required)) missing.push(`${label}: ${name} not required`);
+            if (!hits.length || !hits.some((c) => c.required)) formIssues.push(name);
+          }
+          if (formIssues.length) {
+            missingCount += formIssues.length;
+            missing.push(`${label}: ${formIssues.length} missing/optional (${formIssues.join(', ')})`);
           }
           if (f.checkValidity()) submitsEmpty.push(label);
         });
-        return { examined, wrongEndpoint, missing, submitsEmpty };
+        return { examined, wrongEndpoint, missing, missingCount, submitsEmpty };
       },
-      { endpoint: FORM_ENDPOINT, fieldsApply: !FIELD_CHECKS_SKIP(ctx.slug) },
+      { endpoint: FORM_ENDPOINT, fieldsApply: !fieldChecksSkipped(ctx.slug) },
     );
-    const defects = [];
+    const defects: Defect[] = [];
+    if (r.examined === 0 && ctx.pageType !== 'location' && ctx.pageType !== 'hub') {
+      defects.push({
+        checkId: 'form-inquiry-contract', family: 'FORM' as const, viewport, count: 1,
+        message: `no non-search form on a ${ctx.pageType} page — nothing to judge`,
+      });
+    }
     if (r.wrongEndpoint.length) {
       defects.push({ checkId: 'form-inquiry-contract', family: 'FORM' as const, viewport, count: r.wrongEndpoint.length,
         message: `not posting to ${FORM_ENDPOINT}: ${r.wrongEndpoint.slice(0, 4).join(' | ')}` });
     }
     if (r.missing.length) {
-      defects.push({ checkId: 'form-inquiry-contract', family: 'FORM' as const, viewport, count: r.missing.length,
+      defects.push({ checkId: 'form-inquiry-contract', family: 'FORM' as const, viewport, count: r.missingCount,
         message: `screening fields: ${r.missing.slice(0, 6).join(' | ')}` });
     }
     if (r.submitsEmpty.length) {
       defects.push({ checkId: 'form-inquiry-contract', family: 'FORM' as const, viewport, count: r.submitsEmpty.length,
-        message: `checkValidity() is true on the untouched form (required is not live): ${r.submitsEmpty.join(' | ')}` });
+        message: `checkValidity() is true on the untouched form (no live required constraint, or a control is pre-filled/pre-checked): ${r.submitsEmpty.join(' | ')}` });
     }
     return { examined: r.examined, defects };
   },
