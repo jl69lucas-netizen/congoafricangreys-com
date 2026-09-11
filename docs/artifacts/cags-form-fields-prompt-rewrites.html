@@ -1,0 +1,168 @@
+<title>Goal and Done-Means Rewrites</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F7F5EE; --paper:#FFFFFF; --ink:#1E2A24; --ink-2:#4B5A52; --ink-3:#7A867F;
+  --line:#DDD9CC; --green:#2D6A4F; --green-soft:#E3EEE8; --clay:#E8604C; --clay-soft:#FBE7E2;
+  --code-bg:#F0EEE5; --mark:#FFF3C4;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+    --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+    --code-bg:#11161380; --mark:#4A3F16;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+  --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+  --code-bg:#11161380; --mark:#4A3F16;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 96px}
+header.masthead{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;padding-bottom:20px;border-bottom:2px solid var(--green);margin-bottom:28px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:600;margin:0 0 8px}
+h1.title{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+.sub{color:var(--ink-2);margin:10px 0 0;max-width:62ch}
+.meta{font-size:13px;color:var(--ink-3);text-align:right;line-height:1.5}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 28px}
+button.btn{font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:6px;border:1px solid var(--green);background:var(--green);color:#fff;cursor:pointer}
+button.btn.ghost{background:transparent;color:var(--green)}
+button.btn:focus-visible{outline:3px solid var(--clay);outline-offset:2px}
+.toc{font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 36px;padding:0;list-style:none}
+.toc a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a:hover{color:var(--green);border-color:var(--green)}
+section.sec{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:26px 30px 30px;margin:0 0 22px;position:relative}
+section.sec .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:6px}
+section.sec h2{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:24px;margin:0;line-height:1.2;text-wrap:balance}
+section.sec .copy{flex:none;font:inherit;font-size:12px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:5px;border:1px solid var(--line);background:transparent;color:var(--ink-2);cursor:pointer}
+section.sec .copy:hover{border-color:var(--green);color:var(--green)}
+section.sec .copy.done{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.md h3{font-family:"Source Serif 4",Georgia,serif;font-size:18px;margin:26px 0 8px}
+.md h4{font-size:15px;margin:20px 0 6px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+.md p,.md li{max-width:72ch}
+.md ul,.md ol{padding-left:22px}
+.md li{margin:4px 0}
+.md strong{font-weight:600}
+.md code{font:13.5px/1.5 "IBM Plex Mono",ui-monospace,Menlo,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.md pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;font:13px/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
+.md pre code{background:none;padding:0;font-size:inherit}
+.md table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0 18px;display:block;overflow-x:auto}
+.md thead th{text-align:left;font-weight:600;color:var(--ink-2);font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--green);padding:8px 10px;white-space:nowrap}
+.md tbody td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-variant-numeric:tabular-nums}
+.md tbody tr:last-child td{border-bottom:none}
+.md blockquote{margin:14px 0;padding:10px 16px;border-left:4px solid var(--clay);background:var(--clay-soft);border-radius:0 6px 6px 0}
+.md blockquote p{margin:4px 0}
+.md a{color:var(--green)}
+.md mark{background:var(--mark);padding:0 3px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--ground);padding:9px 16px;border-radius:6px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:640px){header.masthead{grid-template-columns:1fr}.meta{text-align:left}section.sec{padding:20px 18px 22px}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<div class="wrap">
+<header class="masthead">
+  <div>
+    <p class="eyebrow">CongoAfricanGreys.com · Prompt craft</p>
+    <h1 class="title">Goal and Done-Means Rewrites</h1>
+    <p class="sub">Three ways to tighten the 2026-09-11 contact-form fields prompt using only its Goal and Done-means lines, grounded in what the repo actually contains: 3 form families, 34 newsletter boxes, 14 forms posting to a Netlify handler that does not exist on Cloudflare.</p>
+  </div>
+  <div class="meta">Written 2026-09-11<br>Source of truth: <code>docs/artifacts/cags-form-fields-prompt-rewrites.md</code><br>Companion plan: <code>docs/superpowers/plans/2026-09-11-contact-form-fields.md</code></div>
+</header>
+<div class="toolbar">
+  <button class="btn" id="copy-all">Copy whole document as Markdown</button>
+  <span style="font-size:13px;color:var(--ink-3)">Each section below has its own copy button. Copies are exact Markdown, not scraped HTML. The same text is versioned as <code>.md</code> in the repo.</span>
+</div>
+<ul class="toc" id="toc"></ul>
+<div id="doc"></div>
+</div>
+<div class="toast" id="toast">Copied</div>
+
+<script type="text/markdown" data-title="1. What the original Goal and Done-means left open">
+The original pair was:
+
+> **Goal:** Form fields update, read, verify, and confirm your work so no mistakes are made.
+> **Done means:** When you have checked via a Chrome extension or Playwright that each form has the new fields provided below.
+
+Four things the agent had to guess, each of which changes the files it touches:
+
+- **Which forms count.** The site has three form families: the shared full component (17 pages, including the homepage and contact-us), the shared compact component (10 pages), and 20 hand-written forms in individual pages. "Every page with a contact form" does not say whether the 34 one-field newsletter boxes count.
+- **What "has the new fields" is measured against.** The full component already carries all seven. Nine comparison forms already carry the two confirm fields. Done-means needs to say the check is *field name present + required + endpoint*, or a page that already had five of seven passes by accident.
+- **Where the edit lands when the form is shared.** Making Message required on the shared component changes the homepage and contact-us, which the prompt excludes. Goal has to say whether the exclusion is "do not touch those pages" or "do not add fields there".
+- **What verification produces.** "Checked via Playwright" is an activity. Done-means should name the artefact: a list of every form with its fields, endpoint and required flags, and a count that matches the count found in source.
+</script>
+
+<script type="text/markdown" data-title="2. Three rewrites, Goal and Done-means only">
+### A. Field-contract first (Recommended)
+
+> **Goal:** Every inquiry form outside the homepage, contact-us and the location cluster carries the same seven screening fields, in that page's own form styling, every field required with a red asterisk, and every form on the site posts to `https://formspree.io/f/xrejpnvn`.
+>
+> **Done means:** A Playwright pass over the built site lists every `<form>` and, for each in-scope form, reports the seven field names, `required` on each, and the action URL. Zero rows fail, the examined count equals the number of forms found by grep in source, and one screenshot per form family at 375px and 1280px is attached.
+
+*Why recommended:* it names the invariant, which is what the render harness can turn into a check that keeps firing after this session. Trade-off: it is the longest to write and it forces the shared-component question to be answered in the goal.
+
+### B. Endpoint first
+
+> **Goal:** No form on congoafricangreys.com submits anywhere except `https://formspree.io/f/xrejpnvn`. Remove every `data-netlify` attribute, every `/thank-you/`, `/contact-us/` and `/api/newsletter` action, and the old `xpqoeazq` ID; then add the seven fields to each in-scope inquiry form.
+>
+> **Done means:** `grep -c "<form" dist/**/index.html` and `grep -c 'action="https://formspree.io/f/xrejpnvn"'` agree on every page except the two site-search forms, and one real test submission from a for-sale page and one from a bird page arrive in the xrejpnvn dashboard.
+
+*Why not first:* it fixes the money leak fastest (fourteen forms currently post to a Netlify handler that does not exist on Cloudflare, so those inquiries vanish), but it leaves "which fields" to a second prompt.
+
+### C. Harness first
+
+> **Goal:** A render-harness check `form-inquiry-contract` fails whenever an in-scope form is missing any of the seven fields, has one marked optional, or posts anywhere but xrejpnvn; pages are edited until the check is green on every target.
+>
+> **Done means:** `npm run test:render:meta` fails on the check's known_broken fixture and passes known_good; `npm run test:render:pages` reports zero defects for the check with examined ≥ 28 forms; the rule is added to `data/quality/rule-index.json` as `enforced: test`.
+
+*Why not first:* it is the version the learning-loop skill would write, and it is what stops the defect recurring, but it makes the breeder's visible ask (fields on pages) the last thing to land.
+</script>
+
+<script type="text/markdown" data-title="3. A reusable shape">
+```
+Goal:      <one sentence: the invariant that is true when this is finished,
+            with the population it applies to and the exclusions named>
+Done means: <the artefact that proves it: a listing, a count that matches a
+            second independent count, a gate that fails on a fixture, a
+            screenshot per family> — never an activity ("checked", "verified").
+```
+
+Two tests for a Done-means line: could a second agent run it without reading the conversation, and does it fail when the work is half done?
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+<script>
+(function(){
+  var blocks = Array.prototype.slice.call(document.querySelectorAll('script[type="text/markdown"]'));
+  var doc = document.getElementById('doc'), toc = document.getElementById('toc'), toast = document.getElementById('toast');
+  var all = [];
+  function dedent(s){ return s.replace(/^\n+|\s+$/g,''); }
+  function copy(text, btn){
+    var done = function(){ if(btn){ btn.classList.add('done'); btn.textContent='Copied'; setTimeout(function(){btn.classList.remove('done'); btn.textContent=btn.getAttribute('data-label');},1400);} toast.classList.add('show'); setTimeout(function(){toast.classList.remove('show');},1200); };
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, function(){ fallback(text); done(); }); } else { fallback(text); done(); }
+  }
+  function fallback(text){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); }
+  blocks.forEach(function(b, i){
+    var title = b.getAttribute('data-title'); var md = dedent(b.textContent);
+    var full = '## ' + title + '\n\n' + md + '\n';
+    all.push(full);
+    var id = 'sec-' + i;
+    var sec = document.createElement('section'); sec.className='sec'; sec.id=id;
+    var head = document.createElement('div'); head.className='sec-head';
+    var h2 = document.createElement('h2'); h2.textContent = title;
+    var btn = document.createElement('button'); btn.className='copy'; btn.type='button'; btn.textContent='Copy section'; btn.setAttribute('data-label','Copy section');
+    btn.addEventListener('click', function(){ copy(full, btn); });
+    head.appendChild(h2); head.appendChild(btn);
+    var body = document.createElement('div'); body.className='md';
+    body.innerHTML = (window.marked ? marked.parse(md) : '<pre>'+md.replace(/</g,'&lt;')+'</pre>');
+    sec.appendChild(head); sec.appendChild(body); doc.appendChild(sec);
+    var li = document.createElement('li'); var a = document.createElement('a'); a.href='#'+id; a.textContent=title; li.appendChild(a); toc.appendChild(li);
+  });
+  document.getElementById('copy-all').addEventListener('click', function(){
+    copy('# Goal and Done-Means Rewrites\n\n' + all.join('\n'), this);
+  });
+  document.getElementById('copy-all').setAttribute('data-label','Copy whole document as Markdown');
+})();
+</script>
