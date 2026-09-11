@@ -2,9 +2,18 @@
 """Form contract audit over dist/.
 
 Every non-search <form> must POST to the one Formspree endpoint with no Netlify residue.
-Every inquiry form (a form with a <textarea>) on an in-scope page must carry the seven
-screening fields, each required. Excluded from the FIELD checks only: the homepage,
-/contact-us/, and the location cluster (which has no forms today).
+A form is classed "newsletter" only when its non-hidden, non-_gotcha controls are
+exactly one type="email" input; every other form (including one with no textarea) is
+classed "inquiry" and, on an in-scope page, must carry the seven screening fields, each
+required. Excluded from the FIELD checks: the homepage, /contact-us/, the location
+cluster, and buy-* slugs (which have no forms today).
+
+`n` is 1-based over ALL <form> elements in a page's document order, search forms
+included, matching what a browser script will find at `document.forms[n-1]` — it is
+not scoped to in-scope or inquiry forms only. A `<form>` opened while another form is
+still open is ignored on the start tag (browsers drop nested forms), and content inside
+<template>/<noscript> is never scanned. `form=` attribute association (a control outside
+its form's tags claimed via the HTML `form=""` attribute) is not modelled.
 
   python3 scripts/form_contract_audit.py              # table + exit 1 on any problem
   python3 scripts/form_contract_audit.py --json out.json   # rows for form_contract_browser.mjs
@@ -33,36 +42,58 @@ def field_checks_apply(slug: str) -> bool:
     return slug not in ("index", "contact-us") and not LOCATION.match(slug)
 
 
+_SKIPPED = ("template", "noscript")
+
+
 class _Forms(HTMLParser):
     def __init__(self):
         super().__init__()
         self.forms, self._cur = [], None
+        self._skip_depth = 0
 
     def handle_starttag(self, tag, attrs):
+        if tag in _SKIPPED:
+            self._skip_depth += 1
+            return
+        if self._skip_depth:
+            return
         a = dict(attrs)
         if tag == "form":
+            if self._cur is not None:
+                return  # nested <form> start tag ignored, like a browser's parser
             self._cur = {"attrs": a, "controls": []}
             self.forms.append(self._cur)
         elif tag in ("input", "select", "textarea") and self._cur is not None:
+            type_ = a.get("type") or ("text" if tag == "input" else tag)
             self._cur["controls"].append({
-                "tag": tag, "name": a.get("name"), "type": a.get("type", "text" if tag == "input" else tag),
+                "tag": tag, "name": a.get("name"), "type": type_.lower(),
                 "required": "required" in a,
             })
 
     def handle_endtag(self, tag):
+        if tag in _SKIPPED:
+            if self._skip_depth:
+                self._skip_depth -= 1
+            return
+        if self._skip_depth:
+            return
         if tag == "form":
             self._cur = None
 
 
 def audit_html(html: str, slug: str):
-    p = _Forms(); p.feed(html)
+    p = _Forms(); p.feed(html); p.close()
     rows = []
     for n, f in enumerate(p.forms, 1):
         a, ctl = f["attrs"], f["controls"]
         action = a.get("action", "") or ""
         if action.startswith("/search"):
             continue
-        kind = "inquiry" if any(c["tag"] == "textarea" for c in ctl) else "newsletter"
+        # Conservative: a form is "newsletter" only when its real (non-hidden,
+        # non-honeypot) controls are exactly one email input. Everything else —
+        # including an inquiry form with no <textarea> — is "inquiry".
+        real = [c for c in ctl if c["type"] != "hidden" and c["name"] != "_gotcha"]
+        kind = "newsletter" if len(real) == 1 and real[0]["type"] == "email" else "inquiry"
         problems = []
         if action != ENDPOINT:
             problems.append(f'endpoint is "{action or "(none)"}", must be {ENDPOINT}')
@@ -79,9 +110,16 @@ def audit_html(html: str, slug: str):
                     problems.append(f"{key} absent")
                 elif not any(c["required"] for c in hits):
                     problems.append(f"{key} not required")
-        rows.append({"slug": slug, "n": n, "name": a.get("name") or a.get("class", "").split(" ")[0] or "form",
+        rows.append({"slug": slug, "n": n, "name": a.get("name") or (a.get("class") or "").split(" ")[0] or "form",
                      "kind": kind, "action": action, "fields": sorted({c["name"] for c in ctl if c["name"]}),
                      "in_scope": kind == "inquiry" and field_checks_apply(slug), "problems": problems})
+    return rows
+
+
+def audit_dist(dist: Path) -> list:
+    rows = []
+    for path in sorted(dist.rglob("index.html")):
+        rows += audit_html(path.read_text(encoding="utf-8"), page_key(path, dist))
     return rows
 
 
@@ -90,9 +128,10 @@ def main():
     ap.add_argument("--json"); ap.add_argument("--dist", default="dist")
     args = ap.parse_args()
     dist = Path(args.dist)
-    rows = []
-    for path in sorted(dist.rglob("index.html")):
-        rows += audit_html(path.read_text(encoding="utf-8"), page_key(path, dist))
+    rows = audit_dist(dist)
+    if not rows:
+        print("FAIL: no forms examined — is dist/ built?")
+        sys.exit(2)
     bad = [r for r in rows if r["problems"]]
     inquiry = [r for r in rows if r["kind"] == "inquiry"]
     print(f"forms examined: {len(rows)}  (inquiry {len(inquiry)}, in-scope {sum(r['in_scope'] for r in rows)}, newsletter {len(rows) - len(inquiry)})")
