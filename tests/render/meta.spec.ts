@@ -22,7 +22,7 @@ import { measureTopChrome, waitForScrollSettle } from './lib/probes.js';
 import { checkDistFreshness, builtRoutesWithoutSource } from './lib/freshness.js';
 import { fixtureCorpus } from './lib/dupCorpus.js';
 import { resetRaw } from './lib/scorecard.js';
-import { fieldChecksSkipped } from './checks/form.js';
+import { fieldChecksSkipped, formExpected } from './checks/form.js';
 import './checks/index.js';
 
 
@@ -1079,5 +1079,28 @@ test.describe('fieldChecksSkipped pins the field-contract exemption list', () =>
     expect(fieldChecksSkipped('available/roys')).toBe(false);
     expect(fieldChecksSkipped('blog/african-grey-parrot-facts')).toBe(false);
     expect(fieldChecksSkipped('african-grey-parrot-bird-eggs-for-sale-usa')).toBe(false);
+  });
+});
+
+/**
+ * `formExpected` decides when the zero-examined defect fires. It must agree with the
+ * slug-based exemption above, not just the `location`/`hub` pageType check — two live
+ * `for-sale`-typed targets (`buy-african-grey-parrots-with-shipping`,
+ * `african-grey-parrots-for-sale-near-me`) carry only the search form and would otherwise
+ * produce false zero-examined rows.
+ */
+test.describe('formExpected pins the zero-examined exemption list', () => {
+  test('not expected: the slug-exempt for-sale pair, and every location/hub page', () => {
+    expect(formExpected('buy-african-grey-parrots-with-shipping', 'for-sale')).toBe(false);
+    expect(formExpected('african-grey-parrots-for-sale-near-me', 'for-sale')).toBe(false);
+    expect(formExpected('african-grey-parrot-for-sale-florida', 'location')).toBe(false);
+    expect(formExpected('african-grey-parrots-for-sale', 'hub')).toBe(false);
+  });
+
+  test('expected: the for-sale cluster proper, home, bird, and blog', () => {
+    expect(formExpected('congo-african-grey-for-sale', 'for-sale')).toBe(true);
+    expect(formExpected('index', 'home')).toBe(true);
+    expect(formExpected('available/roys', 'bird')).toBe(true);
+    expect(formExpected('blog/african-grey-parrot-facts', 'blog')).toBe(true);
   });
 });

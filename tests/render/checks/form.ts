@@ -11,8 +11,11 @@ import type { Page } from '@playwright/test';
  * not from source: `checkValidity()` on the untouched form is the one honest test that
  * `required` is live on every control the contract names.
  *
- * `examined === 0` is a legitimate, silent state ONLY on `location` and `hub` page types —
- * those clusters carry no inquiry form by design. On every other page type, zero forms
+ * `examined === 0` is a legitimate, silent state on `location` and `hub` page types (those
+ * clusters carry no inquiry form by design) AND on any slug in `LOCATION_CLUSTER` — two
+ * `for-sale`-typed slugs (`buy-african-grey-parrots-with-shipping`,
+ * `african-grey-parrots-for-sale-near-me`) carry only the search form and are slug-exempt
+ * by the plan even though their `pageType` says `for-sale`. On every other page, zero forms
  * examined is itself the defect (the page lost its form, or the form is a `/search/` form
  * in disguise), and this check reports it as one row instead of passing silently — a check
  * that returns clean on zero is indistinguishable from a check that never ran.
@@ -24,8 +27,12 @@ import type { Page } from '@playwright/test';
  * inquiry form, this exemption must be revisited or it will silently stop checking it.
  */
 const FORM_ENDPOINT = 'https://formspree.io/f/xrejpnvn';
+const LOCATION_CLUSTER = /^(african-grey-parrots?-for-sale-|buy-)/;
 export function fieldChecksSkipped(slug: string): boolean {
-  return slug === 'index' || slug === 'contact-us' || /^(african-grey-parrots?-for-sale-|buy-)/.test(slug);
+  return slug === 'index' || slug === 'contact-us' || LOCATION_CLUSTER.test(slug);
+}
+export function formExpected(slug: string, pageType: string): boolean {
+  return pageType !== 'location' && pageType !== 'hub' && !LOCATION_CLUSTER.test(slug);
 }
 
 register({
@@ -104,7 +111,7 @@ register({
       { endpoint: FORM_ENDPOINT, fieldsApply: !fieldChecksSkipped(ctx.slug) },
     );
     const defects: Defect[] = [];
-    if (r.examined === 0 && ctx.pageType !== 'location' && ctx.pageType !== 'hub') {
+    if (r.examined === 0 && formExpected(ctx.slug, ctx.pageType)) {
       defects.push({
         checkId: 'form-inquiry-contract', family: 'FORM' as const, viewport, count: 1,
         message: `no non-search form on a ${ctx.pageType} page — nothing to judge`,
