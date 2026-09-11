@@ -3,7 +3,7 @@ import type { Page } from '@playwright/test';
 // A11Y added 2026-08-07: rendered-contrast invariants. It is its own family rather than a
 // CSS check because the failure it catches is a COMPOSITION defect (component re-themed,
 // child not), not a stylesheet defect — neither declaration is wrong in isolation.
-export type Family = 'IMG' | 'LAYOUT' | 'NAV' | 'CSS' | 'SEM' | 'SCHEMA' | 'DUP' | 'A11Y';
+export type Family = 'IMG' | 'LAYOUT' | 'NAV' | 'CSS' | 'SEM' | 'SCHEMA' | 'DUP' | 'A11Y' | 'FORM';
 export type Severity = 'blocking' | 'advisory';
 
 export interface Defect {

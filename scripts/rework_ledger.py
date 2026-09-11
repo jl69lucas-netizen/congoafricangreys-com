@@ -45,6 +45,7 @@ DOMAIN_PATTERNS = [
     ("SEM", r"heading|h1|h2|h[3-6]\b|outline|title case|hierarch"),
     ("DUP", r"duplicat|crossover|dedup|sibling"),
     ("A11Y", r"a11y|accessib|contrast|wcag|aria|focus"),
+    ("FORM", r"\bform\b|formspree|inquiry|endpoint|netlify|honeypot"),
     ("COPY", r"\bcopy\b|voice|typo|wording|prose|grammar"),
 ]
 
