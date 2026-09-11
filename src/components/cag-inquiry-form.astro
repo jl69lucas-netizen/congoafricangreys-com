@@ -468,6 +468,7 @@ const pricingRows = [
   /* Delivery radio cards (Field 8) */
   .inq-delivery-cards { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
   .inq-delivery-card {
+    position: relative;
     display: flex;
     align-items: flex-start;
     gap: 0;
@@ -478,7 +479,14 @@ const pricingRows = [
     transition: border-color 0.15s, background 0.15s;
     background: #fff9f6;
   }
-  .inq-delivery-card input[type="radio"] { display: none; }
+  /* Visually hidden, never display:none: the first radio is `required`, and a display:none
+     control cannot be focused, so the browser blocked submit with no message at all
+     ("An invalid form control … is not focusable") and keyboard users could not reach it. */
+  .inq-delivery-card input[type="radio"] {
+    position: absolute; top: 14px; left: 16px;
+    width: 1px; height: 1px; margin: 0; opacity: 0;
+  }
+  .inq-delivery-card:has(input:focus-visible) { outline: 2px solid #bd4129; outline-offset: 2px; }
   .inq-delivery-card:has(input:checked) {
     border-color: #e8604c;
     background: rgba(232, 96, 76, 0.04);

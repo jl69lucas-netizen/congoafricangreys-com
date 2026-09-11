@@ -128,9 +128,9 @@ def patch_cta(slug, family):
 # ── Tailwind bird-page vocabulary ───────────────────────────────────────────────
 L = 'class="block font-sora text-xs font-semibold uppercase tracking-wide text-stone-600 mb-1.5"'
 I = 'class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-sora text-sm text-stone-800 focus:border-green focus:ring-2 focus:ring-green/20 focus:outline-none"'
-PILL = 'class="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 font-sora text-sm font-semibold text-stone-700 cursor-pointer has-[:checked]:border-clay has-[:checked]:text-clay-text"'
+PILL = 'class="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 font-sora text-sm font-semibold text-stone-700 cursor-pointer has-[:checked]:border-clay has-[:checked]:text-clay-ink"'
 CARD = 'class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 items-start rounded-xl border border-stone-300 bg-white px-4 py-3 cursor-pointer has-[:checked]:border-clay"'
-REQ = '<span class="text-clay-text">*</span>'
+REQ = '<span class="text-clay-ink">*</span>'
 
 
 def bird_block(P, name):
