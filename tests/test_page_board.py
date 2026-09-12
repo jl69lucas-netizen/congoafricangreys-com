@@ -339,7 +339,7 @@ def test_real_ledger_page_is_never_an_owner_of_its_own_candidates():
 def test_real_ledger_h6_prefixes_are_spent_by_their_owner_only():
     ledger = PB.load_ledger()
     near_me = "african-grey-parrots-for-sale-near-me"
-    assert PB.spent_h6_prefixes(ledger)["Distance Note:"] == near_me
+    assert PB.spent_h6_prefixes(ledger)["Distance Note:"] == [near_me]
     assert "Distance Note:" not in PB.spent_h6_prefixes(ledger, exclude_slug=near_me)
 
 
@@ -506,7 +506,10 @@ LEDGER_EMPTY = {"pools": {"inventory": ["avail-b"]}, "pages": {}}
 
 def test_gate_passes_an_approved_minimal_board():
     b = _approved(MIN_BOARD)
-    f = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")
+    # A live corpus of one unrelated sibling: live={} is itself a FAIL (a gate that
+    # examined nothing is not a pass), which is asserted in its own test below.
+    f = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={"/other/": ["Where Do We Ship Our Birds Each Week?"]},
+                         stage="build")
     # MIN_BOARD carries exactly one H5 and one H6 by design (test_distribution_counts_headings),
     # so the volume floor is the one FAIL a minimal board is meant to raise. Its severity is
     # asserted on its own in test_gate_h5_h6_minimums_are_warn_on_home_and_location.
@@ -558,3 +561,79 @@ def test_gate_h5_h6_minimums_are_warn_on_home_and_location():
     b["meta"]["page_type"] = "location"; b["approval"]["record_hash"] = PB.record_hash(b)
     f = {x["check"]: x["sev"] for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")}
     assert f.get("min-h5-h6") == "WARN"
+
+
+def test_gate_whitelist_matches_whole_tokens_not_substrings():
+    """"evie" is a bird-name whitelist entry and it lives inside "Review". Substring
+    matching cleared a real crossover; whole-token matching keeps the FAIL."""
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["tree"][0]["heading"] = "Our Honest Review of Every Congo We Raise"
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    live = {"/sibling/": ["Our Honest Review of Every Congo We Raise"]}
+    msgs = [x["msg"] for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live=live, stage="build")
+            if x["check"] == "header-collision"]
+    assert any("Honest Review" in m for m in msgs), msgs
+    assert PB._whitelisted("Bery") and PB._whitelisted("Frequently Asked Questions")
+    assert not PB._whitelisted("Our Honest Review of Every Congo We Raise")
+
+
+def test_gate_fails_when_the_header_precheck_examined_zero_live_pages():
+    b = _approved(MIN_BOARD)
+    f = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")
+    assert any(x["check"] == "header-precheck-examined-zero" and x["sev"] == "FAIL" for x in f)
+    f = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={"/other/": ["Where Do We Ship Our Birds Each Week?"]},
+                         stage="build")
+    assert not any(x["check"] == "header-precheck-examined-zero" for x in f)
+
+
+def test_gate_rejects_an_unknown_stage():
+    with pytest.raises(PB.BoardError):
+        PB.gate_findings(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, stage="deploy")
+
+
+def test_board_gate_cli_exits_2_on_an_unknown_flag_and_on_a_missing_board():
+    import subprocess
+    gate = str(ROOT / "scripts" / "board_gate.py")
+    r = subprocess.run([sys.executable, gate, "x", "--publish"], capture_output=True, text=True)
+    assert r.returncode == 2 and "usage: board_gate.py" in r.stdout
+    r = subprocess.run([sys.executable, gate, "no-such-page-anywhere"], capture_output=True, text=True)
+    assert r.returncode == 2 and "board-gate ERROR no board for" in r.stdout
+
+
+def test_own_live_key_is_the_root_for_the_homepage():
+    b = json.loads(json.dumps(MIN_BOARD))
+    assert PB.own_live_key(b) == "/x/"
+    b["meta"]["page_type"] = "home"
+    assert PB.own_live_key(b) == "/"
+    b["meta"]["page_type"] = "hub"; b["meta"]["slug"] = "index"
+    assert PB.own_live_key(b) == "/"
+
+
+def test_gate_against_the_real_ledger_treats_a_refresh_id_as_unspent():
+    ledger = PB.load_ledger()
+    b = _approved(MIN_BOARD)
+
+    def hero_hits(hero):
+        b["tuple"]["hero"] = hero
+        b["approval"]["record_hash"] = PB.record_hash(b)
+        return [x for x in PB.gate_findings(b, ONT_OK, ledger, live={}, stage="build")
+                if x["check"] == "ledger-owned-combo" and "tuple.hero" in x["msg"]]
+
+    assert hero_hits("hero-c-mosaic-metrics#brand-new") == []
+    hits = hero_hits("hero-c-mosaic-metrics")
+    assert len(hits) == 1 and "dna-tested-african-grey-for-sale" in hits[0]["msg"], hits
+
+
+@pytest.mark.skipif(not PB.DIST.exists(), reason="needs a built dist/")
+def test_gate_against_the_real_dist_whitelists_faq_but_flags_current_pricing():
+    live = PB.live_headings()
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["tree"][0]["children"] += [
+        {"level": 4, "heading": "Frequently Asked Questions", "intent": "", "children": []},
+        {"level": 4, "heading": "Current Pricing", "intent": "", "children": []},
+    ]
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    msgs = [x["msg"] for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live=live, stage="build")
+            if x["check"] == "header-collision"]
+    assert any("'Current Pricing'" in m for m in msgs), msgs
+    assert not any("Frequently Asked Questions" in m for m in msgs), msgs

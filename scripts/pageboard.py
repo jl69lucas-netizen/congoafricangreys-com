@@ -192,12 +192,16 @@ def candidates_for(shape, ledger, slug):
 
 
 def spent_h6_prefixes(ledger, exclude_slug=None):
+    """{prefix: [owner, ...]} in ledger order. Owner LISTS, like owned_components(): two
+    pages can already spend one prefix, and a report that named only the first would
+    understate what a third page has to rename."""
     out = {}
     for page, t in ledger.get("pages", {}).items():
         if page == exclude_slug:
             continue
         for p in t.get("h6_prefixes", []):
-            out.setdefault(p, page)
+            if page not in out.setdefault(p, []):
+                out[p].append(page)
     return out
 
 
@@ -286,6 +290,16 @@ def live_headings(dist=DIST):
     return out
 
 
+def own_live_key(board):
+    """The key this board's own page holds in live_headings(). The homepage is "/", not
+    "/index/" — excluding the wrong key would let the homepage collide with itself and
+    fail its own gate on every rebuild."""
+    meta = board["meta"]
+    if meta["page_type"] == "home" or meta["slug"] == "index":
+        return "/"
+    return "/" + meta["slug"] + "/"
+
+
 def header_precheck(proposed, live, exclude_page=None):
     """Every proposed heading that collides with a live one: exact, template (species
     swapped) or 5-token shingle. `live` is {page: [heading, ...]}. `exclude_page` drops
@@ -351,10 +365,25 @@ def distribution(board):
 
 
 ADVISORY_MIN_H5H6 = {"home", "location"}          # rules/headings.md, 2026-09-09
+GATE_STAGES = ("build", "release")
+_WHITELIST_TOKENS = [t for t in (tokens(w) for w in HEADER_WHITELIST) if t]
+
+
+def _whitelisted(heading):
+    """True when a HEADER_WHITELIST phrase appears in the heading as a contiguous run of
+    WHOLE tokens. Substring matching read the bird name "evie" out of "Review" and the
+    bird name "amie" out of any "...amie..." run, clearing collisions the dup gate flags
+    after the build — so the match is on tokens, not characters."""
+    ws = tokens(heading)
+    return any(ws[i:i + len(phrase)] == phrase
+               for phrase in _WHITELIST_TOKENS
+               for i in range(len(ws) - len(phrase) + 1))
 
 
 def gate_findings(board, ont, ledger, live, stage="build"):
     """Every reason this record may not be built (or released). Pure: no printing."""
+    if stage not in GATE_STAGES:
+        raise BoardError(f"unknown gate stage {stage!r}: expected one of {', '.join(GATE_STAGES)}")
     f = []
     slug = board["meta"]["slug"]
     add = lambda check, sev, msg: f.append({"check": check, "sev": sev, "msg": msg})
@@ -375,16 +404,22 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     for key in ("hero", "dial", "rail", "toc", "table", "faq"):
         if t.get(key) in owned:
             add("ledger-owned-combo", "FAIL", f"tuple.{key}={t[key]} is owned by {', '.join(owned[t[key]])}")
+    # Per takeaway id, not per takeaway set: a spent card comes back as `k#refresh`, so a
+    # page may reuse the shell along a named axis but never the bare id a sibling owns.
     for k in t.get("takeaway", []):
         if k in owned:
             add("ledger-owned-combo", "FAIL", f"takeaway {k} is owned by {', '.join(owned[k])}")
     spent = spent_h6_prefixes(ledger, exclude_slug=slug)
     for p in t.get("h6_prefixes", []):
         if p in spent:
-            add("ledger-spent-prefix", "FAIL", f"H6 prefix {p!r} is spent by {spent[p]}")
+            add("ledger-spent-prefix", "FAIL", f"H6 prefix {p!r} is spent by {', '.join(spent[p])}")
 
-    hits = [h for h in header_precheck([h for _, h in all_headings(board)], live, exclude_page="/" + slug + "/")
-            if not any(w in h["heading"].lower() for w in HEADER_WHITELIST)]
+    if not live:
+        add("header-precheck-examined-zero", "FAIL",
+            "header pre-check examined 0 live pages — run npx astro build first")
+    hits = [h for h in header_precheck([h for _, h in all_headings(board)], live,
+                                       exclude_page=own_live_key(board))
+            if not _whitelisted(h["heading"])]
     for h in hits:
         add("header-collision", "FAIL", f"{h['kind']}: {h['heading']!r} vs {h['page']} {h['with']!r}")
 

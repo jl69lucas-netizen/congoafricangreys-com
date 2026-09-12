@@ -1,26 +1,36 @@
 #!/usr/bin/env python3
 """board_gate.py <slug> [--release]
 The Page Board gate: refuses to build (or release) a page whose board.json is not
-approved as it stands. Reads live headings from dist/ (build first). Exit 1 on any FAIL.
+approved as it stands. Reads live headings from dist/ (build first). Exit 1 on any FAIL,
+exit 2 when the record itself cannot be read or the invocation is wrong.
 Prints its examined counts — a gate that examines nothing is not a pass
 (skills/cag-gate-integrity.md)."""
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import pageboard as PB
 
+USAGE = "usage: board_gate.py <slug> [--release]"
+FLAGS = {"--release"}
+
 
 def main():
+    flags = [a for a in sys.argv[1:] if a.startswith("--")]
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    if len(args) != 1:
-        sys.exit("usage: board_gate.py <slug> [--release]")
-    slug, stage = args[0], ("release" if "--release" in sys.argv else "build")
-    board = PB.load_board(slug)
-    ont, ledger = PB.load_ontology(), PB.load_ledger()
-    live = PB.live_headings() if PB.DIST.exists() else {}
-    live.pop("/" + slug + "/", None)
-    if not live:
-        print("WARN header pre-check examined 0 live pages — run `npx astro build` first")
-    f = PB.gate_findings(board, ont, ledger, live, stage=stage)
+    unknown = [a for a in flags if a not in FLAGS]
+    if unknown or len(args) != 1:
+        print(f"board-gate ERROR unknown option {unknown[0]}" if unknown else "board-gate ERROR one slug expected")
+        print(USAGE)
+        sys.exit(2)
+    slug, stage = args[0], ("release" if "--release" in flags else "build")
+    try:
+        board = PB.load_board(slug)
+        ont, ledger = PB.load_ontology(), PB.load_ledger()
+        live = PB.live_headings() if PB.DIST.exists() else {}
+        live.pop(PB.own_live_key(board), None)
+        f = PB.gate_findings(board, ont, ledger, live, stage=stage)
+    except PB.BoardError as e:
+        print(f"board-gate ERROR {e}")
+        sys.exit(2)
     n_head = len(PB.all_headings(board))
     print(f"board-gate {slug} [{stage}] — {len(board['sections'])} sections, {n_head} headings, "
           f"{len(live)} live pages, {sum(len(s['entities']) for s in board['sections'])} entity refs examined")
