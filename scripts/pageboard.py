@@ -57,6 +57,21 @@ def validate_board(board):
         dupes = sorted({v for v in values if values.count(v) > 1})
         if dupes:
             raise BoardError(f"duplicate section {label}: {', '.join(str(d) for d in dupes)}")
+    brief = board["brief"]
+    names = [a["name"] for a in brief["angles"]]
+    dupes = sorted({n for n in names if names.count(n) > 1})
+    if dupes:
+        raise BoardError(f"duplicate angle name: {', '.join(dupes)}")
+    chosen = brief["strategy"]["name"]
+    if chosen not in names:
+        # The two fields are one decision written twice. Left free to disagree, the table
+        # becomes decoration: still rendered, still read as considered, still describing a
+        # page nobody is building.
+        raise BoardError(f"brief.strategy.name {chosen!r} is not one of the angles considered "
+                         f"({', '.join(names)})")
+    for a in brief["angles"]:
+        if a["name"] != chosen and not a["why_not"].strip():
+            raise BoardError(f"angle {a['name']!r} was not taken and records no why_not")
 
 
 def validate_ontology(ont):

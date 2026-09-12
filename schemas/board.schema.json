@@ -28,13 +28,20 @@
       }
     },
     "brief": {
-      "type": "object", "required": ["goal", "scope", "gates", "done", "out_of_scope", "primary_keyword", "strategy"],
+      "type": "object", "required": ["goal", "scope", "gates", "done", "out_of_scope", "primary_keyword", "angles", "strategy"],
       "additionalProperties": false,
       "properties": {
         "goal": {"type": "string"}, "scope": {"type": "string"}, "done": {"type": "string"},
         "gates": {"type": "array", "items": {"type": "string"}},
         "out_of_scope": {"type": "array", "items": {"type": "string"}},
         "primary_keyword": {"type": "string", "minLength": 3},
+        "angles": {
+          "type": "array", "minItems": 2, "maxItems": 3,
+          "items": {"type": "object", "required": ["name", "hook", "why_not"], "additionalProperties": false,
+                    "properties": {"name": {"type": "string", "minLength": 1, "maxLength": 240},
+                                   "hook": {"type": "string", "minLength": 1, "maxLength": 240},
+                                   "why_not": {"type": "string", "maxLength": 240}}}
+        },
         "strategy": {"type": "object", "required": ["name", "why", "trade_off"], "additionalProperties": false,
                      "properties": {"name": {"type": "string"}, "why": {"type": "string"}, "trade_off": {"type": "string"}}}
       }

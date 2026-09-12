@@ -185,6 +185,19 @@ def radio_list(name, items, recommended, picked):
         for i, v in enumerate(items))
 
 
+def angles_table(brief):
+    """Angles considered, the chosen one starred. Its third column is the strategy's own
+    trade-off rather than a why_not: a table where only the rejects carry a cost reads as
+    one good idea and two bad ones, which is not what the sitting is for."""
+    rows = []
+    for a in brief["angles"]:
+        taken = a["name"] == brief["strategy"]["name"]
+        rows.append([("⭐ " if taken else "") + md(a["name"]), md(a["hook"]),
+                     ("**taken** — trade-off: " + md(brief["strategy"]["trade_off"])) if taken
+                     else md(a["why_not"])])
+    return md_table(["Angle", "Hook", "Why not / trade-off"], rows)
+
+
 def render(board, ont, ledger, live, thumbs, slug):
     hits = PB.header_hits(board, live)          # exactly what the gate will fail on
     d = PB.distribution(board)
@@ -200,7 +213,8 @@ def render(board, ont, ledger, live, thumbs, slug):
         f"**Done means.** {md(brief['done'])}",
         f"**Out of scope.** {', '.join(md(o) for o in brief['out_of_scope']) or 'nothing named'}",
         f"**Primary keyword.** {md(brief['primary_keyword'])}",
-        f"**Strategy: {md(brief['strategy']['name'])}.** Why: {md(brief['strategy']['why'])} Trade-off: {md(brief['strategy']['trade_off'])}",
+        f"**Strategy: {md(brief['strategy']['name'])}.** Why: {md(brief['strategy']['why'])}",
+        "", "**Angles considered**", angles_table(brief),
         "", "**Research used**", md_table(["Source", "Fetched"], [[md(s["path"]), md(s["fetched"])] for s in m["sources"]]) if m["sources"] else "_no sources recorded_",
     ])))
 

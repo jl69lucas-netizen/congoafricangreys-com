@@ -11,6 +11,9 @@ MIN_BOARD = {
     "meta": {"slug": "x", "page_type": "hub", "status": "draft", "research_as_of": "2026-09-12", "sources": []},
     "brief": {"goal": "g", "scope": "s", "gates": ["hardening"], "done": "d", "out_of_scope": [],
               "primary_keyword": "african grey parrots for sale",
+              "angles": [{"name": "n", "hook": "the birds first, the pitch second", "why_not": ""},
+                         {"name": "price-led", "hook": "open on the $1,500 floor",
+                          "why_not": "the price bucket is the adoption-cost page's, and it outranks us on it"}],
               "strategy": {"name": "n", "why": "w", "trade_off": "t"}},
     "h1": {"variants": ["a", "b", "c", "d", "e"], "recommended": 0, "pick": None},
     "meta_set": {
@@ -1761,3 +1764,32 @@ def test_approve_js_refuses_an_unanswered_h1_or_meta_group():
     assert "if(!mt||!mdsc){st.textContent='Pick a title and a description before approving.'" in script
     assert "btn.disabled=false;return;" in script
 
+
+
+def test_angles_reject_one_entry_four_entries_a_duplicate_name_and_a_long_field():
+    one = json.loads(json.dumps(MIN_BOARD)); one["brief"]["angles"] = one["brief"]["angles"][:1]
+    four = json.loads(json.dumps(MIN_BOARD)); four["brief"]["angles"] += [
+        {"name": "a", "hook": "h", "why_not": "w"}, {"name": "b", "hook": "h", "why_not": "w"}]
+    dupe = json.loads(json.dumps(MIN_BOARD)); dupe["brief"]["angles"][1]["name"] = "n"
+    long = json.loads(json.dumps(MIN_BOARD)); long["brief"]["angles"][1]["hook"] = "x" * 241
+    for bad in (one, four, dupe, long):
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(bad)
+
+
+def test_angles_tie_to_the_strategy_and_a_rejected_one_must_say_why_not():
+    off = json.loads(json.dumps(MIN_BOARD)); off["brief"]["strategy"]["name"] = "an angle nobody listed"
+    with pytest.raises(PB.BoardError, match="not one of the angles"):
+        PB.validate_board(off)
+    silent = json.loads(json.dumps(MIN_BOARD)); silent["brief"]["angles"][1]["why_not"] = "   "
+    with pytest.raises(PB.BoardError, match="records no why_not"):
+        PB.validate_board(silent)
+    PB.validate_board(MIN_BOARD)                  # the chosen angle's empty why_not is fine
+
+
+def test_board_renders_the_angles_table_with_the_chosen_one_starred():
+    import build_page_board as BPB
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "Angles considered" in html and "⭐ n" in html and "price-led" in html
+    assert "trade-off: t" in html                 # the chosen row carries the strategy's trade-off
+    assert "adoption-cost page" in html           # the rejected row carries its why_not
