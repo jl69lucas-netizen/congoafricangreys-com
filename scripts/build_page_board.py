@@ -47,6 +47,9 @@ button.btn{font:inherit;font-size:14px;font-weight:600;padding:10px 18px;border-
 button.btn[disabled]{opacity:.5;cursor:default}
 .status{font-size:13px;color:var(--ink-2)}
 button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--clay);outline-offset:2px}
+.kit .opt{gap:5px}
+.kit .opt b{font-size:13px;font-weight:600}
+.kit .opt .pill:first-child{justify-self:start;background:var(--paper);border-color:var(--line);color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
 @media (max-width:640px){header.masthead{grid-template-columns:1fr}.meta{text-align:left}section.sec{padding:18px 16px 20px}}
 """
 
@@ -163,6 +166,50 @@ def option_cards(section, ledger, slug, thumbs):
     return cards
 
 
+
+KIT_AXES = ("hero", "dial", "rail", "toc", "faq")
+
+
+def kit_thumb(component_id, thumbs):
+    """Any artboard cut for this shell, whatever section it was cut under: board_canvas.py
+    cuts chrome beneath whichever section offered it, so a section-scoped lookup would
+    leave the strip blank. Exact id first, then the base."""
+    base = PB.base_of(component_id)
+    for wanted in (component_id, base):
+        for (_section, candidate), src in thumbs.items():
+            if candidate == wanted:
+                return src
+    return None
+
+
+def kit_cards(board, ledger, thumbs, slug):
+    """The five chrome shells this page will wear — shown, never offered. Block 6 picks per
+    section; this is the page-level tuple the author already chose against the ledger, and
+    a radio here would invite a choice the ledger rules decide, not the sitting."""
+    t = board["tuple"]
+    owned = PB.owned_components(ledger, exclude_slug=slug)
+    cards = []
+    for axis in KIT_AXES:
+        v = (t.get(axis) or "").strip()
+        if not v:
+            cards.append(f'<div class="opt off"><span class="pill">{esc(axis)}</span>'
+                         f'<div class="nothumb">none</div>'
+                         f'<span class="why">this page wears no {esc(axis)}</span></div>')
+            continue
+        base = PB.base_of(v)
+        delta = v.split("#", 1)[1].strip() if "#" in v else ""
+        th = kit_thumb(v, thumbs)
+        img = (f'<img src="{esc(th)}" alt="{esc(base)} — the {esc(axis)} this page wears">'
+               if th else f'<div class="nothumb">{esc(base)}</div>')
+        owners = owned.get(v) or owned.get(base) or []
+        cards.append(
+            f'<div class="opt"><span class="pill">{esc(axis)}</span>{img}<b>{esc(base)}</b>'
+            + (f'<span class="pill">refresh: {esc(delta)}</span>' if delta else "")
+            + f'<span class="why">{"also worn by " + esc(", ".join(owners)) if owners else "new to the cluster"}'
+              "</span></div>")
+    return cards
+
+
 STANDARD_FORM_DEFAULT = "kit two-column inquiry form (field contract by slug)"
 
 
@@ -267,6 +314,10 @@ def render(board, ont, ledger, live, thumbs, slug):
               + (f"\n\n**BLOCKED referenced: {', '.join(md(e) for e in auth['blocked'])}.** The board cannot be approved." if auth["blocked"] else "")
               + (f"\n\nPROPOSED (need a source): {', '.join(md(e) for e in auth['proposed'])}." if auth["proposed"] else ""))
     parts.append(("5. Entities", ent_md))
+
+    parts.append(("5b. The kit", f'<div class="opts kit">{"".join(kit_cards(board, ledger, thumbs, slug))}</div>'
+                  "\n\nThe page-level tuple, for reading. Picks happen in block 6; a shell that is wrong here is "
+                  "a record edit, not a radio."))
 
     opt_html = []
     for s in board["sections"]:

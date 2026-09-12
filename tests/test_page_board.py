@@ -895,7 +895,7 @@ def test_board_html_escapes_record_text_in_every_context():
     assert "\\# a \\| b \\*c\\* \\_d\\_" in html                  # the heading, markdown-neutral
     assert "<\\/script>" in html                                  # the graph label, JSON-escaped
     blocks = re.findall(r'<script type="text/markdown"[^>]*>(.*?)\n</script>', html, re.S)
-    assert len(blocks) == 8
+    assert len(blocks) == 9    # eight numbered blocks plus 5b, the kit strip
     for i, blk in enumerate(blocks):
         assert "</script" not in blk, i
 
@@ -1972,3 +1972,30 @@ def test_library_urls_is_cached_but_notices_a_changed_library(tmp_path):
     import os
     os.utime(lib, (0, 0))                                        # a different mtime is a different library
     assert PB.library_urls(lib) == {"https://cites.org/eng/app/appendices.php"}
+
+
+# --- Task 16: the kit strip --------------------------------------------------------------
+
+def test_kit_strip_shows_every_axis_the_tuple_names_and_offers_nothing():
+    import build_page_board as BPB
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert 'data-title="5b. The kit"' in html
+    for shell in ("hero-a", "dial-1", "rail-a", "t1", "faq-a"):
+        assert f'<div class="nothumb">{shell}</div>' in html
+    assert 'name="pick-hero"' not in html and 'name="kit-' not in html
+    b = _approved(MIN_BOARD)
+    b["tuple"]["hero"] = "hero-a#inventory-tiles"
+    ledger = {"pools": {"inventory": ["avail-b"]}, "refresh_pools": ["hero"],
+              "pages": {"sibling": {"hero": "hero-a", "dial": "", "rail": "", "toc": "", "takeaway": [],
+                                    "table": "", "faq": "", "h6_prefixes": []}}}
+    html = BPB.render(b, ONT_OK, ledger, live={}, thumbs={}, slug="x")
+    assert "refresh: inventory-tiles" in html and "also worn by sibling" in html
+    assert "new to the cluster" in html            # the dial nobody else records
+
+
+def test_kit_strip_takes_the_desktop_thumb_whatever_section_it_was_cut_under():
+    import build_page_board as BPB
+    thumbs = {("birds", "hero-a"): "thumbs/birds--hero-a--desktop.png"}
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs=thumbs, slug="x")
+    assert 'src="thumbs/birds--hero-a--desktop.png"' in html
+    assert "the hero this page wears" in html
