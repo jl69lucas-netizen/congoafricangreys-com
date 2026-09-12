@@ -65,3 +65,17 @@ Tests: `tests/test_page_board.py` 126 passed. Every task approved by spec + qual
 **Rulings applied:** OG/hero-style images from `assets/` as the breeder asked; infographics as CSS-only HTML blocks (inventory grid, receipt, three-step strip) with values from the data files, no image generation (API credit exhausted); the document photo is the redacted sample flat-lay, never the one bearing an invented name; 3-3-3 kept out of the FAQ (locked ruling).
 
 **Open flags added:** the `next` section pick (`toc-t3-boarding-pass#refresh`) differs from `tuple.toc` (`toc-t4-magazine-index#spoke-index`); the built page follows the pick, the ledger row carries the tuple — align at the next re-board, since editing the tuple after approval moves the hash. `final_page_audit` warns `no_aggregateoffer` on a page whose graph contains AggregateOffer (checker reads a single Product+Offer shape) — harness defect to log. Avail-A does not exist as a component; the hub's "avail-a-grid" is a plain three-column grid without the facet sidebar, recorded here as its definition. The four board additions the breeder said yes to (kit strip, FAQ questions, angles, meta variants) are queued as a plan amendment for the NEXT board, because adding them to this record after approval would have moved its hash.
+
+## Late evening: breeder feedback on the shipped hub
+
+| Item | Commit | What |
+|---|---|---|
+| Desktop form too long, green pane stretched | `10d36a48` | Shared rule in `global.css` (≥981px only): `.cta-form form.form-main` becomes a two-column grid, yes/no questions paired, delivery options 2×2, left pane spreads its three blocks. Covers the six kit pages (hub, A, B, hand-raised, dna-tested, health-guarantee). Harness 15/15. Mobile untouched by design. |
+| Same on the older two-pane form | `b7e55825` | `.form-wrap > form.cta-form` rule for congo, timneh, eggs, adoption-cost. Comparison pages (no green pane) left alone. Harness 15/15. |
+| **External links missed on the hub** | `b7e55825` | Breeder caught it. Five Link-First authority anchors (World Parrot Trust profile, IATA live-animal rules, AAV vet locator, USFWS treaty page, USDA licence search) + IUCN and CITES sources on two fact labels. Root cause: the board record has no `links` block, so neither the board nor the build asked for them → fifth board addition (Task 15 in the additions plan). |
+| Refresh ids: one spelling `_` | `25cb12ca` | file_token/unfile_token, thumbs, builder, approve; canvases regenerated; 128 tests |
+| `no_aggregateoffer` false warning | `c0f4b755` | `final_page_audit` reads a Product's AggregateOffer inside `@graph`; 4 tests; nine for-sale rows lost the false WARN, three moved to PASS |
+| Canvas writer emits Main.dc.html + canvas.json | `089ca700` | no hand-made files in the canvas folder; 132 tests |
+| Additions plan | in flight | `docs/superpowers/plans/2026-09-12-page-board-additions.md`: meta variants, angles, FAQ questions, **links plan**, kit strip; retrofit of the near-me and hub records needs a re-approval sitting |
+
+**Flag closed by the breeder in chat (2026-09-12):** the §7 pick vs tuple — align at the re-approval sitting the additions require, not by editing the approved record now.
