@@ -51,6 +51,36 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 """
 
 
+# Every string in the record is breeder- or agent-written text, and three of this page's
+# four contexts will misread it if it is passed through raw: HTML reads a tag, markdown
+# reads a pipe or an asterisk, and a `</script>` anywhere inside a text/markdown block or
+# the graph's JSON ends the block early and drops the rest of the page. So: esc() for an
+# HTML context, md() for a markdown one, js() for anything embedded in a <script>.
+MD_PUNCT = ("|", "*", "_", "`", "~", "[", "]")
+
+
+def esc(value):
+    """HTML-escape one record value (None → empty), for an HTML context."""
+    return H.escape("" if value is None else str(value))
+
+
+def md(value):
+    """Escape one record value for a MARKDOWN context: HTML first, then the punctuation
+    marked would otherwise act on — a pipe ends a table column, `*`/`_` open emphasis —
+    and a leading `#`, which would turn a value into a heading of its own."""
+    out = esc(value).replace("\\", "\\\\")
+    for ch in MD_PUNCT:
+        out = out.replace(ch, "\\" + ch)
+    out = " ".join(out.split())
+    return "\\" + out if out.startswith("#") else out
+
+
+def js(value):
+    """JSON for embedding in a <script>: `</script>` inside any string would close the
+    block, so the sequence is written with the escape JSON allows and JS reads back."""
+    return json.dumps(value).replace("</", "<\\/")
+
+
 def md_table(headers, rows):
     out = ["| " + " | ".join(headers) + " |", "|" + "---|" * len(headers)]
     out += ["| " + " | ".join(str(c) for c in r) + " |" for r in rows]
@@ -62,7 +92,7 @@ def flag(heading, hit_by):
     if not h:
         return ""
     kind = {"exact": "exact match with", "template": "template match with", "shingle": "5-word overlap with"}[h["kind"]]
-    return f'   <span class="hit">⚠ {kind} {H.escape(h["page"])}</span>'
+    return f'   <span class="hit">⚠ {kind} {esc(h["page"])}</span>'
 
 
 def outline_block(board, hits):
@@ -70,13 +100,13 @@ def outline_block(board, hits):
     shows the same H1 the gate judged, whether it came from a pick or the recommendation."""
     hit_by = {h["heading"]: h for h in hits}
     h1 = PB.all_headings(board)[0][1]
-    lines = [f"H1  {H.escape(h1)}" + flag(h1, hit_by)]
+    lines = [f"H1  {esc(h1)}" + flag(h1, hit_by)]
     for s in board["sections"]:
-        lines.append(f"├─ H2 {s['n']:02d}  {H.escape(s['heading'])}   [{s['category']} · {s['shape']} · {s['framework']} · {s['words']['min']}–{s['words']['max']}w]" + flag(s["heading"], hit_by))
+        lines.append(f"├─ H2 {s['n']:02d}  {esc(s['heading'])}   [{s['category']} · {s['shape']} · {s['framework']} · {s['words']['min']}–{s['words']['max']}w]" + flag(s["heading"], hit_by))
 
         def walk(nodes, depth):
             for n in nodes:
-                lines.append("│   " * depth + f"├─ H{n['level']} {H.escape(n['heading'])}" + flag(n["heading"], hit_by))
+                lines.append("│   " * depth + f"├─ H{n['level']} {esc(n['heading'])}" + flag(n["heading"], hit_by))
                 walk(n["children"], depth + 1)
         walk(s["tree"], 1)
     return "\n".join(lines)
@@ -113,15 +143,15 @@ def option_cards(section, ledger, slug, thumbs):
         delta = c.split("#", 1)[1].strip() if "#" in c else ""
         badge = "refresh: name the axis" if delta == "refresh" else delta
         th = thumbs.get((section["id"], c)) or thumbs.get((section["id"], base))
-        img = (f'<img src="{H.escape(th)}" alt="{H.escape(base)} option for {H.escape(section["id"])}">'
-               if th else f'<div class="nothumb">{H.escape(base)}</div>')
+        img = (f'<img src="{esc(th)}" alt="{esc(base)} option for {esc(section["id"])}">'
+               if th else f'<div class="nothumb">{esc(base)}</div>')
         checked = " checked" if pick == c else ""
-        cards.append(f'<div class="opt">{img}<label><input type="radio" name="pick-{section["id"]}" value="{H.escape(c)}"{checked}> {H.escape(base)}</label>'
-                     + (f'<span class="pill">{H.escape(badge)}</span>' if badge else "") + "</div>")
+        cards.append(f'<div class="opt">{img}<label><input type="radio" name="pick-{section["id"]}" value="{esc(c)}"{checked}> {esc(base)}</label>'
+                     + (f'<span class="pill">{esc(badge)}</span>' if badge else "") + "</div>")
     for x in excluded:
         owners = ", ".join(x.get("owners") or [])
-        cards.append(f'<div class="opt off"><div class="nothumb">{H.escape(x["component"])}</div>'
-                     f'<span class="why">owned by {H.escape(owners)} — excluded</span></div>')
+        cards.append(f'<div class="opt off"><div class="nothumb">{esc(x["component"])}</div>'
+                     f'<span class="why">owned by {esc(owners)} — excluded</span></div>')
     return cards
 
 
@@ -153,23 +183,25 @@ def render(board, ont, ledger, live, thumbs, slug):
 
     brief = board["brief"]
     parts.append(("1. Brief", "\n".join([
-        f"**Goal.** {brief['goal']}", f"**Scope.** {brief['scope']}", f"**Gates.** {', '.join(brief['gates'])}",
-        f"**Done means.** {brief['done']}", f"**Out of scope.** {', '.join(brief['out_of_scope']) or 'nothing named'}",
-        f"**Primary keyword.** `{brief['primary_keyword']}`",
-        f"**Strategy: {brief['strategy']['name']}.** Why: {brief['strategy']['why']} Trade-off: {brief['strategy']['trade_off']}",
-        "", "**Research used**", md_table(["Source", "Fetched"], [[s["path"], s["fetched"]] for s in m["sources"]]) if m["sources"] else "_no sources recorded_",
+        f"**Goal.** {md(brief['goal'])}", f"**Scope.** {md(brief['scope'])}",
+        f"**Gates.** {', '.join(md(g) for g in brief['gates'])}",
+        f"**Done means.** {md(brief['done'])}",
+        f"**Out of scope.** {', '.join(md(o) for o in brief['out_of_scope']) or 'nothing named'}",
+        f"**Primary keyword.** {md(brief['primary_keyword'])}",
+        f"**Strategy: {md(brief['strategy']['name'])}.** Why: {md(brief['strategy']['why'])} Trade-off: {md(brief['strategy']['trade_off'])}",
+        "", "**Research used**", md_table(["Source", "Fetched"], [[md(s["path"]), md(s["fetched"])] for s in m["sources"]]) if m["sources"] else "_no sources recorded_",
     ])))
 
     h1 = board["h1"]
     picked = h1["pick"] if h1["pick"] is not None else h1["recommended"]
     parts.append(("2. H1", "\n".join(
-        [f"{'⭐ ' if i == h1['recommended'] else ''}<label><input type=\"radio\" name=\"h1\" value=\"{i}\"{' checked' if i == picked else ''}> {H.escape(v)}</label>  "
+        [f"{'⭐ ' if i == h1['recommended'] else ''}<label><input type=\"radio\" name=\"h1\" value=\"{i}\"{' checked' if i == picked else ''}> {esc(v)}</label>  "
          for i, v in enumerate(h1["variants"])])))
 
     parts.append(("3. Outline", f"<pre class=\"tree\">{outline_block(board, hits)}</pre>\n\n"
                   + (f"**{len(hits)} heading(s) collide with a live page.** Rewrite them before approving; the gate fails on any." if hits else "No heading collides with a live page (exact, species-template or 5-word shingle).")))
 
-    rows = [[r["section"], r["primary"], r["lsi"], r["longtail"], r["brand"], r["geo"], f"{r['words_min']}–{r['words_max']}"] for r in d["rows"]]
+    rows = [[md(r["section"]), r["primary"], r["lsi"], r["longtail"], r["brand"], r["geo"], f"{r['words_min']}–{r['words_max']}"] for r in d["rows"]]
     t = d["totals"]
     rows.append(["**totals**", t["primary"], t["lsi"], t["longtail"], t["brand"], t["geo"], f"{t['words_min']}–{t['words_max']}"])
     c = d["h_counts"]
@@ -182,41 +214,45 @@ def render(board, ont, ledger, live, thumbs, slug):
     for eid in all_ents:
         e = by_id.get(eid)
         cells = ["✓" if eid in s["entities"] else "" for s in board["sections"]]
-        ent_rows.append([f"{e['name'] if e else eid} ({e['authorization'] if e else 'UNKNOWN'})"] + cells + [(e or {}).get("owner_page") or "—"])
+        ent_rows.append([f"{md(e['name'] if e else eid)} ({md(e['authorization']) if e else 'UNKNOWN'})"] + cells + [md((e or {}).get("owner_page")) or "—"])
     ent_md = ('<div id="entity-graph"></div><p class="legend">colour = class · solid = ASSERTED · dashed = PROPOSED · red = BLOCKED (fails the board)</p>\n\n'
               + md_table(["Entity"] + [f"{s['n']:02d}" for s in board["sections"]] + ["Owner"], ent_rows)
-              + (f"\n\n**BLOCKED referenced: {', '.join(auth['blocked'])}.** The board cannot be approved." if auth["blocked"] else "")
-              + (f"\n\nPROPOSED (need a source): {', '.join(auth['proposed'])}." if auth["proposed"] else ""))
+              + (f"\n\n**BLOCKED referenced: {', '.join(md(e) for e in auth['blocked'])}.** The board cannot be approved." if auth["blocked"] else "")
+              + (f"\n\nPROPOSED (need a source): {', '.join(md(e) for e in auth['proposed'])}." if auth["proposed"] else ""))
     parts.append(("5. Entities", ent_md))
 
     opt_html = []
     for s in board["sections"]:
         if s["shape"] == "standard":
             dflt = standard_default(s, board)
-            cards = [f'<div class="opt"><div class="nothumb">{H.escape(dflt)}</div>'
+            cards = [f'<div class="opt"><div class="nothumb">{esc(dflt)}</div>'
                      f'<span class="why">the default a standard section gets — nothing to pick</span></div>']
         else:
             cards = option_cards(s, ledger, slug, thumbs)
-        opt_html.append(f"### {s['n']:02d} · {H.escape(s['heading'])} <span class=\"pill\">{s['shape']}</span>\n\n<div class=\"opts\">{''.join(cards)}</div>\n"
-                        f"<textarea class=\"note\" name=\"note-{s['id']}\" placeholder=\"Note for this section (optional)\">{H.escape(s['options']['note'])}</textarea>")
+        opt_html.append(f"### {s['n']:02d} · {md(s['heading'])} <span class=\"pill\">{md(s['shape'])}</span>\n\n<div class=\"opts\">{''.join(cards)}</div>\n"
+                        f"<textarea class=\"note\" name=\"note-{s['id']}\" placeholder=\"Note for this section (optional)\">{esc(s['options']['note'])}</textarea>")
     parts.append(("6. Component options", "\n\n".join(opt_html) or "_No sections._"))
 
-    slots = "".join(f'<div class="slot"><b>{H.escape(a["slot"])}</b> · {a["kind"]} · {a["w"]}×{a["h"]} · {"required" if a["required"] else "optional"}<br><span class="st {a["status"]}">{a["status"]}</span>{(" · " + H.escape(a["file"])) if a["file"] else ""}</div>' for a in board["assets"])
+    slots = "".join(
+        f'<div class="slot"><b>{esc(a["slot"])}</b> · {esc(a["kind"])} · {a["w"]}×{a["h"]} · {"required" if a["required"] else "optional"}'
+        f'<br><span class="st {esc(a["status"])}">{esc(a["status"])}</span>{(" · " + esc(a["file"])) if a["file"] else ""}'
+        f'{("<br><span class=" + chr(34) + "why" + chr(34) + ">alt: " + esc(a["alt"]) + "</span>") if a.get("alt") else ""}</div>'
+        for a in board["assets"])
     parts.append(("7. Asset slots", f'<div class="slots">{slots}</div>'))
 
     approve = (f'<div id="approve"><button class="btn" id="approve-btn" disabled>Approve this board</button>'
                f'<span class="status" id="approve-status">{"Approved as it stands." if approved else "Connecting to the board database…"}</span></div>')
     parts.append(("8. Approve", approve + "\n\nWrites your H1 choice, picks, notes and the record hash to the board database. Build refuses to start without it; any later edit to the record clears it."))
 
-    blocks = "".join(f'<script type="text/markdown" data-title="{H.escape(t)}">\n{b}\n</script>\n' for t, b in parts)
-    graph = json.dumps(entity_graph_data(board, ont))
+    blocks = "".join(f'<script type="text/markdown" data-title="{esc(t)}">\n{b}\n</script>\n' for t, b in parts)
+    graph = js(entity_graph_data(board, ont))
     record_hash = PB.record_hash(board)
-    return f"""<title>Page Board: {H.escape(slug)}</title>
+    return f"""<title>Page Board: {esc(slug)}</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,700&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap">
 <style>{CSS}</style>
 <div class="wrap">
-<header class="masthead"><div><p class="eyebrow">CongoAfricanGreys.com · Page Board</p><h1 class="title">/{H.escape(slug)}/</h1></div>
-<div class="meta"><span class="pill">status: {H.escape(m['status'])}</span> <span class="pill">research as of {H.escape(m['research_as_of'])}</span><br>record <code>{record_hash[:12]}</code></div></header>
+<header class="masthead"><div><p class="eyebrow">CongoAfricanGreys.com · Page Board</p><h1 class="title">/{esc(slug)}/</h1></div>
+<div class="meta"><span class="pill">status: {esc(m['status'])}</span> <span class="pill">research as of {esc(m['research_as_of'])}</span><br>record <code>{record_hash[:12]}</code></div></header>
 <div id="doc"></div>
 </div>
 {blocks}
@@ -234,16 +270,38 @@ def render(board, ont, ledger, live, thumbs, slug):
   }});
   var G={graph};
   var el=document.getElementById('entity-graph');
-  if(el&&window.cytoscape){{
-    var cls={{Organism:'#2D6A4F',Documentation:'#6b4fa0',Health:'#c8472f',Commerce:'#b8860b',Logistics:'#1f6f8b',Place:'#7a5c3e',People:'#8b1e5f',Method:'#3d7a4a',Unknown:'#888',section:'#e8dccf'}};
-    cytoscape({{container:el,elements:G.nodes.concat(G.edges),layout:{{name:'cose',animate:false,padding:20}},
-      style:[{{selector:'node',style:{{'label':'data(label)','font-size':10,'width':18,'height':18,'background-color':function(n){{return cls[n.data('kind')]||'#888'}},'color':getComputedStyle(document.documentElement).getPropertyValue('--ink').trim()||'#1E2A24','text-wrap':'wrap','text-max-width':110}}}},
-             {{selector:'node[kind="section"]',style:{{'shape':'round-rectangle','width':60,'height':22,'font-weight':'bold'}}}},
-             {{selector:'edge',style:{{'width':1.5,'line-color':'#9aa','curve-style':'bezier'}}}},
-             {{selector:'edge[auth="PROPOSED"]',style:{{'line-style':'dashed'}}}},
-             {{selector:'edge[auth="BLOCKED"]',style:{{'line-color':'#c8472f','width':3}}}}]}});
+  // Two palettes, not one: a graph drawn in ink-dark fills disappears on the dark ground
+  // and a graph drawn in light fills disappears on the light one. Every fill below clears
+  // 3:1 against its own theme's --ground, which is why the light section node is a mid
+  // clay-brown rather than the cream the page uses for card beds.
+  var PAL={{
+    light:{{Organism:'#2D6A4F',Documentation:'#6b4fa0',Health:'#c8472f',Commerce:'#8a6508',Logistics:'#1f6f8b',Place:'#7a5c3e',People:'#8b1e5f',Method:'#3d7a4a',Unknown:'#6b736e',section:'#8c7a5e',edge:'#6f7a74',blocked:'#c8472f',border:'#3A3227',ink:'#1E2A24'}},
+    dark:{{Organism:'#6FB48F',Documentation:'#b09ae0',Health:'#F08A78',Commerce:'#d9b44a',Logistics:'#7fc3dc',Place:'#c3a483',People:'#e08ab6',Method:'#8fd3a4',Unknown:'#9aa39d',section:'#7d8f84',edge:'#8d9a93',blocked:'#F08A78',border:'#D8DEDA',ink:'#ECEBE3'}}
+  }};
+  function darkMode(){{
+    var a=document.documentElement.getAttribute('data-theme');
+    if(a==='dark')return true;
+    if(a==='light')return false;
+    return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
   }}
-  var RECORD_HASH={json.dumps(record_hash)};var BOARD_DOC={json.dumps("boards/" + slug)};
+  function graphStyle(){{
+    var p=PAL[darkMode()?'dark':'light'];
+    return [{{selector:'node',style:{{'label':'data(label)','font-size':10,'width':18,'height':18,'background-color':function(n){{return p[n.data('kind')]||p.Unknown}},'color':p.ink,'text-wrap':'wrap','text-max-width':110}}}},
+            {{selector:'node[kind="section"]',style:{{'shape':'round-rectangle','width':60,'height':22,'font-weight':'bold','border-width':1,'border-color':p.border}}}},
+            {{selector:'edge',style:{{'width':1.5,'line-color':p.edge,'curve-style':'bezier'}}}},
+            {{selector:'edge[auth="PROPOSED"]',style:{{'line-style':'dashed'}}}},
+            {{selector:'edge[auth="BLOCKED"]',style:{{'line-color':p.blocked,'width':3}}}}];
+  }}
+  if(el&&window.cytoscape){{
+    var cy=cytoscape({{container:el,elements:G.nodes.concat(G.edges),layout:{{name:'cose',animate:false,padding:20}},style:graphStyle()}});
+    if(window.matchMedia){{
+      var mq=window.matchMedia('(prefers-color-scheme: dark)');
+      var repaint=function(){{cy.style(graphStyle());}};
+      if(mq.addEventListener)mq.addEventListener('change',repaint);else if(mq.addListener)mq.addListener(repaint);
+    }}
+  }}
+  var RECORD_HASH={js(record_hash)};var BOARD_DOC={js("boards/" + slug)};
+  var SIGNATURE_SECTIONS={js([s["id"] for s in board["sections"] if s["shape"] != "standard"])};
   var btn=document.getElementById('approve-btn'),st=document.getElementById('approve-status');
   if(!window.claude||!window.claude.use){{st.textContent='Open this board inside claude.ai to approve it.';return;}}
   window.claude.use("db").then(function(db){{
@@ -257,11 +315,22 @@ def render(board, ont, ledger, live, thumbs, slug):
     }}).catch(function(e){{st.textContent='Could not read the board database: '+(e&&e.code?e.code:'error')+'. Approve in chat.';}});
     btn.disabled=false;st.textContent=st.textContent.indexOf('Approved')===0?st.textContent:'Ready.';
     btn.addEventListener('click',function(){{
+      // A half-picked board is worse than an unapproved one: the build would start and
+      // then guess a component. Refuse the write and name the sections still open.
+      var missing=SIGNATURE_SECTIONS.filter(function(id){{
+        return !document.querySelector('input[name="pick-'+id+'"]:checked');
+      }});
+      if(missing.length){{
+        st.textContent=missing.length+' section(s) still need a pick: '+missing.join(', ');
+        btn.disabled=false;return;
+      }}
+      var h1=document.querySelector('input[name="h1"]:checked');
+      if(!h1){{st.textContent='Pick an H1 before approving.';btn.disabled=false;return;}}
       var picks={{}},notes={{}};
       document.querySelectorAll('input[name^="pick-"]:checked').forEach(function(i){{picks[i.name.slice(5)]=i.value;}});
-      document.querySelectorAll('textarea[name^="note-"]').forEach(function(t){{if(t.value.trim())notes[t.name.slice(5)]=t.value.trim();}});
-      var h1=document.querySelector('input[name="h1"]:checked');
-      var rec={{approved_at:new Date().toISOString(),h1:h1?parseInt(h1.value,10):0,picks:picks,notes:notes,canvas_version:null,record_hash:RECORD_HASH}};
+      // Every note box, empty included — "" is how a cleared note reaches the record.
+      document.querySelectorAll('textarea[name^="note-"]').forEach(function(t){{notes[t.name.slice(5)]=t.value.trim();}});
+      var rec={{approved_at:new Date().toISOString(),h1:parseInt(h1.value,10),picks:picks,notes:notes,canvas_version:null,record_hash:RECORD_HASH}};
       btn.disabled=true;st.textContent='Saving…';
       ref.set(rec).then(function(){{st.textContent='Approved '+rec.approved_at+'. Claude reads this back before building.';}})
         .catch(function(e){{btn.disabled=false;st.textContent='Could not save: '+(e&&e.code?e.code:'error')+'. Try again, or approve in chat.';}});
@@ -284,8 +353,11 @@ def main():
     tdir = OUT / slug / "thumbs"
     if tdir.exists():
         for p in sorted(tdir.glob("*.png")):          # <section>--<candidate>--desktop.png
-            sec, cand = p.stem.split("--")[:2]
-            thumbs.setdefault((sec, cand), f"thumbs/{p.name}")
+            bits = p.stem.split("--")
+            if len(bits) < 2:
+                print(f"warning: thumbs/{p.name} is not <section>--<candidate>--<viewport>.png — skipped")
+                continue
+            thumbs.setdefault((bits[0], bits[1]), f"thumbs/{p.name}")
     OUT.mkdir(parents=True, exist_ok=True)
     out = OUT / f"{slug}.html"
     out.write_text(render(board, ont, ledger, live, thumbs, slug), encoding="utf-8")

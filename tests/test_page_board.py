@@ -849,3 +849,25 @@ def test_board_html_shows_standard_sections_with_their_default_and_no_radio(live
     assert "faq-b#map-pin" in html                       # the FAQ shell tuple.faq already names
     assert 'name="pick-faq"' not in html                 # and it is not a choice
     assert BPB.STANDARD_FORM_DEFAULT in html             # 09 reserve → the kit's inquiry form
+
+
+def test_board_html_escapes_record_text_in_every_context():
+    """Record text is breeder- and agent-written, and the board renders it into three
+    contexts that each read different characters: HTML, markdown, and the graph's JSON
+    inside a <script>. A `</script>` in any of them would end the block and drop the rest
+    of the page, so none may survive raw."""
+    import re
+    import build_page_board as BPB
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["brief"]["goal"] = "</script><b>x</b>"
+    b["sections"][0]["heading"] = "# a | b *c* _d_ </script>"
+    html = BPB.render(_approved(b), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+
+    assert "&lt;/script&gt;&lt;b&gt;x&lt;/b&gt;" in html          # the goal, escaped
+    assert "<b>x</b>" not in html
+    assert "\\# a \\| b \\*c\\* \\_d\\_" in html                  # the heading, markdown-neutral
+    assert "<\\/script>" in html                                  # the graph label, JSON-escaped
+    blocks = re.findall(r'<script type="text/markdown"[^>]*>(.*?)\n</script>', html, re.S)
+    assert len(blocks) == 8
+    for i, blk in enumerate(blocks):
+        assert "</script" not in blk, i
