@@ -39,7 +39,7 @@ Every page needs a separate 1200×630px OG image. Generate this in addition to t
 | Provider | Command flag | Best for | Key file |
 |----------|-------------|---------|---------|
 | OpenAI DALL-E 3 | `openai` (default) | Creative/stylized brand assets, icons | `.openai-key` |
-| **Nano Banana 2 / Google Imagen** | `nanobanna` or `google` | Photorealistic lifestyle shots + AI infographics; 9:16 native high-res | `.google-key` (= `GEMINI_API_KEY`) |
+| **Gemini image (flash lanes only)** | `nanobanna` or `google` | Photorealistic lifestyle shots + AI infographics | `.google-key` (= `GEMINI_API_KEY`) |
 | Anthropic Claude | `anthropic` | Claude refines prompt → calls OpenAI to generate | `.anthropic-key` + `.openai-key` |
 | **Claude Code HTML** | `claude-html` | HTML/CSS infographics — no image file, no API cost, fully editable | none (Claude generates code) |
 | **Higgsfield MCP** | `higgsfield` | Character-consistent lifestyle images, video clips, marketing studio assets | MCP UUID `dd46f66a` — no key file; already installed |
@@ -53,9 +53,9 @@ Every page needs a separate 1200×630px OG image. Generate this in addition to t
 
 **Recommendation for CAG:** Use `claude-html` for 90% of infographics — instant, no cost, fully brand-compliant. Use `nanobanna` for one-off high-res 9:16 lifestyle shots. Use `higgsfield` when you need character consistency across multiple images, video generation, or marketing studio assets. Use `openai` for icons. Use `anthropic` when the prompt needs Claude to sharpen it first.
 
-**Nano Banana 2 setup:**
+**Gemini image setup** (key is no longer `AIza…` — the 2026-09 key is 53 chars starting `AQ.A`):
 ```bash
-echo 'AIza...' > .google-key
+pbpaste > .google-key   # clipboard only — never echo or paste the literal key
 export GEMINI_API_KEY=$(cat .google-key)
 # Verify .google-key is in .gitignore before committing
 grep ".google-key" .gitignore || echo ".google-key" >> .gitignore
@@ -181,7 +181,7 @@ CITES Safety: No wire cages, no aviary settings, no wild-capture imagery.
 
 **Generation command:**
 ```bash
-./scripts/generate_nb_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-nb.png" "1200x2133"
+./scripts/generate_nb_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-nb.png" "16:9"
 ```
 
 ---
@@ -378,3 +378,24 @@ Always include from `data/parrot-image-schema.json` `prompt_safety`:
 ## Uniform In-Body Image Sizing (locked 2026-07-12)
 
 On comparison + long-form content pages, every in-body section image — OG photo AND infographic — uses the SAME box: `.sec-img.inf-img` (`max-width:760px; aspect-ratio:1408/768; object-fit:cover; height:auto`), identical on mobile/tablet/desktop. Never give OG photos smaller boxes (`.portrait`/`.portrait-tall`/`.photo43`) on these pages; match the infographic size and tune `object-position` per photo. Ship `<100KB WebP + -760.webp` sibling. Canonical spec: `IMAGE-DESIGNS.md §1a` + CLAUDE.md.
+
+## Model lane policy (breeder, 2026-09-12)
+
+Two Gemini image lanes, and no others:
+
+| Lane | Model | Price | Use |
+|---|---|---|---|
+| `flash` (default) | `gemini-3.1-flash-image` @ 1K | **$0.067**/image | every in-body image and infographic |
+| `cheap` | `gemini-2.5-flash-image` (1024px cap, Google-deprecated) | **$0.039**/image | bulk drafts, thumbnails, throwaways |
+
+`gemini-3-pro-image` ($0.134/image — 2x flash, 3.4x cheap) is **refused by
+`scripts/generate_nb_image.sh`**. The 2026-09-11 Pages A/B run put ~64 images
+through Pro and drained the key's prepaid credit; the label fidelity Pro was
+chosen for did not prevent 4 label defects in 58 images.
+
+`imagen-3.0-generate-001` and the `:predict` body shape are **retired**. The live
+shape is `POST v1beta/models/<model>:generateContent` with header `x-goog-api-key`
+and `generationConfig.imageConfig.{aspectRatio,imageSize}`.
+
+**Verify the model list before any run** — `GET v1beta/models` — a model that
+worked last month may be gone.

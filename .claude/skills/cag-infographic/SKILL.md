@@ -322,8 +322,8 @@ CITES Safety: No wire cages, no aviary settings. Birds in loving home environmen
 ### Generation Commands
 
 ```bash
-# Nano Banana 2 (Google Imagen) — primary choice
-./scripts/generate_nb_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-nb.png" "1200x2133"
+# Gemini flash lane (gemini-3.1-flash-image @ 1K, $0.067) — primary choice
+./scripts/generate_nb_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-nb.png" "16:9"
 
 # OpenAI DALL-E 3 (portrait mode)
 ./scripts/generate_image.sh "FULL_PROMPT_HERE" "cag-infographic-[slug]-openai.png" "1024x1792" "openai"
