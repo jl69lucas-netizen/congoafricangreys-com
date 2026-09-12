@@ -88,8 +88,10 @@ Tests: `tests/test_page_board.py` 126 passed. Every task approved by spec + qual
 | 13 angles | `fd8752d9` | `brief.angles` from the strategy doc (near-me B-1/B-2/B-3) and the research delta (hub); starred row carries the trade-off |
 | 14 FAQ questions | `57d4a3e8` | `questions` on the FAQ section, lifted verbatim from each page's `faqs`; `faq-collision` WARN — 4 soft collisions each on hub and near-me for the sitting |
 | 15 links plan | `82d6f2bd` → `c4b3a937` → `426713c0` | per-section `links`, library membership at validate, three gate rows; **the gate found real page defects**: duplicate anchors on both pages and five mid-sentence anchors on the hub — fixed on the pages (`2c331b97`, `11b87205`, `3da1516b`), records restamped; `nav: true` ruling for tiles, spokes, breadcrumbs, table rows |
-| 16 kit strip | in flight | view-only block "5b. The kit" |
+| 16 kit strip | `04dc573c` | view-only block "5b. The kit": five shells, refresh pill, owning siblings, thumb when a matching base exists (none yet — chrome thumbs are not cut) |
 
 Desktop form (breeder screenshot): final rule at `49bc532f` + `e267fc00` — two cards, sticky green pane at its own height, three-column form; measured live: hub pane 480px beside a 964px form (was 1117/1117). IndexNow resubmitted for every page whose rendering changed.
 
 **Next:** Task 16 review → regenerate both boards + canvases → publish → the breeder's re-approval sitting (both records: meta picks, the §7 tuple alignment, the 4+4 FAQ soft collisions, the near-me/homepage heading overlap) → `board_approve.py` on both → gates 0 FAIL.
+
+**Boards regenerated and republished 2026-09-13** (`ef6b7c42`): hub `adfa7c65`, near-me `f260ac31`, both with the ten blocks. Both records now FAIL `approval-hash` and `meta-no-pick` (release) by design until the breeder re-approves on each board. Deferred, recorded: the near-me `header-collision` against the homepage heading; the 4+4 `faq-collision` WARNs; the hub §7 pick/tuple alignment (edit the tuple to `toc-t3-boarding-pass#spoke-index` at the sitting, before Approve).
