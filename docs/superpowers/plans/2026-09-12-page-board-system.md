@@ -745,6 +745,12 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 
 ---
 
+> **Review amendment (Task 4 self-review, 2026-09-12): refreshed components.** Twelve ledger pages already own every hero, takeaway, FAQ and nav shell, so a bare pool subtraction leaves a new page an empty menu. The cluster's practice is a **refresh**: a spent shell reused along a named axis (near-me's `hero-c-mosaic-metrics#geo-tile-field`, its `toc-t2-chip-cloud#state-chips`, its `faq-b#map-pin`). Component ids are therefore `base` or `base#delta`. Rules every later task inherits:
+> - `owned_components` keys ownership by the **full id and by its base**; `candidates_for` returns, in pool order, every free base as itself and every owned base as `base#refresh` (a placeholder the board author renames to `base#<delta>` in the tuple). A non-empty pool never yields an empty candidate list; `excluded` still names the owner of each owned base.
+> - The gate's `ledger-owned-combo` fails only on an **exact** full-id match with a sibling, or on a bare base that a sibling owns as a base or as any refresh. `base#<new-delta>` passes when no sibling uses that exact id.
+> - Canvas templates select on `cand.split("#")[0]`; the board's option card shows the delta (or "refresh: name the axis") as a badge.
+> - The ledger records refreshed ids where the markdown map does: near-me hero/toc/faq, buy-with-shipping hero (`split-hero-a-trust-ribbon#price-chips`) and faq (`faq-a#price-chip`), adoption-cost toc (`toc-t1-numbered-ledger#t1m`), baby hero (`split-hero-b-warm-gradient#baby-refresh`).
+
 ### Task 5: Header pre-check, authorization check, distribution
 
 **Files:**
