@@ -92,6 +92,8 @@
                                       "geo": {"type": "array", "items": {"type": "string"}}}},
           "entities": {"type": "array", "items": {"type": "string", "pattern": "^ont:[a-z0-9-]+$"}},
           "tree": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+          "questions": {"type": "array", "minItems": 8, "maxItems": 14, "uniqueItems": true,
+                        "items": {"type": "string", "minLength": 8, "pattern": "\\?$"}},
           "images": {"type": "array", "items": {"type": "object", "required": ["slot", "kind", "required", "prompt"], "additionalProperties": false,
                      "properties": {"slot": {"type": "string"}, "kind": {"enum": ["photo", "infographic"]},
                                     "required": {"type": "boolean"}, "prompt": {"type": "string"}}}},
@@ -101,7 +103,12 @@
                                                   "properties": {"component": {"type": "string"}, "owner": {"type": "string"},
                                                                  "owners": {"type": "array", "items": {"type": "string"}}}}},
                                      "pick": {"type": ["string", "null"]}, "note": {"type": "string"}}}
-        }
+        },
+        "allOf": [{
+          "if": {"required": ["id", "shape"],
+                 "properties": {"id": {"const": "faq"}, "shape": {"const": "standard"}}},
+          "then": {"required": ["questions"]}
+        }]
       }
     },
     "tuple": {

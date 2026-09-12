@@ -109,6 +109,8 @@ def outline_block(board, hits):
                 lines.append("│   " * depth + f"├─ H{n['level']} {esc(n['heading'])}" + flag(n["heading"], hit_by))
                 walk(n["children"], depth + 1)
         walk(s["tree"], 1)
+        for i, q in enumerate(s.get("questions", []), 1):
+            lines.append(f"│   ├─ Q{i:02d} {esc(q)}" + flag(q, hit_by))
     return "\n".join(lines)
 
 
@@ -200,6 +202,7 @@ def angles_table(brief):
 
 def render(board, ont, ledger, live, thumbs, slug):
     hits = PB.header_hits(board, live)          # exactly what the gate will fail on
+    qhits = PB.faq_hits(board, live)            # and what it will warn on
     d = PB.distribution(board)
     auth = PB.authorization_check(board, ont)
     approved = PB.approval_matches(board)
@@ -234,8 +237,12 @@ def render(board, ont, ledger, live, thumbs, slug):
         radio_list("meta-description", ms["descriptions"], ms["recommended"]["description"], mdn),
     ])))
 
-    parts.append(("3. Outline", f"<pre class=\"tree\">{outline_block(board, hits)}</pre>\n\n"
-                  + (f"**{len(hits)} heading(s) collide with a live page.** Rewrite them before approving; the gate fails on any." if hits else "No heading collides with a live page (exact, species-template or 5-word shingle).")))
+    parts.append(("3. Outline", f"<pre class=\"tree\">{outline_block(board, hits + qhits)}</pre>\n\n"
+                  + (f"**{len(hits)} heading(s) collide with a live page.** Rewrite them before approving; "
+                     "the gate fails on any." if hits else
+                     "No heading collides with a live page (exact, species-template or 5-word shingle).")
+                  + (f"\n\n{len(qhits)} FAQ question(s) repeat a live heading — a warning, not a refusal."
+                     if qhits else "")))
 
     rows = [[md(r["section"]), r["primary"], r["lsi"], r["longtail"], r["brand"], r["geo"], f"{r['words_min']}–{r['words_max']}"] for r in d["rows"]]
     t = d["totals"]

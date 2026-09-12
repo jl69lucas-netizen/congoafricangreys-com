@@ -314,6 +314,16 @@ def all_headings(board):
     return out
 
 
+def faq_questions(board):
+    """The enumerated FAQ questions, or [] when the record has no FAQ section. Deliberately
+    NOT in all_headings(): a question renders inside a <summary>, and counting it as a
+    heading would inflate h_counts and let a page clear the H5/H6 floor on its FAQ alone."""
+    for s in board["sections"]:
+        if s["id"] == "faq" and s["shape"] == "standard":
+            return list(s.get("questions", []))
+    return []
+
+
 class _Headings(DUP.Text):
     """The dup gate's chrome-skipping walker, narrowed to the text of h1-h6.
 
@@ -491,6 +501,14 @@ def header_hits(board, live):
                      and all(_head_term_shingle(w, pk) for w in h["shingles"]))]
 
 
+def faq_hits(board, live):
+    """FAQ questions that collide with a live heading. Same three kinds and whitelist as
+    header_hits(), minus the head-term exemption: a question is a whole sentence, not a
+    keyword-bearing heading, so a shared five-token run is worth a look every time."""
+    return [h for h in header_precheck(faq_questions(board), live, exclude_page=own_live_key(board))
+            if not _whitelisted(h["heading"])]
+
+
 def gate_findings(board, ont, ledger, live, stage="build"):
     """Every reason this record may not be built (or released). Pure: no printing."""
     if stage not in GATE_STAGES:
@@ -564,6 +582,10 @@ def gate_findings(board, ont, ledger, live, stage="build"):
             "header pre-check examined 0 live pages — run npx astro build first")
     for h in header_hits(board, live):
         add("header-collision", "FAIL", f"{h['kind']}: {h['heading']!r} vs {h['page']} {h['with']!r}")
+    # WARN, never FAIL. Two pages may legitimately answer the same buyer question, and the
+    # dup gate judges the ANSWER after the build; a repeated question is a sign to look.
+    for h in faq_hits(board, live):
+        add("faq-collision", "WARN", f"{h['kind']}: FAQ question {h['heading']!r} vs {h['page']} {h['with']!r}")
 
     counts = distribution(board)["h_counts"]
     if counts["h5"] < 5 or counts["h6"] < 5:

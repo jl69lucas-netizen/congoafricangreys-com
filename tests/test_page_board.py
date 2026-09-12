@@ -1793,3 +1793,67 @@ def test_board_renders_the_angles_table_with_the_chosen_one_starred():
     assert "Angles considered" in html and "⭐ n" in html and "price-led" in html
     assert "trade-off: t" in html                 # the chosen row carries the strategy's trade-off
     assert "adoption-cost page" in html           # the rejected row carries its why_not
+
+
+def _with_faq(questions):
+    b = json.loads(json.dumps(MIN_BOARD))
+    faq = json.loads(json.dumps(b["sections"][0]))
+    faq.update({"id": "faq", "n": 2, "heading": "Questions Buyers Ask Us Before They Reserve",
+                "shape": "standard", "tree": [], "images": [], "questions": questions,
+                "options": {"candidates": [], "excluded": [], "pick": None, "note": ""}})
+    b["sections"].append(faq)
+    return b
+
+
+EIGHT = [f"Question number {n} about buying an African Grey?" for n in range(1, 9)]
+
+# EIGHT's eight questions differ by one token in a position every 5-token window covers, so
+# a live copy of the first collides with all eight. Fine for the schema tests; useless for
+# counting collisions, which is what this second set is for.
+DISTINCT = ["Where do our Congo babies come from?",
+            "When may a weaned chick travel home?",
+            "Which airport handles the flight?",
+            "Does the price include the folder?",
+            "How long until a bird talks?",
+            "Can we visit before we reserve?",
+            "What happens if plans change?",
+            "Is a deposit refundable?"]
+
+
+def test_faq_questions_reject_seven_fifteen_a_duplicate_a_flat_line_and_an_absent_list():
+    fifteen = [f"Question number {n} about buying an African Grey?" for n in range(1, 16)]
+    for bad in (EIGHT[:7], fifteen, EIGHT[:7] + [EIGHT[0]], EIGHT[:7] + ["A statement, not a question."]):
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(_with_faq(bad))
+    PB.validate_board(_with_faq(EIGHT))
+    PB.validate_board(MIN_BOARD)                      # no faq section, nothing to enumerate
+    bare = _with_faq(EIGHT); del bare["sections"][1]["questions"]
+    with pytest.raises(PB.BoardError):
+        PB.validate_board(bare)
+
+
+def test_faq_questions_are_not_headings_but_are_listed_in_the_outline():
+    import build_page_board as BPB
+    b = _with_faq(EIGHT)
+    assert EIGHT[0] not in [t for _, t in PB.all_headings(b)]
+    assert PB.faq_questions(b) == EIGHT
+    html = BPB.render(_approved(b), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "Q01 " + BPB.esc(EIGHT[0]) in html and "Q08 " in html
+
+
+def test_gate_calls_a_colliding_faq_question_a_warn_not_a_fail():
+    b = _approved(_with_faq(DISTINCT))
+    f = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY,
+                         live={"/congo-african-grey-for-sale/": [DISTINCT[0]]}, stage="build")
+    hits = [x for x in f if x["check"] == "faq-collision"]
+    assert len(hits) == 1 and hits[0]["sev"] == "WARN"
+    assert not [x for x in f if x["check"] == "header-collision"]
+
+
+def test_approve_leaves_the_faq_questions_alone():
+    import board_approve as BA
+    b = _with_faq(EIGHT)
+    inbox = {"approved_at": "t", "h1": 0, "picks": {"birds": "avail-b"}, "notes": {},
+             "meta": {"title": 0, "description": 0}, "canvas_version": None, "record_hash": PB.record_hash(b)}
+    out = BA.apply_approval(b, inbox, ONT_OK, LEDGER_EMPTY)
+    assert out["board"]["sections"][1]["questions"] == EIGHT
