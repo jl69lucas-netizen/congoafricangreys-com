@@ -414,6 +414,23 @@ def _head_term_shingle(shingle, primary_keyword):
     return False
 
 
+def header_hits(board, live):
+    """The header collisions THIS board is answerable for — one source of truth, so the
+    board artifact flags exactly what the gate will fail on and never a heading more.
+
+    Three filters, in order: the page's own live headings are dropped (`own_live_key`),
+    a heading whose collision is a whitelisted phrase is dropped (whole tokens, not
+    substrings), and a shingle hit is dropped only when EVERY matching window is a sub-run
+    of the board's own primary keyword or of a head term — one real copied run anywhere in
+    the heading keeps the hit."""
+    pk = board.get("brief", {}).get("primary_keyword", "")
+    return [h for h in header_precheck([t for _, t in all_headings(board)], live,
+                                       exclude_page=own_live_key(board))
+            if not _whitelisted(h["heading"])
+            and not (h["kind"] == "shingle"
+                     and all(_head_term_shingle(w, pk) for w in h["shingles"]))]
+
+
 def gate_findings(board, ont, ledger, live, stage="build"):
     """Every reason this record may not be built (or released). Pure: no printing."""
     if stage not in GATE_STAGES:
@@ -481,13 +498,7 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     if not live:
         add("header-precheck-examined-zero", "FAIL",
             "header pre-check examined 0 live pages — run npx astro build first")
-    pk = board.get("brief", {}).get("primary_keyword", "")
-    hits = [h for h in header_precheck([h for _, h in all_headings(board)], live,
-                                       exclude_page=own_live_key(board))
-            if not _whitelisted(h["heading"])
-            and not (h["kind"] == "shingle"
-                     and all(_head_term_shingle(w, pk) for w in h["shingles"]))]
-    for h in hits:
+    for h in header_hits(board, live):
         add("header-collision", "FAIL", f"{h['kind']}: {h['heading']!r} vs {h['page']} {h['with']!r}")
 
     counts = distribution(board)["h_counts"]

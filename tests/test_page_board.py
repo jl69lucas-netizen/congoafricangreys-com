@@ -815,3 +815,23 @@ def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate(live_dist
     f = [x for x in PB.gate_findings(approved, ont, ledger, live, stage="build") if x["sev"] == "FAIL"]
     assert [x["check"] for x in f] == ["header-collision"], f
     assert " vs / " in f[0]["msg"] and KNOWN_HOMEPAGE_OVERLAP in f[0]["msg"], f
+
+
+def test_board_html_carries_every_block_and_the_theme_rules(tmp_path):
+    import build_page_board as BPB
+    b = _approved(MIN_BOARD)
+    ont, ledger = ONT_OK, LEDGER_EMPTY
+    html = BPB.render(b, ont, ledger, live={}, thumbs={}, slug="x")
+    for marker in ["data-title=\"1. Brief\"", "data-title=\"2. H1\"", "data-title=\"3. Outline\"", "data-title=\"4. Distribution\"",
+                   "id=\"entity-graph\"", "data-title=\"6. Component options\"", "data-title=\"7. Asset slots\"", "id=\"approve\""]:
+        assert marker in html, marker
+    assert ":root{" in html and "prefers-color-scheme: dark" in html and ':root[data-theme="dark"]' in html
+    assert "body{margin:0;background:var(--ground)" in html
+    assert "claude.use(\"db\")" in html and "boards/x" in html
+    assert "<title>Page Board: x</title>" in html
+
+
+def test_board_html_flags_header_collisions_inline():
+    import build_page_board as BPB
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={"/y/": ["What Do We Have for Sale Right Now?"]}, thumbs={}, slug="x")
+    assert "exact match with /y/" in html
