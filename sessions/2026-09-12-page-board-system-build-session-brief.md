@@ -49,3 +49,19 @@ Tests: `tests/test_page_board.py` 126 passed. Every task approved by spec + qual
 9. Pending from the 2026-08-10 plan: the three near-me 301s (Task 11 there) and the singular retirement (Task 13 Steps 6–7), both after the hub is live.
 
 10. Near-me gate at close: 3 header collisions are against the current live hub / singular (both replaced by this rebuild) and the homepage health-guarantee heading (flag 5); `board_thumbs.mjs` has no runtime test.
+
+## Hub C SHIPPED (later the same evening)
+
+| Step | Result |
+|---|---|
+| Approval | Read back from the board db (approved 2026-09-12T21:14:40Z); `board_approve.py` applied 7 picks, ledger row written, gate 0 FAIL / 4 WARN |
+| Images | 24 files in `public/images/hub-page/`: hero (the mosaic OG image, 1280/760/400), six square cards cut from `assets/brand`, four section images, four read-card thumbs from the targets' heroes. No repeat within the page. |
+| Build | `d12248c8` — 264 KB, H1:1 H2:9 H3:34 H4:13 H5:9 H6:7; AggregateOffer + ItemList + FAQPage + 2 OfferShippingDetails; four geo slugs referenced (grid shed) |
+| Gates | hardening clean · seam PASS · dup body/headers clean after six rewrites · evidence 0 ERROR with overrides (Midland 9, Appendix I 2, DNA 6, captive-bred 5, `_why` recorded) · AEO 0 ERROR (binomial added) · final PASS-WITH-WARNINGS like the other 12 · render meta 296 passed · render pages 3/3 |
+| Live | 200, rebuilt page serving; IndexNow 200 for the hub |
+| Singular retired | `3dea688b` — 301s in both `_redirects`, footer + MobileTabBar + Header + 23 page links + 404 repointed, page removed, page-map 87→86, sitemaps clean |
+| Near-me 301s | see the next commit line in git |
+
+**Rulings applied:** OG/hero-style images from `assets/` as the breeder asked; infographics as CSS-only HTML blocks (inventory grid, receipt, three-step strip) with values from the data files, no image generation (API credit exhausted); the document photo is the redacted sample flat-lay, never the one bearing an invented name; 3-3-3 kept out of the FAQ (locked ruling).
+
+**Open flags added:** the `next` section pick (`toc-t3-boarding-pass#refresh`) differs from `tuple.toc` (`toc-t4-magazine-index#spoke-index`); the built page follows the pick, the ledger row carries the tuple — align at the next re-board, since editing the tuple after approval moves the hash. `final_page_audit` warns `no_aggregateoffer` on a page whose graph contains AggregateOffer (checker reads a single Product+Offer shape) — harness defect to log. Avail-A does not exist as a component; the hub's "avail-a-grid" is a plain three-column grid without the facet sidebar, recorded here as its definition. The four board additions the breeder said yes to (kit strip, FAQ questions, angles, meta variants) are queued as a plan amendment for the NEXT board, because adding them to this record after approval would have moved its hash.
