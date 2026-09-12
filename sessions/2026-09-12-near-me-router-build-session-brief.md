@@ -66,6 +66,8 @@ hardening 0/0 (B) · 0/0 (A) · seam 9/10 (form + FAQ share one, in profile) · 
 - **Hero height at 768** is 567px (Page A shipped 528); two columns are kept to 700px. A tablet-only trim would be hiding the metrics strip under 980; not done without a preview.
 - **Task 11 (the three near-me 301s into this page) and Task 13 (hub sheds the grid)** are now unblocked: B is live and enumerates the grid.
 
+- **Heading overlap found by the Page Board pre-check (2026-09-12, later):** near-me H2 "What Arrives With Every African Grey We Place?" shares the six-token run "with every african grey we place" with the homepage's "What Health Guarantees Come With Every African Grey We Place?". The exact-match dup gate cannot see it. Reword the near-me H2 (e.g. "What Travels With Every Bird We Send?") in the next near-me touch; the retrofit board test carries it as a KNOWN OVERLAP pop.
+
 ## What's Next
 1. Page Board spec → `docs/superpowers/specs/2026-09-1x-page-board-system-design.md`, then hub C through the first board.
 2. Task 11: point `/where-to-buy-african-greys-near-me/`, `/buy-african-grey-parrot-near-me/`, `/african-grey-parrot-for-sale-near-me/` at this page; repoint the 9 inbound links on 7 source pages; IndexNow all 7.
