@@ -1,0 +1,182 @@
+<title>Hub C Build Report</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F7F5EE; --paper:#FFFFFF; --ink:#1E2A24; --ink-2:#4B5A52; --ink-3:#7A867F;
+  --line:#DDD9CC; --green:#2D6A4F; --green-soft:#E3EEE8; --clay:#E8604C; --clay-soft:#FBE7E2;
+  --code-bg:#F0EEE5; --mark:#FFF3C4;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+    --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+    --code-bg:#11161380; --mark:#4A3F16;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+  --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+  --code-bg:#11161380; --mark:#4A3F16;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 96px}
+header.masthead{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;padding-bottom:20px;border-bottom:2px solid var(--green);margin-bottom:28px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:600;margin:0 0 8px}
+h1.title{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+.sub{color:var(--ink-2);margin:10px 0 0;max-width:62ch}
+.meta{font-size:13px;color:var(--ink-3);text-align:right;line-height:1.5}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 28px}
+button.btn{font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:6px;border:1px solid var(--green);background:var(--green);color:#fff;cursor:pointer}
+button.btn.ghost{background:transparent;color:var(--green)}
+button.btn:focus-visible{outline:3px solid var(--clay);outline-offset:2px}
+.toc{font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 36px;padding:0;list-style:none}
+.toc a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a:hover{color:var(--green);border-color:var(--green)}
+section.sec{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:26px 30px 30px;margin:0 0 22px;position:relative}
+section.sec .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:6px}
+section.sec h2{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:24px;margin:0;line-height:1.2;text-wrap:balance}
+section.sec .copy{flex:none;font:inherit;font-size:12px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:5px;border:1px solid var(--line);background:transparent;color:var(--ink-2);cursor:pointer}
+section.sec .copy:hover{border-color:var(--green);color:var(--green)}
+section.sec .copy.done{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.md h3{font-family:"Source Serif 4",Georgia,serif;font-size:18px;margin:26px 0 8px}
+.md h4{font-size:15px;margin:20px 0 6px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+.md p,.md li{max-width:72ch}
+.md ul,.md ol{padding-left:22px}
+.md li{margin:4px 0}
+.md strong{font-weight:600}
+.md code{font:13.5px/1.5 "IBM Plex Mono",ui-monospace,Menlo,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.md pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;font:13px/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
+.md pre code{background:none;padding:0;font-size:inherit}
+.md table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0 18px;display:block;overflow-x:auto}
+.md thead th{text-align:left;font-weight:600;color:var(--ink-2);font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--green);padding:8px 10px;white-space:nowrap}
+.md tbody td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-variant-numeric:tabular-nums}
+.md tbody tr:last-child td{border-bottom:none}
+.md blockquote{margin:14px 0;padding:10px 16px;border-left:4px solid var(--clay);background:var(--clay-soft);border-radius:0 6px 6px 0}
+.md blockquote p{margin:4px 0}
+.md a{color:var(--green)}
+.md mark{background:var(--mark);padding:0 3px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--ground);padding:9px 16px;border-radius:6px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:640px){header.masthead{grid-template-columns:1fr}.meta{text-align:left}section.sec{padding:20px 18px 22px}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<div class="wrap">
+<header class="masthead">
+  <div>
+    <p class="eyebrow">CongoAfricanGreys.com · Gate report</p>
+    <h1 class="title">Hub C Build Gate Report</h1>
+    <p class="sub">Page B of the for-sale close: <code>/african-grey-parrots-for-sale-near-me/</code> rebuilt as the geo router from its approved outline and locked tuple 12, then hardened at 375 / 768 / 1280 and passed through every text gate plus the non-commodity, entity and keyword reviews. Shipped 2026-09-12.</p>
+  </div>
+  <div class="meta">Shipped 2026-09-12<br>Source of truth: <code>docs/artifacts/cags-hub-c-first-board-build-gate-report.md</code><br>hub build <code>d12248c8</code> · singular retired <code>3dea688b</code> · near-me 301s <code>4990e829</code></div>
+</header>
+<div class="toolbar">
+  <button class="btn" id="copy-all">Copy whole document as Markdown</button>
+  <span style="font-size:13px;color:var(--ink-3)">Each section below has its own copy button. Copies are exact Markdown, not scraped HTML. The same text is versioned as <code>.md</code> in the repo.</span>
+</div>
+<ul class="toc" id="toc"></ul>
+<div id="doc"></div>
+</div>
+<div class="toast" id="toast">Copied</div>
+
+<script type="text/markdown" data-title="1. Verdict">
+## 1. Verdict
+**PASS-WITH-WARNINGS, shipped.** `/african-grey-parrots-for-sale/` went from a 16 KB near-me lookalike (7 H2s, a state grid, a city grid, no H3–H6) to the for-sale cluster's hub: nine sections from a breeder-approved board record, the full H1–H6 band (9 · 34 · 13 · 9 · 7), six live birds with printed prices, `AggregateOffer` over the set with a `Product` per bird inside an `ItemList`, two `OfferShippingDetails` nodes, and **no state enumeration** — four geo slugs are referenced in total, the router owns the grid.
+
+Every text gate is clean on the shipped build: hardening 0 ERROR / 0 WARN, seam parity PASS (9 seams, 10 sections, form and FAQ share one), dup body and dup headers clean after six rewrites, evidence 0 ERROR with four per-slug overrides recorded, AEO 0 ERROR, final page audit PASS-WITH-WARNINGS on the same two rows every for-sale sibling carries, render meta 296 passed, render pages **3 of 3** at 375 / 768 / 1280 on the first run. Board gate at release: 0 FAIL, 4 WARN.
+
+Live: 200 with the rebuilt page serving; IndexNow 200 for the hub. The singular `/african-grey-parrot-for-sale/` returns a live 301 to the hub. The three retiring near-me pages and the flattened "gray" spelling rule all return live 301s to the router, and the whole site was resubmitted to IndexNow after the footer change: 99 URLs, HTTP 200.
+
+</script>
+<script type="text/markdown" data-title="2. What was built, from the approved record">
+## 2. What was built, from the approved record
+| Axis | Board pick | Shipped as |
+|---|---|---|
+| Hero | Hero-C Mosaic Metrics, refreshed `#inventory-tiles` | Deep-green field, three-metric strip, the mosaic OG photo at 16:9 with caption, four tiles reading live inventory (Congo singles · Timneh singles · companion pair · total) that jump to the cards; image first on phones by CSS order |
+| Dial + rail | Dial 2 Dark Aviary + Rail A price chip | 9 rows with a tag each; rail sticky under the header on tablet and phone |
+| §1 birds | avail-a-grid | A plain three-column card grid, no facet sidebar (Avail-A had no prior implementation; this is its definition). Photo, name, price, blurb, three chips, shipping line, reserve button and a link to the bird's own page. 2-up at tablet, 1-up on phones |
+| §2 which | table-a-stacking | Five-row Congo / Timneh fork (weight, tail, beak, price band, available now) from `price-matrix.json`, clay header, stacks to cards under 640; the side-by-side chart image above it |
+| §3 price | k2-price-tag | Split tag ($1,500–$3,500) with four rows; the receipt HTML infographic below the prose |
+| §4 route | timeline-strip | Three-step strip derived from the T5 stepper's bones (certificate → flight → handover); the "how a grey gets home" map image |
+| §5 papers | lab-report-table | Six-row document register (what it holds · why it exists), caption band, stacks to cards under 640; the redacted sample flat-lay with its required caption |
+| §6 who | split-feature | Sticky photo (the handwritten Midland sign) beside the breeder text and a four-line checklist; both method labels defined once |
+| §7 next | toc-t3-boarding-pass, refreshed `#spoke-index` | 18 boarding-pass stops, one per spoke, six-column desktop, two-column phone |
+| §8 FAQ | faq-c, refreshed `#spoke-links` | Twelve questions, dark register, index chip instead of the $ glyph, answers capped at 70ch |
+| §9 reserve | inline form, full contract | Two-pane form: live birds and shipping line on the left, the seven-field contract with screening questions on the right; 16px controls, 44px pills, honeypot |
+| Takeaways | K1 receipt + K2 price tag | K1 "What you are looking at" with six rows at the top of the content column; K2 in §3 |
+| H6 prefixes | `Inventory Note:` · `Across the Cluster:` · `Before You Reserve:` | 2 · 3 · 2, none among the 25 spent |
+
+Every figure reads from `price-matrix.json`, `financial-entities.json`, `clutch-inventory.json` or `locations.json`. No review quotes (all 17 are spent elsewhere); the 3-3-3 rule stays out of the FAQ (locked ruling). The four infographics the record allowed are CSS-only HTML blocks with values from the data files, because the image API credit is exhausted; the breeder asked for that.
+
+</script>
+<script type="text/markdown" data-title="3. Images">
+## 3. Images
+Twenty-four files under `public/images/hub-page/`, all cut from `assets/` after a labelled contact sheet: the mosaic OG photo as hero at 1280 / 760 / 400 (84 KB at full size), six square 800² cards from the top-level bird photos with 400² siblings (30–50 KB), the Congo-vs-Timneh chart, the delivery map, the Midland-sign photo at three widths, the redacted sample document flat-lay (never the flat-lay bearing an invented name), and four read-card thumbs cut from each target page's own hero by `bake_read_card_thumbs.py`. No image repeats within the page; cross-page reuse of the bird photos is allowed and was used.
+
+</script>
+<script type="text/markdown" data-title="4. Gate findings and what they changed">
+## 4. Gate findings and what they changed
+- **Hardening**: one ERROR on first pass — the `tile-more` cell rendered about 18px tall. Fixed with an explicit `min-height:52px` on that rule. Clean after.
+- **Dup body**: six shingles collided with the near-me page and the Congo-vs-Timneh page. All six were sentences I had reproduced from memory of the near-me FAQ. Rewritten; the counter labels shared with the buy page ("Birds reservable today", "Aviary floor price") renamed; the mandated document caption reworded while keeping its three facts.
+- **Evidence**: first pass 6 ERROR — Midland ×20, captive-bred ×13, DNA ×12, Appendix I ×4, scam ×3, title 110 chars. Prose trimmed to Midland 9 (the six card shipping lines and the form option no longer name the city), captive-bred 5, DNA 6, Appendix I 2, scam 0; title cut to 66 chars. The four residues are recorded in `budgets_by_slug` with their reasons (approved headings, method labels, the spoke index). The lesson from the near-me build held: repeated card and form strings count as much as prose.
+- **AEO**: no binomial on first pass; `Psittacus erithacus` added once in the fork section. The "buried answer" proxies that remain are footer and nav headings, not this page's.
+- **Final audit**: `no_aggregateoffer` WARN on a page whose graph contains `AggregateOffer`. The checker reads a single Product+Offer shape; harness defect, logged in the brief, no page change.
+- **Board gate**: `pick-tuple-mismatch` WARN — the breeder picked the boarding pass for §7 while the tuple recorded the magazine index; the page follows the pick, the ledger row carries the tuple, and the two align at the next re-board because editing the tuple after approval moves the hash.
+
+</script>
+<script type="text/markdown" data-title="5. Runtime">
+## 5. Runtime
+Render pages 3 of 3 at 375 / 768 / 1280 on the first run, no fix round. Desktop and phone screenshots of the live page reviewed: hero, tiles, counters, dial and K1 at 1280; image-first hero, tiles, metrics and H1 at 375 with the mobile tab bar clear of the content.
+
+</script>
+<script type="text/markdown" data-title="6. The retirements">
+## 6. The retirements
+- `/african-grey-parrot-for-sale/` → 301 to the hub in both `_redirects` files. Carriers repointed: the footer link (105 pages), the mobile tab bar's two "Birds" links (every page), the header array, 23 page-level links and the 404 page. Verified in `dist/`: zero links to the singular. Page removed, page-map 87 → 86, sitemaps clean. **Live 301 confirmed.**
+- The three near-me pages → 301 to the router; nine inbound links repointed on seven pages (homepage, FAQ, male-vs-female, breeders comparison, health guarantee, available, available/evie); the old "gray" spelling rule that pointed at one of them flattened straight to the router. 100 pages build. Page-map 86 → 84.
+- **All four retired slugs return live 301s.** Sitewide IndexNow after the footer change: 99 URLs submitted, HTTP 200.
+
+</script>
+<script type="text/markdown" data-title="7. Open flags for the breeder">
+## 7. Open flags for the breeder
+1. The four board additions you approved — kit strip, FAQ questions, angles considered, meta title and description variants — go into the next board as a plan amendment. Adding them to this record after approval would have invalidated the approval.
+2. One spelling for refresh ids. The record writes `base#delta`, the disk writes `+`, the published design canvas writes `_`. Write-back now tolerates all three; one spelling is still better.
+3. The §7 pick versus tuple mismatch above.
+4. The near-me H2 "What Arrives With Every African Grey We Place?" still overlaps the homepage's health-guarantee heading; carried from the near-me brief.
+5. `final_page_audit` cries wolf on `no_aggregateoffer` for hub-shaped graphs; a fixture under `tests/render/fixtures/known_broken/` is the fix, not a rule.
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+<script>
+(function(){
+  var blocks = Array.prototype.slice.call(document.querySelectorAll('script[type="text/markdown"]'));
+  var doc = document.getElementById('doc'), toc = document.getElementById('toc'), toast = document.getElementById('toast');
+  var all = [];
+  function dedent(s){ return s.replace(/^\n+|\s+$/g,''); }
+  function copy(text, btn){
+    var done = function(){ if(btn){ btn.classList.add('done'); btn.textContent='Copied'; setTimeout(function(){btn.classList.remove('done'); btn.textContent=btn.getAttribute('data-label');},1400);} toast.classList.add('show'); setTimeout(function(){toast.classList.remove('show');},1200); };
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, function(){ fallback(text); done(); }); } else { fallback(text); done(); }
+  }
+  function fallback(text){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); }
+  blocks.forEach(function(b, i){
+    var title = b.getAttribute('data-title'); var md = dedent(b.textContent);
+    var full = '## ' + title + '\n\n' + md + '\n';
+    all.push(full);
+    var id = 'sec-' + i;
+    var sec = document.createElement('section'); sec.className='sec'; sec.id=id;
+    var head = document.createElement('div'); head.className='sec-head';
+    var h2 = document.createElement('h2'); h2.textContent = title;
+    var btn = document.createElement('button'); btn.className='copy'; btn.type='button'; btn.textContent='Copy section'; btn.setAttribute('data-label','Copy section');
+    btn.addEventListener('click', function(){ copy(full, btn); });
+    head.appendChild(h2); head.appendChild(btn);
+    var body = document.createElement('div'); body.className='md';
+    body.innerHTML = (window.marked ? marked.parse(md) : '<pre>'+md.replace(/</g,'&lt;')+'</pre>');
+    sec.appendChild(head); sec.appendChild(body); doc.appendChild(sec);
+    var li = document.createElement('li'); var a = document.createElement('a'); a.href='#'+id; a.textContent=title; li.appendChild(a); toc.appendChild(li);
+  });
+  document.getElementById('copy-all').addEventListener('click', function(){
+    copy('# Hub C Build Gate Report\n\n' + all.join('\n'), this);
+  });
+  document.getElementById('copy-all').setAttribute('data-label','Copy whole document as Markdown');
+})();
+</script>
