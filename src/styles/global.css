@@ -332,3 +332,33 @@ select[aria-invalid="true"], textarea[aria-invalid="true"]{ border-color:#b04228
 }
 /* the short legend title exists only for the mobile stack */
 .cag-tstack .ct-short { display: none; }
+
+/* ── Desktop-compact inquiry form · .cta-form (2026-09-12) ───────────────────
+   The for-sale kit's two-pane reserve form (.cta-form > .form-side + form.form-main)
+   grew four screening questions in 2026-09; on desktop the right column stacked
+   every field one under another and the green left pane stretched to match
+   (breeder screenshot, hub page). Above 980px the form becomes a two-column grid:
+   the resale and surrender questions share a row, the four delivery options sit
+   2×2, gaps tighten, and the left pane's three blocks spread over its height.
+   Every field, label and control stays. Tablet and phone are untouched — the
+   breeder likes the stacked layout there. Selector specificity (0,2,1) outranks
+   each page's scoped `.x .form-main` (0,2,0) and Astro's [data-astro-cid] scoping. */
+@media (min-width: 981px) {
+  .cta-form form.form-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .7rem .8rem; align-content: start; }
+  .cta-form form.form-main > * { grid-column: 1 / -1; min-width: 0; }
+  .cta-form form.form-main > .f2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .7rem .8rem; }
+  .cta-form form.form-main > .screen-head { margin-top: .2rem; }
+  /* the two yes/no questions share a row; the details textarea, experience and delivery stay full width */
+  .cta-form form.form-main > fieldset.fset:nth-of-type(1),
+  .cta-form form.form-main > fieldset.fset:nth-of-type(2) { grid-column: span 1; }
+  .cta-form form.form-main > fieldset.fset:nth-of-type(3) .rad { flex-wrap: nowrap; }
+  .cta-form form.form-main .dlv { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .5rem .6rem; }
+  .cta-form form.form-main textarea { min-height: 0; }
+  .cta-form form.form-main textarea[name="surrender_details"] { height: 3.4rem; }
+  .cta-form form.form-main textarea[name="message"] { height: 5.2rem; }
+  .cta-form form.form-main .btn-submit { grid-column: 1 / 2; justify-self: start; min-width: 14rem; }
+  .cta-form form.form-main > .form-note { grid-column: 2 / 3; align-self: center; }
+  /* left pane: heading and lede at the top, the bird list in the middle, the shipping line at the foot */
+  .cta-form > .form-side { display: flex; flex-direction: column; }
+  .cta-form > .form-side .form-birds { margin-top: auto; margin-bottom: auto; }
+}
