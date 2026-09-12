@@ -79,6 +79,9 @@ All URLs verified live before insertion. Anchors are sentence-middle/beginning p
 | PBFD (Psittacine Beak & Feather Disease) | https://pmc.ncbi.nlm.nih.gov/articles/PMC12560886/ | PBFD global-spread review |
 | Avian Polyomavirus (APV) | https://pmc.ncbi.nlm.nih.gov/articles/PMC2168798/ | Polyomaviruses of birds review |
 | Hypocalcemia (African Grey) | https://pmc.ncbi.nlm.nih.gov/articles/PMC7128777/ | African-grey hypocalcemia seizure syndrome |
-| IATA Live Animals Regulations (LAR) | https://www.iata.org/en/programs/cargo/live-animals/ | Canonical industry authority (no PMC equivalent) |
+| IATA Live Animals Regulations (LAR) | https://www.iata.org/en/programs/ops-infra/live-animals/ | Canonical industry authority (no PMC equivalent) |
 | CITES Appendix I | https://www.cites.org/eng/app/appendices.php | Already in use |
+| AAV find-a-vet search | https://www.aav.org/search/custom.asp?id=1803 | Association of Avian Veterinarians locator; used on the near-me router and the hub (2026-09-12) |
+| IUCN Red List — Psittacus erithacus | https://www.iucnredlist.org/species/22724813/154068029 | Lifespan and Endangered status source on fact labels (near-me, hub) |
+| World Parrot Trust grey parrot profile | https://parrots.org/encyclopedia/grey-parrot/ | Species profile linked from the hub's Congo/Timneh fork |
 | Cognition research (Alex) | https://alexfoundation.org/ | Already in use |
