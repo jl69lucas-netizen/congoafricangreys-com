@@ -268,7 +268,8 @@ def test_candidates_subtract_what_siblings_own():
                         "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
     cands, excluded = PB.candidates_for("inventory", ledger, slug="african-grey-parrots-for-sale")
     assert cands == ["avail-a", "avail-b#refresh", "bird-cards"]
-    assert excluded == [{"component": "avail-b", "owner": "dna-tested-african-grey-for-sale"}]
+    assert excluded == [{"component": "avail-b", "owner": "dna-tested-african-grey-for-sale",
+                         "owners": ["dna-tested-african-grey-for-sale"]}]
 
 
 def test_candidates_never_exclude_the_page_itself():
@@ -289,7 +290,8 @@ def test_exhausted_pool_yields_refresh_candidates():
                         "p2": {"hero": "hero-c", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
     cands, excluded = PB.candidates_for("hero", ledger, slug="new-page")
     assert cands == ["hero-a#refresh", "hero-c#refresh"]
-    assert excluded == [{"component": "hero-a", "owner": "p1"}, {"component": "hero-c", "owner": "p2"}]
+    assert excluded == [{"component": "hero-a", "owner": "p1", "owners": ["p1"]},
+                        {"component": "hero-c", "owner": "p2", "owners": ["p2"]}]
 
 
 def test_refreshed_id_owns_its_base():
@@ -297,13 +299,53 @@ def test_refreshed_id_owns_its_base():
               "pages": {"near-me": {"hero": "hero-c#geo-tile-field", "dial": "", "rail": "", "toc": "",
                                     "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
     owned = PB.owned_components(ledger)
-    assert owned["hero-c"] == "near-me" and owned["hero-c#geo-tile-field"] == "near-me"
+    assert owned["hero-c"] == ["near-me"] and owned["hero-c#geo-tile-field"] == ["near-me"]
     cands, excluded = PB.candidates_for("hero", ledger, slug="other")
     assert cands == ["hero-c#refresh"]
-    assert excluded == [{"component": "hero-c", "owner": "near-me"}]
+    assert excluded == [{"component": "hero-c", "owner": "near-me", "owners": ["near-me"]}]
 
 
 def test_base_of():
     assert PB.base_of("hero-c-mosaic-metrics") == "hero-c-mosaic-metrics"
     assert PB.base_of("hero-c-mosaic-metrics#geo-tile-field") == "hero-c-mosaic-metrics"
     assert PB.base_of("faq-b#map-pin") == "faq-b"
+
+
+def test_every_tuple_component_appears_in_some_pool():
+    """A tuple may draw from any pool — eggs' TOC is the nav pool's dial-1-clay — but a
+    component no pool carries can never be offered to a sibling page again."""
+    ledger = PB.load_ledger()
+    pooled = {PB.base_of(c) for pool in ledger["pools"].values() for c in pool}
+    orphans = {PB.base_of(cid): slug for slug, t in ledger["pages"].items()
+               for cid in PB.tuple_component_ids(t) if PB.base_of(cid) not in pooled}
+    assert orphans == {}
+
+
+def test_real_ledger_refresh_owns_its_base():
+    owned = PB.owned_components(PB.load_ledger())
+    assert "african-grey-parrots-for-sale-near-me" in owned["hero-c-mosaic-metrics"]
+    assert owned["hero-c-mosaic-metrics#geo-tile-field"] == ["african-grey-parrots-for-sale-near-me"]
+
+
+def test_real_ledger_page_is_never_an_owner_of_its_own_candidates():
+    ledger = PB.load_ledger()
+    near_me = "african-grey-parrots-for-sale-near-me"
+    cands, excluded = PB.candidates_for("hero", ledger, slug=near_me)
+    assert cands, "the hero pool must never hand a page an empty menu"
+    assert near_me not in {o for e in excluded for o in e["owners"]}
+    assert near_me not in {e["owner"] for e in excluded}
+
+
+def test_real_ledger_h6_prefixes_are_spent_by_their_owner_only():
+    ledger = PB.load_ledger()
+    near_me = "african-grey-parrots-for-sale-near-me"
+    assert PB.spent_h6_prefixes(ledger)["Distance Note:"] == near_me
+    assert "Distance Note:" not in PB.spent_h6_prefixes(ledger, exclude_slug=near_me)
+
+
+def test_validate_ledger_rejects_the_unnamed_refresh_placeholder():
+    ledger = PB.load_ledger()
+    ledger["pages"]["african-grey-parrots-for-sale-near-me"]["hero"] = "x#refresh"
+    with pytest.raises(PB.BoardError) as e:
+        PB.validate_ledger(ledger)
+    assert "x#refresh" in str(e.value)

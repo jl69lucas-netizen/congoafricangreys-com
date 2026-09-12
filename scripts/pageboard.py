@@ -52,8 +52,24 @@ def validate_ontology(ont):
     _validate(ont, "ontology.schema.json")
 
 
+TUPLE_ID_KEYS = ("hero", "dial", "rail", "toc", "table", "faq")
+
+
+def tuple_component_ids(t):
+    """Every component id a ledger/board tuple names, in a fixed order."""
+    return [t[k] for k in TUPLE_ID_KEYS if t.get(k)] + list(t.get("takeaway", []))
+
+
 def validate_ledger(ledger):
     _validate(ledger, "component-ledger.schema.json")
+    # `#refresh` is the board's placeholder for "reuse this shell along an axis you have
+    # not named yet". It may appear in a candidate list; recording one in the ledger would
+    # claim a delta that does not exist, so the author must rename it before it lands.
+    for page, t in ledger.get("pages", {}).items():
+        for cid in tuple_component_ids(t):
+            if cid.endswith("#refresh"):
+                raise BoardError(
+                    f"{page}: {cid} is the unnamed refresh placeholder — rename it to base#<delta> before recording it")
 
 
 def board_path(slug):
@@ -126,7 +142,7 @@ def approval_matches(board):
 
 def base_of(component_id):
     """The shell an id names: `base` itself, or the `base` of a `base#delta` refresh."""
-    return component_id.split("#")[0]
+    return component_id.strip().split("#", 1)[0]
 
 
 # A ledger page "owns" every component named anywhere in its tuple. A hero, dial, rail,
@@ -139,17 +155,15 @@ def owned_components(ledger, exclude_slug=None):
     owned = {}
 
     def claim(component_id, page):
-        owned.setdefault(component_id, page)
-        owned.setdefault(base_of(component_id), page)
+        for key in dict.fromkeys((component_id, base_of(component_id))):
+            if page not in owned.setdefault(key, []):
+                owned[key].append(page)
 
     for page, t in ledger.get("pages", {}).items():
         if page == exclude_slug:
             continue
-        for key in ("hero", "dial", "rail", "toc", "table", "faq"):
-            if t.get(key):
-                claim(t[key], page)
-        for k in t.get("takeaway", []):
-            claim(k, page)
+        for cid in tuple_component_ids(t):
+            claim(cid, page)
     return owned
 
 
@@ -161,9 +175,10 @@ def candidates_for(shape, ledger, slug):
     cands, excluded = [], []
     for c in pool:
         base = base_of(c)
-        if base in owned:
+        owners = owned.get(base)
+        if owners:
             cands.append(f"{base}#refresh")
-            excluded.append({"component": base, "owner": owned[base]})
+            excluded.append({"component": base, "owner": owners[0], "owners": list(owners)})
         else:
             cands.append(c)
     return cands, excluded
