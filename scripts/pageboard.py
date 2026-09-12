@@ -11,6 +11,7 @@ import jsonschema
 # growing a second copy that drifts. It lives beside this file in scripts/.
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import dup_content_audit as DUP
+HEADER_WHITELIST = DUP.HEADER_WHITELIST   # phrases the dup gate already forgives
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SCHEMAS = ROOT / "schemas"
@@ -347,3 +348,58 @@ def distribution(board):
     for lvl, _ in all_headings(board):
         counts[f"h{lvl}"] += 1
     return {"rows": rows, "totals": totals, "h_counts": counts}
+
+
+ADVISORY_MIN_H5H6 = {"home", "location"}          # rules/headings.md, 2026-09-09
+
+
+def gate_findings(board, ont, ledger, live, stage="build"):
+    """Every reason this record may not be built (or released). Pure: no printing."""
+    f = []
+    slug = board["meta"]["slug"]
+    add = lambda check, sev, msg: f.append({"check": check, "sev": sev, "msg": msg})
+
+    if not approval_matches(board):
+        add("approval-hash", "FAIL", "no approval, or the record changed after it was approved — board it again")
+
+    auth = authorization_check(board, ont)
+    for e in auth["blocked"]:
+        add("entity-blocked", "FAIL", f"{e} is BLOCKED (CLAUDE.md rule 2)")
+    for e in auth["unknown"]:
+        add("entity-unknown", "WARN", f"{e} is not in data/cag-ontology.json")
+    for e in auth["proposed"]:
+        add("entity-proposed", "WARN", f"{e} is PROPOSED — needs a source before it can be asserted")
+
+    owned = owned_components(ledger, exclude_slug=slug)
+    t = board["tuple"]
+    for key in ("hero", "dial", "rail", "toc", "table", "faq"):
+        if t.get(key) in owned:
+            add("ledger-owned-combo", "FAIL", f"tuple.{key}={t[key]} is owned by {', '.join(owned[t[key]])}")
+    for k in t.get("takeaway", []):
+        if k in owned:
+            add("ledger-owned-combo", "FAIL", f"takeaway {k} is owned by {', '.join(owned[k])}")
+    spent = spent_h6_prefixes(ledger, exclude_slug=slug)
+    for p in t.get("h6_prefixes", []):
+        if p in spent:
+            add("ledger-spent-prefix", "FAIL", f"H6 prefix {p!r} is spent by {spent[p]}")
+
+    hits = [h for h in header_precheck([h for _, h in all_headings(board)], live, exclude_page="/" + slug + "/")
+            if not any(w in h["heading"].lower() for w in HEADER_WHITELIST)]
+    for h in hits:
+        add("header-collision", "FAIL", f"{h['kind']}: {h['heading']!r} vs {h['page']} {h['with']!r}")
+
+    counts = distribution(board)["h_counts"]
+    if counts["h5"] < 5 or counts["h6"] < 5:
+        sev = "WARN" if board["meta"]["page_type"] in ADVISORY_MIN_H5H6 else "FAIL"
+        add("min-h5-h6", sev, f"H5 {counts['h5']} / H6 {counts['h6']} — floor is 5 each")
+
+    picks = (board.get("approval") or {}).get("picks", {})
+    for s in board["sections"]:
+        if s["shape"] != "standard" and not (s["options"]["pick"] or picks.get(s["id"])):
+            add("signature-no-pick", "FAIL", f"section {s['id']} ({s['shape']}) has no component pick")
+
+    if stage == "release":
+        for a in board["assets"]:
+            if a["required"] and a["status"] != "baked":
+                add("asset-required-missing", "FAIL", f"required slot {a['slot']} ({a['kind']} {a['w']}x{a['h']}) is {a['status']}")
+    return f

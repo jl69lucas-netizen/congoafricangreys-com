@@ -486,3 +486,75 @@ def test_header_precheck_matches_curly_apostrophes_and_plural_species():
     assert hits and hits[0]["kind"] == "template"
     assert PB.header_precheck(["A Grey’s First Week Home"],
                               {"/b/": ["A Grey's First Week Home"]})[0]["kind"] == "exact"
+
+
+def _approved(board):
+    b = json.loads(json.dumps(board))
+    for s in b["sections"]:
+        if s["shape"] != "standard":
+            s["options"]["pick"] = s["options"]["candidates"][0] if s["options"]["candidates"] else "default"
+    b["approval"] = {"approved_at": "2026-09-12T10:00:00Z", "h1": 0, "picks": {s["id"]: s["options"]["pick"] for s in b["sections"]},
+                     "notes": {}, "canvas_version": None, "record_hash": PB.record_hash(b)}
+    b["meta"]["status"] = "approved"
+    return b
+
+
+ONT_OK = {"entities": [{"id": "ont:psittacus-erithacus", "name": "Congo", "aliases": [], "class": "Organism",
+                        "authorization": "ASSERTED", "source": "x", "owner_page": None}]}
+LEDGER_EMPTY = {"pools": {"inventory": ["avail-b"]}, "pages": {}}
+
+
+def test_gate_passes_an_approved_minimal_board():
+    b = _approved(MIN_BOARD)
+    f = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")
+    # MIN_BOARD carries exactly one H5 and one H6 by design (test_distribution_counts_headings),
+    # so the volume floor is the one FAIL a minimal board is meant to raise. Its severity is
+    # asserted on its own in test_gate_h5_h6_minimums_are_warn_on_home_and_location.
+    assert [x for x in f if x["sev"] == "FAIL" and x["check"] != "min-h5-h6"] == [], f
+
+
+def test_gate_fails_without_matching_approval():
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["intent"] = "edited after approval"
+    f = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")
+    assert any(x["check"] == "approval-hash" and x["sev"] == "FAIL" for x in f)
+
+
+def test_gate_fails_on_blocked_entity_and_owned_combo_and_spent_prefix():
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["entities"].append("ont:wild-caught")
+    ont = {"entities": ONT_OK["entities"] + [{"id": "ont:wild-caught", "name": "w", "aliases": [], "class": "Commerce",
+                                              "authorization": "BLOCKED", "source": "r2", "owner_page": None}]}
+    ledger = {"pools": {"inventory": ["avail-b"]},
+              "pages": {"sibling": {"hero": "hero-a", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "",
+                                    "h6_prefixes": ["Aviary Note:"]}}}
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    f = {x["check"] for x in PB.gate_findings(b, ont, ledger, live={}, stage="build") if x["sev"] == "FAIL"}
+    assert {"entity-blocked", "ledger-owned-combo", "ledger-spent-prefix"} <= f
+
+
+def test_gate_fails_on_live_header_collision_and_missing_pick():
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["options"]["pick"] = None
+    b["approval"]["picks"] = {}
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    live = {"/y/": ["What Do We Have for Sale Right Now?"]}   # a sibling, not "/x/": the gate excludes the board's own page
+    f = {x["check"] for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live=live, stage="build") if x["sev"] == "FAIL"}
+    assert {"header-collision", "signature-no-pick"} <= f
+
+
+def test_gate_release_stage_fails_on_missing_required_slot_only_at_release():
+    b = _approved(MIN_BOARD)
+    build = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")
+    release = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="release")
+    assert not any(x["check"] == "asset-required-missing" for x in build)
+    assert any(x["check"] == "asset-required-missing" and x["sev"] == "FAIL" for x in release)
+
+
+def test_gate_h5_h6_minimums_are_warn_on_home_and_location():
+    b = _approved(MIN_BOARD)
+    f = {x["check"]: x["sev"] for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")}
+    assert f.get("min-h5-h6") == "FAIL"           # hub page type: hard
+    b["meta"]["page_type"] = "location"; b["approval"]["record_hash"] = PB.record_hash(b)
+    f = {x["check"]: x["sev"] for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")}
+    assert f.get("min-h5-h6") == "WARN"
