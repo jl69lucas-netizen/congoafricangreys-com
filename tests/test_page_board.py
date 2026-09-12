@@ -144,3 +144,27 @@ def test_approval_matches_returns_false_for_a_non_dict_approval():
         a = json.loads(json.dumps(MIN_BOARD))
         a["approval"] = junk
         assert PB.approval_matches(a) is False
+
+
+def test_ontology_file_validates_and_has_the_blocked_family():
+    ont = PB.load_ontology()
+    ids = [e["id"] for e in ont["entities"]]
+    assert len(ids) == len(set(ids)), "duplicate ontology ids"
+    blocked = {e["id"] for e in ont["entities"] if e["authorization"] == "BLOCKED"}
+    assert {"ont:wild-caught", "ont:imported-from", "ont:smuggled", "ont:undocumented-sale"} <= blocked
+
+
+def test_every_asserted_entity_has_a_source():
+    ont = PB.load_ontology()
+    for e in ont["entities"]:
+        if e["authorization"] == "ASSERTED":
+            assert e["source"], f"{e['id']} is ASSERTED with no source"
+
+
+def test_ledger_facts_are_present_and_asserted():
+    ont = {e["id"]: e for e in PB.load_ontology()["entities"]}
+    for i in ["ont:cites-appendix-i", "ont:usda-awa-licence", "ont:pcr-dna-sexing", "ont:pbfd-screening",
+              "ont:avian-polyomavirus-screening", "ont:psittacosis-screening", "ont:72-hour-guarantee",
+              "ont:airport-cargo-185", "ont:home-delivery-350", "ont:psittacus-erithacus", "ont:psittacus-timneh",
+              "ont:benjamin-home-raising-protocol", "ont:midland-socialization-method"]:
+        assert i in ont and ont[i]["authorization"] == "ASSERTED", i
