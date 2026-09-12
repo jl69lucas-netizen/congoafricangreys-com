@@ -19,6 +19,8 @@ SCHEMAS = ROOT / "schemas"
 ONTOLOGY = ROOT / "data" / "cag-ontology.json"
 LEDGER = ROOT / "data" / "component-ledger.json"
 BUDGETS = ROOT / "data" / "quality" / "evidence-budgets.json"
+EXTERNAL_LIBRARY = ROOT / "docs" / "reference" / "external-link-library.md"
+_LIB_URL = re.compile(r"https?://[^\s`|)>\"']+")
 DIST = ROOT / "dist"
 DESC_MIN, DESC_MAX = 140, 160
 DEFAULT_TITLE_MAX = 70
@@ -43,6 +45,30 @@ def _validate(doc, schema_name):
     except jsonschema.ValidationError as e:
         path = "/".join(str(p) for p in e.absolute_path) or "(root)"
         raise BoardError(f"{schema_name}: {path}: {e.message}") from None
+
+
+def normalise_url(url):
+    """One spelling for comparing a recorded href against a library row: scheme and host
+    lowercased, a leading `www.` dropped, trailing slash and punctuation trimmed. `www.`
+    goes because the library records `https://www.cites.org/eng/app/appendices.php` while
+    the live pages link `https://cites.org/...` — one row, and a checker calling them two
+    would send an author to add a row that is already there."""
+    u = url.strip().rstrip(".,;")
+    m = re.match(r"^(https?)://([^/]+)(.*)$", u, re.I)
+    if not m:
+        return u.lower()
+    host = m.group(2).lower()
+    host = host[4:] if host.startswith("www.") else host
+    return f"{m.group(1).lower()}://{host}{m.group(3).rstrip('/')}"
+
+
+def library_urls(path=EXTERNAL_LIBRARY):
+    """Every URL docs/reference/external-link-library.md records, normalised. Grepped, not
+    parsed: the library is three table shapes plus a prose citation block, and all of them
+    write the URL plainly. Missing file → empty set, and validate_board then skips the
+    membership rule: an absent library is a tooling fault, not a bad record."""
+    p = pathlib.Path(path)
+    return {normalise_url(u) for u in _LIB_URL.findall(p.read_text(encoding="utf-8"))} if p.exists() else set()
 
 
 def validate_board(board):
@@ -72,6 +98,13 @@ def validate_board(board):
     for a in brief["angles"]:
         if a["name"] != chosen and not a["why_not"].strip():
             raise BoardError(f"angle {a['name']!r} was not taken and records no why_not")
+    lib = library_urls()
+    if lib:
+        for sec in board["sections"]:
+            for l in sec["links"]["external"]:
+                if normalise_url(l["href"]) not in lib:
+                    raise BoardError(f"section {sec['id']}: external href {l['href']} is not in "
+                                     "docs/reference/external-link-library.md — add the row and verify 200 first")
 
 
 def validate_ontology(ont):
@@ -455,6 +488,8 @@ def distribution(board):
 
 
 ADVISORY_MIN_H5H6 = {"home", "location"}          # rules/headings.md, 2026-09-09
+LIBRARY_LINK_MIN = 3
+LINK_FLOOR_TYPES = {"for-sale", "hub"}            # the transactional cluster and its hub
 GATE_STAGES = ("build", "release")
 _WHITELIST_TOKENS = [t for t in (tokens(w) for w in HEADER_WHITELIST) if t]
 
@@ -619,6 +654,37 @@ def gate_findings(board, ont, ledger, live, stage="build"):
         if s["shape"] == "nav" and pick and pick != t.get("toc"):
             add("pick-tuple-mismatch", "WARN",
                 f"section {s['id']} picks {pick} but tuple.toc is {t.get('toc') or '(empty)'}")
+
+    internal, external, anchors = [], [], {}
+    for s in board["sections"]:
+        internal += [(s["id"], l) for l in s["links"]["internal"]]
+        external += [(s["id"], l) for l in s["links"]["external"]]
+    # Anchor Diversity is a page-level rule, so the comparison is on tokens: "Our Congo
+    # listings" and "our congo listings," are one anchor twice, and a raw string compare
+    # would pass them.
+    for sid, l in internal + external:
+        anchors.setdefault(" ".join(tokens(l["anchor"])), []).append((sid, l["anchor"]))
+    for uses in anchors.values():
+        if len(uses) > 1:
+            add("links-anchor-duplicate", "FAIL",
+                f"anchor {uses[0][1]!r} is used {len(uses)} times ({', '.join(s for s, _ in uses)}) "
+                "— one anchor, one destination, one place")
+    if board["meta"]["page_type"] in LINK_FLOOR_TYPES and len(external) < LIBRARY_LINK_MIN:
+        # WARN at build so a page can be written while a library row is still being
+        # verified; FAIL at release because a transactional page with no outside citation
+        # is the thin-page pattern the cluster was rebuilt to leave behind.
+        add("links-external-missing", "FAIL" if stage == "release" else "WARN",
+            f"{len(external)} external library link(s) recorded — a {board['meta']['page_type']} page "
+            f"carries at least {LIBRARY_LINK_MIN}")
+    # Reuses the live map the gate already loaded for the header pre-check. When it is
+    # empty the gate has already FAILed on header-precheck-examined-zero, and guessing at
+    # dead links from an unbuilt tree would only add noise to that.
+    for sid, l in (internal if live else []):
+        path = l["href"].split("#", 1)[0].split("?", 1)[0]
+        target = path if path.endswith("/") else path + "/"
+        if target not in live:
+            add("links-internal-dead", "FAIL",
+                f"section {sid}: {l['href']} has no built page (dist{target}index.html)")
 
     if stage == "release":
         for a in board["assets"]:

@@ -34,6 +34,11 @@ MIN_BOARD = {
                  {"level": 5, "heading": "Every Price Includes the Folder", "intent": "", "children": [
                  {"level": 6, "heading": "Aviary Note: Read the Card", "intent": "", "children": []}]}]}]}],
         "images": [{"slot": "birds-opener", "kind": "infographic", "required": False, "prompt": "six bird cards"}],
+        "links": {"internal": [{"href": "/congo-african-grey-for-sale/", "anchor": "Our Congo listings",
+                                "sentence_start": True}],
+                  "external": [{"href": "https://www.aphis.usda.gov/awa/public-search",
+                                "anchor": "USDA APHIS license search tool",
+                                "library_row": "Authority — Government / Legal"}]},
         "options": {"candidates": ["avail-b"], "excluded": [], "pick": None, "note": ""}}],
     "tuple": {"hero": "hero-a", "dial": "dial-1", "rail": "rail-a", "toc": "t1", "takeaway": ["k1"],
               "table": "table-a", "faq": "faq-a", "h6_prefixes": ["Aviary Note:", "From the Book:", "Ask Us:"]},
@@ -536,7 +541,12 @@ def test_gate_passes_an_approved_minimal_board():
     b = _approved(MIN_BOARD)
     # A live corpus of one unrelated sibling: live={} is itself a FAIL (a gate that
     # examined nothing is not a pass), which is asserted in its own test below.
-    f = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={"/other/": ["Where Do We Ship Our Birds Each Week?"]},
+    # The corpus carries the one page MIN_BOARD's links plan points at, so links-internal-dead
+    # has something to examine: a live map missing it would report a dead link that is only
+    # a short fixture.
+    f = PB.gate_findings(b, ONT_OK, LEDGER_EMPTY,
+                         live={"/other/": ["Where Do We Ship Our Birds Each Week?"],
+                               "/congo-african-grey-for-sale/": []},
                          stage="build")
     # MIN_BOARD carries exactly one H5 and one H6 by design (test_distribution_counts_headings),
     # so the volume floor is the one FAIL a minimal board is meant to raise. Its severity is
@@ -826,8 +836,14 @@ def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate(live_dist
     for rebuilt in ("/african-grey-parrots-for-sale/", "/african-grey-parrot-for-sale/"):
         live.pop(rebuilt, None)                                        # hub rebuilt, singular retires into it, Task 13
     f = [x for x in PB.gate_findings(approved, ont, ledger, live, stage="build") if x["sev"] == "FAIL"]
-    assert [x["check"] for x in f] == ["header-collision"], f
+    # Two more since the links plan landed (Task 15), both asserted rather than filtered out:
+    # the record really does use "the guarantee page" twice (papers and arrival) — a defect
+    # on the page for the breeder to settle, not something for the gate to forgive — and the
+    # dead link is the hub this fixture pops on purpose two lines up.
+    assert [x["check"] for x in f] == ["header-collision", "links-anchor-duplicate", "links-internal-dead"], f
     assert " vs / " in f[0]["msg"] and KNOWN_HOMEPAGE_OVERLAP in f[0]["msg"], f
+    assert "the guarantee page" in f[1]["msg"] and "papers, arrival" in f[1]["msg"], f
+    assert "/african-grey-parrots-for-sale/" in f[2]["msg"], f
 
 
 def test_board_html_carries_every_block_and_the_theme_rules(tmp_path):
@@ -1857,3 +1873,50 @@ def test_approve_leaves_the_faq_questions_alone():
              "meta": {"title": 0, "description": 0}, "canvas_version": None, "record_hash": PB.record_hash(b)}
     out = BA.apply_approval(b, inbox, ONT_OK, LEDGER_EMPTY)
     assert out["board"]["sections"][1]["questions"] == EIGHT
+
+
+def test_links_reject_a_relative_href_an_empty_anchor_and_a_url_outside_the_library():
+    rel = json.loads(json.dumps(MIN_BOARD))
+    rel["sections"][0]["links"]["internal"][0]["href"] = "congo-african-grey-for-sale/"
+    blank = json.loads(json.dumps(MIN_BOARD))
+    blank["sections"][0]["links"]["external"][0]["anchor"] = ""
+    for bad in (rel, blank):
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(bad)
+    off = json.loads(json.dumps(MIN_BOARD))
+    off["sections"][0]["links"]["external"][0]["href"] = "https://example.com/parrots"
+    with pytest.raises(PB.BoardError, match="external-link-library"):
+        PB.validate_board(off)
+    lib = PB.library_urls()                       # `www.` and a trailing slash are normalised away
+    assert PB.normalise_url("https://cites.org/eng/app/appendices.php") in lib
+    assert PB.normalise_url("https://parrots.org/encyclopedia/grey-parrot") in lib
+    assert PB.normalise_url("https://example.com/nope") not in lib
+
+
+def test_gate_fails_on_a_duplicate_anchor_and_on_an_internal_href_with_no_built_page():
+    b = _approved(MIN_BOARD)
+    live = {"/x/": [], "/congo-african-grey-for-sale/": []}
+    hits = lambda check: [x for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live=live, stage="build")
+                          if x["check"] == check]
+    assert hits("links-internal-dead") == [] and hits("links-anchor-duplicate") == []
+    b["sections"][0]["links"]["internal"].append(
+        {"href": "/a-page-that-was-never-built/#papers", "anchor": "our congo listings", "sentence_start": True})
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    for check in ("links-anchor-duplicate", "links-internal-dead"):
+        assert len(hits(check)) == 1 and hits(check)[0]["sev"] == "FAIL"
+
+
+def test_gate_links_external_missing_warns_at_build_and_fails_at_release_on_the_hub(live_dist):
+    b = PB.load_board("african-grey-parrots-for-sale")          # the hub record as it stands
+    # ...wound back to how it stood when it was approved on 2026-09-12: no links plan at
+    # all. Step 7 stamped the five external citations the live page already carries, so
+    # the record on disk now clears this floor — stripping them is what keeps the proof.
+    for s in b["sections"]:
+        s["links"] = {"internal": [], "external": []}
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    found = lambda stage: [x for x in PB.gate_findings(b, PB.load_ontology(), PB.load_ledger(),
+                                                       live_dist, stage=stage)
+                           if x["check"] == "links-external-missing"]
+    assert [x["sev"] for x in found("build")] == ["WARN"]
+    assert [x["sev"] for x in found("release")] == ["FAIL"]
+    assert "0 external library link" in found("release")[0]["msg"]

@@ -73,7 +73,7 @@
       "type": "array", "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "n", "heading", "intent", "category", "framework", "words", "shape", "keywords", "entities", "tree", "images", "options"],
+        "required": ["id", "n", "heading", "intent", "category", "framework", "words", "shape", "keywords", "entities", "tree", "images", "links", "options"],
         "additionalProperties": false,
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
@@ -97,6 +97,21 @@
           "images": {"type": "array", "items": {"type": "object", "required": ["slot", "kind", "required", "prompt"], "additionalProperties": false,
                      "properties": {"slot": {"type": "string"}, "kind": {"enum": ["photo", "infographic"]},
                                     "required": {"type": "boolean"}, "prompt": {"type": "string"}}}},
+          "links": {
+            "type": "object", "required": ["internal", "external"], "additionalProperties": false,
+            "properties": {
+              "internal": {"type": "array", "items": {
+                "type": "object", "required": ["href", "anchor", "sentence_start"], "additionalProperties": false,
+                "properties": {"href": {"type": "string", "pattern": "^/"},
+                               "anchor": {"type": "string", "minLength": 1},
+                               "sentence_start": {"const": true}}}},
+              "external": {"type": "array", "items": {
+                "type": "object", "required": ["href", "anchor", "library_row"], "additionalProperties": false,
+                "properties": {"href": {"type": "string", "pattern": "^https?://"},
+                               "anchor": {"type": "string", "minLength": 1},
+                               "library_row": {"type": "string", "minLength": 1}}}}
+            }
+          },
           "options": {"type": "object", "required": ["candidates", "excluded", "pick", "note"], "additionalProperties": false,
                       "properties": {"candidates": {"type": "array", "items": {"type": "string"}},
                                      "excluded": {"type": "array", "items": {"type": "object", "required": ["component", "owner"], "additionalProperties": false,

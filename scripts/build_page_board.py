@@ -111,6 +111,10 @@ def outline_block(board, hits):
         walk(s["tree"], 1)
         for i, q in enumerate(s.get("questions", []), 1):
             lines.append(f"│   ├─ Q{i:02d} {esc(q)}" + flag(q, hit_by))
+        for l in s["links"]["internal"]:
+            lines.append(f"│   → {esc(l['anchor'])} → {esc(l['href'])}")
+        for l in s["links"]["external"]:
+            lines.append(f"│   ↗ {esc(l['anchor'])} → {esc(l['href'])}   [{esc(l['library_row'])}]")
     return "\n".join(lines)
 
 
