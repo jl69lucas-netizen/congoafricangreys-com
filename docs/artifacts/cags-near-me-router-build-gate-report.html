@@ -1,0 +1,193 @@
+<title>Near-Me Router Build Report</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F7F5EE; --paper:#FFFFFF; --ink:#1E2A24; --ink-2:#4B5A52; --ink-3:#7A867F;
+  --line:#DDD9CC; --green:#2D6A4F; --green-soft:#E3EEE8; --clay:#E8604C; --clay-soft:#FBE7E2;
+  --code-bg:#F0EEE5; --mark:#FFF3C4;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+    --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+    --code-bg:#11161380; --mark:#4A3F16;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#151A17; --paper:#1D2420; --ink:#ECEBE3; --ink-2:#B7BDB6; --ink-3:#7F8983;
+  --line:#2F3934; --green:#6FB48F; --green-soft:#1F2F28; --clay:#F08A78; --clay-soft:#3A2622;
+  --code-bg:#11161380; --mark:#4A3F16;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 96px}
+header.masthead{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;padding-bottom:20px;border-bottom:2px solid var(--green);margin-bottom:28px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:600;margin:0 0 8px}
+h1.title{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+.sub{color:var(--ink-2);margin:10px 0 0;max-width:62ch}
+.meta{font-size:13px;color:var(--ink-3);text-align:right;line-height:1.5}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 28px}
+button.btn{font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:6px;border:1px solid var(--green);background:var(--green);color:#fff;cursor:pointer}
+button.btn.ghost{background:transparent;color:var(--green)}
+button.btn:focus-visible{outline:3px solid var(--clay);outline-offset:2px}
+.toc{font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 36px;padding:0;list-style:none}
+.toc a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a:hover{color:var(--green);border-color:var(--green)}
+section.sec{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:26px 30px 30px;margin:0 0 22px;position:relative}
+section.sec .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:6px}
+section.sec h2{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:24px;margin:0;line-height:1.2;text-wrap:balance}
+section.sec .copy{flex:none;font:inherit;font-size:12px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:5px;border:1px solid var(--line);background:transparent;color:var(--ink-2);cursor:pointer}
+section.sec .copy:hover{border-color:var(--green);color:var(--green)}
+section.sec .copy.done{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.md h3{font-family:"Source Serif 4",Georgia,serif;font-size:18px;margin:26px 0 8px}
+.md h4{font-size:15px;margin:20px 0 6px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+.md p,.md li{max-width:72ch}
+.md ul,.md ol{padding-left:22px}
+.md li{margin:4px 0}
+.md strong{font-weight:600}
+.md code{font:13.5px/1.5 "IBM Plex Mono",ui-monospace,Menlo,monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.md pre{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:14px 16px;overflow-x:auto;font:13px/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
+.md pre code{background:none;padding:0;font-size:inherit}
+.md table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0 18px;display:block;overflow-x:auto}
+.md thead th{text-align:left;font-weight:600;color:var(--ink-2);font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--green);padding:8px 10px;white-space:nowrap}
+.md tbody td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-variant-numeric:tabular-nums}
+.md tbody tr:last-child td{border-bottom:none}
+.md blockquote{margin:14px 0;padding:10px 16px;border-left:4px solid var(--clay);background:var(--clay-soft);border-radius:0 6px 6px 0}
+.md blockquote p{margin:4px 0}
+.md a{color:var(--green)}
+.md mark{background:var(--mark);padding:0 3px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--ground);padding:9px 16px;border-radius:6px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:640px){header.masthead{grid-template-columns:1fr}.meta{text-align:left}section.sec{padding:20px 18px 22px}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<div class="wrap">
+<header class="masthead">
+  <div>
+    <p class="eyebrow">CongoAfricanGreys.com · Gate report</p>
+    <h1 class="title">Near-Me Router Build Gate Report</h1>
+    <p class="sub">Page B of the for-sale close: <code>/african-grey-parrots-for-sale-near-me/</code> rebuilt as the geo router from its approved outline and locked tuple 12, then hardened at 375 / 768 / 1280 and passed through every text gate plus the non-commodity, entity and keyword reviews. Shipped 2026-09-12.</p>
+  </div>
+  <div class="meta">Shipped 2026-09-12<br>Source of truth: <code>docs/artifacts/cags-near-me-router-build-gate-report.md</code><br>session-start <code>6e4fc31c</code></div>
+</header>
+<div class="toolbar">
+  <button class="btn" id="copy-all">Copy whole document as Markdown</button>
+  <span style="font-size:13px;color:var(--ink-3)">Each section below has its own copy button. Copies are exact Markdown, not scraped HTML. The same text is versioned as <code>.md</code> in the repo.</span>
+</div>
+<ul class="toc" id="toc"></ul>
+<div id="doc"></div>
+</div>
+<div class="toast" id="toast">Copied</div>
+
+<script type="text/markdown" data-title="1. Verdict">
+**PASS-WITH-WARNINGS, shipped.** `/african-grey-parrots-for-sale-near-me/` went from a 5.5 KB stub (1 H2, no H3–H6, no shipping line, no hero, a wrong Timneh price) to the for-sale cluster's geo router: 6,410 words in `<main>`, the full H1–H6 band (9 · 24 · 7 · 7 · 7), 26 infographics and 6 card photos, six live birds with prices and the shipping line on every card, and the **only** enumeration of the 40 state and metro destinations on the whole site.
+
+Every text gate is clean on the shipped build: hardening scan 0 ERROR / 0 WARN, seam parity 9 seams for 10 sections (form and FAQ share one, in profile), dup body PASS, dup headers clean for this page, evidence 0 ERROR, AEO 0 ERROR, final page audit PASS-WITH-WARNINGS on the `no_aggregateoffer` checker row every for-sale sibling carries, render meta 296 passed, thumb audit 43 of 43. Render pages: **6 of 6 passed** for both slugs at 375 / 768 / 1280 after one blocking NAV row was fixed (40 state-tile jump targets declared the mobile 166px scroll-margin at desktop; now header + 16px). The two advisory rows that remain on both pages are the sitewide Header `mobile-section` orphan class and the breadcrumb separator at 2.38:1, both components.
+
+Three reviews the breeder asked for, none of which ran on Page A, ran here: non-commodity, entity incorporation and keyword verification. They produced 5 sharpened passages, 2 humor beats, 10 grounded entities, a schema addition, and **four overclaims removed**, one of which was also live on Page A and is corrected there.
+</script>
+<script type="text/markdown" data-title="2. What was built, from the approved outline">
+| Axis | Tuple 12 pick | Shipped as |
+|---|---|---|
+| Hero | Hero-C Mosaic Metrics, refreshed to a geographic tile field | Deep-green field (the one dark hero in the cluster), metrics strip, 2:1 photo with caption, **25 state tiles** that jump into the grid plus a "15 metros" cell; 394px at 1280; image first on phones by CSS `order` |
+| Dial + rail | Dial 1 Clay + Rail B green ticker | 9 rows × 29px, label + tag inside the 130px budget; rail sticky under the header, chip gap 10px |
+| TOC | T2 Chip Cloud, refreshed | Region → state chips (South / West / Midwest / Northeast), a metro row, a section row; chips flash their target tile |
+| Takeaways | K3 Green Ledger + K4 Clipboard + K5 Capsule | K3 "Near, or Reachable" five lines · K4 "Ask Before You Drive" checklist under the H6 of that name · K5 four capsules |
+| Table | NEW Table I "Distance Ledger" | 25 rows: state · route · **cargo counter named on that state's page** (13 states) or "Named when you ask" (11) · cost tier; stacks to cards ≤640 |
+| FAQ | FAQ-B, map-pin register | 12 questions, pin glyph in place of the number chip, two columns to 980 then one, answers capped 70ch |
+| H6 prefixes | `Distance Note:` · `From Midland:` · `Ask Before You Drive:` | 2 · 3 · 2, none among the 19 spent |
+| Geo | All 39 shallowly | 24 state tiles + CA buy page + 15 metros nested under their state and repeated as a pin list; 40 links, all 200 |
+
+Every figure reads from `price-matrix.json`, `financial-entities.json`, `clutch-inventory.json` or `locations.json`. The Timneh weight band and the Congo band in the birds section come from the price matrix, not prose. No review quotes (all 17 are spent elsewhere); the 3-3-3 rule stays out (locked).
+</script>
+<script type="text/markdown" data-title="3. SEO, AEO, GEO, evidence and voice">
+- **Title** 63 chars, one clause, brand present. **Description** 153 chars (first cut was 164). Canonical absolute.
+- **Keyword variance** carried on purpose: "African gray parrot for sale near me" verbatim, "African Grey breeders near me" and "African grey for sale near me" verbatim, the exact primary in the hero lead and an FAQ; gray 5 / grey 15 as words; no phrase over 0.25 % density.
+- **Rule 50b**: primary phrase in the hero alt only; 38 unique non-empty alts, 9 decorative seams; none over 125 chars.
+- **Term budgets in `<main>`**: C.A.Gs 4 / 15 · CITES 2 / 5 · Appendix I 2 / 3 · DNA 2 / 6 · captive-bred 5 / 5 · USDA 3 / 3 · Midland 7 / 8 · scam 1 / 2 · legit 0. Two per-slug overrides recorded with their reasons: Midland 8 (the approved outline names it in 1 H3, 1 H5 and 3 H6 prefixes; the form's pickup option; the method label) and Appendix I 3 (approved H3 + one Fact sentence + the QA'd infographic alt).
+- **First build measured Midland ×32** because the Distance Ledger said "Flies from Midland" on 24 rows. Real defect, fixed to "Flies from MAF, our airport". A table column counts.
+- **AEO**: binomials once each, breeder name once, 3 stat-bearing headers, one table, 30 lists, two `OfferShippingDetails` nodes ($185 / $350, US) referenced from every Offer. Remaining WARNs: pronoun-heavy (advisory, house voice) and three BLUF proxies on footer headings.
+- **Statement labels**: Fact ↗ CITES appendices; Fact ↗ IUCN lifespan (40 to 60 years); Observed here since 2014 on the paperwork-travels-with-the-bird practice.
+- **Evidence WARN accepted**: `pbfd-apv-pcr` counted twice inside the one sentence that names PBFD and avian polyomavirus together; the sentence links the guarantee page, which owns the claim.
+</script>
+<script type="text/markdown" data-title="4. The three reviews">
+### Non-commodity (Archaeologist / Provocateur / Stylist)
+Applied: five weak passages rewritten (FAQ distance summary, the avian-vet note, "what a real breeder lets you do", the Timneh crate line now carrying the two weight bands, the legality answer kept with its local-rules caveat); two Honesty-Policy beats ("The bird has never corrected anyone's spelling. It corrects most other things." · "the showroom is our living room, and the floor model talks back"). Declined: a third beat, to keep one per section.
+
+**Overclaims removed:**
+1. **"Bonded pair" → "companion pair"** on this page and on Page A. Jins & Jeni are an unrelated companion pair, separable on request (breeder ruling 2026-06-23, `clutch-inventory.json`). Page A also said they "chose each other in the flight cage and have been inseparable since" and that "the answer is no" to splitting them; both unsourced, both contradicted the data file, both corrected. The approved H3 "The Bonded Pair" is now "The Companion Pair" on both pages, for the breeder to confirm.
+2. "Every state page points at the avian practices buyers there have used" — false for several state pages; replaced by the AAV find-a-vet link.
+3. "Buyers from Lubbock, Odessa, San Angelo and Abilene do this regularly" — unsourced; cut.
+4. `Observed here · 6 birds` under a sentence about every bird flown since 2014 — narrowed to `since 2014`.
+
+### Entity incorporation (4-Move Loop)
+Ten distinct entities, each once: IATA Live Animals Regulations ↗ (recommended), AAV find-a-vet ↗, APHIS Animal Care public search ↗, avian polyomavirus, psittacosis, board-certified avian veterinarian, Midland International Air and Space Port (MAF) resolved once, closed leg band, reverse image search, Delta Cargo / United Cargo / American Airlines Cargo. Declined: "United PetSafe" (the agent could not fetch the programme page; nothing unverifiable was written). Schema: `OfferShippingDetails` added as the agent proposed.
+
+### Keyword verifier
+12 pass · 1 fail (meta length, fixed) · 2 missing forms (added) · 3 warns, all the "near you" phrasing of the approved H1 (left as approved).
+</script>
+<script type="text/markdown" data-title="5. Runtime probes (Playwright, painting viewport)">
+| Viewport | Before → after |
+|---|---|
+| 1280 | hero grid 418 → **394px** (16:9 → 2:1 photo) · dial 8 of 9 rows wrapping at 43–58px → **9 × 29px** (labels shortened to the 130px budget) · tile links 12.16px and table headers 12.48px → 12.8px · ship-line 107ch and clipboard title 97ch → 70ch cap · **hero lead invisible** (ink on dark green) → cream · 0 contrast fails, 0 srcset waste |
+| 768 | FAQ answers 85ch single-column → 70ch · rail chip gap 8 → 10px · state grid 3-up, cards 2-up uniform 568px · hero 567px, two columns held to 700px |
+| 375 | scrollWidth 375, no overflow · image first · tile field 7 columns · state grid 2-up · cards 1-up · ledger stacks to cards · rail jump lands the H2 27px below the sticky rail · 0 contrast, 0 small fonts |
+</script>
+<script type="text/markdown" data-title="6. Impeccable and frontend-design critique">
+Register: brand. Scene: a scam-wary buyer on a phone who typed "near me" and got a page of classifieds. Colour strategy: Committed (forest + clay on cream, as `DESIGN.md` locks it); the hero is the cluster's one deep-green field, a deliberate delta from Page A's warm cream and dna-tested's cream Hero-C, not a palette change. No absolute-ban hit: no gradient text, no glass, no hero-metric template (the metrics strip is three facts about this page's function, not a KPI row), no side-stripe cards, no identical icon-card grid (the state tiles are navigation, each a distinct destination). Theme sentence forced the answer: the tile field is a map without a map, and the dark ground is what makes 25 cream tiles read as one field. Type: Newsreader + IBM Plex Sans via the theme; the H1 honours its clamp at 31.68px. Motion: hover lift and a 1.6s target flash only.
+</script>
+<script type="text/markdown" data-title="7. Learning loop">
+Seven escapes, six charged to tools or probes, one to the page:
+1. **Contrast sweep ignored alpha** — 30 false fails on translucent white over the dark hero. Composite translucent layers over the nearest opaque colour.
+2. **The static hardening scan cannot see the theme.** `body.theme-d h1 + p` (global.css) out-specified `.nmr .hero .lead` and painted it ink on dark green. §1l reads page CSS only; my gradient-skipping sweep skipped it too. Caught by eye on the fold screenshot. Fix on the page: a class containing `text-cream`, the rule's own escape hatch. Harness gap logged (§9).
+3. **A `display:grid` link stacks its inline arrow** — "15 metros →" on two lines; `inline-flex` fixed it. Only the screenshot saw it.
+4. **The thumb baker swallowed the footer** — a `.read-cards` block inside a `<nav>` ran to the footer's `</section>` and minted a stray `read--hero` for `href="/"`. Fixed in `scripts/bake_read_card_thumbs.py` (stop at `</nav>` or `</section>`, whichever first). No new rule.
+5. **The dup gate reads data furniture as prose** — the Avail-B filter rail and the form-side inventory list are rendered from `clutch-inventory.json`. Two stems whitelisted (one list, two readers).
+6. **Harness freshness check worked** — it refused to measure once source was newer than `dist/`, and the earlier run broke because I rebuilt mid-run. Never build while `test:render:pages` runs.
+7. **Page defect, the real one:** "Flies from Midland" × 24 rows. Term budgets count table columns.
+</script>
+<script type="text/markdown" data-title="8. Page Board status">
+No spec yet. Page B, like Page A, shipped through the old lane (outline gate → tuple → build → harden). The Page Board brainstorm still stops at clarifying questions. Order now: Page Board spec → hub C through the first board → Task 11 (the three near-me 301s into this page, 9 inbound links on 7 pages repointed, IndexNow all 7) → Task 13 (hub sheds the grid).
+</script>
+<script type="text/markdown" data-title="9. Open flags for the breeder">
+- **Confirm the heading change**: "The Bonded Pair" → "The Companion Pair" on both pages, per your 2026-06-23 ruling. Page A's invented flight-cage sentence is gone.
+- **Page A header crossover**: "Reservable Right Now" is an exact H3 match with the health-guarantee page. One of the two should rename; not touched this session.
+- **Hero at 768** is 567px (Page A shipped 528). A tablet trim would hide the metrics strip under 980; not done without a preview.
+- **Harness backlog**: §1l needs `src/styles/global.css` descendant rules as input plus a `known_broken` fixture that inlines the theme rule; `no_aggregateoffer` still needs its fixture.
+- **Distance Ledger**: 11 state pages name no cargo counter. When each state page gains one, the ledger picks it up by editing `namedAirports` in the page's frontmatter; nothing is inferred.
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+<script>
+(function(){
+  var blocks = Array.prototype.slice.call(document.querySelectorAll('script[type="text/markdown"]'));
+  var doc = document.getElementById('doc'), toc = document.getElementById('toc'), toast = document.getElementById('toast');
+  var all = [];
+  function dedent(s){ return s.replace(/^\n+|\s+$/g,''); }
+  function copy(text, btn){
+    var done = function(){ if(btn){ btn.classList.add('done'); btn.textContent='Copied'; setTimeout(function(){btn.classList.remove('done'); btn.textContent=btn.getAttribute('data-label');},1400);} toast.classList.add('show'); setTimeout(function(){toast.classList.remove('show');},1200); };
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, function(){ fallback(text); done(); }); } else { fallback(text); done(); }
+  }
+  function fallback(text){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); }
+  blocks.forEach(function(b, i){
+    var title = b.getAttribute('data-title'); var md = dedent(b.textContent);
+    var full = '## ' + title + '\n\n' + md + '\n';
+    all.push(full);
+    var id = 'sec-' + i;
+    var sec = document.createElement('section'); sec.className='sec'; sec.id=id;
+    var head = document.createElement('div'); head.className='sec-head';
+    var h2 = document.createElement('h2'); h2.textContent = title;
+    var btn = document.createElement('button'); btn.className='copy'; btn.type='button'; btn.textContent='Copy section'; btn.setAttribute('data-label','Copy section');
+    btn.addEventListener('click', function(){ copy(full, btn); });
+    head.appendChild(h2); head.appendChild(btn);
+    var body = document.createElement('div'); body.className='md';
+    body.innerHTML = (window.marked ? marked.parse(md) : '<pre>'+md.replace(/</g,'&lt;')+'</pre>');
+    sec.appendChild(head); sec.appendChild(body); doc.appendChild(sec);
+    var li = document.createElement('li'); var a = document.createElement('a'); a.href='#'+id; a.textContent=title; li.appendChild(a); toc.appendChild(li);
+  });
+  document.getElementById('copy-all').addEventListener('click', function(){
+    copy('# Near-Me Router Build Gate Report\n\n' + all.join('\n'), this);
+  });
+  document.getElementById('copy-all').setAttribute('data-label','Copy whole document as Markdown');
+})();
+</script>

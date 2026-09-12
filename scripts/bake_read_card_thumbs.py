@@ -71,7 +71,11 @@ def read_cards(slug):
     if not start:
         return []
     tail = html[start.end():]
-    block = tail.split("</section>")[0]
+    # 2026-09-12: a read-cards block that lives in a <nav> OUTSIDE any <section> (every
+    # for-sale page since buy-with-shipping) ran to the footer's </section> and swallowed
+    # the footer logo link, minting a thumb named read--hero for href="/". Stop at whichever
+    # of </nav> or </section> closes first.
+    block = re.split(r"</nav>|</section>", tail, maxsplit=1)[0]
     out = []  # (href, img src)
     for href, inner in re.findall(r"<a\s[^>]*href=\"([^\"]+)\"(.*?)</a>", block, re.S):
         if "<img" not in inner:

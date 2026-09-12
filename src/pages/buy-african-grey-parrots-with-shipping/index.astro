@@ -49,7 +49,7 @@ const available = ((clutch as any).birds as any[]).filter((b) => b.status === "a
 const isTimneh = (b: any) => b.variant === "timneh_african_grey";
 const subLabel = (b: any) => (isTimneh(b) ? "Timneh" : "Congo");
 const groupKey = (b: any) => (b.sex === "pair" ? "pair" : isTimneh(b) ? "timneh" : "congo");
-const groupLabel = (b: any) => (b.sex === "pair" ? "Bonded pair" : isTimneh(b) ? "Timneh" : "Congo");
+const groupLabel = (b: any) => (b.sex === "pair" ? "Companion pair" : isTimneh(b) ? "Timneh" : "Congo");
 const groupCount = (k: string) => available.filter((b) => groupKey(b) === k).length;
 const shortName = (b: any) => b.name.replace(" (Pair)", "");
 
@@ -63,7 +63,7 @@ const birdImg: Record<string, { src: string; alt: string; pos: string; badge?: "
   "Roys": { src: IMG + "roys-congo-african-grey-cock-card.webp", pos: "center 30%", badge: "top",
     alt: "Roys standing beside his play ball at four months" },
   "Jins & Jeni (Pair)": { src: IMG + "jins-jeni-bonded-congo-pair-card.webp", pos: "center 30%",
-    alt: "Jins and Jeni beak to beak, the bonded pair we sell together" },
+    alt: "Jins and Jeni beak to beak, the companion pair we sell together" },
   "Elad": { src: IMG + "elad-timneh-african-grey-cock-card.webp", pos: "center 36%",
     alt: "Elad stepping up to a hand at his cage door" },
   "Evie": { src: IMG + "evie-timneh-african-grey-hen-card.webp", pos: "center 34%",
@@ -73,7 +73,7 @@ const birdBlurb: Record<string, string> = {
   "Bery": "Grown hen, past weaning and past the settling wobbles a younger bird still has ahead.",
   "Amie": "Hand-fed from a syringe in our kitchen; she finishes weaning here before she flies.",
   "Roys": "Busy, bold cock who works a foraging toy until it gives up its last pellet.",
-  "Jins & Jeni (Pair)": "Two unrelated birds who chose each other. They leave together or not at all.",
+  "Jins & Jeni (Pair)": "Two unrelated Congos raised side by side and placed together as a companion pair.",
   "Elad": "Charcoal Timneh cock, horn-coloured upper beak, already stepping up on request.",
   "Evie": "Timneh hen who watches a room for a while before she decides to join it.",
 };
@@ -137,7 +137,7 @@ const readMore = [
 const faqs = [
   { q: "Where can I buy an African Grey parrot?", a: "From the people who hatched it, ideally, and you should be able to find them on a map. We are a family aviary in west Texas, we have six birds available as this page stands, and every one of them was raised in our house, not bought in to resell. A breeder who raised your bird can tell you what it eats, how it behaves at dusk and which of its parents it takes after. A reseller can only tell you the price." },
   { q: "Can you buy an African Grey parrot online safely?", a: "Yes, with one condition: everything you cannot see in person has to be verifiable another way. Ask for a live video call with the specific bird, on the day, not a clip that could be a year old. Ask for the paperwork before you pay, not after. Check the price against what raising a bird actually costs, which is the table further up this page. Pay by a method that leaves you recourse. If a seller resists any of those four, the problem is the seller." },
-  { q: "How much should an African Grey parrot cost?", a: "Ours run from " + timnehRange.split("–")[0] + " for a Timneh hen to " + congoRange.split("–")[1] + " for the bonded pair, and the price ladder above shows what else the internet was asking on one day in August. The honest range is wide because birds differ in age, sex and subspecies, but it has a floor. Below roughly two thousand dollars, something in the listing is usually untrue, and Google's own summary of this search pushes buyers the other way by calling eight thousand typical." },
+  { q: "How much should an African Grey parrot cost?", a: "Ours run from " + timnehRange.split("–")[0] + " for a Timneh hen to " + congoRange.split("–")[1] + " for the companion pair, and the price ladder above shows what else the internet was asking on one day in August. The honest range is wide because birds differ in age, sex and subspecies, but it has a floor. Below roughly two thousand dollars, something in the listing is usually untrue, and Google's own summary of this search pushes buyers the other way by calling eight thousand typical." },
   { q: "What is the best age to buy an African Grey parrot?", a: "After weaning, which for these birds lands somewhere between twelve and sixteen weeks. An unweaned chick is the single most common thing to go wrong in this trade, because hand-feeding is a skill with a real risk of aspiration and crop burn, and a seller who hands that job to a first-time buyer has moved their risk onto you. We finish the job here. When a bird leaves, it eats on its own." },
   { q: "Do I need a licence to own an African Grey parrot?", a: "Not as a pet owner in the United States. The treaty listing that governs these birds restricts international commercial trade in wild-caught ones, and it does not stop you owning a bird bred in this country with its papers in order. State and city rules differ on numbers and noise, not on the species, so check locally if you keep several birds, and keep your folder somewhere you can find it." },
   { q: "How do you ship an African Grey parrot?", a: "Three ways, and the section above sets each one out. Airport cargo at " + airport + " is what most buyers choose: your bird flies as manifested live-animal cargo on a direct flight where the route allows, and you collect at the airline's cargo desk. Home delivery at " + home + " brings the crate to your door. A cabin seat with a flight nanny is " + cabin + " and is quoted per route, because the nanny's own ticket sets the cost." },
@@ -157,7 +157,7 @@ const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
   name: "African Grey parrots available to buy from C.A.Gs",
   itemListElement: available.map((b, i) => ({ "@type": "ListItem", position: i + 1,
     item: { "@type": "Product",
-      name: shortName(b) + " — " + subLabel(b) + " African Grey" + (b.sex === "pair" ? " bonded pair" : ""),
+      name: shortName(b) + " — " + subLabel(b) + " African Grey" + (b.sex === "pair" ? " companion pair" : ""),
       category: "Companion parrot",
       image: site + birdImg[b.name].src,
       brand: { "@type": "Organization", name: "C.A.Gs" },
@@ -289,7 +289,7 @@ const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stro
                 <button class="side-f on" type="button" data-f="all">All birds<span class="side-n">{available.length}</span></button>
                 <button class="side-f" type="button" data-f="congo">Congo<span class="side-n">{groupCount("congo")}</span></button>
                 <button class="side-f" type="button" data-f="timneh">Timneh<span class="side-n">{groupCount("timneh")}</span></button>
-                <button class="side-f" type="button" data-f="pair">Bonded pair<span class="side-n">{groupCount("pair")}</span></button>
+                <button class="side-f" type="button" data-f="pair">Companion pair<span class="side-n">{groupCount("pair")}</span></button>
               </div>
               <div class="side-ship">
                 <p class="rail-ship">Ships nationwide · <b>{airport}</b> airport · <b>{home}</b> home · <b>{cabin}</b> cabin</p>
@@ -328,7 +328,7 @@ const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stro
           <p>Congos are the larger of the two, with the scarlet tail most people picture when they hear the name, and we have {groupCount("congo") + groupCount("pair")} of them including the pair. Bery is grown and settled. Amie is still on formula and finishes weaning in our kitchen. Roys is the busy one, the bird who will dismantle a foraging toy while the others watch.</p>
 
           <h4>What Does Each Congo African Grey Cost?</h4>
-          <p>Congos here run from {congoRange.split("–")[0]}, and the bonded pair is {congoRange.split("–")[1]} because two birds leave together. The spread inside that range is about age and about which bird has already done the growing, not about a sliding scale we apply to whoever asks. The number on the card is the number you pay.</p>
+          <p>Congos here run from {congoRange.split("–")[0]}, and the companion pair is {congoRange.split("–")[1]} because two birds leave together. The spread inside that range is about age and about which bird has already done the growing, not about a sliding scale we apply to whoever asks. The number on the card is the number you pay.</p>
 
           <h5>Every Congo Price Includes Sexing, Paperwork, and a Vet Certificate</h5>
           <p>Nothing on the list in the receipt above is an extra. A bird that has been examined, screened, sexed and papered costs us more to raise than a bird that has only been fed, and pricing those steps separately would let us advertise a smaller headline while charging the same money in the end. We would rather print one figure and stand behind it.</p>
@@ -348,8 +348,8 @@ const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stro
           <h6>Price Check: Why Our Timnehs Start at {timnehRange.split("–")[0]}</h6>
           <p>That figure is the floor for this whole aviary, and it exists because below it the arithmetic of raising a bird properly stops working. When you see a Timneh advertised at half of it, the saving is coming out of something — the feeding, the testing, the paperwork, or the truth of the listing itself.</p>
 
-          <h3>Jins and Jeni — the Bonded Pair We Sell Together</h3>
-          <p>Jins and Jeni are not siblings and were not paired by us; they chose each other in the flight cage and have been inseparable since. They go as a pair at {congoRange.split("–")[1]} for both. We have had buyers ask to split them, and the answer is no: separating a bonded pair undoes years of the thing that makes them worth having.</p>
+          <h3>Jins and Jeni — the Companion Pair We Sell Together</h3>
+          <p>Jins and Jeni are not siblings and were not bred as a pair; they are two hand-raised Congos who grew up side by side, and we offer them together as a companion pair at {congoRange.split("–")[1]} for both. They are listed here as a pair. If you want one of them on their own, ask us and we will talk it through rather than quote a policy.</p>
 
           <h4>What Does “Hand-Raised” Mean Here?</h4>
           <p>We call our own way of doing it <em>The Benjamin Home-Raising Protocol</em>: chicks raised in the house rather than a barn, hand-fed on a schedule we keep ourselves, and held back until they are weaned and eating unaided somewhere between twelve and sixteen weeks. It is our name for our practice, not a certificate anybody issued us, and the reason we name it at all is that “hand-raised” has become a word sellers use without doing any of it.</p>

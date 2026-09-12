@@ -62,6 +62,15 @@ WHITELIST_SNIPPETS = [
 
     # CTA button labels
     "book a video call first read the full scam guide",
+
+    # ── 2026-09-12, near-me router ─────────────────────────────────────────
+    # Two data-rendered furniture blocks the for-sale kit prints from
+    # data/clutch-inventory.json on every page that ships Avail-B + the kit form:
+    # the "browse by kind" filter rail with live counts, and the form-side list of
+    # every reservable bird with its price. Identical by construction, like the
+    # counter strip; not prose.
+    "browse by kind all birds 6 congo 3 timneh 2 companion pair 1",
+    "bery congo $1 700 amie congo $2 500 roys congo $2 300 jins jeni congo $3 500 elad timneh $1 600 evie timneh $1 500",
 ]
 
 SKIP_TAGS = {"script", "style", "noscript", "header", "footer", "nav", "form"}
