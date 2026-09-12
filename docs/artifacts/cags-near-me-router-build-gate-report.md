@@ -78,3 +78,9 @@ No spec yet. Page B, like Page A, shipped through the old lane (outline gate →
 - **Hero at 768** is 567px (Page A shipped 528). A tablet trim would hide the metrics strip under 980; not done without a preview.
 - **Harness backlog**: §1l needs `src/styles/global.css` descendant rules as input plus a `known_broken` fixture that inlines the theme rule; `no_aggregateoffer` still needs its fixture.
 - **Distance Ledger**: 11 state pages name no cargo counter. When each state page gains one, the ledger picks it up by editing `namedAirports` in the page's frontmatter; nothing is inferred.
+
+## 10. Follow-up, same day: the four flags, all taken
+1. **Companion Pair heading confirmed** by the breeder on both buy pages; ruling recorded.
+2. **Page A H3 renamed** from "Reservable Right Now" (an exact match with the health-guarantee page) to "Six Folders Already Started". Dup headers and hardening clean.
+3. **Harness gap closed.** New static check §1m `theme-lead-color-outranks-component` compares the theme's `h1/h2 + p` ink rule against a page's light lead colour by specificity (5 tests; advisory in the rule index). Its first survey without a colour filter fired on 18 light-hero pages where ink was correct, so the check only fires for light declared colours. The refined survey found one live defect the site had been carrying: the `/case-studies/` lead at **2.07:1**, ink on forest green. Fixed with the theme's own sentinel class. A second harness defect surfaced on the way: the IMG check judged a reset fetch as a 404 (four runs, four different decodable files); it now reloads a "broken" image once before judging, and the broken-image fixture still fails as it should. Meta gate 296 passed, acceptance run 6 of 6, shipped as `5bf5b647`.
+4. **Queue:** Page Board spec → hub C through the first board → the three near-me 301s into this page.
