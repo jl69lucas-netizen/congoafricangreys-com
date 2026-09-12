@@ -206,8 +206,11 @@ def render(board, ont, ledger, live, thumbs, slug):
 
     h1, ms = board["h1"], board["meta_set"]
     picked = h1["pick"] if h1["pick"] is not None else h1["recommended"]
-    mt = ms["pick"]["title"] if ms["pick"]["title"] is not None else ms["recommended"]["title"]
-    mdn = ms["pick"]["description"] if ms["pick"]["description"] is not None else ms["recommended"]["description"]
+    # The board must star the same pair the gate and the build will read, so the fallback
+    # is PB.meta_pick()'s and not a second copy of it. It returns the STRINGS; the radio
+    # group needs their index, and a board carrying one string twice is degenerate anyway.
+    mt_s, md_s = PB.meta_pick(board)
+    mt, mdn = ms["titles"].index(mt_s), ms["descriptions"].index(md_s)
     parts.append(("2. H1 and meta", "\n".join([
         "**H1** — the page's own promise", "",
         radio_list("h1", h1["variants"], h1["recommended"], picked), "",

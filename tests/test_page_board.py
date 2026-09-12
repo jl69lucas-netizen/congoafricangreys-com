@@ -1736,3 +1736,28 @@ def test_approve_applies_the_meta_picks_and_refuses_an_index_off_the_menu():
     with pytest.raises(PB.BoardError):
         BA.apply_approval(json.loads(json.dumps(MIN_BOARD)), dict(inbox, meta={"title": 9, "description": 0}),
                           ONT_OK, LEDGER_EMPTY)
+
+
+def test_meta_pick_index_below_zero_is_rejected():
+    for field in ("title", "description"):
+        bad = json.loads(json.dumps(MIN_BOARD))
+        bad["meta_set"]["pick"][field] = -1
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(bad)
+
+
+def test_approve_js_refuses_an_unanswered_h1_or_meta_group():
+    """The Approve handler's own guards, read out of the rendered page: a board where the
+    breeder skipped the H1 or either meta group must refuse the write rather than send a
+    record with a missing index in it."""
+    import build_page_board as BPB
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    script = html.split("btn.addEventListener('click'", 1)[1]
+    assert "input[name=\"h1\"]:checked" in script
+    assert "if(!h1){st.textContent='Pick an H1 before approving.'" in script
+    assert "input[name=\"meta-title\"]:checked" in script
+    assert "input[name=\"meta-description\"]:checked" in script
+    # Either group unanswered refuses — an OR, not an AND, so one skipped group is enough.
+    assert "if(!mt||!mdsc){st.textContent='Pick a title and a description before approving.'" in script
+    assert "btn.disabled=false;return;" in script
+
