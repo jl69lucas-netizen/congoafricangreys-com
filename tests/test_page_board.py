@@ -836,14 +836,12 @@ def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate(live_dist
     for rebuilt in ("/african-grey-parrots-for-sale/", "/african-grey-parrot-for-sale/"):
         live.pop(rebuilt, None)                                        # hub rebuilt, singular retires into it, Task 13
     f = [x for x in PB.gate_findings(approved, ont, ledger, live, stage="build") if x["sev"] == "FAIL"]
-    # Two more since the links plan landed (Task 15), both asserted rather than filtered out:
-    # the record really does use "the guarantee page" twice (papers and arrival) — a defect
-    # on the page for the breeder to settle, not something for the gate to forgive — and the
-    # dead link is the hub this fixture pops on purpose two lines up.
-    assert [x["check"] for x in f] == ["header-collision", "links-anchor-duplicate", "links-internal-dead"], f
+    # One more since the links plan landed (Task 15), asserted rather than filtered out: the
+    # dead link is the hub this fixture pops on purpose two lines up. The duplicate anchor
+    # this check found on 2026-09-12 is gone — the page was fixed, not the gate.
+    assert [x["check"] for x in f] == ["header-collision", "links-internal-dead"], f
     assert " vs / " in f[0]["msg"] and KNOWN_HOMEPAGE_OVERLAP in f[0]["msg"], f
-    assert "the guarantee page" in f[1]["msg"] and "papers, arrival" in f[1]["msg"], f
-    assert "/african-grey-parrots-for-sale/" in f[2]["msg"], f
+    assert "/african-grey-parrots-for-sale/" in f[1]["msg"], f
 
 
 def test_board_html_carries_every_block_and_the_theme_rules(tmp_path):
@@ -1920,3 +1918,57 @@ def test_gate_links_external_missing_warns_at_build_and_fails_at_release_on_the_
     assert [x["sev"] for x in found("build")] == ["WARN"]
     assert [x["sev"] for x in found("release")] == ["FAIL"]
     assert "0 external library link" in found("release")[0]["msg"]
+
+
+def _nav(board, section_links):
+    b = json.loads(json.dumps(board))
+    b["sections"][0]["links"]["internal"] = section_links
+    return b
+
+
+NAV_TILE = {"href": "/african-grey-parrot-for-sale-miami/", "anchor": "Miami · Florida", "nav": True}
+
+
+def test_a_nav_anchor_needs_no_sentence_start_but_a_prose_anchor_still_does():
+    PB.validate_board(_nav(MIN_BOARD, [NAV_TILE]))                      # no sentence_start, and none needed
+    PB.validate_board(_nav(MIN_BOARD, [dict(NAV_TILE, nav=False, sentence_start=True)]))
+    for bad in ([dict(NAV_TILE, nav=False)],                            # nav:false is prose: Link-First applies
+                [{"href": "/congo-african-grey-for-sale/", "anchor": "Our Congo listings"}],
+                [dict(NAV_TILE, sentence_start=False)]):                # sentence_start is const true
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(_nav(MIN_BOARD, bad))
+
+
+def test_duplicate_anchors_skip_nav_lists_and_anchors_that_tokenise_to_nothing():
+    live = {"/x/": [], "/congo-african-grey-for-sale/": [], "/african-grey-parrot-for-sale-miami/": [],
+            "/african-grey-parrot-for-sale-orlando/": []}
+    dupes = lambda b: [x for x in PB.gate_findings(_approved(b), ONT_OK, LEDGER_EMPTY, live=live, stage="build")
+                       if x["check"] == "links-anchor-duplicate"]
+    # A grid repeats its own tiles by nature — chip row and map tile, one destination twice.
+    assert dupes(_nav(MIN_BOARD, [NAV_TILE, dict(NAV_TILE, href="/african-grey-parrot-for-sale-orlando/"),
+                                  dict(NAV_TILE)])) == []
+    # And a nav tile is not a second use of the prose anchor that happens to read the same.
+    assert dupes(_nav(MIN_BOARD, [{"href": "/congo-african-grey-for-sale/", "anchor": "Our Congo listings",
+                                   "sentence_start": True},
+                                  {"href": "/congo-african-grey-for-sale/", "anchor": "our congo listings",
+                                   "nav": True}])) == []
+    # Two prose anchors that tokenise to nothing are not "the same anchor twice".
+    assert dupes(_nav(MIN_BOARD, [{"href": "/congo-african-grey-for-sale/", "anchor": "—", "sentence_start": True},
+                                  {"href": "/african-grey-parrot-for-sale-miami/", "anchor": "→",
+                                   "sentence_start": True}])) == []
+    # The real rule still fires on two prose uses of one anchor.
+    assert len(dupes(_nav(MIN_BOARD, [{"href": "/congo-african-grey-for-sale/", "anchor": "Our Congo listings",
+                                       "sentence_start": True},
+                                      {"href": "/african-grey-parrot-for-sale-miami/", "anchor": "our congo listings,",
+                                       "sentence_start": True}]))) == 1
+
+
+def test_library_urls_is_cached_but_notices_a_changed_library(tmp_path):
+    lib = tmp_path / "external-link-library.md"
+    lib.write_text("| `https://parrots.org/encyclopedia/grey-parrot/` |\n", encoding="utf-8")
+    assert PB.library_urls(lib) == {"https://parrots.org/encyclopedia/grey-parrot"}
+    assert PB.library_urls(lib) is PB.library_urls(lib)          # same object: read once, not per link
+    lib.write_text("| `https://www.cites.org/eng/app/appendices.php` |\n", encoding="utf-8")
+    import os
+    os.utime(lib, (0, 0))                                        # a different mtime is a different library
+    assert PB.library_urls(lib) == {"https://cites.org/eng/app/appendices.php"}

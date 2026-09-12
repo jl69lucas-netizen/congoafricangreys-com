@@ -3,7 +3,7 @@
 computes, it never writes a board or publishes anything (the CLIs do).
 Spec: docs/superpowers/specs/2026-09-12-page-board-system-design.md
 """
-import hashlib, json, pathlib, re, sys
+import functools, hashlib, json, pathlib, re, sys
 import jsonschema
 
 # The header pre-check must judge a heading the way `dup_content_audit.py --headers`
@@ -62,13 +62,26 @@ def normalise_url(url):
     return f"{m.group(1).lower()}://{host}{m.group(3).rstrip('/')}"
 
 
+@functools.lru_cache(maxsize=8)
+def _library_urls(path, _mtime):
+    p = pathlib.Path(path)
+    return frozenset(normalise_url(u) for u in _LIB_URL.findall(p.read_text(encoding="utf-8")))
+
+
 def library_urls(path=EXTERNAL_LIBRARY):
     """Every URL docs/reference/external-link-library.md records, normalised. Grepped, not
     parsed: the library is three table shapes plus a prose citation block, and all of them
     write the URL plainly. Missing file → empty set, and validate_board then skips the
-    membership rule: an absent library is a tooling fault, not a bad record."""
+    membership rule: an absent library is a tooling fault, not a bad record.
+
+    Read once per (path, mtime): validate_board asks for the whole set on every record, and
+    the near-me grid alone would otherwise re-read an 87-line file 30 times. Keying on the
+    mtime rather than the path alone means an edited library is picked up in-process, which
+    is what the link agent does while it is adding a row."""
     p = pathlib.Path(path)
-    return {normalise_url(u) for u in _LIB_URL.findall(p.read_text(encoding="utf-8"))} if p.exists() else set()
+    if not p.exists():
+        return frozenset()
+    return _library_urls(str(p), p.stat().st_mtime_ns)
 
 
 def validate_board(board):
@@ -662,8 +675,17 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     # Anchor Diversity is a page-level rule, so the comparison is on tokens: "Our Congo
     # listings" and "our congo listings," are one anchor twice, and a raw string compare
     # would pass them.
+    # A nav anchor is exempt (breeder, 2026-09-13): a grid, a boarding pass and a
+    # breadcrumb repeat their destinations by nature, and a tile that reads like a prose
+    # anchor elsewhere on the page is not a second use of it. An anchor that tokenises to
+    # nothing — a glyph, a dash — is skipped too: it would group every other such anchor
+    # under one empty key and report a duplicate nobody wrote.
     for sid, l in internal + external:
-        anchors.setdefault(" ".join(tokens(l["anchor"])), []).append((sid, l["anchor"]))
+        if l.get("nav"):
+            continue
+        key = " ".join(tokens(l["anchor"]))
+        if key:
+            anchors.setdefault(key, []).append((sid, l["anchor"]))
     for uses in anchors.values():
         if len(uses) > 1:
             add("links-anchor-duplicate", "FAIL",

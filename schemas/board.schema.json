@@ -101,10 +101,14 @@
             "type": "object", "required": ["internal", "external"], "additionalProperties": false,
             "properties": {
               "internal": {"type": "array", "items": {
-                "type": "object", "required": ["href", "anchor", "sentence_start"], "additionalProperties": false,
+                "type": "object", "required": ["href", "anchor"], "additionalProperties": false,
                 "properties": {"href": {"type": "string", "pattern": "^/"},
                                "anchor": {"type": "string", "minLength": 1},
-                               "sentence_start": {"const": true}}}},
+                               "nav": {"type": "boolean"},
+                               "sentence_start": {"const": true}},
+                "if": {"required": ["nav"], "properties": {"nav": {"const": true}}},
+                "then": true,
+                "else": {"required": ["sentence_start"]}}},
               "external": {"type": "array", "items": {
                 "type": "object", "required": ["href", "anchor", "library_row"], "additionalProperties": false,
                 "properties": {"href": {"type": "string", "pattern": "^https?://"},
