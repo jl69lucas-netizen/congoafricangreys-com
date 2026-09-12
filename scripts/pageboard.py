@@ -18,7 +18,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SCHEMAS = ROOT / "schemas"
 ONTOLOGY = ROOT / "data" / "cag-ontology.json"
 LEDGER = ROOT / "data" / "component-ledger.json"
+BUDGETS = ROOT / "data" / "quality" / "evidence-budgets.json"
 DIST = ROOT / "dist"
+DESC_MIN, DESC_MAX = 140, 160
+DEFAULT_TITLE_MAX = 70
 
 
 class BoardError(Exception):
@@ -157,6 +160,9 @@ def record_hash_bare(board):
             s["options"]["note"] = ""
     if isinstance(b.get("h1"), dict):
         b["h1"]["pick"] = None
+    ms = b.get("meta_set")
+    if isinstance(ms, dict) and isinstance(ms.get("pick"), dict):
+        ms["pick"] = {"title": None, "description": None}
     return record_hash(b)
 
 
@@ -255,6 +261,28 @@ def picked_h1(board):
     h1 = board["h1"]
     i = h1["recommended"] if h1.get("pick") is None else h1["pick"]
     return h1["variants"][i]
+
+
+def title_ceiling(slug):
+    """The evidence audit's sitewide `title_max_chars`, unless `title_max_chars_by_slug`
+    raises it for this page. Read from the budgets file so the number moves in one place;
+    falls back rather than raising, because a missing budgets file must not be the reason a
+    board cannot be gated."""
+    try:
+        b = _read_json(BUDGETS)
+    except (BoardError, OSError):
+        return DEFAULT_TITLE_MAX
+    return int(b.get("title_max_chars_by_slug", {}).get(slug, b.get("title_max_chars", DEFAULT_TITLE_MAX)))
+
+
+def meta_pick(board):
+    """(title, description) the page will actually render: the breeder's picks, else the
+    recommendations — the same fallback picked_h1() uses, so the board, the gate and the
+    build all read one pair of strings."""
+    ms = board["meta_set"]
+    ti = ms["recommended"]["title"] if ms["pick"]["title"] is None else ms["pick"]["title"]
+    di = ms["recommended"]["description"] if ms["pick"]["description"] is None else ms["pick"]["description"]
+    return ms["titles"][ti], ms["descriptions"][di]
 
 
 def all_headings(board):
@@ -526,6 +554,22 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     if counts["h5"] < 5 or counts["h6"] < 5:
         sev = "WARN" if board["meta"]["page_type"] in ADVISORY_MIN_H5H6 else "FAIL"
         add("min-h5-h6", sev, f"H5 {counts['h5']} / H6 {counts['h6']} — floor is 5 each")
+
+    ms = board["meta_set"]
+    # A recommendation is a draft, not a choice. At build the page can be written against
+    # it; by release an unanswered meta set is a page shipping someone's guess.
+    sev = "FAIL" if stage == "release" else "WARN"
+    for field in ("title", "description"):
+        if ms["pick"][field] is None:
+            add("meta-no-pick", sev, f"meta {field} has no pick — the recommendation is a draft, not a choice")
+    cap = title_ceiling(slug)
+    for i, t_ in enumerate(ms["titles"]):
+        if len(t_) > cap:
+            add("meta-length", "FAIL", f"title variant {i} is {len(t_)} chars — ceiling is {cap} "
+                                       "(data/quality/evidence-budgets.json)")
+    for i, d_ in enumerate(ms["descriptions"]):
+        if not DESC_MIN <= len(d_) <= DESC_MAX:
+            add("meta-length", "FAIL", f"description variant {i} is {len(d_)} chars — band is {DESC_MIN}–{DESC_MAX}")
 
     picks = (board.get("approval") or {}).get("picks", {})
     for s in board["sections"]:

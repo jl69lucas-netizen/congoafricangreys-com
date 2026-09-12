@@ -149,6 +149,15 @@ def apply_approval(board, inbox, ont, ledger, canvas_dir=None):
             raise PB.BoardError(f"approval notes section {sid!r}, which is not in the record")
         by_id[sid]["options"]["note"] = note          # "" is the breeder clearing the note
     b["h1"]["pick"] = inbox.get("h1", b["h1"]["recommended"])
+    meta = inbox.get("meta")
+    if meta is not None:
+        # Range-checked here as well as in the schema: a database document written by hand
+        # reaches this function without passing through the button that made it.
+        for field in ("title", "description"):
+            i, variants = meta.get(field), b["meta_set"][field + "s"]
+            if not isinstance(i, int) or isinstance(i, bool) or not 0 <= i < len(variants):
+                raise PB.BoardError(f"approval meta.{field}={i!r} is not one of the three {field} variants")
+            b["meta_set"]["pick"][field] = i
 
     # The Approve button already refuses an incomplete set of picks; trusting it would make
     # a half-picked board approvable by anyone who wrote the database document by hand.

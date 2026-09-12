@@ -13,6 +13,14 @@ MIN_BOARD = {
               "primary_keyword": "african grey parrots for sale",
               "strategy": {"name": "n", "why": "w", "trade_off": "t"}},
     "h1": {"variants": ["a", "b", "c", "d", "e"], "recommended": 0, "pick": None},
+    "meta_set": {
+        "titles": ["African Grey Parrots for Sale in the USA | Congo & Timneh | C.A.Gs",
+                   "African Grey Parrots for Sale — Named, Priced, Documented | C.A.Gs",
+                   "Buy an African Grey Parrot From the Aviary That Raised It | C.A.Gs"],
+        "descriptions": ["d" * 150, "e" * 140, "f" * 160],
+        "recommended": {"title": 0, "description": 0},
+        "pick": {"title": None, "description": None},
+    },
     "sections": [{
         "id": "birds", "n": 1, "heading": "What Do We Have for Sale Right Now?", "intent": "inventory first",
         "category": "A", "framework": "EEBP", "words": {"min": 400, "max": 600}, "shape": "inventory",
@@ -824,7 +832,7 @@ def test_board_html_carries_every_block_and_the_theme_rules(tmp_path):
     b = _approved(MIN_BOARD)
     ont, ledger = ONT_OK, LEDGER_EMPTY
     html = BPB.render(b, ont, ledger, live={}, thumbs={}, slug="x")
-    for marker in ["data-title=\"1. Brief\"", "data-title=\"2. H1\"", "data-title=\"3. Outline\"", "data-title=\"4. Distribution\"",
+    for marker in ["data-title=\"1. Brief\"", "data-title=\"2. H1 and meta\"", "data-title=\"3. Outline\"", "data-title=\"4. Distribution\"",
                    "id=\"entity-graph\"", "data-title=\"6. Component options\"", "data-title=\"7. Asset slots\"", "id=\"approve\""]:
         assert marker in html, marker
     assert ":root{" in html and "prefers-color-scheme: dark" in html and ':root[data-theme="dark"]' in html
@@ -1666,3 +1674,65 @@ def test_canvas_rewrite_keeps_the_index_and_the_manifest_consistent(tmp_path):
     assert (tmp_path / "Main.dc.html").exists()
     assert {a["file"] for a in manifest["artboards"]} == {p.name for p in tmp_path.glob("*.dc.html")}
     assert not any("avail-a-grid" in a["file"] for a in manifest["artboards"])
+
+
+def test_meta_set_rejects_a_long_title_a_description_off_band_and_a_fourth_variant():
+    for field, i, value in (("titles", 1, "A" * 71), ("descriptions", 0, "d" * 139),
+                            ("descriptions", 0, "d" * 161), ("titles", 3, "A fourth title")):
+        bad = json.loads(json.dumps(MIN_BOARD))
+        bad["meta_set"][field][i:i + 1] = [value]
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(bad)
+
+
+def test_meta_pick_falls_back_to_the_recommendation_and_hash_bare_resets_it():
+    b = json.loads(json.dumps(MIN_BOARD))
+    before = PB.record_hash_bare(b)
+    assert PB.meta_pick(b) == (b["meta_set"]["titles"][0], b["meta_set"]["descriptions"][0])
+    b["meta_set"]["pick"] = {"title": 2, "description": 1}
+    assert PB.meta_pick(b) == (b["meta_set"]["titles"][2], b["meta_set"]["descriptions"][1])
+    assert PB.record_hash(b) != before and PB.record_hash_bare(b) == before
+
+
+def test_gate_meta_no_pick_warns_at_build_and_fails_at_release():
+    b = _approved(MIN_BOARD)
+    found = lambda stage: [x for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage=stage)
+                           if x["check"] == "meta-no-pick"]
+    assert [x["sev"] for x in found("build")] == ["WARN", "WARN"]
+    assert [x["sev"] for x in found("release")] == ["FAIL", "FAIL"]
+    b["meta_set"]["pick"] = {"title": 0, "description": 0}
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    assert found("release") == []
+
+
+def test_gate_meta_length_reads_the_per_slug_ceiling(monkeypatch, tmp_path):
+    budgets = tmp_path / "evidence-budgets.json"
+    budgets.write_text(json.dumps({"title_max_chars": 40, "title_max_chars_by_slug": {"x": 70}}))
+    monkeypatch.setattr(PB, "BUDGETS", budgets)
+    assert PB.title_ceiling("x") == 70 and PB.title_ceiling("other") == 40
+    b = _approved(MIN_BOARD)
+    checks = lambda: {x["check"] for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")}
+    assert "meta-length" not in checks()                 # ceiling 70 for slug "x"
+    b["meta"]["slug"] = "other"; b["approval"]["record_hash"] = PB.record_hash(b)
+    assert "meta-length" in checks()
+
+
+def test_board_renders_the_meta_radio_groups_beside_the_h1():
+    import build_page_board as BPB
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert 'data-title="2. H1 and meta"' in html
+    assert 'name="meta-title"' in html and 'name="meta-description"' in html
+    assert "meta-title" in html.split("Approve this board")[0]
+    assert "meta:{title:" in html                        # Approve sends the pair
+
+
+def test_approve_applies_the_meta_picks_and_refuses_an_index_off_the_menu():
+    import board_approve as BA
+    b = json.loads(json.dumps(MIN_BOARD))
+    inbox = {"approved_at": "t", "h1": 0, "picks": {"birds": "avail-b"}, "notes": {},
+             "meta": {"title": 2, "description": 1}, "canvas_version": None, "record_hash": PB.record_hash(b)}
+    out = BA.apply_approval(b, inbox, ONT_OK, LEDGER_EMPTY)
+    assert out["board"]["meta_set"]["pick"] == {"title": 2, "description": 1}
+    with pytest.raises(PB.BoardError):
+        BA.apply_approval(json.loads(json.dumps(MIN_BOARD)), dict(inbox, meta={"title": 9, "description": 0}),
+                          ONT_OK, LEDGER_EMPTY)

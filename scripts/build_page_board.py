@@ -175,6 +175,16 @@ def standard_default(section, board):
     return "ledger default"
 
 
+def radio_list(name, items, recommended, picked):
+    """One radio group, one line per variant, the recommendation starred, every variant
+    carrying its own length. The label keeps the click target on the text: three
+    70-character titles are an unreasonable click target as bare radios."""
+    return "\n".join(
+        f'{"⭐ " if i == recommended else ""}<label><input type="radio" name="{esc(name)}" value="{i}"'
+        f'{" checked" if i == picked else ""}> {esc(v)} <span class="why">({len(v)} chars)</span></label>  '
+        for i, v in enumerate(items))
+
+
 def render(board, ont, ledger, live, thumbs, slug):
     hits = PB.header_hits(board, live)          # exactly what the gate will fail on
     d = PB.distribution(board)
@@ -194,11 +204,18 @@ def render(board, ont, ledger, live, thumbs, slug):
         "", "**Research used**", md_table(["Source", "Fetched"], [[md(s["path"]), md(s["fetched"])] for s in m["sources"]]) if m["sources"] else "_no sources recorded_",
     ])))
 
-    h1 = board["h1"]
+    h1, ms = board["h1"], board["meta_set"]
     picked = h1["pick"] if h1["pick"] is not None else h1["recommended"]
-    parts.append(("2. H1", "\n".join(
-        [f"{'⭐ ' if i == h1['recommended'] else ''}<label><input type=\"radio\" name=\"h1\" value=\"{i}\"{' checked' if i == picked else ''}> {esc(v)}</label>  "
-         for i, v in enumerate(h1["variants"])])))
+    mt = ms["pick"]["title"] if ms["pick"]["title"] is not None else ms["recommended"]["title"]
+    mdn = ms["pick"]["description"] if ms["pick"]["description"] is not None else ms["recommended"]["description"]
+    parts.append(("2. H1 and meta", "\n".join([
+        "**H1** — the page's own promise", "",
+        radio_list("h1", h1["variants"], h1["recommended"], picked), "",
+        f"**Title tag** — ceiling {PB.title_ceiling(slug)} characters", "",
+        radio_list("meta-title", ms["titles"], ms["recommended"]["title"], mt), "",
+        f"**Meta description** — band {PB.DESC_MIN}–{PB.DESC_MAX} characters", "",
+        radio_list("meta-description", ms["descriptions"], ms["recommended"]["description"], mdn),
+    ])))
 
     parts.append(("3. Outline", f"<pre class=\"tree\">{outline_block(board, hits)}</pre>\n\n"
                   + (f"**{len(hits)} heading(s) collide with a live page.** Rewrite them before approving; the gate fails on any." if hits else "No heading collides with a live page (exact, species-template or 5-word shingle).")))
@@ -328,11 +345,16 @@ def render(board, ont, ledger, live, thumbs, slug):
       }}
       var h1=document.querySelector('input[name="h1"]:checked');
       if(!h1){{st.textContent='Pick an H1 before approving.';btn.disabled=false;return;}}
+      var mt=document.querySelector('input[name="meta-title"]:checked'),
+          mdsc=document.querySelector('input[name="meta-description"]:checked');
+      if(!mt||!mdsc){{st.textContent='Pick a title and a description before approving.';btn.disabled=false;return;}}
       var picks={{}},notes={{}};
       document.querySelectorAll('input[name^="pick-"]:checked').forEach(function(i){{picks[i.name.slice(5)]=i.value;}});
       // Every note box, empty included — "" is how a cleared note reaches the record.
       document.querySelectorAll('textarea[name^="note-"]').forEach(function(t){{notes[t.name.slice(5)]=t.value.trim();}});
-      var rec={{approved_at:new Date().toISOString(),h1:parseInt(h1.value,10),picks:picks,notes:notes,canvas_version:null,record_hash:RECORD_HASH}};
+      var rec={{approved_at:new Date().toISOString(),h1:parseInt(h1.value,10),
+               meta:{{title:parseInt(mt.value,10),description:parseInt(mdsc.value,10)}},
+               picks:picks,notes:notes,canvas_version:null,record_hash:RECORD_HASH}};
       btn.disabled=true;st.textContent='Saving…';
       ref.set(rec).then(function(){{st.textContent='Approved '+rec.approved_at+'. Claude reads this back before building.';}})
         .catch(function(e){{btn.disabled=false;st.textContent='Could not save: '+(e&&e.code?e.code:'error')+'. Try again, or approve in chat.';}});
