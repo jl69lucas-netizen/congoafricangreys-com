@@ -879,11 +879,12 @@ def test_canvas_writes_three_options_two_viewports_per_signature_section(tmp_pat
     import board_canvas as BC
     b = _approved(MIN_BOARD)
     ledger = {"pools": {"inventory": ["avail-a-grid", "avail-b-faceted", "bird-cards-row", "minibird-cards"]}, "pages": {}}
-    BC.write_canvas(b, ledger, out=tmp_path)
+    result = BC.write_canvas(b, ledger, out=tmp_path)
     names = sorted(p.name for p in tmp_path.glob("*.dc.html"))
     assert names == sorted([f"birds--{c}--{vp}.dc.html"
                             for c in ["avail-a-grid", "avail-b-faceted", "bird-cards-row"]
                             for vp in ("Mobile", "Desktop")])
+    assert result["counts"] == {"birds": 3} and len(result["files"]) == 6
     assert (tmp_path / "CONTRACT.md").exists() and (tmp_path / "support.js").exists()
     html = (tmp_path / "birds--avail-b-faceted--Desktop.dc.html").read_text()
     assert 'id="root" style="width:1440px' in html and "What Do We Have for Sale Right Now?" in html
@@ -900,6 +901,54 @@ def test_canvas_copy_comes_only_from_the_record(tmp_path):
     assert "lorem" not in html.lower()
 
 
+def test_canvas_escapes_record_text_into_the_artboard(tmp_path):
+    """Record text is breeder- and agent-written. A `<script>` in a heading that reached an
+    artboard raw would run in the canvas editor, not render as the heading it is."""
+    import board_canvas as BC
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["heading"] = "<script>alert(1)</script> & \"quoted\""
+    BC.write_canvas(b, {"pools": {"inventory": ["avail-a-grid"]}, "pages": {}}, out=tmp_path)
+    html = (tmp_path / "birds--avail-a-grid--Desktop.dc.html").read_text()
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;alert(1)&lt;/script&gt; &amp; &quot;quoted&quot;" in html
+    assert html.count("<script") == 1                   # the verbatim support.js line, nothing else
+
+
+def test_canvas_shipping_line_comes_from_the_financial_data(tmp_path):
+    """$185 / $350 have moved once already. The canvas reads them from the same file the
+    price pages read rather than keeping a second copy that can drift."""
+    import json
+    import board_canvas as BC
+    opts = json.loads(BC.FINANCIAL.read_text(encoding="utf-8"))["purchase_costs"]["delivery_options"]
+    BC.write_canvas(_approved(MIN_BOARD), {"pools": {"inventory": ["avail-a-grid"]}, "pages": {}}, out=tmp_path)
+    html = (tmp_path / "birds--avail-a-grid--Desktop.dc.html").read_text()
+    for key in ("airport_pickup", "home_delivery"):
+        assert f'{opts[key]["label"]} {opts[key]["display"]}' in html
+
+
+def test_canvas_prunes_an_artboard_the_ledger_withdrew(tmp_path):
+    """A candidate the pool no longer offers must not survive on disk: a stale artboard
+    gets a thumb cut from it and is offered to the breeder as a live option."""
+    import board_canvas as BC
+    b = _approved(MIN_BOARD)
+    BC.write_canvas(b, {"pools": {"inventory": ["avail-a-grid", "avail-b-faceted"]}, "pages": {}}, out=tmp_path)
+    assert (tmp_path / "birds--avail-b-faceted--Mobile.dc.html").exists()
+    BC.write_canvas(b, {"pools": {"inventory": ["avail-a-grid"]}, "pages": {}}, out=tmp_path)
+    assert not (tmp_path / "birds--avail-b-faceted--Mobile.dc.html").exists()
+    assert not (tmp_path / "birds--avail-b-faceted--Desktop.dc.html").exists()
+    assert (tmp_path / "birds--avail-a-grid--Mobile.dc.html").exists()
+
+
+def test_canvas_warns_when_a_pool_is_short_or_empty(tmp_path, capsys):
+    import board_canvas as BC
+    b = _approved(MIN_BOARD)
+    result = BC.write_canvas(b, {"pools": {"inventory": []}, "pages": {}}, out=tmp_path)
+    assert result["counts"] == {"birds": 0} and result["files"] == []
+    assert list(tmp_path.glob("*.dc.html")) == []
+    err = capsys.readouterr().err
+    assert "birds" in err and "inventory" in err and "0 options" in err
+
+
 def test_canvas_names_a_refresh_candidate_with_a_plus_and_badges_the_artboard(tmp_path):
     """A `#` in a filename breaks the file:// URL the canvas editor and the thumb cutter
     load, so a refreshed candidate travels as `base+refresh` — and the artboard itself
@@ -907,13 +956,39 @@ def test_canvas_names_a_refresh_candidate_with_a_plus_and_badges_the_artboard(tm
     import board_canvas as BC
     b = _approved(MIN_BOARD)
     b["sections"][0]["id"] = "x"
-    b["sections"][0]["shape"] = "hero"
-    ledger = {"pools": {"hero": ["hero-a", "hero-c"]}, "refresh_pools": ["hero"],
-              "pages": {"sib": {"hero": "hero-a", "dial": "dial-1", "rail": "rail-a", "toc": "t1",
+    b["sections"][0]["shape"] = "nav"                   # a nav section draws from the toc pool
+    PB.validate_board(b)                                # every shape here is one the schema allows
+    ledger = {"pools": {"toc": ["toc-a", "toc-c"]}, "refresh_pools": ["toc"],
+              "pages": {"sib": {"hero": "hero-a", "dial": "dial-1", "rail": "rail-a", "toc": "toc-a",
                                 "table": "table-a", "faq": "faq-a", "takeaway": ["k1"], "h6_prefixes": []}}}
     BC.write_canvas(b, ledger, out=tmp_path)
     names = sorted(p.name for p in tmp_path.glob("*.dc.html"))
-    assert names == sorted([f"x--{c}--{vp}.dc.html" for c in ("hero-a+refresh", "hero-c")
+    assert names == sorted([f"x--{c}--{vp}.dc.html" for c in ("toc-a+refresh", "toc-c")
                             for vp in ("Mobile", "Desktop")])
-    assert "REFRESH" in (tmp_path / "x--hero-a+refresh--Mobile.dc.html").read_text()
-    assert "REFRESH" not in (tmp_path / "x--hero-c--Mobile.dc.html").read_text()
+    assert "REFRESH" in (tmp_path / "x--toc-a+refresh--Mobile.dc.html").read_text()
+    assert "REFRESH" not in (tmp_path / "x--toc-c--Mobile.dc.html").read_text()
+
+
+def test_board_maps_a_thumb_filename_plus_back_to_a_candidate_hash(tmp_path, monkeypatch):
+    """The round trip board_canvas.py opens: the candidate `toc-a#refresh` is written
+    `toc-a+refresh` on disk, and the board has to key it back or the option renders with
+    no thumbnail even though one was cut for it."""
+    import build_page_board as BPB
+    (tmp_path / "x" / "thumbs").mkdir(parents=True)
+    (tmp_path / "x" / "thumbs" / "grid--toc-a+refresh--desktop.png").write_bytes(b"")
+    monkeypatch.setattr(BPB, "OUT", tmp_path)
+    monkeypatch.setattr(PB, "ROOT", tmp_path)
+    monkeypatch.setattr(PB, "DIST", tmp_path / "no-dist")
+    monkeypatch.setattr(sys, "argv", ["build_page_board.py", "x"])
+    monkeypatch.setattr(PB, "load_board", lambda slug: _approved(MIN_BOARD))
+    monkeypatch.setattr(PB, "load_ontology", lambda: ONT_OK)
+    monkeypatch.setattr(PB, "load_ledger", lambda: LEDGER_EMPTY)
+    captured = {}
+
+    def fake_render(board, ont, ledger, live, thumbs, slug):
+        captured["thumbs"] = thumbs
+        return "<!doctype html>"
+
+    monkeypatch.setattr(BPB, "render", fake_render)
+    BPB.main()
+    assert captured["thumbs"] == {("grid", "toc-a#refresh"): "thumbs/grid--toc-a+refresh--desktop.png"}
