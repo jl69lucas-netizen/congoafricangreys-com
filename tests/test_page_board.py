@@ -400,3 +400,35 @@ def test_distribution_sums_keywords_and_words():
     assert d["rows"][0]["section"] == "birds" and d["rows"][0]["primary"] == 1
     assert d["totals"]["words_min"] == 400 and d["totals"]["words_max"] == 600
     assert d["h_counts"] == {"h2": 1, "h3": 1, "h4": 1, "h5": 1, "h6": 1}
+
+
+def _tmp_dist(tmp_path):
+    """A miniature dist/: the homepage, a one-level page, a two-level page."""
+    pages = {
+        "index.html": "<html><body><h1>Home</h1></body></html>",
+        "foo/index.html": "<html><body><h2>Foo <em>Heading</em></h2></body></html>",
+        "a/b/index.html": "<html><body><h3>Cards &amp; Folders</h3>\n"
+                          "<h2 class='x'>Every Bird Card\n  Tells You Something</h2></body></html>",
+    }
+    for rel, html in pages.items():
+        p = tmp_path / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(html, encoding="utf-8")
+    return tmp_path
+
+
+def test_live_headings_slugs_the_homepage_as_root(tmp_path):
+    live = PB.live_headings(_tmp_dist(tmp_path))
+    assert set(live) == {"/", "/foo/", "/a/b/"}
+    assert live["/"] == ["Home"]
+    assert live["/foo/"] == ["Foo Heading"]                      # nested tags stripped
+    assert live["/a/b/"] == ["Cards & Folders", "Every Bird Card Tells You Something"]
+
+
+def test_header_precheck_shingle_needs_five_tokens_of_live_heading(tmp_path):
+    live = PB.live_headings(_tmp_dist(tmp_path))
+    # "Foo Heading" is two tokens long — it can never seed a 5-token shingle.
+    assert PB.header_precheck(["Foo Heading With More Words Here"], live) == []
+    hits = PB.header_precheck(["Every Bird Card Tells You Today"], live)
+    assert [(h["kind"], h["page"], h["with"]) for h in hits] == [
+        ("shingle", "/a/b/", "Every Bird Card Tells You Something")]

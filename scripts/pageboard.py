@@ -224,7 +224,8 @@ def live_headings(dist=DIST):
     import html as _h
     out = {}
     for page in sorted(pathlib.Path(dist).glob("**/index.html")):
-        slug = "/" + page.parent.relative_to(dist).as_posix().strip(".") + "/"
+        rel = page.parent.relative_to(dist).as_posix()
+        slug = "/" if rel == "." else "/" + rel + "/"
         out[slug] = [_h.unescape(re.sub(r"\s+", " ", strip.sub("", raw)).strip()) for _, raw in hpat.findall(page.read_text(errors="ignore"))]
     return out
 
