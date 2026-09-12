@@ -124,19 +124,32 @@ def approval_matches(board):
     return isinstance(a, dict) and a.get("record_hash") == record_hash(board)
 
 
+def base_of(component_id):
+    """The shell an id names: `base` itself, or the `base` of a `base#delta` refresh."""
+    return component_id.split("#")[0]
+
+
 # A ledger page "owns" every component named anywhere in its tuple. A hero, dial, rail,
 # TOC, table, FAQ shell or takeaway a sibling owns is removed from the pool; the record
 # keeps who owned it so the board can say so. The page itself never excludes itself.
+# A spent shell is not gone, it is refreshed: an owned base comes back as `base#refresh`,
+# a placeholder the board author renames to the axis it actually varies, and a refreshed
+# id owns its base as well as itself, so a non-empty pool never offers an empty menu.
 def owned_components(ledger, exclude_slug=None):
     owned = {}
+
+    def claim(component_id, page):
+        owned.setdefault(component_id, page)
+        owned.setdefault(base_of(component_id), page)
+
     for page, t in ledger.get("pages", {}).items():
         if page == exclude_slug:
             continue
         for key in ("hero", "dial", "rail", "toc", "table", "faq"):
             if t.get(key):
-                owned.setdefault(t[key], page)
+                claim(t[key], page)
         for k in t.get("takeaway", []):
-            owned.setdefault(k, page)
+            claim(k, page)
     return owned
 
 
@@ -145,8 +158,14 @@ def candidates_for(shape, ledger, slug):
         return [], []
     pool = list(ledger.get("pools", {}).get(shape, []))
     owned = owned_components(ledger, exclude_slug=slug)
-    cands = [c for c in pool if c not in owned]
-    excluded = [{"component": c, "owner": owned[c]} for c in pool if c in owned]
+    cands, excluded = [], []
+    for c in pool:
+        base = base_of(c)
+        if base in owned:
+            cands.append(f"{base}#refresh")
+            excluded.append({"component": base, "owner": owned[base]})
+        else:
+            cands.append(c)
     return cands, excluded
 
 

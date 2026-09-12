@@ -259,7 +259,7 @@ def test_reseeding_carries_an_earlier_decision_on_a_catalog_id(tmp_path, monkeyp
 def test_ledger_file_validates_and_knows_pages_a_and_b():
     ledger = PB.load_ledger()
     assert ledger["pages"]["buy-african-grey-parrots-with-shipping"]["toc"] == "toc-t3-boarding-pass"
-    assert ledger["pages"]["african-grey-parrots-for-sale-near-me"]["hero"] == "hero-c-mosaic-metrics"
+    assert ledger["pages"]["african-grey-parrots-for-sale-near-me"]["hero"] == "hero-c-mosaic-metrics#geo-tile-field"
 
 
 def test_candidates_subtract_what_siblings_own():
@@ -267,7 +267,7 @@ def test_candidates_subtract_what_siblings_own():
               "pages": {"dna-tested-african-grey-for-sale": {"hero": "hero-c", "dial": "dial-1", "rail": "rail-a", "toc": "avail-b",
                         "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
     cands, excluded = PB.candidates_for("inventory", ledger, slug="african-grey-parrots-for-sale")
-    assert cands == ["avail-a", "bird-cards"]
+    assert cands == ["avail-a", "avail-b#refresh", "bird-cards"]
     assert excluded == [{"component": "avail-b", "owner": "dna-tested-african-grey-for-sale"}]
 
 
@@ -281,3 +281,29 @@ def test_candidates_never_exclude_the_page_itself():
 def test_standard_shape_has_no_options():
     cands, excluded = PB.candidates_for("standard", {"pools": {}, "pages": {}}, slug="x")
     assert cands == [] and excluded == []
+
+
+def test_exhausted_pool_yields_refresh_candidates():
+    ledger = {"pools": {"hero": ["hero-a", "hero-c"]},
+              "pages": {"p1": {"hero": "hero-a", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []},
+                        "p2": {"hero": "hero-c", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
+    cands, excluded = PB.candidates_for("hero", ledger, slug="new-page")
+    assert cands == ["hero-a#refresh", "hero-c#refresh"]
+    assert excluded == [{"component": "hero-a", "owner": "p1"}, {"component": "hero-c", "owner": "p2"}]
+
+
+def test_refreshed_id_owns_its_base():
+    ledger = {"pools": {"hero": ["hero-c"]},
+              "pages": {"near-me": {"hero": "hero-c#geo-tile-field", "dial": "", "rail": "", "toc": "",
+                                    "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
+    owned = PB.owned_components(ledger)
+    assert owned["hero-c"] == "near-me" and owned["hero-c#geo-tile-field"] == "near-me"
+    cands, excluded = PB.candidates_for("hero", ledger, slug="other")
+    assert cands == ["hero-c#refresh"]
+    assert excluded == [{"component": "hero-c", "owner": "near-me"}]
+
+
+def test_base_of():
+    assert PB.base_of("hero-c-mosaic-metrics") == "hero-c-mosaic-metrics"
+    assert PB.base_of("hero-c-mosaic-metrics#geo-tile-field") == "hero-c-mosaic-metrics"
+    assert PB.base_of("faq-b#map-pin") == "faq-b"
