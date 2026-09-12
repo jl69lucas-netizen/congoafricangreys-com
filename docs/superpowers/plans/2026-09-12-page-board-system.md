@@ -436,6 +436,8 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 
 ---
 
+> **Review amendment (Task 2 quality review, 2026-09-12):** `record_hash` excludes **lifecycle fields**, not only `approval`: `meta.status` and every asset's `status` and `file`. Approving sets status and baking sets file/status after the hash is taken; hashing them would invalidate every legitimate approval and block release. Tasks 6, 8 and 10 rely on this: `PB.record_hash` is stable across status changes and image baking.
+
 ### Task 3: Seed the ontology
 
 **Files:**
