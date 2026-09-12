@@ -181,3 +181,17 @@ def test_load_ledger_raises_board_error_when_the_file_is_missing(tmp_path, monke
     with pytest.raises(PB.BoardError) as e:
         PB.load_ledger()
     assert "does not exist" in str(e.value) and "component-ledger.json" in str(e.value)
+
+
+def test_reseeding_keeps_a_board_added_proposed_entity(tmp_path, monkeypatch):
+    import seed_ontology
+    copy = tmp_path / "cag-ontology.json"
+    ont = PB.load_ontology()
+    ont["entities"].append({"id": "ont:board-added", "name": "x", "aliases": [], "class": "Health",
+                            "authorization": "PROPOSED", "source": None, "owner_page": None})
+    copy.write_text(json.dumps(ont, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    monkeypatch.setattr(PB, "ONTOLOGY", copy)
+    seed_ontology.main()
+    after = {e["id"]: e for e in json.loads(copy.read_text(encoding="utf-8"))["entities"]}
+    assert "ont:board-added" in after, "a board-added entity was dropped by a re-seed"
+    assert after["ont:board-added"]["authorization"] == "PROPOSED"

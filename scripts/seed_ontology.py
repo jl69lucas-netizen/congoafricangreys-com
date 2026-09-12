@@ -110,12 +110,17 @@ def main():
                 merged[eid]["authorization"] = old["authorization"]
                 merged[eid]["source"] = old["source"] or merged[eid]["source"]
             merged[eid]["owner_page"] = old.get("owner_page")
-        elif old["authorization"] != "PROPOSED":            # a decided entity the catalog never carried
-            merged[eid] = old                               # (board_approve.py adds these) — keep it
+        else:                                               # an entity the catalog never carried —
+            merged.setdefault(eid, old)                     # a board added it (spec 3.2); keep it,
+                                                            # PROPOSED included, until it is sourced
     ont = {"entities": sorted(merged.values(), key=lambda e: e["id"])}
     PB.validate_ontology(ont)
     PB.ONTOLOGY.write_text(json.dumps(ont, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"wrote {PB.ONTOLOGY.relative_to(PB.ROOT)} — {len(ont['entities'])} entities "
+    try:                                                    # a test may point ONTOLOGY outside ROOT
+        where = PB.ONTOLOGY.relative_to(PB.ROOT)
+    except ValueError:
+        where = PB.ONTOLOGY
+    print(f"wrote {where} — {len(ont['entities'])} entities "
           f"({sum(e['authorization']=='ASSERTED' for e in ont['entities'])} asserted, "
           f"{sum(e['authorization']=='BLOCKED' for e in ont['entities'])} blocked)")
 
