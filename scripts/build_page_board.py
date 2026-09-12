@@ -125,6 +125,24 @@ def option_cards(section, ledger, slug, thumbs):
     return cards
 
 
+STANDARD_FORM_DEFAULT = "kit two-column inquiry form (field contract by slug)"
+
+
+def standard_default(section, board):
+    """What a standard section gets without anyone choosing anything (spec §4.6).
+
+    A standard section still occupies the page, so the board shows it — a FAQ renders the
+    shell the tuple already names, a reserve/form section renders the kit's inquiry form,
+    and anything else falls back to whatever the ledger hands it. Shown, never offered:
+    a breeder who sees no card for section 08 assumes the section has no component."""
+    sid = section["id"].lower()
+    if "faq" in sid:
+        return board["tuple"].get("faq") or "ledger default"
+    if "reserve" in sid or "form" in sid:
+        return STANDARD_FORM_DEFAULT
+    return "ledger default"
+
+
 def render(board, ont, ledger, live, thumbs, slug):
     hits = PB.header_hits(board, live)          # exactly what the gate will fail on
     d = PB.distribution(board)
@@ -174,11 +192,14 @@ def render(board, ont, ledger, live, thumbs, slug):
     opt_html = []
     for s in board["sections"]:
         if s["shape"] == "standard":
-            continue
-        cards = option_cards(s, ledger, slug, thumbs)
+            dflt = standard_default(s, board)
+            cards = [f'<div class="opt"><div class="nothumb">{H.escape(dflt)}</div>'
+                     f'<span class="why">the default a standard section gets — nothing to pick</span></div>']
+        else:
+            cards = option_cards(s, ledger, slug, thumbs)
         opt_html.append(f"### {s['n']:02d} · {H.escape(s['heading'])} <span class=\"pill\">{s['shape']}</span>\n\n<div class=\"opts\">{''.join(cards)}</div>\n"
                         f"<textarea class=\"note\" name=\"note-{s['id']}\" placeholder=\"Note for this section (optional)\">{H.escape(s['options']['note'])}</textarea>")
-    parts.append(("6. Component options", "\n\n".join(opt_html) or "_No signature sections._"))
+    parts.append(("6. Component options", "\n\n".join(opt_html) or "_No sections._"))
 
     slots = "".join(f'<div class="slot"><b>{H.escape(a["slot"])}</b> · {a["kind"]} · {a["w"]}×{a["h"]} · {"required" if a["required"] else "optional"}<br><span class="st {a["status"]}">{a["status"]}</span>{(" · " + H.escape(a["file"])) if a["file"] else ""}</div>' for a in board["assets"])
     parts.append(("7. Asset slots", f'<div class="slots">{slots}</div>'))
@@ -228,7 +249,12 @@ def render(board, ont, ledger, live, thumbs, slug):
   window.claude.use("db").then(function(db){{
     if(!db){{st.textContent='Approval needs the board database, which this view cannot reach.';return;}}
     var ref=db.doc(BOARD_DOC);
-    ref.get().then(function(snap){{var d=snap&&snap.exists?snap.data():null;if(d&&d.record_hash===RECORD_HASH){{st.textContent='Approved '+d.approved_at+'.';}}}}).catch(function(){{}});
+    ref.get().then(function(snap){{
+      if(!snap||!snap.exists){{return;}}                 // absence is not an error: never approved
+      var d=snap.data()||{{}};                            // frozen body; undefined only when !exists
+      if(d.record_hash===RECORD_HASH){{st.textContent='Approved '+(d.approved_at||'earlier')+'.';}}
+      else{{st.textContent='An earlier version of this board was approved — this record has changed since.';}}
+    }}).catch(function(e){{st.textContent='Could not read the board database: '+(e&&e.code?e.code:'error')+'. Approve in chat.';}});
     btn.disabled=false;st.textContent=st.textContent.indexOf('Approved')===0?st.textContent:'Ready.';
     btn.addEventListener('click',function(){{
       var picks={{}},notes={{}};
@@ -240,7 +266,7 @@ def render(board, ont, ledger, live, thumbs, slug):
       ref.set(rec).then(function(){{st.textContent='Approved '+rec.approved_at+'. Claude reads this back before building.';}})
         .catch(function(e){{btn.disabled=false;st.textContent='Could not save: '+(e&&e.code?e.code:'error')+'. Try again, or approve in chat.';}});
     }});
-  }});
+  }}).catch(function(e){{st.textContent='Board database unavailable: '+(e&&e.code?e.code:'error')+'. Approve in chat.';}});
 }})();
 </script>
 """

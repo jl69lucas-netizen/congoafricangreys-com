@@ -835,3 +835,17 @@ def test_board_html_flags_header_collisions_inline():
     import build_page_board as BPB
     html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={"/y/": ["What Do We Have for Sale Right Now?"]}, thumbs={}, slug="x")
     assert "exact match with /y/" in html
+
+
+def test_board_html_shows_standard_sections_with_their_default_and_no_radio(live_dist):
+    """A standard section has no choice to make, which is not the same as having no
+    component: the board must still show what it gets, or the breeder reads the gap as a
+    missing section. Shown, never offered — no radio carries a standard section's id."""
+    import build_page_board as BPB
+    slug = "african-grey-parrots-for-sale-near-me"
+    b = PB.load_board(slug)
+    html = BPB.render(b, PB.load_ontology(), PB.load_ledger(), live={}, thumbs={}, slug=slug)
+    assert "08 · Near-Me Questions Buyers Ask Us From Every State" in html
+    assert "faq-b#map-pin" in html                       # the FAQ shell tuple.faq already names
+    assert 'name="pick-faq"' not in html                 # and it is not a choice
+    assert BPB.STANDARD_FORM_DEFAULT in html             # 09 reserve → the kit's inquiry form

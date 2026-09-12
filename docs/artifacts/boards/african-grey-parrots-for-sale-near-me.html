@@ -204,6 +204,16 @@ Headings: H1 1 · H2 9 · H3 18 · H4 7 · H5 7 · H6 7. Counts are ceilings, no
 
 <div class="opts"><div class="opt"><div class="nothumb">toc-t5-reserve-stepper</div><label><input type="radio" name="pick-arrival" value="toc-t5-reserve-stepper"> toc-t5-reserve-stepper</label></div><div class="opt"><div class="nothumb">timeline-strip</div><label><input type="radio" name="pick-arrival" value="timeline-strip"> timeline-strip</label></div><div class="opt"><div class="nothumb">numbered-ledger</div><label><input type="radio" name="pick-arrival" value="numbered-ledger" checked> numbered-ledger</label></div></div>
 <textarea class="note" name="note-arrival" placeholder="Note for this section (optional)"></textarea>
+
+### 08 · Near-Me Questions Buyers Ask Us From Every State <span class="pill">standard</span>
+
+<div class="opts"><div class="opt"><div class="nothumb">faq-b#map-pin</div><span class="why">the default a standard section gets — nothing to pick</span></div></div>
+<textarea class="note" name="note-faq" placeholder="Note for this section (optional)"></textarea>
+
+### 09 · Tell Us Where You Are <span class="pill">standard</span>
+
+<div class="opts"><div class="opt"><div class="nothumb">kit two-column inquiry form (field contract by slug)</div><span class="why">the default a standard section gets — nothing to pick</span></div></div>
+<textarea class="note" name="note-reserve" placeholder="Note for this section (optional)"></textarea>
 </script>
 <script type="text/markdown" data-title="7. Asset slots">
 <div class="slots"><div class="slot"><b>hero</b> · photo · 1280×960 · required<br><span class="st baked">baked</span> · public/images/near-me-page/african-grey-parrots-for-sale-near-me-hero.webp</div><div class="slot"><b>card-bery</b> · photo · 800×800 · required<br><span class="st baked">baked</span> · public/images/near-me-page/bery-congo-african-grey-hen-near-me-card.webp</div><div class="slot"><b>newsletter</b> · photo · 1408×768 · optional<br><span class="st baked">baked</span> · public/images/near-me-page/timneh-chick-nursery-newsletter-near-me.webp</div></div>
@@ -243,7 +253,12 @@ Writes your H1 choice, picks, notes and the record hash to the board database. B
   window.claude.use("db").then(function(db){
     if(!db){st.textContent='Approval needs the board database, which this view cannot reach.';return;}
     var ref=db.doc(BOARD_DOC);
-    ref.get().then(function(snap){var d=snap&&snap.exists?snap.data():null;if(d&&d.record_hash===RECORD_HASH){st.textContent='Approved '+d.approved_at+'.';}}).catch(function(){});
+    ref.get().then(function(snap){
+      if(!snap||!snap.exists){return;}                 // absence is not an error: never approved
+      var d=snap.data()||{};                            // frozen body; undefined only when !exists
+      if(d.record_hash===RECORD_HASH){st.textContent='Approved '+(d.approved_at||'earlier')+'.';}
+      else{st.textContent='An earlier version of this board was approved — this record has changed since.';}
+    }).catch(function(e){st.textContent='Could not read the board database: '+(e&&e.code?e.code:'error')+'. Approve in chat.';});
     btn.disabled=false;st.textContent=st.textContent.indexOf('Approved')===0?st.textContent:'Ready.';
     btn.addEventListener('click',function(){
       var picks={},notes={};
@@ -255,6 +270,6 @@ Writes your H1 choice, picks, notes and the record hash to the board database. B
       ref.set(rec).then(function(){st.textContent='Approved '+rec.approved_at+'. Claude reads this back before building.';})
         .catch(function(e){btn.disabled=false;st.textContent='Could not save: '+(e&&e.code?e.code:'error')+'. Try again, or approve in chat.';});
     });
-  });
+  }).catch(function(e){st.textContent='Board database unavailable: '+(e&&e.code?e.code:'error')+'. Approve in chat.';});
 })();
 </script>
