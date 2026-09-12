@@ -12,6 +12,7 @@ import jsonschema
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import dup_content_audit as DUP
 HEADER_WHITELIST = DUP.HEADER_WHITELIST   # phrases the dup gate already forgives
+HEAD_TERMS = DUP.HEAD_TERMS               # and the phrases every for-sale page must be free to write
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SCHEMAS = ROOT / "schemas"
@@ -342,11 +343,15 @@ def header_precheck(proposed, live, exclude_page=None):
         tt = SPECIES.sub("{species}", t)
         if tt in templ:
             hits.append({"heading": h, "kind": "template", "page": templ[tt], "with": tt}); continue
-        for i in range(len(ws) - SHINGLE + 1):
-            key = " ".join(ws[i:i + SHINGLE])
-            if key in shingles:
-                page, with_ = shingles[key]
-                hits.append({"heading": h, "kind": "shingle", "page": page, "with": with_, "shingle": key}); break
+        # EVERY matching window, not the first: a heading may open on the head term the
+        # page is allowed to rank for and still copy a real run further along, and a
+        # break here would let the second hide behind the first.
+        matched = [" ".join(ws[i:i + SHINGLE]) for i in range(len(ws) - SHINGLE + 1)
+                   if " ".join(ws[i:i + SHINGLE]) in shingles]
+        if matched:
+            page, with_ = shingles[matched[0]]
+            hits.append({"heading": h, "kind": "shingle", "page": page, "with": with_,
+                         "shingle": matched[0], "shingles": matched})
     return hits
 
 
@@ -395,14 +400,6 @@ def _whitelisted(heading):
                for i in range(len(ws) - len(phrase) + 1))
 
 
-# The site's head terms. A heading that shares nothing with a live one but the phrase the
-# page is trying to rank for is not a crossover: `african grey parrot for sale` is in the
-# headings of 46 live pages by design, and no rewrite can remove it from a for-sale page.
-# Precedent: sessions/2026-08-10-two-pages-outline-gate.md §C2.
-HEAD_TERMS = ["african grey parrot for sale", "african grey parrots for sale",
-              "african grey for sale", "african grey parrot", "african grey parrots"]
-
-
 def _head_term_shingle(shingle, primary_keyword):
     """True when the shared run is a contiguous sub-run of the board's own primary keyword
     or of a head term — the exemption applies to SHINGLE hits only. An exact or template
@@ -439,7 +436,6 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     # The ledger's discipline is that COMBOS differ, not components: dial-1-clay is on
     # nine pages by design, so a per-component rule would fail every page on the site.
     # Four rules, narrowest first.
-    owned = owned_components(ledger, exclude_slug=slug)
     t = board["tuple"]
     siblings = {p: s for p, s in ledger.get("pages", {}).items() if p != slug}
     tw = set(t.get("takeaway", []))
@@ -453,6 +449,7 @@ def gate_findings(board, ont, ledger, live, stage="build"):
             f"every tuple axis matches {p} — the combo is what has to differ")
     rest = {p: s for p, s in siblings.items() if p not in identical}
 
+    trip = []
     if any(triple):
         trip = [p for p, s in rest.items() if tuple(s.get(k) or "" for k in ("hero", "dial", "rail")) == triple]
         if trip:
@@ -463,11 +460,16 @@ def gate_findings(board, ont, ledger, live, stage="build"):
         if sets:
             add("ledger-takeaway-set-owned", "FAIL",
                 f"takeaway set {{{', '.join(sorted(tw))}}} is the same set as {', '.join(sets)}")
-    # The scarce shells: a bare base a sibling uses (bare or refreshed) must be refreshed
-    # here too. A `base#delta` passes — unless it is a sibling's exact id, which owned_
-    # components records under the full id.
-    for key in ("hero", "toc", "faq"):
+    # The scarce shells — the tuple axes the ledger itself lists as refresh pools, so the
+    # rule follows the data rather than a second hardcoded list (takeaway is a refresh pool
+    # too, but it is a set, and the set rule above already covers it). A bare base a sibling
+    # uses (bare or refreshed) must be refreshed here too; a `base#delta` passes unless it
+    # is a sibling's exact id, which owned_components records under the full id.
+    owned = owned_components({"pages": rest})          # an identical sibling is already reported
+    for key in [k for k in TUPLE_ID_KEYS if k in ledger.get("refresh_pools", [])]:
         v = t.get(key)
+        if key == "hero" and trip:
+            continue                                   # the triple finding already names it
         if v and owned.get(v):
             add("ledger-shell-owned", "FAIL",
                 f"tuple.{key}={v} is owned by {', '.join(owned[v])} — refresh it as {base_of(v)}#<delta>")
@@ -483,7 +485,8 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     hits = [h for h in header_precheck([h for _, h in all_headings(board)], live,
                                        exclude_page=own_live_key(board))
             if not _whitelisted(h["heading"])
-            and not (h["kind"] == "shingle" and _head_term_shingle(h["shingle"], pk))]
+            and not (h["kind"] == "shingle"
+                     and all(_head_term_shingle(w, pk) for w in h["shingles"]))]
     for h in hits:
         add("header-collision", "FAIL", f"{h['kind']}: {h['heading']!r} vs {h['page']} {h['with']!r}")
 
@@ -494,8 +497,15 @@ def gate_findings(board, ont, ledger, live, stage="build"):
 
     picks = (board.get("approval") or {}).get("picks", {})
     for s in board["sections"]:
-        if s["shape"] != "standard" and not (s["options"]["pick"] or picks.get(s["id"])):
+        pick = s["options"]["pick"] or picks.get(s["id"])
+        if s["shape"] != "standard" and not pick:
             add("signature-no-pick", "FAIL", f"section {s['id']} ({s['shape']}) has no component pick")
+        # A nav-shaped section IS the page's table of contents, so its pick and tuple.toc
+        # are two names for one component. A mismatch means one of them is stale — a WARN,
+        # because which one is right is the author's call, not the gate's.
+        if s["shape"] == "nav" and pick and pick != t.get("toc"):
+            add("pick-tuple-mismatch", "WARN",
+                f"section {s['id']} picks {pick} but tuple.toc is {t.get('toc') or '(empty)'}")
 
     if stage == "release":
         for a in board["assets"]:

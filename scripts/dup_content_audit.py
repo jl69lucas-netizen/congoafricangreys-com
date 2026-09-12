@@ -163,6 +163,19 @@ def crossovers(wa, sa, sb):
         found += [seg for seg in unwhitelisted_segments(run) if len(seg) >= MIN_WORDS]
     return found
 
+# The site's head terms: phrases a page is trying to rank for, which therefore appear in
+# many headings by design (`african grey parrot for sale` is in 46 live pages' headings).
+# A shared run that is nothing but one of these is not a crossover. Read by the Page Board
+# header pre-check as well as this gate — one data list, two gates.
+# Precedent: sessions/2026-08-10-two-pages-outline-gate.md §C2.
+HEAD_TERMS = [
+    "african grey parrot for sale",
+    "african grey parrots for sale",
+    "african grey for sale",
+    "african grey parrot",
+    "african grey parrots",
+]
+
 # Headings allowed to repeat on every page (site-standard sections).
 HEADER_WHITELIST = [
     "frequently asked questions",

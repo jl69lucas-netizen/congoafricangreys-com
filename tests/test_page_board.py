@@ -29,6 +29,14 @@ MIN_BOARD = {
 }
 
 
+@pytest.fixture(scope="session")
+def live_dist():
+    """dist/ is 104 pages of HTML; reading it once per session rather than once per test
+    is the difference between a gate you run and one you skip."""
+    if not PB.DIST.exists():
+        pytest.skip("needs a built dist/")
+    return PB.live_headings()
+
 def test_minimal_board_validates():
     PB.validate_board(MIN_BOARD)          # raises on failure
 
@@ -498,7 +506,8 @@ def _approved(board):
     b = json.loads(json.dumps(board))
     for s in b["sections"]:
         if s["shape"] != "standard":
-            s["options"]["pick"] = s["options"]["candidates"][0] if s["options"]["candidates"] else "default"
+            s["options"]["pick"] = s["options"]["pick"] or (
+                s["options"]["candidates"][0] if s["options"]["candidates"] else "default")
     b["approval"] = {"approved_at": "2026-09-12T10:00:00Z", "h1": 0, "picks": {s["id"]: s["options"]["pick"] for s in b["sections"]},
                      "notes": {}, "canvas_version": None, "record_hash": PB.record_hash(b)}
     b["meta"]["status"] = "approved"
@@ -534,7 +543,7 @@ def test_gate_fails_on_blocked_entity_and_owned_shell_and_spent_prefix():
     b["sections"][0]["entities"].append("ont:wild-caught")
     ont = {"entities": ONT_OK["entities"] + [{"id": "ont:wild-caught", "name": "w", "aliases": [], "class": "Commerce",
                                               "authorization": "BLOCKED", "source": "r2", "owner_page": None}]}
-    ledger = {"pools": {"inventory": ["avail-b"]},
+    ledger = {"refresh_pools": ["hero", "toc", "faq"], "pools": {"inventory": ["avail-b"]},
               "pages": {"sibling": {"hero": "hero-a", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "",
                                     "h6_prefixes": ["Aviary Note:"]}}}
     b["approval"]["record_hash"] = PB.record_hash(b)
@@ -545,7 +554,7 @@ def test_gate_fails_on_blocked_entity_and_owned_shell_and_spent_prefix():
 def _ledger_with(**tuple_fields):
     t = {"hero": "", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}
     t.update(tuple_fields)
-    return {"pools": {"inventory": ["avail-b"]}, "pages": {"sibling": t}}
+    return {"refresh_pools": ["hero", "toc", "faq"], "pools": {"inventory": ["avail-b"]}, "pages": {"sibling": t}}
 
 
 def _checks(board, ledger):
@@ -557,8 +566,11 @@ def test_gate_flags_a_copied_hero_dial_rail_triple():
     b = _approved(MIN_BOARD)
     same = _checks(b, _ledger_with(hero="hero-a", dial="dial-1", rail="rail-a", toc="t9", table="table-z", faq="faq-z"))
     assert "ledger-triple-owned" in same
+    # and the triple names the hero already, so the shell rule does not say it twice
+    assert "ledger-shell-owned" not in same, same
     diff = _checks(b, _ledger_with(hero="hero-a", dial="dial-2", rail="rail-a", toc="t9", table="table-z", faq="faq-z"))
     assert "ledger-triple-owned" not in diff
+    assert "ledger-shell-owned" in diff, diff      # a shared hero on its own is still a shell finding
 
 
 def test_gate_flags_a_takeaway_set_a_sibling_already_uses():
@@ -578,8 +590,8 @@ def test_gate_flags_a_tuple_that_is_identical_to_a_siblings():
                           takeaway=list(t["takeaway"]), table=t["table"], faq=t["faq"])
     f = _checks(b, ledger)
     assert "ledger-tuple-identical" in f
-    # the narrower rules do not also fire: one identical sibling is one finding, not three
-    assert "ledger-triple-owned" not in f and "ledger-takeaway-set-owned" not in f
+    # one identical sibling is ONE finding, not four: the narrower rules stay silent
+    assert sorted(x for x in f if x.startswith("ledger-")) == ["ledger-tuple-identical"], f
 
 
 def test_gate_lets_a_refreshed_shell_pass_but_not_a_bare_one():
@@ -688,9 +700,8 @@ def test_gate_against_the_real_ledger_treats_a_refresh_id_as_unspent():
     assert len(hits) == 1 and "dna-tested-african-grey-for-sale" in hits[0]["msg"], hits
 
 
-@pytest.mark.skipif(not PB.DIST.exists(), reason="needs a built dist/")
-def test_gate_against_the_real_dist_whitelists_faq_but_flags_current_pricing():
-    live = PB.live_headings()
+def test_gate_against_the_real_dist_whitelists_faq_but_flags_current_pricing(live_dist):
+    live = dict(live_dist)
     b = _approved(MIN_BOARD)
     b["sections"][0]["tree"][0]["children"] += [
         {"level": 4, "heading": "Frequently Asked Questions", "intent": "", "children": []},
@@ -743,8 +754,50 @@ def test_an_exact_head_term_heading_is_never_exempt():
                                      stage="build") if x["check"] == "header-collision"]
     assert len(f) == 1 and "exact" in f[0]["msg"], f
 
-@pytest.mark.skipif(not PB.DIST.exists(), reason="needs a built dist/ for the header pre-check")
-def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate():
+def test_shingle_hits_report_every_window_not_just_the_first():
+    """A heading may open on the head term it is allowed to rank for and still copy a real
+    run further along; breaking at the first window would hide the second."""
+    hits = PB.header_precheck(["African Grey Parrot for Sale: What Health Guarantees Come With Every Bird"],
+                              {"/y/": ["African Grey Parrot for Sale Arizona"],
+                               "/z/": ["Our Promise: What Health Guarantees Come With Every Bird We Place"]})
+    assert hits[0]["shingles"][0] == "african grey parrot for sale"
+    assert "what health guarantees come with" in hits[0]["shingles"]
+    assert hits[0]["shingle"] == hits[0]["shingles"][0]      # the first, kept for compatibility
+
+
+def test_gate_does_not_exempt_a_heading_that_copies_a_run_beyond_the_head_term():
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["heading"] = "African Grey Parrot for Sale: What Health Guarantees Come With Every Bird"
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    live = {"/y/": ["African Grey Parrot for Sale Arizona"],
+            "/z/": ["Our Promise: What Health Guarantees Come With Every Bird We Place"]}
+    f = [x for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live=live, stage="build")
+         if x["check"] == "header-collision"]
+    assert len(f) == 1, f
+
+
+def test_pick_tuple_mismatch_is_a_warn_on_a_nav_section():
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["shape"] = "nav"
+    b["sections"][0]["options"]["pick"] = "toc-t2-chip-cloud#state-chips"
+    b["tuple"]["toc"] = "toc-t2-chip-cloud"                  # the stale bare id
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    f = [x for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={"/y/": ["Something Else Entirely Here Now"]},
+                                     stage="build") if x["check"] == "pick-tuple-mismatch"]
+    assert len(f) == 1 and f[0]["sev"] == "WARN", f
+    b["tuple"]["toc"] = "toc-t2-chip-cloud#state-chips"      # the ids agree
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    assert [x for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={"/y/": ["Something Else Entirely Here Now"]},
+                                        stage="build") if x["check"] == "pick-tuple-mismatch"] == []
+
+# The one heading on the shipped near-me page that genuinely crosses over with a sibling:
+# the homepage's "What Health Guarantees Come With Every African Grey We Place?". It is
+# asserted rather than popped, so a NEW collision fails this test instead of hiding behind
+# a pop list. Fix belongs on the near-me page in a later session.
+KNOWN_HOMEPAGE_OVERLAP = "What Health Guarantees Come With Every African Grey We Place?"
+
+
+def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate(live_dist):
     b = PB.load_board("african-grey-parrots-for-sale-near-me")
     ledger, ont = PB.load_ledger(), PB.load_ontology()
     d = PB.distribution(b)
@@ -753,14 +806,12 @@ def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate():
     cands, excluded = PB.candidates_for(grid["shape"], ledger, slug=b["meta"]["slug"])
     assert cands, "the grid section must have at least one candidate"
     approved = _approved(b)
-    live = PB.live_headings()
+    live = dict(live_dist)
     live.pop("/african-grey-parrots-for-sale-near-me/", None)          # the board's own page
     for retiring in ("/african-grey-parrot-for-sale-near-me/", "/where-to-buy-african-greys-near-me/"):
         live.pop(retiring, None)                                       # retire in Task 11, 2026-08-10 plan
     for rebuilt in ("/african-grey-parrots-for-sale/", "/african-grey-parrot-for-sale/"):
         live.pop(rebuilt, None)                                        # hub rebuilt, singular retires into it, Task 13
-    # KNOWN OVERLAP — homepage heading "What Health Guarantees Come With Every African Grey
-    # We Place?"; fix on the near-me page in a later session
-    live.pop("/", None)
     f = [x for x in PB.gate_findings(approved, ont, ledger, live, stage="build") if x["sev"] == "FAIL"]
-    assert f == [], f
+    assert [x["check"] for x in f] == ["header-collision"], f
+    assert " vs / " in f[0]["msg"] and KNOWN_HOMEPAGE_OVERLAP in f[0]["msg"], f
