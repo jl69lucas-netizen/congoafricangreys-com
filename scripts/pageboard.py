@@ -192,3 +192,98 @@ def spent_h6_prefixes(ledger, exclude_slug=None):
         for p in t.get("h6_prefixes", []):
             out.setdefault(p, page)
     return out
+
+
+TOKEN = re.compile(r"[a-z0-9$']+")
+SPECIES = re.compile(r"\b(congo|timneh|macaw|cockatoo|amazon(?: parrot)?|eclectus|african grey|grey)\b")
+SHINGLE = 5
+
+
+def tokens(text):
+    return TOKEN.findall(text.lower())
+
+
+def all_headings(board):
+    """(level, text) in render order: H2 then its tree, depth-first."""
+    out = []
+
+    def walk(nodes):
+        for n in nodes:
+            out.append((n["level"], n["heading"]))
+            walk(n.get("children", []))
+    for s in board["sections"]:
+        out.append((2, s["heading"]))
+        walk(s["tree"])
+    return out
+
+
+def live_headings(dist=DIST):
+    """{page: [heading text, ...]} from every built page. Empty when dist/ is absent."""
+    hpat = re.compile(r"<h([1-6])[^>]*>(.*?)</h\1>", re.S | re.I)
+    strip = re.compile(r"<[^>]+>")
+    import html as _h
+    out = {}
+    for page in sorted(pathlib.Path(dist).glob("**/index.html")):
+        slug = "/" + page.parent.relative_to(dist).as_posix().strip(".") + "/"
+        out[slug] = [_h.unescape(re.sub(r"\s+", " ", strip.sub("", raw)).strip()) for _, raw in hpat.findall(page.read_text(errors="ignore"))]
+    return out
+
+
+def header_precheck(proposed, live):
+    """Every proposed heading that collides with a live one: exact, template (species
+    swapped) or 5-token shingle. `live` is {page: [heading, ...]}."""
+    exact, templ, shingles = {}, {}, {}
+    for page, hs in live.items():
+        for h in hs:
+            t = " ".join(tokens(h))
+            if not t:
+                continue
+            exact.setdefault(t, page)
+            templ.setdefault(SPECIES.sub("{species}", t), page)
+            ws = tokens(h)
+            for i in range(len(ws) - SHINGLE + 1):
+                shingles.setdefault(" ".join(ws[i:i + SHINGLE]), (page, h))
+    hits = []
+    for h in proposed:
+        ws = tokens(h)
+        t = " ".join(ws)
+        if t in exact:
+            hits.append({"heading": h, "kind": "exact", "page": exact[t], "with": h}); continue
+        tt = SPECIES.sub("{species}", t)
+        if tt in templ:
+            hits.append({"heading": h, "kind": "template", "page": templ[tt], "with": tt}); continue
+        for i in range(len(ws) - SHINGLE + 1):
+            key = " ".join(ws[i:i + SHINGLE])
+            if key in shingles:
+                page, with_ = shingles[key]
+                hits.append({"heading": h, "kind": "shingle", "page": page, "with": with_}); break
+    return hits
+
+
+def authorization_check(board, ont):
+    by_id = {e["id"]: e for e in ont["entities"]}
+    used = []
+    for s in board["sections"]:
+        for eid in s["entities"]:
+            if eid not in used:
+                used.append(eid)
+    return {
+        "blocked": [e for e in used if e in by_id and by_id[e]["authorization"] == "BLOCKED"],
+        "proposed": [e for e in used if e in by_id and by_id[e]["authorization"] == "PROPOSED"],
+        "unknown": [e for e in used if e not in by_id],
+    }
+
+
+def distribution(board):
+    rows, totals = [], {"primary": 0, "lsi": 0, "longtail": 0, "brand": 0, "geo": 0, "words_min": 0, "words_max": 0}
+    for s in board["sections"]:
+        row = {"section": s["id"], "heading": s["heading"]}
+        for k in ("primary", "lsi", "longtail", "brand", "geo"):
+            row[k] = len(s["keywords"][k]); totals[k] += row[k]
+        row["words_min"], row["words_max"] = s["words"]["min"], s["words"]["max"]
+        totals["words_min"] += row["words_min"]; totals["words_max"] += row["words_max"]
+        rows.append(row)
+    counts = {f"h{n}": 0 for n in range(2, 7)}
+    for lvl, _ in all_headings(board):
+        counts[f"h{lvl}"] += 1
+    return {"rows": rows, "totals": totals, "h_counts": counts}

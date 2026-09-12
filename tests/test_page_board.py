@@ -356,3 +356,47 @@ def test_ledger_tuple_slot_may_be_empty():
     PB.validate_ledger({"pools": {"hero": ["hero-a"]},
                         "pages": {"p1": {"hero": "hero-a", "dial": "", "rail": "", "toc": "",
                                          "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}})
+
+
+def test_all_headings_walks_the_tree_in_order():
+    hs = PB.all_headings(MIN_BOARD)
+    assert hs[0] == (2, "What Do We Have for Sale Right Now?")
+    assert hs[-1] == (6, "Aviary Note: Read the Card")
+    assert [lvl for lvl, _ in hs] == [2, 3, 4, 5, 6]
+
+
+def test_header_precheck_finds_exact_and_shingle_matches(tmp_path):
+    live = {"/congo-vs-timneh/": ["Congo or Timneh — Which Suits Your Household?", "What Every Bird Card Tells You Before You Ask"]}
+    hits = PB.header_precheck(["Congo or Timneh — Which Suits Your Household?",
+                               "What Every Bird Card Tells You Before You Buy",
+                               "A Heading Nobody Has Used"], live)
+    kinds = {h["heading"]: h["kind"] for h in hits}
+    assert kinds["Congo or Timneh — Which Suits Your Household?"] == "exact"
+    assert kinds["What Every Bird Card Tells You Before You Buy"] == "shingle"
+    assert "A Heading Nobody Has Used" not in kinds
+
+
+def test_header_precheck_template_collision_across_species():
+    live = {"/african-grey-vs-macaw/": ["Is a Macaw Right for You?"]}
+    hits = PB.header_precheck(["Is a Cockatoo Right for You?"], live)
+    assert hits and hits[0]["kind"] == "template"
+
+
+def test_authorization_check_reports_blocked_and_proposed():
+    ont = {"entities": [
+        {"id": "ont:ok", "name": "ok", "aliases": [], "class": "Health", "authorization": "ASSERTED", "source": "x", "owner_page": None},
+        {"id": "ont:maybe", "name": "maybe", "aliases": [], "class": "Health", "authorization": "PROPOSED", "source": None, "owner_page": None},
+        {"id": "ont:wild-caught", "name": "wild-caught", "aliases": [], "class": "Commerce", "authorization": "BLOCKED", "source": "rule 2", "owner_page": None}]}
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["entities"] = ["ont:ok", "ont:maybe", "ont:wild-caught", "ont:unknown"]
+    r = PB.authorization_check(b, ont)
+    assert r["blocked"] == ["ont:wild-caught"]
+    assert r["proposed"] == ["ont:maybe"]
+    assert r["unknown"] == ["ont:unknown"]
+
+
+def test_distribution_sums_keywords_and_words():
+    d = PB.distribution(MIN_BOARD)
+    assert d["rows"][0]["section"] == "birds" and d["rows"][0]["primary"] == 1
+    assert d["totals"]["words_min"] == 400 and d["totals"]["words_max"] == 600
+    assert d["h_counts"] == {"h2": 1, "h3": 1, "h4": 1, "h5": 1, "h6": 1}
