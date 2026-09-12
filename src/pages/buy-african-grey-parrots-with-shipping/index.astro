@@ -1,210 +1,1249 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import TrustBar from '../../components/TrustBar.astro';
-import CTA from '../../components/CTA.astro';
-import Schema from '../../components/Schema.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import StatementLabel from '../../components/cag-library/StatementLabel.astro';
+import clutch from '../../../data/clutch-inventory.json';
+import prices from '../../../data/price-matrix.json';
 
-const title = "African Grey Parrot Shipping — Safe IATA Delivery Nationwide";
-const description = "We ship hand-raised African Grey parrots nationwide via IATA-approved carriers. CITES documents included. Vet-checked before shipping. Learn how it works.";
+// ============================================================================
+//  /buy-african-grey-parrots-with-shipping/ — for-sale cluster, buy page
+//  Strategy A-3 "Proof-of-Price Storefront" (sessions/2026-08-10-two-pages-sprint05-strategy.md §A2)
+//  Outline: sessions/2026-08-10-two-pages-outline-gate.md PAGE A (10 H2 · 24 H3 · 10 H4 · 8 H5 · 6 H6)
+//  Tuple 11 (sessions/2026-07-19-for-sale-component-map.md):
+//    Split-Hero A + price-transparency ribbon · Dial 2 Dark-Aviary + Rail B green ticker
+//    · T3 Boarding-Pass TOC (genuine first use, restricted to shipping-heavy pages)
+//    · K1 Receipt + K4 Clipboard · NEW Table H "Price Ladder" · FAQ-A refreshed to a clay $ chip
+//  H6 prefixes reserved to this page: "Price Check:" · "On the Paperwork:" · "What We Measured:"
+//  Prose written fresh from the outline. No sibling page was opened for copy — components
+//  and CSS only (Write-From-Outline). No reviews: all 17 in data/reviews.json are spent
+//  on other pages, and one quote credited twice fails evidence_audit review-attribution.
+//  The 3-3-3 rule stays OUT of the FAQ (locked decision, project-for-sale-cluster-close)
+//  until it is sourced to the Verified-Claim Ledger.
+//  Evidence caps (for-sale + budgets_by_slug): C.A.Gs 15 · CITES 5 · Appendix I 4
+//    · DNA 6 · captive-bred 5 · USDA 3 · Midland 4 · scam 2 · legit 0.
+// ============================================================================
+
+const title = "Buy an African Grey Parrot Online — Every Price Shown | C.A.Gs";
+const description = "Buy an African Grey parrot online from the family who raised it. Six documented birds, every price published, airport cargo $185, home delivery $350, cabin $750.";
 const canonical = "https://congoafricangreys.com/buy-african-grey-parrots-with-shipping/";
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How are African Grey parrots shipped?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "African Grey parrots are shipped via IATA-approved airline cargo in climate-controlled, airline-compliant travel carriers. We use United, American, Delta, and Alaska Airlines, selecting the most direct route to minimize travel time. Birds travel in the climate-controlled cargo hold and typically arrive at the destination airport within 3–8 hours of departure."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What documents come with my shipped parrot?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Every shipped African Grey parrot includes: a USDA health certificate issued by our avian vet within 10 days of the shipping date (required for interstate transport), CITES Appendix I captive-bred certificate confirming legal US captive breeding, DNA sexing certificate from a certified avian lab, hatch certificate with band number, and full avian vet records including pre-ship health clearance. These documents travel with your bird."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is it safe to ship an African Grey parrot?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes — when done correctly, airline shipping is safe for African Greys. We only ship birds that are fully weaned, at least 5–6 months old, and vet-cleared within 48 hours before the flight. IATA-approved travel carriers provide ventilation, stability, and appropriate spacing. We book direct flights when possible and keep total travel time under 8 hours."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How long does African Grey parrot shipping take?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "From departure to airport pickup typically takes 3–8 hours depending on your location. You pick up your bird at the cargo or pet desk of your nearest major airport. We provide real-time flight tracking and notify you when your bird has departed and when the flight lands."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How much does shipping cost?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Nationwide airline shipping costs $185. This covers the flight booking, IATA-approved carrier crate, health certificate, and all required documentation. There are no hidden fees."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you ship to all 50 states?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. We ship IATA-compliant to all 50 states. Birds are transported to your nearest major airport and you pick them up at the cargo or pet desk. California, Hawaii, and New York buyers should note their states have additional documentation requirements — which our CITES paperwork fully satisfies."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What airlines do you use for shipping?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We work with United Airlines, American Airlines, Delta, and Alaska Airlines — choosing the fastest, most direct route available for your location from our Midland, TX aviary."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What if my bird appears distressed on arrival?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Contact us the same day. Birds are vet-checked within 48 hours before any shipping date, so arrival distress is rare — but if you observe labored breathing, refusal to eat, or unusual posture after arrival, call us immediately and we will coordinate with a local avian vet in your area."
-      }
-    }
-  ]
+const IMG = "/images/buy-shipping-page/";
+const site = "https://congoafricangreys.com";
+const seam = "/cag-fs-seam-emblem.webp";
+
+const deposit = (prices as any).deposit_display;            // $200
+const airport = (prices as any).airport_pickup_display;      // $185
+const home = (prices as any).home_delivery_display;          // $350
+const cabin = (prices as any).cabin_nanny_display;           // $750
+const congoRange = (prices as any).variants.congo_african_grey.price_display;   // $1,700–$3,500
+const timnehRange = (prices as any).variants.timneh_african_grey.price_display; // $1,500–$1,600
+
+const breadcrumbs = [
+  { name: "Home", url: "/" },
+  { name: "African Greys for Sale", url: "/african-grey-parrots-for-sale/" },
+  { name: "Buy With Shipping", url: "/buy-african-grey-parrots-with-shipping/" },
+];
+
+// Live inventory only. Sold birds never appear and are never InStock.
+const available = ((clutch as any).birds as any[]).filter((b) => b.status === "available");
+const isTimneh = (b: any) => b.variant === "timneh_african_grey";
+const subLabel = (b: any) => (isTimneh(b) ? "Timneh" : "Congo");
+const groupKey = (b: any) => (b.sex === "pair" ? "pair" : isTimneh(b) ? "timneh" : "congo");
+const groupLabel = (b: any) => (b.sex === "pair" ? "Bonded pair" : isTimneh(b) ? "Timneh" : "Congo");
+const groupCount = (k: string) => available.filter((b) => groupKey(b) === k).length;
+const shortName = (b: any) => b.name.replace(" (Pair)", "");
+
+// Photographs chosen 2026-09-12 from assets/brand (sessions/2026-09-12-two-pages-photo-manifest.json).
+// Every alt differs in its first five words (Rule 50b).
+const birdImg: Record<string, { src: string; alt: string; pos: string; badge?: "top" }> = {
+  "Bery": { src: IMG + "bery-congo-african-grey-hen-card.webp", pos: "center 32%",
+    alt: "A one year old Congo hen steady under a gentle hand" },
+  "Amie": { src: IMG + "amie-congo-african-grey-hen-card.webp", pos: "center 34%",
+    alt: "Amie as a hand fed baby cupped in both hands" },
+  "Roys": { src: IMG + "roys-congo-african-grey-cock-card.webp", pos: "center 30%", badge: "top",
+    alt: "Roys standing beside his play ball at four months" },
+  "Jins & Jeni (Pair)": { src: IMG + "jins-jeni-bonded-congo-pair-card.webp", pos: "center 30%",
+    alt: "Jins and Jeni beak to beak, the bonded pair we sell together" },
+  "Elad": { src: IMG + "elad-timneh-african-grey-cock-card.webp", pos: "center 36%",
+    alt: "Elad stepping up to a hand at his cage door" },
+  "Evie": { src: IMG + "evie-timneh-african-grey-hen-card.webp", pos: "center 34%",
+    alt: "Evie the Timneh hen upright on her rope perch" },
 };
+const birdBlurb: Record<string, string> = {
+  "Bery": "Grown hen, past weaning and past the settling wobbles a younger bird still has ahead.",
+  "Amie": "Hand-fed from a syringe in our kitchen; she finishes weaning here before she flies.",
+  "Roys": "Busy, bold cock who works a foraging toy until it gives up its last pellet.",
+  "Jins & Jeni (Pair)": "Two unrelated birds who chose each other. They leave together or not at all.",
+  "Elad": "Charcoal Timneh cock, horn-coloured upper beak, already stepping up on request.",
+  "Evie": "Timneh hen who watches a room for a while before she decides to join it.",
+};
+
+// Counter strip — 8 snippets (matrix row 2). Every figure from a data file.
+const counters = [
+  { n: String(available.length), l: "Birds reservable today" },
+  { n: timnehRange.split("–")[0], l: "Aviary floor price" },
+  { n: congoRange.split("–")[0], l: "Congo floor price" },
+  { n: "72 Hours", l: "Written health window" },
+  { n: airport, l: "Airport cargo" },
+  { n: home, l: "Home delivery" },
+  { n: cabin, l: "Cabin with a nanny" },
+  { n: "24h", l: "We reply, personally" },
+];
+
+// Dial 2 + Rail B + T3 all read this one spine. IDs map to the approved outline.
+const sections = [
+  { n: "01", id: "birds", label: "Birds you can reserve", tag: available.length + " now" },
+  { n: "02", id: "price", label: "Four prices, one bird", tag: "Proof" },
+  { n: "03", id: "papers", label: "Paperwork in the folder", tag: "5 docs" },
+  { n: "04", id: "first72", label: "The first 72 hours", tag: "72h" },
+  { n: "05", id: "travel", label: "Getting your bird home", tag: "3 routes" },
+  { n: "06", id: "states", label: "Five states we ship", tag: "IA·KY·MD·TN·WI" },
+  { n: "07", id: "choose", label: "Congo or Timneh", tag: "Decide" },
+  { n: "08", id: "checks", label: "Catching a fake listing", tag: "5 checks" },
+  { n: "09", id: "faq", label: "Buying questions", tag: "12 Q" },
+  { n: "10", id: "reserve", label: "Reserve a bird", tag: "24h" },
+];
+const N = sections.length;
+
+// NEW Table H "Price Ladder" — the mandatory price artifact. Every row is a reading we
+// recorded on one day (sprint0 §3c). Sources stay descriptive; the figures are the evidence.
+const ladderRows = [
+  { src: "A free-hosted “foundation” site", price: "$850", when: "10 Aug 2026", incl: "“Free delivery” advertised. No vet record, no sexing certificate, no band named anywhere on the listing." },
+  { src: "A second free-site seller", price: "$1,500", when: "10 Aug 2026", incl: "One flat price for any bird, with no paperwork named and no individual bird shown." },
+  { src: "A classified listing", price: "$4,500", when: "10 Aug 2026", incl: "Same seller as the two rows below, same day, lowest of their three numbers." },
+  { src: "That seller’s own website", price: "$7,500", when: "10 Aug 2026", incl: "Same birds again, priced three thousand dollars above their own classified." },
+  { src: "An aggregator listing", price: "$8,500", when: "10 Aug 2026", incl: "The same seller’s ceiling, on a third platform, on that same afternoon." },
+  { src: "Google’s AI Overview", price: "$5,000–$8,500", when: "10 Aug 2026", incl: "Called “typical”, attached to no seller and no bird, and it also told buyers that anything under $2,000 is fraudulent." },
+  { src: "Us, on this page", price: timnehRange.split("–")[0] + "–" + congoRange.split("–")[1], when: "Today", incl: "Hand-feeding to weaning, the pre-sale avian exam, the screening panel, sexing, the paper folder and the closed band." },
+];
+
+// Geo — IA · KY · MD · TN · WI, the five unspent by any built sibling. All slugs verified live.
+const statePlaces = [
+  { href: "/african-grey-parrot-for-sale-iowa/", label: "African Greys for sale in Iowa", note: "Des Moines cargo counter" },
+  { href: "/african-grey-parrot-for-sale-kentucky/", label: "Buy an African Grey in Kentucky", note: "Louisville live-animal desk" },
+  { href: "/african-grey-parrot-for-sale-maryland/", label: "African Grey parrots in Maryland", note: "Baltimore–Washington routing" },
+  { href: "/african-grey-parrot-for-sale-tennessee/", label: "Hand-raised Greys in Tennessee", note: "Nashville direct flights" },
+  { href: "/african-grey-parrot-for-sale-wisconsin/", label: "Documented Greys in Wisconsin", note: "Milwaukee cargo pickup" },
+];
+
+const readMore = [
+  { href: "/african-grey-parrot-price/", img: IMG + "read-african-grey-parrot-price-hero", kicker: "Costs", title: "What an African Grey parrot costs", sub: "The purchase price beside the first-year setup, the annual spend and the lifetime figure." },
+  { href: "/congo-vs-timneh-african-grey/", img: IMG + "read-congo-vs-timneh-african-grey-hero", kicker: "Compare", title: "Congo vs Timneh African Grey", sub: "Size, tail colour, talking onset and temperament, with both birds side by side." },
+  { href: "/how-to-avoid-african-grey-parrot-scams/", img: IMG + "read-how-to-avoid-african-grey-parrot-scams-hero", kicker: "Caution", title: "How to avoid a fraudulent listing", sub: "The payment routes, stock photographs and pressure tactics a fake seller relies on." },
+  { href: "/cites-african-grey-documentation/", img: IMG + "read-cites-african-grey-documentation-hero", kicker: "Paperwork", title: "Documentation, explained in full", sub: "What each certificate proves, who issues it, and how to check it against your bird." },
+];
+
+// QAB — 12 questions from the Sprint 0.5 fan-out and the measured PAA set.
+const faqs = [
+  { q: "Where can I buy an African Grey parrot?", a: "From the people who hatched it, ideally, and you should be able to find them on a map. We are a family aviary in west Texas, we have six birds available as this page stands, and every one of them was raised in our house rather than bought in to resell. A breeder who raised your bird can tell you what it eats, how it behaves at dusk and which of its parents it takes after. A reseller can only tell you the price." },
+  { q: "Can you buy an African Grey parrot online safely?", a: "Yes, with one condition: everything you cannot see in person has to be verifiable another way. Ask for a live video call with the specific bird, on the day, not a clip that could be a year old. Ask for the paperwork before you pay rather than after. Check the price against what raising a bird actually costs, which is the table further up this page. Pay by a method that leaves you recourse. If a seller resists any of those four, the problem is the seller." },
+  { q: "How much should an African Grey parrot cost?", a: "Ours run from " + timnehRange.split("–")[0] + " for a Timneh hen to " + congoRange.split("–")[1] + " for the bonded pair, and the price ladder above shows what else the internet was asking on one day in August. The honest range is wide because birds differ in age, sex and subspecies, but it has a floor. Below roughly two thousand dollars, something in the listing is usually untrue, and Google's own summary of this search pushes buyers the other way by calling eight thousand typical." },
+  { q: "What is the best age to buy an African Grey parrot?", a: "After weaning, which for these birds lands somewhere between twelve and sixteen weeks. An unweaned chick is the single most common thing to go wrong in this trade, because hand-feeding is a skill with a real risk of aspiration and crop burn, and a seller who hands that job to a first-time buyer has moved their risk onto you. We finish the job here. When a bird leaves, it eats on its own." },
+  { q: "Do I need a licence to own an African Grey parrot?", a: "Not as a pet owner in the United States. The treaty listing that governs these birds restricts international commercial trade in wild-caught ones, and it does not stop you owning a bird bred in this country with its papers in order. State and city rules differ on numbers and noise rather than on the species, so check locally if you keep several birds, and keep your folder somewhere you can find it." },
+  { q: "How do you ship an African Grey parrot?", a: "Three ways, and the section above sets each one out. Airport cargo at " + airport + " is what most buyers choose: your bird flies as manifested live-animal cargo on a direct flight where the route allows, and you collect at the airline's cargo desk. Home delivery at " + home + " brings the crate to your door. A cabin seat with a flight nanny is " + cabin + " and is quoted per route, because the nanny's own ticket sets the cost." },
+  { q: "Is flying safe for a parrot?", a: "It is, when the bird is old enough, the crate meets the live-animal standard and the flight is direct. Connections are where handling and temperature risk accumulate, so we book around them. Our birds travel fully weaned and vet-cleared, with the health certificate taped to the crate because the airline asks for it. We also cover anything transit-related for twenty-four hours from the moment you take possession." },
+  { q: "What comes with the bird when I buy it?", a: "A paper folder and a ringed bird. The folder holds the written health guarantee, the avian veterinary certificate from the pre-sale examination, the sexing certificate, the treaty paperwork and the hatch record. The ring is already on your bird's leg, and its number appears on the certificates so you can match the documents to the parrot yourself on day one. The paperwork section on this page lists each document and what it proves." },
+  { q: "Can I visit before I buy?", a: "Yes, and we would rather you did. We are two or three hours from a good part of Texas and buyers drive it regularly. If you cannot make the trip, a video call is the next best thing and we will do it whenever you ask. What we will not do is take a deposit from somebody who has never seen the bird move." },
+  { q: "What deposit do you take, and is it refundable?", a: "A " + deposit + " deposit holds a bird and comes off the balance. It is what stops us selling a bird twice while you arrange a flight. If something changes on your side before travel, tell us early and we will talk about it rather than hide behind a policy; if a bird's health changes on our side, you get the deposit back and your choice of the others. Nothing is taken through the form on this page." },
+  { q: "Do you sell African Grey parrots to any buyer?", a: "No, and the questions on the form are how we decide. We do not sell to pet stores, to commercial breeding operations or to anyone buying to resell cheaply, and we ask directly rather than guess. We also ask whether you have surrendered an animal before, because a straight answer tells us more than a perfect one. A bird that may live forty years deserves that conversation." },
+  { q: "How quickly will you reply?", a: "Within a day, and usually the same afternoon. It will be Mark or Teri writing, not a queue, which is also why we answer questions about birds we do not have and routes we cannot fly. If you have not heard from us in twenty-four hours, something went wrong with the email rather than with your enquiry, so send it again." },
+];
+
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
+
+// One Product per real available bird, inside an ItemList. Sold birds are absent entirely.
+const itemListSchema = { "@context": "https://schema.org", "@type": "ItemList",
+  name: "African Grey parrots available to buy from C.A.Gs",
+  itemListElement: available.map((b, i) => ({ "@type": "ListItem", position: i + 1,
+    item: { "@type": "Product",
+      name: shortName(b) + " — " + subLabel(b) + " African Grey" + (b.sex === "pair" ? " bonded pair" : ""),
+      category: "Companion parrot",
+      image: site + birdImg[b.name].src,
+      brand: { "@type": "Organization", name: "C.A.Gs" },
+      offers: { "@type": "Offer", price: String(b.price), priceCurrency: "USD",
+        availability: "https://schema.org/InStock", url: site + b.slug,
+        seller: { "@type": ["Organization", "LocalBusiness"], name: "C.A.Gs", alternateName: "Congo African Greys" } } } })) };
+
+const groupSchema = {
+  "@context": "https://schema.org", "@type": "Product",
+  name: "African Grey Parrot for Sale Online, Documented and Weaned",
+  image: [site + IMG + "buy-african-grey-parrots-with-shipping-hero.webp", site + IMG + "buy-african-grey-price-ladder-850-to-8500-infographic.webp"],
+  description: "A weaned, hand-raised African Grey parrot bought direct from the family aviary that hatched it, with the price published, the paper folder listed item by item, and three delivery routes quoted openly.",
+  category: "Companion parrot",
+  brand: { "@type": "Organization", name: "C.A.Gs" },
+  offers: { "@type": "AggregateOffer", lowPrice: String(Math.min(...available.map((b) => b.price))),
+    highPrice: String(Math.max(...available.map((b) => b.price))), priceCurrency: "USD",
+    offerCount: String(available.length), availability: "https://schema.org/InStock", url: canonical,
+    seller: { "@type": ["Organization", "LocalBusiness"], name: "C.A.Gs", alternateName: "Congo African Greys" } },
+};
+
+const schemaGraph = JSON.stringify({ "@context": "https://schema.org", "@graph": [groupSchema, itemListSchema, faqSchema] });
+const ogExtra = `<meta property="og:image" content="${site}${IMG}buy-african-grey-parrots-with-shipping-hero.webp">`;
+const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`;
 ---
+<BaseLayout title={title} description={description} canonical={canonical} ogType="product" hideGlobalCta={true} schemaJson={schemaGraph} heroPreload={IMG + "buy-african-grey-parrots-with-shipping-hero.webp"} heroPreloadSrcset={IMG + "buy-african-grey-parrots-with-shipping-hero-760.webp 760w, " + IMG + "buy-african-grey-parrots-with-shipping-hero.webp 1280w"} heroPreloadSizes="(max-width: 900px) 100vw, 540px" extraHeadHtml={ogExtra}>
 
-<BaseLayout {title} {description} {canonical} hideGlobalCta>
+  <main class="bws">
+    <div class="bw-container"><Breadcrumb items={breadcrumbs} /></div>
 
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-
-  <!-- Hero -->
-  <div style="max-width:1200px;margin:0 auto;">
-    <Breadcrumb items={[
-      { name: "Home", url: "/" },
-      { name: "Resources & Trust", url: "/trusted-african-grey-parrot-breeders/" },
-      { name: "Live Shipping Info", url: "/buy-african-grey-parrots-with-shipping/" }
-      ]} />
-  </div>
-
-  <section class="bg-green text-white py-16 px-4">
-    <div class="max-w-3xl mx-auto text-center">
-      <p class="text-gold font-sora text-sm font-semibold uppercase tracking-widest mb-3">Ships To All 50 States</p>
-      <h1 class="font-lora font-bold text-4xl sm:text-5xl mb-4">Buy African Grey Parrots With Shipping</h1>
-      <p class="text-white/80 text-lg">IATA-compliant airline transport from Midland, TX. Same-day &amp; next-day shipping available. Health certificate included on every bird.</p>
-    </div>
-  </section>
-
-  <TrustBar />
-
-  <!-- Where We Ship -->
-  <section class="py-16 px-4">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-6 text-center">Where We Ship</h2>
-      <p class="text-stone-600 text-center mb-8 max-w-2xl mx-auto">We offer nationwide shipping, covering local and major airports across the U.S. Whether you're in Texas, Florida, or California, our expert team ensures your parrot arrives safely and stress-free.</p>
-      <div class="grid sm:grid-cols-2 gap-4">
-        {[
-          'Wausau, WI — Fast shipping available',
-          'Oak Ridge, TN — Talking parrots',
-          'Princeton, NJ — Delivered safely',
-          'Asheville, NC — Congo African Greys',
-          'Harrison, AR — Certified breeders',
-          'MI, MD, FL — Fertile eggs available',
-        ].map(loc => (
-          <div class="flex items-start gap-3 p-4 border border-stone-100 rounded-xl bg-white">
-            <span class="text-green text-lg mt-0.5"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-            <p class="text-stone-600 text-sm">{loc}</p>
+    <!-- ===================== SPLIT-HERO A · IMAGE LEFT + PRICE RIBBON ===================== -->
+    <header class="hero">
+      <div class="hero-grid bw-container">
+        <figure class="hero-shot">
+          <img src={IMG + "buy-african-grey-parrots-with-shipping-hero.webp"}
+               srcset={IMG + "buy-african-grey-parrots-with-shipping-hero-760.webp 760w, " + IMG + "buy-african-grey-parrots-with-shipping-hero.webp 1280w"}
+               sizes="(max-width: 900px) 100vw, 540px"
+               width="1280" height="960" fetchpriority="high" decoding="async"
+               alt="A hand raised Congo stepping onto its owner's hand at home">
+        </figure>
+        <div class="hero-copy">
+          <p class="eyebrow">USDA-licensed family aviary in west Texas since 2014 · {available.length} captive-bred birds reservable · we answer in a day</p>
+          <h1>Buy an African Grey Parrot Online — Documented, Weaned, and <em>Priced in the Open</em></h1>
+          <p class="lead">Every bird on this page has a name, a photograph taken here, a price printed beside it and a folder of paperwork that travels with it. Nothing is hidden behind “enquire for pricing”, because the thing buyers most need to judge is the one thing this trade keeps vague. Read the prices first, then read why they are what they are.</p>
+          <div class="hero-cta">
+            <a class="btn btn-clay" href="#birds">See the {available.length} birds and their prices</a>
+            <a class="btn btn-ghost" href="#price">Why prices vary this much</a>
           </div>
+        </div>
+      </div>
+      <ul class="ribbon bw-container" aria-label="What every price here includes">
+        <li><span set:html={tick} /> {timnehRange.split("–")[0]} floor, published</li>
+        <li><span set:html={tick} /> Every price shown on the card</li>
+        <li><span set:html={tick} /> CITES paperwork included</li>
+        <li><span set:html={tick} /> 72-hour written guarantee</li>
+      </ul>
+    </header>
+
+    <!-- ===================== COUNTER STRIP · 8 ===================== -->
+    <section class="counter" aria-label="This page at a glance">
+      <div class="bw-container counter-grid">
+        {counters.map((c) => (
+          <div class="cstat"><span class="cn">{c.n}</span><span class="cl">{c.l}</span></div>
         ))}
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- How Airline Shipping Works -->
-  <section class="bg-warm-white py-16 px-4">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-10 text-center"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> How Airline Shipping Works</h2>
-      <div class="space-y-8">
-        {[
-          { step: '1', title: 'Flight Booking & Scheduling', body: 'Once your order is confirmed, we book the next available flight. We prioritize direct and non-stop flights to minimize stress and prevent unnecessary delays.' },
-          { step: '2', title: 'Pre-Flight Health Check & Documentation', body: 'Every parrot undergoes a comprehensive health check before flying. We provide all required airline-approved health certificates, ensuring compliance with aviation safety standards.' },
-          { step: '3', title: 'Temperature-Controlled Travel Crates', body: 'Your African Grey travels in a well-ventilated, airline-approved pet carrier with soft bedding, fresh food, and water dispensers.' },
-          { step: '4', title: 'Live Tracking & Updates', body: 'Once your bird is in transit, we provide real-time flight tracking and arrival updates so you can plan for smooth airport pickup.' },
-        ].map(item => (
-          <div class="flex gap-5 items-start">
-            <div class="w-10 h-10 rounded-full bg-green text-white font-bold font-lora flex items-center justify-center shrink-0 text-lg">{item.step}</div>
-            <div>
-              <h3 class="font-lora font-semibold text-logo-dark text-lg mb-1">{item.title}</h3>
-              <p class="text-stone-600 text-sm leading-relaxed">{item.body}</p>
+    <!-- ===================== RAIL B · GREEN TICKER (mobile) ===================== -->
+    <nav class="bw-rail" aria-label="Jump to a section">
+      <div class="bw-container railB">
+        {sections.map((s, i) => (
+          <a href={"#" + s.id} data-dial={s.id} class={i === 0 ? "on" : ""}><span class="p">{s.n}</span> {s.label}</a>
+        ))}
+      </div>
+    </nav>
+
+    <div class="bw-container body-grid">
+
+      <!-- ===================== DIAL 2 · DARK AVIARY (desktop) ===================== -->
+      <aside class="bdial-wrap" aria-label="Section progress">
+        <nav class="bdial" style="--p:10">
+          <div class="bdial-ring"><div><b id="dialNum">01</b><span>of {N}</span></div></div>
+          <div class="bdial-list">
+            {sections.map((s, i) => (
+              <a href={"#" + s.id} data-dial={s.id} class={i === 0 ? "on" : ""}><span class="num">{s.n}</span><span class="dh">{s.label}</span>{s.tag && <span class="tag">{s.tag}</span>}</a>
+            ))}
+          </div>
+        </nav>
+      </aside>
+
+      <div class="content">
+
+        <!-- ===================== K1 · RECEIPT CARD ===================== -->
+        <aside class="k1" aria-label="What a price here covers">
+          <div class="k1-head"><b>One price, itemised</b><span>Printed, not quoted on request</span></div>
+          <dl class="k1-rows">
+            <div><dt>Aviary range</dt><dd>{timnehRange.split("–")[0]}–{congoRange.split("–")[1]} · Congo from {congoRange.split("–")[0]}, Timneh {timnehRange}</dd></div>
+            <div><dt>Included</dt><dd>Hand-feeding to weaning · pre-sale avian exam · screening panel · sexing certificate · <a href="#papers">the full paper folder</a></dd></div>
+            <div><dt>Deposit</dt><dd>{deposit}, off the balance, holds one named bird</dd></div>
+            <div><dt>Travel</dt><dd>{airport} airport cargo · {home} home delivery · {cabin} cabin with a nanny · collection here is free</dd></div>
+            <div><dt>Guarantee</dt><dd><a href="#first72">72 hours written from arrival</a>, plus 24 hours on anything transit-related</dd></div>
+            <div><dt>Not charged</dt><dd>No listing fee, no “paperwork fee”, no delivery surcharge added later</dd></div>
+          </dl>
+        </aside>
+
+        <!-- ===================== T3 · BOARDING-PASS TOC (first use) ===================== -->
+        <nav class="bpass" aria-label="What this page covers">
+          <div class="bpass-head">
+            <span class="bp-k">Page itinerary</span>
+            <span class="bp-route">MAF <span aria-hidden="true">→</span> YOUR CITY</span>
+          </div>
+          <ol class="bpass-stops">
+            {sections.map((s) => (
+              <li><a href={"#" + s.id}><span class="bp-n">{s.n}</span><span class="bp-l">{s.label}</span>{s.tag && <span class="bp-t">{s.tag}</span>}</a></li>
+            ))}
+          </ol>
+        </nav>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Ask us which bird suits your household <span aria-hidden="true">→</span></a></div>
+
+        <!-- ===================== §1 · THE BIRDS ===================== -->
+        <section class="sec" id="birds">
+          <h2>{available.length === 6 ? "Six" : String(available.length)} Birds Are Reservable Today — Here Is Each One</h2>
+          <p class="opener">Every bird below lives here right now, and the photograph beside each name was taken in this house rather than bought from a stock library. We list what we have, which is why the grid is short; when a bird goes, the card goes with it instead of staying up to collect enquiries.</p>
+
+          <div class="availB">
+            <aside class="availB-side" aria-label="Filter the birds">
+              <p class="side-h">Browse by kind</p>
+              <div class="side-filters">
+                <button class="side-f on" type="button" data-f="all">All birds<span class="side-n">{available.length}</span></button>
+                <button class="side-f" type="button" data-f="congo">Congo<span class="side-n">{groupCount("congo")}</span></button>
+                <button class="side-f" type="button" data-f="timneh">Timneh<span class="side-n">{groupCount("timneh")}</span></button>
+                <button class="side-f" type="button" data-f="pair">Bonded pair<span class="side-n">{groupCount("pair")}</span></button>
+              </div>
+              <div class="side-ship">
+                <p class="rail-ship">Ships nationwide · <b>{airport}</b> airport · <b>{home}</b> home · <b>{cabin}</b> cabin</p>
+                <p class="rail-ship">Collection here is free inside a two to three hour drive.</p>
+              </div>
+            </aside>
+
+            <div class="availB-grid">
+              {available.map((b) => {
+                const nm = shortName(b);
+                const im = birdImg[b.name];
+                return (
+                  <article class={"bcard " + groupKey(b)} data-p={groupKey(b)}>
+                    <div class="bphoto">
+                      <img src={im.src} srcset={im.src.replace(".webp", "-760.webp") + " 760w, " + im.src + " 800w"} sizes="(max-width: 640px) 46vw, 260px" alt={im.alt} style={"object-position:" + im.pos} width="800" height="800" loading="lazy" decoding="async">
+                      <span class={"bbadge " + groupKey(b) + (im.badge === "top" ? " badge-top" : "")}>{groupLabel(b)}</span>
+                    </div>
+                    <div class="binfo">
+                      <div class="brow"><h3>{nm}</h3><span class="bprice">{b.price_display}</span></div>
+                      <p class="bblurb">{birdBlurb[b.name]}</p>
+                      <div class="bchips">
+                        <span>{subLabel(b)}</span>
+                        <span>{b.sex === "pair" ? "Two birds" : b.sex === "male" ? "Cock" : "Hen"}</span>
+                        <span>Papers included</span>
+                      </div>
+                      <p class="bship">Ships nationwide · {airport} airport · {home} home</p>
+                      <a class="btn btn-clay bfull" href="#reserve">Ask about {nm}</a>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </div>
-        ))}
+
+          <h3>The Congo African Greys We Have Available Today</h3>
+          <p>Congos are the larger of the two, with the scarlet tail most people picture when they hear the name, and we have {groupCount("congo") + groupCount("pair")} of them including the pair. Bery is grown and settled. Amie is still on formula and finishes weaning in our kitchen. Roys is the busy one, the bird who will dismantle a foraging toy while the others watch.</p>
+
+          <h4>What Does Each Congo African Grey Cost?</h4>
+          <p>Congos here run from {congoRange.split("–")[0]}, and the bonded pair is {congoRange.split("–")[1]} because two birds leave together. The spread inside that range is about age and about which bird has already done the growing, not about a sliding scale we apply to whoever asks. The number on the card is the number you pay.</p>
+
+          <h5>Every Congo Price Includes Sexing, Paperwork, and a Vet Certificate</h5>
+          <p>Nothing on the list in the receipt above is an extra. A bird that has been examined, screened, sexed and papered costs us more to raise than a bird that has only been fed, and pricing those steps separately would let us advertise a smaller headline while charging the same money in the end. We would rather print one figure and stand behind it.</p>
+
+          <h6>Price Check: What a Congo Price Should Always Include</h6>
+          <p>Ask any seller to itemise, and listen for four things: hand-feeding through to weaning, an avian examination before sale, a sexing result on paper and the treaty documentation. If the reply covers only the bird, the rest was either skipped or is coming as a surprise invoice later. <a href="/african-grey-parrot-price/">Our costs page</a> sets the same arithmetic out across a first year rather than a single purchase.</p>
+
+          <h3>The Timneh African Greys We Have Available Today</h3>
+          <p>Timnehs are the smaller subspecies, darker in the body, with a maroon tail and a horn-coloured upper beak instead of the Congo's solid black. Elad and Evie are both here, both weaned, and both priced in the {timnehRange} band.</p>
+
+          <h4>Is a Timneh a Cheaper African Grey or a Different Bird?</h4>
+          <p>A different bird that happens to cost less. The price gap follows demand and size rather than quality, and the birds themselves differ in temperament: ours tend to start talking earlier and take a room's changes more calmly. Buying one to save money is the wrong reason. Buying one because a steadier, slightly smaller parrot suits your household is the right one.</p>
+
+          <h5>Timneh Pricing Reflects Size and Demand, Not a Lesser Bird</h5>
+          <p>The same feeding, the same examination and the same paperwork go into a Timneh as into a Congo, so the margin on one is thinner rather than fatter. What moves the price is that fewer buyers arrive asking for them by name, which is a fact about the market and not about the parrot sitting on the perch.</p>
+
+          <h6>Price Check: Why Our Timnehs Start at {timnehRange.split("–")[0]}</h6>
+          <p>That figure is the floor for this whole aviary, and it exists because below it the arithmetic of raising a bird properly stops working. When you see a Timneh advertised at half of it, the saving is coming out of something — the feeding, the testing, the paperwork, or the truth of the listing itself.</p>
+
+          <h3>Jins and Jeni — the Bonded Pair We Sell Together</h3>
+          <p>Jins and Jeni are not siblings and were not paired by us; they chose each other in the flight cage and have been inseparable since. They go as a pair at {congoRange.split("–")[1]} for both. We have had buyers ask to split them, and the answer is no: separating a bonded pair undoes years of the thing that makes them worth having.</p>
+
+          <h4>What Does “Hand-Raised” Mean Here?</h4>
+          <p>We call our own way of doing it <em>The Benjamin Home-Raising Protocol</em>: chicks raised in the house rather than a barn, hand-fed on a schedule we keep ourselves, and held back until they are weaned and eating unaided somewhere between twelve and sixteen weeks. It is our name for our practice, not a certificate anybody issued us, and the reason we name it at all is that “hand-raised” has become a word sellers use without doing any of it.</p>
+
+          <h3>What Every Bird Card Tells You Before You Ask</h3>
+          <p>Each card above carries the same six facts, in the same places, so you can compare birds instead of decoding listings. Name, subspecies, sex, price, what travels with the bird, and the delivery tiers. If a detail you need is missing, it is missing from our records too, and we will say so rather than fill the gap with something plausible.</p>
+          <img class="sec-img inf-img" src={IMG + "what-a-bird-card-tells-you-infographic.webp"}
+               srcset={IMG + "what-a-bird-card-tells-you-infographic-760.webp 760w, " + IMG + "what-a-bird-card-tells-you-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Anatomy of a C.A.Gs bird card and the six facts it states up front">
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Reserve one of these birds with a {deposit} deposit <span aria-hidden="true">→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §2 · THE PRICE ARTIFACT (MANDATORY) ===================== -->
+        <section class="sec" id="price">
+          <h2>Why the Same Bird Carries Four Different Price Tags</h2>
+          <p class="opener">On one afternoon in August 2026 we recorded what this search was actually asking for an African Grey, and the answers ranged from eight hundred and fifty dollars to eight and a half thousand. The wide part is not a market finding its level. Some of it is the same seller, on the same day, quoting three different numbers on three different platforms.</p>
+          <img class="sec-img inf-img" src={IMG + "buy-african-grey-price-ladder-850-to-8500-infographic.webp"}
+               srcset={IMG + "buy-african-grey-price-ladder-850-to-8500-infographic-760.webp 760w, " + IMG + "buy-african-grey-price-ladder-850-to-8500-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Price ladder showing African Grey listings from $850 to $8,500 with the C.A.Gs band marked">
+
+          <div class="tblwrap">
+            <table class="tblH">
+              <caption class="tblH-cap">The price ladder, as recorded on a single day in August 2026</caption>
+              <thead><tr><th scope="col">Where the price came from</th><th scope="col">Asking price</th><th scope="col">Recorded</th><th scope="col">What the price was said to include</th></tr></thead>
+              <tbody>
+                {ladderRows.map((r) => (
+                  <tr>
+                    <td data-label="Source">{r.src}</td>
+                    <td data-label="Price">{r.price}</td>
+                    <td data-label="Recorded">{r.when}</td>
+                    <td data-label="Includes">{r.incl}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p class="cap">Third-party figures are readings from one afternoon and will have moved since. Ours are current and sit in the data file this page reads from.</p>
+
+          <h3>One Seller, Three Platforms, Three Different Prices</h3>
+          <p>The clearest thing we found was not the cheap end. It was one aviary advertising its birds at four and a half thousand on a classified site, seven and a half on its own website and eight and a half through an aggregator, all live at once. No bird changed. Only the audience did.</p>
+          <img class="sec-img inf-img" src={IMG + "one-seller-three-platform-prices-infographic.webp"}
+               srcset={IMG + "one-seller-three-platform-prices-infographic-760.webp 760w, " + IMG + "one-seller-three-platform-prices-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="One seller's African Greys listed at three different prices across three platforms">
+
+          <h4>What Did We Actually Measure in August 2026?</h4>
+          <p>Six sources, read on one afternoon, written down as we found them: two free-hosted sellers at the bottom, one seller across three platforms in the middle and upper range, and Google's own overview of this search at the top. We did not average them, because an average of a fiction and a fact is another fiction.</p>
+          <img class="sec-img inf-img" src={IMG + "how-we-measured-african-grey-listing-prices-infographic.webp"}
+               srcset={IMG + "how-we-measured-african-grey-listing-prices-infographic-760.webp 760w, " + IMG + "how-we-measured-african-grey-listing-prices-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="How the same seller's listings were recorded across three platforms">
+
+          <h5>The Same Aviary's Birds Carried a Four-Thousand-Dollar Spread in One Day</h5>
+          <p>Four thousand dollars is not a discount or a promotion. It is a seller discovering what each platform's buyers will tolerate and pricing accordingly, which is legal, common, and worth knowing about before you take any single listing as the market rate for a parrot.</p>
+
+          <h6>What We Measured: The Three Listings, Side by Side</h6>
+          <p>Classified four and a half thousand. Own site seven and a half. Aggregator eight and a half. Same seller, same afternoon, same photographs of the same birds on all three.</p>
+
+          <h3>What an Honest African Grey Price Is Made Of</h3>
+          <p>Six things carry real cost, and they are the reason a floor exists at all: months of hand-feeding every few hours, the pre-sale veterinary examination, the screening panel, the sexing assay, the paper folder, and the crate a bird travels in. Strip any of them out and the price can fall. So can the bird's chances.</p>
+          <img class="sec-img inf-img" src={IMG + "what-an-african-grey-price-includes-infographic.webp"}
+               srcset={IMG + "what-an-african-grey-price-includes-infographic-760.webp 760w, " + IMG + "what-an-african-grey-price-includes-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Six cost components behind an honest hand-raised African Grey price">
+
+          <h4>Why Is an $850 African Grey a Warning Sign?</h4>
+          <p>Because the feeding alone outruns it. A chick eats formula for months, somebody is awake for the night feeds, and the veterinary work happens whether or not a buyer appears. At eight hundred and fifty dollars the sums fail before the bird is weaned, which means one of three things is untrue: the bird, the testing, or the seller's existence.</p>
+          <img class="sec-img inf-img" src={IMG + "why-an-850-dollar-african-grey-is-a-warning-sign-infographic.webp"}
+               srcset={IMG + "why-an-850-dollar-african-grey-is-a-warning-sign-infographic-760.webp 760w, " + IMG + "why-an-850-dollar-african-grey-is-a-warning-sign-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="What an $850 African Grey listing leaves out below the waterline">
+
+          <h5>Hand-Feeding, Avian Vet Care, and Documentation Set the Real Floor</h5>
+          <p>Our floor is {timnehRange.split("–")[0]} and it is arithmetic rather than positioning. Take the formula, the hours, the examination, the panel, the assay and the paperwork, and that is where a bird stops costing us money to place. A seller beneath it is either subsidising from somewhere or not doing the work.</p>
+
+          <h6>What We Measured: Where the Low Listings Cluster</h6>
+          <p>Both sub-thousand listings we found sat on free website hosts, showed no individual bird, named no veterinary practice and offered delivery free of charge. The pattern repeats because it costs nothing to publish.</p>
+
+          <h3>How to Price-Check Any African Grey Breeder in Ten Minutes</h3>
+          <p>Search the price, compare it against the range on this page, ask the seller to itemise, then ask to see the bird live. Four moves, ten minutes, and they settle most questions before any money moves. <a href="/trusted-african-grey-parrot-breeders/">Our own credentials page</a> is written so you can run those checks on us.</p>
+          <img class="sec-img inf-img" src={IMG + "price-check-any-african-grey-breeder-infographic.webp"}
+               srcset={IMG + "price-check-any-african-grey-breeder-infographic-760.webp 760w, " + IMG + "price-check-any-african-grey-breeder-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Four moves that price-check an African Grey breeder in ten minutes">
+
+          <h4>What Should You Ask Before You Send a Deposit?</h4>
+          <p>Who owns the bird right now, can I see it live today, what paperwork comes with it, and how do you take payment. Four questions, and the last one carries the most weight, because a seller steering you toward a wire, a gift card or a peer-to-peer app has chosen the one route with no way back.</p>
+          <img class="sec-img inf-img" src={IMG + "what-to-ask-before-sending-a-deposit-infographic.webp"}
+               srcset={IMG + "what-to-ask-before-sending-a-deposit-infographic-760.webp 760w, " + IMG + "what-to-ask-before-sending-a-deposit-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Four questions to ask a breeder before any deposit changes hands">
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Ask us to itemise any price on this page <span aria-hidden="true">→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §3 · THE PAPERWORK ===================== -->
+        <section class="sec" id="papers">
+          <h2>What Paperwork Comes With an African Grey You Buy From Us?</h2>
+          <p class="opener">Five documents and a banded leg, handed over together rather than posted on afterwards. Not one page-one competitor we checked publishes its documentation list, which is odd, because the folder is the part that proves a bird is what the listing says it is.</p>
+          <img class="sec-img ph-wide" src={IMG + "african-grey-documents-folder-buy-page.webp"}
+               srcset={IMG + "african-grey-documents-folder-buy-page-760.webp 760w, " + IMG + "african-grey-documents-folder-buy-page.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Sample DNA, health, CITES captive-bred and hatch records with personal fields redacted">
+          <p class="cap">The documents shown are samples with personal fields redacted. Your bird's own paperwork is provided on request.</p>
+
+          <h3>The Appendix I Certificate in Your Folder</h3>
+          <p><StatementLabel kind="fact" source="https://cites.org/eng/app/appendices.php" />African Greys sit on Appendix I of the CITES treaty, which restricts international commercial trade in wild-caught birds. Ours are bred here, and the certificate in your folder records exactly that, which is what makes owning and transporting one inside this country straightforward.</p>
+          <img class="sec-img inf-img" src={IMG + "cites-appendix-one-certificate-in-your-folder-infographic.webp"}
+               srcset={IMG + "cites-appendix-one-certificate-in-your-folder-infographic-760.webp 760w, " + IMG + "cites-appendix-one-certificate-in-your-folder-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="The CITES Appendix I certificate that travels in every buyer folder">
+
+          <h4>Why Does CITES Matter When You Buy an African Grey?</h4>
+          <p>Because it is the difference between a bird with a lawful history and a bird with none. The paperwork ties your parrot to a captive-bred origin, and a seller who cannot produce it is asking you to take the most checkable fact about your bird on trust. <a href="/cites-african-grey-documentation/">The documentation page</a> walks through each certificate in detail.</p>
+          <img class="sec-img inf-img" src={IMG + "why-cites-matters-when-you-buy-an-african-grey-infographic.webp"}
+               srcset={IMG + "why-cites-matters-when-you-buy-an-african-grey-infographic-760.webp 760w, " + IMG + "why-cites-matters-when-you-buy-an-african-grey-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Why the treaty listing shapes a lawful captive-bred African Grey purchase">
+
+          <h5>Appendix I Has Applied to Every African Grey Since January 2017</h5>
+          <p>The uplisting took effect that month, so any bird offered as pre-treaty stock is either much older than it looks or being described dishonestly. It changed nothing about keeping a captive-bred parrot as a pet and a great deal about importing one.</p>
+
+          <h6>On the Paperwork: What Appendix I Does and Does Not Mean</h6>
+          <p>It does mean international commercial trade in wild-caught birds is barred. It does not mean you need a personal licence to keep a captive-bred bird at home, and it does not make your purchase a grey area. Keep the certificate with the rest of the folder.</p>
+
+          <h3>Sex Testing and the Screens We Run</h3>
+          <p><StatementLabel kind="observed" n={available.length} since={2014} />Every bird here is sexed by a laboratory before it is listed, and the same sample type carries the disease panel. You get the certificate with the laboratory's name on it rather than our opinion, which matters for a species that gives no reliable visual clue either way.</p>
+          <img class="sec-img inf-img" src={IMG + "dna-sexing-and-disease-screens-we-run-infographic.webp"}
+               srcset={IMG + "dna-sexing-and-disease-screens-we-run-infographic-760.webp 760w, " + IMG + "dna-sexing-and-disease-screens-we-run-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="The three laboratory screens run on every bird before it is placed">
+
+          <h4>How Do You Know the Sex of the Bird You Are Buying?</h4>
+          <p>From the DNA result, never from the bird's appearance. Hens and cocks look alike at every age, so anyone telling you a bird is female because of its head shape or its tail is guessing. Ours arrive with the assay on paper, tied to the band number. <a href="/dna-tested-african-grey-for-sale/">The testing page</a> explains the method and what the fee covers.</p>
+          <img class="sec-img inf-img" src={IMG + "how-you-know-the-sex-of-your-african-grey-infographic.webp"}
+               srcset={IMG + "how-you-know-the-sex-of-your-african-grey-infographic-760.webp 760w, " + IMG + "how-you-know-the-sex-of-your-african-grey-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Why a Grey's sex is confirmed by laboratory result and never by eye">
+
+          <h3>Our USDA AWA Licence, and What It Lets You Verify</h3>
+          <p>We hold a federal USDA licence under the Animal Welfare Act, and the number is yours on request so you can look us up rather than believe us. That is the point of a licence: it puts a third party between a seller's claim about themselves and a buyer's ability to check it.</p>
+          <img class="sec-img inf-img" src={IMG + "usda-awa-licence-you-can-verify-infographic.webp"}
+               srcset={IMG + "usda-awa-licence-you-can-verify-infographic-760.webp 760w, " + IMG + "usda-awa-licence-you-can-verify-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="The USDA AWA licence a buyer can check before reserving a bird">
+
+          <h3>Hatch Certificates and Band Numbers</h3>
+          <p>The ring on your bird's leg went on as a chick and cannot be fitted to an adult, which is why it is the one identifier that cannot be moved between birds. Its number appears on the hatch record and on every certificate in the folder, so you can match paperwork to parrot yourself on the first evening.</p>
+          <img class="sec-img inf-img" src={IMG + "hatch-certificate-and-closed-band-number-infographic.webp"}
+               srcset={IMG + "hatch-certificate-and-closed-band-number-infographic-760.webp 760w, " + IMG + "hatch-certificate-and-closed-band-number-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Closed band and hatch certificate, the two records that identify one bird">
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Ask to see a bird's folder before you commit <span aria-hidden="true">→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §4 · THE FIRST 72 HOURS ===================== -->
+        <section class="sec" id="first72">
+          <h2>The First Seventy-Two Hours After Your Bird Lands</h2>
+          <p class="opener">Our written guarantee runs 72 hours from arrival, with a separate 24-hour clause for anything caused by the journey. It is short on purpose, and we would rather explain why than let a longer number do the persuading.</p>
+          <img class="sec-img inf-img" src={IMG + "first-72-hours-after-african-grey-arrives-infographic.webp"}
+               srcset={IMG + "first-72-hours-after-african-grey-arrives-infographic-760.webp 760w, " + IMG + "first-72-hours-after-african-grey-arrives-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Four steps covered by the seventy-two hour health guarantee after arrival">
+
+          <h3>The 72-Hour Guarantee, Stated Plainly</h3>
+          <p>Three days from the moment your bird reaches you, an examination by your own avian vet decides the question, and the remedy is replacement or refund. Book the appointment before the bird travels, because good avian practices run a waiting list and the window does not pause while you find one.</p>
+          <img class="sec-img inf-img" src={IMG + "the-seventy-two-hour-guarantee-stated-plainly-infographic.webp"}
+               srcset={IMG + "the-seventy-two-hour-guarantee-stated-plainly-infographic-760.webp 760w, " + IMG + "the-seventy-two-hour-guarantee-stated-plainly-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="The written guarantee window counted plainly across three arrival days">
+
+          <h3>Is a Longer Guarantee a Better Guarantee?</h3>
+          <p>Usually the opposite. A year-long promise sounds generous precisely because almost nobody expects to be asked to honour it, and the sellers advertising the longest windows in our search were the ones we could verify least. A short window that names its terms is worth more than a long one that names none.</p>
+          <img class="sec-img inf-img" src={IMG + "is-a-longer-guarantee-a-better-guarantee-infographic.webp"}
+               srcset={IMG + "is-a-longer-guarantee-a-better-guarantee-infographic-760.webp 760w, " + IMG + "is-a-longer-guarantee-a-better-guarantee-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="A short enforceable promise set against a long vague one">
+
+          <h4>What Makes a Health Guarantee Enforceable?</h4>
+          <p>Four things: it is in writing, it names an independent vet as the arbiter, it states a time limit, and it states the remedy. Ours does all four and <a href="/african-grey-parrot-health-guarantee/">the full policy</a> carries the wording. A guarantee missing any of them is a sentiment rather than a term.</p>
+          <img class="sec-img inf-img" src={IMG + "what-makes-a-health-guarantee-enforceable-infographic.webp"}
+               srcset={IMG + "what-makes-a-health-guarantee-enforceable-infographic-760.webp 760w, " + IMG + "what-makes-a-health-guarantee-enforceable-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Four clauses that make a bird health guarantee possible to enforce">
+
+          <h5>A Guarantee Is Worth Exactly as Much as the Address Behind It</h5>
+          <p>Any document is only as good as your ability to find the people who wrote it. We are a licensed aviary at a verifiable address with a phone number in the footer, which is the part that makes the rest of it mean anything.</p>
+
+          <h6>On the Paperwork: What Ours Says, Word for Word</h6>
+          <p>Seventy-two hours from arrival for health, twenty-four for transit, confirmed by your own avian veterinarian, settled as replacement or refund, void on removing the leg ring or on skipping the examination. The document identifies your bird by the ring number rather than by its name, which is why <a href="#papers">the paperwork section</a> matters more than it looks.</p>
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Read the terms before you pay a deposit <span aria-hidden="true">→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §5 · GETTING YOUR BIRD HOME ===================== -->
+        <section class="sec" id="travel">
+          <h2>Getting Your Bird From Our Aviary to Your City</h2>
+          <p class="opener">Three routes, three prices, all printed. Shipping is how a bird reaches you rather than a reason to buy one, so we treat it as logistics to be explained plainly instead of a headline.</p>
+          <img class="sec-img inf-img" src={IMG + "three-ways-your-african-grey-travels-home-infographic.webp"}
+               srcset={IMG + "three-ways-your-african-grey-travels-home-infographic-760.webp 760w, " + IMG + "three-ways-your-african-grey-travels-home-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Three routes an African Grey takes from the Midland aviary to a buyer">
+
+          <p class="ship-line">Ships nationwide · <b>{airport}</b> airport cargo · <b>{home}</b> home delivery · <b>{cabin}</b> cabin with a flight nanny · collection here is free within a two to three hour drive.</p>
+
+          <h3>Airport Cargo at {airport}</h3>
+          <p>Most buyers choose this one. Your bird flies as manifested live-animal cargo in a crate meeting the airline's live-animal standard, on a direct flight wherever the route allows, and you collect at the cargo desk rather than at a baggage carousel. Delta, United and American all carry them.</p>
+          <img class="sec-img ph-wide" src={IMG + "african-grey-iata-cargo-crate-airport.webp"}
+               srcset={IMG + "african-grey-iata-cargo-crate-airport-760.webp 760w, " + IMG + "african-grey-iata-cargo-crate-airport.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="IATA-approved travel crate with an African Grey at the airline cargo counter">
+
+          <h3>Home Delivery at {home}</h3>
+          <p>The crate comes to the address you give us on a date we agree first, which suits buyers who would rather not drive to a cargo counter or who live a long way from one. It costs more because somebody makes the journey with your bird instead of the airline doing it.</p>
+          <img class="sec-img ph-wide" src={IMG + "african-grey-home-delivery-courier-family.webp"}
+               srcset={IMG + "african-grey-home-delivery-courier-family-760.webp 760w, " + IMG + "african-grey-home-delivery-courier-family.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Courier handing an African Grey carrier and document folder to a family at their door">
+
+          <h3>Pickup in Midland, Texas</h3>
+          <p>Free, and the gentlest option for the bird, which is why buyers within a few hours of us drive it regularly. You meet the parrot where it grew up, we go through the folder at the table, and nothing about the day involves a crate in a cargo hold. A cabin seat with a flight nanny is the third option at {cabin}, quoted per route because the nanny buys a ticket too.</p>
+          <img class="sec-img inf-img" src={IMG + "pickup-in-midland-texas-drive-time-infographic.webp"}
+               srcset={IMG + "pickup-in-midland-texas-drive-time-infographic-760.webp 760w, " + IMG + "pickup-in-midland-texas-drive-time-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Collecting a bird in person from the Midland aviary gate">
+
+          <h4>How Long Is an African Grey Actually in Transit?</h4>
+          <p>On a direct routing, the flight itself is a few hours and the whole day usually ends with your bird home the same afternoon. We book around connections rather than through them, because that is where handling and temperature risk stack up.</p>
+          <img class="sec-img inf-img" src={IMG + "how-long-an-african-grey-is-in-transit-infographic.webp"}
+               srcset={IMG + "how-long-an-african-grey-is-in-transit-infographic-760.webp 760w, " + IMG + "how-long-an-african-grey-is-in-transit-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Time a Grey spends in transit on a direct cargo routing">
+
+          <h5>We Book Direct Flights and Keep Total Transit Under Eight Hours</h5>
+          <p>Eight hours is our ceiling from crate to collection, and we will change the date rather than accept a routing that breaks it. If your nearest airport only takes connections, we will say so before you pay and look at the other two routes with you.</p>
+
+          <h3>What Happens on Arrival Day</h3>
+          <p>You collect, you bring your bird home, you put the crate in a quiet room and let it open in its own time. Food and water go in straight away, visitors do not. The first evening is for settling rather than for introductions, and the vet appointment you booked earlier does the rest.</p>
+          <img class="sec-img inf-img" src={IMG + "what-happens-on-arrival-day-infographic.webp"}
+               srcset={IMG + "what-happens-on-arrival-day-infographic-760.webp 760w, " + IMG + "what-happens-on-arrival-day-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Four calm steps between landing and a bird's first quiet room">
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Tell us where you are and we will quote the route <span aria-hidden="true">→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §6 · THE FIVE STATES ===================== -->
+        <section class="sec" id="states">
+          <h2>Iowa, Kentucky, Maryland, Tennessee, Wisconsin — What Buyers There Ask</h2>
+          <p class="opener">These five states send us more questions than most, and the questions are practical rather than philosophical: which airport, what the drive looks like at the other end, and whether the paperwork changes at a state line. It does not.</p>
+          <img class="sec-img inf-img" src={IMG + "african-grey-shipping-routes-five-states-infographic.webp"}
+               srcset={IMG + "african-grey-shipping-routes-five-states-infographic-760.webp 760w, " + IMG + "african-grey-shipping-routes-five-states-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Flight routes from Midland Texas to Iowa, Kentucky, Maryland, Tennessee and Wisconsin">
+
+          <div class="geo-cards">
+            {statePlaces.map((p) => (
+              <a class="geo-card" href={p.href}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span class="gl">{p.label}</span>
+                <span class="gn">{p.note}</span>
+              </a>
+            ))}
+          </div>
+
+          <h3>What Buyers in These Five States Ask Us Most</h3>
+          <p>Three questions, in this order: how the bird travels, what arrives with it, and what happens if something is wrong on the first day. The answers are the same whether you are in Des Moines or Baltimore, which is rather the point of writing them on one page instead of five.</p>
+          <img class="sec-img inf-img" src={IMG + "what-buyers-in-five-states-ask-most-infographic.webp"}
+               srcset={IMG + "what-buyers-in-five-states-ask-most-infographic-760.webp 760w, " + IMG + "what-buyers-in-five-states-ask-most-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Five state index cards for the questions buyers there ask most">
+
+          <h3>Your Nearest Cargo Airport, and What It Changes</h3>
+          <p>It changes the day rather than the price. A direct route means an afternoon collection; a city served only by connections means we look at home delivery instead. Tell us your city and we will tell you which of the three routes actually works from here.</p>
+          <img class="sec-img inf-img" src={IMG + "your-nearest-cargo-airport-changes-the-day-infographic.webp"}
+               srcset={IMG + "your-nearest-cargo-airport-changes-the-day-infographic-760.webp 760w, " + IMG + "your-nearest-cargo-airport-changes-the-day-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="How the nearest cargo counter shapes collection on flight day">
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Ask which route reaches your city <span aria-hidden="true">→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §7 · CONGO OR TIMNEH ===================== -->
+        <section class="sec" id="choose">
+          <h2>Congo or Timneh — Which Suits Your Household?</h2>
+          <p class="opener"><StatementLabel kind="fact" source="https://www.iucnredlist.org/species/22724813/154068029" />Both are African Greys, and the two subspecies of <em>Psittacus erithacus</em> differ in size, tail colour and beak more than most buyers expect. Which one suits you is a question about your rooms and your routine rather than about which bird is better.</p>
+          <img class="sec-img inf-img" src={IMG + "congo-or-timneh-identity-cards-infographic.webp"}
+               srcset={IMG + "congo-or-timneh-identity-cards-infographic-760.webp 760w, " + IMG + "congo-or-timneh-identity-cards-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Congo and Timneh African Grey identity cards compared side by side">
+
+          <h3>If This Is Your First Parrot</h3>
+          <p><StatementLabel kind="fact" source="https://www.iucnredlist.org/species/22724813/154068029" />An African Grey lives 40 to 60 years in good care, so a bird bought this year may still be with your household in the 2080s. That is the fact worth sitting with before the price is. We point most first-time owners at a Timneh, because ours tend to settle faster and take household noise in their stride. That is a tendency rather than a rule, and Bery would suit a beginner better than some Timnehs would. <a href="/congo-vs-timneh-african-grey/">The full comparison</a> sets both birds out trait by trait if you want to decide it yourself.</p>
+          <img class="sec-img inf-img" src={IMG + "if-this-is-your-first-african-grey-parrot-infographic.webp"}
+               srcset={IMG + "if-this-is-your-first-african-grey-parrot-infographic-760.webp 760w, " + IMG + "if-this-is-your-first-african-grey-parrot-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Where a first-time parrot owner lands between the two Greys">
+
+          <div class="xsell">
+            <p class="xsell-k">If you already know which one you want</p>
+            <p>Go straight to the subspecies pages, where each bird is set out on its own with its own photographs and price: <a href="/congo-african-grey-for-sale/">Congo African Greys for sale</a> or <a href="/timneh-african-grey-for-sale/">Timneh African Greys for sale</a>. <a href="/african-grey-parrots-for-sale-near-me/">Buyers looking for a breeder near them</a> can start from the state grid instead.</p>
+          </div>
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Not sure which suits you? Ask us <span aria-hidden="true">→</span></a></div>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §8 · FIVE CHECKS ===================== -->
+        <section class="sec" id="checks">
+          <h2>Five Checks That Catch a Fake Listing</h2>
+          <p class="opener">A fraudulent listing fails the same five tests every time, and running them costs you ten minutes. We publish them knowing they apply to us as much as to anyone else selling a bird online.</p>
+          <img class="sec-img inf-img" src={IMG + "five-checks-fake-african-grey-listing-infographic.webp"}
+               srcset={IMG + "five-checks-fake-african-grey-listing-infographic-760.webp 760w, " + IMG + "five-checks-fake-african-grey-listing-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Five verification checks that expose a fraudulent African Grey listing">
+
+          <aside class="k4" aria-label="The five checks">
+            <p class="k4-h">Run these before any money moves</p>
+            <ul class="k4-list">
+              <li><span set:html={tick} /> A street address you can look up, not just a city</li>
+              <li><span set:html={tick} /> A licence number you can verify with the issuer</li>
+              <li><span set:html={tick} /> A live video call with the specific bird, today</li>
+              <li><span set:html={tick} /> The documents shown before payment, not promised after</li>
+              <li><span set:html={tick} /> A payment route that leaves you recourse</li>
+            </ul>
+          </aside>
+
+          <h3>What to Ask, and What to Refuse</h3>
+          <p>Ask for the address, the licence, the live call and the folder. Refuse a wire transfer, a gift card, a peer-to-peer app and any story about why the bird cannot be seen moving today. The refusals matter more than the questions, because a seller only needs one irreversible payment route to disappear down.</p>
+          <img class="sec-img inf-img" src={IMG + "what-to-ask-and-what-to-refuse-infographic.webp"}
+               srcset={IMG + "what-to-ask-and-what-to-refuse-infographic-760.webp 760w, " + IMG + "what-to-ask-and-what-to-refuse-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="What to ask a seller and what to refuse outright when buying">
+
+          <h4>Can a Video Call Prove a Bird Is Real?</h4>
+          <p>It is the single hardest thing for a fake listing to produce. Ask for the call now rather than later, ask the seller to move the bird onto a hand, and ask a question they have to answer live. A recorded clip proves a parrot existed somewhere once; a live call proves this one exists today.</p>
+          <img class="sec-img inf-img" src={IMG + "can-a-video-call-prove-the-bird-is-real-infographic.webp"}
+               srcset={IMG + "can-a-video-call-prove-the-bird-is-real-infographic-760.webp 760w, " + IMG + "can-a-video-call-prove-the-bird-is-real-infographic.webp 1408w"}
+               sizes="(max-width: 900px) 100vw, 760px" width="1408" height="768" loading="lazy" decoding="async"
+               alt="Proving a named bird exists through a live video call">
+
+          <h5>Only a Verifiable Address Has Ever Stopped One of These</h5>
+          <p>Every other signal can be faked cheaply: photographs, testimonials, a professional-looking site, even a licence number copied from a real aviary. A physical place with people at it is the one thing a fraudulent seller cannot manufacture, which is why <a href="/how-to-avoid-african-grey-parrot-scams/">our guide to spotting a scam</a> starts there rather than with the price.</p>
+        </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Run these checks on us — ask for the call <span aria-hidden="true">→</span></a></div>
+
+        <!-- Newsletter · contextual placement before the FAQ -->
+        <aside class="fs-nl" aria-label="Clutch alerts">
+          <div class="fs-nl-grid">
+            <img class="fs-nl-img" src={IMG + "african-grey-clutch-spoonfeeding-newsletter.webp"}
+                 srcset={IMG + "african-grey-clutch-spoonfeeding-newsletter-760.webp 760w, " + IMG + "african-grey-clutch-spoonfeeding-newsletter.webp 1408w"}
+                 sizes="(max-width: 900px) 100vw, 380px" width="1408" height="768" loading="lazy" decoding="async"
+                 alt="Spoon feeding a weaning Congo chick in our nursery">
+            <div class="fs-nl-inner">
+              <p class="fs-nl-eyebrow">Clutch alerts</p>
+              <p class="fs-nl-h">Hear about the next clutch while the birds are still on formula</p>
+              <p class="fs-nl-sub">One email per clutch, sent when the chicks hatch rather than when they are ready to leave, so you have time to think.</p>
+              <form class="fs-nl-form" action="https://formspree.io/f/xrejpnvn" method="POST">
+                <input type="hidden" name="_subject" value="C.A.Gs clutch alerts — buy-african-grey-parrots-with-shipping">
+                <label class="vh" for="bw-nl-email">Your email address</label>
+                <input id="bw-nl-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email">
+                <button class="btn btn-clay" type="submit">Send me clutch alerts</button>
+              </form>
+              <p class="fs-nl-note">One email per clutch. Unsubscribe whenever you like.</p>
+            </div>
+          </div>
+        </aside>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §9 · FAQ-A refreshed · CLAY $ CHIP ===================== -->
+        <section class="sec" id="faq">
+          <h2>African Grey Buying Questions We Answer Every Week</h2>
+          <p class="opener">Twelve questions, answered the way we would answer them on the phone. Where a question has a number in it, the number comes from the same data file the prices on this page read from.</p>
+          <div class="faqA">
+            {faqs.map((f) => (
+              <details class="faqA-item">
+                <summary>
+                  <span class="faqA-t" aria-hidden="true">$</span>
+                  <span class="faqA-q">{f.q}</span>
+                  <span class="faqA-v" aria-hidden="true"></span>
+                </summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
+
+          <h3>Before You Buy</h3>
+          <p>The four questions worth asking every seller are in the price section above, and the five checks are the section before this one. Run both on us. If anything we have written here does not survive the checking, we would rather hear it from you than have you wonder.</p>
+
+          <h3>After You Reserve</h3>
+          <p>Your deposit holds one named bird, the folder is prepared in your name, and we agree a travel date that suits the route rather than the calendar. Between reserving and flying we send photographs, because the waiting is the hardest part for most buyers.</p>
+        </section>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== §10 · RESERVE ===================== -->
+        <section class="sec" id="reserve">
+          <h2>Reserve Your African Grey Parrot</h2>
+          <p class="opener">Tell us which bird you are looking at and where you are, and one of us will reply within a day. A {deposit} deposit holds a bird; nothing is taken through this form.</p>
+
+          <div class="cta-form">
+            <div class="form-side">
+              <h3>Reservable Right Now</h3>
+              <p>Every bird below is here, weaned or weaning, with its folder already started.</p>
+              <ul class="form-birds">
+                {available.map((b) => (
+                  <li><b>{shortName(b)}</b><span>{subLabel(b)} · {b.price_display}</span></li>
+                ))}
+              </ul>
+              <p class="form-ship">Ships nationwide · <b>{airport}</b> airport · <b>{home}</b> home · <b>{cabin}</b> cabin · free collection here.</p>
+            </div>
+            <form class="form-main" action="https://formspree.io/f/xrejpnvn" method="POST">
+              <input type="hidden" name="_subject" value="C.A.Gs inquiry — buy-african-grey-parrots-with-shipping">
+              <input type="hidden" name="_next" value="https://congoafricangreys.com/contact-us/?success=true">
+              <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <label for="bw-bird"><span>Which bird are you asking about? <span class="req">*</span></span>
+                <select id="bw-bird" name="bird" required>
+                  <option value="">Choose a bird…</option>
+                  {available.map((b) => (<option>{shortName(b)} — {subLabel(b)}, {b.price_display}</option>))}
+                  <option>Not sure yet — help me choose</option>
+                  <option>A future clutch</option>
+                </select>
+              </label>
+              <div class="f2">
+                <label for="bw-first"><span>First name <span class="req">*</span></span><input id="bw-first" name="first-name" type="text" required autocomplete="given-name" /></label>
+                <label for="bw-last"><span>Last name <span class="req">*</span></span><input id="bw-last" name="last-name" type="text" required autocomplete="family-name" /></label>
+              </div>
+              <div class="f2">
+                <label for="bw-cell"><span>Cell <span class="req">*</span></span><input id="bw-cell" name="cell" type="tel" required autocomplete="tel" /></label>
+                <label for="bw-cell-confirm"><span>Confirm cell <span class="req">*</span></span><input id="bw-cell-confirm" name="cell_confirm" type="tel" required /></label>
+              </div>
+              <div class="f2">
+                <label for="bw-email"><span>Email <span class="req">*</span></span><input id="bw-email" name="email" type="email" required autocomplete="email" /></label>
+                <label for="bw-email-confirm"><span>Confirm email <span class="req">*</span></span><input id="bw-email-confirm" name="email_confirm" type="email" required /></label>
+              </div>
+              <div class="screen-head"><p class="screen-title">Questions we ask every family</p><p class="screen-why">A bird here may outlive the arrangement you make for it today, so we ask everyone the same few things before we place one.</p></div>
+              <fieldset class="fset">
+                <legend>Are you involved in any pet store, commercial parrot breeding operation, or getting parrots for cheap resale? <span class="req">*</span></legend>
+                <div class="rad">
+                  <label for="bw-resale-yes"><input id="bw-resale-yes" type="radio" name="resale_screening" value="yes" required /> Yes</label>
+                  <label for="bw-resale-no"><input id="bw-resale-no" type="radio" name="resale_screening" value="no" required /> No</label>
+                </div>
+              </fieldset>
+              <fieldset class="fset">
+                <legend>Have you ever surrendered a pet to a shelter or given one away? <span class="req">*</span></legend>
+                <div class="rad">
+                  <label for="bw-surrender-yes"><input id="bw-surrender-yes" type="radio" name="surrender_history" value="yes" required /> Yes</label>
+                  <label for="bw-surrender-no"><input id="bw-surrender-no" type="radio" name="surrender_history" value="no" required /> No</label>
+                </div>
+              </fieldset>
+              <label for="bw-surrender"><span>If yes, tell us what happened. Honest answers are appreciated.</span><textarea id="bw-surrender" name="surrender_details" rows="3"></textarea></label>
+              <fieldset class="fset">
+                <legend>Are you a first-time or experienced parrot owner? <span class="req">*</span></legend>
+                <div class="rad">
+                  <label for="bw-exp-experienced"><input id="bw-exp-experienced" type="radio" name="experience" value="experienced" required /> Experienced owner</label>
+                  <label for="bw-exp-first"><input id="bw-exp-first" type="radio" name="experience" value="first-time" required /> First-time owner</label>
+                </div>
+              </fieldset>
+              <fieldset class="fset">
+                <legend>How would you like your bird to reach you? <span class="req">*</span></legend>
+                <div class="dlv">
+                  <label for="bw-dlv-airport"><input id="bw-dlv-airport" type="radio" name="delivery" value={"Airport cargo — " + airport} required /><span class="t">Airport Cargo · {airport}</span><span class="d">Flies as manifested live-animal cargo with Delta, United or American to your nearest major airport; you collect at the cargo desk.</span></label>
+                  <label for="bw-dlv-home"><input id="bw-dlv-home" type="radio" name="delivery" value={"Home delivery — " + home} required /><span class="t">Home Delivery · {home}</span><span class="d">Brought to the address you give us, on a date we agree with you first.</span></label>
+                  <label for="bw-dlv-cabin"><input id="bw-dlv-cabin" type="radio" name="delivery" value={"Cabin with a flight nanny — from " + cabin} required /><span class="t">Cabin With a Flight Nanny · from {cabin}</span><span class="d">A nanny keeps your bird in the cabin for the whole flight. Quoted per route, because the nanny buys a ticket too.</span></label>
+                  <label for="bw-dlv-pickup"><input id="bw-dlv-pickup" type="radio" name="delivery" value="Pickup in Midland, TX" required /><span class="t">Local Pickup · Free</span><span class="d">Collect from us in Midland, TX if you live within two or three hours.</span></label>
+                </div>
+              </fieldset>
+              <label for="bw-msg"><span>What would you like to ask us? <span class="req">*</span></span><textarea id="bw-msg" name="message" rows="4" required></textarea></label>
+              <button class="btn btn-clay btn-submit" type="submit">Ask about this bird</button>
+              <p class="form-note">We reply within 24 hours, personally. No deposit is taken through this form.</p>
+            </form>
+          </div>
+
+          <h3>Tell Us Which Bird and Where You Are</h3>
+          <p>Those two facts are enough for us to answer properly: the bird decides the price and the paperwork, your city decides the route. Everything else we can work out in the reply.</p>
+        </section>
+
+        <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
+
+        <!-- ===================== FURTHER READING ===================== -->
+        <nav class="reading" aria-label="Keep reading">
+          <p class="reading-h">Keep reading before you reserve</p>
+          <div class="read-cards">
+            {readMore.map((r) => (
+              <a class="read-card" href={r.href}>
+                <img src={r.img + "-320.webp"} srcset={r.img + "-320.webp 320w, " + r.img + "-760.webp 760w"} sizes="120px" width="320" height="175" loading="lazy" decoding="async" alt={r.title}>
+                <span class="rc-body">
+                  <span class="rc-k">{r.kicker}</span>
+                  <b>{r.title}</b>
+                  <span class="rc-s">{r.sub}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </nav>
+
       </div>
     </div>
-  </section>
+  </main>
 
-  <!-- Delivery Options -->
-  <section class="py-16 px-4">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8 text-center">Delivery Options</h2>
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="border border-gold/30 rounded-2xl p-8 bg-white shadow-sm">
-          <div class="text-3xl mb-3"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
-          <h3 class="font-lora font-bold text-xl text-logo-dark mb-3">Airline Shipping</h3>
-          <p class="text-stone-600 text-sm leading-relaxed mb-4">Your parrot flies in a climate-controlled cabin, supervised by experienced pet nannies or licensed animal chaperones. We partner with United, American, Delta, and Alaska Airlines.</p>
-          <ul class="text-sm text-stone-600 space-y-2">
-            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Same-Day &amp; Next-Day Shipping</li>
-            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Pick up at your nearest major airport</li>
-            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Arrives within 3–8 hours of departure</li>
-          </ul>
-        </div>
-        <div class="border border-gold/30 rounded-2xl p-8 bg-white shadow-sm">
-          <div class="text-3xl mb-3"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
-          <h3 class="font-lora font-bold text-xl text-logo-dark mb-3">Home Delivery</h3>
-          <p class="text-stone-600 text-sm leading-relaxed mb-4">For select locations, we offer door-to-door transport with a licensed animal chaperone. Fully managed — we handle all logistics and paperwork.</p>
-          <ul class="text-sm text-stone-600 space-y-2">
-            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Door-to-door convenience</li>
-            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Licensed chaperone accompanies your bird</li>
-            <li><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 11 15.5 16.5 9"/></svg> Available for select U.S. locations</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+  <script is:inline define:vars={{ N }}>
+    (() => {
+      // ---- Dial 2 scroll-spy ----
+      const ring = document.querySelector('.bdial');
+      const num = document.getElementById('dialNum');
+      const items = [...document.querySelectorAll('[data-dial]')];
+      const ids = [...new Set(items.map((i) => i.dataset.dial))];
+      const secs = ids.map((id) => document.getElementById(id)).filter(Boolean);
+      if (ring && secs.length) {
+        let active = -1;
+        const paint = (i) => {
+          if (i < 0 || i === active) return;
+          active = i;
+          ring.style.setProperty('--p', String(Math.round(((i + 1) / N) * 100)));
+          if (num) num.textContent = String(i + 1).padStart(2, '0');
+          const id = secs[i].id;
+          items.forEach((el) => el.classList.toggle('on', el.dataset.dial === id));
+          requestAnimationFrame(() => {
+            const chip = document.querySelector('.railB a.on');
+            if (chip) chip.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'auto' });
+          });
+        };
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => { if (e.isIntersecting) paint(secs.indexOf(e.target)); });
+        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+        secs.forEach((s) => io.observe(s));
+      }
 
-  <!-- FAQ -->
-  <section class="bg-warm-white py-16 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-lora font-bold text-3xl text-logo-dark mb-8 text-center">Shipping FAQs</h2>
-      <div class="space-y-4">
-        {[
-          { q: 'How much does shipping cost?', a: 'Nationwide airline shipping costs $185. This covers the flight booking, IATA-approved carrier crate, health certificate, and all documentation.' },
-          { q: 'Do you ship to all 50 states?', a: 'Yes. We ship IATA-compliant to all 50 states. Birds are transported to your nearest major airport and you pick them up at the cargo or pet desk.' },
-          { q: 'What airlines do you use?', a: 'We work with United Airlines, American Airlines, Delta, and Alaska Airlines — choosing the fastest, most direct route available for your location.' },
-          { q: 'Is my bird safe during the flight?', a: 'Yes. Every bird travels in a temperature-controlled cabin in an airline-approved crate. We schedule direct flights when possible and provide real-time tracking updates.' },
-          { q: 'What documentation comes with the bird?', a: 'Every bird ships with an avian vet health certificate (dated within 10 days of shipment), CITES captive-bred documentation, hatch certificate, band number, and DNA sexing certificate.' },
-        ].map(faq => (
-          <details class="border border-stone-200 rounded-xl overflow-hidden group">
-            <summary class="flex items-center justify-between p-5 cursor-pointer font-sora font-semibold text-logo-dark hover:bg-stone-50 transition-colors">
-              {faq.q}
-              <svg class="w-5 h-5 text-gold shrink-0 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </summary>
-            <div class="px-5 pb-5 text-stone-600 text-sm leading-relaxed">{faq.a}</div>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <Schema type="local-business" />
-  <CTA headline="Ready to Ship Your African Grey Home?" sub="Book your bird today — we handle all shipping logistics, documentation, and real-time tracking so your parrot arrives safe." />
+      // ---- Avail-B group filter ----
+      const btns = [...document.querySelectorAll('.side-f')];
+      const cards = [...document.querySelectorAll('.bcard')];
+      btns.forEach((b) => b.addEventListener('click', () => {
+        const f = b.dataset.f;
+        btns.forEach((x) => x.classList.toggle('on', x === b));
+        cards.forEach((c) => c.classList.toggle('hide', f !== 'all' && c.dataset.p !== f));
+      }));
+    })();
+  </script>
 </BaseLayout>
+
+<style is:global>
+/* ===================== /buy-african-grey-parrots-with-shipping/ ===================== */
+/* --hdr = the real global header height (96px, sticky top-0 z-50). */
+.bws{--ink:#3a2f2a;--clay:#e8604c;--clay-ink:#c8472f;--clay-t:#b04228;--green:#2D6A4F;--green-d:#234f3b;--cream:#faf7f4;--bd:#e7ddd3;--muted:#6b625a;--hdr:96px;overflow-x:clip;color:var(--ink);background:var(--cream);}
+.bws .bw-container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.bws h2{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.5rem,1.1rem + 1.6vw,2rem);line-height:1.18;color:var(--green-d);margin:0 0 .5rem;letter-spacing:-.01em;}
+.bws h3{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.18rem,1rem + .7vw,1.42rem);color:var(--ink);margin:1.5rem 0 .35rem;}
+.bws h4{font-size:1.06rem;font-weight:700;color:var(--green-d);margin:1.1rem 0 .3rem;}
+.bws h5{font-size:.98rem;font-weight:700;color:var(--ink);margin:.9rem 0 .25rem;}
+.bws h6{font-size:.9rem;font-weight:700;color:var(--muted);margin:.8rem 0 .2rem;text-transform:uppercase;letter-spacing:.03em;}
+.bws p{max-width:70ch;line-height:1.7;margin:0 0 .8rem;}
+.bws .sec p.opener{font-size:1.05rem;}
+.bws p.cap{font-size:.8rem;color:var(--muted);font-style:italic;margin:-.5rem 0 1rem;}
+.bws a{color:var(--clay-t);text-underline-offset:2px;}
+.bws .content p a,.bws .content li a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;}
+.bws .content p a:hover,.bws .content li a:hover{text-decoration-thickness:2px;}
+.bws .content p a.btn,.bws .content p a.ticket-cta,.bws .content a.geo-card,.bws .content a.read-card{text-decoration:none;}
+.bws .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+/* Buttons */
+.bws .btn{display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:.95rem;padding:.7rem 1.25rem;border-radius:50px;text-decoration:none;transition:transform .18s,background .18s,box-shadow .18s;border:1px solid transparent;}
+.bws .btn-clay{background:var(--clay-ink);color:#fff;box-shadow:0 4px 14px rgba(200,71,47,.24);}
+.bws .btn-clay:hover{transform:translateY(-1px);}
+.bws .btn-ghost{background:transparent;color:var(--green-d);border-color:var(--green);}
+.bws .btn-ghost:hover{background:rgba(45,106,79,.07);}
+
+/* ===== SPLIT-HERO A · image left, copy right, price ribbon beneath ===== */
+.bws .hero{background:linear-gradient(158deg,#f8f4ef,#f3ece4 58%,#efe4da);border-bottom:1px solid var(--bd);padding:6px 0 0;}
+.bws .hero-grid{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:34px;align-items:center;padding-bottom:20px;}
+.bws .hero-shot{margin:0;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(60,30,10,.16);background:#efe6dd;}
+.bws .hero-shot img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;}
+.bws .eyebrow{font-size:.82rem;font-weight:600;color:var(--clay-t);margin:.2rem 0 .55rem;}
+.bws .hero h1{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.5rem,1.02rem + 1.55vw,1.98rem);line-height:1.13;color:var(--green-d);margin:0 0 .45rem;letter-spacing:-.015em;text-wrap:balance;}
+.bws .hero h1 em{color:var(--clay-ink);font-style:italic;}
+.bws .hero .lead{font-size:.94rem;line-height:1.58;color:var(--ink);max-width:58ch;margin:0;}
+.bws .hero-cta{display:flex;gap:.55rem;flex-wrap:wrap;margin:.9rem 0 0;}
+.bws .ribbon{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0 auto;padding:0;border-top:1px solid var(--bd);}
+.bws .ribbon li{display:flex;align-items:center;justify-content:center;gap:.45rem;text-align:center;font-size:.8rem;font-weight:600;color:var(--green-d);padding:12px 14px;border-right:1px solid var(--bd);}
+.bws .ribbon li:last-child{border-right:0;}
+.bws .ribbon svg{color:var(--green);flex:none;}
+
+/* Counter — 8 snippets */
+.bws .counter{background:#fff;border-bottom:1px solid var(--bd);padding:20px 0;}
+.bws .counter-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;}
+.bws .cstat{border:1px solid var(--bd);border-radius:12px;padding:10px 11px;text-align:center;min-height:66px;display:flex;flex-direction:column;justify-content:center;background:var(--cream);}
+.bws .cstat .cn{font-family:var(--font-lora,'Newsreader',serif);font-size:1.22rem;font-weight:700;color:var(--clay-ink);line-height:1;font-variant-numeric:tabular-nums;}
+.bws .cstat .cl{font-size:var(--fs-micro);color:var(--muted);margin-top:.3rem;line-height:1.3;}
+
+/* Seam divider */
+.bws .seam-wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin:30px auto 26px;max-width:560px;}
+.bws .seam-wrap::before,.bws .seam-wrap::after{content:"";height:1px;border-radius:1px;}
+.bws .seam-wrap::before{background:linear-gradient(to right,transparent,rgba(232,96,76,.34));}
+.bws .seam-wrap::after{background:linear-gradient(to left,transparent,rgba(232,96,76,.34));}
+.bws .seam{display:block;height:34px;width:auto;opacity:.92;margin:0;}
+
+/* Clay spine on every H2 */
+.bws .content .sec>h2{position:relative;padding-left:14px;}
+.bws .content .sec>h2::before{content:"";position:absolute;left:0;top:.24em;bottom:.24em;width:3px;border-radius:2px;background:var(--clay);}
+
+/* Body grid + Dial 2 (dark aviary) */
+.bws .body-grid{display:grid;grid-template-columns:196px minmax(0,1fr);gap:28px;padding-top:8px;padding-bottom:40px;}
+.bws .bdial-wrap{position:relative;}
+.bws .bdial{position:sticky;top:calc(var(--hdr) + 16px);display:flex;flex-direction:column;gap:10px;align-items:stretch;background:#1c3a2e;border:1px solid #2c5344;border-radius:16px;padding:12px 10px;box-shadow:0 6px 18px rgba(20,45,32,.22);max-height:calc(100vh - var(--hdr) - 32px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#3a6b54 transparent;}
+.bws .bdial-ring{--p:10;margin:2px auto 0;flex:none;width:64px;height:64px;border-radius:50%;background:conic-gradient(#8fd3ac calc(var(--p,10) * 1%),#2c5344 0);display:grid;place-items:center;}
+.bws .bdial-ring>div{width:50px;height:50px;border-radius:50%;background:#1c3a2e;display:grid;place-items:center;text-align:center;font-family:var(--font-lora,'Newsreader',serif);}
+.bws .bdial-ring b{font-size:15px;color:#a7e0c2;display:block;line-height:1;}
+.bws .bdial-ring span{font-size:var(--fs-micro);color:#9fc7b0;letter-spacing:.02em;text-transform:uppercase;}
+.bws .bdial-list{display:grid;grid-template-columns:1fr;gap:1px;border-top:1px dashed #38614c;padding-top:8px;}
+.bws .bdial-list a{display:flex;gap:7px;align-items:baseline;color:#cfe3d8;text-decoration:none;font-size:var(--fs-micro);line-height:1.25;padding:5px 7px;border-radius:8px;transition:background-color .15s,color .15s;}
+.bws .bdial-list a:hover{background:#26503f;color:#fff;}
+.bws .bdial-list a.on{background:#2e5c48;color:#fff;font-weight:600;}
+/* dark card -> #9fc7b0 numerals, never the light-card #6b625a */
+.bws .bdial-list .num{font-family:var(--font-lora,'Newsreader',serif);font-weight:700;color:#9fc7b0;width:16px;flex:none;font-size:var(--fs-micro);font-variant-numeric:tabular-nums;}
+.bws .bdial-list a.on .num{color:#a7e0c2;}
+.bws .bdial-list .dh{min-width:0;}
+.bws .bdial-list .tag{margin-left:auto;font-size:var(--fs-micro);font-weight:600;letter-spacing:.02em;color:#1c3a2e;background:#8fd3ac;border-radius:50px;padding:1px 6px;white-space:nowrap;}
+
+/* Rail B (mobile) hidden on desktop */
+.bws .bw-rail{display:none;}
+
+/* Section images */
+.bws .sec-img{display:block;width:100%;max-width:760px;aspect-ratio:1408/768;object-fit:cover;height:auto;border-radius:14px;border:1px solid var(--bd);margin:1rem 0 1.1rem;box-shadow:0 4px 16px rgba(60,30,10,.06);}
+.bws .sec{scroll-margin-top:calc(var(--hdr) + 16px);padding:6px 0 10px;}
+
+/* Ticket CTA */
+.bws .ticket{margin:1.2rem 0 .2rem;}
+.bws .ticket-cta{display:inline-flex;align-items:center;justify-content:center;text-align:center;text-wrap:balance;gap:.5rem;background:#fff;border:1.5px solid var(--clay);color:var(--clay-ink);font-weight:700;padding:.55rem 1.05rem;border-radius:50px;text-decoration:none;transition:background .18s;}
+.bws .ticket-cta span{transition:transform .18s;}
+.bws .ticket-cta:hover{background:#fff3ef;}
+.bws .ticket-cta:hover span{transform:translateX(3px);}
+
+/* K1 Receipt card */
+.bws .k1{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:0;margin:12px 0 14px;box-shadow:0 3px 14px rgba(60,30,10,.05);overflow:hidden;}
+.bws .k1-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:var(--green-d);color:#fff;padding:.6rem 1rem;}
+.bws .k1-head b{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;}
+.bws .k1-head span{font-size:var(--fs-micro);letter-spacing:.09em;text-transform:uppercase;color:#c9e3d5;}
+.bws .k1-rows{margin:0;padding:.4rem 1rem .7rem;}
+.bws .k1-rows>div{display:grid;grid-template-columns:minmax(0,7.5rem) minmax(0,1fr);gap:.8rem;padding:.5rem 0;border-bottom:1px dashed var(--bd);}
+.bws .k1-rows>div:last-child{border-bottom:0;}
+.bws .k1-rows dt{font-size:var(--fs-micro);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green-d);padding-top:.15rem;}
+.bws .k1-rows dd{margin:0;font-size:.9rem;line-height:1.5;color:var(--ink);}
+
+/* K4 Clipboard checklist */
+.bws .k4{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px 18px 16px;margin:14px 0 6px;box-shadow:0 3px 12px rgba(60,30,10,.05);position:relative;}
+.bws .k4::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:86px;height:16px;border-radius:5px;background:#e3d8cd;border:1px solid var(--bd);}
+.bws .k4-h{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;color:var(--green-d);margin:.4rem 0 .7rem;padding-bottom:.5rem;border-bottom:1px solid var(--bd);}
+.bws .k4-list{list-style:none;margin:0;padding:0;display:grid;gap:.45rem;}
+.bws .k4-list li{display:grid;grid-template-columns:1.2rem 1fr;gap:.55rem;align-items:start;font-size:.9rem;line-height:1.5;}
+.bws .k4-list svg{color:var(--green);margin-top:.18rem;}
+
+/* T3 Boarding-Pass TOC — first use, restricted to shipping-heavy pages */
+.bws .bpass{background:#fff;border:1px solid var(--bd);border-radius:16px;margin:12px 0 4px;box-shadow:0 3px 12px rgba(60,30,10,.05);overflow:hidden;}
+.bws .bpass-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:var(--green-d);color:#fff;padding:.55rem 1rem;}
+.bws .bp-k{font-size:var(--fs-micro);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c9e3d5;}
+.bws .bp-route{font-family:var(--font-lora,'Newsreader',serif);font-size:1rem;letter-spacing:.06em;}
+.bws .bpass-stops{list-style:none;margin:0;padding:10px 12px 12px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.bws .bpass-stops li{position:relative;}
+/* perforation between stubs, not a side stripe */
+.bws .bpass-stops li + li::before{content:"";position:absolute;left:-5px;top:6px;bottom:6px;border-left:1px dashed var(--bd);}
+.bws .bpass-stops a{display:grid;grid-template-rows:auto auto auto;gap:2px;text-decoration:none;background:var(--cream);border:1px solid var(--bd);border-radius:10px;padding:8px 10px 9px;min-height:64px;transition:border-color .15s,background-color .15s,transform .15s;}
+.bws .bpass-stops a:hover{border-color:var(--clay);background:#fff6f2;transform:translateY(-1px);}
+.bws .bp-n{font-family:var(--font-lora,'Newsreader',serif);font-weight:700;font-size:.95rem;color:var(--clay-ink);line-height:1;font-variant-numeric:tabular-nums;}
+.bws .bp-l{font-size:.8rem;font-weight:600;color:var(--green-d);line-height:1.25;}
+.bws .bp-t{font-size:var(--fs-micro);color:var(--muted);}
+
+/* NEW Table H "Price Ladder" */
+.bws .tblwrap{overflow-x:auto;margin:1rem 0;}
+.bws .tblH{width:100%;border-collapse:separate;border-spacing:0;font-size:.88rem;background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;}
+.bws .tblH-cap{caption-side:top;text-align:left;font-size:var(--fs-micro);font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#fff;background:var(--clay-ink);padding:.5rem .9rem;}
+.bws .tblH th{background:var(--cream);color:var(--green-d);text-align:left;padding:.6rem .8rem;font-weight:700;font-size:.8rem;border-bottom:2px solid var(--bd);}
+.bws .tblH td{padding:.62rem .8rem;border-bottom:1px solid var(--bd);vertical-align:top;}
+.bws .tblH tr:last-child td{border-bottom:0;}
+.bws .tblH td:first-child{font-weight:700;color:var(--green-d);}
+.bws .tblH td:nth-child(2){font-weight:700;color:var(--clay-ink);white-space:nowrap;font-variant-numeric:tabular-nums;}
+.bws .tblH td:nth-child(3){color:var(--muted);white-space:nowrap;}
+.bws .tblH tr:last-child td:nth-child(2){color:var(--green-d);}
+.bws .tblH tr:last-child{background:#f6faf8;}
+
+/* Avail-B — sidebar faceted by kind */
+.bws .availB{display:grid;grid-template-columns:200px minmax(0,1fr);gap:20px;margin:1rem 0;align-items:start;}
+.bws .availB-side{position:sticky;top:calc(var(--hdr) + 16px);background:#fff;border:1px solid var(--bd);border-radius:16px;padding:14px;box-shadow:0 4px 16px rgba(60,30,10,.06);}
+.bws .side-h{font-size:var(--fs-micro);font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 .6rem;}
+.bws .side-filters{display:flex;flex-direction:column;gap:4px;}
+.bws .side-f{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:var(--cream);border:1.5px solid var(--bd);border-radius:10px;padding:.5rem .65rem;font:inherit;font-size:.86rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:left;transition:background-color .15s,border-color .15s;}
+.bws .side-f:hover{background:#fff3ef;}
+.bws .side-f.on{border-color:var(--clay-ink);color:var(--green-d);background:#fff3ef;}
+.bws .side-n{font-size:var(--fs-micro);font-weight:700;color:var(--muted);background:#fff;border-radius:50px;min-width:24px;text-align:center;padding:2px 8px;}
+.bws .side-f.on .side-n{background:var(--clay-ink);color:#fff;}
+.bws .side-ship{border-top:1px solid var(--bd);margin-top:12px;padding-top:10px;}
+.bws .rail-ship{font-size:var(--fs-micro);color:var(--muted);margin:0 0 .35rem;line-height:1.45;}
+.bws .rail-ship b{color:var(--green-d);}
+.bws .availB-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-content:start;}
+.bws .bcard{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column;}
+.bws .bcard.hide{display:none;}
+.bws .bphoto{position:relative;aspect-ratio:1/1;overflow:hidden;}
+.bws .bphoto img{width:100%;height:100%;object-fit:cover;}
+.bws .bphoto::after{content:"";position:absolute;inset:auto 0 0 0;height:44%;background:linear-gradient(to top,rgba(28,18,12,.42),transparent);pointer-events:none;}
+.bws .bbadge{position:absolute;top:auto;bottom:8px;left:8px;z-index:2;background:rgba(255,255,255,.94);color:var(--green-d);font-size:var(--fs-micro);font-weight:700;padding:.18rem .5rem;border-radius:50px;text-transform:uppercase;letter-spacing:.03em;box-shadow:0 1px 4px rgba(0,0,0,.18);}
+.bws .bbadge.timneh{color:var(--clay-ink);}
+.bws .bbadge.pair{color:#1f4f6d;}
+.bws .bbadge.badge-top{top:8px;bottom:auto;}
+.bws .binfo{padding:11px 12px 13px;display:flex;flex-direction:column;gap:.45rem;flex:1;}
+.bws .brow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem;align-items:baseline;min-height:2.65rem;}
+.bws .brow h3{font-family:var(--font-lora,'Newsreader',serif);font-size:1.02rem;line-height:1.16;margin:0;text-transform:uppercase;letter-spacing:.02em;color:var(--green-d);min-width:0;overflow-wrap:anywhere;}
+.bws .bprice{font-weight:700;color:var(--clay-ink);font-size:.98rem;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.bws .bblurb{font-size:.8rem;color:var(--muted);line-height:1.45;margin:0;flex:1;}
+.bws .bchips{display:flex;gap:.3rem;flex-wrap:wrap;min-height:1.4rem;align-content:start;}
+.bws .bchips span{font-size:var(--fs-micro);background:var(--cream);border:1px solid var(--bd);color:var(--green-d);padding:.1rem .4rem;border-radius:50px;font-weight:600;}
+.bws .bship{font-size:var(--fs-micro);color:var(--muted);margin:0;line-height:1.4;}
+.bws .bfull{align-self:start;justify-content:center;margin-top:auto;font-size:.8rem;padding:.5rem .95rem;white-space:nowrap;gap:.3rem;}
+
+/* Shipping line + geo cards */
+.bws .ship-line{background:#fdf5f3;border:1px solid #f0d5cd;border-radius:10px;padding:.6rem .85rem;font-size:.9rem;margin:.9rem 0;}
+.bws .ship-line b{color:var(--green-d);}
+.bws .geo-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:1rem 0 .4rem;}
+.bws .geo-card{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.6rem;background:#fff;border:1px solid var(--bd);border-radius:11px;padding:.6rem .8rem;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s;}
+.bws .geo-card svg{grid-row:1/3;align-self:center;color:var(--clay);}
+.bws .geo-card .gl{font-weight:600;font-size:.85rem;color:var(--green-d);}
+.bws .geo-card .gn{font-size:var(--fs-micro);color:var(--muted);}
+.bws .geo-card:hover{border-color:var(--clay);transform:translateY(-1px);}
+
+/* Cross-sell strip */
+.bws .xsell{margin:1.3rem 0 .2rem;background:linear-gradient(180deg,#fff,#fdf7f4);border:1px solid var(--bd);border-radius:14px;padding:15px 18px 6px;}
+.bws .xsell-k{font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.08em;color:var(--clay-t);font-weight:700;margin:0 0 9px;}
+.bws .xsell p:not(.xsell-k){font-size:.86rem;line-height:1.55;color:var(--muted);margin:0 0 10px;max-width:70ch;}
+.bws .xsell a{color:var(--green-d);font-weight:700;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;}
+.bws .xsell a:hover{color:var(--clay-ink);}
+
+/* Newsletter — .fs-nl with this page's own image */
+.bws .fs-nl{margin:24px 0;border-radius:20px;overflow:hidden;box-shadow:0 6px 22px rgba(60,30,10,.08);background:linear-gradient(135deg,#221f1d,#2f2926);color:#fff;}
+.bws .fs-nl-grid{display:grid;grid-template-columns:380px minmax(0,1fr);align-items:stretch;}
+.bws .fs-nl-img{display:block;width:100%;height:100%;object-fit:cover;}
+.bws .fs-nl-inner{padding:clamp(14px,2.2vw,20px) clamp(16px,2.8vw,26px);}
+.bws .fs-nl-eyebrow{color:#f08070;font-size:var(--fs-micro);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px;}
+.bws .fs-nl-h{font-family:var(--font-lora,'Newsreader',serif);font-size:clamp(1.05rem,1.8vw,1.24rem);line-height:1.22;margin:0 0 4px;color:#fff;max-width:40ch;}
+.bws .fs-nl-sub{font-size:.84rem;line-height:1.5;margin:0 0 10px;max-width:52ch;color:rgba(255,255,255,.86);}
+.bws .fs-nl-form{display:flex;gap:8px;flex-wrap:wrap;}
+.bws .fs-nl-form input{flex:1;min-width:200px;border:1.5px solid rgba(255,255,255,.3);border-radius:50px;padding:12px 18px;font:inherit;font-size:16px;background:#fff;color:#2a2622;}
+.bws .fs-nl-form input:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px rgba(232,96,76,.2);}
+.bws .fs-nl-form button{border:none;cursor:pointer;}
+.bws .fs-nl-note{font-size:var(--fs-micro);color:rgba(255,255,255,.72);margin:10px 0 0;}
+
+/* FAQ-A refreshed — clay $ chip (the health-guarantee page uses a green tick) */
+.bws .faqA{margin:1rem 0 6px;display:flex;flex-direction:column;gap:8px;}
+.bws .faqA-item{background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(60,30,10,.04);}
+.bws .faqA-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 18px;color:#2a2622;}
+.bws .faqA-item summary::-webkit-details-marker{display:none;}
+.bws .faqA-t{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50px;background:#fdecE7;border:1.5px solid var(--clay);color:var(--clay-t);flex:none;font:700 .92rem/1 var(--font-lora,'Newsreader'),serif;}
+.bws .faqA-item[open] .faqA-t{background:var(--clay-ink);color:#fff;border-color:var(--clay-ink);}
+.bws .faqA-q{font-family:var(--font-lora,'Newsreader',serif);font-size:1rem;font-weight:600;flex:1;line-height:1.32;}
+.bws .faqA-v{width:11px;height:11px;flex:none;border-right:2px solid var(--green-d);border-bottom:2px solid var(--green-d);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s;}
+.bws .faqA-item[open] .faqA-v{transform:rotate(225deg) translate(-2px,-2px);}
+.bws .faqA-item[open] summary{border-bottom:1px solid var(--bd);background:#fdf7f4;}
+.bws .faqA-item p{color:#4a423b;font-size:.9rem;margin:0;padding:14px 18px 16px;max-width:70ch;line-height:1.62;}
+
+/* Contact form */
+.bws .cta-form{display:grid;grid-template-columns:.85fr 1.15fr;gap:0;border:1px solid var(--bd);border-radius:16px;overflow:hidden;margin:1rem 0;}
+.bws .form-side{background:var(--green-d);color:#eaf3ee;padding:22px;}
+.bws .form-side h3{color:#fff;margin:0 0 .4rem;}
+.bws .form-side p{color:#d7e7de;font-size:.86rem;}
+.bws .form-birds{list-style:none;margin:.8rem 0;padding:0;}
+.bws .form-birds li{display:flex;justify-content:space-between;gap:.6rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:.85rem;}
+.bws .form-birds b{color:#fff;}
+.bws .form-ship{font-size:var(--fs-micro);color:#c9f2db;}
+.bws .form-ship b{color:#fff;}
+.bws .form-main{padding:22px;background:#fff;display:grid;gap:1rem;}
+.bws .form-main label{display:grid;gap:.25rem;min-width:0;font-size:.82rem;font-weight:600;color:var(--green-d);}
+.bws .form-main input,.bws .form-main select,.bws .form-main textarea{font:inherit;font-size:16px;font-weight:400;padding:.55rem .65rem;border:1px solid var(--bd);border-radius:10px;background:var(--cream);color:var(--ink);width:100%;max-width:100%;box-sizing:border-box;min-width:0;}
+.bws .f2{display:grid;grid-template-columns:1fr 1fr;gap:1rem .7rem;}
+.bws .screen-head{border-top:1px dashed var(--bd);padding-top:.8rem;}
+.bws .screen-title{font-weight:700;color:var(--green-d);font-size:.92rem;margin:0 0 .2rem;}
+.bws .screen-why{font-size:var(--fs-micro);color:var(--muted);margin:0;}
+.bws .btn-submit{border-radius:12px;justify-content:center;margin-top:.3rem;}
+.bws .req{color:#b04228;font-weight:700;}
+.bws .fset{border:0;padding:0;margin:0;min-width:0;display:grid;gap:.35rem;}
+.bws .fset legend{padding:0;font-size:.82rem;font-weight:600;color:var(--green-d);}
+.bws .rad{display:flex;flex-wrap:wrap;gap:.6rem;}
+.bws .rad label{display:flex;align-items:center;gap:.5rem;min-height:44px;padding:.55rem 1.1rem;border:1.5px solid #ede5dc;border-radius:50px;background:#fff9f6;cursor:pointer;}
+.bws .rad label:has(input:checked){border-color:#e8604c;background:rgba(232,96,76,.06);color:#b04228;}
+.bws .dlv{display:grid;gap:.5rem;}
+.bws .dlv label{display:grid;grid-template-columns:auto 1fr;column-gap:.6rem;row-gap:.1rem;align-items:start;padding:.6rem .85rem;border:1.5px solid #ede5dc;border-radius:12px;background:#fff9f6;cursor:pointer;}
+.bws .dlv label:has(input:checked){border-color:#e8604c;background:rgba(232,96,76,.05);}
+.bws .dlv input{grid-row:span 2;margin-top:3px;}
+.bws .dlv .t{font-weight:700;}
+.bws .dlv .d{grid-column:2;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.45;}
+.bws .rad input,.bws .dlv input{width:auto;padding:0;border:0;border-radius:0;background:none;box-shadow:none;accent-color:#e8604c;}
+.bws .form-note{font-size:var(--fs-micro);color:var(--muted);font-weight:400;margin:0;}
+.bws .hp{position:absolute;left:-9999px;}
+
+/* Further reading */
+.bws .reading{margin:1.4rem 0 .2rem;}
+.bws .reading-h{font-family:var(--font-lora,'Newsreader',serif);font-size:1.08rem;color:var(--green-d);margin:0 0 .7rem;}
+.bws .read-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.bws .read-card{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#fff;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s;}
+.bws .read-card img{width:120px;height:100%;object-fit:cover;}
+.bws .rc-body{padding:10px 12px 10px 0;display:flex;flex-direction:column;gap:.2rem;}
+.bws .rc-k{font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.04em;color:var(--clay-t);font-weight:700;}
+.bws .rc-body b{color:var(--green-d);font-size:.92rem;line-height:1.25;}
+.bws .rc-s{font-size:var(--fs-micro);color:var(--muted);line-height:1.4;}
+.bws .read-card:hover{border-color:var(--clay);transform:translateY(-1px);}
+
+/* statement labels sit inline at the start of the sentence they label */
+.bws .content p .stmt-label{margin-right:8px;}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width:980px){
+  .bws .hero-grid{grid-template-columns:minmax(0,1fr);gap:18px;}
+  .bws .hero-shot{order:-1;}
+  .bws .ribbon{grid-template-columns:minmax(0,1fr);}
+  .bws .ribbon li{display:grid;grid-template-columns:1rem 1fr;align-items:start;justify-items:start;text-align:left;gap:.55rem;padding:10px 16px;line-height:1.4;border-right:0;border-bottom:1px solid var(--bd);}
+  .bws .ribbon li:last-child{border-bottom:0;}
+  .bws .ribbon svg{margin-top:.16rem;}
+  .bws .counter-grid{grid-template-columns:repeat(4,1fr);}
+  .bws .body-grid{grid-template-columns:minmax(0,1fr);}
+  .bws .content{min-width:0;}
+  .bws .bdial-wrap{display:none;}
+  .bws .bpass-stops{grid-template-columns:repeat(2,1fr);}
+  .bws .bpass-stops li + li::before{display:none;}
+  .bws .availB{grid-template-columns:minmax(0,1fr);}
+  .bws .availB-side{position:static;}
+  .bws .side-filters{flex-direction:row;flex-wrap:wrap;}
+  .bws .side-f{width:auto;}
+  .bws .availB-grid{grid-template-columns:repeat(2,1fr);}
+  .bws .read-cards,.bws .geo-cards{grid-template-columns:minmax(0,1fr);}
+  .bws .cta-form{grid-template-columns:minmax(0,1fr);}
+  .bws .fs-nl-grid{grid-template-columns:minmax(0,1fr);}
+  .bws .fs-nl-img{aspect-ratio:1408/768;height:auto;}
+  /* Rail B — sticky UNDER the site header, green ticker pills */
+  .bws .bw-rail{display:block;position:sticky;top:var(--hdr);z-index:40;background:rgba(250,247,244,.985);border-bottom:1px solid var(--bd);box-shadow:0 6px 14px rgba(60,30,10,.07);}
+  .bws .railB{display:flex;gap:8px;overflow-x:auto;padding:.45rem 0;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:auto;}
+  .bws .railB::-webkit-scrollbar{display:none;}
+  .bws .railB a{flex:0 0 auto;display:inline-flex;align-items:center;gap:.35rem;font-size:var(--fs-micro);font-weight:600;color:#fff;border:1.5px solid var(--green);border-radius:50px;padding:7px 14px;text-decoration:none;background:var(--green);white-space:nowrap;scroll-margin-inline:20px;min-height:36px;}
+  .bws .railB a.on{background:#25543d;border-color:#25543d;box-shadow:0 2px 8px rgba(45,106,79,.35);}
+  .bws .railB a .p{font-weight:700;color:#c9f2db;font-variant-numeric:tabular-nums;}
+  .bws .sec{scroll-margin-top:calc(var(--hdr) + 66px);}
+}
+@media (max-width:640px){
+  .bws .bw-container{padding:0 16px;}
+  .bws .counter-grid{grid-template-columns:repeat(2,1fr);}
+  .bws .bpass-stops{grid-template-columns:minmax(0,1fr);}
+  .bws .k1-rows>div{grid-template-columns:minmax(0,1fr);gap:.15rem;}
+  .bws .availB-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .bws .bblurb{display:none;}
+  .bws .binfo{padding:9px 9px 11px;gap:.4rem;}
+  .bws .brow{min-height:2.5rem;}
+  .bws .brow h3{font-size:.92rem;}
+  .bws .bprice{font-size:.92rem;}
+  .bws .bfull{align-self:stretch;font-size:var(--fs-micro);padding:.5rem .55rem;}
+  .bws .seam-wrap{gap:12px;margin:24px auto 22px;}
+  .bws .seam{height:30px;}
+  .bws .f2{grid-template-columns:1fr;}
+  .bws .ticket-cta{font-size:.86rem;padding:.5rem .9rem;line-height:1.35;}
+
+  /* Mobile table stacking — Table H becomes cards */
+  .bws .tblwrap{overflow-x:visible;}
+  .bws .tblH{border:0;border-radius:0;overflow:visible;background:transparent;}
+  .bws .tblH-cap{border-radius:10px;margin-bottom:10px;}
+  .bws .tblH thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+  .bws .tblH tbody,.bws .tblH tr,.bws .tblH td{display:block;}
+  .bws .tblH tr{border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#fff;margin-bottom:10px;}
+  .bws .tblH tr:last-child{margin-bottom:0;}
+  .bws .tblH td{padding:.55rem .8rem;border-bottom:1px solid var(--bd);}
+  .bws .tblH tr td:last-child{border-bottom:0;}
+  .bws .tblH td:first-child{background:var(--cream);color:var(--green-d);font-weight:700;font-size:.92rem;padding:.6rem .8rem;border-bottom:2px solid var(--bd);white-space:normal;}
+  .bws .tblH td[data-label]:not(:first-child){display:grid;grid-template-columns:minmax(0,6.6rem) minmax(0,1fr);gap:.55rem;align-items:baseline;}
+  .bws .tblH td[data-label]:not(:first-child)::before{content:attr(data-label);font-size:var(--fs-micro);font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);line-height:1.6;}
+
+  /* Mobile full-bleed section images. Infographics keep native 16:9 and are never
+     cover-cropped; real photographs take the wider 5:4 frame. */
+  .bws .sec-img{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);border-radius:0;border-left:0;border-right:0;}
+  .bws .sec-img.inf-img{aspect-ratio:1408/768;object-fit:contain;background:#fff;}
+  .bws .sec-img.ph-wide{aspect-ratio:5/4;object-fit:cover;background:transparent;}
+}
+@media(max-width:560px){
+  .bws .fs-nl-form{flex-direction:column;}
+  .bws .fs-nl-form input,.bws .fs-nl-form button{width:100%;min-width:0;}
+}
+</style>
