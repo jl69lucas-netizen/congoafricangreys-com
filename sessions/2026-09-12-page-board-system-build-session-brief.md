@@ -79,3 +79,17 @@ Tests: `tests/test_page_board.py` 126 passed. Every task approved by spec + qual
 | Additions plan | in flight | `docs/superpowers/plans/2026-09-12-page-board-additions.md`: meta variants, angles, FAQ questions, **links plan**, kit strip; retrofit of the near-me and hub records needs a re-approval sitting |
 
 **Flag closed by the breeder in chat (2026-09-12):** the §7 pick vs tuple — align at the re-approval sitting the additions require, not by editing the approved record now.
+
+## 2026-09-13 early hours: the five board additions (plan `docs/superpowers/plans/2026-09-12-page-board-additions.md`)
+
+| Task | Commits | Result |
+|---|---|---|
+| 12 meta variants | `7bde3c2a` → `606f305b` | `meta_set` (3 titles ≤ ceiling, 3 descriptions 140–160), block "2. H1 and meta", Approve sends `meta`, `meta-no-pick` / `meta-length` gate rows; picks stay null until the sitting (my first instruction pre-answered the breeder — reviewer caught it) |
+| 13 angles | `fd8752d9` | `brief.angles` from the strategy doc (near-me B-1/B-2/B-3) and the research delta (hub); starred row carries the trade-off |
+| 14 FAQ questions | `57d4a3e8` | `questions` on the FAQ section, lifted verbatim from each page's `faqs`; `faq-collision` WARN — 4 soft collisions each on hub and near-me for the sitting |
+| 15 links plan | `82d6f2bd` → `c4b3a937` → `426713c0` | per-section `links`, library membership at validate, three gate rows; **the gate found real page defects**: duplicate anchors on both pages and five mid-sentence anchors on the hub — fixed on the pages (`2c331b97`, `11b87205`, `3da1516b`), records restamped; `nav: true` ruling for tiles, spokes, breadcrumbs, table rows |
+| 16 kit strip | in flight | view-only block "5b. The kit" |
+
+Desktop form (breeder screenshot): final rule at `49bc532f` + `e267fc00` — two cards, sticky green pane at its own height, three-column form; measured live: hub pane 480px beside a 964px form (was 1117/1117). IndexNow resubmitted for every page whose rendering changed.
+
+**Next:** Task 16 review → regenerate both boards + canvases → publish → the breeder's re-approval sitting (both records: meta picks, the §7 tuple alignment, the 4+4 FAQ soft collisions, the near-me/homepage heading overlap) → `board_approve.py` on both → gates 0 FAIL.
