@@ -357,7 +357,7 @@ def main():
             if len(bits) < 2:
                 print(f"warning: thumbs/{p.name} is not <section>--<candidate>--<viewport>.png — skipped")
                 continue
-            thumbs.setdefault((bits[0], bits[1]), f"thumbs/{p.name}")
+            thumbs.setdefault((bits[0], bits[1].replace("+", "#")), f"thumbs/{p.name}")  # `+` is `#` in a filename
     OUT.mkdir(parents=True, exist_ok=True)
     out = OUT / f"{slug}.html"
     out.write_text(render(board, ont, ledger, live, thumbs, slug), encoding="utf-8")

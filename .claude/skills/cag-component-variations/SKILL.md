@@ -221,6 +221,8 @@ calling the page done:
 
 ## 9. Record
 
+Variations canvas (2026-09-10): https://claude.ai/code/artifact/65cdf7d4-d24b-45b4-a8ba-b5bbd142fe15
+
 The 2026-09-10 homepage build's canvas and reference material live at:
 - `docs/design/homepage-variations/CONTRACT.md` — the canvas contract (worked example for
   §4 above).
@@ -254,3 +256,12 @@ The 2026-09-10 homepage build's canvas and reference material live at:
 - **Shipping: B — confirmed, note corrected.** Folds the existing five-step delivery flow
   in rather than duplicating it; second-shortest at both Tablet and Desktop, not shortest
   (the note originally over-claimed this and was fixed during the pass).
+
+## Page Board mode (2026-09-12)
+
+When a page has `data/pages/<slug>/board.json`, the copy source is the **section record**, not
+`dist/<slug>/index.html`. `scripts/board_canvas.py <slug>` emits the option artboards from the
+record (candidates from `data/component-ledger.json` pools minus what siblings own), and
+`scripts/board_thumbs.mjs <slug>` cuts the thumbnails the board shows. Never lift copy from a
+sibling or from `dist/` for a boarded page; a text tweak on the canvas is written back into the
+record by `scripts/board_approve.py`. Spec: `docs/superpowers/specs/2026-09-12-page-board-system-design.md`.

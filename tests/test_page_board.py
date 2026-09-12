@@ -871,3 +871,49 @@ def test_board_html_escapes_record_text_in_every_context():
     assert len(blocks) == 8
     for i, blk in enumerate(blocks):
         assert "</script" not in blk, i
+
+
+# ---------------------------------------------------------------- canvas artboards
+
+def test_canvas_writes_three_options_two_viewports_per_signature_section(tmp_path):
+    import board_canvas as BC
+    b = _approved(MIN_BOARD)
+    ledger = {"pools": {"inventory": ["avail-a-grid", "avail-b-faceted", "bird-cards-row", "minibird-cards"]}, "pages": {}}
+    BC.write_canvas(b, ledger, out=tmp_path)
+    names = sorted(p.name for p in tmp_path.glob("*.dc.html"))
+    assert names == sorted([f"birds--{c}--{vp}.dc.html"
+                            for c in ["avail-a-grid", "avail-b-faceted", "bird-cards-row"]
+                            for vp in ("Mobile", "Desktop")])
+    assert (tmp_path / "CONTRACT.md").exists() and (tmp_path / "support.js").exists()
+    html = (tmp_path / "birds--avail-b-faceted--Desktop.dc.html").read_text()
+    assert 'id="root" style="width:1440px' in html and "What Do We Have for Sale Right Now?" in html
+    assert "<script src=\"./support.js\"></script>" in html
+
+
+def test_canvas_copy_comes_only_from_the_record(tmp_path):
+    import board_canvas as BC
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["heading"] = "A Heading That Exists Nowhere Else"
+    BC.write_canvas(b, {"pools": {"inventory": ["avail-a-grid"]}, "pages": {}}, out=tmp_path)
+    html = (tmp_path / "birds--avail-a-grid--Mobile.dc.html").read_text()
+    assert "A Heading That Exists Nowhere Else" in html
+    assert "lorem" not in html.lower()
+
+
+def test_canvas_names_a_refresh_candidate_with_a_plus_and_badges_the_artboard(tmp_path):
+    """A `#` in a filename breaks the file:// URL the canvas editor and the thumb cutter
+    load, so a refreshed candidate travels as `base+refresh` — and the artboard itself
+    says REFRESH, because a placeholder id nobody chose is not a design decision."""
+    import board_canvas as BC
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["id"] = "x"
+    b["sections"][0]["shape"] = "hero"
+    ledger = {"pools": {"hero": ["hero-a", "hero-c"]}, "refresh_pools": ["hero"],
+              "pages": {"sib": {"hero": "hero-a", "dial": "dial-1", "rail": "rail-a", "toc": "t1",
+                                "table": "table-a", "faq": "faq-a", "takeaway": ["k1"], "h6_prefixes": []}}}
+    BC.write_canvas(b, ledger, out=tmp_path)
+    names = sorted(p.name for p in tmp_path.glob("*.dc.html"))
+    assert names == sorted([f"x--{c}--{vp}.dc.html" for c in ("hero-a+refresh", "hero-c")
+                            for vp in ("Mobile", "Desktop")])
+    assert "REFRESH" in (tmp_path / "x--hero-a+refresh--Mobile.dc.html").read_text()
+    assert "REFRESH" not in (tmp_path / "x--hero-c--Mobile.dc.html").read_text()
