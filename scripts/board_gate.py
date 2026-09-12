@@ -25,15 +25,20 @@ def main():
     try:
         board = PB.load_board(slug)
         ont, ledger = PB.load_ontology(), PB.load_ledger()
+        # The page's own live headings are NOT popped here: header_hits() excludes them
+        # with own_live_key(), and a caller-side pop mis-keyed the homepage (slug "").
         live = PB.live_headings() if PB.DIST.exists() else {}
-        live.pop(PB.own_live_key(board), None)
         f = PB.gate_findings(board, ont, ledger, live, stage=stage)
     except PB.BoardError as e:
         print(f"board-gate ERROR {e}")
         sys.exit(2)
     n_head = len(PB.all_headings(board))
+    # Every family says what it examined: an empty ledger or an empty asset list would
+    # otherwise let the ledger-* checks and asset-required-missing pass on nothing.
+    siblings = [p for p in ledger.get("pages", {}) if p != board["meta"]["slug"]]
     print(f"board-gate {slug} [{stage}] — {len(board['sections'])} sections, {n_head} headings, "
-          f"{len(live)} live pages, {sum(len(s['entities']) for s in board['sections'])} entity refs examined")
+          f"{len(live)} live pages, {sum(len(s['entities']) for s in board['sections'])} entity refs, "
+          f"{len(siblings)} ledger siblings, {len(board['assets'])} assets examined")
     for x in f:
         print(f"  {x['sev']:4s} {x['check']:24s} {x['msg']}")
     fails = [x for x in f if x["sev"] == "FAIL"]

@@ -24,6 +24,7 @@ import os
 import pathlib
 import re
 import sys
+import tempfile
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import pageboard as PB
@@ -33,11 +34,17 @@ H2 = re.compile(r"<h2[^>]*>(.*?)</h2>", re.S)
 TAG = re.compile(r"<[^>]+>")
 
 
-def artboard_name(section_id, pick, viewport="Desktop"):
-    """The file board_canvas.py wrote for this pick. `#` is spelled `+` on disk (it breaks
-    a file:// path), so a lookup on the `#` spelling finds nothing and reports no change —
-    a silent write-back is worse than a missing one."""
-    return f"{section_id}--{file_token(pick)}--{viewport}.dc.html"
+def artboard_names(section_id, pick, viewport="Desktop"):
+    """Every filename this pick may have been saved under, in the order to try them.
+
+    `#` is spelled `+` by board_canvas.py (it breaks a file:// path), and the PUBLISHED
+    design canvas spells it `_` (the design helper refuses `+`), so an artboard extracted
+    from the canvas comes back as `..._refresh--Desktop.dc.html`. A lookup on one spelling
+    alone finds nothing and reports no change — a silent write-back is worse than a
+    missing one."""
+    return [f"{section_id}--{t}--{viewport}.dc.html"
+            for t in dict.fromkeys((file_token(pick), pick.replace("#", "_")))]
+
 
 
 def writeback_text(board, canvas_dir):
@@ -48,7 +55,11 @@ def writeback_text(board, canvas_dir):
     Strict on purpose. A named canvas directory that is not there is a typo, and an
     artboard the breeder split into two <h2>s has no single heading to write back —
     both raise rather than approve the record the breeder did not see. An artboard that is
-    merely absent or heading-less warns on stderr: the canvas is a subset of the record."""
+    merely absent, heading-less, or carrying an <h2> that strips to nothing warns on
+    stderr: the canvas is a subset of the record.
+
+    The artboard is looked up under BOTH refresh-id spellings (artboard_names): `+` as
+    board_canvas.py writes it, then `_` as the published design canvas spells it."""
     canvas_dir = pathlib.Path(canvas_dir)
     if not canvas_dir.exists():
         raise PB.BoardError(f"canvas directory {canvas_dir} does not exist")
@@ -57,9 +68,10 @@ def writeback_text(board, canvas_dir):
         pick = s["options"].get("pick")
         if not pick:
             continue
-        art = canvas_dir / artboard_name(s["id"], pick)
-        if not art.exists():
-            print(f"board-approve WARN no artboard for {s['id']} ({pick}): {art.name}", file=sys.stderr)
+        names = artboard_names(s["id"], pick)
+        art = next((canvas_dir / n for n in names if (canvas_dir / n).exists()), None)
+        if art is None:
+            print(f"board-approve WARN no artboard for {s['id']} ({pick}): tried {', '.join(names)}", file=sys.stderr)
             continue
         found = H2.findall(art.read_text(encoding="utf-8"))
         if not found:
@@ -70,7 +82,11 @@ def writeback_text(board, canvas_dir):
                 f"{art.name} carries {len(found)} <h2> headings — section {s['id']} has one heading, "
                 "so which one to write back is not knowable; fix the artboard")
         new = re.sub(r"\s+", " ", _html.unescape(TAG.sub("", found[0]))).strip()
-        if new and new != s["heading"]:
+        if not new:
+            print(f"board-approve WARN {art.name} has an <h2> that strips to empty — heading left as written",
+                  file=sys.stderr)
+            continue
+        if new != s["heading"]:
             changed.append((s["id"], "heading", s["heading"], new))
             s["heading"] = new
     return changed
@@ -107,7 +123,11 @@ def apply_approval(board, inbox, ont, ledger, canvas_dir=None):
     """The board, ledger and ontology as they stand after this approval. Pure: it reads
     nothing but its arguments and writes nothing — raise here and the files on disk are
     untouched."""
-    if inbox.get("record_hash") != PB.record_hash(board):
+    # Either the record as it stands, or the record as it stood before an approval wrote
+    # picks/notes/h1 into it: applying one approval twice (a rerun, a retry after a failed
+    # write) is idempotent, while a heading edited after the fact moves BOTH hashes and is
+    # still refused.
+    if inbox.get("record_hash") not in (PB.record_hash(board), PB.record_hash_bare(board)):
         raise PB.BoardError(
             "approval hash does not match the record — the record changed after the board was approved")
     b = json.loads(json.dumps(board))
@@ -167,9 +187,17 @@ def _atomic_write(path, text):
     component ledger is worse than an unwritten one: the next page reads it to learn what
     it may not claim."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(path.name + ".tmp")
-    tmp.write_text(text, encoding="utf-8")
-    os.replace(tmp, path)
+    # A unique temp name per write: two runs (or two approvals in one tree) sharing one
+    # `<name>.tmp` would have the second clobber the first mid-write.
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=path.parent,
+                                     prefix=path.name + ".", suffix=".tmp", delete=False) as fh:
+        fh.write(text)
+        tmp = pathlib.Path(fh.name)
+    try:
+        os.replace(tmp, path)
+    except OSError:
+        tmp.unlink(missing_ok=True)          # a failed write leaves no orphan beside the target
+        raise
 
 
 def _json_text(doc):

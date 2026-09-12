@@ -1366,3 +1366,192 @@ def test_approve_main_reports_only_the_promotions_this_run_made(tmp_path, monkey
     monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test"])
     BA.main()
     assert "1 PROPOSED→ASSERTED" in capsys.readouterr().out
+
+
+# --- Task 11 close-out: idempotent re-approval, `_` fallback, gate counts, rsplit ids ----
+
+def test_record_hash_bare_ignores_picks_notes_and_h1_pick():
+    """The hash of the record as it stood BEFORE an approval wrote the choices in."""
+    bare = json.loads(json.dumps(MIN_BOARD))
+    filled = json.loads(json.dumps(MIN_BOARD))
+    filled["sections"][0]["options"]["pick"] = "avail-b"
+    filled["sections"][0]["options"]["note"] = "shorter eyebrow"
+    filled["h1"]["pick"] = 2
+    assert PB.record_hash_bare(filled) == PB.record_hash(bare)
+    assert PB.record_hash_bare(filled) != PB.record_hash(filled)
+    filled["sections"][0]["heading"] = "Something Else"      # a real edit still moves it
+    assert PB.record_hash_bare(filled) != PB.record_hash(bare)
+
+
+def _idempotent_inbox(board):
+    return {"approved_at": "2026-09-12T12:00:00Z", "h1": 2, "picks": {"birds": "avail-b"},
+            "notes": {"birds": "shorter eyebrow"}, "canvas_version": "v7",
+            "record_hash": PB.record_hash(board)}
+
+
+def test_approve_twice_with_the_same_inbox_is_idempotent():
+    """Re-running the approval step is a normal operator move (a rerun, a retry after a
+    failed write). The first run writes the picks INTO the record, which moves its hash —
+    so the second run has to recognise the record it itself produced."""
+    import board_approve as BA
+    b = _hub_board()
+    ledger = {"pools": {"inventory": ["avail-b"]}, "pages": {}}
+    inbox = _idempotent_inbox(b)
+    first = BA.apply_approval(b, inbox, json.loads(json.dumps(ONT_PROMOTE)), ledger)
+    second = BA.apply_approval(first["board"], inbox, json.loads(json.dumps(ONT_PROMOTE)), ledger)
+    assert PB.record_hash(second["board"]) == PB.record_hash(first["board"])
+    assert second["board"]["sections"][0]["options"]["pick"] == "avail-b"
+    assert second["board"]["sections"][0]["options"]["note"] == "shorter eyebrow"
+    assert second["board"]["h1"]["pick"] == 2
+    assert PB.approval_matches(second["board"]) is True
+
+
+def test_approve_still_refuses_a_record_edited_after_approval():
+    import board_approve as BA
+    b = _hub_board()
+    ledger = {"pools": {"inventory": ["avail-b"]}, "pages": {}}
+    inbox = _idempotent_inbox(b)
+    first = BA.apply_approval(b, inbox, json.loads(json.dumps(ONT_PROMOTE)), ledger)
+    edited = first["board"]
+    edited["sections"][0]["heading"] = "A Heading Nobody Approved"
+    with pytest.raises(PB.BoardError):
+        BA.apply_approval(edited, inbox, json.loads(json.dumps(ONT_PROMOTE)), ledger)
+
+
+def test_writeback_falls_back_to_the_underscore_spelling(tmp_path):
+    """The published design canvas spells `#` as `_` (the design helper refuses `+`), so an
+    extracted artboard can come back under either name."""
+    import board_approve as BA
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["id"] = "grid"
+    b["sections"][0]["options"]["pick"] = "toc-t1-numbered-ledger#refresh"
+    (tmp_path / "grid--toc-t1-numbered-ledger_refresh--Desktop.dc.html").write_text(
+        "<h2>Where Do We Ship Each Week?</h2>", encoding="utf-8")
+    assert BA.writeback_text(b, tmp_path) == [
+        ("grid", "heading", "What Do We Have for Sale Right Now?", "Where Do We Ship Each Week?")]
+
+
+def test_writeback_warns_when_an_artboard_h2_strips_to_empty(tmp_path, capsys):
+    import board_approve as BA
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["options"]["pick"] = "avail-b"
+    (tmp_path / "birds--avail-b--Desktop.dc.html").write_text(
+        "<h2><span> </span></h2>", encoding="utf-8")
+    assert BA.writeback_text(b, tmp_path) == []
+    assert "empty" in capsys.readouterr().err
+
+
+def test_atomic_write_uses_a_unique_tmp_name(tmp_path, monkeypatch):
+    import board_approve as BA
+    seen, real = [], BA.os.replace
+
+    def spy(src, dst):
+        seen.append(str(src))
+        return real(src, dst)
+
+    monkeypatch.setattr(BA.os, "replace", spy)
+    BA._atomic_write(tmp_path / "a.json", "1\n")
+    BA._atomic_write(tmp_path / "a.json", "2\n")
+    assert (tmp_path / "a.json").read_text(encoding="utf-8") == "2\n"
+    assert len(set(seen)) == 2                       # two runs never race on one .tmp name
+    assert list(tmp_path.glob("*.tmp")) == []        # and nothing is left behind
+
+
+LEDGER_ONE_SIBLING = {"pools": {"inventory": ["avail-b"]}, "refresh_pools": [],
+                      "pages": {"sib": {"hero": "hero-z", "dial": "dial-9", "rail": "rail-z", "toc": "t9",
+                                        "table": "table-z", "faq": "faq-z", "takeaway": ["k9"],
+                                        "h6_prefixes": ["Field Note:"]}}}
+
+
+def test_gate_warns_when_the_component_ledger_has_no_pages():
+    """An empty ledger makes the five ledger-* checks examine nothing, and a PASS that
+    examined nothing is not a pass (skills/cag-gate-integrity.md)."""
+    live = {"/other/": ["Where Do We Ship Our Birds Each Week?"]}
+    empty = [x for x in PB.gate_findings(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live, stage="build")
+             if x["check"] == "ledger-examined-zero"]
+    assert len(empty) == 1 and empty[0]["sev"] == "WARN"
+    assert [x for x in PB.gate_findings(_approved(MIN_BOARD), ONT_OK, LEDGER_ONE_SIBLING, live, stage="build")
+            if x["check"] == "ledger-examined-zero"] == []
+
+
+def test_board_gate_banner_counts_ledger_siblings_assets_and_the_pages_own_live_page(tmp_path, monkeypatch, capsys):
+    """The banner has to show what every family examined — and the own page is no longer
+    popped out of the live corpus, because header_hits() excludes it internally."""
+    import board_gate as BG
+    monkeypatch.setattr(PB, "load_board", lambda slug: _approved(MIN_BOARD))
+    monkeypatch.setattr(PB, "load_ontology", lambda: ONT_OK)
+    monkeypatch.setattr(PB, "load_ledger", lambda: LEDGER_ONE_SIBLING)
+    (tmp_path / "dist").mkdir()
+    monkeypatch.setattr(PB, "DIST", tmp_path / "dist")
+    monkeypatch.setattr(PB, "live_headings", lambda: {
+        "/x/": ["What Do We Have for Sale Right Now?"],          # the board's own live page
+        "/other/": ["Where Do We Ship Our Birds Each Week?"]})
+    monkeypatch.setattr(sys, "argv", ["board_gate.py", "x"])
+    with pytest.raises(SystemExit):
+        BG.main()
+    out = capsys.readouterr().out
+    banner = out.splitlines()[0]
+    assert "2 live pages" in banner, banner
+    assert "1 ledger siblings" in banner and "1 assets" in banner, banner
+    assert "header-collision" not in out                          # its own headings are its own
+
+
+def test_header_hits_excludes_the_homepage_without_a_pop():
+    """The homepage's slug is "", so a caller-side `live.pop("/"+slug+"/")` would pop "//"
+    and leave the homepage colliding with itself. header_hits() keys it on own_live_key()."""
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["meta"]["slug"] = ""
+    b["meta"]["page_type"] = "home"
+    live = {"/": [t for _, t in PB.all_headings(b)],
+            "/other/": ["Something Else Entirely Different Here"]}
+    assert PB.header_hits(b, live) == []
+
+
+def _thumb_capture(tmp_path, monkeypatch, thumb_name):
+    import build_page_board as BPB
+    (tmp_path / "x" / "thumbs").mkdir(parents=True)
+    (tmp_path / "x" / "thumbs" / thumb_name).write_bytes(b"")
+    monkeypatch.setattr(BPB, "OUT", tmp_path)
+    monkeypatch.setattr(PB, "ROOT", tmp_path)
+    monkeypatch.setattr(PB, "DIST", tmp_path / "no-dist")
+    monkeypatch.setattr(sys, "argv", ["build_page_board.py", "x"])
+    monkeypatch.setattr(PB, "load_board", lambda slug: _approved(MIN_BOARD))
+    monkeypatch.setattr(PB, "load_ontology", lambda: ONT_OK)
+    monkeypatch.setattr(PB, "load_ledger", lambda: LEDGER_EMPTY)
+    captured = {}
+    monkeypatch.setattr(BPB, "render", lambda board, ont, ledger, live, thumbs, slug: captured.setdefault("thumbs", thumbs) and "" or "<!doctype html>")
+    BPB.main()
+    return captured["thumbs"]
+
+
+def test_board_keys_a_thumb_for_a_section_id_that_contains_a_double_hyphen(tmp_path, monkeypatch):
+    """Section ids may carry `--` (schema: ^[a-z][a-z0-9-]*$), so the split has to come
+    from the RIGHT or `bird--grid` loses everything after its own separator."""
+    thumbs = _thumb_capture(tmp_path, monkeypatch, "bird--grid--toc-a+refresh--desktop.png")
+    assert thumbs == {("bird--grid", "toc-a#refresh"): "thumbs/bird--grid--toc-a+refresh--desktop.png"}
+
+
+def test_file_token_round_trips_through_unfile_token():
+    import board_canvas as BC
+    assert BC.file_token("toc-a#refresh") == "toc-a+refresh"
+    assert BC.unfile_token("toc-a+refresh") == "toc-a#refresh"
+    assert BC.unfile_token(BC.file_token("toc-a")) == "toc-a"
+
+
+def test_the_refresh_badge_reads_the_same_on_the_board_and_the_canvas():
+    import board_canvas as BC, build_page_board as BPB
+    assert "REFRESH — name the axis" in BC.pill("toc-a#refresh")
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["options"]["pick"] = "avail-b#refresh"
+    html = BPB.render(b, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "REFRESH — name the axis" in html and "refresh: name the axis" not in html
+
+
+def test_board_renders_an_excluded_shell_owner_when_only_owner_is_set(monkeypatch):
+    """The board schema requires `owner` and only allows `owners`, so a record written by
+    hand may carry the singular alone — and an excluded card with no owner reads as a bug."""
+    import build_page_board as BPB
+    monkeypatch.setattr(PB, "candidates_for", lambda shape, ledger, slug: (
+        ["avail-b"], [{"component": "avail-a", "owner": "sibling-page"}]))
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "owned by sibling-page" in html

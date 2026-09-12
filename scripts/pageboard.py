@@ -143,6 +143,23 @@ def record_hash(board):
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
+def record_hash_bare(board):
+    """The hash the record carried BEFORE an approval wrote the breeder's choices into it:
+    every `sections[].options.pick` back to null, every `.note` back to "", `h1.pick` back
+    to null. board_approve.py accepts an inbox that matches EITHER this or the record as it
+    stands, so re-running one approval twice is idempotent instead of reading as a
+    post-approval edit. Nothing else is reset: a heading the breeder changed after the fact
+    moves both hashes, which is exactly the edit the approval gate exists to catch."""
+    b = json.loads(json.dumps(board))
+    for s in b.get("sections", []):
+        if isinstance(s.get("options"), dict):
+            s["options"]["pick"] = None
+            s["options"]["note"] = ""
+    if isinstance(b.get("h1"), dict):
+        b["h1"]["pick"] = None
+    return record_hash(b)
+
+
 def approval_matches(board):
     a = board.get("approval")
     return isinstance(a, dict) and a.get("record_hash") == record_hash(board)
@@ -490,6 +507,10 @@ def gate_findings(board, ont, ledger, live, stage="build"):
         if v and owned.get(v):
             add("ledger-shell-owned", "FAIL",
                 f"tuple.{key}={v} is owned by {', '.join(owned[v])} — refresh it as {base_of(v)}#<delta>")
+    if not siblings:
+        add("ledger-examined-zero", "WARN",
+            f"the component ledger records {len(ledger.get('pages', {}))} page(s) and no sibling of {slug} — "
+            "the five ledger-* checks examined nothing")
     spent = spent_h6_prefixes(ledger, exclude_slug=slug)
     for p in t.get("h6_prefixes", []):
         if p in spent:

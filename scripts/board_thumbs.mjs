@@ -23,7 +23,12 @@ try {
   for (const f of files) {
     await page.goto(pathToFileURL(resolve(src, f)).href);
     await page.waitForTimeout(400);                     // fonts + inline layout
-    const [section, cand] = f.replace('--Desktop.dc.html', '').split('--');
+    // Split from the RIGHT: a section id may itself contain `--`, and a left split would
+    // cut `bird--grid` in half and name the thumb after half a section.
+    const stem = f.replace('--Desktop.dc.html', '');
+    const cut = stem.lastIndexOf('--');
+    if (cut < 1) { console.error('skipped', f, '— not <section>--<candidate>--Desktop.dc.html'); continue; }
+    const section = stem.slice(0, cut), cand = stem.slice(cut + 2);
     await page.locator('#root').screenshot({ path: resolve(out, `${section}--${cand}--desktop.png`) });
     console.log('thumb', section, cand);
   }

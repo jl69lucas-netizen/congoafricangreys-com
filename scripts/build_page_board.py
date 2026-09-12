@@ -141,7 +141,7 @@ def option_cards(section, ledger, slug, thumbs):
     for c in cands:
         base = PB.base_of(c)
         delta = c.split("#", 1)[1].strip() if "#" in c else ""
-        badge = "refresh: name the axis" if delta == "refresh" else delta
+        badge = "REFRESH — name the axis" if delta == "refresh" else delta   # one label, board and canvas
         th = thumbs.get((section["id"], c)) or thumbs.get((section["id"], base))
         img = (f'<img src="{esc(th)}" alt="{esc(base)} option for {esc(section["id"])}">'
                if th else f'<div class="nothumb">{esc(base)}</div>')
@@ -149,7 +149,9 @@ def option_cards(section, ledger, slug, thumbs):
         cards.append(f'<div class="opt">{img}<label><input type="radio" name="pick-{section["id"]}" value="{esc(c)}"{checked}> {esc(base)}</label>'
                      + (f'<span class="pill">{esc(badge)}</span>' if badge else "") + "</div>")
     for x in excluded:
-        owners = ", ".join(x.get("owners") or [])
+        # The schema requires `owner` and only allows `owners`, so the singular is the
+        # fallback: an excluded card with no owner on it reads as a bug, not as a rule.
+        owners = ", ".join(x.get("owners") or ([x["owner"]] if x.get("owner") else []))
         cards.append(f'<div class="opt off"><div class="nothumb">{esc(x["component"])}</div>'
                      f'<span class="why">owned by {esc(owners)} — excluded</span></div>')
     return cards
@@ -345,19 +347,25 @@ def main():
     if len(sys.argv) != 2:
         sys.exit("usage: build_page_board.py <slug>")
     slug = sys.argv[1]
+    # Imported here, not at module scope: board_canvas.py imports esc() from this module,
+    # and a top-level import back would close the cycle before esc() is defined.
+    from board_canvas import unfile_token          # the `+` → `#` spelling, defined once
     board = PB.load_board(slug)
     ont, ledger = PB.load_ontology(), PB.load_ledger()
+    # No own-page pop: PB.header_hits() excludes it with own_live_key(), which is "/" for
+    # the homepage — the pop built "//" and left the homepage colliding with itself.
     live = PB.live_headings() if PB.DIST.exists() else {}
-    live.pop("/" + slug + "/", None)
     thumbs = {}
     tdir = OUT / slug / "thumbs"
     if tdir.exists():
         for p in sorted(tdir.glob("*.png")):          # <section>--<candidate>--desktop.png
-            bits = p.stem.split("--")
-            if len(bits) < 2:
+            # From the RIGHT: a section id may itself contain `--` (schema ^[a-z][a-z0-9-]*$),
+            # and a left split would cut `bird--grid` in half and lose its candidate.
+            bits = p.stem.rsplit("--", 2)
+            if len(bits) < 3:
                 print(f"warning: thumbs/{p.name} is not <section>--<candidate>--<viewport>.png — skipped")
                 continue
-            thumbs.setdefault((bits[0], bits[1].replace("+", "#")), f"thumbs/{p.name}")  # `+` is `#` in a filename
+            thumbs.setdefault((bits[0], unfile_token(bits[1])), f"thumbs/{p.name}")  # `+` is `#` in a filename
     OUT.mkdir(parents=True, exist_ok=True)
     out = OUT / f"{slug}.html"
     out.write_text(render(board, ont, ledger, live, thumbs, slug), encoding="utf-8")

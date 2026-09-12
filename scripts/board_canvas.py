@@ -58,6 +58,12 @@ def file_token(candidate):
     return candidate.replace("#", "+")
 
 
+def unfile_token(token):
+    """A filename fragment back to the candidate it names — the inverse of file_token(),
+    beside it so the two spellings can never drift apart."""
+    return token.replace("+", "#")
+
+
 def slot_box(w, h, label):
     return (f'<div aria-label="{esc(label)}" style="width:100%; aspect-ratio:{w}/{h}; background:repeating-linear-gradient(135deg,#eee 0 8px,#e2ddd6 8px 16px); '
             f'border:1px dashed {BD}; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:12px; color:{MUTED};">{esc(label)} · {w}×{h}</div>')
