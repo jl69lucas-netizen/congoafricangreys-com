@@ -100,3 +100,47 @@ def test_approval_matches_only_when_hash_matches():
     assert PB.approval_matches(a) is False
     a["approval"] = None
     assert PB.approval_matches(a) is False
+
+
+def test_record_hash_ignores_lifecycle_fields():
+    a = json.loads(json.dumps(MIN_BOARD))
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["meta"]["status"] = "approved"                   # board_approve.py flips this when it stamps
+    b["assets"][0]["status"] = "baked"                 # and baking a photo fills these in
+    b["assets"][0]["file"] = "/img/hero.webp"
+    assert PB.record_hash(a) == PB.record_hash(b)
+    b["assets"][0]["alt"] = "a real alt line"          # alt IS content, so it must move the hash
+    assert PB.record_hash(a) != PB.record_hash(b)
+
+
+def test_approval_survives_the_approve_then_bake_lifecycle():
+    board = json.loads(json.dumps(MIN_BOARD))
+    board["approval"] = {"approved_at": "2026-09-12T10:00:00Z", "h1": 0, "picks": {}, "notes": {},
+                         "canvas_version": None, "record_hash": PB.record_hash(board)}
+    board["meta"]["status"] = "approved"
+    assert PB.approval_matches(board) is True
+    board["assets"][0]["status"] = "baked"
+    board["assets"][0]["file"] = "/img/hero.webp"
+    assert PB.approval_matches(board) is True
+
+
+def test_record_hash_survives_a_json_round_trip():
+    a = json.loads(json.dumps(MIN_BOARD))
+    b = json.loads(json.dumps(a, indent=2, ensure_ascii=False))
+    assert PB.record_hash(a) == PB.record_hash(b)
+
+
+def test_approval_matches_false_when_only_the_stored_hash_is_tampered_with():
+    a = json.loads(json.dumps(MIN_BOARD))
+    a["approval"] = {"approved_at": "2026-09-12T10:00:00Z", "h1": 0, "picks": {}, "notes": {},
+                     "canvas_version": None, "record_hash": PB.record_hash(a)}
+    assert PB.approval_matches(a) is True
+    a["approval"]["record_hash"] = "0" * 64
+    assert PB.approval_matches(a) is False
+
+
+def test_approval_matches_returns_false_for_a_non_dict_approval():
+    for junk in ("approved", ["approved"], 1, True):
+        a = json.loads(json.dumps(MIN_BOARD))
+        a["approval"] = junk
+        assert PB.approval_matches(a) is False

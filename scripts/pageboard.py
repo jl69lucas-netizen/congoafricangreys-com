@@ -90,14 +90,31 @@ def load_ledger():
     return ledger
 
 
+LIFECYCLE_ASSET_KEYS = ("status", "file")
+
+
 def record_hash(board):
-    """sha256 of the record with `approval` removed, keys sorted. An edit anywhere else
-    changes the hash, which is how a post-approval edit sends the page back to the board."""
+    """sha256 of the record's CONTENT, keys sorted. Four fields are excluded because they
+    are lifecycle state rather than content, and they move after approval by design:
+    the top-level `approval`, `meta.status` (board_approve.py flips it to "approved"
+    the moment it stamps the hash), and every asset's `status` and `file` (baking a photo
+    fills them in). Hashing any of them would make every legitimate approval, and every
+    later bake, read as a post-approval edit. An edit anywhere else DOES change the hash,
+    which is how a real post-approval edit sends the page back to the board."""
     body = {k: v for k, v in board.items() if k != "approval"}
+    meta = body.get("meta")
+    if isinstance(meta, dict):
+        body["meta"] = {k: v for k, v in meta.items() if k != "status"}
+    assets = body.get("assets")
+    if isinstance(assets, list):
+        body["assets"] = [
+            {k: v for k, v in a.items() if k not in LIFECYCLE_ASSET_KEYS} if isinstance(a, dict) else a
+            for a in assets
+        ]
     blob = json.dumps(body, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
 def approval_matches(board):
     a = board.get("approval")
-    return bool(a) and a.get("record_hash") == record_hash(board)
+    return isinstance(a, dict) and a.get("record_hash") == record_hash(board)
