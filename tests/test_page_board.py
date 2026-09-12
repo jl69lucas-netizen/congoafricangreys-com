@@ -195,3 +195,58 @@ def test_reseeding_keeps_a_board_added_proposed_entity(tmp_path, monkeypatch):
     after = {e["id"]: e for e in json.loads(copy.read_text(encoding="utf-8"))["entities"]}
     assert "ont:board-added" in after, "a board-added entity was dropped by a re-seed"
     assert after["ont:board-added"]["authorization"] == "PROPOSED"
+
+
+def _anchor(heading):
+    """GitHub-style heading slug: lowercase, punctuation dropped, spaces to hyphens."""
+    import re
+    s = re.sub(r"[^a-z0-9 \-]", "", heading.strip().lstrip("#").strip().lower())
+    return s.replace(" ", "-")
+
+
+def test_every_asserted_source_resolves_to_a_real_heading_or_data_key():
+    for e in PB.load_ontology()["entities"]:
+        src = e["source"]
+        if e["authorization"] != "ASSERTED" or not src or "#" not in src:
+            continue
+        path, _, frag = src.partition("#")
+        f = PB.ROOT / path
+        assert f.exists(), f"{e['id']}: {path} does not exist"
+        if path.endswith(".json"):
+            doc = json.loads(f.read_text(encoding="utf-8"))
+            assert frag in doc or frag in doc.get("variants", {}), f"{e['id']}: no key {frag} in {path}"
+        elif path.endswith(".md"):
+            anchors = {_anchor(l) for l in f.read_text(encoding="utf-8").splitlines() if l.startswith("#")}
+            assert frag in anchors, f"{e['id']}: {path} has no heading anchored #{frag}"
+
+
+def test_ledger_twins_are_not_duplicated_as_proposed_catalog_rows():
+    ids = {e["id"] for e in PB.load_ontology()["entities"]}
+    assert ids.isdisjoint({"ont:dna-sexing", "ont:usda-license", "ont:cites-documentation",
+                           "ont:iata-compliant-shipping", "ont:lifetime-advisory"})
+
+
+def test_catalog_parse_floor_rejects_a_catalog_that_lost_its_tables(tmp_path, monkeypatch):
+    import seed_ontology
+    empty = tmp_path / "cag-entity-agent.md"
+    empty.write_text("# skill\n\n## Something Else\n\nno catalog here\n", encoding="utf-8")
+    monkeypatch.setattr(seed_ontology, "CATALOG", empty)
+    with pytest.raises(PB.BoardError) as e:
+        seed_ontology.catalog_entities()
+    assert "catalog rows" in str(e.value)
+
+
+def test_reseeding_carries_an_earlier_decision_on_a_catalog_id(tmp_path, monkeypatch):
+    import seed_ontology
+    copy = tmp_path / "cag-ontology.json"
+    ont = PB.load_ontology()
+    for e in ont["entities"]:
+        if e["id"] == "ont:hand-raised":                  # a catalog row, PROPOSED as seeded
+            e.update(authorization="ASSERTED", source="x", owner_page="/foo/")
+    copy.write_text(json.dumps(ont, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    monkeypatch.setattr(PB, "ONTOLOGY", copy)
+    seed_ontology.main()
+    after = {e["id"]: e for e in json.loads(copy.read_text(encoding="utf-8"))["entities"]}
+    assert after["ont:hand-raised"]["authorization"] == "ASSERTED"
+    assert after["ont:hand-raised"]["source"] == "x"
+    assert after["ont:hand-raised"]["owner_page"] == "/foo/"
