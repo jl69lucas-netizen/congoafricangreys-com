@@ -174,10 +174,25 @@ def owned_components(ledger, exclude_slug=None):
     return owned
 
 
+# A section shape normally draws from the pool of its own name. `nav` is the exception:
+# a nav-shaped section is a table of contents, and the TOC shells live in the `toc` pool
+# (the `nav` pool is the dials and rails, which are page chrome, not section options).
+SHAPE_POOL = {"nav": "toc"}
+
+
 def candidates_for(shape, ledger, slug):
+    """The options a section of this shape may be offered.
+
+    Most pools are SHARED: dial-1-clay is on nine pages by design, and the ledger's
+    discipline is that the COMBO differs, not the component. Only the pools listed in
+    `refresh_pools` are scarce enough that a sibling's claim costs the shell — there a
+    spent base comes back as `base#refresh` for the author to rename."""
     if shape == "standard":
         return [], []
-    pool = list(ledger.get("pools", {}).get(shape, []))
+    pool_name = SHAPE_POOL.get(shape, shape)
+    pool = list(ledger.get("pools", {}).get(pool_name, []))
+    if pool_name not in ledger.get("refresh_pools", []):
+        return pool, []
     owned = owned_components(ledger, exclude_slug=slug)
     cands, excluded = [], []
     for c in pool:
@@ -399,16 +414,41 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     for e in auth["proposed"]:
         add("entity-proposed", "WARN", f"{e} is PROPOSED — needs a source before it can be asserted")
 
+    # The ledger's discipline is that COMBOS differ, not components: dial-1-clay is on
+    # nine pages by design, so a per-component rule would fail every page on the site.
+    # Four rules, narrowest first.
     owned = owned_components(ledger, exclude_slug=slug)
     t = board["tuple"]
-    for key in ("hero", "dial", "rail", "toc", "table", "faq"):
-        if t.get(key) in owned:
-            add("ledger-owned-combo", "FAIL", f"tuple.{key}={t[key]} is owned by {', '.join(owned[t[key]])}")
-    # Per takeaway id, not per takeaway set: a spent card comes back as `k#refresh`, so a
-    # page may reuse the shell along a named axis but never the bare id a sibling owns.
-    for k in t.get("takeaway", []):
-        if k in owned:
-            add("ledger-owned-combo", "FAIL", f"takeaway {k} is owned by {', '.join(owned[k])}")
+    siblings = {p: s for p, s in ledger.get("pages", {}).items() if p != slug}
+    tw = set(t.get("takeaway", []))
+    triple = tuple(t.get(k) or "" for k in ("hero", "dial", "rail"))
+
+    identical = [p for p, s in siblings.items()
+                 if all((s.get(k) or "") == (t.get(k) or "") for k in TUPLE_ID_KEYS)
+                 and set(s.get("takeaway", [])) == tw]
+    for p in identical:
+        add("ledger-tuple-identical", "FAIL",
+            f"every tuple axis matches {p} — the combo is what has to differ")
+    rest = {p: s for p, s in siblings.items() if p not in identical}
+
+    if any(triple):
+        trip = [p for p, s in rest.items() if tuple(s.get(k) or "" for k in ("hero", "dial", "rail")) == triple]
+        if trip:
+            add("ledger-triple-owned", "FAIL",
+                f"hero+dial+rail {'+'.join(x or '—' for x in triple)} is the same signature as {', '.join(trip)}")
+    if tw:
+        sets = [p for p, s in rest.items() if set(s.get("takeaway", [])) == tw]
+        if sets:
+            add("ledger-takeaway-set-owned", "FAIL",
+                f"takeaway set {{{', '.join(sorted(tw))}}} is the same set as {', '.join(sets)}")
+    # The scarce shells: a bare base a sibling uses (bare or refreshed) must be refreshed
+    # here too. A `base#delta` passes — unless it is a sibling's exact id, which owned_
+    # components records under the full id.
+    for key in ("hero", "toc", "faq"):
+        v = t.get(key)
+        if v and owned.get(v):
+            add("ledger-shell-owned", "FAIL",
+                f"tuple.{key}={v} is owned by {', '.join(owned[v])} — refresh it as {base_of(v)}#<delta>")
     spent = spent_h6_prefixes(ledger, exclude_slug=slug)
     for p in t.get("h6_prefixes", []):
         if p in spent:

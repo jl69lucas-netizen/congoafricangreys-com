@@ -262,21 +262,27 @@ def test_ledger_file_validates_and_knows_pages_a_and_b():
     assert ledger["pages"]["african-grey-parrots-for-sale-near-me"]["hero"] == "hero-c-mosaic-metrics#geo-tile-field"
 
 
-def test_candidates_subtract_what_siblings_own():
+def test_candidates_of_a_shared_pool_are_all_free():
+    """`inventory` is not a refresh pool: a sibling using avail-b costs nobody anything,
+    because the ledger's discipline is that the combo differs, not the component."""
     ledger = {"pools": {"inventory": ["avail-a", "avail-b", "bird-cards"]},
               "pages": {"dna-tested-african-grey-for-sale": {"hero": "hero-c", "dial": "dial-1", "rail": "rail-a", "toc": "avail-b",
                         "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
     cands, excluded = PB.candidates_for("inventory", ledger, slug="african-grey-parrots-for-sale")
-    assert cands == ["avail-a", "avail-b#refresh", "bird-cards"]
-    assert excluded == [{"component": "avail-b", "owner": "dna-tested-african-grey-for-sale",
-                         "owners": ["dna-tested-african-grey-for-sale"]}]
+    assert cands == ["avail-a", "avail-b", "bird-cards"] and excluded == []
+
+
+def test_a_nav_shaped_section_draws_from_the_toc_pool():
+    ledger = {"pools": {"nav": ["dial-1", "rail-a"], "toc": ["toc-t1", "toc-t2"]}, "pages": {}}
+    cands, excluded = PB.candidates_for("nav", ledger, slug="x")
+    assert cands == ["toc-t1", "toc-t2"] and excluded == []
 
 
 def test_candidates_never_exclude_the_page_itself():
-    ledger = {"pools": {"nav": ["dial-1", "dial-2"]},
-              "pages": {"x": {"hero": "", "dial": "dial-1", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
-    cands, excluded = PB.candidates_for("nav", ledger, slug="x")
-    assert cands == ["dial-1", "dial-2"] and excluded == []
+    ledger = {"refresh_pools": ["hero"], "pools": {"hero": ["hero-a", "hero-c"]},
+              "pages": {"x": {"hero": "hero-a", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
+    cands, excluded = PB.candidates_for("hero", ledger, slug="x")
+    assert cands == ["hero-a", "hero-c"] and excluded == []
 
 
 def test_standard_shape_has_no_options():
@@ -285,7 +291,7 @@ def test_standard_shape_has_no_options():
 
 
 def test_exhausted_pool_yields_refresh_candidates():
-    ledger = {"pools": {"hero": ["hero-a", "hero-c"]},
+    ledger = {"refresh_pools": ["hero"], "pools": {"hero": ["hero-a", "hero-c"]},
               "pages": {"p1": {"hero": "hero-a", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []},
                         "p2": {"hero": "hero-c", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
     cands, excluded = PB.candidates_for("hero", ledger, slug="new-page")
@@ -295,7 +301,7 @@ def test_exhausted_pool_yields_refresh_candidates():
 
 
 def test_refreshed_id_owns_its_base():
-    ledger = {"pools": {"hero": ["hero-c"]},
+    ledger = {"refresh_pools": ["hero"], "pools": {"hero": ["hero-c"]},
               "pages": {"near-me": {"hero": "hero-c#geo-tile-field", "dial": "", "rail": "", "toc": "",
                                     "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
     owned = PB.owned_components(ledger)
@@ -523,7 +529,7 @@ def test_gate_fails_without_matching_approval():
     assert any(x["check"] == "approval-hash" and x["sev"] == "FAIL" for x in f)
 
 
-def test_gate_fails_on_blocked_entity_and_owned_combo_and_spent_prefix():
+def test_gate_fails_on_blocked_entity_and_owned_shell_and_spent_prefix():
     b = _approved(MIN_BOARD)
     b["sections"][0]["entities"].append("ont:wild-caught")
     ont = {"entities": ONT_OK["entities"] + [{"id": "ont:wild-caught", "name": "w", "aliases": [], "class": "Commerce",
@@ -533,7 +539,65 @@ def test_gate_fails_on_blocked_entity_and_owned_combo_and_spent_prefix():
                                     "h6_prefixes": ["Aviary Note:"]}}}
     b["approval"]["record_hash"] = PB.record_hash(b)
     f = {x["check"] for x in PB.gate_findings(b, ont, ledger, live={}, stage="build") if x["sev"] == "FAIL"}
-    assert {"entity-blocked", "ledger-owned-combo", "ledger-spent-prefix"} <= f
+    assert {"entity-blocked", "ledger-shell-owned", "ledger-spent-prefix"} <= f
+
+
+def _ledger_with(**tuple_fields):
+    t = {"hero": "", "dial": "", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}
+    t.update(tuple_fields)
+    return {"pools": {"inventory": ["avail-b"]}, "pages": {"sibling": t}}
+
+
+def _checks(board, ledger):
+    return {x["check"] for x in PB.gate_findings(board, ONT_OK, ledger, live={}, stage="build") if x["sev"] == "FAIL"}
+
+
+def test_gate_flags_a_copied_hero_dial_rail_triple():
+    """Components are shared by design; the signature the reader sees first is not."""
+    b = _approved(MIN_BOARD)
+    same = _checks(b, _ledger_with(hero="hero-a", dial="dial-1", rail="rail-a", toc="t9", table="table-z", faq="faq-z"))
+    assert "ledger-triple-owned" in same
+    diff = _checks(b, _ledger_with(hero="hero-a", dial="dial-2", rail="rail-a", toc="t9", table="table-z", faq="faq-z"))
+    assert "ledger-triple-owned" not in diff
+
+
+def test_gate_flags_a_takeaway_set_a_sibling_already_uses():
+    b = _approved(MIN_BOARD)
+    b["tuple"]["takeaway"] = ["k1", "k2"]
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    same = _checks(b, _ledger_with(takeaway=["k2", "k1"]))          # a set, so order cannot dodge it
+    assert "ledger-takeaway-set-owned" in same
+    assert "ledger-takeaway-set-owned" not in _checks(b, _ledger_with(takeaway=["k1", "k3"]))
+    assert "ledger-takeaway-set-owned" not in _checks(b, _ledger_with(takeaway=["k1"]))
+
+
+def test_gate_flags_a_tuple_that_is_identical_to_a_siblings():
+    b = _approved(MIN_BOARD)
+    t = b["tuple"]
+    ledger = _ledger_with(hero=t["hero"], dial=t["dial"], rail=t["rail"], toc=t["toc"],
+                          takeaway=list(t["takeaway"]), table=t["table"], faq=t["faq"])
+    f = _checks(b, ledger)
+    assert "ledger-tuple-identical" in f
+    # the narrower rules do not also fire: one identical sibling is one finding, not three
+    assert "ledger-triple-owned" not in f and "ledger-takeaway-set-owned" not in f
+
+
+def test_gate_lets_a_refreshed_shell_pass_but_not_a_bare_one():
+    b = _approved(MIN_BOARD)
+    ledger = _ledger_with(hero="hero-a", dial="dial-9", rail="rail-9")
+    assert "ledger-shell-owned" in _checks(b, ledger)               # MIN_BOARD's bare hero-a
+    b["tuple"]["hero"] = "hero-a#minimal"
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    assert "ledger-shell-owned" not in _checks(b, ledger)
+    ledger["pages"]["sibling"]["hero"] = "hero-a#minimal"           # the same delta, though, is the same shell
+    assert "ledger-shell-owned" in _checks(b, ledger)
+
+
+def test_gate_does_not_police_shared_pool_components():
+    """dial-1-clay is on nine pages by design: a shared dial, rail or table is never a FAIL."""
+    b = _approved(MIN_BOARD)
+    f = _checks(b, _ledger_with(hero="hero-z", dial="dial-1", rail="rail-a", toc="t9", table="table-a", faq="faq-z"))
+    assert not any(c.startswith("ledger-") for c in f), f
 
 
 def test_gate_fails_on_live_header_collision_and_missing_pick():
@@ -617,7 +681,7 @@ def test_gate_against_the_real_ledger_treats_a_refresh_id_as_unspent():
         b["tuple"]["hero"] = hero
         b["approval"]["record_hash"] = PB.record_hash(b)
         return [x for x in PB.gate_findings(b, ONT_OK, ledger, live={}, stage="build")
-                if x["check"] == "ledger-owned-combo" and "tuple.hero" in x["msg"]]
+                if x["check"] == "ledger-shell-owned" and "tuple.hero" in x["msg"]]
 
     assert hero_hits("hero-c-mosaic-metrics#brand-new") == []
     hits = hero_hits("hero-c-mosaic-metrics")
@@ -637,3 +701,4 @@ def test_gate_against_the_real_dist_whitelists_faq_but_flags_current_pricing():
             if x["check"] == "header-collision"]
     assert any("'Current Pricing'" in m for m in msgs), msgs
     assert not any("Frequently Asked Questions" in m for m in msgs), msgs
+
