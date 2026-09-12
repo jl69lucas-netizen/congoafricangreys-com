@@ -1,8 +1,9 @@
 // scripts/board_thumbs.mjs <slug>
 // Screenshots every Desktop artboard in docs/design/board-<slug>/ into
 // docs/artifacts/boards/<slug>/thumbs/<section>--<candidate>--desktop.png (1440 wide, capped 900 tall).
-// A candidate's `#` is spelled `+` in both names, exactly as board_canvas.py wrote it;
-// build_page_board.py maps it back when it keys thumbs by (section, candidate).
+// A candidate's `#` is spelled `_` in both names, exactly as board_canvas.py wrote it
+// (the design-canvas helper refuses `+`); build_page_board.py maps it back when it keys
+// thumbs by (section, candidate).
 import { chromium } from 'playwright';
 import { readdirSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';

@@ -28,22 +28,21 @@ import tempfile
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import pageboard as PB
-from board_canvas import file_token       # one `#` → `+` spelling for the whole board system
+from board_canvas import file_token       # one `#` → `_` spelling for the whole board system
 
 H2 = re.compile(r"<h2[^>]*>(.*?)</h2>", re.S)
 TAG = re.compile(r"<[^>]+>")
 
 
 def artboard_names(section_id, pick, viewport="Desktop"):
-    """Every filename this pick may have been saved under, in the order to try them.
+    """The filename this pick was saved under. A list of one, because the caller walks it.
 
-    `#` is spelled `+` by board_canvas.py (it breaks a file:// path), and the PUBLISHED
-    design canvas spells it `_` (the design helper refuses `+`), so an artboard extracted
-    from the canvas comes back as `..._refresh--Desktop.dc.html`. A lookup on one spelling
-    alone finds nothing and reports no change — a silent write-back is worse than a
-    missing one."""
-    return [f"{section_id}--{t}--{viewport}.dc.html"
-            for t in dict.fromkeys((file_token(pick), pick.replace("#", "_")))]
+    One spelling on every surface outside the record (breeder ruling 2026-09-12): `#` is
+    written `_` by board_canvas.py — it breaks a file:// path, and the design-canvas helper
+    refuses `+` — so an artboard extracted from the published canvas comes back under the
+    same name the writer emitted. A second name that can never exist would only pad the
+    WARN line on a real miss."""
+    return [f"{section_id}--{file_token(pick)}--{viewport}.dc.html"]
 
 
 
@@ -58,8 +57,8 @@ def writeback_text(board, canvas_dir):
     merely absent, heading-less, or carrying an <h2> that strips to nothing warns on
     stderr: the canvas is a subset of the record.
 
-    The artboard is looked up under BOTH refresh-id spellings (artboard_names): `+` as
-    board_canvas.py writes it, then `_` as the published design canvas spells it."""
+    The artboard is looked up under the one refresh-id spelling on disk (artboard_names):
+    `_`, as board_canvas.py writes it and the published design canvas keeps it."""
     canvas_dir = pathlib.Path(canvas_dir)
     if not canvas_dir.exists():
         raise PB.BoardError(f"canvas directory {canvas_dir} does not exist")

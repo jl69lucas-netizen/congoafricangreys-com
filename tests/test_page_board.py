@@ -949,10 +949,11 @@ def test_canvas_warns_when_a_pool_is_short_or_empty(tmp_path, capsys):
     assert "birds" in err and "inventory" in err and "0 options" in err
 
 
-def test_canvas_names_a_refresh_candidate_with_a_plus_and_badges_the_artboard(tmp_path):
+def test_canvas_names_a_refresh_candidate_with_an_underscore_and_badges_the_artboard(tmp_path):
     """A `#` in a filename breaks the file:// URL the canvas editor and the thumb cutter
-    load, so a refreshed candidate travels as `base+refresh` — and the artboard itself
-    says REFRESH, because a placeholder id nobody chose is not a design decision."""
+    load, and the design-canvas helper refuses `+`, so a refreshed candidate travels as
+    `base_refresh` on every surface outside the record — and the artboard itself says
+    REFRESH, because a placeholder id nobody chose is not a design decision."""
     import board_canvas as BC
     b = _approved(MIN_BOARD)
     b["sections"][0]["id"] = "x"
@@ -963,19 +964,19 @@ def test_canvas_names_a_refresh_candidate_with_a_plus_and_badges_the_artboard(tm
                                 "table": "table-a", "faq": "faq-a", "takeaway": ["k1"], "h6_prefixes": []}}}
     BC.write_canvas(b, ledger, out=tmp_path)
     names = sorted(p.name for p in tmp_path.glob("*.dc.html"))
-    assert names == sorted([f"x--{c}--{vp}.dc.html" for c in ("toc-a+refresh", "toc-c")
+    assert names == sorted([f"x--{c}--{vp}.dc.html" for c in ("toc-a_refresh", "toc-c")
                             for vp in ("Mobile", "Desktop")])
-    assert "REFRESH" in (tmp_path / "x--toc-a+refresh--Mobile.dc.html").read_text()
+    assert "REFRESH" in (tmp_path / "x--toc-a_refresh--Mobile.dc.html").read_text()
     assert "REFRESH" not in (tmp_path / "x--toc-c--Mobile.dc.html").read_text()
 
 
-def test_board_maps_a_thumb_filename_plus_back_to_a_candidate_hash(tmp_path, monkeypatch):
+def test_board_maps_a_thumb_filename_underscore_back_to_a_candidate_hash(tmp_path, monkeypatch):
     """The round trip board_canvas.py opens: the candidate `toc-a#refresh` is written
-    `toc-a+refresh` on disk, and the board has to key it back or the option renders with
+    `toc-a_refresh` on disk, and the board has to key it back or the option renders with
     no thumbnail even though one was cut for it."""
     import build_page_board as BPB
     (tmp_path / "x" / "thumbs").mkdir(parents=True)
-    (tmp_path / "x" / "thumbs" / "grid--toc-a+refresh--desktop.png").write_bytes(b"")
+    (tmp_path / "x" / "thumbs" / "grid--toc-a_refresh--desktop.png").write_bytes(b"")
     monkeypatch.setattr(BPB, "OUT", tmp_path)
     monkeypatch.setattr(PB, "ROOT", tmp_path)
     monkeypatch.setattr(PB, "DIST", tmp_path / "no-dist")
@@ -991,7 +992,7 @@ def test_board_maps_a_thumb_filename_plus_back_to_a_candidate_hash(tmp_path, mon
 
     monkeypatch.setattr(BPB, "render", fake_render)
     BPB.main()
-    assert captured["thumbs"] == {("grid", "toc-a#refresh"): "thumbs/grid--toc-a+refresh--desktop.png"}
+    assert captured["thumbs"] == {("grid", "toc-a#refresh"): "thumbs/grid--toc-a_refresh--desktop.png"}
 
 
 # --- Task 10: approval read-back, promotions, ledger append, text write-back -------------
@@ -1122,14 +1123,14 @@ def test_text_writeback_updates_the_record_from_the_saved_artboard(tmp_path):
                         "What Do We Have for Sale Today?")]
 
 
-def test_text_writeback_maps_a_hash_in_the_pick_to_a_plus_in_the_filename(tmp_path):
-    """board_canvas.py writes `#` as `+`; a write-back that looked for the `#` spelling
+def test_text_writeback_maps_a_hash_in_the_pick_to_an_underscore_in_the_filename(tmp_path):
+    """board_canvas.py writes `#` as `_`; a write-back that looked for the `#` spelling
     would silently find no artboard and report no change."""
     import board_approve as BA
     b = json.loads(json.dumps(MIN_BOARD))
     b["sections"][0]["id"] = "grid"
     b["sections"][0]["options"]["pick"] = "toc-t1-numbered-ledger#state-chips"
-    (tmp_path / "grid--toc-t1-numbered-ledger+state-chips--Desktop.dc.html").write_text(
+    (tmp_path / "grid--toc-t1-numbered-ledger_state-chips--Desktop.dc.html").write_text(
         "<h2>Where Do We Ship Each Week?</h2>", encoding="utf-8")
     changed = BA.writeback_text(b, tmp_path)
     assert changed == [("grid", "heading", "What Do We Have for Sale Right Now?",
@@ -1418,9 +1419,9 @@ def test_approve_still_refuses_a_record_edited_after_approval():
         BA.apply_approval(edited, inbox, json.loads(json.dumps(ONT_PROMOTE)), ledger)
 
 
-def test_writeback_falls_back_to_the_underscore_spelling(tmp_path):
-    """The published design canvas spells `#` as `_` (the design helper refuses `+`), so an
-    extracted artboard can come back under either name."""
+def test_writeback_reads_the_underscore_spelling(tmp_path):
+    """`_` is the one spelling on disk (2026-09-12): the canvas writer emits it and the
+    published design canvas — whose helper refuses `+` — extracts it unchanged."""
     import board_approve as BA
     b = json.loads(json.dumps(MIN_BOARD))
     b["sections"][0]["id"] = "grid"
@@ -1429,6 +1430,27 @@ def test_writeback_falls_back_to_the_underscore_spelling(tmp_path):
         "<h2>Where Do We Ship Each Week?</h2>", encoding="utf-8")
     assert BA.writeback_text(b, tmp_path) == [
         ("grid", "heading", "What Do We Have for Sale Right Now?", "Where Do We Ship Each Week?")]
+
+
+def test_artboard_names_offers_only_the_underscore_spelling():
+    """The `+` fallback is gone: one spelling on disk means one name to try, and a second
+    name that can never exist only hides a real miss behind a longer WARN line."""
+    import board_approve as BA
+    assert BA.artboard_names("grid", "toc-a#refresh") == ["grid--toc-a_refresh--Desktop.dc.html"]
+    assert BA.artboard_names("grid", "toc-a") == ["grid--toc-a--Desktop.dc.html"]
+
+
+def test_writeback_ignores_the_retired_plus_spelling(tmp_path, capsys):
+    """A stale `+`-named artboard left over from the old spelling is not a match — it warns
+    rather than writing back a heading from a file the current canvas never emits."""
+    import board_approve as BA
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["id"] = "grid"
+    b["sections"][0]["options"]["pick"] = "toc-t1-numbered-ledger#refresh"
+    (tmp_path / "grid--toc-t1-numbered-ledger+refresh--Desktop.dc.html").write_text(
+        "<h2>Where Do We Ship Each Week?</h2>", encoding="utf-8")
+    assert BA.writeback_text(b, tmp_path) == []
+    assert "no artboard for grid" in capsys.readouterr().err
 
 
 def test_writeback_warns_when_an_artboard_h2_strips_to_empty(tmp_path, capsys):
@@ -1527,14 +1549,20 @@ def _thumb_capture(tmp_path, monkeypatch, thumb_name):
 def test_board_keys_a_thumb_for_a_section_id_that_contains_a_double_hyphen(tmp_path, monkeypatch):
     """Section ids may carry `--` (schema: ^[a-z][a-z0-9-]*$), so the split has to come
     from the RIGHT or `bird--grid` loses everything after its own separator."""
-    thumbs = _thumb_capture(tmp_path, monkeypatch, "bird--grid--toc-a+refresh--desktop.png")
-    assert thumbs == {("bird--grid", "toc-a#refresh"): "thumbs/bird--grid--toc-a+refresh--desktop.png"}
+    thumbs = _thumb_capture(tmp_path, monkeypatch, "bird--grid--toc-a_refresh--desktop.png")
+    assert thumbs == {("bird--grid", "toc-a#refresh"): "thumbs/bird--grid--toc-a_refresh--desktop.png"}
 
 
 def test_file_token_round_trips_through_unfile_token():
+    """One spelling on every surface outside the record: `#` travels as `_`. A section id
+    may carry `--` and a delta may carry `-`, but `_` appears in no id the schema allows
+    (^[a-z0-9-]+(#[a-z0-9-]+)?$), so the mapping cannot be ambiguous."""
     import board_canvas as BC
-    assert BC.file_token("toc-a#refresh") == "toc-a+refresh"
-    assert BC.unfile_token("toc-a+refresh") == "toc-a#refresh"
+    assert BC.file_token("toc-a#refresh") == "toc-a_refresh"
+    assert BC.unfile_token("toc-a_refresh") == "toc-a#refresh"
+    assert BC.file_token("toc-t1-numbered-ledger#state-chips") == "toc-t1-numbered-ledger_state-chips"
+    assert BC.unfile_token(BC.file_token("toc-t1-numbered-ledger#state-chips")) == "toc-t1-numbered-ledger#state-chips"
+    assert BC.file_token("toc-t1-numbered-ledger") == "toc-t1-numbered-ledger"
     assert BC.unfile_token(BC.file_token("toc-a")) == "toc-a"
 
 

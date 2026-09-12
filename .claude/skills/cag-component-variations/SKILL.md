@@ -264,4 +264,8 @@ When a page has `data/pages/<slug>/board.json`, the copy source is the **section
 record (candidates from `data/component-ledger.json` pools minus what siblings own), and
 `scripts/board_thumbs.mjs <slug>` cuts the thumbnails the board shows. Never lift copy from a
 sibling or from `dist/` for a boarded page; a text tweak on the canvas is written back into the
-record by `scripts/board_approve.py`. Spec: `docs/superpowers/specs/2026-09-12-page-board-system-design.md`.
+record by `scripts/board_approve.py`. Artboard filenames are `<section>--<candidate>--<Mobile|Desktop>.dc.html`
+with a refresh candidate's `#` spelled `_` (`#` breaks the `file://` URL the editor loads, and the design-canvas
+helper refuses `+`) — `_` is the one spelling on every surface outside the record, which keeps the
+record's `#`, and the board maps it back when it keys thumbs.
+Spec: `docs/superpowers/specs/2026-09-12-page-board-system-design.md`.

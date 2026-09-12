@@ -349,7 +349,7 @@ def main():
     slug = sys.argv[1]
     # Imported here, not at module scope: board_canvas.py imports esc() from this module,
     # and a top-level import back would close the cycle before esc() is defined.
-    from board_canvas import unfile_token          # the `+` → `#` spelling, defined once
+    from board_canvas import unfile_token          # the `_` → `#` spelling, defined once
     board = PB.load_board(slug)
     ont, ledger = PB.load_ontology(), PB.load_ledger()
     # No own-page pop: PB.header_hits() excludes it with own_live_key(), which is "/" for
@@ -365,7 +365,7 @@ def main():
             if len(bits) < 3:
                 print(f"warning: thumbs/{p.name} is not <section>--<candidate>--<viewport>.png — skipped")
                 continue
-            thumbs.setdefault((bits[0], unfile_token(bits[1])), f"thumbs/{p.name}")  # `+` is `#` in a filename
+            thumbs.setdefault((bits[0], unfile_token(bits[1])), f"thumbs/{p.name}")  # `_` is `#` in a filename
     OUT.mkdir(parents=True, exist_ok=True)
     out = OUT / f"{slug}.html"
     out.write_text(render(board, ont, ledger, live, thumbs, slug), encoding="utf-8")
