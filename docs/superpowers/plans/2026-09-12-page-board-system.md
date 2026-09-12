@@ -1319,6 +1319,11 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 
 ---
 
+> **Review amendment (Task 7 fixture, 2026-09-12): combos, not components.** Running the gate on the real near-me record showed the per-component ownership rule fails every shipped page: `dial-1-clay` is on nine pages and `table-a-stacking` on eight by design. The ledger's actual discipline (component map §"Per-page assignment discipline" and the tuple-11/12 ledger) is:
+> - **Shared pools** (no ownership, every entry always a free candidate): `nav` (dials + rails), `inventory`, `compare`, `sequence`, `proof`, `price`, `narrative`. **Refresh pools** (an owned base is offered as `base#refresh`): `hero`, `toc` (the five TOC shells, split out of `nav`; shape `nav` sections draw from the `toc` pool), `faq`, `takeaway`, `counter`. The ledger carries `"refresh_pools": [...]`.
+> - Gate FAILs: `ledger-tuple-identical` (all seven axes equal a sibling's), `ledger-triple-owned` (hero + dial + rail equal a sibling's triple), `ledger-takeaway-set-owned` (the same set of takeaway ids as a sibling), `ledger-spent-prefix` (unchanged), and `ledger-shell-owned` only for **refresh-pool axes** (hero, toc, faq) used bare when a sibling uses that base bare or refreshed. Dials, rails and tables never fail on their own.
+> - Tasks 8 and 9 read `refresh_pools` to decide whether an option card shows an owner badge.
+
 ### Task 8: The board artifact generator
 
 **Files:**
