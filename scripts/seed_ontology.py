@@ -60,9 +60,10 @@ def catalog_entities():
             continue
         rows += 1
         name = m.group(1).strip()
-        # MFS placeholders; price rows (the LEDGER carries the ranges with a source); and
-        # rows the ledger already owns under a sourced name.
-        if name.startswith("[") or name.startswith("$") or name.lower() in twins:
+        # MFS placeholders; price rows and bare statistics (credentials.md gives different
+        # figures, and an unverified number must not enter the ontology even as PROPOSED);
+        # and rows the ledger already owns under a sourced name.
+        if name.startswith("[") or name[:1].isdigit() or name.startswith("$") or name.lower() in twins:
             continue
         eid = slug(name)
         aliases = [a.strip() for a in m.group(2).split(",") if a.strip()]

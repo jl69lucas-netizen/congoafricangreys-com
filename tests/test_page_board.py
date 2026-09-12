@@ -207,7 +207,11 @@ def _anchor(heading):
 def test_every_asserted_source_resolves_to_a_real_heading_or_data_key():
     for e in PB.load_ontology()["entities"]:
         src = e["source"]
-        if e["authorization"] != "ASSERTED" or not src or "#" not in src:
+        if e["authorization"] != "ASSERTED" or not src:
+            continue
+        if "#" not in src:                                  # a bare path must still resolve;
+            if "/" in src or src.endswith(".md"):           # a literal citation (IUCN 22724813) need not
+                assert (PB.ROOT / src).exists(), f"{e['id']}: {src} does not exist"
             continue
         path, _, frag = src.partition("#")
         f = PB.ROOT / path
