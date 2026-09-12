@@ -73,3 +73,30 @@ def test_save_board_rejects_slug_mismatch(tmp_path, monkeypatch):
     assert not PB.board_path("y").exists()
     PB.save_board("x", board)                          # the matching slug still writes
     assert PB.board_path("x").exists()
+
+
+def test_record_hash_ignores_approval_and_is_stable():
+    a = json.loads(json.dumps(MIN_BOARD))
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["approval"] = {"approved_at": "2026-09-12T10:00:00Z", "h1": 0, "picks": {}, "notes": {},
+                     "canvas_version": None, "record_hash": "0" * 64}
+    assert PB.record_hash(a) == PB.record_hash(b)
+    assert len(PB.record_hash(a)) == 64
+
+
+def test_record_hash_changes_when_a_heading_changes():
+    a = json.loads(json.dumps(MIN_BOARD))
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["heading"] = "Something Else"
+    assert PB.record_hash(a) != PB.record_hash(b)
+
+
+def test_approval_matches_only_when_hash_matches():
+    a = json.loads(json.dumps(MIN_BOARD))
+    a["approval"] = {"approved_at": "2026-09-12T10:00:00Z", "h1": 0, "picks": {"birds": "avail-b"}, "notes": {},
+                     "canvas_version": None, "record_hash": PB.record_hash(a)}
+    assert PB.approval_matches(a) is True
+    a["sections"][0]["intent"] = "edited after approval"
+    assert PB.approval_matches(a) is False
+    a["approval"] = None
+    assert PB.approval_matches(a) is False

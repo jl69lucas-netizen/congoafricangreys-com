@@ -88,3 +88,16 @@ def load_ledger():
     ledger = _read_json(LEDGER)
     validate_ledger(ledger)
     return ledger
+
+
+def record_hash(board):
+    """sha256 of the record with `approval` removed, keys sorted. An edit anywhere else
+    changes the hash, which is how a post-approval edit sends the page back to the board."""
+    body = {k: v for k, v in board.items() if k != "approval"}
+    blob = json.dumps(body, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def approval_matches(board):
+    a = board.get("approval")
+    return bool(a) and a.get("record_hash") == record_hash(board)
