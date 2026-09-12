@@ -1160,3 +1160,78 @@ def test_approve_main_reads_a_wrapped_inbox_and_writes_all_three_files(tmp_path,
     assert saved["meta"]["status"] == "approved" and PB.approval_matches(saved) is True
     assert PB.load_ledger()["pages"]["hub-test"]["hero"] == "hero-a"
     assert {e["id"]: e["authorization"] for e in PB.load_ontology()["entities"]}["ont:new-thing"] == "ASSERTED"
+
+
+def _approve_main_fixture(tmp_path, monkeypatch, record_hash=None, with_canvas=None):
+    """Plant a hub-test board, ledger, ontology and an inbox under a tmp ROOT for main() tests.
+    `with_canvas` = (directory, h2 text) writes a Desktop artboard for the birds/avail-b pick."""
+    monkeypatch.setattr(PB, "ROOT", tmp_path)
+    monkeypatch.setattr(PB, "ONTOLOGY", tmp_path / "data" / "cag-ontology.json")
+    monkeypatch.setattr(PB, "LEDGER", tmp_path / "data" / "component-ledger.json")
+    b = _hub_board()
+    PB.save_board("hub-test", b)
+    PB.ONTOLOGY.parent.mkdir(parents=True, exist_ok=True)
+    PB.ONTOLOGY.write_text(json.dumps(ONT_PROMOTE), encoding="utf-8")
+    PB.LEDGER.write_text(json.dumps({"pools": {"inventory": ["avail-b"]}, "pages": {}}), encoding="utf-8")
+    inbox_dir = tmp_path / "data" / "pages" / "hub-test" / "inbox" / "boards"
+    inbox_dir.mkdir(parents=True, exist_ok=True)
+    (inbox_dir / "hub-test.json").write_text(json.dumps({
+        "approved_at": "2026-09-12T12:00:00Z", "h1": 1, "picks": {"birds": "avail-b"},
+        "notes": {}, "canvas_version": None,
+        "record_hash": record_hash or PB.record_hash(b)}), encoding="utf-8")
+    if with_canvas:
+        d, h2 = with_canvas
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "birds--avail-b--Desktop.dc.html").write_text(
+            f'<div id="root"><h2 style="x">{h2}</h2></div>', encoding="utf-8")
+    return b
+
+
+def test_approve_main_exits_2_on_a_stale_hash_and_writes_nothing(tmp_path, monkeypatch):
+    import board_approve as BA
+    _approve_main_fixture(tmp_path, monkeypatch, record_hash="f" * 64)
+    before = {p: p.read_text(encoding="utf-8") for p in
+              (PB.board_path("hub-test"), PB.LEDGER, PB.ONTOLOGY)}
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test"])
+    with pytest.raises(SystemExit) as ex:
+        BA.main()
+    assert ex.value.code == 2
+    for p, text in before.items():
+        assert p.read_text(encoding="utf-8") == text, f"{p.name} was written on a refused approval"
+    assert PB.load_board("hub-test")["meta"]["status"] != "approved"
+
+
+def test_approve_main_exits_2_when_the_inbox_is_missing(tmp_path, monkeypatch, capsys):
+    import board_approve as BA
+    _approve_main_fixture(tmp_path, monkeypatch)
+    inbox = tmp_path / "data" / "pages" / "hub-test" / "inbox" / "boards" / "hub-test.json"
+    inbox.unlink()
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test"])
+    with pytest.raises(SystemExit) as ex:
+        BA.main()
+    assert ex.value.code == 2
+    assert str(inbox) in capsys.readouterr().out
+
+
+def test_approve_main_defaults_the_canvas_dir_to_docs_design_board_slug(tmp_path, monkeypatch):
+    import board_approve as BA
+    default = tmp_path / "docs" / "design" / "board-hub-test"
+    _approve_main_fixture(tmp_path, monkeypatch, with_canvas=(default, "Birds Heading From the Default Canvas"))
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test"])
+    BA.main()
+    saved = PB.load_board("hub-test")
+    assert saved["sections"][0]["heading"] == "Birds Heading From the Default Canvas"
+    assert PB.approval_matches(saved) is True
+
+
+def test_approve_main_prefers_an_explicit_canvas_dir_over_the_default(tmp_path, monkeypatch):
+    import board_approve as BA
+    default = tmp_path / "docs" / "design" / "board-hub-test"
+    _approve_main_fixture(tmp_path, monkeypatch, with_canvas=(default, "Heading From the Default"))
+    other = tmp_path / "elsewhere"
+    other.mkdir()
+    (other / "birds--avail-b--Desktop.dc.html").write_text(
+        '<div id="root"><h2>Heading From the Explicit Dir</h2></div>', encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test", "--canvas-dir", str(other)])
+    BA.main()
+    assert PB.load_board("hub-test")["sections"][0]["heading"] == "Heading From the Explicit Dir"
