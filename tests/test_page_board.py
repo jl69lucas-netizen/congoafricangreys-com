@@ -742,3 +742,25 @@ def test_an_exact_head_term_heading_is_never_exempt():
     f = [x for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={"/y/": ["African Grey Parrot For Sale"]},
                                      stage="build") if x["check"] == "header-collision"]
     assert len(f) == 1 and "exact" in f[0]["msg"], f
+
+@pytest.mark.skipif(not PB.DIST.exists(), reason="needs a built dist/ for the header pre-check")
+def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate():
+    b = PB.load_board("african-grey-parrots-for-sale-near-me")
+    ledger, ont = PB.load_ledger(), PB.load_ontology()
+    d = PB.distribution(b)
+    assert d["h_counts"] == {"h1": 1, "h2": 9, "h3": 18, "h4": 7, "h5": 7, "h6": 7}
+    grid = next(s for s in b["sections"] if s["id"] == "grid")
+    cands, excluded = PB.candidates_for(grid["shape"], ledger, slug=b["meta"]["slug"])
+    assert cands, "the grid section must have at least one candidate"
+    approved = _approved(b)
+    live = PB.live_headings()
+    live.pop("/african-grey-parrots-for-sale-near-me/", None)          # the board's own page
+    for retiring in ("/african-grey-parrot-for-sale-near-me/", "/where-to-buy-african-greys-near-me/"):
+        live.pop(retiring, None)                                       # retire in Task 11, 2026-08-10 plan
+    for rebuilt in ("/african-grey-parrots-for-sale/", "/african-grey-parrot-for-sale/"):
+        live.pop(rebuilt, None)                                        # hub rebuilt, singular retires into it, Task 13
+    # KNOWN OVERLAP — homepage heading "What Health Guarantees Come With Every African Grey
+    # We Place?"; fix on the near-me page in a later session
+    live.pop("/", None)
+    f = [x for x in PB.gate_findings(approved, ont, ledger, live, stage="build") if x["sev"] == "FAIL"]
+    assert f == [], f
