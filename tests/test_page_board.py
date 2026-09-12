@@ -49,3 +49,27 @@ def test_ontology_and_ledger_schemas_accept_minimal_docs():
     PB.validate_ontology({"entities": [{"id": "ont:x", "name": "X", "aliases": [], "class": "Health",
                                         "authorization": "PROPOSED", "source": None, "owner_page": None}]})
     PB.validate_ledger({"pools": {"inventory": ["avail-a", "avail-b"]}, "pages": {}})
+
+
+def test_extra_key_inside_words_fails():
+    bad = json.loads(json.dumps(MIN_BOARD)); bad["sections"][0]["words"]["target"] = 500
+    with pytest.raises(PB.BoardError):
+        PB.validate_board(bad)
+
+
+def test_bad_approval_pick_key_fails():
+    bad = json.loads(json.dumps(MIN_BOARD))
+    bad["approval"] = {"approved_at": "2026-09-12T00:00:00Z", "h1": 0, "picks": {"Bad Id!": "avail-b"},
+                       "notes": {}, "canvas_version": None, "record_hash": "0" * 64}
+    with pytest.raises(PB.BoardError):
+        PB.validate_board(bad)
+
+
+def test_save_board_rejects_slug_mismatch(tmp_path, monkeypatch):
+    monkeypatch.setattr(PB, "ROOT", tmp_path)
+    board = json.loads(json.dumps(MIN_BOARD))          # meta.slug is "x"
+    with pytest.raises(PB.BoardError):
+        PB.save_board("y", board)
+    assert not PB.board_path("y").exists()
+    PB.save_board("x", board)                          # the matching slug still writes
+    assert PB.board_path("x").exists()

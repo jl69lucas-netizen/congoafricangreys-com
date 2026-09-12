@@ -17,6 +17,14 @@ class BoardError(Exception):
     """A record that does not describe a buildable page."""
 
 
+def _read_json(path):
+    """Read a JSON file, reporting a malformed one as a BoardError like every other fault."""
+    try:
+        return json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        raise BoardError(f"{path}: {e}") from None
+
+
 def _validate(doc, schema_name):
     schema = json.loads((SCHEMAS / schema_name).read_text(encoding="utf-8"))
     try:
@@ -28,6 +36,16 @@ def _validate(doc, schema_name):
 
 def validate_board(board):
     _validate(board, "board.schema.json")
+    ids, ns = [], []
+    for sec in board["sections"]:
+        if sec["words"]["min"] > sec["words"]["max"]:
+            raise BoardError(f"section {sec['id']}: words.min {sec['words']['min']} > words.max {sec['words']['max']}")
+        ids.append(sec["id"])
+        ns.append(sec["n"])
+    for label, values in (("id", ids), ("n", ns)):
+        dupes = sorted({v for v in values if values.count(v) > 1})
+        if dupes:
+            raise BoardError(f"duplicate section {label}: {', '.join(str(d) for d in dupes)}")
 
 
 def validate_ontology(ont):
@@ -46,25 +64,27 @@ def load_board(slug):
     p = board_path(slug)
     if not p.exists():
         raise BoardError(f"no board for {slug}: {p} does not exist")
-    board = json.loads(p.read_text(encoding="utf-8"))
+    board = _read_json(p)
     validate_board(board)
     return board
 
 
 def save_board(slug, board):
     validate_board(board)
+    if board["meta"]["slug"] != slug:
+        raise BoardError(f"slug mismatch: saving as {slug} but the record says {board['meta']['slug']}")
     p = board_path(slug)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(board, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def load_ontology():
-    ont = json.loads(ONTOLOGY.read_text(encoding="utf-8"))
+    ont = _read_json(ONTOLOGY)
     validate_ontology(ont)
     return ont
 
 
 def load_ledger():
-    ledger = json.loads(LEDGER.read_text(encoding="utf-8"))
+    ledger = _read_json(LEDGER)
     validate_ledger(ledger)
     return ledger
