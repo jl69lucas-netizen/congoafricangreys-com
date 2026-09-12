@@ -702,3 +702,43 @@ def test_gate_against_the_real_dist_whitelists_faq_but_flags_current_pricing():
     assert any("'Current Pricing'" in m for m in msgs), msgs
     assert not any("Frequently Asked Questions" in m for m in msgs), msgs
 
+
+
+def test_shingle_hits_carry_the_window_they_matched():
+    hits = PB.header_precheck(["Where Do We Ship Our Birds Each Week, Exactly?"],
+                              {"/y/": ["Where Do We Ship Our Birds Each Week?"]})
+    assert hits[0]["kind"] == "shingle" and hits[0]["shingle"] == "where do we ship our"
+
+
+def test_head_term_shingle_helper():
+    pk = "african grey parrots for sale near me"
+    assert PB._head_term_shingle("african grey parrot for sale", pk)       # a head term
+    assert PB._head_term_shingle("african grey parrots for sale", pk)      # and the board's own keyword
+    assert not PB._head_term_shingle("every african grey we place", pk)
+    assert not PB._head_term_shingle("", pk)
+
+
+def test_gate_exempts_a_head_term_only_shingle_but_not_a_real_one():
+    """`african grey parrot for sale` is in 46 live headings by design; a page cannot be
+    asked to rank for a phrase it is forbidden to write. Precedent: 2026-08-10 §C2."""
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["heading"] = "Is an African Grey Parrot for Sale Here Right for You?"
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    head_only = {"/y/": ["African Grey Parrot for Sale Arizona"]}
+    msgs = lambda live: [x["msg"] for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live=live, stage="build")
+                         if x["check"] == "header-collision"]
+    assert msgs(head_only) == []
+    real = {"/y/": ["What Health Guarantees Come With Every African Grey We Place?"]}
+    b["sections"][0]["heading"] = "What Arrives With Every African Grey We Place?"
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    assert len(msgs(real)) == 1, msgs(real)
+
+
+def test_an_exact_head_term_heading_is_never_exempt():
+    """The exemption is for shingles. A heading copied whole is copied whole."""
+    b = _approved(MIN_BOARD)
+    b["sections"][0]["heading"] = "African Grey Parrot for Sale"
+    b["approval"]["record_hash"] = PB.record_hash(b)
+    f = [x for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={"/y/": ["African Grey Parrot For Sale"]},
+                                     stage="build") if x["check"] == "header-collision"]
+    assert len(f) == 1 and "exact" in f[0]["msg"], f

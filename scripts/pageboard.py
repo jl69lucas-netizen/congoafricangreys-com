@@ -346,7 +346,7 @@ def header_precheck(proposed, live, exclude_page=None):
             key = " ".join(ws[i:i + SHINGLE])
             if key in shingles:
                 page, with_ = shingles[key]
-                hits.append({"heading": h, "kind": "shingle", "page": page, "with": with_}); break
+                hits.append({"heading": h, "kind": "shingle", "page": page, "with": with_, "shingle": key}); break
     return hits
 
 
@@ -393,6 +393,28 @@ def _whitelisted(heading):
     return any(ws[i:i + len(phrase)] == phrase
                for phrase in _WHITELIST_TOKENS
                for i in range(len(ws) - len(phrase) + 1))
+
+
+# The site's head terms. A heading that shares nothing with a live one but the phrase the
+# page is trying to rank for is not a crossover: `african grey parrot for sale` is in the
+# headings of 46 live pages by design, and no rewrite can remove it from a for-sale page.
+# Precedent: sessions/2026-08-10-two-pages-outline-gate.md §C2.
+HEAD_TERMS = ["african grey parrot for sale", "african grey parrots for sale",
+              "african grey for sale", "african grey parrot", "african grey parrots"]
+
+
+def _head_term_shingle(shingle, primary_keyword):
+    """True when the shared run is a contiguous sub-run of the board's own primary keyword
+    or of a head term — the exemption applies to SHINGLE hits only. An exact or template
+    match is a copied heading whatever it is made of, and is never exempt."""
+    ws = tokens(shingle)
+    if not ws:
+        return False
+    for phrase in [primary_keyword or ""] + HEAD_TERMS:
+        p = tokens(phrase)
+        if any(p[i:i + len(ws)] == ws for i in range(len(p) - len(ws) + 1)):
+            return True
+    return False
 
 
 def gate_findings(board, ont, ledger, live, stage="build"):
@@ -457,9 +479,11 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     if not live:
         add("header-precheck-examined-zero", "FAIL",
             "header pre-check examined 0 live pages — run npx astro build first")
+    pk = board.get("brief", {}).get("primary_keyword", "")
     hits = [h for h in header_precheck([h for _, h in all_headings(board)], live,
                                        exclude_page=own_live_key(board))
-            if not _whitelisted(h["heading"])]
+            if not _whitelisted(h["heading"])
+            and not (h["kind"] == "shingle" and _head_term_shingle(h["shingle"], pk))]
     for h in hits:
         add("header-collision", "FAIL", f"{h['kind']}: {h['heading']!r} vs {h['page']} {h['with']!r}")
 
