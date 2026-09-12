@@ -992,3 +992,171 @@ def test_board_maps_a_thumb_filename_plus_back_to_a_candidate_hash(tmp_path, mon
     monkeypatch.setattr(BPB, "render", fake_render)
     BPB.main()
     assert captured["thumbs"] == {("grid", "toc-a#refresh"): "thumbs/grid--toc-a+refresh--desktop.png"}
+
+
+# --- Task 10: approval read-back, promotions, ledger append, text write-back -------------
+
+def _hub_board(slug="hub-test"):
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["meta"]["slug"] = slug
+    b["meta"]["status"] = "boarded"
+    b["sections"][0]["entities"] = ["ont:congo-african-grey", "ont:new-thing"]
+    return b
+
+
+ONT_PROMOTE = {"entities": [
+    {"id": "ont:congo-african-grey", "name": "Congo", "aliases": [], "class": "Organism",
+     "authorization": "ASSERTED", "source": "x", "owner_page": None},
+    {"id": "ont:new-thing", "name": "New", "aliases": [], "class": "Health",
+     "authorization": "PROPOSED", "source": "ledger#y", "owner_page": None},
+    {"id": "ont:no-source", "name": "NS", "aliases": [], "class": "Health",
+     "authorization": "PROPOSED", "source": None, "owner_page": None},
+    {"id": "ont:unused-thing", "name": "Unused", "aliases": [], "class": "Health",
+     "authorization": "PROPOSED", "source": "ledger#z", "owner_page": None}]}
+
+
+def test_approve_writes_approval_ledger_and_promotions():
+    import board_approve as BA
+    b = _hub_board()
+    ont = json.loads(json.dumps(ONT_PROMOTE))
+    ledger = {"pools": {"inventory": ["avail-b"]}, "pages": {}}
+    inbox = {"approved_at": "2026-09-12T12:00:00Z", "h1": 2, "picks": {"birds": "avail-b"},
+             "notes": {"birds": "shorter eyebrow"}, "canvas_version": "v7", "record_hash": PB.record_hash(b)}
+    out = BA.apply_approval(b, inbox, ont, ledger)
+    # Picks and notes ARE hashed content, so the stamped hash is the record the breeder
+    # saw WITH their choices in it — every field but record_hash is the inbox verbatim.
+    assert {k: v for k, v in out["board"]["approval"].items() if k != "record_hash"} == \
+           {k: v for k, v in inbox.items() if k != "record_hash"}
+    assert PB.approval_matches(out["board"]) is True
+    assert out["board"]["meta"]["status"] == "approved"
+    assert out["board"]["h1"]["pick"] == 2
+    assert out["board"]["sections"][0]["options"]["pick"] == "avail-b"
+    assert out["board"]["sections"][0]["options"]["note"] == "shorter eyebrow"
+    assert out["ledger"]["pages"]["hub-test"]["hero"] == "hero-a"
+    auth = {e["id"]: e["authorization"] for e in out["ontology"]["entities"]}
+    assert auth["ont:new-thing"] == "ASSERTED"          # referenced + sourced
+    assert auth["ont:no-source"] == "PROPOSED"          # no source, never promoted
+    assert auth["ont:unused-thing"] == "PROPOSED"       # sourced but this page never names it
+    assert b["meta"]["status"] == "boarded"             # the caller's record is not mutated
+
+
+def test_approve_refuses_a_stale_hash():
+    import board_approve as BA
+    b = json.loads(json.dumps(MIN_BOARD))
+    inbox = {"approved_at": "t", "h1": 0, "picks": {}, "notes": {}, "canvas_version": None,
+             "record_hash": "f" * 64}
+    with pytest.raises(PB.BoardError):
+        BA.apply_approval(b, inbox, ONT_OK, LEDGER_EMPTY)
+
+
+def test_approve_clears_a_note_with_an_empty_string():
+    import board_approve as BA
+    b = _hub_board()
+    b["sections"][0]["options"]["note"] = "an older note"
+    inbox = {"approved_at": "t", "h1": 0, "picks": {"birds": "avail-b"}, "notes": {"birds": ""},
+             "canvas_version": None, "record_hash": PB.record_hash(b)}
+    out = BA.apply_approval(b, inbox, json.loads(json.dumps(ONT_PROMOTE)),
+                            {"pools": {"inventory": ["avail-b"]}, "pages": {}})
+    assert out["board"]["sections"][0]["options"]["note"] == ""
+
+
+def test_approve_refuses_an_unrenamed_refresh_placeholder_in_the_tuple():
+    import board_approve as BA
+    b = _hub_board()
+    b["tuple"]["hero"] = "hero-a#refresh"
+    inbox = {"approved_at": "t", "h1": 0, "picks": {"birds": "avail-b"}, "notes": {},
+             "canvas_version": None, "record_hash": PB.record_hash(b)}
+    with pytest.raises(PB.BoardError) as e:
+        BA.apply_approval(b, inbox, json.loads(json.dumps(ONT_PROMOTE)),
+                          {"pools": {"inventory": ["avail-b"]}, "pages": {}})
+    assert "refresh" in str(e.value)
+
+
+def test_approve_refuses_a_board_whose_signature_section_has_no_pick():
+    import board_approve as BA
+    b = _hub_board()
+    inbox = {"approved_at": "t", "h1": 0, "picks": {}, "notes": {}, "canvas_version": None,
+             "record_hash": PB.record_hash(b)}
+    with pytest.raises(PB.BoardError) as e:
+        BA.apply_approval(b, inbox, json.loads(json.dumps(ONT_PROMOTE)),
+                          {"pools": {"inventory": ["avail-b"]}, "pages": {}})
+    assert "birds" in str(e.value)
+
+
+def test_approve_refuses_a_pick_for_a_section_that_does_not_exist():
+    import board_approve as BA
+    b = _hub_board()
+    inbox = {"approved_at": "t", "h1": 0, "picks": {"birds": "avail-b", "ghost": "avail-b"},
+             "notes": {}, "canvas_version": None, "record_hash": PB.record_hash(b)}
+    with pytest.raises(PB.BoardError) as e:
+        BA.apply_approval(b, inbox, json.loads(json.dumps(ONT_PROMOTE)),
+                          {"pools": {"inventory": ["avail-b"]}, "pages": {}})
+    assert "ghost" in str(e.value)
+
+
+def test_approve_records_the_ledger_entry_in_the_shape_the_twelve_pages_use():
+    """Same eight keys as every existing ledger page, and the H6 prefixes come from the
+    record's own H6 nodes — a prefix the page declared but never spent stays free."""
+    import board_approve as BA
+    b = _hub_board()
+    inbox = {"approved_at": "t", "h1": 0, "picks": {"birds": "avail-b"}, "notes": {},
+             "canvas_version": None, "record_hash": PB.record_hash(b)}
+    out = BA.apply_approval(b, inbox, json.loads(json.dumps(ONT_PROMOTE)),
+                            {"pools": {"inventory": ["avail-b"]}, "pages": {}})
+    entry = out["ledger"]["pages"]["hub-test"]
+    assert sorted(entry) == ["dial", "faq", "h6_prefixes", "hero", "rail", "table", "takeaway", "toc"]
+    assert entry["h6_prefixes"] == ["Aviary Note:"]        # declared three, spent one
+    assert PB.spent_h6_prefixes(out["ledger"]) == {"Aviary Note:": ["hub-test"]}
+
+
+def test_text_writeback_updates_the_record_from_the_saved_artboard(tmp_path):
+    import board_approve as BA
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["options"]["pick"] = "avail-b"
+    art = tmp_path / "birds--avail-b--Desktop.dc.html"
+    art.write_text('<div id="root"><h2 style="x">What Do We Have for Sale Today?</h2>'
+                   '<p>Our birds, today.</p></div>', encoding="utf-8")
+    changed = BA.writeback_text(b, tmp_path)
+    assert b["sections"][0]["heading"] == "What Do We Have for Sale Today?"
+    assert changed == [("birds", "heading", "What Do We Have for Sale Right Now?",
+                        "What Do We Have for Sale Today?")]
+
+
+def test_text_writeback_maps_a_hash_in_the_pick_to_a_plus_in_the_filename(tmp_path):
+    """board_canvas.py writes `#` as `+`; a write-back that looked for the `#` spelling
+    would silently find no artboard and report no change."""
+    import board_approve as BA
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["id"] = "grid"
+    b["sections"][0]["options"]["pick"] = "toc-t1-numbered-ledger#state-chips"
+    (tmp_path / "grid--toc-t1-numbered-ledger+state-chips--Desktop.dc.html").write_text(
+        "<h2>Where Do We Ship Each Week?</h2>", encoding="utf-8")
+    changed = BA.writeback_text(b, tmp_path)
+    assert changed == [("grid", "heading", "What Do We Have for Sale Right Now?",
+                        "Where Do We Ship Each Week?")]
+    assert b["sections"][0]["heading"] == "Where Do We Ship Each Week?"
+
+
+def test_approve_main_reads_a_wrapped_inbox_and_writes_all_three_files(tmp_path, monkeypatch):
+    """read_db may hand the document back wrapped in {"data": ...}; main() unwraps it and
+    writes the board, the ledger and the ontology."""
+    import board_approve as BA
+    monkeypatch.setattr(PB, "ROOT", tmp_path)
+    monkeypatch.setattr(PB, "ONTOLOGY", tmp_path / "data" / "cag-ontology.json")
+    monkeypatch.setattr(PB, "LEDGER", tmp_path / "data" / "component-ledger.json")
+    b = _hub_board()
+    PB.save_board("hub-test", b)
+    PB.ONTOLOGY.parent.mkdir(parents=True, exist_ok=True)
+    PB.ONTOLOGY.write_text(json.dumps(ONT_PROMOTE), encoding="utf-8")
+    PB.LEDGER.write_text(json.dumps({"pools": {"inventory": ["avail-b"]}, "pages": {}}), encoding="utf-8")
+    inbox_dir = tmp_path / "data" / "pages" / "hub-test" / "inbox" / "boards"
+    inbox_dir.mkdir(parents=True, exist_ok=True)
+    (inbox_dir / "hub-test.json").write_text(json.dumps({"data": {
+        "approved_at": "2026-09-12T12:00:00Z", "h1": 1, "picks": {"birds": "avail-b"},
+        "notes": {}, "canvas_version": None, "record_hash": PB.record_hash(b)}}), encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test"])
+    BA.main()
+    saved = PB.load_board("hub-test")
+    assert saved["meta"]["status"] == "approved" and PB.approval_matches(saved) is True
+    assert PB.load_ledger()["pages"]["hub-test"]["hero"] == "hero-a"
+    assert {e["id"]: e["authorization"] for e in PB.load_ontology()["entities"]}["ont:new-thing"] == "ASSERTED"
