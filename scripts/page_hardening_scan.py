@@ -816,7 +816,12 @@ _QUOTED = re.compile(r'"([^"]*)"|\'([^\']*)\'')
 # variant syntax (`md:flex`, `w-1/2`) is filtered structurally below.
 TAILWIND_UTILS = {"sr-only", "not-sr-only", "container", "group", "peer",
                   "antialiased", "truncate", "sticky", "fixed", "absolute",
-                  "relative", "hidden", "block", "flex", "grid", "inline"}
+                  "relative", "hidden", "block", "flex", "grid", "inline",
+                  # Theme SENTINELS, not utilities: direction-d.css reads them with
+                  # `[class*="text-cream"]` / `[class*="text-white"]` to exempt a lead
+                  # paragraph from its var(--ink) rule (§1m). They never have a rule of
+                  # their own; case-studies was reported for carrying one (2026-09-12).
+                  "text-cream", "text-white"}
 
 
 def _rendered_classes(markup):
@@ -1021,6 +1026,124 @@ def check_component_color_specificity(src_pairs):
                     "(skills/cag-gate-integrity.md).")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 1m. theme-lead-color-outranks-component — the §1l gap the near-me router
+#     shipped through (2026-09-12). src/styles/direction-d.css paints the first
+#     paragraph after an h1/h2 `var(--ink)` with
+#     `body.theme-d h1 + p:not([style*="color"]):not([class*="text-cream"]):not([class*="text-white"])`
+#     — specificity (0,4,3). A page's `.pg .hero .lead{color:#dcebe3}` is (0,3,0)
+#     and loses silently: the lead rendered ink on a dark green field, invisible.
+#     §1l reads only the page's own CSS and only the `.ancestor tag` shape, and
+#     a gradient-skipping runtime sweep skipped the hero. Caught by eye.
+#     The rule's own escape hatch is a class containing `text-cream`/`text-white`
+#     or an inline color; that is the prescribed fix, not a specificity war.
+#     WARN: the pairing h-tag→p is read from source markup, not a painted DOM.
+# ─────────────────────────────────────────────────────────────────────────────
+_RULE_RE = re.compile(r"([^{}]+)\{([^}]*)\}")
+_LEAD_SEL = re.compile(r"^body\.theme-d\s+(h[1-6])\s*\+\s*p\b")
+
+
+def _specificity(sel):
+    """(ids, classes+attrs+pseudo-classes, elements) for one compound/complex selector.
+    `:not(X)` counts X's specificity, per CSS Selectors 4. Pseudo-elements ignored."""
+    sel = re.sub(r"::[\w-]+", "", sel)
+    ids = len(re.findall(r"#[\w-]+", sel))
+    attrs = len(re.findall(r"\[[^\]]*\]", sel))
+    sel_no_attr = re.sub(r"\[[^\]]*\]", "", sel)
+    classes = len(re.findall(r"\.[\w-]+", sel_no_attr))
+    pseudo = len(re.findall(r":(?!not\b)[\w-]+", sel_no_attr))
+    elements = len(re.findall(r"(?:^|[\s>+~(])([a-zA-Z][\w-]*)", sel_no_attr))
+    return (ids, classes + attrs + pseudo, elements)
+
+
+_LIGHT_TOKENS = ("#fff", "white", "var(--cream)", "var(--warm-white)", "#faf7f4", "#fff9f6")
+
+
+def _declares_light_color(body):
+    """True when a rule body's `color:` resolves to something light (luminance > .5).
+    Unresolvable `var()`s other than the known light tokens are treated as NOT light,
+    so the check stays quiet rather than guessing."""
+    m = re.search(r"(?<![-\w])color\s*:\s*([^;}]+)", body)
+    if not m:
+        return False
+    v = m.group(1).strip().lower()
+    if any(v.startswith(t) for t in _LIGHT_TOKENS):
+        return True
+    hm = re.match(r"#([0-9a-f]{3}|[0-9a-f]{6})\b", v)
+    if hm:
+        h = hm.group(1)
+        if len(h) == 3:
+            h = "".join(c * 2 for c in h)
+        r, g, b = (int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
+        return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.5
+    rm = re.match(r"rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)", v)
+    if rm:
+        r, g, b = (int(x) / 255 for x in rm.groups())
+        return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.5
+    return False
+
+
+def check_theme_lead_color(src_pairs, theme_css):
+    theme = _strip_css_comments(theme_css)
+    lead_rules = []                                   # (h-tag, selector, specificity)
+    for m in _RULE_RE.finditer(theme):
+        if not _HAS_COLOR.search(m.group(2)):
+            continue
+        for sel in m.group(1).split(","):
+            sel = " ".join(sel.split())
+            lm = _LEAD_SEL.match(sel)
+            if lm:
+                lead_rules.append((lm.group(1), sel, _specificity(sel)))
+    if not lead_rules:
+        return
+    for f, text in src_pairs:
+        i = text.find("<style")
+        if i == -1:
+            continue
+        markup, css = text[:i], text[i:]
+        css = css[:css.find("<script")] if "<script" in css else css
+        css = _strip_css_comments(css)
+        page_rules = []                               # (selector, last class, specificity)
+        for m in _RULE_RE.finditer(css):
+            body = m.group(2)
+            if not _HAS_COLOR.search(body) or "!important" in body:
+                continue
+            # Only a LIGHT declared colour is a defect when the theme's var(--ink)
+            # wins: a dark lead losing to ink is invisible in the other sense — nobody
+            # can see the difference. First survey (2026-09-12) fired on 18 light-hero
+            # pages for exactly that reason; a check that cries wolf once is ignored.
+            if not _declares_light_color(body):
+                continue
+            for sel in m.group(1).split(","):
+                sel = " ".join(sel.split())
+                if not sel or sel.startswith("@"):
+                    continue
+                last = re.search(r"\.([\w-]+)$", sel)
+                if last:
+                    page_rules.append((sel, last.group(1), _specificity(sel)))
+        for hm in re.finditer(r"<(h[1-6])\b[^>]*>.*?</\1>\s*<p\b([^>]*)>", markup, re.S):
+            htag, attrs = hm.group(1), hm.group(2)
+            if re.search(r'style="[^"]*color', attrs):
+                continue
+            cm = re.search(r'class="([^"]*)"', attrs)
+            classes = cm.group(1).split() if cm else []
+            if any("text-cream" in c or "text-white" in c for c in classes):
+                continue
+            for ht, tsel, tspec in lead_rules:
+                if ht != htag:
+                    continue
+                for psel, cls, pspec in page_rules:
+                    if cls in classes and pspec < tspec:
+                        fmt = lambda t: "(" + ",".join(map(str, t)) + ")"
+                        add("WARN", "theme-lead-color-outranks-component", f, None,
+                            f"`{psel}` {fmt(pspec)} sets color on the paragraph after an <{htag}>, but the "
+                            f"theme's `{tsel[:60]}…` {fmt(tspec)} outranks it — the lead renders var(--ink) "
+                            "whatever the page says (invisible on a dark hero)",
+                            "Add a class containing `text-cream` (or `text-white`) to that <p> — the theme "
+                            "rule's own escape hatch — or set the colour inline. Confirm with "
+                            "getComputedStyle in Playwright (skills/cag-gate-integrity.md).")
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     fail_on_error = "--fail-on-error" in sys.argv
@@ -1055,6 +1178,8 @@ def main():
     base = "src/layouts/BaseLayout.astro"
     theme = "\n".join(lines_of("src/styles/direction-d.css") +
                       lines_of("src/styles/global.css"))
+    # 2026-09-12: the theme's h1/h2 + p lead rule vs a page's own lead colour
+    check_theme_lead_color(src_pairs, theme)
     if os.path.exists(base):
         check_font_families("\n".join(lines_of(base)), theme)
 

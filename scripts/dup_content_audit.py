@@ -66,7 +66,8 @@ WHITELIST_SNIPPETS = [
     # ── 2026-09-12, near-me router ─────────────────────────────────────────
     # Two data-rendered furniture blocks the for-sale kit prints from
     # data/clutch-inventory.json on every page that ships Avail-B + the kit form:
-    # the "browse by kind" filter rail with live counts, and the form-side list of
+    # the browse-by-kind filter rail with live counts (no quotes here: the harness
+    # reader takes any quoted string in this block as a stem), and the form-side list of
     # every reservable bird with its price. Identical by construction, like the
     # counter strip; not prose.
     "browse by kind all birds 6 congo 3 timneh 2 companion pair 1",

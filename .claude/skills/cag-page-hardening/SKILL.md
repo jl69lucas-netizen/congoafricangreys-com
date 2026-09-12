@@ -334,6 +334,20 @@ it" signal, not a verdict. Confirm with `getComputedStyle` in Playwright first.
 >    reported twice. **This is the identical trap that produced 6 false icon-baseline
 >    WARNs on 2026-07-26.** Strip comments before parsing CSS. Always.
 
+### 1m. `theme-lead-color-outranks-component` — WARN — *the invisible hero lead*
+
+Added 2026-09-12 (near-me router). `src/styles/direction-d.css` paints the first
+paragraph after an `h1`/`h2` `var(--ink)` with a `body.theme-d h1 + p:not(…)×3` rule
+at **(0,4,3)**. A page's `.pg .hero .lead{color:#dcebe3}` is (0,3,0) and loses
+silently: on a dark hero the lead rendered ink on green, invisible. §1l never saw it
+(page CSS only, `.ancestor tag` shape only) and a gradient-skipping runtime sweep
+skipped the hero too; a fold screenshot caught it.
+
+**Fix — use the rule's own escape hatch, not a specificity war:** give the paragraph
+a class containing `text-cream` (or `text-white`), or an inline colour. The check
+reads the `hN → p` pairing from source markup, so it is a "go and measure it"
+signal. Verify with `getComputedStyle(lead).color`.
+
 ## 2. Runtime probes (§Runtime — the static scan CANNOT catch these)
 
 > **Use Playwright, not the Browser pane.** The Browser pane reports `vw: 0` and every

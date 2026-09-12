@@ -29,6 +29,30 @@ register({
         Promise.allSettled(pending.map((i) => i.decode().catch(() => null))),
         new Promise((res) => setTimeout(res, 5000)),
       ]);
+      /**
+       * 2026-09-12: four consecutive scoped runs of buy-with-shipping each reported ONE
+       * different image as `complete && naturalWidth === 0` at 375/768 — iata-cargo-crate,
+       * one-seller-three-platform, health-guarantee-enforceable, how-you-know-the-sex —
+       * while every file decoded with Pillow and shipped in dist/, and the same page had
+       * passed 3/3 that morning. A fetch that resets under the ~40-image eager burst leaves
+       * exactly that state, and it is indistinguishable from a 404 in one read. So give a
+       * "broken" image ONE reload before judging it: a real 404 fails the retry too, which
+       * is what keeps known_broken/img-broken-vs-still-loading.html red.
+       */
+      const broken = Array.from(document.images).filter((i) => i.complete && i.naturalWidth === 0 && (i.currentSrc || i.src));
+      if (broken.length) {
+        await Promise.race([
+          Promise.allSettled(broken.map(async (i) => {
+            const src = i.getAttribute('src') || '';
+            const srcset = i.getAttribute('srcset') || '';
+            i.removeAttribute('srcset'); i.removeAttribute('src');
+            if (srcset) i.setAttribute('srcset', srcset);
+            i.setAttribute('src', src);
+            await i.decode().catch(() => null);
+          })),
+          new Promise((res) => setTimeout(res, 4000)),
+        ]);
+      }
     });
 
     const r = await page.evaluate(() => {

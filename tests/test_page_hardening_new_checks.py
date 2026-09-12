@@ -716,3 +716,66 @@ if __name__ == "__main__":
             fails += 1; print(f"  FAIL {f.__name__}"); traceback.print_exc()
     print(f"\n{len(fns)-fails}/{len(fns)} passed")
     sys.exit(1 if fails else 0)
+
+
+# ── 9. theme-lead-color-outranks-component ────────────────────────────────────
+# 2026-09-12, near-me router. The hero lead `.nmr .hero .lead{color:#dcebe3}` is
+# (0,3,0). The theme's lead-line rule in src/styles/direction-d.css,
+# `body.theme-d h1 + p:not([style*="color"]):not([class*="text-cream"]):not([class*="text-white"])`,
+# is (0,4,3) and sets `color: var(--ink)` — so the lead rendered ink on a dark green
+# field, invisible, and §1l never saw it because it only reads the page's own CSS
+# and only the `.ancestor tag` shape. Caught by eye on a fold screenshot.
+
+THEME_LEAD_RULE = """
+body.theme-d h1 + p:not([style*="color"]):not([class*="text-cream"]):not([class*="text-white"]),
+body.theme-d h2 + p:not([style*="color"]):not([class*="text-cream"]):not([class*="text-white"]) {
+  color: var(--ink);
+}
+"""
+
+DARK_HERO_LEAD = """
+<header class="hero">
+  <h1>African Grey Parrots for Sale Near You — Find Your State, <em>Not a Classified Ad</em></h1>
+  <p class="lead">If you typed African Grey parrots for sale near me, here is what near means.</p>
+</header>
+<style>
+.nmr .hero{background:#234f3b;}
+.nmr .hero .lead{font-size:.94rem;color:#dcebe3;}
+</style>
+"""
+
+DARK_HERO_LEAD_EXEMPTED = DARK_HERO_LEAD.replace('class="lead"', 'class="lead text-cream"')
+DARK_HERO_LEAD_AFTER_H3 = DARK_HERO_LEAD.replace("<h1>", "<h3>").replace("</h1>", "</h3>")
+DARK_HERO_LEAD_OUTRANKS = DARK_HERO_LEAD.replace(".nmr .hero .lead{", "body.theme-d .nmr .hero h1 + p.lead{")
+
+
+def test_flags_theme_lead_rule_outranking_component_lead_colour():
+    found = run(H.check_theme_lead_color, [("p.astro", DARK_HERO_LEAD)], THEME_LEAD_RULE)
+    hits = checks_named(found, "theme-lead-color-outranks-component")
+    assert len(hits) == 1, found
+    assert "(0,3,0)" in hits[0]["msg"] and "(0,4,3)" in hits[0]["msg"]
+
+
+def test_text_cream_class_is_the_rules_own_escape_hatch():
+    found = run(H.check_theme_lead_color, [("p.astro", DARK_HERO_LEAD_EXEMPTED)], THEME_LEAD_RULE)
+    assert checks_named(found, "theme-lead-color-outranks-component") == []
+
+
+def test_theme_lead_rule_only_targets_h1_and_h2_leads():
+    found = run(H.check_theme_lead_color, [("p.astro", DARK_HERO_LEAD_AFTER_H3)], THEME_LEAD_RULE)
+    assert checks_named(found, "theme-lead-color-outranks-component") == []
+
+
+def test_page_rule_that_outranks_the_theme_is_fine():
+    found = run(H.check_theme_lead_color, [("p.astro", DARK_HERO_LEAD_OUTRANKS)], THEME_LEAD_RULE)
+    assert checks_named(found, "theme-lead-color-outranks-component") == []
+
+
+DARK_LEAD_ON_LIGHT_HERO = DARK_HERO_LEAD.replace("color:#dcebe3", "color:#3a2f2a").replace("background:#234f3b", "background:#faf7f4")
+
+
+def test_dark_declared_lead_losing_to_ink_is_not_a_defect():
+    # 18 light-hero pages fired on the first survey; a dark lead losing to var(--ink)
+    # changes nothing anyone can see, so it is not reported.
+    found = run(H.check_theme_lead_color, [("p.astro", DARK_LEAD_ON_LIGHT_HERO)], THEME_LEAD_RULE)
+    assert checks_named(found, "theme-lead-color-outranks-component") == []

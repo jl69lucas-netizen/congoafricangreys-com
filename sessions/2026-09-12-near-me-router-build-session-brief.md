@@ -70,3 +70,13 @@ hardening 0/0 (B) · 0/0 (A) · seam 9/10 (form + FAQ share one, in profile) · 
 1. Page Board spec → `docs/superpowers/specs/2026-09-1x-page-board-system-design.md`, then hub C through the first board.
 2. Task 11: point `/where-to-buy-african-greys-near-me/`, `/buy-african-grey-parrot-near-me/`, `/african-grey-parrot-for-sale-near-me/` at this page; repoint the 9 inbound links on 7 source pages; IndexNow all 7.
 3. Harness: §1l theme-rule input + fixture; `no_aggregateoffer` fixture; Page A "Reservable Right Now" rename.
+
+## Follow-up, same day — the four open flags, breeder said yes to all
+1. **Heading change confirmed.** "The Bonded Pair" → "The Companion Pair" on both buy pages stands; the ruling is recorded in memory `project_jins_jeni_vs_breeding_pair`.
+2. **Page A header crossover.** "Reservable Right Now" (form-side H3) collided exactly with the health-guarantee page; Page A's became "Six Folders Already Started". Dup headers clean, hardening clean, final audit unchanged.
+3. **Harness gap closed, and it found a live defect.** New `page_hardening_scan.py` §1m `theme-lead-color-outranks-component` (advisory, `data/quality/rule-index.json`, 5 pytest cases in `tests/test_page_hardening_new_checks.py`): pairs the theme's `body.theme-d h1/h2 + p` ink rule (0,4,3) against a page's **light** lead colour by specificity. The first survey, without the light filter, fired on 18 light-hero pages where ink was what the page wanted anyway — a check that cries wolf once is ignored, so the filter went in with its own test. The refined survey fired on exactly one page besides the pre-fix near-me lead: **`/case-studies/`**, measured live at **2.07:1** (rgb(32,52,43) on forest green). Fixed with the theme's own sentinel class; `text-cream` / `text-white` are now allow-listed in the orphan check as sentinels, not utilities.
+4. **Page Board spec → hub C → the three 301s** is the queue; nothing built yet.
+
+**A second harness defect, charged to the tool:** four consecutive scoped runs of Page A each reported one *different* image as `complete, naturalWidth 0` at 375/768 (every file decodes and ships; the same page had passed 3/3 that morning). `tests/render/checks/img.ts` now gives a "broken" image one reload before judging it; a real 404 fails the retry too, so `known_broken/img-broken-vs-still-loading.html` stays red. Meta gate 296 passed. Acceptance run with the retry: **6 of 6 passed** for both slugs.
+
+Quality report at close: rework 8.9% (−2.2), harness self-repair 17.8%, worst family CSS (111 rows), 0 open overrides, 15 rules with no backing test (unchanged list).
