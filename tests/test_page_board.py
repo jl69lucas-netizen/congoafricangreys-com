@@ -360,12 +360,18 @@ def test_ledger_tuple_slot_may_be_empty():
 
 def test_all_headings_walks_the_tree_in_order():
     hs = PB.all_headings(MIN_BOARD)
-    assert hs[0] == (2, "What Do We Have for Sale Right Now?")
+    assert hs[0] == (1, "a")                      # h1.pick is None, so the recommendation
+    assert hs[1] == (2, "What Do We Have for Sale Right Now?")
     assert hs[-1] == (6, "Aviary Note: Read the Card")
-    assert [lvl for lvl, _ in hs] == [2, 3, 4, 5, 6]
+    assert [lvl for lvl, _ in hs] == [1, 2, 3, 4, 5, 6]
 
 
-def test_header_precheck_finds_exact_and_shingle_matches(tmp_path):
+def test_all_headings_opens_on_the_breeder_pick_when_there_is_one():
+    b = json.loads(json.dumps(MIN_BOARD)); b["h1"]["pick"] = 3
+    assert PB.all_headings(b)[0] == (1, "d")
+
+
+def test_header_precheck_finds_exact_and_shingle_matches():
     live = {"/congo-vs-timneh/": ["Congo or Timneh — Which Suits Your Household?", "What Every Bird Card Tells You Before You Ask"]}
     hits = PB.header_precheck(["Congo or Timneh — Which Suits Your Household?",
                                "What Every Bird Card Tells You Before You Buy",
@@ -399,7 +405,23 @@ def test_distribution_sums_keywords_and_words():
     d = PB.distribution(MIN_BOARD)
     assert d["rows"][0]["section"] == "birds" and d["rows"][0]["primary"] == 1
     assert d["totals"]["words_min"] == 400 and d["totals"]["words_max"] == 600
-    assert d["h_counts"] == {"h2": 1, "h3": 1, "h4": 1, "h5": 1, "h6": 1}
+    assert d["h_counts"] == {"h1": 1, "h2": 1, "h3": 1, "h4": 1, "h5": 1, "h6": 1}
+
+
+def test_distribution_totals_add_across_two_sections():
+    b = json.loads(json.dumps(MIN_BOARD))
+    second = json.loads(json.dumps(b["sections"][0]))
+    second.update({"id": "shipping", "n": 2, "heading": "How Do We Ship?",
+                   "words": {"min": 250, "max": 300}, "tree": []})
+    second["keywords"] = {"primary": ["african grey shipping"], "lsi": ["iata"],
+                          "longtail": [], "brand": ["c.a.gs"], "geo": ["midland", "texas"]}
+    b["sections"].append(second)
+    PB.validate_board(b)                                   # still a buildable record
+    d = PB.distribution(b)
+    assert [r["section"] for r in d["rows"]] == ["birds", "shipping"]
+    assert d["totals"] == {"primary": 2, "lsi": 1, "longtail": 0, "brand": 1, "geo": 2,
+                           "words_min": 650, "words_max": 900}
+    assert d["h_counts"] == {"h1": 1, "h2": 2, "h3": 1, "h4": 1, "h5": 1, "h6": 1}
 
 
 def _tmp_dist(tmp_path):
@@ -432,3 +454,35 @@ def test_header_precheck_shingle_needs_five_tokens_of_live_heading(tmp_path):
     hits = PB.header_precheck(["Every Bird Card Tells You Today"], live)
     assert [(h["kind"], h["page"], h["with"]) for h in hits] == [
         ("shingle", "/a/b/", "Every Bird Card Tells You Something")]
+
+
+def test_live_headings_skips_site_chrome_like_the_dup_gate():
+    """Only body headings enter the corpus. A nav link, a read-card title and a footer
+    heading are chrome the dup gate already ignores, and counting them would make the
+    pre-check collide every new page with the template every page shares."""
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        dist = pathlib.Path(d)
+        (dist / "p").mkdir()
+        (dist / "p" / "index.html").write_text(
+            "<html><body>"
+            "<nav><h2>By Location</h2></nav>"
+            "<div class='read-cards'><h3>Congo vs Timneh</h3></div>"
+            "<h2>What Does a Congo Cost?</h2>"
+            "<footer><h2>Contact</h2></footer>"
+            "</body></html>", encoding="utf-8")
+        assert PB.live_headings(dist) == {"/p/": ["What Does a Congo Cost?"]}
+
+
+def test_header_precheck_excludes_the_page_being_rebuilt():
+    live = {"/buy/": ["What Does a Congo Cost?"], "/other/": ["Where Do We Ship?"]}
+    assert PB.header_precheck(["What Does a Congo Cost?"], live)[0]["kind"] == "exact"
+    assert PB.header_precheck(["What Does a Congo Cost?"], live, exclude_page="/buy/") == []
+
+
+def test_header_precheck_matches_curly_apostrophes_and_plural_species():
+    live = {"/a/": ["What Do African Greys Eat Each Day?"]}          # plural, once invisible
+    hits = PB.header_precheck(["What Do Timneh Eat Each Day?"], live)
+    assert hits and hits[0]["kind"] == "template"
+    assert PB.header_precheck(["A Grey’s First Week Home"],
+                              {"/b/": ["A Grey's First Week Home"]})[0]["kind"] == "exact"

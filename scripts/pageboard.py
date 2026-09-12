@@ -3,8 +3,14 @@
 computes, it never writes a board or publishes anything (the CLIs do).
 Spec: docs/superpowers/specs/2026-09-12-page-board-system-design.md
 """
-import hashlib, json, pathlib, re
+import hashlib, json, pathlib, re, sys
 import jsonschema
+
+# The header pre-check must judge a heading the way `dup_content_audit.py --headers`
+# will judge it after the build, so it borrows that module's chrome rules rather than
+# growing a second copy that drifts. It lives beside this file in scripts/.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import dup_content_audit as DUP
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SCHEMAS = ROOT / "schemas"
@@ -195,17 +201,27 @@ def spent_h6_prefixes(ledger, exclude_slug=None):
 
 
 TOKEN = re.compile(r"[a-z0-9$']+")
-SPECIES = re.compile(r"\b(congo|timneh|macaw|cockatoo|amazon(?: parrot)?|eclectus|african grey|grey)\b")
+SPECIES = re.compile(r"\b(congo|timneh|macaw|cockatoo|amazon(?: parrot)?|eclectus|african greys?|greys?)\b")
 SHINGLE = 5
+HEADING_TAGS = {"h1", "h2", "h3", "h4", "h5", "h6"}
 
 
 def tokens(text):
-    return TOKEN.findall(text.lower())
+    """The dup auditor's tokeniser, plus one normalisation it does not need: a curly
+    apostrophe is folded to a straight one, so "Grey’s" and "Grey's" are one token."""
+    return TOKEN.findall(text.replace("’", "'").lower())
+
+
+def picked_h1(board):
+    """The H1 the page will actually render: the breeder's pick, else the recommendation."""
+    h1 = board["h1"]
+    i = h1["recommended"] if h1.get("pick") is None else h1["pick"]
+    return h1["variants"][i]
 
 
 def all_headings(board):
-    """(level, text) in render order: H2 then its tree, depth-first."""
-    out = []
+    """(level, text) in render order: the picked H1, then each H2 and its tree, depth-first."""
+    out = [(1, picked_h1(board))]
 
     def walk(nodes):
         for n in nodes:
@@ -217,24 +233,67 @@ def all_headings(board):
     return out
 
 
+class _Headings(DUP.Text):
+    """The dup gate's chrome-skipping walker, narrowed to the text of h1-h6.
+
+    Inheriting it is the point: a heading is collected only where
+    `dup_content_audit.py --headers` would see it, so a nav link, a read-card title or a
+    footer heading never enters the corpus the pre-check compares a new page against.
+    Two copies of that rule would drift, and the drifted one would cry wolf."""
+
+    def __init__(self):
+        super().__init__()
+        self.headings = []
+        self._buf = None
+
+    def _visible(self):
+        return bool(self.stack) and not self.stack[-1][1]
+
+    def handle_starttag(self, tag, attrs):
+        super().handle_starttag(tag, attrs)
+        if self._buf is None and tag in HEADING_TAGS and self._visible():
+            self._buf = []
+
+    def handle_endtag(self, tag):
+        if self._buf is not None and tag in HEADING_TAGS:
+            text = re.sub(r"\s+", " ", "".join(self._buf)).strip()
+            if text:
+                self.headings.append(text)
+            self._buf = None
+        super().handle_endtag(tag)
+
+    def handle_data(self, data):
+        super().handle_data(data)
+        if self._buf is not None and self._visible():
+            self._buf.append(data)
+
+
+def page_headings(path):
+    """Every visible h1-h6 on one built page, tag-stripped, unescaped, collapsed."""
+    p = _Headings()
+    p.feed(pathlib.Path(path).read_text(encoding="utf-8", errors="ignore"))
+    p.close()
+    return p.headings
+
+
 def live_headings(dist=DIST):
     """{page: [heading text, ...]} from every built page. Empty when dist/ is absent."""
-    hpat = re.compile(r"<h([1-6])[^>]*>(.*?)</h\1>", re.S | re.I)
-    strip = re.compile(r"<[^>]+>")
-    import html as _h
     out = {}
     for page in sorted(pathlib.Path(dist).glob("**/index.html")):
         rel = page.parent.relative_to(dist).as_posix()
-        slug = "/" if rel == "." else "/" + rel + "/"
-        out[slug] = [_h.unescape(re.sub(r"\s+", " ", strip.sub("", raw)).strip()) for _, raw in hpat.findall(page.read_text(errors="ignore"))]
+        out["/" if rel == "." else "/" + rel + "/"] = page_headings(page)
     return out
 
 
-def header_precheck(proposed, live):
+def header_precheck(proposed, live, exclude_page=None):
     """Every proposed heading that collides with a live one: exact, template (species
-    swapped) or 5-token shingle. `live` is {page: [heading, ...]}."""
+    swapped) or 5-token shingle. `live` is {page: [heading, ...]}. `exclude_page` drops
+    the page being rebuilt, which would otherwise collide with its own live headings —
+    the same convention as owned_components() and spent_h6_prefixes()."""
     exact, templ, shingles = {}, {}, {}
     for page, hs in live.items():
+        if page == exclude_page:
+            continue
         for h in hs:
             t = " ".join(tokens(h))
             if not t:
@@ -284,7 +343,7 @@ def distribution(board):
         row["words_min"], row["words_max"] = s["words"]["min"], s["words"]["max"]
         totals["words_min"] += row["words_min"]; totals["words_max"] += row["words_max"]
         rows.append(row)
-    counts = {f"h{n}": 0 for n in range(2, 7)}
+    counts = {f"h{n}": 0 for n in range(1, 7)}
     for lvl, _ in all_headings(board):
         counts[f"h{lvl}"] += 1
     return {"rows": rows, "totals": totals, "h_counts": counts}
