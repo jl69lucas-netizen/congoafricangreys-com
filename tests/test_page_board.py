@@ -349,3 +349,10 @@ def test_validate_ledger_rejects_the_unnamed_refresh_placeholder():
     with pytest.raises(PB.BoardError) as e:
         PB.validate_ledger(ledger)
     assert "x#refresh" in str(e.value)
+
+
+def test_ledger_tuple_slot_may_be_empty():
+    """An empty scalar slot means "this page has no such component", not a bad id."""
+    PB.validate_ledger({"pools": {"hero": ["hero-a"]},
+                        "pages": {"p1": {"hero": "hero-a", "dial": "", "rail": "", "toc": "",
+                                         "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}})
