@@ -12,7 +12,9 @@
 | 10 approval read-back | `427eafb7` → tests `afbbe363` → fix `f7f5d119` → quality fixes `f7dbde4a` (atomic tmp+replace writes, base-matched picks, strict write-back, argparse) | `board_approve.py`: hash check, picks/notes (`""` clears), h1, ledger row in the twelve-page shape with H6 prefixes derived from the record, sourced-PROPOSED promotion, canvas heading write-back (`#`→`+` file), exit 2 on BoardError, `--canvas-dir` default; the flag's value was being read as a second slug — fixed |
 | 11 hub C boarded | `7e6883f9` | research delta, `data/pages/african-grey-parrots-for-sale/board.json`, 42 artboards, 21 thumbs, board HTML |
 
-Tests: `tests/test_page_board.py` 113 passed. Task 10 approved by both reviewers; whole-implementation review dispatched.
+| close-out | `a39632cd` | whole-implementation review (ready to close) → idempotent re-approval via `record_hash_bare`, `_` artboard fallback, gate banner ledger/asset counts + `ledger-examined-zero`, own-page pops removed, `unfile_token`, rsplit ids, unique `.tmp` |
+
+Tests: `tests/test_page_board.py` 126 passed. Every task approved by spec + quality reviewers; close-out commit approved. **Page Board system COMPLETE.**
 
 ## Hub C — where it stands
 
@@ -37,7 +39,7 @@ Tests: `tests/test_page_board.py` 113 passed. Task 10 approved by both reviewers
 ## Open Flags
 
 1. **Board additions proposed, not added (breeder to rule):** view-only kit strip for hero/TOC/FAQ shells with the refresh delta named; the twelve FAQ questions enumerated in the record; two or three angles considered in the brief with one recommended; three meta title/description variants beside the H1 block. Not needed: the full keyword universe on the board; a counter slot (dial + rail are the for-sale counter pair).
-2. **Three spellings of `#`.** Record `#` → on-disk artboard `+` (Task 9 ruling) → published canvas `_` (the design helper refuses `+`). The seeded copies live in the scratchpad only; `board_approve.py` reads the on-disk `+` files. If the breeder edits on the canvas and saves, an `--extract` will hand back `_` names — a re-map is needed before write-back. Decide one spelling for all three surfaces.
+2. **Three spellings of `#`** (write-back now falls back to `_`, so an extracted canvas is readable; still worth one spelling). Record `#` → on-disk artboard `+` (Task 9 ruling) → published canvas `_` (the design helper refuses `+`). The seeded copies live in the scratchpad only; `board_approve.py` reads the on-disk `+` files. If the breeder edits on the canvas and saves, an `--extract` will hand back `_` names — a re-map is needed before write-back. Decide one spelling for all three surfaces.
 3. **Page Board scripts unregistered** in `docs/reference/system-registry.md` (`pageboard.py`, `board_gate.py`, `board_canvas.py`, `board_thumbs.mjs`, `build_page_board.py`, `board_approve.py`).
 4. **Thumbs folder never pruned** (`docs/artifacts/boards/<slug>/thumbs/`) — harmless, lookups are by rendered candidate.
 5. **`_validate` lru_cache**, ontology prune path, near-me H2 "What Arrives With Every African Grey We Place?" vs homepage overlap — carried from the near-me brief.
@@ -45,3 +47,5 @@ Tests: `tests/test_page_board.py` 113 passed. Task 10 approved by both reviewers
 7. **Opus session limit** interrupted one fix round; the two missing Task 10 tests were written inline by the controller (`afbbe363`) — the only inline code this session.
 8. **Rule 13:** the research delta is `.md` only so far; publish as an Artifact with copy buttons alongside the gate report at release.
 9. Pending from the 2026-08-10 plan: the three near-me 301s (Task 11 there) and the singular retirement (Task 13 Steps 6–7), both after the hub is live.
+
+10. Near-me gate at close: 3 header collisions are against the current live hub / singular (both replaced by this rebuild) and the homepage health-guarantee heading (flag 5); `board_thumbs.mjs` has no runtime test.
