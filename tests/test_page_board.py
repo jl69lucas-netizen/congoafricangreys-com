@@ -15,7 +15,7 @@ MIN_BOARD = {
         "id": "birds", "n": 1, "heading": "What Do We Have for Sale Right Now?", "intent": "inventory first",
         "category": "A", "framework": "EEBP", "words": {"min": 400, "max": 600}, "shape": "inventory",
         "keywords": {"primary": ["african grey parrots for sale"], "lsi": [], "longtail": [], "brand": [], "geo": []},
-        "entities": ["ont:congo-african-grey"],
+        "entities": ["ont:psittacus-erithacus"],
         "tree": [{"level": 3, "heading": "Our Congos", "intent": "", "children": [
                  {"level": 4, "heading": "What Does Each Cost?", "intent": "", "children": [
                  {"level": 5, "heading": "Every Price Includes the Folder", "intent": "", "children": [
