@@ -381,17 +381,19 @@ On comparison + long-form content pages, every in-body section image — OG phot
 
 ## Model lane policy (breeder, 2026-09-12)
 
-Two Gemini image lanes, and no others:
+Three Gemini image lanes in `scripts/generate_nb_image.sh`, flash by default:
 
 | Lane | Model | Price | Use |
 |---|---|---|---|
-| `flash` (default) | `gemini-3.1-flash-image` @ 1K | **$0.067**/image | every in-body image and infographic |
+| `flash` (default) | `gemini-3.1-flash-image` @ 1K | **$0.067**/image | every routine in-body image and infographic |
 | `cheap` | `gemini-2.5-flash-image` (1024px cap, Google-deprecated) | **$0.039**/image | bulk drafts, thumbnails, throwaways |
+| `pro` (opt-in) | `gemini-3-pro-image` @ 2K | **$0.134**/image | dense baked labels or exact figures, after flash has missed |
 
-`gemini-3-pro-image` ($0.134/image — 2x flash, 3.4x cheap) is **refused by
-`scripts/generate_nb_image.sh`**. The 2026-09-11 Pages A/B run put ~64 images
-through Pro and drained the key's prepaid credit; the label fidelity Pro was
-chosen for did not prevent 4 label defects in 58 images.
+**Pro must be asked for by name** — never the default, never a batch-wide setting.
+The 2026-09-11 Pages A/B run put ~64 images through Pro by default and drained the
+key's prepaid credit, and the label fidelity Pro was chosen for still left 4 label
+defects in 58 images. Pro bills 1K and 2K at the same $0.134, so when you do reach
+for it, shoot 2K — the resolution is free, the lane is not.
 
 `imagen-3.0-generate-001` and the `:predict` body shape are **retired**. The live
 shape is `POST v1beta/models/<model>:generateContent` with header `x-goog-api-key`

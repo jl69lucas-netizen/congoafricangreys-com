@@ -5,12 +5,15 @@
 #   ASPECT  16:9 (default) · 4:3 · 1:1 · 3:4 · 9:16
 #   LANE    flash  = gemini-3.1-flash-image  @ 1K   $0.067/image   (default)
 #           cheap  = gemini-2.5-flash-image  @ 1024 $0.039/image
+#           pro    = gemini-3-pro-image      @ 2K   $0.134/image   (opt-in)
 #
 # Example: ./scripts/generate_nb_image.sh "CAG infographic..." "cag-inf-shipping.png" "16:9"
 #
-# LANE POLICY (breeder, 2026-09-12): these two lanes ONLY. gemini-3-pro-image is
-# $0.134/image — 2x flash, 3.4x cheap — and is refused by this script. The
-# 2026-09-11 run put 64 images through Pro and drained the prepaid credit.
+# LANE POLICY (breeder, 2026-09-12): flash is the default for every routine image.
+# pro costs 2x flash and 3.4x cheap and must be asked for BY NAME — reach for it when
+# an image is carrying dense baked labels or exact figures and flash has already missed.
+# The 2026-09-11 run put ~64 images through Pro by default and drained the prepaid
+# credit, which is what made flash the default.
 #
 # Key:    .google-key (project root, gitignored) or GEMINI_API_KEY env var.
 #         Never echo, cat or paste the key. See docs/reference/secure-credentials.md.
@@ -34,10 +37,12 @@ fi
 case "$LANE" in
   flash) MODEL="gemini-3.1-flash-image"; IMAGE_SIZE="1K"; PRICE="0.067" ;;
   cheap) MODEL="gemini-2.5-flash-image"; IMAGE_SIZE="";   PRICE="0.039" ;;
+  pro)   MODEL="gemini-3-pro-image";     IMAGE_SIZE="2K"; PRICE="0.134" ;;
   *)
-    echo "Error: lane '$LANE' is not allowed. Use 'flash' (gemini-3.1-flash-image, \$0.067)" >&2
-    echo "       or 'cheap' (gemini-2.5-flash-image, \$0.039)." >&2
-    echo "       gemini-3-pro-image (\$0.134) is off the menu by breeder policy 2026-09-12." >&2
+    echo "Error: lane '$LANE' is not a lane. Use one of:" >&2
+    echo "       flash  gemini-3.1-flash-image @ 1K  \$0.067  (default)" >&2
+    echo "       cheap  gemini-2.5-flash-image       \$0.039" >&2
+    echo "       pro    gemini-3-pro-image     @ 2K  \$0.134  (ask for it by name)" >&2
     exit 1
     ;;
 esac
@@ -50,6 +55,9 @@ elif [ -z "${GEMINI_API_KEY:-}" ]; then
   exit 1
 fi
 
+if [ "$LANE" = "pro" ]; then
+  echo "PRO LANE — \$${PRICE}/image, 2x flash. Worth it only for dense baked labels." >&2
+fi
 echo "Model: ${MODEL}${IMAGE_SIZE:+ @ $IMAGE_SIZE} | Aspect: ${ASPECT} | ~\$${PRICE}"
 echo "Output: content/generated/${OUTFILE}"
 mkdir -p content/generated
