@@ -145,7 +145,11 @@ def _write_json(path, doc):
 
 
 def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    argv = sys.argv[1:]
+    if "--canvas-dir" in argv:                       # its value is not a positional
+        i = argv.index("--canvas-dir")
+        argv = argv[:i] + argv[i + 2:]
+    args = [a for a in argv if not a.startswith("--")]
     if len(args) != 1:
         print("board-approve ERROR one slug expected")
         print(USAGE)
