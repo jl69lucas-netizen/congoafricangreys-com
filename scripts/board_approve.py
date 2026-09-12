@@ -13,50 +13,63 @@
    data/component-ledger.json, in the shape the existing pages use.
 6. Promotes referenced PROPOSED entities that carry a source to ASSERTED.
 
-Nothing is written until all three documents validate: apply_approval() is pure, main()
-writes only what it returns.
+One approval, three documents. apply_approval() is pure — it raises before anything is
+written — and main() serialises all three before it replaces any of them, so a refused
+approval leaves the tree exactly as it found it.
 """
+import argparse
 import html as _html
 import json
+import os
 import pathlib
 import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import pageboard as PB
+from board_canvas import file_token       # one `#` → `+` spelling for the whole board system
 
-USAGE = "usage: board_approve.py <slug> [--canvas-dir <dir>]"
 H2 = re.compile(r"<h2[^>]*>(.*?)</h2>", re.S)
 TAG = re.compile(r"<[^>]+>")
 
 
 def artboard_name(section_id, pick, viewport="Desktop"):
-    """The file board_canvas.py wrote for this pick. `#` is spelled `+` on disk (it is a
-    URL fragment everywhere else), so a lookup on the `#` spelling finds nothing and
-    reports no change — a silent write-back is worse than a missing one."""
-    return f"{section_id}--{pick.replace('#', '+')}--{viewport}.dc.html"
+    """The file board_canvas.py wrote for this pick. `#` is spelled `+` on disk (it breaks
+    a file:// path), so a lookup on the `#` spelling finds nothing and reports no change —
+    a silent write-back is worse than a missing one."""
+    return f"{section_id}--{file_token(pick)}--{viewport}.dc.html"
 
 
 def writeback_text(board, canvas_dir):
     """A saved artboard's <h2> text becomes the section heading if it changed. Returns
     [(section id, field, old, new)]. Only the heading is written back: it is the one copy
-    field an artboard shows verbatim; intents render as summaries, never as final prose."""
+    field an artboard shows verbatim; intents render as summaries, never as final prose.
+
+    Strict on purpose. A named canvas directory that is not there is a typo, and an
+    artboard the breeder split into two <h2>s has no single heading to write back —
+    both raise rather than approve the record the breeder did not see. An artboard that is
+    merely absent or heading-less warns on stderr: the canvas is a subset of the record."""
     canvas_dir = pathlib.Path(canvas_dir)
-    changed = []
     if not canvas_dir.exists():
-        return changed
+        raise PB.BoardError(f"canvas directory {canvas_dir} does not exist")
+    changed = []
     for s in board["sections"]:
         pick = s["options"].get("pick")
         if not pick:
             continue
         art = canvas_dir / artboard_name(s["id"], pick)
         if not art.exists():
+            print(f"board-approve WARN no artboard for {s['id']} ({pick}): {art.name}", file=sys.stderr)
             continue
-        m = H2.search(art.read_text(encoding="utf-8"))
-        if not m:
+        found = H2.findall(art.read_text(encoding="utf-8"))
+        if not found:
+            print(f"board-approve WARN {art.name} has no <h2> — heading left as written", file=sys.stderr)
             continue
-        new = _html.unescape(TAG.sub("", m.group(1))).strip()
-        new = re.sub(r"\s+", " ", new)
+        if len(found) > 1:
+            raise PB.BoardError(
+                f"{art.name} carries {len(found)} <h2> headings — section {s['id']} has one heading, "
+                "so which one to write back is not knowable; fix the artboard")
+        new = re.sub(r"\s+", " ", _html.unescape(TAG.sub("", found[0]))).strip()
         if new and new != s["heading"]:
             changed.append((s["id"], "heading", s["heading"], new))
             s["heading"] = new
@@ -103,6 +116,14 @@ def apply_approval(board, inbox, ont, ledger, canvas_dir=None):
     for sid, pick in inbox.get("picks", {}).items():
         if sid not in by_id:
             raise PB.BoardError(f"approval picks section {sid!r}, which is not in the record")
+        # The pick has to come off the menu the board offered. It is matched on the BASE,
+        # because renaming an offered `base` (or the `base#refresh` placeholder) to the axis
+        # it actually varies — `toc-t2-chip-cloud#state-chips` — IS the documented workflow.
+        menu = {PB.base_of(c) for c in by_id[sid]["options"]["candidates"]}
+        if PB.base_of(pick) not in menu:
+            raise PB.BoardError(
+                f"section {sid}: pick {pick!r} is not one of its candidates "
+                f"({', '.join(by_id[sid]['options']['candidates']) or 'none offered'})")
         by_id[sid]["options"]["pick"] = pick
     for sid, note in inbox.get("notes", {}).items():
         if sid not in by_id:
@@ -131,36 +152,43 @@ def apply_approval(board, inbox, ont, ledger, canvas_dir=None):
     PB.validate_ledger(led)
 
     o = json.loads(json.dumps(ont))
+    was = {e["id"]: e["authorization"] for e in o["entities"]}
     used = {e for s in b["sections"] for e in s["entities"]}
     for e in o["entities"]:
         if e["id"] in used and e["authorization"] == "PROPOSED" and e["source"]:
             e["authorization"] = "ASSERTED"
     PB.validate_ontology(o)
-    return {"board": b, "ledger": led, "ontology": o, "changed": changed}
+    promoted = [e["id"] for e in o["entities"] if e["authorization"] != was[e["id"]]]
+    return {"board": b, "ledger": led, "ontology": o, "changed": changed, "promoted": promoted}
 
 
-def _write_json(path, doc):
+def _atomic_write(path, text):
+    """Write through a sibling temp file and rename over the target. A half-written
+    component ledger is worse than an unwritten one: the next page reads it to learn what
+    it may not claim."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def _json_text(doc):
+    return json.dumps(doc, indent=2, ensure_ascii=False) + "\n"
+
+
+def parse_args(argv=None):
+    p = argparse.ArgumentParser(prog="board_approve.py", description="apply a board approval")
+    p.add_argument("slug")
+    p.add_argument("--canvas-dir", default=None,
+                   help="artboard directory (default: docs/design/board-<slug> when it exists)")
+    return p.parse_args(sys.argv[1:] if argv is None else argv)
 
 
 def main():
-    argv = sys.argv[1:]
-    if "--canvas-dir" in argv:                       # its value is not a positional
-        i = argv.index("--canvas-dir")
-        argv = argv[:i] + argv[i + 2:]
-    args = [a for a in argv if not a.startswith("--")]
-    if len(args) != 1:
-        print("board-approve ERROR one slug expected")
-        print(USAGE)
-        sys.exit(2)
-    slug = args[0]
-    if "--canvas-dir" in sys.argv:
-        i = sys.argv.index("--canvas-dir")
-        if i + 1 >= len(sys.argv):
-            print(f"board-approve ERROR --canvas-dir needs a directory\n{USAGE}")
-            sys.exit(2)
-        canvas_dir = pathlib.Path(sys.argv[i + 1])
+    a = parse_args()                                  # argparse itself exits 2 on a bad invocation
+    slug = a.slug
+    if a.canvas_dir is not None:
+        canvas_dir = pathlib.Path(a.canvas_dir)       # named but absent is a BoardError, not a skip
     else:
         default = PB.ROOT / "docs" / "design" / f"board-{slug}"
         canvas_dir = default if default.exists() else None
@@ -173,19 +201,27 @@ def main():
         inbox = json.loads(inbox_path.read_text(encoding="utf-8"))
         inbox = inbox.get("data", inbox) if isinstance(inbox, dict) else inbox   # read_db may wrap it
         out = apply_approval(PB.load_board(slug), inbox, PB.load_ontology(), PB.load_ledger(), canvas_dir)
-    except PB.BoardError as e:
+        # PB.save_board() guards this, but the board's write has to be ordered with the
+        # other two, so the guard is restated here and the write is done below.
+        if out["board"]["meta"]["slug"] != slug:
+            raise PB.BoardError(f"slug mismatch: approving {slug} but the record says {out['board']['meta']['slug']}")
+        PB.validate_board(out["board"])
+        # Serialise all three BEFORE replacing any of them, then replace ledger → ontology
+        # → board: the board is stamped approved only once the claims it makes are recorded.
+        writes = [(PB.LEDGER, _json_text(out["ledger"])),
+                  (PB.ONTOLOGY, _json_text(out["ontology"])),
+                  (PB.board_path(slug), _json_text(out["board"]))]
+        for path, text in writes:
+            _atomic_write(path, text)
+    except (PB.BoardError, OSError) as e:
         print(f"board-approve ERROR {e}")
         sys.exit(2)
 
-    PB.save_board(slug, out["board"])
-    _write_json(PB.LEDGER, out["ledger"])
-    _write_json(PB.ONTOLOGY, out["ontology"])
     for sid, field, old, new in out["changed"]:
         print(f"  write-back {sid}.{field}: {old!r} → {new!r}")
-    promoted = sum(1 for e in out["ontology"]["entities"] if e["authorization"] == "ASSERTED")
     print(f"approved {slug} at {out['board']['approval']['approved_at']} — "
           f"{len(out['board']['approval']['picks'])} picks, {len(out['changed'])} text write-backs, "
-          f"ledger row {out['ledger']['pages'][slug]}, {promoted} ASSERTED entities")
+          f"ledger row {out['ledger']['pages'][slug]}, {len(out['promoted'])} PROPOSED→ASSERTED")
 
 
 if __name__ == "__main__":

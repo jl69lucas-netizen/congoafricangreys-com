@@ -1235,3 +1235,134 @@ def test_approve_main_prefers_an_explicit_canvas_dir_over_the_default(tmp_path, 
     monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test", "--canvas-dir", str(other)])
     BA.main()
     assert PB.load_board("hub-test")["sections"][0]["heading"] == "Heading From the Explicit Dir"
+
+
+# --- Task 10 quality pass: atomic writes, candidate-checked picks, strict write-back -----
+
+def test_approve_refuses_a_pick_that_is_not_on_the_offered_menu():
+    import board_approve as BA
+    b = _hub_board()
+    inbox = {"approved_at": "t", "h1": 0, "picks": {"birds": "avail-z"}, "notes": {},
+             "canvas_version": None, "record_hash": PB.record_hash(b)}
+    with pytest.raises(PB.BoardError) as e:
+        BA.apply_approval(b, inbox, json.loads(json.dumps(ONT_PROMOTE)),
+                          {"pools": {"inventory": ["avail-b"]}, "pages": {}})
+    assert "birds" in str(e.value) and "avail-z" in str(e.value)
+
+
+def test_approve_accepts_a_delta_rename_of_an_offered_candidate():
+    """The board offers `base` (or `base#refresh`) and the author renames it to the axis
+    the option actually varies — `toc-t2-chip-cloud#state-chips` is the shipped hub's own
+    pick. A strict membership test would refuse the documented workflow, so the menu is
+    matched on the BASE."""
+    import board_approve as BA
+    b = _hub_board()
+    inbox = {"approved_at": "t", "h1": 0, "picks": {"birds": "avail-b#state-chips"}, "notes": {},
+             "canvas_version": None, "record_hash": PB.record_hash(b)}
+    out = BA.apply_approval(b, inbox, json.loads(json.dumps(ONT_PROMOTE)),
+                            {"pools": {"inventory": ["avail-b"]}, "pages": {}})
+    assert out["board"]["sections"][0]["options"]["pick"] == "avail-b#state-chips"
+
+
+def test_writeback_raises_when_the_canvas_dir_does_not_exist(tmp_path):
+    """A canvas directory the caller named and that is not there is a typo, not an absence
+    of tweaks — returning [] would silently approve the un-tweaked record."""
+    import board_approve as BA
+    with pytest.raises(PB.BoardError) as e:
+        BA.writeback_text(json.loads(json.dumps(MIN_BOARD)), tmp_path / "nope")
+    assert "nope" in str(e.value)
+
+
+def test_writeback_raises_when_an_artboard_carries_two_h2s(tmp_path):
+    import board_approve as BA
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["options"]["pick"] = "avail-b"
+    (tmp_path / "birds--avail-b--Desktop.dc.html").write_text(
+        "<h2>First Heading Here</h2><div><h2>Second Heading Here</h2></div>", encoding="utf-8")
+    with pytest.raises(PB.BoardError) as e:
+        BA.writeback_text(b, tmp_path)
+    assert "birds" in str(e.value)
+    assert b["sections"][0]["heading"] == "What Do We Have for Sale Right Now?"
+
+
+def test_writeback_warns_on_a_missing_artboard_and_on_one_without_an_h2(tmp_path, capsys):
+    import board_approve as BA
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["options"]["pick"] = "avail-b"
+    assert BA.writeback_text(b, tmp_path) == []                      # nothing on disk at all
+    assert "birds" in capsys.readouterr().err
+    (tmp_path / "birds--avail-b--Desktop.dc.html").write_text("<p>no heading</p>", encoding="utf-8")
+    assert BA.writeback_text(b, tmp_path) == []
+    assert "no <h2>" in capsys.readouterr().err
+
+
+def test_approve_main_exits_2_and_leaves_the_board_unapproved_when_the_ledger_write_fails(
+        tmp_path, monkeypatch):
+    """Three documents, one approval: a board stamped approved with no ledger row would
+    leave every component it just claimed unowned, and the next page would claim them."""
+    import board_approve as BA
+    _approve_main_fixture(tmp_path, monkeypatch)
+    real_replace = BA.os.replace
+
+    def flaky(src, dst):
+        if str(dst).endswith("component-ledger.json"):
+            raise OSError("disk full")
+        return real_replace(src, dst)
+
+    monkeypatch.setattr(BA.os, "replace", flaky)
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test"])
+    with pytest.raises(SystemExit) as ex:
+        BA.main()
+    assert ex.value.code == 2
+    assert PB.load_board("hub-test")["meta"]["status"] != "approved"
+    assert PB.load_ledger()["pages"] == {}
+
+
+def test_approve_main_exits_2_on_a_slug_the_record_disagrees_with(tmp_path, monkeypatch, capsys):
+    import board_approve as BA
+    b = _approve_main_fixture(tmp_path, monkeypatch)
+    b["meta"]["slug"] = "hub-other"
+    PB.board_path("hub-test").write_text(json.dumps(b), encoding="utf-8")
+    # the hash the inbox carries has to be the hash of the record as it now stands
+    inbox = tmp_path / "data" / "pages" / "hub-test" / "inbox" / "boards" / "hub-test.json"
+    doc = json.loads(inbox.read_text(encoding="utf-8"))
+    doc["record_hash"] = PB.record_hash(b)
+    inbox.write_text(json.dumps(doc), encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test"])
+    with pytest.raises(SystemExit) as ex:
+        BA.main()
+    assert ex.value.code == 2
+    assert "slug" in capsys.readouterr().out
+
+
+def test_approve_main_exits_2_when_canvas_dir_has_no_value(tmp_path, monkeypatch):
+    import board_approve as BA
+    _approve_main_fixture(tmp_path, monkeypatch)
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test", "--canvas-dir"])
+    with pytest.raises(SystemExit) as ex:
+        BA.main()
+    assert ex.value.code == 2
+
+
+def test_approve_main_takes_the_last_canvas_dir_and_accepts_the_equals_form(tmp_path, monkeypatch):
+    import board_approve as BA
+    default = tmp_path / "docs" / "design" / "board-hub-test"
+    _approve_main_fixture(tmp_path, monkeypatch, with_canvas=(default, "Heading From the Default"))
+    first, last = tmp_path / "first", tmp_path / "last"
+    for d, h2 in ((first, "Heading From the First Dir"), (last, "Heading From the Last Dir")):
+        d.mkdir()
+        (d / "birds--avail-b--Desktop.dc.html").write_text(f"<h2>{h2}</h2>", encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test",
+                                      "--canvas-dir", str(first), f"--canvas-dir={last}"])
+    BA.main()
+    assert PB.load_board("hub-test")["sections"][0]["heading"] == "Heading From the Last Dir"
+
+
+def test_approve_main_reports_only_the_promotions_this_run_made(tmp_path, monkeypatch, capsys):
+    """ONT_PROMOTE already holds one ASSERTED entity; counting every ASSERTED row would
+    report two promotions for a run that made one."""
+    import board_approve as BA
+    _approve_main_fixture(tmp_path, monkeypatch)
+    monkeypatch.setattr(sys, "argv", ["board_approve.py", "hub-test"])
+    BA.main()
+    assert "1 PROPOSED→ASSERTED" in capsys.readouterr().out
