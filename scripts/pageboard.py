@@ -122,3 +122,39 @@ def record_hash(board):
 def approval_matches(board):
     a = board.get("approval")
     return isinstance(a, dict) and a.get("record_hash") == record_hash(board)
+
+
+# A ledger page "owns" every component named anywhere in its tuple. A hero, dial, rail,
+# TOC, table, FAQ shell or takeaway a sibling owns is removed from the pool; the record
+# keeps who owned it so the board can say so. The page itself never excludes itself.
+def owned_components(ledger, exclude_slug=None):
+    owned = {}
+    for page, t in ledger.get("pages", {}).items():
+        if page == exclude_slug:
+            continue
+        for key in ("hero", "dial", "rail", "toc", "table", "faq"):
+            if t.get(key):
+                owned.setdefault(t[key], page)
+        for k in t.get("takeaway", []):
+            owned.setdefault(k, page)
+    return owned
+
+
+def candidates_for(shape, ledger, slug):
+    if shape == "standard":
+        return [], []
+    pool = list(ledger.get("pools", {}).get(shape, []))
+    owned = owned_components(ledger, exclude_slug=slug)
+    cands = [c for c in pool if c not in owned]
+    excluded = [{"component": c, "owner": owned[c]} for c in pool if c in owned]
+    return cands, excluded
+
+
+def spent_h6_prefixes(ledger, exclude_slug=None):
+    out = {}
+    for page, t in ledger.get("pages", {}).items():
+        if page == exclude_slug:
+            continue
+        for p in t.get("h6_prefixes", []):
+            out.setdefault(p, page)
+    return out

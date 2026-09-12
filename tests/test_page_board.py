@@ -254,3 +254,30 @@ def test_reseeding_carries_an_earlier_decision_on_a_catalog_id(tmp_path, monkeyp
     assert after["ont:hand-raised"]["authorization"] == "ASSERTED"
     assert after["ont:hand-raised"]["source"] == "x"
     assert after["ont:hand-raised"]["owner_page"] == "/foo/"
+
+
+def test_ledger_file_validates_and_knows_pages_a_and_b():
+    ledger = PB.load_ledger()
+    assert ledger["pages"]["buy-african-grey-parrots-with-shipping"]["toc"] == "toc-t3-boarding-pass"
+    assert ledger["pages"]["african-grey-parrots-for-sale-near-me"]["hero"] == "hero-c-mosaic-metrics"
+
+
+def test_candidates_subtract_what_siblings_own():
+    ledger = {"pools": {"inventory": ["avail-a", "avail-b", "bird-cards"]},
+              "pages": {"dna-tested-african-grey-for-sale": {"hero": "hero-c", "dial": "dial-1", "rail": "rail-a", "toc": "avail-b",
+                        "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
+    cands, excluded = PB.candidates_for("inventory", ledger, slug="african-grey-parrots-for-sale")
+    assert cands == ["avail-a", "bird-cards"]
+    assert excluded == [{"component": "avail-b", "owner": "dna-tested-african-grey-for-sale"}]
+
+
+def test_candidates_never_exclude_the_page_itself():
+    ledger = {"pools": {"nav": ["dial-1", "dial-2"]},
+              "pages": {"x": {"hero": "", "dial": "dial-1", "rail": "", "toc": "", "takeaway": [], "table": "", "faq": "", "h6_prefixes": []}}}
+    cands, excluded = PB.candidates_for("nav", ledger, slug="x")
+    assert cands == ["dial-1", "dial-2"] and excluded == []
+
+
+def test_standard_shape_has_no_options():
+    cands, excluded = PB.candidates_for("standard", {"pools": {}, "pages": {}}, slug="x")
+    assert cands == [] and excluded == []
