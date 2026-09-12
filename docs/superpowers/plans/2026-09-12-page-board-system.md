@@ -803,7 +803,7 @@ def test_distribution_sums_keywords_and_words():
     d = PB.distribution(MIN_BOARD)
     assert d["rows"][0]["section"] == "birds" and d["rows"][0]["primary"] == 1
     assert d["totals"]["words_min"] == 400 and d["totals"]["words_max"] == 600
-    assert d["h_counts"] == {"h2": 1, "h3": 1, "h4": 1, "h5": 1, "h6": 1}
+    assert d["h_counts"] == {"h1": 1, "h2": 1, "h3": 1, "h4": 1, "h5": 1, "h6": 1}
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -926,6 +926,8 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 ---
+
+> **Review amendment (Task 5 quality review, 2026-09-12):** `live_headings` builds its corpus the way `dup_content_audit.py` does (skips `SKIP_TAGS` and `CHROME_RE` chrome), `header_precheck(proposed, live, exclude_page=None)` drops the page's own key, and `all_headings` begins with `(1, <picked H1>)` so `h_counts` carries `"h1"`. The gate additionally drops any hit whose heading contains a `dup_content_audit.HEADER_WHITELIST` phrase (import it: `from dup_content_audit import HEADER_WHITELIST`).
 
 ### Task 6: The gate
 
@@ -1052,7 +1054,8 @@ def gate_findings(board, ont, ledger, live, stage="build"):
         if p in spent:
             add("ledger-spent-prefix", "FAIL", f"H6 prefix {p!r} is spent by {spent[p]}")
 
-    hits = header_precheck([h for _, h in all_headings(board)], live)
+    hits = [h for h in header_precheck([h for _, h in all_headings(board)], live, exclude_page="/" + slug + "/")
+            if not any(w in h["heading"].lower() for w in HEADER_WHITELIST)]   # dup_content_audit.HEADER_WHITELIST
     for h in hits:
         add("header-collision", "FAIL", f"{h['kind']}: {h['heading']!r} vs {h['page']} {h['with']!r}")
 
@@ -1159,7 +1162,7 @@ def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate():
     b = PB.load_board("african-grey-parrots-for-sale-near-me")
     ledger, ont = PB.load_ledger(), PB.load_ontology()
     d = PB.distribution(b)
-    assert d["h_counts"] == {"h2": 9, "h3": 18, "h4": 7, "h5": 7, "h6": 7}
+    assert d["h_counts"] == {"h1": 1, "h2": 9, "h3": 18, "h4": 7, "h5": 7, "h6": 7}
     grid = next(s for s in b["sections"] if s["id"] == "grid")
     cands, excluded = PB.candidates_for(grid["shape"], ledger, slug=b["meta"]["slug"])
     assert cands, "the grid section must have at least one candidate"
