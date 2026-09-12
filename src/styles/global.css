@@ -346,7 +346,12 @@ select[aria-invalid="true"], textarea[aria-invalid="true"]{ border-color:#b04228
    Measured 2026-09-12 before this pass: hub form 1117px tall against ~520px of pane
    content; the two-column version was not enough. */
 @media (min-width: 981px) {
-  body .cta-form:has(> form.form-main) { grid-template-columns: minmax(0, .68fr) minmax(0, 1.32fr); }
+  /* Two cards, not one stretched box: the green pane keeps its own height and sticks
+     beside the form as it scrolls; the form is its own white card. Measured 2026-09-12:
+     three columns beside a stretched pane still left ~600px of empty green. */
+  body .cta-form:has(> form.form-main) { grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); gap: 18px; align-items: start; overflow: visible; border: 0; background: transparent; box-shadow: none; }
+  body .cta-form > .form-side { position: sticky; top: 112px; border-radius: 16px; }
+  body .cta-form > form.form-main { border: 1px solid #e7ddd3; border-radius: 16px; box-shadow: 0 3px 14px rgba(60,30,10,.05); }
   body .cta-form > form.form-main { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem .7rem; align-content: start; padding: 18px 20px; }
   body .cta-form > form.form-main > * { grid-column: 1 / -1; min-width: 0; }
   body .cta-form > form.form-main > .f2:first-of-type { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .6rem .7rem; }
@@ -369,8 +374,6 @@ select[aria-invalid="true"], textarea[aria-invalid="true"]{ border-color:#b04228
   body .cta-form > form.form-main .btn-submit { grid-column: 3 / 4; align-self: end; margin: 0 0 .1rem; justify-self: stretch; }
   body .cta-form > form.form-main > .form-note { grid-column: 1 / -1; }
   /* left pane: heading and lede at the top, the bird list in the middle, the shipping line at the foot */
-  body .cta-form > .form-side { display: flex; flex-direction: column; }
-  body .cta-form > .form-side .form-birds { margin-top: auto; margin-bottom: auto; }
 }
 
 /* Same compaction for the kit's older two-pane form (congo · timneh · eggs · adoption-cost):
@@ -393,6 +396,6 @@ select[aria-invalid="true"], textarea[aria-invalid="true"]{ border-color:#b04228
   body .form-wrap > form.cta-form > label:has(textarea[name="message"]) { grid-column: 1 / 3; }
   body .form-wrap > form.cta-form textarea[name="message"] { height: 4.6rem; }
   body .form-wrap > form.cta-form > .form-actions { grid-column: 3 / 4; align-self: end; margin: 0; }
-  body .form-wrap > .form-side { display: flex; flex-direction: column; align-self: stretch; }
-  body .form-wrap > .form-side .fs-ship { margin-top: auto !important; }
+  body .form-wrap:has(> form.cta-form) { align-items: start; }
+  body .form-wrap > .form-side { position: sticky; top: 112px; align-self: start; }
 }
