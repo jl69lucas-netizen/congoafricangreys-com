@@ -10,6 +10,10 @@
 ## Brief restated at the start (CLAUDE.md rule 6)
 Outline approved 2026-08-10, not reopened. Tuple 12: Hero-C refreshed to a **geographic tile field** on a deep-green field · Dial 1 Clay + Rail B ticker · T2 chip cloud refreshed to **region → state chips + metros + sections** · K3 ledger + K4 clipboard + K5 capsules · **NEW Table I "Distance Ledger"** (state · route · cargo counter named on that state's page · cost) · FAQ-B refreshed to a **map-pin register**. H6 prefixes `Distance Note:` · `From Midland:` · `Ask Before You Drive:`. Prose written fresh from the outline; no sibling opened for copy. Reviews out (all 17 spent), 3-3-3 rule out (locked).
 
+## Committed
+- `46048216` build(for-sale): near-me router + companion-pair correction on both buy pages. Pushed, live (polled until both pages served the new markup), IndexNow HTTP 200 for both slugs.
+- `d194d909` chore(dates): page-dates map, near-me `dateModified` 2026-09-12.
+
 ## What was built
 - 6,410 words in `<main>`; H1 1 · H2 9 · H3 24 (+6 card names, +1 form) · H4 7 · H5 7 · H6 7; 38 unique non-empty alts, 9 decorative; 26 infographics + 6 card photos + hero + newsletter, every H3 image-first.
 - **The grid, enumerated once sitewide:** 24 state tiles by region + the CA buy page = 25 states, 15 metros nested under their state and repeated as a pin list; 39 distinct `/african-grey-parrot-for-sale-<x>/` links + the CA page = 40 destinations, all 200 in `dist/`.
