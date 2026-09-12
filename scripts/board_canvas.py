@@ -18,6 +18,12 @@ DESIGN = PB.ROOT / "docs" / "design"
 SUPPORT = DESIGN / "homepage-variations-r3" / "support.js"
 FINANCIAL = PB.ROOT / "data" / "financial-entities.json"
 VIEWPORTS = {"Mobile": 390, "Desktop": 1440}
+# Canvas geometry. One 2070px slot per option holds the Mobile artboard and, 470px
+# right of it, the Desktop one — 160px of air before the next option starts. The
+# index takes the first slot of the first page, so nothing overlaps it.
+SLOT_W, DESKTOP_DX = 2070, 470
+BOARD_BOX = {"Mobile": (390, 1100), "Desktop": (1440, 900)}
+MAIN_BOX, NOTE_W, NOTE_DY = (1440, 1400), 420, -120
 MAX_OPTIONS = 3
 MAX_CARDS = 6
 GREEN, GREEN_D, CLAY, CLAY_INK, CREAM, INK, MUTED, BD = "#2D6A4F", "#234f3b", "#e8604c", "#c8472f", "#faf7f4", "#1f2a24", "#6b625a", "#e7ddd3"
@@ -226,6 +232,72 @@ TEMPLATES = {"inventory": tpl_inventory, "compare": tpl_compare, "sequence": tpl
              "proof": tpl_proof, "price": tpl_price, "nav": tpl_nav, "narrative": tpl_narrative}
 
 
+def recommended_h1(board):
+    """The H1 variant the record recommends. `recommended` indexes `variants`; a record
+    that lost it falls back to the first variant rather than to invented copy."""
+    h1 = board.get("h1") or {}
+    variants = h1.get("variants") or [""]
+    i = h1.get("recommended")
+    return variants[i] if isinstance(i, int) and 0 <= i < len(variants) else variants[0]
+
+
+def main_artboard(board, counts):
+    """The canvas index: the recommended H1 and one row per section — n, heading, intent,
+    shape, framework, word band, option count. Written from the record like every other
+    artboard, because a hand-made index goes stale the first time a heading is approved,
+    and a stale index is the one artboard every reader opens first."""
+    rows = []
+    for s in board["sections"]:
+        n = counts.get(s["id"], 0)
+        meta = (f'{s["shape"]} · {s["framework"]} · {s["words"]["min"]}–{s["words"]["max"]} words · '
+                f'{n} option{"" if n == 1 else "s"}')
+        rows.append(
+            f'<div style="display:flex; gap:16px; padding:14px 0; border-bottom:1px solid {BD};">'
+            f'<div style="width:36px; font-family:Newsreader, Georgia, serif; font-size:22px; color:{CLAY_INK};">{s["n"]:02d}</div>'
+            f'<div style="flex:1; display:flex; flex-direction:column; gap:4px;">'
+            f'<div style="font-family:Newsreader, Georgia, serif; font-size:20px; color:{GREEN};">{esc(s["heading"])}</div>'
+            f'<div style="font-size:13px; color:{MUTED};">{esc(s["intent"])}</div>'
+            f'<div style="font-size:12px; color:#8a8577; text-transform:uppercase; letter-spacing:.06em;">{esc(meta)}</div>'
+            f'</div></div>')
+    slug = board["meta"]["slug"]
+    return _wrap(1440,
+        f'<div style="font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:{CLAY_INK};">Page Board canvas · /{esc(slug)}/</div>'
+        f'<h1 style="font-size:40px; line-height:1.1; color:{GREEN};">{esc(recommended_h1(board))}</h1>'
+        f'<div style="font-size:15px; color:{MUTED};">Recommended H1. One canvas page per section; each holds that '
+        f'section\'s options at two widths. Pick on the board, tweak here.</div>'
+        f'<div style="display:flex; flex-direction:column;">{"".join(rows)}</div>')
+
+
+def canvas_manifest(plan, main_page=None):
+    """The `design` skill's manifest for this folder, from the same plan the files were
+    written from — so it can never list an artboard the run did not write, or miss one it did.
+
+    `plan` is [(section, [candidate, ...])] in the record's own order. One page per signature
+    section; one 2070px slot per option; the index on the first page. File names carry the
+    `_` spelling (file_token), because the manifest names paths, not record ids."""
+    pages, artboards, notes = [], [], []
+    for s, cands in plan:
+        pid = f"page-{s['n']}"
+        pages.append({"id": pid, "name": f"{s['n']}. {s['heading']}"[:60]})
+        x0 = 0
+        if pid == (main_page or (plan[0][0] and f"page-{plan[0][0]['n']}")):
+            artboards.append({"file": "Main.dc.html", "x": 0, "y": 0, "w": MAIN_BOX[0], "h": MAIN_BOX[1],
+                              "page": pid, "title": "Main — the record's index"})
+            x0 = SLOT_W
+        for i, c in enumerate(cands):
+            x, tok = x0 + i * SLOT_W, file_token(c)
+            for vp, dx in (("Mobile", 0), ("Desktop", DESKTOP_DX)):
+                w, h = BOARD_BOX[vp]
+                artboards.append({"file": f"{s['id']}--{tok}--{vp}.dc.html",
+                                  "x": x + dx, "y": 0, "w": w, "h": h, "page": pid})
+            notes.append({"id": f"opt-{s['id']}-{tok}", "x": x, "y": NOTE_DY, "w": NOTE_W, "page": pid,
+                          "text": f"{c} — option {i + 1} for section {s['n']}, {s['heading']} "
+                                  f"({s['shape']} · {s['framework']}). Every word is this section's own record; "
+                                  f"a text edit here is written back by board_approve.py."})
+    return {"pages": pages, "artboards": artboards, "annotations": notes,
+            "launch": {"view": "canvas", "page": pages[0]["id"] if pages else "page-1"}}
+
+
 def write_canvas(board, ledger, out):
     """Write every signature section's artboards into `out`, replacing what is there.
 
@@ -240,11 +312,12 @@ def write_canvas(board, ledger, out):
     # be offered to the breeder as a live option long after it stopped being one.
     for stale in out.glob("*.dc.html"):
         stale.unlink()
-    files, counts = [], {}
+    files, counts, plan = [], {}, []
     for s in board["sections"]:
         if s["shape"] == "standard":
             continue
         cands = PB.candidates_for(s["shape"], ledger, slug)[0][:MAX_OPTIONS]
+        plan.append((s, cands))
         tpl = TEMPLATES[s["shape"]]
         counts[s["id"]] = len(cands)
         if len(cands) < MAX_OPTIONS:
@@ -256,6 +329,11 @@ def write_canvas(board, ledger, out):
                 p = out / f"{s['id']}--{file_token(c)}--{vp}.dc.html"
                 p.write_text(_wrap(vw, tpl(s, c, vw)), encoding="utf-8")
                 files.append(p)
+    # The index and the manifest are written LAST, from the plan this run just executed:
+    # the prune above deleted the previous index with every other .dc.html, and a manifest
+    # that described the previous run would point the editor at files that are gone.
+    (out / "Main.dc.html").write_text(main_artboard(board, counts), encoding="utf-8")
+    (out / "canvas.json").write_text(json.dumps(canvas_manifest(plan), indent=2) + "\n", encoding="utf-8")
     if SUPPORT.exists():
         shutil.copy(SUPPORT, out / "support.js")
     else:
@@ -267,7 +345,9 @@ def write_canvas(board, ledger, out):
         "into the record by board_approve.py at approval. File naming: <section>--<candidate>--<Mobile|Desktop>.dc.html, with a\n"
         "candidate's `#` spelled `_` (a `#` breaks the file:// URL the editor and the thumb cutter load, and the design-canvas\n"
         "helper refuses `+`); the board maps it back. `_` is the one spelling on every surface outside the record.\n"
-        "The folder is rewritten on every run: a candidate the ledger withdrew is deleted, never left behind.\n", encoding="utf-8")
+        "The folder is rewritten on every run: a candidate the ledger withdrew is deleted, never left behind.\n"
+        "Main.dc.html (the record's index) and canvas.json (the design-skill manifest) are written by the same run —\n"
+        "nothing in this folder is hand-made, so nothing in it can go stale against the record.\n", encoding="utf-8")
     return {"files": files, "counts": counts}
 
 

@@ -6,3 +6,5 @@ into the record by board_approve.py at approval. File naming: <section>--<candid
 candidate's `#` spelled `_` (a `#` breaks the file:// URL the editor and the thumb cutter load, and the design-canvas
 helper refuses `+`); the board maps it back. `_` is the one spelling on every surface outside the record.
 The folder is rewritten on every run: a candidate the ledger withdrew is deleted, never left behind.
+Main.dc.html (the record's index) and canvas.json (the design-skill manifest) are written by the same run —
+nothing in this folder is hand-made, so nothing in it can go stale against the record.

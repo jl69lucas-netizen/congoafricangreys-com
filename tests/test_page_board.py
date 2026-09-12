@@ -5,6 +5,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import pageboard as PB
 
 
+from build_page_board import esc as BPB_esc      # the one None-safe escaper
+
 MIN_BOARD = {
     "meta": {"slug": "x", "page_type": "hub", "status": "draft", "research_as_of": "2026-09-12", "sources": []},
     "brief": {"goal": "g", "scope": "s", "gates": ["hardening"], "done": "d", "out_of_scope": [],
@@ -881,11 +883,12 @@ def test_canvas_writes_three_options_two_viewports_per_signature_section(tmp_pat
     ledger = {"pools": {"inventory": ["avail-a-grid", "avail-b-faceted", "bird-cards-row", "minibird-cards"]}, "pages": {}}
     result = BC.write_canvas(b, ledger, out=tmp_path)
     names = sorted(p.name for p in tmp_path.glob("*.dc.html"))
-    assert names == sorted([f"birds--{c}--{vp}.dc.html"
+    assert names == sorted(["Main.dc.html"] + [f"birds--{c}--{vp}.dc.html"
                             for c in ["avail-a-grid", "avail-b-faceted", "bird-cards-row"]
                             for vp in ("Mobile", "Desktop")])
-    assert result["counts"] == {"birds": 3} and len(result["files"]) == 6
+    assert result["counts"] == {"birds": 3} and len(result["files"]) == 6   # options only
     assert (tmp_path / "CONTRACT.md").exists() and (tmp_path / "support.js").exists()
+    assert (tmp_path / "canvas.json").exists()
     html = (tmp_path / "birds--avail-b-faceted--Desktop.dc.html").read_text()
     assert 'id="root" style="width:1440px' in html and "What Do We Have for Sale Right Now?" in html
     assert "<script src=\"./support.js\"></script>" in html
@@ -944,7 +947,9 @@ def test_canvas_warns_when_a_pool_is_short_or_empty(tmp_path, capsys):
     b = _approved(MIN_BOARD)
     result = BC.write_canvas(b, {"pools": {"inventory": []}, "pages": {}}, out=tmp_path)
     assert result["counts"] == {"birds": 0} and result["files"] == []
-    assert list(tmp_path.glob("*.dc.html")) == []
+    # The index is still written: a section with no option is exactly what the breeder
+    # needs to SEE, and an empty folder says nothing.
+    assert [p.name for p in tmp_path.glob("*.dc.html")] == ["Main.dc.html"]
     err = capsys.readouterr().err
     assert "birds" in err and "inventory" in err and "0 options" in err
 
@@ -964,7 +969,7 @@ def test_canvas_names_a_refresh_candidate_with_an_underscore_and_badges_the_artb
                                 "table": "table-a", "faq": "faq-a", "takeaway": ["k1"], "h6_prefixes": []}}}
     BC.write_canvas(b, ledger, out=tmp_path)
     names = sorted(p.name for p in tmp_path.glob("*.dc.html"))
-    assert names == sorted([f"x--{c}--{vp}.dc.html" for c in ("toc-a_refresh", "toc-c")
+    assert names == sorted(["Main.dc.html"] + [f"x--{c}--{vp}.dc.html" for c in ("toc-a_refresh", "toc-c")
                             for vp in ("Mobile", "Desktop")])
     assert "REFRESH" in (tmp_path / "x--toc-a_refresh--Mobile.dc.html").read_text()
     assert "REFRESH" not in (tmp_path / "x--toc-c--Mobile.dc.html").read_text()
@@ -1583,3 +1588,81 @@ def test_board_renders_an_excluded_shell_owner_when_only_owner_is_set(monkeypatc
         ["avail-b"], [{"component": "avail-a", "owner": "sibling-page"}]))
     html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
     assert "owned by sibling-page" in html
+
+
+# --- Task 12: the canvas writer owns Main.dc.html and canvas.json ------------------------
+
+def _two_section_board():
+    """MIN_BOARD plus a second signature section, so the manifest has more than one page."""
+    b = _approved(MIN_BOARD)
+    s2 = json.loads(json.dumps(b["sections"][0]))
+    s2.update({"id": "next", "n": 2, "heading": "Which Page Do You Need Next?",
+               "intent": "one link to every spoke", "framework": "AIDA", "shape": "nav",
+               "words": {"min": 300, "max": 450}})
+    s2["options"] = {"candidates": [], "excluded": [], "pick": None, "note": ""}
+    b["sections"].append(s2)
+    PB.validate_board(b)
+    return b
+
+
+_CANVAS_LEDGER = {"pools": {"inventory": ["avail-b", "avail-a-grid"], "toc": ["toc-a", "toc-c"]},
+                  "refresh_pools": ["toc"],
+                  "pages": {"sib": {"hero": "hero-a", "dial": "dial-1", "rail": "rail-a", "toc": "toc-a",
+                                    "table": "table-a", "faq": "faq-a", "takeaway": ["k1"], "h6_prefixes": []}}}
+
+
+def test_canvas_writes_a_main_index_artboard_for_the_whole_record(tmp_path):
+    """Nothing hand-made may live in the folder: the index the canvas opens on is written
+    from the record like every other artboard, so a heading edit cannot leave it stale."""
+    import board_canvas as BC
+    b = _two_section_board()
+    BC.write_canvas(b, _CANVAS_LEDGER, out=tmp_path)
+    main = (tmp_path / "Main.dc.html").read_text(encoding="utf-8")
+    for s in b["sections"]:
+        assert BPB_esc(s["heading"]) in main, s["id"]
+        assert BPB_esc(s["framework"]) in main and f'{s["words"]["min"]}' in main
+    assert b["h1"]["variants"][b["h1"]["recommended"]] in main
+    assert "data-dc-script" not in main          # a static index, not a scripted artboard
+
+
+def test_canvas_manifest_lists_exactly_the_artboards_on_disk(tmp_path):
+    import board_canvas as BC
+    BC.write_canvas(_two_section_board(), _CANVAS_LEDGER, out=tmp_path)
+    manifest = json.loads((tmp_path / "canvas.json").read_text(encoding="utf-8"))
+    assert {a["file"] for a in manifest["artboards"]} == {p.name for p in tmp_path.glob("*.dc.html")}
+    assert len(manifest["artboards"]) == len(list(tmp_path.glob("*.dc.html")))   # no dupes
+    assert manifest["launch"] == {"view": "canvas", "page": "page-1"}
+    assert [p["id"] for p in manifest["pages"]] == ["page-1", "page-2"]
+    assert manifest["pages"][0]["name"].startswith("1. ") and len(manifest["pages"][0]["name"]) <= 60
+    main = next(a for a in manifest["artboards"] if a["file"] == "Main.dc.html")
+    assert (main["page"], main["x"], main["y"], main["w"], main["h"]) == ("page-1", 0, 0, 1440, 1400)
+    assert {n["id"] for n in manifest["annotations"]} >= {"opt-birds-avail-b"}
+    assert all(n["w"] == 420 for n in manifest["annotations"])
+
+
+def test_canvas_manifest_spells_a_refresh_candidate_with_an_underscore(tmp_path):
+    """The manifest names files, and a file's `#` is spelled `_` — a manifest that carried
+    the record's `#` would point the editor at a path that does not exist."""
+    import board_canvas as BC
+    b = _two_section_board()
+    b["sections"][0]["shape"] = "nav"                    # draws from the toc pool, which refreshes
+    PB.validate_board(b)
+    BC.write_canvas(b, _CANVAS_LEDGER, out=tmp_path)
+    manifest = json.loads((tmp_path / "canvas.json").read_text(encoding="utf-8"))
+    files = [a["file"] for a in manifest["artboards"]]
+    assert any("toc-a_refresh" in f for f in files), files
+    assert not any("#" in f or "+" in f for f in files), files
+    assert any(n["id"] == "opt-birds-toc-a_refresh" for n in manifest["annotations"])
+
+
+def test_canvas_rewrite_keeps_the_index_and_the_manifest_consistent(tmp_path):
+    """The prune deletes every .dc.html — including the index — so a second run has to put
+    both back, and the manifest has to describe the run that just happened, not the one before."""
+    import board_canvas as BC
+    b = _two_section_board()
+    BC.write_canvas(b, _CANVAS_LEDGER, out=tmp_path)
+    BC.write_canvas(b, {"pools": {"inventory": ["avail-b"], "toc": []}, "pages": {}}, out=tmp_path)
+    manifest = json.loads((tmp_path / "canvas.json").read_text(encoding="utf-8"))
+    assert (tmp_path / "Main.dc.html").exists()
+    assert {a["file"] for a in manifest["artboards"]} == {p.name for p in tmp_path.glob("*.dc.html")}
+    assert not any("avail-a-grid" in a["file"] for a in manifest["artboards"])
