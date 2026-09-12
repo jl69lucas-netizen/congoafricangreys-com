@@ -79,12 +79,16 @@ def save_board(slug, board):
 
 
 def load_ontology():
+    if not ONTOLOGY.exists():
+        raise BoardError(f"no ontology: {ONTOLOGY} does not exist")
     ont = _read_json(ONTOLOGY)
     validate_ontology(ont)
     return ont
 
 
 def load_ledger():
+    if not LEDGER.exists():
+        raise BoardError(f"no component ledger: {LEDGER} does not exist")
     ledger = _read_json(LEDGER)
     validate_ledger(ledger)
     return ledger

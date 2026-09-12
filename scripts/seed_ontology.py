@@ -18,8 +18,18 @@ def slug(name):
 
 
 def catalog_entities():
-    out, cls = [], "Documentation"
+    """Rows of the catalog tables only. The catalog is the section under
+    `## Complete Entity Catalog` and it ends at the next H2 — tables further down the
+    skill (the page-type density table, for one) describe pages, not entities."""
+    out, cls, inside = [], "Documentation", False
     for line in CATALOG.read_text(encoding="utf-8").splitlines():
+        if line.startswith("## "):
+            if inside:
+                break
+            inside = line.strip() == "## Complete Entity Catalog"
+            continue
+        if not inside:
+            continue
         h = re.match(r"^### Category \d+ — (.+)$", line)
         if h:
             key = h.group(1).lower()
@@ -29,7 +39,8 @@ def catalog_entities():
         if not m or m.group(1).strip() in ("Primary Entity", "---------------") or m.group(1).startswith("-"):
             continue
         name = m.group(1).strip()
-        if name.startswith("[") or "$1,200" in name:        # MFS placeholders and the wrong Timneh floor
+        # MFS placeholders, and price rows — the LEDGER carries the real ranges with sources
+        if name.startswith("[") or name.startswith("$"):
             continue
         aliases = [a.strip() for a in m.group(2).split(",") if a.strip()]
         out.append({"id": slug(name), "name": name, "aliases": aliases, "class": cls,
@@ -94,11 +105,13 @@ def main():
         merged[eid] = {"id": eid, "name": name, "aliases": [], "class": "Commerce",
                        "authorization": "BLOCKED", "source": "CLAUDE.md rule 2", "owner_page": None}
     for eid, old in existing.items():                       # idempotent: keep earlier decisions
-        if eid in merged and old["authorization"] != "PROPOSED":
-            merged[eid]["authorization"] = old["authorization"]
-            merged[eid]["source"] = old["source"] or merged[eid]["source"]
-        merged[eid]["owner_page"] = old.get("owner_page") if eid in merged else None
-        merged.setdefault(eid, old)
+        if eid in merged:
+            if old["authorization"] != "PROPOSED":
+                merged[eid]["authorization"] = old["authorization"]
+                merged[eid]["source"] = old["source"] or merged[eid]["source"]
+            merged[eid]["owner_page"] = old.get("owner_page")
+        elif old["authorization"] != "PROPOSED":            # a decided entity the catalog never carried
+            merged[eid] = old                               # (board_approve.py adds these) — keep it
     ont = {"entities": sorted(merged.values(), key=lambda e: e["id"])}
     PB.validate_ontology(ont)
     PB.ONTOLOGY.write_text(json.dumps(ont, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

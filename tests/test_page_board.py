@@ -168,3 +168,16 @@ def test_ledger_facts_are_present_and_asserted():
               "ont:airport-cargo-185", "ont:home-delivery-350", "ont:psittacus-erithacus", "ont:psittacus-timneh",
               "ont:benjamin-home-raising-protocol", "ont:midland-socialization-method"]:
         assert i in ont and ont[i]["authorization"] == "ASSERTED", i
+
+
+def test_the_ontology_carries_no_page_type_or_price_range_rows():
+    ids = {e["id"] for e in PB.load_ontology()["entities"]}
+    assert ids.isdisjoint({"ont:page-type", "ont:homepage", "ont:comparison-page", "ont:location-page",
+                           "ont:price-page", "ont:variant-guide", "ont:1-500-3-500"})
+
+
+def test_load_ledger_raises_board_error_when_the_file_is_missing(tmp_path, monkeypatch):
+    monkeypatch.setattr(PB, "LEDGER", tmp_path / "component-ledger.json")
+    with pytest.raises(PB.BoardError) as e:
+        PB.load_ledger()
+    assert "does not exist" in str(e.value) and "component-ledger.json" in str(e.value)
