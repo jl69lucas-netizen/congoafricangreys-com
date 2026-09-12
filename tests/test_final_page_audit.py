@@ -144,3 +144,51 @@ if __name__ == "__main__":
             fails += 1; print(f"  FAIL {f.__name__}"); traceback.print_exc()
     print(f"\n{len(fns)-fails}/{len(fns)} passed")
     sys.exit(1 if fails else 0)
+
+
+# --- no_aggregateoffer: an aggregate a Product owns is not a stray (harness fix 2026-09-12) ---
+# The hub /african-grey-parrots-for-sale/ reported WARN → no_aggregateoffer while its graph
+# carried exactly the shape Google wants for a group listing: one Product whose `offers` is
+# an AggregateOffer, plus an ItemList of per-bird Product+Offer. The checker only asked
+# whether the string "AggregateOffer" appeared anywhere in the flattened type list.
+HUB_GRAPH_AGGREGATE = """
+<html><head><title>African Grey Parrots for Sale | C.A.Gs</title></head><body><main><h1>African Greys</h1>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"Product","name":"African Grey Parrot","offers":{"@type":"AggregateOffer","lowPrice":"1500","highPrice":"3500","offerCount":"6","priceCurrency":"USD"}},
+{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Product","name":"Bery","offers":{"@type":"Offer","price":"2300"}}}]},
+{"@type":"Organization","name":"C.A.Gs"}]}</script>
+<p>Ships nationwide: $185 airport, $350 home.</p></main></body></html>
+"""
+
+STRAY_AGGREGATE = """
+<html><head><title>Stray | C.A.Gs</title></head><body><main><h1>Stray</h1>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"Product","name":"One Bird","offers":{"@type":"Offer","price":"2300"}},
+{"@type":"AggregateOffer","lowPrice":"1500","highPrice":"3500"}]}</script>
+<p>Ships nationwide: $185 airport, $350 home.</p></main></body></html>
+"""
+
+
+def test_for_sale_hub_product_carrying_aggregateoffer_is_not_flagged():
+    r = A.audit_html("african-grey-parrots-for-sale", HUB_GRAPH_AGGREGATE, "for-sale")
+    assert "AggregateOffer" in r["schema_types"]          # it IS on the page
+    assert r["no_aggregateoffer"] is True                  # and it is not a defect there
+
+
+def test_for_sale_stray_aggregateoffer_is_still_flagged():
+    """An aggregate that belongs to no Product is a price claim nothing on the page owns."""
+    r = A.audit_html("african-grey-parrot-bird-eggs-for-sale-usa", STRAY_AGGREGATE, "for-sale")
+    assert r["no_aggregateoffer"] is False
+
+
+def test_bird_page_product_carrying_aggregateoffer_still_fails():
+    """A single-bird listing never aggregates, however well-formed the shape is: the FAIL
+    the bird profile raises is not weakened by the hub fix."""
+    r = A.audit_html("available/x", HUB_GRAPH_AGGREGATE, "bird")
+    assert r["no_aggregateoffer"] is False
+    assert r["_severity"]["no_aggregateoffer"] == "FAIL"
+
+
+def test_single_product_offer_page_passes_on_both_profiles():
+    for pt in ("bird", "for-sale"):
+        assert A.audit_html("available/roys", MINIMAL_BIRD, pt)["no_aggregateoffer"] is True, pt

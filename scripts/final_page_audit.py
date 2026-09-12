@@ -189,6 +189,10 @@ def audit_html(slug, html, page_type="interior"):
         try: blobs.append(json.loads(b))
         except Exception: valid=False
     types=[]; org_found=[False]
+    aggregates=[]; owned_aggregates=set()
+    def typelist(o):
+        tt = o.get("@type") if isinstance(o,dict) else None
+        return tt if isinstance(tt,list) else ([tt] if tt else [])
     def walk(o):
         if isinstance(o,dict):
             tt=o.get("@type")
@@ -197,6 +201,15 @@ def audit_html(slug, html, page_type="interior"):
             # @type is a list like ["LocalBusiness","PetStore"] (valid schema).
             tl=tt if isinstance(tt,list) else [tt]
             if any(x in ("Organization","LocalBusiness","PetStore") for x in tl): org_found[0]=True
+            if "AggregateOffer" in tl: aggregates.append(id(o))
+            # An AggregateOffer a Product declares as its own `offers` is that Product's
+            # price band — the shape a group or hub listing is supposed to carry. Record
+            # it as owned so the check below can tell it from a stray aggregate node.
+            if "Product" in tl:
+                offers=o.get("offers")
+                for off in (offers if isinstance(offers,list) else [offers]):
+                    if isinstance(off,dict) and "AggregateOffer" in typelist(off):
+                        owned_aggregates.add(id(off))
             for v in o.values(): walk(v)
         elif isinstance(o,list):
             for v in o: walk(v)
@@ -209,7 +222,16 @@ def audit_html(slug, html, page_type="interior"):
     r["faqpage_ok"] = flat.count("FAQPage") <= 1
     r["schema_types"] = ",".join(sorted(set(flat)))
     # --- bird-listing hard gates (page_type == "bird") ---
-    r["no_aggregateoffer"] = "AggregateOffer" not in flat
+    # Where the profile calls this a hard FAIL (a single bird listing, a comparison page),
+    # ANY AggregateOffer is a defect — those pages never aggregate, however well-formed
+    # the shape. Where it is a WARN (the for-sale cluster, whose group and hub pages own
+    # one), only an aggregate that belongs to no Product is: a price band nothing on the
+    # page claims. Charged to the harness 2026-09-12 — the hub carried a graph-level
+    # Product whose `offers` is an AggregateOffer, plus an ItemList of per-bird
+    # Product+Offer, and a flat type-name search called the correct shape a defect.
+    stray_aggregate = [a for a in aggregates if a not in owned_aggregates]
+    r["no_aggregateoffer"] = (not aggregates) if severity(page_type, "no_aggregateoffer") == "FAIL" \
+                             else not stray_aggregate
     # Fail only on an actual health CLAIM about PBFD/polyoma (tested clear / negative /
     # free of), not a mere mention or a denial — those would over-match (review finding).
     r["no_pbfd_claim"] = not re.search(
