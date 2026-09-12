@@ -362,3 +362,20 @@ select[aria-invalid="true"], textarea[aria-invalid="true"]{ border-color:#b04228
   .cta-form > .form-side { display: flex; flex-direction: column; }
   .cta-form > .form-side .form-birds { margin-top: auto; margin-bottom: auto; }
 }
+
+/* Same compaction for the kit's older two-pane form (congo · timneh · eggs · adoption-cost):
+   there the <form> itself carries .cta-form and sits in .form-wrap beside aside.form-side.
+   Comparison pages use form.cta-form without .form-wrap and are left alone on purpose. */
+@media (min-width: 981px) {
+  .form-wrap > form.cta-form { max-width: none; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .7rem .8rem; align-content: start; }
+  .form-wrap > form.cta-form > * { grid-column: 1 / -1; min-width: 0; }
+  .form-wrap > form.cta-form > .form-2col { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .7rem .8rem; }
+  .form-wrap > form.cta-form > fieldset.fset:nth-of-type(1),
+  .form-wrap > form.cta-form > fieldset.fset:nth-of-type(2) { grid-column: span 1; }
+  .form-wrap > form.cta-form .dlv { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .5rem .6rem; }
+  .form-wrap > form.cta-form textarea { min-height: 0; }
+  .form-wrap > form.cta-form textarea[name="surrender_details"] { height: 3.4rem; }
+  .form-wrap > form.cta-form textarea[name="message"] { height: 5.2rem; }
+  .form-wrap > .form-side { display: flex; flex-direction: column; align-self: stretch; }
+  .form-wrap > .form-side .fs-ship { margin-top: auto !important; }
+}
