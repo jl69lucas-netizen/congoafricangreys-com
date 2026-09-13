@@ -1,4 +1,5 @@
 ---
+import '../styles/fonts.css';
 import '../styles/global.css';
 import '../styles/direction-d.css';
 import Header from '../components/Header.astro';
@@ -62,6 +63,10 @@ const freshnessJson = emitFreshness ? JSON.stringify({
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
+  <!-- charset first: it must sit in the first 1024 bytes (Lighthouse `charset`); the GA and
+       form scripts below used to push it past that. -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- Google tag (gtag.js) — deferred off the critical path (Lighthouse: reduce unused JavaScript).
        gtag.js (~155 KiB) only fetches after first user interaction OR a short idle fallback,
        so it no longer blocks/loads with the initial page. dataLayer calls are queued and replayed. -->
@@ -96,8 +101,6 @@ const freshnessJson = emitFreshness ? JSON.stringify({
     import '../scripts/form-enhance.js';
   </script>
 
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="robots" content={robots} />
@@ -125,27 +128,12 @@ const freshnessJson = emitFreshness ? JSON.stringify({
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content="https://congoafricangreys.com/og-twitter.png" />
 
-  <!-- Fonts — preconnect + non-render-blocking load (media=print swap). Direction D
-       renders exactly two families: Newsreader for headings and display accents,
-       IBM Plex Sans for everything else. Lora and Sora were dropped 2026-07-26 —
-       the --font-lora / --font-sora tokens in global.css now point at these two, so
-       the ~50 page rules consuming them are unchanged. That removes 2 of 6 woff2
-       files from every page on the site.
-       display=swap means fallback text paints immediately, then swaps. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
-    media="print"
-    onload="this.media='all'"
-  />
-  <noscript>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
-    />
-  </noscript>
+  <!-- Fonts — self-hosted in src/styles/fonts.css (2026-09-13). Direction D renders two
+       families: Newsreader for headings and display accents, IBM Plex Sans for everything
+       else. Plex is preloaded because every page paints body text above the fold; the two
+       Newsreader files are not — preloading 200 KB would compete with the LCP hero image,
+       and the generated metric-matched fallback keeps their swap from shifting layout. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-sans.woff2" crossorigin />
 
   <!-- Structured data -->
   {schemaJson && <script type="application/ld+json" set:html={schemaJson} />}
