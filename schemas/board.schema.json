@@ -73,7 +73,7 @@
       "type": "array", "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "n", "heading", "intent", "category", "framework", "words", "shape", "keywords", "entities", "tree", "images", "links", "options"],
+        "required": ["id", "n", "heading", "intent", "category", "group", "why", "why_source", "framework", "words", "shape", "keywords", "entities", "tree", "images", "links", "options"],
         "additionalProperties": false,
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
@@ -81,6 +81,9 @@
           "heading": {"type": "string", "minLength": 1},
           "intent": {"type": "string"},
           "category": {"enum": ["A", "B", "C"]},
+          "group": {"enum": ["MANDATORY", "COMPETITOR-BASED", "SUGGESTED-RECOMMENDED"]},
+          "why": {"type": "string", "minLength": 20, "maxLength": 400},
+          "why_source": {"type": "string", "minLength": 1, "maxLength": 300},
           "framework": {"enum": ["EEBP", "FAB", "QAB", "PAS", "BAB", "PDB", "AIDA", "EBD", "HSS"]},
           "words": {"type": "object", "required": ["min", "max"], "additionalProperties": false,
                     "properties": {"min": {"type": "integer", "minimum": 0}, "max": {"type": "integer", "minimum": 0}}},

@@ -26,7 +26,11 @@ MIN_BOARD = {
     },
     "sections": [{
         "id": "birds", "n": 1, "heading": "What Do We Have for Sale Right Now?", "intent": "inventory first",
-        "category": "A", "framework": "EEBP", "words": {"min": 400, "max": 600}, "shape": "inventory",
+        "category": "A", "framework": "EEBP",
+        "group": "MANDATORY",
+        "why": "A for-sale hub that shows no birds above the fold reads as a directory, not a breeder.",
+        "why_source": "docs/research/for-sale-keywords-2026-07.md",
+        "words": {"min": 400, "max": 600}, "shape": "inventory",
         "keywords": {"primary": ["african grey parrots for sale"], "lsi": [], "longtail": [], "brand": [], "geo": []},
         "entities": ["ont:psittacus-erithacus"],
         "tree": [{"level": 3, "heading": "Our Congos", "intent": "", "children": [
@@ -2052,3 +2056,29 @@ def test_gate_warns_on_a_signature_section_with_no_image_and_fails_on_a_shared_a
                 if x["check"] == "asset-alt-duplicate"]
     assert len(findings) == 1
     assert "hero, card-01, card-02" in findings[0]["msg"]
+
+
+def test_section_why_is_required_c_is_always_ours_and_competitor_names_a_url():
+    for mutate in (lambda s: s.pop("why"), lambda s: s.update(why="too short"),
+                   lambda s: s.update(group="OPTIONAL")):
+        bad = json.loads(json.dumps(MIN_BOARD)); mutate(bad["sections"][0])
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(bad)
+    bad = json.loads(json.dumps(MIN_BOARD)); bad["sections"][0]["category"] = "C"
+    with pytest.raises(PB.BoardError, match="SUGGESTED-RECOMMENDED"):
+        PB.validate_board(bad)
+    bad = json.loads(json.dumps(MIN_BOARD)); bad["sections"][0]["group"] = "COMPETITOR-BASED"
+    with pytest.raises(PB.BoardError, match="URL"):
+        PB.validate_board(bad)
+    ok = json.loads(json.dumps(MIN_BOARD))
+    ok["sections"][0].update(group="COMPETITOR-BASED",
+                             why_source="https://www.birdbreeders.com/birds/category/african-grey (ranks first with a grid)")
+    PB.validate_board(ok)
+
+
+def test_distribution_block_shows_group_and_grounded_why():
+    import build_page_board as BPB
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "**Why each section is here**" in html
+    assert "reads as a directory, not a breeder." in html and "for-sale-keywords-2026-07.md" in html
+    assert "[A · mandatory · inventory" in html                  # the outline line carries the group

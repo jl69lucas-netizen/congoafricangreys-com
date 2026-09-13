@@ -105,7 +105,7 @@ def outline_block(board, hits):
     h1 = PB.all_headings(board)[0][1]
     lines = [f"H1  {esc(h1)}" + flag(h1, hit_by)]
     for s in board["sections"]:
-        lines.append(f"├─ H2 {s['n']:02d}  {esc(s['heading'])}   [{s['category']} · {s['shape']} · {s['framework']} · {s['words']['min']}–{s['words']['max']}w]" + flag(s["heading"], hit_by))
+        lines.append(f"├─ H2 {s['n']:02d}  {esc(s['heading'])}   [{s['category']} · {GROUP_SHORT[s['group']]} · {s['shape']} · {s['framework']} · {s['words']['min']}–{s['words']['max']}w]" + flag(s["heading"], hit_by))
 
         def walk(nodes, depth):
             for n in nodes:
@@ -211,6 +211,9 @@ def kit_cards(board, ledger, thumbs, slug):
 
 
 STANDARD_FORM_DEFAULT = "kit two-column inquiry form (field contract by slug)"
+
+
+GROUP_SHORT = {"MANDATORY": "mandatory", "COMPETITOR-BASED": "competitor", "SUGGESTED-RECOMMENDED": "ours"}
 
 
 def standard_default(section, board):
@@ -320,8 +323,12 @@ def render(board, ont, ledger, live, thumbs, slug):
     t = d["totals"]
     rows.append(["**totals**", t["primary"], t["lsi"], t["longtail"], t["brand"], t["geo"], f"{t['words_min']}–{t['words_max']}"])
     c = d["h_counts"]
+    why_rows = [[f"{s['n']:02d} {md(s['heading'])}", md(s["group"]), md(s["framework"]), md(s["why"]), md(s["why_source"])]
+                for s in board["sections"]]
     parts.append(("4. Distribution", md_table(["Section", "Primary", "LSI", "Long-tail", "Brand", "Geo", "Words"], rows)
-                  + f"\n\nHeadings: H1 {c['h1']} · H2 {c['h2']} · H3 {c['h3']} · H4 {c['h4']} · H5 {c['h5']} · H6 {c['h6']}. Counts are ceilings, not floors."))
+                  + f"\n\nHeadings: H1 {c['h1']} · H2 {c['h2']} · H3 {c['h3']} · H4 {c['h4']} · H5 {c['h5']} · H6 {c['h6']}. Counts are ceilings, not floors."
+                  + "\n\n**Why each section is here**\n\n"
+                  + md_table(["Section", "Group", "Framework", "Why", "Source"], why_rows)))
 
     by_id = {e["id"]: e for e in ont["entities"]}
     ent_rows = []

@@ -90,6 +90,14 @@ def validate_board(board):
     for sec in board["sections"]:
         if sec["words"]["min"] > sec["words"]["max"]:
             raise BoardError(f"section {sec['id']}: words.min {sec['words']['min']} > words.max {sec['words']['max']}")
+        if sec["category"] == "C" and sec["group"] != "SUGGESTED-RECOMMENDED":
+            # The pipeline review defines C as "the sections that are ours alone" — the one
+            # letter with a written meaning, so the one mapping the record may not contradict.
+            raise BoardError(f"section {sec['id']}: category C is a section that is ours alone, so its group is "
+                             f"SUGGESTED-RECOMMENDED, not {sec['group']}")
+        if sec["group"] == "COMPETITOR-BASED" and not re.search(r"https?://", sec["why_source"]):
+            raise BoardError(f"section {sec['id']}: a COMPETITOR-BASED section cites the competitor it answers — "
+                             "why_source carries no URL")
         ids.append(sec["id"])
         ns.append(sec["n"])
     for label, values in (("id", ids), ("n", ns)):
