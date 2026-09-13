@@ -1,6 +1,6 @@
 ## 1. Verdict
 
-**Code side: done and live. Mobile Performance 100 is blocked by one Cloudflare setting only you can change.**
+**Code side: done and live. The Cloudflare tag gateway is now off. PageSpeed's own confirmation is the last step.**
 
 | Page | A11y | Best Practices | SEO | Agentic | CLS | Performance |
 |---|---|---|---|---|---|---|
@@ -13,7 +13,7 @@ Measured with Lighthouse 13.4.1 (the version PageSpeed runs), 3 runs each, mobil
 Why Performance is not claimed yet:
 - **Desktop 99** locally. The only remaining rows are compression and cache headers, which the local test server lacks and Cloudflare provides.
 - **Mobile** cannot be judged on this Mac: its CPU benchmark (~490) under 4× throttle reads ~78 whatever the page does.
-- **Live mobile** still carries 468 ms of blocking script from Cloudflare's Google tag gateway (section 8).
+- **Live mobile** carried 468 ms of blocking script from Cloudflare's Google tag gateway. The gateway was switched off afterwards, and the live page now loads no injected script (section 8).
 - PageSpeed's free daily quota was spent before this session, so the Google-side confirmation waits for it to reset.
 
 ## 2. What PageSpeed flagged, and what it actually was
@@ -108,16 +108,16 @@ Traps worth keeping:
 - **Workaround until it's fixed:** type the full name (e.g. `/cag-perf-gate`) or start a fresh session.
 - **Separate real defect found:** a skill invoked *with arguments* has `$1`-style tokens replaced. The for-sale builder's "`$1,500` floor price" rendered as "`invoke,500`" this session. The new perf skill avoids dollar-digit text. Other skills that quote prices this way may garble the same way when called with arguments (only the for-sale builder was observed).
 
-## 8. Open: your action, then the PageSpeed check
+## 8. Open: the PageSpeed check
 
-1. **Turn off Cloudflare's Google tag gateway** (only you can; it is an account setting):
-   - Cloudflare dashboard → **Tag Management → Google Tag Gateway**;
-   - turn it off for congoafricangreys.com;
-   - **Caching → Configuration → Purge Everything**.
+1. **Done: Cloudflare's Google tag gateway is off.** At your request (2026-09-13), it was switched off in Chrome: Web tag management → congoafricangreys.com → Google Tag Gateway → off, and Cloudflare confirmed "Config disabled successfully". Purge Everything was then accepted.
 
-   Google Analytics keeps working through the site's own delayed loader. This removes `/70de/`: the 79 KiB of unused JavaScript, the forced reflow, the missing source map and ~470 ms of mobile blocking time.
+   Verified afterwards:
+   - the live page loads **no edge-injected script** (`perf_audit.py --live` → EDGE-INJECTED: none);
+   - the `/70de/` unused-JavaScript row is gone;
+   - Google Analytics still loads through the site's own delayed loader: the tag initialised and a measurement request fired after a scroll.
 2. **Confirm on PageSpeed** once PageSpeed's free quota resets:
    - `python3 scripts/perf_audit.py <slug> --psi --mobile` and `--psi` for the three pages;
    - or run pagespeed.web.dev by hand.
 
-   Those records close the board's `perf-psi-pending` warnings. If mobile Performance still reads under 100 after the toggle, the failing rows in that record are the next fix list.
+   Those records close the board's `perf-psi-pending` warnings. If mobile Performance still reads under 100, the failing rows in that record are the next fix list. A local mobile run right after the toggle is not evidence either way: it ran while Chrome was busy on the same Mac, and main-thread time doubled.
