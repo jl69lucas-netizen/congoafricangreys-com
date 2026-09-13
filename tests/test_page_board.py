@@ -46,7 +46,8 @@ MIN_BOARD = {
                                 "library_row": "Authority — Government / Legal"}]},
         "options": {"candidates": ["avail-b"], "excluded": [], "pick": None, "note": ""}}],
     "tuple": {"hero": "hero-a", "dial": "dial-1", "rail": "rail-a", "toc": "t1", "takeaway": ["k1"],
-              "table": "table-a", "faq": "faq-a", "h6_prefixes": ["Aviary Note:", "From the Book:", "Ask Us:"]},
+              "table": "table-a", "faq": "faq-a", "stepper": "", "newsletter": {"after": "", "variant": ""},
+              "h6_prefixes": ["Aviary Note:", "From the Book:", "Ask Us:"]},
     "assets": [{"slot": "hero", "kind": "photo", "w": 1280, "h": 960, "required": True, "status": "missing", "file": None, "alt": ""}],
     "approval": None,
 }
@@ -2134,3 +2135,28 @@ def test_keyword_types_tuple_labels_and_schema_name_the_same_arrays():
     bad = json.loads(json.dumps(MIN_BOARD)); bad["sections"][0]["keywords"]["voice"] = []
     with pytest.raises(PB.BoardError):
         PB.validate_board(bad)
+
+
+# --- Task 20: the whole tuple on the kit strip ------------------------------------------
+
+def test_tuple_newsletter_names_a_real_section_and_sets_both_fields_together():
+    for nl in ({"after": "birds", "variant": ""}, {"after": "", "variant": "A"},
+               {"after": "shipping", "variant": "A"}, {"after": "birds", "variant": "D"}):
+        bad = json.loads(json.dumps(MIN_BOARD)); bad["tuple"]["newsletter"] = nl
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(bad)
+    ok = json.loads(json.dumps(MIN_BOARD)); ok["tuple"]["newsletter"] = {"after": "birds", "variant": "B"}
+    PB.validate_board(ok)
+
+
+def test_kit_strip_shows_takeaway_table_stepper_and_the_newsletter():
+    import build_page_board as BPB
+    b = _approved(MIN_BOARD)
+    b["tuple"].update(takeaway=["k1", "k2"], newsletter={"after": "birds", "variant": "B"})
+    html = BPB.render(b, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    for shell in ("table-a", "k1", "k2"):
+        assert f'<div class="nothumb">{shell}</div>' in html
+    assert "this page wears no stepper" in html
+    assert "after 01 · What Do We Have for Sale Right Now?" in html and "variant B" in html
+    b["tuple"]["newsletter"] = {"after": "", "variant": ""}
+    assert "this page places no newsletter" in BPB.render(b, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")

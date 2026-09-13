@@ -104,6 +104,12 @@ def validate_board(board):
         dupes = sorted({v for v in values if values.count(v) > 1})
         if dupes:
             raise BoardError(f"duplicate section {label}: {', '.join(str(d) for d in dupes)}")
+    nl = board["tuple"]["newsletter"]
+    if bool(nl["after"]) != bool(nl["variant"]):
+        raise BoardError("tuple.newsletter: `after` and `variant` are set together or not at all "
+                         f"(after={nl['after']!r}, variant={nl['variant']!r})")
+    if nl["after"] and nl["after"] not in ids:
+        raise BoardError(f"tuple.newsletter.after {nl['after']!r} is not a section id ({', '.join(ids)})")
     brief = board["brief"]
     names = [a["name"] for a in brief["angles"]]
     dupes = sorted({n for n in names if names.count(n) > 1})

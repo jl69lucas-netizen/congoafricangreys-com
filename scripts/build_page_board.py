@@ -181,7 +181,7 @@ def option_cards(section, ledger, slug, thumbs):
 
 
 
-KIT_AXES = ("hero", "dial", "rail", "toc", "faq")
+KIT_AXES = ("hero", "dial", "rail", "toc", "table", "stepper", "faq")
 
 
 def kit_thumb(component_id, thumbs):
@@ -196,31 +196,42 @@ def kit_thumb(component_id, thumbs):
     return None
 
 
-def kit_cards(board, ledger, thumbs, slug):
-    """The five chrome shells this page will wear — shown, never offered. Block 6 picks per
-    section; this is the page-level tuple the author already chose against the ledger, and
-    a radio here would invite a choice the ledger rules decide, not the sitting."""
-    t = board["tuple"]
-    owned = PB.owned_components(ledger, exclude_slug=slug)
-    cards = []
-    for axis in KIT_AXES:
-        v = (t.get(axis) or "").strip()
-        if not v:
-            cards.append(f'<div class="opt off"><span class="pill">{esc(axis)}</span>'
-                         f'<div class="nothumb">none</div>'
-                         f'<span class="why">this page wears no {esc(axis)}</span></div>')
-            continue
-        base = PB.base_of(v)
-        delta = v.split("#", 1)[1].strip() if "#" in v else ""
-        th = kit_thumb(v, thumbs)
-        img = (f'<img src="{esc(th)}" alt="{esc(base)} — the {esc(axis)} this page wears">'
-               if th else f'<div class="nothumb">{esc(base)}</div>')
-        owners = owned.get(v) or owned.get(base) or []
-        cards.append(
-            f'<div class="opt"><span class="pill">{esc(axis)}</span>{img}<b>{esc(base)}</b>'
+def _kit_card(axis, v, owned, thumbs):
+    """One shell card. An empty axis is shown as worn-by-nobody rather than dropped, so a
+    page without a stepper says so instead of looking like a strip with a card missing."""
+    if not v:
+        return (f'<div class="opt off"><span class="pill">{esc(axis)}</span><div class="nothumb">none</div>'
+                f'<span class="why">this page wears no {esc(axis)}</span></div>')
+    base = PB.base_of(v)
+    delta = v.split("#", 1)[1].strip() if "#" in v else ""
+    th = kit_thumb(v, thumbs)
+    img = (f'<img src="{esc(th)}" alt="{esc(base)} — the {esc(axis)} this page wears">'
+           if th else f'<div class="nothumb">{esc(base)}</div>')
+    owners = owned.get(v) or owned.get(base) or []
+    return (f'<div class="opt"><span class="pill">{esc(axis)}</span>{img}<b>{esc(base)}</b>'
             + (f'<span class="pill">refresh: {esc(delta)}</span>' if delta else "")
             + f'<span class="why">{"also worn by " + esc(", ".join(owners)) if owners else "new to the cluster"}'
               "</span></div>")
+
+
+def kit_cards(board, ledger, thumbs, slug):
+    """Every tuple axis this page wears (brief §13): seven shells, each takeaway card, and the
+    newsletter placement — shown, never offered. Block 6 picks per section; the tuple is the
+    author's decision against the ledger, and a radio here would invite a choice the ledger
+    rules decide, not the sitting."""
+    t = board["tuple"]
+    owned = PB.owned_components(ledger, exclude_slug=slug)
+    cards = [_kit_card(axis, (t.get(axis) or "").strip(), owned, thumbs) for axis in KIT_AXES]
+    cards += [_kit_card("takeaway", k.strip(), owned, thumbs) for k in (t.get("takeaway") or [""])]
+    nl = t["newsletter"]
+    if nl["after"]:
+        sec = next(s for s in board["sections"] if s["id"] == nl["after"])
+        cards.append(f'<div class="opt"><span class="pill">newsletter</span><div class="nothumb">variant {esc(nl["variant"])}</div>'
+                     f'<b>after {sec["n"]:02d} · {esc(sec["heading"])}</b>'
+                     '<span class="why">kit §11 clutch-alert signup, placed in context</span></div>')
+    else:
+        cards.append('<div class="opt off"><span class="pill">newsletter</span><div class="nothumb">none</div>'
+                     '<span class="why">this page places no newsletter</span></div>')
     return cards
 
 
