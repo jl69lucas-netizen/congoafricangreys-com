@@ -223,7 +223,7 @@ Develop 100+ keyword variations across these categories **FOR EACH STATE**:
 - "nationwide African Grey parrot shipping"
 - "African Grey parrot [State] airports IATA"
 
-### C. Entity Optimization (150+ Entities Required PER STATE)
+### C. Entity Optimization (95–105 Distinct Entities PER STATE, Each Once — Rule 57 as of 2026-09-09)
 
 #### Entity Categories to Include:
 
@@ -1294,7 +1294,7 @@ Before finalizing, verify:
 7. **Verify state bird import rules** — apply standard block + any state-specific notes
 8. **Create meta elements** (title + description with 3 alternatives each)
 9. **Write all 22 sections** following the structure above — CITES language in every section
-10. **Integrate 150+ entities** naturally throughout
+10. **Integrate 95–105 distinct entities**, each said once where load-bearing (Rule 57, 2026-09-09)
 11. **Include 50+ internal links** and **50+ external links**
 12. **Provide 3 alternative header options** for H1-H3 headers
 13. **Verify word count** (4,500+ words)

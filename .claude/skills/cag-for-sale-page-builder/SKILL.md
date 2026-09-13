@@ -58,7 +58,7 @@ Conversational Q&A style (What/How/Is/Can/Where), per the Heading Hierarchy Outl
 85–112 **DIFFERENT** entities per page (birds by name, Midland/TX geo, CITES Appendix I, USDA AWA, DNA sexing labs, PBFD/Polyomavirus PCR, Delta/United/American cargo, IATA LAR, pellet brands, avian-vet terms) — each mentioned a natural number of times. The MFS log documents the failure mode: business name in every sentence = unreadable, unrankable. Targets: brand 5–10×, full location 1–2× + city/state 5–8×, each bird named in its card + 1–2 body mentions. All health/credential entities bounded by the **Verified-Claim Ledger**.
 
 ### 2e. Meta
-Use the CAG 2 long formats (Title ≤205 · Desc F1 ≤185 / F2 ≤300) — NOT the MFS 275-char format. 3 sets per page (Educational / Benefit-Solution / Transactional-Urgency), one marked (Recommended) with why + trade-off. Front-load primary keyword; include real price floor, real credentials, branded ending.
+Use Format 1 only: one-clause title ≤70 chars, no pipes, desc ≤160 (2026-09-09; the ≤205 / F2 ≤300 long formats are retired) — NOT the MFS 275-char format. 3 sets per page (Educational / Benefit-Solution / Transactional-Urgency), one marked (Recommended) with why + trade-off. Front-load primary keyword; include real price floor, real credentials, branded ending.
 
 ### 2f. Counter snippets
 8 per page, <4 words, number-led, Ledger-verified only (e.g. "12+ Yrs Aviary" · "100% CITES Papered" · "$1,500 Floor Price" · "24h Reply" · "0 Wild-Caught"). NEVER fabricated counts (no fake "184 families", no fake ratings).
