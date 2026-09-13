@@ -20,6 +20,7 @@ MIN_BOARD = {
               "tool": {"pick": "none",
                        "evidence": "No top-10 result for the head term ships a calculator or quiz, and the fan-out has no 'calculate' query.",
                        "trade_off": ""},
+              "schema": {"types": ["AggregateOffer", "FAQPage"], "offer_model": "aggregate-offer"},
               },
     "h1": {"variants": ["a", "b", "c", "d", "e"], "recommended": 0, "pick": None},
     "meta_set": {
@@ -2268,3 +2269,39 @@ def test_board_renders_the_tool_decision():
     import build_page_board as BPB
     html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
     assert "**Tool.** none — evidence: No top-10 result for the head term" in html
+
+
+def test_schema_plan_ties_offer_model_to_its_types():
+    for sch in ({"types": ["AggregateOffer"], "offer_model": "product-offer-per-bird"},
+                {"types": ["Offer", "FAQPage"], "offer_model": "none"},
+                {"types": ["FAQPage"], "offer_model": "aggregate-offer"},
+                {"types": ["faqpage"], "offer_model": "none"}):
+        bad = json.loads(json.dumps(MIN_BOARD)); bad["brief"]["schema"] = sch
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(bad)
+    ok = json.loads(json.dumps(MIN_BOARD))
+    ok["brief"]["schema"] = {"types": ["Product", "Offer", "FAQPage"], "offer_model": "product-offer-per-bird"}
+    PB.validate_board(ok)
+
+
+def test_release_gate_reads_json_ld_from_the_built_page(tmp_path, monkeypatch):
+    page = tmp_path / "x" / "index.html"
+    page.parent.mkdir()
+    page.write_text('<script type="application/ld+json">{"@graph":[{"@type":"Product","offers":{"@type":"AggregateOffer"}}]}</script>'
+                    '<script type="application/ld+json">{broken</script>', encoding="utf-8")
+    monkeypatch.setattr(PB, "DIST", tmp_path)
+    assert PB.dist_schema_types("x") == ({"Product", "AggregateOffer"}, 1)
+    b = _approved(MIN_BOARD)
+    schema_rows = lambda stage: sorted((x["check"], x["msg"].split(" ")[0]) for x in
+                                       PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage=stage)
+                                       if x["check"].startswith("schema-"))
+    assert schema_rows("build") == []
+    assert schema_rows("release") == [("schema-planned-missing", "FAQPage"), ("schema-unparsed", "1")]
+    monkeypatch.setattr(PB, "DIST", tmp_path / "nowhere")
+    assert [c for c, _ in schema_rows("release")] == ["schema-examined-zero"]
+
+
+def test_board_renders_the_schema_plan():
+    import build_page_board as BPB
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "**Schema plan.** offer model aggregate-offer; types: AggregateOffer, FAQPage." in html

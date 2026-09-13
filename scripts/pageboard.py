@@ -133,6 +133,13 @@ def validate_board(board):
     tool = brief["tool"]
     if tool["pick"].strip().lower() != "none" and not tool["trade_off"].strip():
         raise BoardError(f"brief.tool: {tool['pick']!r} is a real tool and records no trade_off (§14)")
+    sch = brief["schema"]
+    types = set(sch["types"])
+    need = {"product-offer-per-bird": {"Product", "Offer"}, "aggregate-offer": {"AggregateOffer"}, "none": set()}[sch["offer_model"]]
+    if not need <= types:
+        raise BoardError(f"brief.schema: offer_model {sch['offer_model']} needs {', '.join(sorted(need - types))} in types")
+    if sch["offer_model"] == "none" and types & {"Offer", "AggregateOffer"}:
+        raise BoardError("brief.schema: offer_model none, but types name an Offer — a page that sells nothing marks up no offer")
     lib = library_urls()
     if lib:
         for sec in board["sections"]:
@@ -434,6 +441,36 @@ def cta_findings(board):
             out.append(("cta-gap", f"sections {', '.join(ids)} run ~{run} words with no CTA — the plan allows at most {cap}"))
         run, ids = 0, []
     return out
+
+
+_LD_JSON = re.compile(r'<script[^>]+type="application/ld\+json"[^>]*>(.*?)</script>', re.S | re.I)
+
+
+def dist_schema_types(slug, dist=None):
+    """(types, unparsed) for the built page: every @type anywhere in its JSON-LD, nested
+    offers and @graph members included, and the count of blocks that do not parse. None when
+    the page is not built. DIST is read at call time, so a test can point it elsewhere."""
+    root = pathlib.Path(DIST if dist is None else dist)
+    page = root / "index.html" if slug == "index" else root / slug / "index.html"
+    if not page.exists():
+        return None
+    types, unparsed = set(), 0
+
+    def walk(o):
+        if isinstance(o, dict):
+            t = o.get("@type")
+            types.update([t] if isinstance(t, str) else [x for x in t or [] if isinstance(x, str)])
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    for blk in _LD_JSON.findall(page.read_text(encoding="utf-8", errors="ignore")):
+        try:
+            walk(json.loads(blk))
+        except json.JSONDecodeError:
+            unparsed += 1
+    return types, unparsed
 
 
 class _Headings(DUP.Text):
@@ -792,4 +829,14 @@ def gate_findings(board, ont, ledger, live, stage="build"):
         for a in board["assets"]:
             if a["required"] and a["status"] != "baked":
                 add("asset-required-missing", "FAIL", f"required slot {a['slot']} ({a['kind']} {a['w']}x{a['h']}) is {a['status']}")
+        got = dist_schema_types(slug)
+        if got is None:
+            add("schema-examined-zero", "FAIL", f"no built page for {slug} — the schema plan examined nothing")
+        else:
+            found, unparsed = got
+            for tname in board["brief"]["schema"]["types"]:
+                if tname not in found:
+                    add("schema-planned-missing", "FAIL", f"{tname} is in the schema plan but not in the built page's JSON-LD")
+            if unparsed:
+                add("schema-unparsed", "FAIL", f"{unparsed} JSON-LD block(s) on the built page do not parse")
     return f
