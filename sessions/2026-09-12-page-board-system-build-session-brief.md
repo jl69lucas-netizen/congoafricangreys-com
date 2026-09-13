@@ -138,3 +138,30 @@ Tests 155 → 172. Final whole-implementation review: **Ready** (apply_approval 
 **For the re-approval sitting (both boards):** meta picks; hub §7 pick/tuple alignment; the new real findings — hub one CTA per ~1,683 words with gaps which→papers ~2,275 and next+faq ~1,475, hub `next` has no image; near-me one CTA per ~935 words, gap arrival+faq ~1,525. Neither page has a tool (§14 says one is required unless the page type does not support it) — a question for the sitting, not a record error.
 
 **Open flags added (from the final review, relevant before the location boards):** `cadence.min` is validated but never gated (no over-dense CTA warning); "no section carries a CTA" applies to every page type — revisit for any location board type without a CTA; `brief.cta.destination` is not checked against a section id; `H.escape` inside `<…>` autolinks could show `&amp;` for a URL with `&`; the release schema check reads whatever dist/ holds, so it is only as fresh as the last build. The location-wave direction (groups of 5–6, own components per group, Firecrawl component sweep first, no component shared with any other page family) is in memory `project_location_cluster_wave_direction`.
+
+## 2026-09-13 close: findings fixed, resume point
+
+**Shipped `664f34e4` (live 200, IndexNow 200), breeder-approved findings:**
+- **Hub:** 8 reserve CTAs, ~631 words per CTA; the section-end tickets now reserve instead of hopping to the next section.
+- **Hub:** a photo in "next" (`african-greys-on-a-feeding-perch-hub`, from assets/brand).
+- **Hub tool:** "What You Pay, and When".
+- **Near-me:** 7 reserve CTAs, ~668 words per CTA.
+- **Near-me tool:** "Route finder" (state → route, counter, cost, metro pages).
+
+Records stamped from dist/; both boards republished. Board gate rows are only approval-hash + meta-no-pick; the hub also carries entity-proposed ×3 and pick-tuple-mismatch.
+
+**Caught by gates and fixed before deploy:**
+- 11.84px eyebrow labels (now 0.8rem).
+- Near-me Midland budget at 9/8 (the finder says "MAF, our airport").
+- Finder `<dt>` labels quieter than their values.
+
+A render NAV flake (near-me @1280, `#mt-dallas`, 1 fail then 2 passes) is being fixed in a separate background task.
+
+**Resume here next session:**
+1. **The breeder's re-approval sitting on both boards:** meta picks; hub §7 tuple → `toc-t3-boarding-pass#spoke-index`. Then `read_db` → `board_approve.py` both → `board_gate.py` 0 FAIL.
+2. **Location Cluster Wave, waiting on the breeder's location `.md`.**
+   - No location page has been built on the new system; the 39 live pages are legacy.
+   - **All location components are designed in Claude Design** (breeder ruling 2026-09-13).
+   - Groups of 5–6, each with its own kit; a Firecrawl competitor component-type sweep comes first.
+   - Zero components shared with any other family, enforced by a declared family registry + gate built before the first location board (recommended over a dist/ class census, which is inconsistent across families).
+   - Full order in memory `project_location_cluster_wave_direction` and the pipeline guide artifact `f9396de4`.
