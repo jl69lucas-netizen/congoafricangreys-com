@@ -130,6 +130,9 @@ def validate_board(board):
         raise BoardError(f"brief.cta.cadence: min {cad['min']} > max {cad['max']}")
     if not any(s.get("cta", 0) for s in board["sections"]):
         raise BoardError("no section carries a CTA — a transactional page with a CTA plan places at least one")
+    tool = brief["tool"]
+    if tool["pick"].strip().lower() != "none" and not tool["trade_off"].strip():
+        raise BoardError(f"brief.tool: {tool['pick']!r} is a real tool and records no trade_off (§14)")
     lib = library_urls()
     if lib:
         for sec in board["sections"]:
@@ -413,7 +416,8 @@ def cta_findings(board):
     so both findings are prompts to look rather than proof: `cta-cadence` when the page's
     words per CTA exceed the plan's maximum, `cta-gap` for each run of consecutive CTA-free
     sections longer than that maximum. A section's `cta` is a count, not a flag: a long FAQ
-    can carry two."""
+    can carry two. A CTA section's own words close the run rather than join it, so one long
+    section that carries a CTA never reports a gap on its own."""
     cap = board["brief"]["cta"]["cadence"]["max"]
     mid = lambda s: (s["words"]["min"] + s["words"]["max"]) // 2
     total = sum(mid(s) for s in board["sections"])

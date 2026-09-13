@@ -16,7 +16,11 @@ MIN_BOARD = {
                           "why_not": "the price bucket is the adoption-cost page's, and it outranks us on it"}],
               "strategy": {"name": "n", "why": "w", "trade_off": "t"},
               "cta": {"cadence": {"min": 500, "max": 700}, "destination": "#reserve",
-                      "anchors": ["Reserve This Bird"], "global_cta": "hidden"}},
+                      "anchors": ["Reserve This Bird"], "global_cta": "hidden"},
+              "tool": {"pick": "none",
+                       "evidence": "No top-10 result for the head term ships a calculator or quiz, and the fan-out has no 'calculate' query.",
+                       "trade_off": ""},
+              },
     "h1": {"variants": ["a", "b", "c", "d", "e"], "recommended": 0, "pick": None},
     "meta_set": {
         "titles": ["African Grey Parrots for Sale in the USA | Congo & Timneh | C.A.Gs",
@@ -2226,3 +2230,41 @@ def test_board_renders_the_cta_plan_and_marks_cta_sections():
     html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
     assert "**CTA plan.** One every 500–700 words" in html and "Reserve This Bird" in html
     assert "hidden on this page" in html and "400–600w · CTA×1]" in html
+
+
+def test_cta_gap_runs_break_at_each_cta_section_and_counts_move_the_cadence():
+    b = json.loads(json.dumps(MIN_BOARD))
+    def add(sid, n, lo, hi, cta):
+        s = json.loads(json.dumps(b["sections"][0]))
+        s.update({"id": sid, "n": n, "words": {"min": lo, "max": hi}, "cta": cta, "tree": []})
+        b["sections"].append(s)
+    b["sections"][0]["cta"] = 0                      # birds ~500, no CTA
+    add("a", 2, 400, 600, 0)                         # run birds+a = ~1000 -> gap
+    add("b", 3, 400, 600, 1)                         # CTA closes it
+    add("c", 4, 700, 900, 0)                         # run c = ~800 -> second gap (trailing)
+    gaps = [m for c, m in PB.cta_findings(b) if c == "cta-gap"]
+    assert len(gaps) == 2 and "birds, a" in gaps[0] and "sections c " in gaps[1]
+    total = sum((s["words"]["min"] + s["words"]["max"]) // 2 for s in b["sections"])   # 2300
+    assert ("cta-cadence" in dict(PB.cta_findings(b)))                                  # 2300 / 1 CTA
+    b["sections"][2]["cta"] = 4                                                        # 2300 / 4 = 575
+    assert "cta-cadence" not in dict(PB.cta_findings(b)) and total == 2300
+
+
+# --- Task 22: the tool decision ---------------------------------------------------------------
+
+def test_tool_decision_requires_evidence_and_a_trade_off_for_a_real_tool():
+    for mutate in (lambda t: t.update(evidence="none seen"),
+                   lambda t: t.update(pick="first-year cost calculator", trade_off=""),
+                   lambda t: t.pop("pick")):
+        bad = json.loads(json.dumps(MIN_BOARD)); mutate(bad["brief"]["tool"])
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(bad)
+    ok = json.loads(json.dumps(MIN_BOARD))
+    ok["brief"]["tool"].update(pick="first-year cost calculator", trade_off="adds JS to a page that ships none today")
+    PB.validate_board(ok)
+
+
+def test_board_renders_the_tool_decision():
+    import build_page_board as BPB
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "**Tool.** none — evidence: No top-10 result for the head term" in html

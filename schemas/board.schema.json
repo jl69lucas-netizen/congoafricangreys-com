@@ -28,7 +28,7 @@
       }
     },
     "brief": {
-      "type": "object", "required": ["goal", "scope", "gates", "done", "out_of_scope", "primary_keyword", "angles", "strategy", "cta"],
+      "type": "object", "required": ["goal", "scope", "gates", "done", "out_of_scope", "primary_keyword", "angles", "strategy", "cta", "tool"],
       "additionalProperties": false,
       "properties": {
         "goal": {"type": "string"}, "scope": {"type": "string"}, "done": {"type": "string"},
@@ -50,7 +50,11 @@
                               "properties": {"min": {"type": "integer", "minimum": 100}, "max": {"type": "integer", "minimum": 100}}},
                   "destination": {"type": "string", "pattern": "^#[a-z][a-z0-9-]*$"},
                   "anchors": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 2, "maxLength": 60}},
-                  "global_cta": {"enum": ["hidden", "shown"]}}}
+                  "global_cta": {"enum": ["hidden", "shown"]}}},
+        "tool": {"type": "object", "required": ["pick", "evidence", "trade_off"], "additionalProperties": false,
+                 "properties": {"pick": {"type": "string", "minLength": 1, "maxLength": 120},
+                                "evidence": {"type": "string", "minLength": 20, "maxLength": 400},
+                                "trade_off": {"type": "string", "maxLength": 240}}}
       }
     },
     "h1": {

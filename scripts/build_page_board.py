@@ -304,10 +304,12 @@ def image_plan_table(board):
 def decisions_lines(brief):
     """The page-level decisions the brief gates on (§10, §14, §16d), one bold-led line each,
     so the sitting reads them beside the strategy they serve."""
-    c = brief["cta"]
+    c, tool = brief["cta"], brief["tool"]
     return [f"**CTA plan.** One every {c['cadence']['min']}–{c['cadence']['max']} words, to {md(c['destination'])}; "
             f"anchors: {', '.join(md(a) for a in c['anchors'])}; the site-wide CTA band is "
-            f"{'hidden on this page' if c['global_cta'] == 'hidden' else 'shown'}."]
+            f"{'hidden on this page' if c['global_cta'] == 'hidden' else 'shown'}.",
+            f"**Tool.** {md(tool['pick'])} — evidence: {md(tool['evidence'])}"
+            + (f" Trade-off: {md(tool['trade_off'])}" if tool["trade_off"].strip() else "")]
 
 
 def render(board, ont, ledger, live, thumbs, slug):
