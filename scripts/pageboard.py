@@ -678,6 +678,47 @@ def faq_hits(board, live):
             if not _whitelisted(h["heading"])]
 
 
+PERF_DIR = ROOT / "data" / "quality" / "perf"
+PERF_PROFILES = ("mobile", "desktop")
+
+
+def perf_findings(slug, stage, perf_dir=None, dist_page=None):
+    """PageSpeed at release: 100 in all five categories (scripts/perf_audit.py records).
+
+    Local records (`<slug>--<profile>.json`, measured on dist/) gate the release and must be
+    newer than the build. Mobile Performance is NOT judged locally: this Mac's CPU cannot
+    stand in for PageSpeed's, so the PSI record (`<slug>--<profile>--psi.json`) judges it.
+    A PSI record can only exist after deploy, so a missing or superseded one is pending
+    (WARN); a PSI record that reads under 100, or saw an edge-injected script, FAILS the
+    next release — the breeder's 2026-09-13 report is exactly that case."""
+    if stage != "release":
+        return []
+    perf_dir = pathlib.Path(perf_dir) if perf_dir else PERF_DIR
+    dist_page = pathlib.Path(dist_page) if dist_page else (DIST / slug / "index.html" if slug else DIST / "index.html")
+    f = []
+    add = lambda check, sev, msg: f.append({"check": check, "sev": sev, "msg": msg})
+    read = lambda name: json.loads((perf_dir / f"{name}.json").read_text()) if (perf_dir / f"{name}.json").exists() else None
+    for prof in PERF_PROFILES:
+        local, psi = read(f"{slug}--{prof}"), read(f"{slug}--{prof}--psi")
+        if local is None:
+            add("perf-record-missing", "FAIL", f"no {prof} perf record — python3 scripts/perf_audit.py {slug}{' --mobile' if prof == 'mobile' else ''} --runs 3")
+        else:
+            if dist_page.exists() and local.get("dist_mtime", 0) < dist_page.stat().st_mtime:
+                add("perf-record-stale", "FAIL", f"{prof} perf record predates the current build — re-run perf_audit.py")
+            judged = [c for c in local.get("failed", []) if not (prof == "mobile" and c == "performance")]
+            if judged:
+                add("perf-below-100", "FAIL", f"{prof} (dist) under 100: {', '.join(judged)}")
+        if psi is None or (local is not None and psi.get("measured_at", "") < local.get("measured_at", "")):
+            add("perf-psi-pending", "WARN", f"{prof}: confirm on PageSpeed after deploy — perf_audit.py {slug} --psi{' --mobile' if prof == 'mobile' else ''}")
+            continue
+        if psi.get("failed"):
+            got = ", ".join(f"{c} {round((psi.get('median') or {}).get(c, 0) * 100)}" for c in psi["failed"])
+            add("perf-psi-below-100", "FAIL", f"{prof} on PageSpeed under 100: {got}")
+        if psi.get("edge_blocking"):
+            add("perf-edge-injected", "FAIL", f"{prof}: Cloudflare injects scripts dist/ never ships: {', '.join(psi['edge_blocking'])}")
+    return f
+
+
 def gate_findings(board, ont, ledger, live, stage="build"):
     """Every reason this record may not be built (or released). Pure: no printing."""
     if stage not in GATE_STAGES:
@@ -836,6 +877,8 @@ def gate_findings(board, ont, ledger, live, stage="build"):
         if target not in live:
             add("links-internal-dead", "FAIL",
                 f"section {sid}: {l['href']} has no built page (dist{target}index.html)")
+
+    f.extend(perf_findings(slug, stage))
 
     if stage == "release":
         for a in board["assets"]:

@@ -1,75 +1,69 @@
 ---
 name: cag-perf-gate
-description: Use before pushing any CAG page, and whenever PageSpeed/Lighthouse reports a defect — contrast, LCP, CLS, image delivery, unused CSS, render-blocking. Runs the local Lighthouse gate against dist/ so the breeder never has to paste a URL into pagespeed.web.dev after a deploy, and applies the banked fix for each audit class. Triggers "run the perf gate", "check PageSpeed", "why is CLS bad", "Lighthouse says", "contrast failure".
+description: Use before pushing or releasing any CAG page, and whenever PageSpeed Insights or Lighthouse reports anything under 100 — Performance, Accessibility, Best Practices, SEO or Agentic Browsing; CLS or layout-shift culprits; unused JavaScript or a missing source map on a first-party path like /70de/; forced reflow; web-font or network-dependency rows; image delivery; contrast. Also when local Lighthouse and PageSpeed disagree. Triggers "check PageSpeed", "score 100", "why is CLS bad", "Lighthouse says", "agentic browsing".
 ---
 
 # CAG Perf Gate
 
-Before 2026-08-07 no perf gate existed in this repo. What existed were two *agents*
-(`cag-performance-fixer`, `cag-performance-monitor-agent`), and an agent is not a gate: it
-runs when someone remembers to call it, produces prose, and nothing fails.
+**Done = PageSpeed Insights reads 100 in all five categories (Performance, Accessibility,
+Best Practices, SEO, Agentic Browsing), mobile AND desktop, on the live URL.** A local run
+finds defects; PSI judges. Never tell the breeder a page is done on a local number.
 
 ## Run it
 
 ```bash
-npx astro build && python3 scripts/perf_audit.py <slug> && python3 scripts/perf_audit.py <slug> --mobile
+npx astro build
+python3 scripts/perf_audit.py <slug> --runs 3            # desktop, dist/
+python3 scripts/perf_audit.py <slug> --mobile --runs 3   # mobile, dist/
+python3 scripts/perf_audit.py <slug> --live --mobile     # deployed page: edge injections
+python3 scripts/perf_audit.py <slug> --psi --mobile      # after deploy: THE record
+python3 scripts/perf_audit.py <slug> --psi               # after deploy, desktop
 ```
 
-Floors: performance ≥ 95 · accessibility / best-practices / SEO = 100.
+Every floor is 0.995 (what PSI displays as 100). Lighthouse is pinned to 13.4.1 with
+`scripts/lighthouse/agentic-*.mjs`. `--preset=desktop` is ignored alongside a config path,
+so desktop has its own config. Records land in `data/quality/perf/`;
+`board_gate.py <slug> --release` FAILs without fresh local records, and FAILs on any PSI
+record under 100 (`scripts/pageboard.py perf_findings`).
 
-The fast half runs in the render harness and needs no Lighthouse:
+## Why local and PSI disagree (check these before theorising)
 
-```bash
-npm run test:render:meta && npm run test:render:pages
-```
+| Local says | PSI says | Real cause | How to see it |
+|---|---|---|---|
+| CLS 0 | CLS 0.2+ on a hero element | a box that only reaches full size when its image arrives; locally the preloaded image lands before first paint | `layout-image-box-reserved` (render harness), or delay images in headless Chrome |
+| no `/70de/` | 79 KiB unused JS, forced reflow, missing source map on `/70de/` | **Cloudflare Google tag gateway** injecting gtag.js at the edge; dist/ never contains it | `perf_audit.py --live` → `EDGE-INJECTED` |
+| fonts from `/fonts/` | `/cf-fonts/...woff2` rows | Cloudflare Fonts rewriting a Google Fonts link | same `--live` list |
+| mobile Performance ~60 | 90s | this Mac's CPU benchmark (~490) under 4× throttle | judge mobile Performance only on `--psi` |
 
-`a11y-text-contrast-aa` (A11Y family, **advisory**) computes contrast from rendered colours
-in ~2s. Run the harness first; run Lighthouse before push.
+**When CLS disagrees, delay one resource class at a time** (images, fonts, CSS, JS) and
+record which element moves. Lighthouse's "Web font" attribution is often a coincident
+swap, not the cause: on 2026-09-13 fonts measured 0.02, images reproduced 0.156 of PSI's 0.153.
 
-**Read its output as a lead, not a verdict — it is not promoted yet.** It shipped
-2026-08-07 declared blocking but wired into no page type, so it examined **zero nodes on
-every page for a full day** (`reference_registered_is_not_wired`). Wired in 2026-08-08, it
-reports 1,783 findings across 45 of 45 page-viewports — 0 clean — which is a miscalibrated
-check, not a site that fails AA everywhere. Two false-positive classes are confirmed and
-must be fixed before it is promoted back to blocking:
+## Edge features are not code
 
-| Signature | Why it is wrong |
+`/70de/` is gtag.js, not Rocket Loader. The Google tag gateway is a zone switch that
+overrides the page's own tag, and Configuration Rules cannot disable it. Fix: Cloudflare →
+Tag Management → Google Tag Gateway → off, then Caching → Purge Everything. GA keeps
+working through BaseLayout's interaction-deferred loader. Never "leave it": an injected
+script FAILs `--live`. Changing the dashboard is the breeder's action — ask, don't assume.
+
+## Fix bank
+
+| Row | Fix on this site |
 |---|---|
-| `.rbadge` / `.absolute.top-3` at ~**1:1** | out-of-flow label over a photo: `position:absolute`, `background:none`, dark `text-shadow`. `backdrop()` walks DOM ancestors, never meets the image, and compares white against the white section behind it |
-| Tailwind `text-*/80` at ~**1.1:1** | translucent **foreground**: the check's `rgb()` keeps the colour channels and ignores fg alpha unless it is exactly 0 |
+| layout shift on a hero/grid item | give the shrink-wrapped box a definite width (`width:100%` beside `margin-left:auto` on a grid item); `aspect-ratio` alone does not help when the WIDTH changes |
+| image `<img>` without reserved box | `width`/`height` attrs + `aspect-ratio`; `final_page_audit.py img_dims` |
+| web-font swap shift | fallback faces are generated — `scripts/font_fallback_metrics.py` (Arial/Times bases, Linux clones listed); never hand-tune; `tests/test_font_fallbacks.py` |
+| `uses-responsive-images` desktop | add a candidate within ~10% of the measured slot (hero slot 520–540px → `-560.webp`), in BOTH the `<img srcset>` and `heroPreloadSrcset` |
+| LCP discovery | `heroPreload` + `heroPreloadSrcset` + `fetchpriority="high"` on the LCP image only |
+| `color-contrast` | measure the ratio, add the missing page-scoped override (`reference_markup_css_drift`) |
+| `unused-css-rules` | class-diff with `page_hardening_scan.py`, triage, never bulk-delete |
 
-A third family — clay/gold on light at **3.17–3.38:1** against a 4.5 requirement — is
-likely real and matches the known clay-contrast issue (`reference_forsale_dial_rail_contrast`,
-`reference_aa_contrast_and_perf_fixes`). Triage is its own sprint.
+## Red flags — stop
 
-## Before you fix anything
-
-**A Lighthouse finding is a hypothesis about the page, not a fact about it.** Confirm it on
-the built page at the breakpoint named before editing. Twelve checkers have cried wolf on
-this site. See `skills/cag-gate-integrity.md`.
-
-**Perf conclusions need ≥5 runs.** CLS here is bimodal — one run already produced a
-confident wrong attribution. Use `--runs 5` and read the median and the spread, never a
-single number. `reference_bimodal_metrics_need_5_runs`.
-
-## Known-ignored
-
-- **`valid-source-maps` on `/70de/`** — Cloudflare Rocket Loader, injected at the edge, not
-  in this repo, and **Unscored** by Lighthouse. Toggle it in the Cloudflare dashboard
-  (Speed → Optimization) or leave it. Never chase it in code. Suppressed by the CLI.
-
-## The fix bank
-
-| Audit | Root cause seen on this site | Fix |
-|---|---|---|
-| `color-contrast` | component re-themed, child colour never overridden (`.bpair .tdial` → `.ti` stayed sage, 2.66:1) | measure the ratio in Python, add the missing `.<page>` override — never eyeball. `reference_markup_css_drift` |
-| `largest-contentful-paint` | srcset double-download | `heroPreload` + `heroPreloadSrcset` + `fetchpriority="high"` on the LCP image **only** |
-| `cumulative-layout-shift` | counter / infographic / card with no reserved box | explicit `width`/`height` on every `<img>` + `min-height` on the container. `final_page_audit.py` `img_dims` fails the whole page without them |
-| `uses-responsive-images` | `sizes` guessed instead of measured | measure a real rendered width in the browser. `reference_srcset_needs_measured_sizes` |
-| `unused-css-rules` | dead kit CSS from a ported sibling | class-diff the page (`page_hardening_scan.py`), then **triage**: spec-mandated → render it; variant not used → delete. Never bulk-delete |
-| `render-blocking-resources` | WooCommerce CSS + jQuery | defer; `font-display:swap`. `reference_aa_contrast_and_perf_fixes` |
-
-## Related
-
-`tests/render/checks/a11y.ts` · `scripts/page_hardening_scan.py` ·
-`skills/cag-gate-integrity.md` · `reference_perf_image_tooling` (Pillow, not sips)
+- "PSI is just confirmation" → PSI is the record; dist/ is a pre-check.
+- "Local CLS is 0, so PSI's number is noise" → delay images first.
+- "Performance ≥ 95 is the floor" → the floor is 100.
+- "It's Rocket Loader, never chase it" → it was the tag gateway; `--live` names it.
+- "Lighthouse blamed the web font, so fix fonts / add min-height" → measure which class moves.
+- A gate that reports PASS: read its examined count (`skills/cag-gate-integrity.md`).
