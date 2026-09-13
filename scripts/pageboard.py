@@ -95,7 +95,7 @@ def validate_board(board):
             # letter with a written meaning, so the one mapping the record may not contradict.
             raise BoardError(f"section {sec['id']}: category C is a section that is ours alone, so its group is "
                              f"SUGGESTED-RECOMMENDED, not {sec['group']}")
-        if sec["group"] == "COMPETITOR-BASED" and not re.search(r"https?://", sec["why_source"]):
+        if sec["group"] == "COMPETITOR-BASED" and not re.search(r"https?://[^\s/]+\.[^\s/]+", sec["why_source"]):
             raise BoardError(f"section {sec['id']}: a COMPETITOR-BASED section cites the competitor it answers — "
                              "why_source carries no URL")
         ids.append(sec["id"])

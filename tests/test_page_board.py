@@ -2060,7 +2060,8 @@ def test_gate_warns_on_a_signature_section_with_no_image_and_fails_on_a_shared_a
 
 def test_section_why_is_required_c_is_always_ours_and_competitor_names_a_url():
     for mutate in (lambda s: s.pop("why"), lambda s: s.update(why="too short"),
-                   lambda s: s.update(group="OPTIONAL")):
+                   lambda s: s.update(group="OPTIONAL"), lambda s: s.pop("group"),
+                   lambda s: s.update(why_source=""), lambda s: s.update(why="w" * 401)):
         bad = json.loads(json.dumps(MIN_BOARD)); mutate(bad["sections"][0])
         with pytest.raises(PB.BoardError):
             PB.validate_board(bad)
@@ -2068,6 +2069,10 @@ def test_section_why_is_required_c_is_always_ours_and_competitor_names_a_url():
     with pytest.raises(PB.BoardError, match="SUGGESTED-RECOMMENDED"):
         PB.validate_board(bad)
     bad = json.loads(json.dumps(MIN_BOARD)); bad["sections"][0]["group"] = "COMPETITOR-BASED"
+    with pytest.raises(PB.BoardError, match="URL"):
+        PB.validate_board(bad)
+    bad = json.loads(json.dumps(MIN_BOARD))
+    bad["sections"][0].update(group="COMPETITOR-BASED", why_source="no https:// found")
     with pytest.raises(PB.BoardError, match="URL"):
         PB.validate_board(bad)
     ok = json.loads(json.dumps(MIN_BOARD))
@@ -2082,3 +2087,16 @@ def test_distribution_block_shows_group_and_grounded_why():
     assert "**Why each section is here**" in html
     assert "reads as a directory, not a breeder." in html and "for-sale-keywords-2026-07.md" in html
     assert "[A · mandatory · inventory" in html                  # the outline line carries the group
+
+    competitor = json.loads(json.dumps(MIN_BOARD))
+    competitor["sections"][0].update(group="COMPETITOR-BASED",
+                                     why_source="https://example.com/foo_bar (a note)")
+    html2 = BPB.render(_approved(competitor), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "· competitor ·" in html2
+    assert "<https://example.com/foo_bar>" in html2
+
+    ours = json.loads(json.dumps(MIN_BOARD))
+    ours["sections"][0]["category"] = "C"
+    ours["sections"][0]["group"] = "SUGGESTED-RECOMMENDED"
+    html3 = BPB.render(_approved(ours), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "[C · ours ·" in html3

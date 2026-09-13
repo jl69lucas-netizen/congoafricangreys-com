@@ -5,7 +5,7 @@ docs/artifacts/boards/<slug>/thumbs/*.png cut by board_thumbs.mjs from the canva
 (run board_canvas.py first; thumbs are optional — a missing thumb renders as a labelled box).
 Publish with the Artifact tool: file_path=<html>, capabilities={"db": {}},
 files={"thumbs/...": "docs/artifacts/boards/<slug>/thumbs/..."}."""
-import html as H, json, pathlib, sys
+import html as H, json, pathlib, re, sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import pageboard as PB
 
@@ -76,6 +76,20 @@ def md(value):
         out = out.replace(ch, "\\" + ch)
     out = " ".join(out.split())
     return "\\" + out if out.startswith("#") else out
+
+
+def md_with_urls(value):
+    """md() for prose that may carry bare URLs: each http(s) URL is wrapped in <…> so marked
+    autolinks it verbatim, and only the text around it is escaped — md() alone would put a
+    backslash inside any URL with an underscore."""
+    text = "" if value is None else str(value)
+    out, last = [], 0
+    for m in re.finditer(r"https?://[^\s<>()]+", text):
+        out.append(md(text[last:m.start()]))
+        out.append("<" + H.escape(m.group(0), quote=True) + ">")
+        last = m.end()
+    out.append(md(text[last:]))
+    return " ".join(p for p in out if p)
 
 
 def js(value):
@@ -323,7 +337,7 @@ def render(board, ont, ledger, live, thumbs, slug):
     t = d["totals"]
     rows.append(["**totals**", t["primary"], t["lsi"], t["longtail"], t["brand"], t["geo"], f"{t['words_min']}–{t['words_max']}"])
     c = d["h_counts"]
-    why_rows = [[f"{s['n']:02d} {md(s['heading'])}", md(s["group"]), md(s["framework"]), md(s["why"]), md(s["why_source"])]
+    why_rows = [[f"{s['n']:02d} {md(s['heading'])}", md(s["group"]), md(s["framework"]), md(s["why"]), md_with_urls(s["why_source"])]
                 for s in board["sections"]]
     parts.append(("4. Distribution", md_table(["Section", "Primary", "LSI", "Long-tail", "Brand", "Geo", "Words"], rows)
                   + f"\n\nHeadings: H1 {c['h1']} · H2 {c['h2']} · H3 {c['h3']} · H4 {c['h4']} · H5 {c['h5']} · H6 {c['h6']}. Counts are ceilings, not floors."
