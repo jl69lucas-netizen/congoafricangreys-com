@@ -596,7 +596,7 @@ test.describe('nav-jump-target-lands reports causes, not instances', () => {
     expect(
       result.defects[0].message,
       'the row must name the page-level cause',
-    ).toMatch(/scroll-margin-top|scroll-behavior/);
+    ).toMatch(/scroll-margin-top/);
   });
 });
 
@@ -701,6 +701,69 @@ test.describe('nav-jump-target-lands names the direction of failure', () => {
     // pass on every possible implementation — the third toothless assertion this file
     // has shipped. Match what the wrong implementation would actually print.
     expect(r.defects[0].message).not.toMatch(/past the \d+px far edge/);
+  });
+});
+
+/**
+ * A landing must be a fact about the page's geometry, never about animation timing.
+ *
+ * Measured 2026-09-13: /african-grey-parrots-for-sale-near-me/ @1280 failed once with
+ * `#mt-dallas@7373px` (its raw document offset is ~7394px, so the page had barely moved),
+ * then passed twice on the identical dist/. waitForScrollSettle's equal-read and
+ * start-grace logic was already in place and still lost the race to the site's
+ * `html{scroll-behavior:smooth}`. Waiting longer only makes the race less likely. It never
+ * removes it, so the check now measures with the root forced to instant scrolling.
+ *
+ * The race itself cannot be scheduled from a fixture, so this pins the property that
+ * rules it out: every click happens under `scroll-behavior:auto`. Against the pre-fix
+ * nav.ts the first assertion fails deterministically, with every entry "smooth".
+ */
+test.describe('nav-jump-target-lands measures geometry, not smooth-scroll timing', () => {
+  const URL = `${FIXTURE_BASE}/tests/render/fixtures/known_broken/nav-smooth-scroll-landing.html`;
+
+  test('clicks under instant scrolling, restores the page, and still catches the real miss', async ({
+    page,
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== testInfo.config.projects[0].name,
+      `viewport-independent; runs once in ${testInfo.config.projects[0].name}`,
+    );
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(URL);
+    expect(
+      await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior),
+      'the fixture must declare smooth scrolling, or this test proves nothing',
+    ).toBe('smooth');
+
+    const check = registry.find((c) => c.id === 'nav-jump-target-lands')!;
+    const r = await runCheck(check, page, 1280, FIXTURE_CTX);
+
+    const behaviors: string[] = await page.evaluate(() => (window as any).__navBehaviors);
+    expect(r.examined, 'must have judged all 30 targets').toBe(30);
+    expect(behaviors.length, 'one recorded click per examined target').toBe(r.examined);
+    expect(
+      [...new Set(behaviors)],
+      'every click must run under scroll-behavior:auto — a smooth click hands the landing to the animation scheduler',
+    ).toEqual(['auto']);
+
+    expect(
+      await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior),
+      'the check must restore the page as shipped for the checks that run after it',
+    ).toBe('smooth');
+    expect(
+      await page.evaluate(() => document.documentElement.getAttribute('style')),
+      'no inline style may be left behind on <html>',
+    ).toBeNull();
+
+    // Not blinded: the one genuine defect is still caught, and only it.
+    expect(r.defects.length).toBe(1);
+    expect(r.defects[0].count).toBe(1);
+    expect(r.defects[0].message).toMatch(/1 of 30 in-page links land outside 88-156px/);
+    expect(r.defects[0].message).toMatch(/first: #s17@20px/);
+    expect(r.defects[0].message).toMatch(/1 of 30 targets declare scroll-margin-top under the 88px near edge/);
+    // The page's smooth scrolling can no longer move a measured landing, so naming it as
+    // a root cause would send the next reader to edit CSS that was never the problem.
+    expect(r.defects[0].message).not.toMatch(/scroll-behavior/);
   });
 });
 

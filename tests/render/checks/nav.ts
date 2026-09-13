@@ -1,5 +1,10 @@
 import { register, type CheckResult, type Defect } from '../lib/registry.js';
-import { measureTopChrome, resetScrollInstant, waitForScrollSettle } from '../lib/probes.js';
+import {
+  forceInstantRootScroll,
+  measureTopChrome,
+  resetScrollInstant,
+  waitForScrollSettle,
+} from '../lib/probes.js';
 import type { Page } from '@playwright/test';
 
 register({
@@ -60,6 +65,12 @@ register({
  * because that is what this function inspects. And when both cohorts exist it reports
  * BOTH: naming only the majority silently drops the targets that need the opposite fix,
  * which is a milder form of the misattribution this function was rewritten to remove.
+ *
+ * It no longer names `html{scroll-behavior:smooth}`. The landings are measured with the
+ * root forced to instant scrolling (see forceInstantRootScroll), so the page's smooth
+ * scrolling cannot move a measured landing. Before that, the smooth-scroll branch was the
+ * cause printed on the 2026-09-13 flake. It was right that the animation mattered and
+ * wrong about whose defect it was: the race belonged to the harness, not the page.
  */
 async function diagnoseLandingCause(
   page: Page,
@@ -69,9 +80,6 @@ async function diagnoseLandingCause(
 ): Promise<string | null> {
   return page.evaluate(
     ({ hrefs, lo, hi }: { hrefs: string[]; lo: number; hi: number }) => {
-      const docH = document.documentElement.scrollHeight;
-      const behavior = getComputedStyle(document.documentElement).scrollBehavior;
-
       let seen = 0;
       let short = 0;
       let long = 0;
@@ -88,9 +96,8 @@ async function diagnoseLandingCause(
       const under = `declare scroll-margin-top under the ${lo}px near edge`;
 
       // Every branch requires its own cohort to be NON-EMPTY, so a zero count can never
-      // be printed and can never preempt the scroll-behavior branch below it. The old
-      // `long > short` form returned "0 of 19 targets overshoot" whenever both were
-      // zero — reachable in practice, because the last anchor on a page often cannot
+      // be printed. The old `long > short` form returned "0 of 19 targets overshoot"
+      // whenever both were zero — reachable in practice, because the last anchor on a page often cannot
       // reach its offset at the document end and so lands outside the band while every
       // scroll-margin-top on the page is correct.
       if (long && short) {
@@ -100,9 +107,6 @@ async function diagnoseLandingCause(
       if (short && short === seen) return `all ${seen} targets ${under}`;
       if (long) return `${long} of ${seen} targets ${over}`;
       if (short) return `${short} of ${seen} targets ${under}`;
-      if (behavior === 'smooth' && docH > 8000) {
-        return `html{scroll-behavior:smooth} on a ${docH}px document`;
-      }
       return null;
     },
     { hrefs: targets, lo, hi },
@@ -177,75 +181,104 @@ register({
     const MAX_SETTLE_EXTENSIONS = 4;
     let extensionsUsed = 0;
 
-    for (const href of targets) {
-      try {
-        await resetScrollInstant(page);
+    // Measure geometry, not animation timing. Every page on this site declares
+    // html{scroll-behavior:smooth}, and a smooth fragment scroll can stall mid-flight
+    // for longer than the settle probe's equal-read window. That is what produced the
+    // one-off `#mt-dallas@7373px` on 2026-09-13. The reasoning and the measurement are
+    // in forceInstantRootScroll.
+    const instant = await forceInstantRootScroll(page);
+    if (!instant.applied) {
+      await instant.restore();
+      return {
+        examined: 0,
+        defects: [
+          {
+            checkId: 'nav-jump-target-lands',
+            family: 'NAV' as const,
+            viewport,
+            count: 1,
+            message:
+              'the harness could not force scroll-behavior:auto on <html>, so landings would depend on smooth-scroll timing; refusing to measure. This is a harness defect, not a page defect',
+          },
+        ],
+      };
+    }
 
-        // Click the first link for this href that has a real box, in the page itself.
-        // This triggers the browser's own fragment navigation — the behaviour a user
-        // gets — without requiring viewport visibility.
-        const clicked = await page.evaluate((h: string) => {
-          const links = Array.from(
-            document.querySelectorAll<HTMLAnchorElement>(`a[href="${h.replace(/"/g, '\\"')}"]`),
-          );
-          const el = links.find((a) => {
-            const b = a.getBoundingClientRect();
-            return b.width >= 8 && b.height >= 8;
-          });
-          if (!el) return false;
-          el.click();
-          return true;
-        }, href);
+    try {
+      for (const href of targets) {
+        try {
+          await resetScrollInstant(page);
 
-        if (!clicked) {
-          untestable.push(`${href} (no clickable box)`);
-          continue;
+          // Click the first link for this href that has a real box, in the page itself.
+          // This triggers the browser's own fragment navigation — the behaviour a user
+          // gets — without requiring viewport visibility.
+          const clicked = await page.evaluate((h: string) => {
+            const links = Array.from(
+              document.querySelectorAll<HTMLAnchorElement>(`a[href="${h.replace(/"/g, '\\"')}"]`),
+            );
+            const el = links.find((a) => {
+              const b = a.getBoundingClientRect();
+              return b.width >= 8 && b.height >= 8;
+            });
+            if (!el) return false;
+            el.click();
+            return true;
+          }, href);
+
+          if (!clicked) {
+            untestable.push(`${href} (no clickable box)`);
+            continue;
+          }
+
+          let settle = await waitForScrollSettle(page);
+
+          // A scroll that is STILL MOVING when the budget expires is not evidence of a page
+          // defect, and this check's own message says so ("PROBABLY A BUDGET DEFECT, NOT A
+          // PAGE DEFECT; raise maxMs before touching the page"). Failing a BLOCKING gate on
+          // that verdict is incoherent, and it was measured doing exactly that on 2026-08-02:
+          // three consecutive runs of the same commit against the same dist/ failed on three
+          // different page/viewport pairs — adoption-cost@375, then timneh@375 and
+          // hand-raised@768 — each time one link out of eighteen.
+          //
+          // So keep waiting instead of guessing. The scroll is already in flight, so a second
+          // wait simply continues it; only a target that is STILL unsettled after the
+          // extension is reported, which turns "probably the budget" into "definitely not".
+          // Bounded twice over — a per-target extension and a per-page cap on how many
+          // targets may use one — because pages.spec runs every check for one page+viewport
+          // inside a single 120s test, and an unbounded extension would trade false failures
+          // for pages that write no partial at all. A page with no partial scores ABSENT,
+          // which probes.ts already calls the worst failure mode this harness has.
+          if (!settle.settled && settle.lastDeltaPx > 0 && extensionsUsed < MAX_SETTLE_EXTENSIONS) {
+            extensionsUsed++;
+            settle = await waitForScrollSettle(page, { maxMs: SETTLE_EXTENSION_MS });
+          }
+
+          if (!settle.settled) {
+            const detail = `${href} (gave up at ${settle.ms}ms, y=${settle.y}, last tick ${settle.lastDeltaPx}px)`;
+            if (settle.lastDeltaPx > 0) unsettledMoving.push(detail);
+            else unsettledStuck.push(detail);
+            continue;
+          }
+
+          const top = await page.evaluate((h: string) => {
+            const el = document.getElementById(decodeURIComponent(h.slice(1)));
+            return el ? Math.round(el.getBoundingClientRect().top) : NaN;
+          }, href);
+
+          if (Number.isNaN(top)) {
+            untestable.push(`${href} (target vanished after navigation)`);
+          } else if (top < lo || top > hi) {
+            missed.push(`${href}@${top}px`);
+          }
+        } catch (err) {
+          // A thrown check drops the page from the scorecard silently. Never throw.
+          untestable.push(`${href} (${(err as Error).message.split('\n')[0]})`);
         }
-
-        let settle = await waitForScrollSettle(page);
-
-        // A scroll that is STILL MOVING when the budget expires is not evidence of a page
-        // defect, and this check's own message says so ("PROBABLY A BUDGET DEFECT, NOT A
-        // PAGE DEFECT; raise maxMs before touching the page"). Failing a BLOCKING gate on
-        // that verdict is incoherent, and it was measured doing exactly that on 2026-08-02:
-        // three consecutive runs of the same commit against the same dist/ failed on three
-        // different page/viewport pairs — adoption-cost@375, then timneh@375 and
-        // hand-raised@768 — each time one link out of eighteen.
-        //
-        // So keep waiting instead of guessing. The scroll is already in flight, so a second
-        // wait simply continues it; only a target that is STILL unsettled after the
-        // extension is reported, which turns "probably the budget" into "definitely not".
-        // Bounded twice over — a per-target extension and a per-page cap on how many
-        // targets may use one — because pages.spec runs every check for one page+viewport
-        // inside a single 120s test, and an unbounded extension would trade false failures
-        // for pages that write no partial at all. A page with no partial scores ABSENT,
-        // which probes.ts already calls the worst failure mode this harness has.
-        if (!settle.settled && settle.lastDeltaPx > 0 && extensionsUsed < MAX_SETTLE_EXTENSIONS) {
-          extensionsUsed++;
-          settle = await waitForScrollSettle(page, { maxMs: SETTLE_EXTENSION_MS });
-        }
-
-        if (!settle.settled) {
-          const detail = `${href} (gave up at ${settle.ms}ms, y=${settle.y}, last tick ${settle.lastDeltaPx}px)`;
-          if (settle.lastDeltaPx > 0) unsettledMoving.push(detail);
-          else unsettledStuck.push(detail);
-          continue;
-        }
-
-        const top = await page.evaluate((h: string) => {
-          const el = document.getElementById(decodeURIComponent(h.slice(1)));
-          return el ? Math.round(el.getBoundingClientRect().top) : NaN;
-        }, href);
-
-        if (Number.isNaN(top)) {
-          untestable.push(`${href} (target vanished after navigation)`);
-        } else if (top < lo || top > hi) {
-          missed.push(`${href}@${top}px`);
-        }
-      } catch (err) {
-        // A thrown check drops the page from the scorecard silently. Never throw.
-        untestable.push(`${href} (${(err as Error).message.split('\n')[0]})`);
       }
+    } finally {
+      // Restore BEFORE diagnosing and before any later check runs: both must read the
+      // page as it ships.
+      await instant.restore();
     }
 
     const defects: Defect[] = [];

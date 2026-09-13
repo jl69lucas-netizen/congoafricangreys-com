@@ -227,6 +227,64 @@ export async function resetScrollInstant(page: Page): Promise<void> {
   }
 }
 
+/**
+ * Force `scroll-behavior:auto` on the root for the duration of a measurement, then put
+ * back exactly what the page declared.
+ *
+ * Why waiting cannot fix it: the settle probe calls a scroll settled after five equal
+ * reads (160ms). On 2026-09-13, with four browsers competing for the CPU on
+ * /african-grey-parrots-for-sale-near-me/ @1280, a smooth fragment scroll was measured
+ * stalling mid-flight for 221ms after it had already started (p95 40ms). A stall that
+ * long passes the equal-read test, and the 400ms start grace no longer applies once the
+ * page has moved. The blocking NAV check then recorded `#mt-dallas@7373px`, about 21px
+ * short of its ~7394px document offset, and passed twice on the same dist/. A longer
+ * budget only makes that less likely. An instant fragment scroll lands synchronously
+ * inside the click, so there is no animation left to race.
+ *
+ * Detection is unchanged. Where a fragment scroll ends up is set by the target's
+ * scroll-margin-top and the chrome above it. Animation only changes when it gets there.
+ * JS that asks for `behavior:'smooth'` explicitly still animates, and
+ * waitForScrollSettle still covers it.
+ *
+ * Why an inline `!important` on <html> rather than emulating reduced motion: that media
+ * query flips every reduced-motion rule on the page, not just this one, so the check
+ * would measure a different page. An inline `!important` outranks any author stylesheet,
+ * `!important` rules included.
+ *
+ * Returns false when the override did not take. The caller must refuse to measure
+ * rather than report timing noise as a landing defect.
+ */
+export async function forceInstantRootScroll(page: Page): Promise<{ applied: boolean; restore: () => Promise<void> }> {
+  const prev = await page.evaluate(() => {
+    const root = document.documentElement;
+    const s = root.style;
+    const saved = {
+      hadStyleAttr: root.hasAttribute('style'),
+      value: s.getPropertyValue('scroll-behavior'),
+      priority: s.getPropertyPriority('scroll-behavior'),
+    };
+    s.setProperty('scroll-behavior', 'auto', 'important');
+    return { ...saved, applied: getComputedStyle(root).scrollBehavior === 'auto' };
+  });
+
+  const restore = async () => {
+    try {
+      await page.evaluate((p) => {
+        const root = document.documentElement;
+        if (p.value) root.style.setProperty('scroll-behavior', p.value, p.priority);
+        else root.style.removeProperty('scroll-behavior');
+        // Leave no empty `style=""` behind: a later check that reads attributes should
+        // see the markup as shipped.
+        if (!p.hadStyleAttr && !root.getAttribute('style')) root.removeAttribute('style');
+      }, prev);
+    } catch {
+      // The document went away (a link navigated off-page). The override went with it.
+    }
+  };
+
+  return { applied: prev.applied, restore };
+}
+
 export interface ScrollSettle {
   y: number;
   /** False means it was still moving when the budget ran out — that is a finding, not a landing. */
