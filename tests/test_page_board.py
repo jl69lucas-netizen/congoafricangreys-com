@@ -2009,10 +2009,18 @@ def test_image_plan_lists_every_slot_with_its_prompt_and_flags_a_bare_signature_
     b = _approved(MIN_BOARD)
     html = BPB.render(b, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
     assert 'data-title="3b. Image plan"' in html
-    assert "birds-opener" in html and "six bird cards" in html and "optional" in html
+    block = html.split('data-title="3b. Image plan">', 1)[1].split("</script>", 1)[0]
+    assert "birds-opener" in html and "six bird cards" in html and "| optional |" in block
     b["sections"][0]["images"] = []
     html = BPB.render(b, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
     assert "**⚠ no image slot**" in html
+
+    std = json.loads(json.dumps(b["sections"][0]))
+    std.update({"id": "reserve", "n": 2, "shape": "standard", "images": [], "tree": []})
+    b["sections"].append(std)
+    html = BPB.render(b, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    block = html.split('data-title="3b. Image plan">', 1)[1].split("</script>", 1)[0]
+    assert "_no image slot_" in block
 
 
 def test_gate_warns_on_a_signature_section_with_no_image_and_fails_on_a_shared_alt():
@@ -2020,6 +2028,7 @@ def test_gate_warns_on_a_signature_section_with_no_image_and_fails_on_a_shared_a
     checks = lambda: [(x["check"], x["sev"]) for x in
                       PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")]
     assert ("image-coverage", "WARN") not in checks()
+    assert ("asset-alt-duplicate", "FAIL") not in checks()
     reserve = json.loads(json.dumps(b["sections"][0]))
     reserve.update({"id": "reserve", "n": 2, "shape": "standard", "images": [], "tree": []})
     b["sections"].append(reserve)
@@ -2029,3 +2038,17 @@ def test_gate_warns_on_a_signature_section_with_no_image_and_fails_on_a_shared_a
     b["assets"] = [dict(b["assets"][0], alt="A Congo on its perch"),
                    dict(b["assets"][0], slot="card-01", alt="a congo on its perch.")]
     assert ("asset-alt-duplicate", "FAIL") in checks()
+
+    b["assets"] = [dict(b["assets"][0], slot="hero", alt="A Congo on its perch"),
+                   dict(b["assets"][0], slot="card-01", alt=""),
+                   dict(b["assets"][0], slot="card-02", alt="A Timneh on the scale")]
+    assert ("asset-alt-duplicate", "FAIL") not in checks()
+
+    a0 = b["assets"][0]
+    b["assets"] = [dict(a0, slot="hero", alt="Grey!"),
+                   dict(a0, slot="card-01", alt="grey"),
+                   dict(a0, slot="card-02", alt="GREY.")]
+    findings = [x for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")
+                if x["check"] == "asset-alt-duplicate"]
+    assert len(findings) == 1
+    assert "hero, card-01, card-02" in findings[0]["msg"]

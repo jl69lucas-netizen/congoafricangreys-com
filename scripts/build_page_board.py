@@ -238,6 +238,19 @@ def radio_list(name, items, recommended, picked):
         for i, v in enumerate(items))
 
 
+def angles_table(brief):
+    """Angles considered, the chosen one starred. Its third column is the strategy's own
+    trade-off rather than a why_not: a table where only the rejects carry a cost reads as
+    one good idea and two bad ones, which is not what the sitting is for."""
+    rows = []
+    for a in brief["angles"]:
+        taken = a["name"] == brief["strategy"]["name"]
+        rows.append([("⭐ " if taken else "") + md(a["name"]), md(a["hook"]),
+                     ("**taken** — trade-off: " + md(brief["strategy"]["trade_off"])) if taken
+                     else md(a["why_not"])])
+    return md_table(["Angle", "Hook", "Why not / trade-off"], rows)
+
+
 def image_plan_table(board):
     """One row per image slot the outline plans, prompt included: the infographic prompts ARE
     the generation pack (§15c), and a photo prompt says what the photo has to show. A
@@ -253,19 +266,6 @@ def image_plan_table(board):
             rows.append([label, md(i["slot"]), md(i["kind"]),
                          "required" if i["required"] else "optional", md(i["prompt"]) or "_no prompt_"])
     return md_table(["Section", "Slot", "Kind", "Required", "Prompt"], rows)
-
-
-def angles_table(brief):
-    """Angles considered, the chosen one starred. Its third column is the strategy's own
-    trade-off rather than a why_not: a table where only the rejects carry a cost reads as
-    one good idea and two bad ones, which is not what the sitting is for."""
-    rows = []
-    for a in brief["angles"]:
-        taken = a["name"] == brief["strategy"]["name"]
-        rows.append([("⭐ " if taken else "") + md(a["name"]), md(a["hook"]),
-                     ("**taken** — trade-off: " + md(brief["strategy"]["trade_off"])) if taken
-                     else md(a["why_not"])])
-    return md_table(["Angle", "Hook", "Why not / trade-off"], rows)
 
 
 def render(board, ont, ledger, live, thumbs, slug):
