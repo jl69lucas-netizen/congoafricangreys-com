@@ -512,11 +512,17 @@ def authorization_check(board, ont):
     }
 
 
+KEYWORD_TYPES = ("primary", "lsi", "longtail", "brand", "geo",
+                 "conversational", "comparison", "solution", "transactional")
+KEYWORD_LABELS = {"primary": "Primary", "lsi": "LSI", "longtail": "Long-tail", "brand": "Brand", "geo": "Geo",
+                  "conversational": "Voice", "comparison": "Compare", "solution": "Solution", "transactional": "Transact"}
+
+
 def distribution(board):
-    rows, totals = [], {"primary": 0, "lsi": 0, "longtail": 0, "brand": 0, "geo": 0, "words_min": 0, "words_max": 0}
+    rows, totals = [], {**{k: 0 for k in KEYWORD_TYPES}, "words_min": 0, "words_max": 0}
     for s in board["sections"]:
         row = {"section": s["id"], "heading": s["heading"]}
-        for k in ("primary", "lsi", "longtail", "brand", "geo"):
+        for k in KEYWORD_TYPES:
             row[k] = len(s["keywords"][k]); totals[k] += row[k]
         row["words_min"], row["words_max"] = s["words"]["min"], s["words"]["max"]
         totals["words_min"] += row["words_min"]; totals["words_max"] += row["words_max"]

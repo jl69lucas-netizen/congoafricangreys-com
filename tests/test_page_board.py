@@ -31,7 +31,8 @@ MIN_BOARD = {
         "why": "A for-sale hub that shows no birds above the fold reads as a directory, not a breeder.",
         "why_source": "docs/research/for-sale-keywords-2026-07.md",
         "words": {"min": 400, "max": 600}, "shape": "inventory",
-        "keywords": {"primary": ["african grey parrots for sale"], "lsi": [], "longtail": [], "brand": [], "geo": []},
+        "keywords": {"primary": ["african grey parrots for sale"], "lsi": [], "longtail": [], "brand": [], "geo": [],
+                     "conversational": [], "comparison": [], "solution": [], "transactional": []},
         "entities": ["ont:psittacus-erithacus"],
         "tree": [{"level": 3, "heading": "Our Congos", "intent": "", "children": [
                  {"level": 4, "heading": "What Does Each Cost?", "intent": "", "children": [
@@ -450,12 +451,14 @@ def test_distribution_totals_add_across_two_sections():
     second.update({"id": "shipping", "n": 2, "heading": "How Do We Ship?",
                    "words": {"min": 250, "max": 300}, "tree": []})
     second["keywords"] = {"primary": ["african grey shipping"], "lsi": ["iata"],
-                          "longtail": [], "brand": ["c.a.gs"], "geo": ["midland", "texas"]}
+                          "longtail": [], "brand": ["c.a.gs"], "geo": ["midland", "texas"],
+                          "conversational": [], "comparison": [], "solution": [], "transactional": []}
     b["sections"].append(second)
     PB.validate_board(b)                                   # still a buildable record
     d = PB.distribution(b)
     assert [r["section"] for r in d["rows"]] == ["birds", "shipping"]
     assert d["totals"] == {"primary": 2, "lsi": 1, "longtail": 0, "brand": 1, "geo": 2,
+                           "conversational": 0, "comparison": 0, "solution": 0, "transactional": 0,
                            "words_min": 650, "words_max": 900}
     assert d["h_counts"] == {"h1": 1, "h2": 2, "h3": 1, "h4": 1, "h5": 1, "h6": 1}
 
@@ -2100,3 +2103,16 @@ def test_distribution_block_shows_group_and_grounded_why():
     ours["sections"][0]["group"] = "SUGGESTED-RECOMMENDED"
     html3 = BPB.render(_approved(ours), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
     assert "[C · ours ·" in html3
+
+
+def test_keywords_carry_the_briefs_eight_types_plus_geo():
+    import build_page_board as BPB
+    bad = json.loads(json.dumps(MIN_BOARD)); del bad["sections"][0]["keywords"]["transactional"]
+    with pytest.raises(PB.BoardError):
+        PB.validate_board(bad)
+    b = json.loads(json.dumps(MIN_BOARD))
+    b["sections"][0]["keywords"]["transactional"] = ["reserve an african grey", "african grey deposit"]
+    PB.validate_board(b)
+    assert PB.distribution(b)["totals"]["transactional"] == 2
+    html = BPB.render(_approved(b), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "| Section | Primary | LSI | Long-tail | Brand | Geo | Voice | Compare | Solution | Transact | Words |" in html
