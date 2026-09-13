@@ -119,7 +119,8 @@ def outline_block(board, hits):
     h1 = PB.all_headings(board)[0][1]
     lines = [f"H1  {esc(h1)}" + flag(h1, hit_by)]
     for s in board["sections"]:
-        lines.append(f"├─ H2 {s['n']:02d}  {esc(s['heading'])}   [{s['category']} · {GROUP_SHORT[s['group']]} · {s['shape']} · {s['framework']} · {s['words']['min']}–{s['words']['max']}w]" + flag(s["heading"], hit_by))
+        cta = f" · CTA×{s['cta']}" if s.get("cta") else ""
+        lines.append(f"├─ H2 {s['n']:02d}  {esc(s['heading'])}   [{s['category']} · {GROUP_SHORT[s['group']]} · {s['shape']} · {s['framework']} · {s['words']['min']}–{s['words']['max']}w{cta}]" + flag(s["heading"], hit_by))
 
         def walk(nodes, depth):
             for n in nodes:
@@ -300,6 +301,15 @@ def image_plan_table(board):
     return md_table(["Section", "Slot", "Kind", "Required", "Prompt"], rows)
 
 
+def decisions_lines(brief):
+    """The page-level decisions the brief gates on (§10, §14, §16d), one bold-led line each,
+    so the sitting reads them beside the strategy they serve."""
+    c = brief["cta"]
+    return [f"**CTA plan.** One every {c['cadence']['min']}–{c['cadence']['max']} words, to {md(c['destination'])}; "
+            f"anchors: {', '.join(md(a) for a in c['anchors'])}; the site-wide CTA band is "
+            f"{'hidden on this page' if c['global_cta'] == 'hidden' else 'shown'}."]
+
+
 def render(board, ont, ledger, live, thumbs, slug):
     hits = PB.header_hits(board, live)          # exactly what the gate will fail on
     qhits = PB.faq_hits(board, live)            # and what it will warn on
@@ -317,6 +327,7 @@ def render(board, ont, ledger, live, thumbs, slug):
         f"**Out of scope.** {', '.join(md(o) for o in brief['out_of_scope']) or 'nothing named'}",
         f"**Primary keyword.** {md(brief['primary_keyword'])}",
         f"**Strategy: {md(brief['strategy']['name'])}.** Why: {md(brief['strategy']['why'])}",
+        *decisions_lines(brief),
         "", "**Angles considered**", angles_table(brief),
         "", "**Research used**", md_table(["Source", "Fetched"], [[md(s["path"]), md(s["fetched"])] for s in m["sources"]]) if m["sources"] else "_no sources recorded_",
     ])))

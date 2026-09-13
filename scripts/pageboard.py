@@ -125,6 +125,11 @@ def validate_board(board):
     for a in brief["angles"]:
         if a["name"] != chosen and not a["why_not"].strip():
             raise BoardError(f"angle {a['name']!r} was not taken and records no why_not")
+    cad = brief["cta"]["cadence"]
+    if cad["min"] > cad["max"]:
+        raise BoardError(f"brief.cta.cadence: min {cad['min']} > max {cad['max']}")
+    if not any(s.get("cta", 0) for s in board["sections"]):
+        raise BoardError("no section carries a CTA — a transactional page with a CTA plan places at least one")
     lib = library_urls()
     if lib:
         for sec in board["sections"]:
@@ -401,6 +406,30 @@ def duplicate_alts(board):
         if key:
             seen.setdefault(key, []).append(a["slot"])
     return {k: v for k, v in seen.items() if len(v) > 1}
+
+
+def cta_findings(board):
+    """[(check, message)] for the CTA plan, read on word-band MIDPOINTS. Bands are estimates,
+    so both findings are prompts to look rather than proof: `cta-cadence` when the page's
+    words per CTA exceed the plan's maximum, `cta-gap` for each run of consecutive CTA-free
+    sections longer than that maximum. A section's `cta` is a count, not a flag: a long FAQ
+    can carry two."""
+    cap = board["brief"]["cta"]["cadence"]["max"]
+    mid = lambda s: (s["words"]["min"] + s["words"]["max"]) // 2
+    total = sum(mid(s) for s in board["sections"])
+    n = sum(s.get("cta", 0) for s in board["sections"])
+    out = []
+    if n == 0 or total / n > cap:
+        out.append(("cta-cadence", f"{n} CTA(s) across ~{total} words is one per ~{total // max(n, 1)} — "
+                                   f"the plan allows at most {cap}"))
+    run, ids = 0, []
+    for s in board["sections"] + [None]:
+        if s is not None and not s.get("cta", 0):
+            run += mid(s); ids.append(s["id"]); continue
+        if run > cap:
+            out.append(("cta-gap", f"sections {', '.join(ids)} run ~{run} words with no CTA — the plan allows at most {cap}"))
+        run, ids = 0, []
+    return out
 
 
 class _Headings(DUP.Text):
@@ -700,6 +729,8 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     for key, slots in duplicate_alts(board).items():
         add("asset-alt-duplicate", "FAIL",
             f"slots {', '.join(slots)} share one alt ({key!r}) — no two images on a page share an alt (Rule 50b)")
+    for check, msg in cta_findings(board):
+        add(check, "WARN", msg)
 
     picks = (board.get("approval") or {}).get("picks", {})
     for s in board["sections"]:

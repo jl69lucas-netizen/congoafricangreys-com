@@ -14,7 +14,9 @@ MIN_BOARD = {
               "angles": [{"name": "n", "hook": "the birds first, the pitch second", "why_not": ""},
                          {"name": "price-led", "hook": "open on the $1,500 floor",
                           "why_not": "the price bucket is the adoption-cost page's, and it outranks us on it"}],
-              "strategy": {"name": "n", "why": "w", "trade_off": "t"}},
+              "strategy": {"name": "n", "why": "w", "trade_off": "t"},
+              "cta": {"cadence": {"min": 500, "max": 700}, "destination": "#reserve",
+                      "anchors": ["Reserve This Bird"], "global_cta": "hidden"}},
     "h1": {"variants": ["a", "b", "c", "d", "e"], "recommended": 0, "pick": None},
     "meta_set": {
         "titles": ["African Grey Parrots for Sale in the USA | Congo & Timneh | C.A.Gs",
@@ -31,6 +33,7 @@ MIN_BOARD = {
         "why": "A for-sale hub that shows no birds above the fold reads as a directory, not a breeder.",
         "why_source": "docs/research/for-sale-keywords-2026-07.md",
         "words": {"min": 400, "max": 600}, "shape": "inventory",
+        "cta": 1,
         "keywords": {"primary": ["african grey parrots for sale"], "lsi": [], "longtail": [], "brand": [], "geo": [],
                      "conversational": [], "comparison": [], "solution": [], "transactional": []},
         "entities": ["ont:psittacus-erithacus"],
@@ -2190,3 +2193,36 @@ def test_kit_strip_shows_takeaway_table_stepper_and_the_newsletter():
     b4["tuple"]["newsletter"] = {"after": "shipping", "variant": "A"}
     with pytest.raises(PB.BoardError):
         BPB.render(b4, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+
+
+# --- Task 21: the CTA plan -------------------------------------------------------------------
+
+def test_cta_plan_validates_cadence_destination_and_needs_one_cta():
+    for mutate in (lambda b: b["sections"][0].update(cta=0),
+                   lambda b: b["brief"]["cta"]["cadence"].update(min=800),
+                   lambda b: b["brief"]["cta"].update(destination="reserve"),
+                   lambda b: b["brief"]["cta"].update(anchors=[])):
+        bad = json.loads(json.dumps(MIN_BOARD)); mutate(bad)
+        with pytest.raises(PB.BoardError):
+            PB.validate_board(bad)
+
+
+def test_gate_warns_on_thin_cta_cadence_and_a_long_cta_free_run():
+    b = json.loads(json.dumps(MIN_BOARD))
+    assert PB.cta_findings(b) == []                            # one CTA in ~500 words
+    ship = json.loads(json.dumps(b["sections"][0]))
+    ship.update({"id": "shipping", "n": 2, "words": {"min": 700, "max": 900}, "cta": 0, "tree": []})
+    b["sections"].append(ship)
+    found = dict(PB.cta_findings(b))
+    assert set(found) == {"cta-cadence", "cta-gap"}            # ~1300 words on one CTA; shipping runs ~800 bare
+    assert "shipping" in found["cta-gap"]
+    f = [x for x in PB.gate_findings(_approved(b), ONT_OK, LEDGER_EMPTY, live={}, stage="build")
+         if x["check"].startswith("cta-")]
+    assert sorted((x["check"], x["sev"]) for x in f) == [("cta-cadence", "WARN"), ("cta-gap", "WARN")]
+
+
+def test_board_renders_the_cta_plan_and_marks_cta_sections():
+    import build_page_board as BPB
+    html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "**CTA plan.** One every 500–700 words" in html and "Reserve This Bird" in html
+    assert "hidden on this page" in html and "400–600w · CTA×1]" in html
