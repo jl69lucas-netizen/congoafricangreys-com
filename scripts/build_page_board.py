@@ -238,6 +238,23 @@ def radio_list(name, items, recommended, picked):
         for i, v in enumerate(items))
 
 
+def image_plan_table(board):
+    """One row per image slot the outline plans, prompt included: the infographic prompts ARE
+    the generation pack (§15c), and a photo prompt says what the photo has to show. A
+    signature section with no slot gets a row of its own, so the gap is on the board rather
+    than only in the gate output."""
+    rows = []
+    for s in board["sections"]:
+        label = f"{s['n']:02d} {md(s['heading'])}"
+        if not s["images"]:
+            rows.append([label, "—", "—", "—",
+                         "_no image slot_" if s["shape"] == "standard" else "**⚠ no image slot**"])
+        for i in s["images"]:
+            rows.append([label, md(i["slot"]), md(i["kind"]),
+                         "required" if i["required"] else "optional", md(i["prompt"]) or "_no prompt_"])
+    return md_table(["Section", "Slot", "Kind", "Required", "Prompt"], rows)
+
+
 def angles_table(brief):
     """Angles considered, the chosen one starred. Its third column is the strategy's own
     trade-off rather than a why_not: a table where only the rejects carry a cost reads as
@@ -294,6 +311,10 @@ def render(board, ont, ledger, live, thumbs, slug):
                      "No heading collides with a live page (exact, species-template or 5-word shingle).")
                   + (f"\n\n{len(qhits)} FAQ question(s) repeat a live heading — a warning, not a refusal."
                      if qhits else "")))
+
+    parts.append(("3b. Image plan", image_plan_table(board)
+                  + "\n\nEvery image slot the outline plans. Infographic prompts are the generation pack; "
+                    "photo prompts say what the photo has to show. Page-level files and alts are in block 7."))
 
     rows = [[md(r["section"]), r["primary"], r["lsi"], r["longtail"], r["brand"], r["geo"], f"{r['words_min']}–{r['words_max']}"] for r in d["rows"]]
     t = d["totals"]

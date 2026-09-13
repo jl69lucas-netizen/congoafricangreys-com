@@ -896,7 +896,7 @@ def test_board_html_escapes_record_text_in_every_context():
     assert "\\# a \\| b \\*c\\* \\_d\\_" in html                  # the heading, markdown-neutral
     assert "<\\/script>" in html                                  # the graph label, JSON-escaped
     blocks = re.findall(r'<script type="text/markdown"[^>]*>(.*?)\n</script>', html, re.S)
-    assert len(blocks) == 9    # eight numbered blocks plus 5b, the kit strip
+    assert len(blocks) == 10    # eight numbered blocks plus 3b (image plan) and 5b (the kit strip)
     for i, blk in enumerate(blocks):
         assert "</script" not in blk, i
 
@@ -2000,3 +2000,32 @@ def test_kit_strip_takes_the_desktop_thumb_whatever_section_it_was_cut_under():
     html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs=thumbs, slug="x")
     assert 'src="thumbs/birds--hero-a--desktop.png"' in html
     assert "the hero this page wears" in html
+
+
+# --- Task 17: the image plan on the board --------------------------------------------------
+
+def test_image_plan_lists_every_slot_with_its_prompt_and_flags_a_bare_signature_section():
+    import build_page_board as BPB
+    b = _approved(MIN_BOARD)
+    html = BPB.render(b, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert 'data-title="3b. Image plan"' in html
+    assert "birds-opener" in html and "six bird cards" in html and "optional" in html
+    b["sections"][0]["images"] = []
+    html = BPB.render(b, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "**⚠ no image slot**" in html
+
+
+def test_gate_warns_on_a_signature_section_with_no_image_and_fails_on_a_shared_alt():
+    b = _approved(MIN_BOARD)
+    checks = lambda: [(x["check"], x["sev"]) for x in
+                      PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={}, stage="build")]
+    assert ("image-coverage", "WARN") not in checks()
+    reserve = json.loads(json.dumps(b["sections"][0]))
+    reserve.update({"id": "reserve", "n": 2, "shape": "standard", "images": [], "tree": []})
+    b["sections"].append(reserve)
+    assert ("image-coverage", "WARN") not in checks()          # a standard section is exempt
+    b["sections"][0]["images"] = []
+    assert ("image-coverage", "WARN") in checks()
+    b["assets"] = [dict(b["assets"][0], alt="A Congo on its perch"),
+                   dict(b["assets"][0], slot="card-01", alt="a congo on its perch.")]
+    assert ("asset-alt-duplicate", "FAIL") in checks()

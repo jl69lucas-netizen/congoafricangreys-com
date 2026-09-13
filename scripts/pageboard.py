@@ -370,6 +370,25 @@ def faq_questions(board):
     return []
 
 
+def image_gaps(board):
+    """Signature sections (shape ≠ standard) that plan no image. The brief puts an image
+    under every H2 (§15b); a standard section — the FAQ, the form — wears its shell and no
+    in-body image by design, so it is exempt rather than reported as a gap nobody will fill."""
+    return [s["id"] for s in board["sections"] if s["shape"] != "standard" and not s["images"]]
+
+
+def duplicate_alts(board):
+    """{normalised alt: [slot, ...]} for every non-empty asset alt used twice (Rule 50b: no two
+    images on a page share an alt). Compared on tokens, so a trailing full stop or a capital
+    letter is not a second alt. An empty alt is an unwritten one, not a duplicate."""
+    seen = {}
+    for a in board["assets"]:
+        key = " ".join(tokens(a["alt"]))
+        if key:
+            seen.setdefault(key, []).append(a["slot"])
+    return {k: v for k, v in seen.items() if len(v) > 1}
+
+
 class _Headings(DUP.Text):
     """The dup gate's chrome-skipping walker, narrowed to the text of h1-h6.
 
@@ -655,6 +674,12 @@ def gate_findings(board, ont, ledger, live, stage="build"):
     for i, d_ in enumerate(ms["descriptions"]):
         if not DESC_MIN <= len(d_) <= DESC_MAX:
             add("meta-length", "FAIL", f"description variant {i} is {len(d_)} chars — band is {DESC_MIN}–{DESC_MAX}")
+
+    for sid in image_gaps(board):
+        add("image-coverage", "WARN", f"section {sid} plans no image slot — the brief puts one under every H2 (§15b)")
+    for key, slots in duplicate_alts(board).items():
+        add("asset-alt-duplicate", "FAIL",
+            f"slots {', '.join(slots)} share one alt ({key!r}) — no two images on a page share an alt (Rule 50b)")
 
     picks = (board.get("approval") or {}).get("picks", {})
     for s in board["sections"]:
