@@ -2116,3 +2116,21 @@ def test_keywords_carry_the_briefs_eight_types_plus_geo():
     assert PB.distribution(b)["totals"]["transactional"] == 2
     html = BPB.render(_approved(b), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
     assert "| Section | Primary | LSI | Long-tail | Brand | Geo | Voice | Compare | Solution | Transact | Words |" in html
+
+
+def test_keyword_types_tuple_labels_and_schema_name_the_same_arrays():
+    """The schema keeps its own copy of the names; this pins it to PB.KEYWORD_TYPES, so a type
+    added in one place and not the other fails here instead of silently vanishing from the board
+    (schema only) or raising KeyError in distribution() (tuple only)."""
+    schema = json.loads((PB.SCHEMAS / "board.schema.json").read_text(encoding="utf-8"))
+    kw = schema["properties"]["sections"]["items"]["properties"]["keywords"]
+    assert kw["required"] == list(PB.KEYWORD_TYPES)
+    assert set(kw["properties"]) == set(PB.KEYWORD_TYPES)
+    assert set(PB.KEYWORD_LABELS) == set(PB.KEYWORD_TYPES)
+    for typ in PB.KEYWORD_TYPES:
+        b = json.loads(json.dumps(MIN_BOARD))
+        b["sections"][0]["keywords"][typ] = ["one", "two"]
+        assert PB.distribution(b)["totals"][typ] == 2
+    bad = json.loads(json.dumps(MIN_BOARD)); bad["sections"][0]["keywords"]["voice"] = []
+    with pytest.raises(PB.BoardError):
+        PB.validate_board(bad)
