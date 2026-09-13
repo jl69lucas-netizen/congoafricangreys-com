@@ -58,6 +58,19 @@ const shortName = (b: any) => b.name.replace(" (Pair)", "");
 const birdCount = available.length;
 const birdWord = ["zero","one","two","three","four","five","six","seven","eight","nine"][birdCount] ?? String(birdCount);
 const congoBirds = available.filter((b) => groupKey(b) === "congo");
+
+// ---- Tool (brief §14) · what you pay, and when. Every figure from clutch-inventory / price-matrix. ----
+const money = (n: number) => "$" + n.toLocaleString("en-US");
+const depositCost = (prices as any).deposit;
+const payBirds = available.map((b) => ({ id: b.id, price: b.price,
+  label: shortName(b) + " — " + (b.sex === "pair" ? "Congo companion pair" : subLabel(b)) + ", " + b.price_display }));
+const payDelivery = [
+  { id: "pickup", cost: 0, from: false, label: "Collect here, within a two to three hour drive" },
+  { id: "airport", cost: (prices as any).airport_pickup_cost, from: false, label: "Airport cargo, any state" },
+  { id: "home", cost: (prices as any).home_delivery_cost, from: false, label: "Home delivery, any address" },
+  { id: "cabin", cost: (prices as any).cabin_nanny_cost, from: true, label: "Cabin seat with a flight nanny, quoted per route" },
+];
+const payDefault = { bird: payBirds[0], way: payDelivery[1] };
 const timnehBirds = available.filter((b) => groupKey(b) === "timneh");
 const pairBirds = available.filter((b) => groupKey(b) === "pair");
 const lowPrice = Math.min(...available.map((b) => b.price));
@@ -412,7 +425,7 @@ const p = "hub";
 
           <h3>The Price Gap Between the Two</h3>
           <p><StatementLabel kind="fact" source="https://www.iucnredlist.org/species/22724813/154068029" /> Both forms live 40 to 60 years in a home, so the gap is paid once and the bird is kept for decades. Today the gap is the distance between {timnehRange} and {congoRange}. It reflects demand for the red tail, not a difference in what leaves with the bird. A Timneh at {floor} arrives with the same laboratory results and the same paperwork as a Congo at {ceiling} does.</p>
-          <div class="ticket"><a class="ticket-cta" href="#price">What sits inside the price <span aria-hidden="true">→</span></a></div>
+          <div class="ticket"><a class="ticket-cta" href="#reserve">Tell us Congo or Timneh and we will match a bird <span aria-hidden="true">→</span></a></div>
         </section>
 
         <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
@@ -467,7 +480,27 @@ const p = "hub";
               <div class="rc-total"><dt>Collect in person within a two to three hour drive</dt><dd>Free</dd></div>
             </dl>
           </figure>
-          <div class="ticket"><a class="ticket-cta" href="#route">How the bird travels <span aria-hidden="true">→</span></a></div>
+          <!-- Tool (brief §14) · what you pay, and when. Rendered at rest for the first bird by air; the script recomputes. -->
+          <div class="paycalc" id="pay-calc" role="group" aria-labelledby="pc-h">
+            <p class="paycalc-k">Work it out</p>
+            <p class="paycalc-h" id="pc-h">What You Pay, and When</p>
+            <div class="paycalc-in">
+              <label>Which bird
+                <select id="pc-bird">{payBirds.map((b) => <option value={b.id} selected={b.id === payDefault.bird.id}>{b.label}</option>)}</select>
+              </label>
+              <label>How it reaches you
+                <select id="pc-way">{payDelivery.map((d) => <option value={d.id} selected={d.id === payDefault.way.id}>{d.label}</option>)}</select>
+              </label>
+            </div>
+            <dl class="rc paycalc-out" aria-live="polite">
+              <div><dt>The bird</dt><dd id="pc-price">{money(payDefault.bird.price)}</dd></div>
+              <div><dt>Getting it to you</dt><dd id="pc-ship">{money(payDefault.way.cost)}</dd></div>
+              <div><dt>Deposit, after the video call</dt><dd id="pc-dep">{money(depositCost)}</dd></div>
+              <div class="rc-total"><dt>Balance when the bird is yours</dt><dd id="pc-bal">{money(payDefault.bird.price + payDefault.way.cost - depositCost)}</dd></div>
+            </dl>
+            <p class="paycalc-note">The deposit comes off the balance, so the last two lines are the whole cost. A cabin seat is quoted route by route, so for that option the figures are where the quote starts.</p>
+          </div>
+          <div class="ticket"><a class="ticket-cta" href="#reserve">Hold the bird you just priced <span aria-hidden="true">→</span></a></div>
         </section>
 
         <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
@@ -501,7 +534,7 @@ const p = "hub";
           <p>The journey ends when the bird is in your hands, at a counter or a doorstep or our kitchen. That moment matters for more than the photograph, because it is when the guarantee begins.</p>
           <h4>The Guarantee Clock Starts at Handover</h4>
           <p><a href="https://www.aav.org/search/custom.asp?id=1803" target="_blank" rel="noopener noreferrer">The avian vet locator from the Association of Avian Veterinarians ↗</a> is what we use to find a clinic near you inside that window. Our written health guarantee runs 72 hours from possession, and anything transit-related is covered for the first 24. A same-day call is what makes either usable, because it lets us arrange an avian vet near you while the window is open. <a href="/african-grey-parrot-health-guarantee/">The guarantee page</a> has the term word for word.</p>
-          <div class="ticket"><a class="ticket-cta" href="#papers">What travels with the bird <span aria-hidden="true">→</span></a></div>
+          <div class="ticket"><a class="ticket-cta" href="#reserve">Tell us your city and we will book the route <span aria-hidden="true">→</span></a></div>
         </section>
 
         <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
@@ -550,7 +583,7 @@ const p = "hub";
           <p>We hold a licence under the Animal Welfare Act, and it is the one credential a buyer can check without trusting us at all.</p>
           <h4>How to Look Us Up on APHIS</h4>
           <p><a href="https://www.aphis.usda.gov/awa/public-search" target="_blank" rel="noopener noreferrer">The USDA licence search ↗</a> lists every Animal Welfare Act licence holder by name. Search it for us before you send a deposit to anyone, including us. A seller who is not in it has no licence to lose.</p>
-          <div class="ticket"><a class="ticket-cta" href="#who">Who raises these birds <span aria-hidden="true">→</span></a></div>
+          <div class="ticket"><a class="ticket-cta" href="#reserve">See a bird's folder on a video call first <span aria-hidden="true">→</span></a></div>
         </section>
 
         <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
@@ -596,6 +629,7 @@ const p = "hub";
         <section class="sec" id="next">
           <h2>Which African Grey Page Do You Need Next?</h2>
           <p class="opener">This page is the hub. Every other for-sale page on the site is a spoke that answers one question in depth, and the boarding pass below lists all of them.</p>
+          <img class="sec-img" src={IMG + "african-greys-on-a-feeding-perch-hub-760.webp"} srcset={IMG + "african-greys-on-a-feeding-perch-hub-760.webp 760w, " + IMG + "african-greys-on-a-feeding-perch-hub.webp 800w"} sizes="(max-width:900px) 100vw, 760px" width="800" height="436" loading="lazy" decoding="async" alt="Four African Greys on a feeding perch, one reaching for a walnut in an outstretched hand">
 
           <nav class="bpass" id="spoke-index" aria-label="Every page in the for-sale cluster">
             <div class="bpass-head"><span class="bp-k">Cluster index</span><span class="bp-route">HUB <span aria-hidden="true">→</span> {spokes.length} SPOKES</span></div>
@@ -646,6 +680,7 @@ const p = "hub";
           <p>Questions five and six. Owning a grey hatched in captivity is lawful; the six documents are what make it provable.</p>
           <h3>Pairs, Babies and Adoption</h3>
           <p>Questions two, nine and ten. A companion pair is two unrelated birds sold together, a baby is a chick that leaves once weaned, and adoption is a good route when a rescue near you has the right bird.</p>
+          <div class="ticket"><a class="ticket-cta" href="#reserve">Ask us the question this page missed <span aria-hidden="true">→</span></a></div>
         </section>
 
         <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
@@ -764,7 +799,7 @@ const p = "hub";
     </div><!-- /body-grid -->
   </main>
 
-  <script is:inline define:vars={{ N }}>
+  <script is:inline define:vars={{ N, payBirds, payDelivery, depositCost }}>
     (() => {
       const ring = document.querySelector('.bdial');
       const num = document.getElementById('dialNum');
@@ -789,6 +824,24 @@ const p = "hub";
           entries.forEach((e) => { if (e.isIntersecting) paint(secs.indexOf(e.target)); });
         }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
         secs.forEach((s) => io.observe(s));
+      }
+
+      // ---- Tool · what you pay, and when (figures passed in from the data files) ----
+      const pcBird = document.getElementById('pc-bird');
+      const pcWay = document.getElementById('pc-way');
+      if (pcBird && pcWay) {
+        const money = (n) => '$' + n.toLocaleString('en-US');
+        const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+        const update = () => {
+          const b = payBirds.find((x) => x.id === pcBird.value) || payBirds[0];
+          const d = payDelivery.find((x) => x.id === pcWay.value) || payDelivery[0];
+          const from = d.from ? 'from ' : '';
+          set('pc-price', money(b.price));
+          set('pc-ship', d.cost ? from + money(d.cost) : 'Free');
+          set('pc-bal', from + money(b.price + d.cost - depositCost));
+        };
+        pcBird.addEventListener('change', update);
+        pcWay.addEventListener('change', update);
       }
     })();
   </script>
@@ -940,6 +993,15 @@ const p = "hub";
   .hub .rc .rc-total{background:#f4faf6;margin:0 -1rem;padding:.6rem 1rem;}
   .hub .rc .rc-total dt{font-weight:700;color:var(--green-d);}
   .hub .rc .rc-total dd{color:var(--green-d);}
+  .hub .paycalc{margin:1.1rem 0 .4rem;max-width:600px;background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;box-shadow:0 6px 20px rgba(60,30,10,.08);}
+  .hub .paycalc-k{margin:0;padding:.95rem 1rem 0;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--clay-t);}
+  .hub .paycalc-h{margin:.1rem 0 .7rem;padding:0 1rem;font-family:var(--font-lora,'Newsreader',serif);font-size:1.22rem;font-weight:700;color:var(--green-d);}
+  .hub .paycalc-in{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;padding:0 1rem .9rem;}
+  .hub .paycalc-in label{display:grid;gap:.3rem;font-size:.84rem;font-weight:600;color:var(--muted);}
+  .hub .paycalc-in select{width:100%;min-height:44px;font:inherit;font-size:1rem;font-weight:500;color:var(--ink);background:var(--cream);border:1px solid var(--bd);border-radius:10px;padding:.5rem .6rem;}
+  .hub .paycalc-in select:focus-visible{outline:3px solid var(--clay);outline-offset:2px;}
+  .hub .paycalc .rc{border-top:1px solid var(--bd);}
+  .hub .paycalc-note{margin:0;padding:.65rem 1rem .95rem;font-size:.82rem;line-height:1.5;color:var(--muted);}
 
   /* ---- Table A (fork) ---- */
   .hub .otA{border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(60,30,10,.08);border:1px solid var(--bd);margin:6px 0 18px;}
@@ -1091,6 +1153,7 @@ const p = "hub";
     .hub .hero-field{order:-1;max-width:none;}
   }
   @media(max-width:640px){
+    .hub .paycalc-in{grid-template-columns:1fr;}
     .hub .counter-grid{grid-template-columns:repeat(2,1fr);}
     .hub .seam-wrap{gap:12px;margin:24px auto 22px;}
     .hub .seam{height:30px;}

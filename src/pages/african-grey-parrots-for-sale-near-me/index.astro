@@ -137,6 +137,16 @@ const ledgerRows = states
     tier: s.abbr === "TX" ? "Free pickup within 2–3 h · " + airport + " · " + home : airport + " airport · " + home + " home",
   }));
 
+// ---- Tool (brief §14) · route finder: one ledger row, plus the metro pages in that state. ----
+// The ledger row above already spells the airport out in full; the finder repeats it as MAF, so the page's
+// Midland budget (evidence-budgets.json, 8 on this page) is spent on copy, not on a second airport name.
+const finder = ledgerRows.map((r) => ({ abbr: r.abbr, state: r.state, href: r.href,
+  route: r.route.replace("Midland International Air and Space Port (MAF)", "MAF, our airport"), port: r.port, tier: r.tier,
+  metros: metrosOf(r.abbr).map((m) => ({ name: m.city, href: m.full_slug })) }));
+const finderOther = { abbr: "other", state: "", href: "", route: "Flies from MAF, our airport", port: "Named when you tell us your city",
+  tier: airport + " airport · " + home + " home", metros: [] };
+const finderDefault = finder.find((r) => r.abbr === "TX") ?? finder[0];
+
 // ---- Keep reading — thumbs are cut from each TARGET page's own hero (bake_read_card_thumbs.py). ----
 const readMore = [
   { href: "/african-grey-parrot-for-sale-florida/", img: IMG + "read-african-grey-parrot-for-sale-florida-hero", kicker: "A state page", title: "African Grey parrots for sale in Florida", sub: "What every state page in the grid does: the route, the cost, the avian vets and the birds, written for one state." },
@@ -460,6 +470,29 @@ const heroSizes = "(max-width: 700px) 100vw, (max-width: 980px) 44vw, 520px";
           </div>
           <p class="cap">Where a state page does not yet name a cargo counter we say so rather than guess; we confirm the airport when you tell us your city.</p>
 
+          <!-- Tool (brief §14) · route finder. Rendered at rest for Texas; the script swaps the row and the metro links. -->
+          <div class="rfind" id="route-finder" role="group" aria-labelledby="rf-h">
+            <div class="rfind-top">
+              <p class="rfind-k">Route finder</p>
+              <p class="rfind-h" id="rf-h">Where Will Your Bird Be Going?</p>
+              <label class="rfind-l">Your state
+                <select id="rf-state">
+                  {finder.map((r) => <option value={r.abbr} selected={r.abbr === finderDefault.abbr}>{r.state}</option>)}
+                  <option value="other">A state not on this list</option>
+                </select>
+              </label>
+            </div>
+            <dl class="rfind-out" aria-live="polite">
+              <div><dt>How it gets there</dt><dd id="rf-route">{finderDefault.route}</dd></div>
+              <div><dt>Cargo counter</dt><dd id="rf-port">{finderDefault.port}</dd></div>
+              <div><dt>What it costs</dt><dd id="rf-tier">{finderDefault.tier}</dd></div>
+            </dl>
+            <p class="rfind-go" id="rf-go"><a href={finderDefault.href}>The {finderDefault.state} page</a> is written for buyers in your state.</p>
+            <ul class="rfind-metros" id="rf-metros" aria-label="Metro pages in this state">
+              {finderDefault.metros.map((m) => <li><a href={m.href}>{m.name}</a></li>)}
+            </ul>
+          </div>
+
           <h3>Pickup in Midland, Texas — Within Two or Three Hours</h3>
           <img class="sec-img inf-img" src={IMG + "midland-pickup-within-two-or-three-hours-infographic.webp"}
                srcset={IMG + "midland-pickup-within-two-or-three-hours-infographic-760.webp 760w, " + IMG + "midland-pickup-within-two-or-three-hours-infographic.webp 1408w"}
@@ -698,6 +731,8 @@ const heroSizes = "(max-width: 700px) 100vw, (max-width: 980px) 44vw, 520px";
           <p><a href="https://www.aav.org/search/custom.asp?id=1803" target="_blank" rel="noopener noreferrer">The Association of Avian Veterinarians' find-a-vet search ↗</a> lists member practices by city. Book one before the bird lands, because our 72-hour term only works if a vet who handles parrots sees the bird inside the window. Bring the folder; the leg band gets matched to the lab paper at that first visit.</p>
         </section>
 
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Plan the first vet visit with us before the bird lands <span aria-hidden="true">→</span></a></div>
+
         <!-- Newsletter · contextual placement before the FAQ, this page's own image -->
         <aside class="fs-nl" aria-label="Clutch alerts by state">
           <div class="fs-nl-grid">
@@ -745,6 +780,8 @@ const heroSizes = "(max-width: 700px) 100vw, (max-width: 980px) 44vw, 520px";
           <h3>Documentation and Legality</h3>
           <p>The other half are about whether a bird bred in Texas is legal to own in your state and what proves it. It is, and the folder proves it. The documentation page linked above goes through each certificate if you want to read them before you ask.</p>
         </section>
+
+        <div class="ticket"><a class="ticket-cta" href="#reserve">Still unsure about your state? Ask us directly <span aria-hidden="true">→</span></a></div>
 
         <div class="seam-wrap"><img class="seam" src={seam} alt="" loading="lazy" width="182" height="60" decoding="async"></div>
 
@@ -859,7 +896,7 @@ const heroSizes = "(max-width: 700px) 100vw, (max-width: 980px) 44vw, 520px";
     </div>
   </main>
 
-  <script is:inline define:vars={{ N }}>
+  <script is:inline define:vars={{ N, finder, finderOther }}>
     (() => {
       // ---- Dial 1 scroll-spy: ring, counter, dial rows and rail chips read one spine ----
       const ring = document.getElementById('dialRing');
@@ -907,6 +944,28 @@ const heroSizes = "(max-width: 700px) 100vw, (max-width: 980px) 44vw, 520px";
         a.addEventListener('click', () => flash(a.getAttribute('href')));
       });
       if (location.hash) flash(location.hash);
+
+      // ---- Tool · route finder: swap the ledger row and the state's metro links ----
+      const rfSel = document.getElementById('rf-state');
+      if (rfSel) {
+        const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+        const go = document.getElementById('rf-go');
+        const list = document.getElementById('rf-metros');
+        const link = (href, text) => { const a = document.createElement('a'); a.href = href; a.textContent = text; return a; };
+        rfSel.addEventListener('change', () => {
+          const r = finder.find((x) => x.abbr === rfSel.value) || finderOther;
+          set('rf-route', r.route); set('rf-port', r.port); set('rf-tier', r.tier);
+          if (go) {
+            go.textContent = '';
+            if (r.href) { go.append(link(r.href, 'The ' + r.state + ' page'), ' is written for buyers in your state.'); }
+            else { go.append(link('#reserve', 'Tell us your city'), ' and we will name the counter and book the flight.'); }
+          }
+          if (list) {
+            list.textContent = '';
+            r.metros.forEach((m) => { const li = document.createElement('li'); li.append(link(m.href, m.name)); list.append(li); });
+          }
+        });
+      }
     })();
   </script>
 </BaseLayout>
@@ -1009,6 +1068,22 @@ const heroSizes = "(max-width: 700px) 100vw, (max-width: 980px) 44vw, 520px";
 
 /* Ticket CTA */
 .nmr .ticket{margin:1.2rem 0 .2rem;}
+.nmr .rfind{margin:1.2rem 0 1.4rem;max-width:640px;background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;box-shadow:0 6px 20px rgba(60,30,10,.08);}
+.nmr .rfind-top{background:var(--green-d);color:#fff;padding:.95rem 1rem 1rem;display:grid;gap:.15rem;}
+.nmr .rfind-k{margin:0;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#cfe6da;}
+.nmr .rfind-h{margin:0 0 .55rem;font-family:var(--font-lora,'Newsreader',serif);font-size:1.22rem;font-weight:700;color:#fff;}
+.nmr .rfind-l{display:grid;gap:.3rem;font-size:.84rem;font-weight:600;color:#e3eee8;}
+.nmr .rfind-l select{width:100%;max-width:340px;min-height:44px;font:inherit;font-size:1rem;font-weight:500;color:var(--ink);background:#fff;border:1px solid #cfe6da;border-radius:10px;padding:.5rem .6rem;}
+.nmr .rfind-l select:focus-visible{outline:3px solid #f08070;outline-offset:2px;}
+.nmr .rfind-out{margin:0;padding:.35rem 1rem .2rem;}
+.nmr .rfind-out div{display:grid;grid-template-columns:150px 1fr;gap:.8rem;padding:.55rem 0;border-bottom:1px solid var(--bd);}
+.nmr .rfind-out dt{font-size:.84rem;font-weight:700;color:var(--green-d);}
+.nmr .rfind-out dd{margin:0;font-size:.95rem;color:var(--ink);}
+.nmr .rfind-go{margin:0;padding:.7rem 1rem .3rem;font-size:.92rem;}
+.nmr .rfind-metros{list-style:none;margin:0;padding:.2rem 1rem 1rem;display:flex;flex-wrap:wrap;gap:.45rem;}
+.nmr .rfind-metros a{display:inline-flex;align-items:center;min-height:32px;padding:.2rem .75rem;border:1px solid var(--bd);border-radius:50px;font-size:.86rem;font-weight:600;color:var(--green-d);text-decoration:none;background:var(--cream);}
+.nmr .rfind-metros a:hover{border-color:var(--green);}
+.nmr .rfind-metros:empty{display:none;}
 .nmr .ticket-cta{display:inline-flex;align-items:center;justify-content:center;text-align:center;text-wrap:balance;gap:.5rem;background:#fff;border:1.5px solid var(--clay);color:var(--clay-ink);font-weight:700;padding:.55rem 1.05rem;border-radius:50px;text-decoration:none;transition:background .18s;}
 .nmr .ticket-cta span{transition:transform .18s;}
 .nmr .ticket-cta:hover{background:#fff3ef;}
@@ -1236,6 +1311,8 @@ const heroSizes = "(max-width: 700px) 100vw, (max-width: 980px) 44vw, 520px";
   .nmr .tile-field a.tile-more{grid-column:span 3;}
 }
 @media (max-width:640px){
+  .nmr .rfind-out div{grid-template-columns:1fr;gap:.15rem;}
+  .nmr .rfind-l select{max-width:none;}
   .nmr .nm-container{padding:0 16px;}
   .nmr .counter-grid{grid-template-columns:repeat(2,1fr);}
   .nmr .k3-row{flex-direction:column;gap:2px;}
