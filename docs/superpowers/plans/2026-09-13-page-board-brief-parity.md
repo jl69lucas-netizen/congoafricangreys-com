@@ -139,7 +139,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 
 **Files:** modify `schemas/board.schema.json`, `scripts/pageboard.py`, `scripts/build_page_board.py`, both `data/pages/<slug>/board.json`; test `tests/test_page_board.py`.
 
-The brief labels every section MANDATORY, COMPETITOR-BASED or SUGGESTED-RECOMMENDED, each with a why grounded in Sprint 0 and the source named. The record has `category` A/B/C, but no source on disk defines A or B. The pipeline review (`docs/artifacts/cags-sprint-pipeline-review.md` line 236) defines only C, "the sections that are ours alone". So `group` is a new field authored per section, never derived from the letter. The one sourced mapping is enforced: category C is always SUGGESTED-RECOMMENDED. `category` stays, because the canvas and the options logic already read it.
+The brief labels every section MANDATORY, COMPETITOR-BASED or SUGGESTED-RECOMMENDED, each with a why grounded in Sprint 0 and the source named. The record has `category` A/B/C, but no source on disk defines A or B. The pipeline review (`docs/artifacts/cags-sprint-pipeline-review.md` line 236) defines only C, "the sections that are ours alone". So `group` is a new field authored per section, never derived from the letter. The one sourced mapping is enforced: category C is always SUGGESTED-RECOMMENDED. `category` stays: the outline line renders it and the C rule reads it (nothing else does — corrected after the Task 18 quality review).
 
 - [ ] **Step 1: Write the failing tests, and give MIN_BOARD the new fields**
 
