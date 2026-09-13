@@ -95,3 +95,25 @@ Desktop form (breeder screenshot): final rule at `49bc532f` + `e267fc00` — two
 **Next:** Task 16 review → regenerate both boards + canvases → publish → the breeder's re-approval sitting (both records: meta picks, the §7 tuple alignment, the 4+4 FAQ soft collisions, the near-me/homepage heading overlap) → `board_approve.py` on both → gates 0 FAIL.
 
 **Boards regenerated and republished 2026-09-13** (`ef6b7c42`): hub `adfa7c65`, near-me `f260ac31`, both with the ten blocks. Both records now FAIL `approval-hash` and `meta-no-pick` (release) by design until the breeder re-approves on each board. Deferred, recorded: the near-me `header-collision` against the homepage heading; the 4+4 `faq-collision` WARNs; the hub §7 pick/tuple alignment (edit the tuple to `toc-t3-boarding-pass#spoke-index` at the sitting, before Approve).
+
+## 2026-09-13: collision flags closed (breeder: "lets fix this")
+
+The near-me/homepage heading overlap (flag 5, flag 10) and the 4+4 `faq-collision` WARNs are **fixed on the pages and the records**, not carried to the sitting. Each hit was first confirmed in `dist/` (all seven colliding headings exist; the matched runs were real copies except one, noted below). The gate was not changed: the FAQ check's "no head-term exemption" is a plan decision (additions plan, Task 14).
+
+| Page | Was | Now | Collided with |
+|---|---|---|---|
+| near-me §6 H2 | What Arrives With Every African Grey We Place? | What Paperwork Comes in Your African Grey's Folder? | `/` "What Health Guarantees Come With Every African Grey We Place?" |
+| near-me Q01 | Are there African Grey parrots for sale near me? | Is there a breeder selling African Greys near me? | hub H2 (the only shared run was the head term; reworded rather than exempted, the answer opens "Probably not from a breeder") |
+| near-me Q03 | Where can I buy an African Grey parrot near me without getting scammed? | Where can I safely purchase an African Grey near me? | `/how-to-avoid-african-grey-parrot-scams/` |
+| near-me Q04 | How much does an African Grey parrot cost near me? | What will an African Grey near me cost? | `/african-grey-parrot-adoption-cost/` |
+| near-me Q05 | Can you legally own an African Grey parrot in my state? | Is an African Grey legal to keep in my state? | `/cites-african-grey-documentation/` |
+| hub Q01 | How much does an African Grey parrot cost from you? | What do your African Greys sell for? | `/african-grey-parrot-adoption-cost/` |
+| hub Q02 | How much does a pair of African Grey parrots cost? | What do two African Greys cost if I buy them together? | `/congo-african-grey-parrot-pair-for-sale/` |
+| hub Q05 | Can I legally own an African Grey parrot in the United States? | Is keeping an African Grey as a pet legal in the US? | `/cites-african-grey-documentation/` |
+| hub Q10 | Is a Congo or a Timneh better for a first bird? | Should my first bird be a Timneh or a Congo? | `/` |
+
+Answers unchanged. "Which Five Documents Travel With Your African Grey?" passed the pre-check but was rejected as a near-template of dna-tested's "Which Documents Travel With a Sexed Bird"; "Does my state allow me to own an African Grey?" clashed with `/african-grey-care/`.
+
+**Verified:** board gate hub 1 FAIL (`approval-hash`) · 6 WARN, near-me 1 FAIL (`approval-hash`) · 2 WARN — zero `header-collision` / `faq-collision`, 100 live pages examined; old wordings re-injected in memory → 1 header + 1 FAQ hit (gate not blinded) · dist: old strings 0, each new question ×2 (summary + FAQPage), new H2 ×1 · dup body PASS (2 pages) · dup headers PASS (2 pages) · hardening 0 ERROR both · final audit near-me PASS, hub PASS-WITH-WARNINGS (unchanged) · `test_page_board.py` 155 passed (the retrofit test's pinned `KNOWN_HOMEPAGE_OVERLAP` FAIL now asserts zero collisions) · render meta 296 passed. Boards regenerated and republished in place (`f260ac31`, `adfa7c65`); new record hashes, no approval was pending on either.
+
+**Still open for the sitting:** meta picks on both records, the hub §7 pick/tuple alignment, then `board_approve.py` on both.

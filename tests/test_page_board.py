@@ -813,11 +813,10 @@ def test_pick_tuple_mismatch_is_a_warn_on_a_nav_section():
     assert [x for x in PB.gate_findings(b, ONT_OK, LEDGER_EMPTY, live={"/y/": ["Something Else Entirely Here Now"]},
                                         stage="build") if x["check"] == "pick-tuple-mismatch"] == []
 
-# The one heading on the shipped near-me page that genuinely crosses over with a sibling:
-# the homepage's "What Health Guarantees Come With Every African Grey We Place?". It is
-# asserted rather than popped, so a NEW collision fails this test instead of hiding behind
-# a pop list. Fix belongs on the near-me page in a later session.
-KNOWN_HOMEPAGE_OVERLAP = "What Health Guarantees Come With Every African Grey We Place?"
+# The near-me page used to cross over with the homepage's "What Health Guarantees Come With
+# Every African Grey We Place?" and this test pinned that FAIL. The page was fixed on
+# 2026-09-13 (the §6 H2 is now "What Paperwork Comes in Your African Grey's Folder?"), so
+# the fixture now asserts zero header collisions — a new one fails here.
 
 
 def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate(live_dist):
@@ -838,10 +837,12 @@ def test_near_me_retrofit_board_renders_candidates_and_passes_the_gate(live_dist
     f = [x for x in PB.gate_findings(approved, ont, ledger, live, stage="build") if x["sev"] == "FAIL"]
     # One more since the links plan landed (Task 15), asserted rather than filtered out: the
     # dead link is the hub this fixture pops on purpose two lines up. The duplicate anchor
-    # this check found on 2026-09-12 is gone — the page was fixed, not the gate.
-    assert [x["check"] for x in f] == ["header-collision", "links-internal-dead"], f
-    assert " vs / " in f[0]["msg"] and KNOWN_HOMEPAGE_OVERLAP in f[0]["msg"], f
-    assert "/african-grey-parrots-for-sale/" in f[1]["msg"], f
+    # this check found on 2026-09-12 is gone — the page was fixed, not the gate. So is the
+    # homepage header collision, fixed on the page 2026-09-13.
+    assert [x["check"] for x in f] == ["links-internal-dead"], f
+    assert "/african-grey-parrots-for-sale/" in f[0]["msg"], f
+    assert not [x for x in PB.gate_findings(approved, ont, ledger, live, stage="build")
+                if x["check"] in ("header-collision", "faq-collision")], "near-me collisions are back"
 
 
 def test_board_html_carries_every_block_and_the_theme_rules(tmp_path):
