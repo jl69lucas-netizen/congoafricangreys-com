@@ -231,7 +231,7 @@ itemListSchema.itemListElement.forEach((li: any) => { li.item.offers.shippingDet
 const schemaGraph = JSON.stringify({ "@context": "https://schema.org", "@graph": [hubSchema, itemListSchema, faqSchema, ...shipNodes] });
 const ogExtra = `<meta property="og:image" content="${site}${IMG}african-grey-parrots-for-sale-hero.webp">`;
 const tick = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`;
-const heroSrcset = IMG + "african-grey-parrots-for-sale-hero-400.webp 400w, " + IMG + "african-grey-parrots-for-sale-hero-760.webp 760w, " + IMG + "african-grey-parrots-for-sale-hero.webp 1280w";
+const heroSrcset = IMG + "african-grey-parrots-for-sale-hero-400.webp 400w, " + IMG + "african-grey-parrots-for-sale-hero-560.webp 560w, " + IMG + "african-grey-parrots-for-sale-hero-760.webp 760w, " + IMG + "african-grey-parrots-for-sale-hero.webp 1280w";
 const heroSizes = "(max-width: 700px) 100vw, (max-width: 980px) 44vw, 520px";
 const p = "hub";
 ---
@@ -326,15 +326,15 @@ const p = "hub";
           <h2>African Grey Parrots for Sale From Our Aviary, Priced and Named</h2>
           <p class="opener">These are the {birdWord} greys we can put a name and a price to today. Nothing here is a stock photograph and nothing is a bird we bought in to resell. Each one hatched in our nursery, and each card links to the bird's own page, where the same price appears again.</p>
 
-          <div class="availA-grid" role="list" aria-label="Birds available now">
+          <div class="availA-grid" aria-label="Birds available now">
             {available.map((b) => {
               const nm = shortName(b);
               const im = birdImg[b.name];
               const k = groupKey(b);
               return (
-                <article class={"bcard " + k} role="listitem">
+                <article class={"bcard " + k}>
                   <div class="bphoto">
-                    <img src={im.src + ".webp"} srcset={im.src + "-400.webp 400w, " + im.src + ".webp 800w"} sizes="(max-width: 640px) 100vw, (max-width: 980px) 46vw, 300px" alt={im.alt} style={"object-position:" + im.pos} width="800" height="800" loading="lazy" decoding="async">
+                    <img src={im.src + ".webp"} srcset={im.src + "-400.webp 400w, " + im.src + "-640.webp 640w, " + im.src + ".webp 800w"} sizes="(max-width: 640px) 100vw, (max-width: 980px) 46vw, 300px" alt={im.alt} style={"object-position:" + im.pos} width="800" height="800" loading="lazy" decoding="async">
                     <span class={"bbadge " + k}>{k === "pair" ? "Companion pair" : subLabel(b)}</span>
                   </div>
                   <div class="binfo">
@@ -885,7 +885,8 @@ const p = "hub";
   /* text-cream exempts the lead from body.theme-d h1 + p, which would paint it --ink on the dark field */
   .hub .hero .lead{font-size:.94rem;line-height:1.58;color:#dcebe3;max-width:58ch;margin:0;}
   .hub .hero-cta{display:flex;gap:.55rem;flex-wrap:wrap;margin:.8rem 0 0;}
-  .hub .hero-field{display:grid;gap:10px;max-width:520px;margin-left:auto;min-width:0;}
+  /* width:100% — margin-left:auto on a grid item shrink-wraps it, so the field grew 34px when the hero photo loaded (CLS .035 @1350, layout-image-box-reserved, 2026-09-13). */
+  .hub .hero-field{display:grid;gap:10px;width:100%;max-width:520px;margin-left:auto;min-width:0;}
   .hub .field-photo{margin:0;position:relative;border-radius:16px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.28);background:#1a3529;}
   .hub .field-photo img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;object-position:center 50%;}
   .hub .field-photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 14px 10px;display:flex;flex-direction:column;gap:1px;background:linear-gradient(to top,rgba(20,30,24,.78),transparent);color:#fff;}
@@ -953,6 +954,7 @@ const p = "hub";
   .hub .k1-rows>div:last-child{border-bottom:0;}
   .hub .k1-rows dt{font-size:var(--fs-micro);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green-d);padding-top:.15rem;}
   .hub .k1-rows dd{margin:0;font-size:.9rem;line-height:1.5;color:var(--ink);}
+  .hub .k1-rows dd a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;}
 
   /* ---- Avail-A: a plain grid, no facet sidebar ---- */
   .hub .availA-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:1rem 0;}

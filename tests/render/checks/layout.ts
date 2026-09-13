@@ -377,3 +377,94 @@ register({
     };
   },
 });
+
+/**
+ * 2026-09-13 — PSI measured CLS 0.266 on /african-grey-parrots-for-sale-near-me/ while every
+ * local Lighthouse run read 0. `.hero-field{margin-left:auto}` made a grid item shrink-wrap:
+ * until the hero photo arrived its only max-content was the tile chips (228px at 412), so the
+ * 2:1 photo box was 114px tall, then grew to 190 on load and pushed the hero copy down 76px.
+ * Locally the preloaded photo lands before first paint, so the box never visibly grows —
+ * the defect only exists on a slower load, which is exactly where PageSpeed measures.
+ *
+ * The probe reproduces the pre-load state without a slow network: each above-the-fold <img>
+ * is REPLACED by a clone whose source never resolves. (Changing an existing element's src
+ * would not work — the browser keeps painting the old image until the new one decodes.)
+ * Layout is compared with the loaded state, then the originals are put back.
+ *
+ * Judged unit: each above-the-fold image. Elements that move are named, not counted as units.
+ */
+register({
+  id: 'layout-image-box-reserved',
+  family: 'LAYOUT',
+  severity: 'advisory',
+  describe: 'nothing in the first viewport may move or resize when above-the-fold images finish loading',
+  minExamined: 0,
+  async run(page: Page, viewport: number): Promise<CheckResult> {
+    await page.route('**/__cag_pending_image__/**', () => {
+      /* never fulfilled: the clone stays in the pending state for the whole measurement */
+    });
+    try {
+      const r = await page.evaluate(async () => {
+        window.scrollTo(0, 0);
+        const vh = window.innerHeight;
+        const label = (el: Element) => {
+          const c = typeof (el as HTMLElement).className === 'string' ? (el as HTMLElement).className.trim() : '';
+          return el.tagName.toLowerCase() + (c ? '.' + c.split(/\s+/).slice(0, 2).join('.') : '');
+        };
+        const imgs = Array.from(document.images).filter((im) => {
+          const b = im.getBoundingClientRect();
+          return b.width > 0 && b.height > 0 && b.top < vh && im.currentSrc;
+        });
+        if (!imgs.length) return { examined: 0, movers: [] as string[] };
+        const watched = Array.from(document.body.querySelectorAll<HTMLElement>('body *')).filter((el) => {
+          if (el.tagName === 'IMG' || el.closest('svg')) return false;
+          const b = el.getBoundingClientRect();
+          return b.width > 0 && b.height > 0 && b.top < vh && getComputedStyle(el).position !== 'fixed';
+        });
+        const before = watched.map((el) => el.getBoundingClientRect());
+        // Swap the image (or its <picture>) for a clone that cannot load.
+        const swaps: [Element, Element][] = [];
+        imgs.forEach((im, i) => {
+          const host = im.parentElement && im.parentElement.tagName === 'PICTURE' ? im.parentElement : im;
+          const clone = host.cloneNode(true) as HTMLElement;
+          const cimg = (clone.tagName === 'IMG' ? clone : clone.querySelector('img')) as HTMLImageElement;
+          clone.querySelectorAll('source').forEach((s) => s.remove());
+          cimg.removeAttribute('srcset');
+          cimg.removeAttribute('loading');
+          cimg.src = `/__cag_pending_image__/${i}.webp`;
+          host.replaceWith(clone);
+          swaps.push([host, clone]);
+        });
+        document.body.offsetHeight;
+        await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+        const movers: string[] = [];
+        watched.forEach((el, i) => {
+          if (!el.isConnected) return;
+          const a = before[i];
+          const b = el.getBoundingClientRect();
+          const dy = Math.round(b.top - a.top);
+          const dh = Math.round(b.height - a.height);
+          if (Math.abs(dy) > 4 || Math.abs(dh) > 4) movers.push(`${label(el)} Δy${dy} Δh${dh}`);
+        });
+        swaps.forEach(([host, clone]) => clone.replaceWith(host));
+        return { examined: imgs.length, movers };
+      });
+      return {
+        examined: r.examined,
+        defects: r.movers.length
+          ? [
+              {
+                checkId: 'layout-image-box-reserved',
+                family: 'LAYOUT' as const,
+                viewport,
+                count: r.movers.length,
+                message: `layout in the first viewport changes when its images load (CLS): ${r.movers.slice(0, 5).join(' | ')}`,
+              },
+            ]
+          : [],
+      };
+    } finally {
+      await page.unroute('**/__cag_pending_image__/**');
+    }
+  },
+});

@@ -1023,7 +1023,8 @@ const ogExtra = `<meta property="og:image" content="${site}${IMG}hand-raised-afr
   .handraised .hero-grid{grid-template-columns:1fr;gap:18px;}
   /* Photos lead on mobile, copy follows — matching the sibling for-sale heroes
      (.chero-media{order:-1} on congo/timneh). Desktop keeps copy-left/photos-right. */
-  .handraised .hero-scatter{max-width:420px;margin:0 auto;gap:12px 10px;order:-1;}
+  /* width:100% — margin:0 auto on a grid item shrink-wraps it; before the four photos load the scatter was 84px tall and grew to 426 (CLS .35 mobile, layout-image-box-reserved, 2026-09-13). */
+  .handraised .hero-scatter{width:100%;max-width:420px;margin:0 auto;gap:12px 10px;order:-1;}
   .handraised .pofig{max-width:none;}
   .handraised .counter-grid{grid-template-columns:repeat(3,1fr);}
   /* minmax(0,1fr) + min-width:0 stop the 100vw full-bleed images from inflating
