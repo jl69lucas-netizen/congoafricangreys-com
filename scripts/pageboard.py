@@ -443,7 +443,18 @@ def cta_findings(board):
     return out
 
 
-_LD_JSON = re.compile(r'<script[^>]+type="application/ld\+json"[^>]*>(.*?)</script>', re.S | re.I)
+_LD_JSON = re.compile(
+    r"""<script[^>]+type\s*=\s*["']application/ld\+json[^"']*["'][^>]*>(.*?)</script>""",
+    re.S | re.I,
+)
+
+
+def _schema_type_name(t):
+    """`Product`, `https://schema.org/Product` and `schema:Product` are one type; anything that is
+    not a string names no type."""
+    if not isinstance(t, str):
+        return None
+    return re.sub(r"^(?:https?://schema\.org/|schema:)", "", t.strip()) or None
 
 
 def dist_schema_types(slug, dist=None):
@@ -459,7 +470,8 @@ def dist_schema_types(slug, dist=None):
     def walk(o):
         if isinstance(o, dict):
             t = o.get("@type")
-            types.update([t] if isinstance(t, str) else [x for x in t or [] if isinstance(x, str)])
+            names = t if isinstance(t, list) else [t]
+            types.update(n for n in map(_schema_type_name, names) if n)
             for v in o.values():
                 walk(v)
         elif isinstance(o, list):

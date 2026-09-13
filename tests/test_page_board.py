@@ -2244,11 +2244,19 @@ def test_cta_gap_runs_break_at_each_cta_section_and_counts_move_the_cadence():
     add("b", 3, 400, 600, 1)                         # CTA closes it
     add("c", 4, 700, 900, 0)                         # run c = ~800 -> second gap (trailing)
     gaps = [m for c, m in PB.cta_findings(b) if c == "cta-gap"]
-    assert len(gaps) == 2 and "birds, a" in gaps[0] and "sections c " in gaps[1]
-    total = sum((s["words"]["min"] + s["words"]["max"]) // 2 for s in b["sections"])   # 2300
+    assert len(gaps) == 2
+    assert "sections birds, a run ~1000 words" in gaps[0]
+    assert "sections c run ~800 words" in gaps[1]
     assert ("cta-cadence" in dict(PB.cta_findings(b)))                                  # 2300 / 1 CTA
     b["sections"][2]["cta"] = 4                                                        # 2300 / 4 = 575
-    assert "cta-cadence" not in dict(PB.cta_findings(b)) and total == 2300
+    assert "cta-cadence" not in dict(PB.cta_findings(b))
+
+    # a long CTA-carrying section reports no gap on its own (it still trips cta-cadence,
+    # 2000/1 > 700 — that is not asserted away here)
+    single = json.loads(json.dumps(MIN_BOARD))
+    single["sections"][0]["words"] = {"min": 1900, "max": 2100}
+    single["sections"][0]["cta"] = 1
+    assert [c for c, _ in PB.cta_findings(single) if c == "cta-gap"] == []
 
 
 # --- Task 22: the tool decision ---------------------------------------------------------------
@@ -2269,6 +2277,14 @@ def test_board_renders_the_tool_decision():
     import build_page_board as BPB
     html = BPB.render(_approved(MIN_BOARD), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
     assert "**Tool.** none — evidence: No top-10 result for the head term" in html
+    assert "Trade-off:" not in html
+
+    picked = json.loads(json.dumps(MIN_BOARD))
+    picked["brief"]["tool"].update(pick="first-year cost calculator",
+                                   evidence="No top-10 result for the head term ships a calculator or quiz.",
+                                   trade_off="adds JS to a page that ships none today")
+    html2 = BPB.render(_approved(picked), ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "Trade-off: adds JS to a page that ships none today" in html2
 
 
 def test_schema_plan_ties_offer_model_to_its_types():
@@ -2299,6 +2315,33 @@ def test_release_gate_reads_json_ld_from_the_built_page(tmp_path, monkeypatch):
     assert schema_rows("release") == [("schema-planned-missing", "FAQPage"), ("schema-unparsed", "1")]
     monkeypatch.setattr(PB, "DIST", tmp_path / "nowhere")
     assert [c for c, _ in schema_rows("release")] == ["schema-examined-zero"]
+
+    # quote/param variants, schema.org URL and schema: prefixed types, non-string @type ignored
+    ypage = tmp_path / "y" / "index.html"
+    ypage.parent.mkdir()
+    ypage.write_text(
+        "<script type='application/ld+json'>{\"@type\": \"https://schema.org/FAQPage\"}</script>"
+        '<script type="application/ld+json; charset=utf-8">{"@type": ["schema:Product", 5]}</script>'
+        '<script type="application/ld+json">{"@type": 7}</script>',
+        encoding="utf-8")
+    assert PB.dist_schema_types("y", dist=tmp_path) == ({"FAQPage", "Product"}, 0)
+
+    # the index slug reads <dist>/index.html directly
+    (tmp_path / "index.html").write_text(
+        '<script type="application/ld+json">{"@type": "WebSite"}</script>', encoding="utf-8")
+    assert PB.dist_schema_types("index", dist=tmp_path) == ({"WebSite"}, 0)
+
+    # all planned types present on the built page -> no schema-* release findings
+    x2page = tmp_path / "x2" / "index.html"
+    x2page.parent.mkdir()
+    x2page.write_text(
+        '<script type="application/ld+json">'
+        '{"@graph": [{"@type": "AggregateOffer"}, {"@type": "FAQPage"}]}</script>',
+        encoding="utf-8")
+    monkeypatch.setattr(PB, "DIST", tmp_path)
+    b2 = json.loads(json.dumps(b)); b2["meta"]["slug"] = "x2"
+    findings2 = PB.gate_findings(b2, ONT_OK, LEDGER_EMPTY, live={}, stage="release")
+    assert [x for x in findings2 if x["check"].startswith("schema-")] == []
 
 
 def test_board_renders_the_schema_plan():
