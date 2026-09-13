@@ -2148,6 +2148,10 @@ def test_tuple_newsletter_names_a_real_section_and_sets_both_fields_together():
     ok = json.loads(json.dumps(MIN_BOARD)); ok["tuple"]["newsletter"] = {"after": "birds", "variant": "B"}
     PB.validate_board(ok)
 
+    bad_takeaway = json.loads(json.dumps(MIN_BOARD)); bad_takeaway["tuple"]["takeaway"] = ["k1", ""]
+    with pytest.raises(PB.BoardError):
+        PB.validate_board(bad_takeaway)
+
 
 def test_kit_strip_shows_takeaway_table_stepper_and_the_newsletter():
     import build_page_board as BPB
@@ -2158,5 +2162,31 @@ def test_kit_strip_shows_takeaway_table_stepper_and_the_newsletter():
         assert f'<div class="nothumb">{shell}</div>' in html
     assert "this page wears no stepper" in html
     assert "after 01 · What Do We Have for Sale Right Now?" in html and "variant B" in html
+
+    # the newsletter card itself carries both fields, not just the page somewhere
+    start = html.index('<span class="pill">newsletter</span>')
+    stops = [i for i in (html.find("</div></div>", start), html.find('<div class="opt', start + 1)) if i != -1]
+    card = html[start:min(stops)]
+    assert "variant B" in card and "after 01 · What Do We Have for Sale Right Now?" in card
+
     b["tuple"]["newsletter"] = {"after": "", "variant": ""}
     assert "this page places no newsletter" in BPB.render(b, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+
+    # a stepper is not a ledger-tracked axis, so ownership is unknowable, not "new"
+    b2 = _approved(MIN_BOARD)
+    b2["tuple"]["stepper"] = "t5-stepper"
+    html2 = BPB.render(b2, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")
+    assert "not tracked by the component ledger yet" in html2
+    assert '<div class="nothumb">t5-stepper</div>' in html2
+
+    # a tracked axis (table) still says who else wears it
+    b3 = _approved(MIN_BOARD)
+    html3 = BPB.render(b3, ONT_OK, _ledger_with(table="table-a"), live={}, thumbs={}, slug="x")
+    assert "also worn by sibling" in html3
+
+    # render() is called on unvalidated dicts in tests, so it needs its own guard for a
+    # newsletter.after that names no real section
+    b4 = _approved(MIN_BOARD)
+    b4["tuple"]["newsletter"] = {"after": "shipping", "variant": "A"}
+    with pytest.raises(PB.BoardError):
+        BPB.render(b4, ONT_OK, LEDGER_EMPTY, live={}, thumbs={}, slug="x")

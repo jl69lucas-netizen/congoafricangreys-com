@@ -208,10 +208,12 @@ def _kit_card(axis, v, owned, thumbs):
     img = (f'<img src="{esc(th)}" alt="{esc(base)} — the {esc(axis)} this page wears">'
            if th else f'<div class="nothumb">{esc(base)}</div>')
     owners = owned.get(v) or owned.get(base) or []
+    tracked = axis in PB.TUPLE_ID_KEYS or axis == "takeaway"
+    why = ("not tracked by the component ledger yet" if not tracked
+           else "also worn by " + esc(", ".join(owners)) if owners else "new to the cluster")
     return (f'<div class="opt"><span class="pill">{esc(axis)}</span>{img}<b>{esc(base)}</b>'
             + (f'<span class="pill">refresh: {esc(delta)}</span>' if delta else "")
-            + f'<span class="why">{"also worn by " + esc(", ".join(owners)) if owners else "new to the cluster"}'
-              "</span></div>")
+            + f'<span class="why">{why}</span></div>')
 
 
 def kit_cards(board, ledger, thumbs, slug):
@@ -225,7 +227,9 @@ def kit_cards(board, ledger, thumbs, slug):
     cards += [_kit_card("takeaway", k.strip(), owned, thumbs) for k in (t.get("takeaway") or [""])]
     nl = t["newsletter"]
     if nl["after"]:
-        sec = next(s for s in board["sections"] if s["id"] == nl["after"])
+        sec = next((s for s in board["sections"] if s["id"] == nl["after"]), None)
+        if sec is None:
+            raise PB.BoardError(f"tuple.newsletter.after {nl['after']!r} is not a section id")
         cards.append(f'<div class="opt"><span class="pill">newsletter</span><div class="nothumb">variant {esc(nl["variant"])}</div>'
                      f'<b>after {sec["n"]:02d} · {esc(sec["heading"])}</b>'
                      '<span class="why">kit §11 clutch-alert signup, placed in context</span></div>')
