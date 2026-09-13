@@ -8,6 +8,30 @@ The two boards already carry the planning half of the Universal Page Build Brief
 
 Checked against: the brief artifact `f63b8e4f` (v2.2, §0–§26), `schemas/board.schema.json`, both `data/pages/*/board.json` records, `scripts/build_page_board.py`, and the published boards `adfa7c65` (hub) and `f260ac31` (near-me), on 2026-09-13.
 
+## Status — Items 1–7 Shipped
+
+**Shipped 2026-09-13, Tasks 17–23 of `docs/superpowers/plans/2026-09-13-page-board-brief-parity.md`.** Each task passed a spec review and a code-quality review; the whole implementation passed a final review ("Ready"). `tests/test_page_board.py`: 155 → 172 passed. Both boards regenerated and republished in place.
+
+| # | Item | Commit | What the board now shows |
+|---|---|---|---|
+| 1 | Image plan | `e31278b0` · `139cd6d1` | Block 3b: every slot and prompt; `image-coverage` WARN, `asset-alt-duplicate` FAIL |
+| 2 | Group + why | `31b66439` · `075ecba2` | Group label on each H2; "Why each section is here" table with sources |
+| 3 | Keyword types | `bee1850a` · `5bf28951` | Voice · Compare · Solution · Transact columns |
+| 4 | Whole tuple | `60ed162e` · `5951dca4` | Kit strip: table, takeaway, stepper, newsletter placement |
+| 5 | CTA plan | `301d84f0` | CTA plan line; CTA×n on each H2; `cta-cadence` / `cta-gap` WARNs |
+| 6 | Tool decision | `69f3376f` | Tool line with evidence (competitor tools NOT FETCHED) |
+| 7 | Schema plan | `e55b8a57` · `6c67a926` | Schema plan line; release gate reads the built JSON-LD |
+
+**New gate findings for the sitting (real, not stamp errors):**
+
+| Page | Finding |
+|---|---|
+| Hub | One reserve CTA per ~1,683 words; *which → papers* runs ~2,275 words and *next + FAQ* ~1,475 with no CTA |
+| Hub | Section *next* plans no image |
+| Near-me | One reserve CTA per ~935 words; *arrival + FAQ* runs ~1,525 with no CTA |
+
+Release schema check: zero rows on both pages — all 11 planned JSON-LD types are on the built pages and every block parses. Items 8–14 stay deferred to the location Cluster Wave boards.
+
 ## Already on the Boards
 
 | Brief § | Brief item | Board block | State |

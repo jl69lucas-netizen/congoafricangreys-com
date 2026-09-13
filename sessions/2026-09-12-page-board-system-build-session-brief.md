@@ -117,3 +117,24 @@ Answers unchanged. "Which Five Documents Travel With Your African Grey?" passed 
 **Verified:** board gate hub 1 FAIL (`approval-hash`) · 6 WARN, near-me 1 FAIL (`approval-hash`) · 2 WARN — zero `header-collision` / `faq-collision`, 100 live pages examined; old wordings re-injected in memory → 1 header + 1 FAQ hit (gate not blinded) · dist: old strings 0, each new question ×2 (summary + FAQPage), new H2 ×1 · dup body PASS (2 pages) · dup headers PASS (2 pages) · hardening 0 ERROR both · final audit near-me PASS, hub PASS-WITH-WARNINGS (unchanged) · `test_page_board.py` 155 passed (the retrofit test's pinned `KNOWN_HOMEPAGE_OVERLAP` FAIL now asserts zero collisions) · render meta 296 passed. Boards regenerated and republished in place (`f260ac31`, `adfa7c65`); new record hashes, no approval was pending on either.
 
 **Still open for the sitting:** meta picks on both records, the hub §7 pick/tuple alignment, then `board_approve.py` on both.
+
+## 2026-09-13: brief parity — Tasks 17–24 (plan `docs/superpowers/plans/2026-09-13-page-board-brief-parity.md`)
+
+Source: gap analysis artifact `8be278cb` (items 1–7 approved by the breeder; 8–14 deferred to the location Cluster Wave). Subagent-driven: implementer → spec review → quality review per task; record values authored by the controller only.
+
+| Task | Commits | Result |
+|---|---|---|
+| 17 image plan | `e31278b0` → `139cd6d1` | block 3b; `image-coverage` WARN (standard exempt), `asset-alt-duplicate` FAIL |
+| 18 group + why | `edc65179` (near-me record reformatted, content identical) → `31b66439` → `075ecba2` | `group`/`why`/`why_source`; C ⇒ SUGGESTED-RECOMMENDED; competitor needs a URL; hub `reserve` corrected C→A |
+| 19 keyword types | `bee1850a` → `5bf28951` | nine arrays from `KEYWORD_TYPES`, schema pinned by test; every stamped phrase checked against its own section in dist/ |
+| 20 whole tuple | `60ed162e` → `5951dca4` | `stepper`, `newsletter` (near-me after `arrival`, kit §11 variant B); stepper "not tracked by the component ledger yet" |
+| 21 CTA plan | `301d84f0` | `brief.cta` + section counts (card grid = 1, each `.ticket-cta` = 1 for the section it follows, form section = 1) |
+| 22 tool | `69f3376f` | pick none on both; competitor tool presence NOT FETCHED (rule 10, corrected at review) |
+| 23 schema plan | `e55b8a57` → `6c67a926` | 11 page-own JSON-LD types (dist minus contact-us), aggregate-offer; release gate reads dist, URL-style types and quote variants handled |
+| 24 close | this commit | both boards regenerated + republished (`adfa7c65`, `f260ac31`); gap analysis updated (`8be278cb`) |
+
+Tests 155 → 172. Final whole-implementation review: **Ready** (apply_approval dry-run on both records → 0 FAIL at build and release after approval; canvas writes cleanly).
+
+**For the re-approval sitting (both boards):** meta picks; hub §7 pick/tuple alignment; the new real findings — hub one CTA per ~1,683 words with gaps which→papers ~2,275 and next+faq ~1,475, hub `next` has no image; near-me one CTA per ~935 words, gap arrival+faq ~1,525. Neither page has a tool (§14 says one is required unless the page type does not support it) — a question for the sitting, not a record error.
+
+**Open flags added (from the final review, relevant before the location boards):** `cadence.min` is validated but never gated (no over-dense CTA warning); "no section carries a CTA" applies to every page type — revisit for any location board type without a CTA; `brief.cta.destination` is not checked against a section id; `H.escape` inside `<…>` autolinks could show `&amp;` for a URL with `&`; the release schema check reads whatever dist/ holds, so it is only as fresh as the last build. The location-wave direction (groups of 5–6, own components per group, Firecrawl component sweep first, no component shared with any other page family) is in memory `project_location_cluster_wave_direction`.
